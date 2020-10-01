@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
@@ -201,32 +202,32 @@ namespace PlaywrightSharp
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
 
         /// <inheritdoc/>
-        public Task ExposeBindingAsync(string name, Action<BindingSource> playwrightFunction)
-            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
+        public Task ExposeBindingAsync(string name, Action<BindingSource> playwrightBinding)
+            => ExposeBindingAsync(name, (Delegate)playwrightBinding);
 
         /// <inheritdoc/>
-        public Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> playwrightFunction)
-            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
+        public Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> playwrightBinding)
+            => ExposeBindingAsync(name, (Delegate)playwrightBinding);
 
         /// <inheritdoc/>
-        public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> playwrightFunction)
-            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
+        public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> playwrightBinding)
+            => ExposeBindingAsync(name, (Delegate)playwrightBinding);
 
         /// <inheritdoc/>
-        public Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> playwrightFunction)
-            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
+        public Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> playwrightBinding)
+            => ExposeBindingAsync(name, (Delegate)playwrightBinding);
 
         /// <inheritdoc/>
-        public Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> playwrightFunction)
-            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
+        public Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> playwrightBinding)
+            => ExposeBindingAsync(name, (Delegate)playwrightBinding);
 
         /// <inheritdoc/>
-        public Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> playwrightFunction)
-            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
+        public Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> playwrightBinding)
+            => ExposeBindingAsync(name, (Delegate)playwrightBinding);
 
         /// <inheritdoc/>
-        public Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> playwrightFunction)
-            => ExposeBindingAsync(name, (Delegate)playwrightFunction);
+        public Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> playwrightBinding)
+            => ExposeBindingAsync(name, (Delegate)playwrightBinding);
 
         /// <inheritdoc/>
         public Task ExposeFunctionAsync(string name, Action playwrightFunction)
@@ -278,33 +279,102 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task AddInitScriptAsync(string script = null, object[] args = null, string path = null, string content = null)
+        public Task AddInitScriptAsync(string script = null, object[] arg = null, string path = null, string content = null)
         {
             if (string.IsNullOrEmpty(script))
             {
                 script = ScriptsHelper.EvaluationScript(content, path);
             }
 
-            return _channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(script, args));
+            return _channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(script, arg));
         }
 
         /// <inheritdoc />
-        public Task SetHttpCredentialsAsync(Credentials credentials) => _channel.SetHttpCredentialsAsync(credentials);
+        public Task SetHttpCredentialsAsync(Credentials httpCredentials) => _channel.SetHttpCredentialsAsync(httpCredentials);
 
         /// <inheritdoc />
-        public Task SetOfflineAsync(bool enabled) => _channel.SetOfflineAsync(enabled);
+        public Task SetOfflineAsync(bool offline) => _channel.SetOfflineAsync(offline);
 
         /// <inheritdoc />
         public async Task<ICDPSession> NewCDPSessionAsync(IPage page) => (await _channel.NewCDPSessionAsync(page).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
         public Task RouteAsync(string url, Action<Route, IRequest> handler)
+            => RouteAsync(
+                new RouteSetting
+                {
+                    Url = url,
+                    Handler = handler,
+                });
+
+        /// <inheritdoc />
+        public Task RouteAsync(Regex url, Action<Route, IRequest> handler)
+            => RouteAsync(
+                new RouteSetting
+                {
+                    Regex = url,
+                    Handler = handler,
+                });
+
+        /// <inheritdoc />
+        public Task RouteAsync(Func<string, bool> url, Action<Route, IRequest> handler)
+            => RouteAsync(
+                new RouteSetting
+                {
+                    Function = url,
+                    Handler = handler,
+                });
+
+        /// <inheritdoc />
+        public Task UnrouteAsync(string url, Action<Route, IRequest> handler = null)
+            => UnrouteAsync(
+                new RouteSetting
+                {
+                    Url = url,
+                    Handler = handler,
+                });
+
+        /// <inheritdoc />
+        public Task UnrouteAsync(Regex url, Action<Route, IRequest> handler = null)
+            => UnrouteAsync(
+                new RouteSetting
+                {
+                    Regex = url,
+                    Handler = handler,
+                });
+
+        /// <inheritdoc />
+        public Task UnrouteAsync(Func<string, bool> url, Action<Route, IRequest> handler = null)
+            => UnrouteAsync(
+                new RouteSetting
+                {
+                    Function = url,
+                    Handler = handler,
+                });
+
+        /// <inheritdoc />
+        public Task SetExtraHttpHeadersAsync(Dictionary<string, string> headers) => _channel.SetExtraHttpHeadersAsync(headers);
+
+        internal void OnRoute(Route route, Request request)
         {
-            _routes.Add(new RouteSetting
+            foreach (var item in _routes)
             {
-                Url = url,
-                Handler = handler,
-            });
+                if (
+                    (item.Url != null && request.Url.UrlMatches(item.Url)) ||
+                    (item.Regex?.IsMatch(request.Url) == true) ||
+                    (item.Function?.Invoke(request.Url) == true))
+                {
+                    item.Handler(route, request);
+                    return;
+                }
+            }
+
+            _ = route.ContinueAsync();
+        }
+
+        private Task RouteAsync(RouteSetting setting)
+        {
+            _routes.Add(setting);
 
             if (_routes.Count == 1)
             {
@@ -314,11 +384,14 @@ namespace PlaywrightSharp
             return Task.CompletedTask;
         }
 
-        /// <inheritdoc />
-        public Task UnrouteAsync(string url, Action<Route, IRequest> handler = null)
+        private Task UnrouteAsync(RouteSetting setting)
         {
             var newRoutesList = new List<RouteSetting>();
-            newRoutesList.AddRange(_routes.Where(r => r.Url != url || (handler != null && r.Handler != handler)));
+            newRoutesList.AddRange(_routes.Where(r =>
+                (setting.Url != null && r.Url != setting.Url) ||
+                (setting.Regex != null && r.Regex != setting.Regex) ||
+                (setting.Function != null && r.Function != setting.Function) ||
+                (setting.Handler != null && r.Handler != setting.Handler)));
             _routes = newRoutesList;
 
             if (_routes.Count == 0)
@@ -327,23 +400,6 @@ namespace PlaywrightSharp
             }
 
             return Task.CompletedTask;
-        }
-
-        /// <inheritdoc />
-        public Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers) => _channel.SetExtraHttpHeadersAsync(headers);
-
-        internal void OnRoute(Route route, Request request)
-        {
-            foreach (var item in _routes)
-            {
-                if (request.Url.UrlMatches(item.Url))
-                {
-                    item.Handler(route, request);
-                    return;
-                }
-            }
-
-            _ = route.ContinueAsync();
         }
 
         private void Channel_Closed(object sender, EventArgs e)

@@ -41,7 +41,7 @@ namespace PlaywrightSharp
         /// Gets or sets the expiration. Unix time in seconds.
         /// </summary>
         /// <value>Expiration.</value>
-        public double? Expires { get; set; }
+        public decimal? Expires { get; set; }
 
         /// <summary>
         /// Gets or sets if it's HTTP only.

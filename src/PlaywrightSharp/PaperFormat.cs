@@ -110,12 +110,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// Checks for object equality.
         /// </summary>
-        /// <param name="format">Format to check.</param>
+        /// <param name="other">Format to check.</param>
         /// <returns>Whether the objects are equal or not.</returns>
-        public bool Equals(PaperFormat format)
-            => format != null &&
-               Width == format.Width &&
-               Height == format.Height;
+        public bool Equals(PaperFormat other)
+            => other != null &&
+               Width == other.Width &&
+               Height == other.Height;
 
         /// <inheritdoc cref="object.GetHashCode"/>
         public override int GetHashCode()

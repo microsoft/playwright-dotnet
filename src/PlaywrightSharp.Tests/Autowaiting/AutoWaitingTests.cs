@@ -205,7 +205,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
                 <a href=""{ TestConstants.EmptyPage}"" target=target>empty.html</a>
                 <iframe name=target></iframe>");
 
-            var frame = Page.Frames.FirstOrDefault(f => f.Name == "target");
+            var frame = Page.GetFrame("target");
 
             await TaskUtils.WhenAll(
                 Page.ClickAsync("a").ContinueWith(t => messages.Add("click")),

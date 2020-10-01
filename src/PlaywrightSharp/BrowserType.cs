@@ -61,9 +61,13 @@ namespace PlaywrightSharp
             int? slowMo = null,
             bool? ignoreDefaultArgs = null,
             string[] ignoredDefaultArgs = null,
-            IDictionary<string, string> env = null,
-            IDictionary<string, object> firefoxUserPrefs = null,
-            ProxySettings proxy = null)
+            Dictionary<string, string> env = null,
+            Dictionary<string, object> firefoxUserPrefs = null,
+            ProxySettings proxy = null,
+            bool? chromiumSandbox = null,
+            bool? handleSIGINT = null,
+            bool? handleSIGTERM = null,
+            bool? handleSIGHUP = null)
             => LaunchAsync(new LaunchOptions
             {
                 Headless = headless,
@@ -76,11 +80,15 @@ namespace PlaywrightSharp
                 Timeout = timeout,
                 DumpIO = dumpIO,
                 SlowMo = slowMo,
-                IgnoreDefaultArgs = ignoreHTTPSErrors,
+                IgnoreDefaultArgs = ignoreDefaultArgs,
                 IgnoredDefaultArgs = ignoredDefaultArgs,
                 Env = env,
                 FirefoxUserPrefs = firefoxUserPrefs,
                 Proxy = proxy,
+                ChromiumSandbox = chromiumSandbox,
+                HandleSIGHUP = handleSIGHUP,
+                HandleSIGINT = handleSIGINT,
+                HandleSIGTERM = handleSIGTERM,
             });
 
         /// <inheritdoc />
@@ -109,8 +117,8 @@ namespace PlaywrightSharp
             int? slowMo = null,
             bool? ignoreDefaultArgs = null,
             string[] ignoredDefaultArgs = null,
-            IDictionary<string, string> env = null,
-            IDictionary<string, object> firefoxUserPrefs = null,
+            Dictionary<string, string> env = null,
+            Dictionary<string, object> firefoxUserPrefs = null,
             ProxySettings proxy = null,
             string userAgent = null,
             bool? bypassCSP = null,
@@ -126,7 +134,11 @@ namespace PlaywrightSharp
             bool? acceptDownloads = null,
             ColorScheme? colorScheme = null,
             string locale = null,
-            Dictionary<string, string> extraHttpHeaders = null)
+            Dictionary<string, string> extraHttpHeaders = null,
+            bool? chromiumSandbox = null,
+            bool? handleSIGINT = null,
+            bool? handleSIGTERM = null,
+            bool? handleSIGHUP = null)
             => LaunchPersistentContextAsync(
                 userAgent,
                 new LaunchPersistentOptions
@@ -141,7 +153,7 @@ namespace PlaywrightSharp
                     Timeout = timeout,
                     DumpIO = dumpIO,
                     SlowMo = slowMo,
-                    IgnoreDefaultArgs = ignoreHTTPSErrors,
+                    IgnoreDefaultArgs = ignoreDefaultArgs,
                     IgnoredDefaultArgs = ignoredDefaultArgs,
                     Env = env,
                     FirefoxUserPrefs = firefoxUserPrefs,
@@ -162,6 +174,10 @@ namespace PlaywrightSharp
                     ColorScheme = colorScheme,
                     Locale = locale,
                     ExtraHttpHeaders = extraHttpHeaders,
+                    ChromiumSandbox = chromiumSandbox,
+                    HandleSIGHUP = handleSIGHUP,
+                    HandleSIGINT = handleSIGINT,
+                    HandleSIGTERM = handleSIGTERM,
                 });
 
         /// <inheritdoc />
@@ -178,8 +194,8 @@ namespace PlaywrightSharp
             int? slowMo = null,
             bool? ignoreDefaultArgs = null,
             string[] ignoredDefaultArgs = null,
-            IDictionary<string, string> env = null,
-            IDictionary<string, object> firefoxUserPrefs = null,
+            Dictionary<string, string> env = null,
+            Dictionary<string, object> firefoxUserPrefs = null,
             ProxySettings proxy = null,
             string userAgent = null,
             bool? bypassCSP = null,
@@ -195,7 +211,11 @@ namespace PlaywrightSharp
             bool? acceptDownloads = null,
             ColorScheme? colorScheme = null,
             string locale = null,
-            Dictionary<string, string> extraHttpHeaders = null)
+            Dictionary<string, string> extraHttpHeaders = null,
+            bool? chromiumSandbox = null,
+            bool? handleSIGINT = null,
+            bool? handleSIGTERM = null,
+            bool? handleSIGHUP = null)
             => LaunchPersistentContextAsync(
                 userAgent,
                 new LaunchPersistentOptions
@@ -210,7 +230,7 @@ namespace PlaywrightSharp
                     Timeout = timeout,
                     DumpIO = dumpIO,
                     SlowMo = slowMo,
-                    IgnoreDefaultArgs = ignoreHTTPSErrors,
+                    IgnoreDefaultArgs = ignoreDefaultArgs,
                     IgnoredDefaultArgs = ignoredDefaultArgs,
                     Env = env,
                     FirefoxUserPrefs = firefoxUserPrefs,
@@ -230,6 +250,10 @@ namespace PlaywrightSharp
                     ColorScheme = colorScheme,
                     Locale = locale,
                     ExtraHttpHeaders = extraHttpHeaders,
+                    ChromiumSandbox = chromiumSandbox,
+                    HandleSIGHUP = handleSIGHUP,
+                    HandleSIGINT = handleSIGINT,
+                    HandleSIGTERM = handleSIGTERM,
                 });
 
         /// <inheritdoc />

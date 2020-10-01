@@ -85,6 +85,7 @@ namespace PlaywrightSharp
             Credentials httpCredentials = null,
             bool? hasTouch = null,
             bool? acceptDownloads = null,
+            bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null)
@@ -105,6 +106,7 @@ namespace PlaywrightSharp
                 AcceptDownloads = acceptDownloads,
                 ColorScheme = colorScheme,
                 Locale = locale,
+                IgnoreHTTPSErrors = ignoreHTTPSErrors,
                 ExtraHttpHeaders = extraHttpHeaders,
             });
 
@@ -171,6 +173,7 @@ namespace PlaywrightSharp
             Credentials httpCredentials = null,
             bool? hasTouch = null,
             bool? acceptDownloads = null,
+            bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null)
@@ -189,6 +192,7 @@ namespace PlaywrightSharp
                 HttpCredentials = httpCredentials,
                 HasTouch = hasTouch,
                 AcceptDownloads = acceptDownloads,
+                IgnoreHTTPSErrors = ignoreHTTPSErrors,
                 ColorScheme = colorScheme,
                 Locale = locale,
                 ExtraHttpHeaders = extraHttpHeaders,

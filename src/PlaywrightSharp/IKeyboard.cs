@@ -44,7 +44,7 @@ namespace PlaywrightSharp
         /// <param name="delay">Time to wait between <c>keydown</c> and <c>keyup</c> in milliseconds. Defaults to 0.</param>
         /// <remarks>
         /// If <paramref name="key"/> is a single character and no modifier keys besides <c>Shift</c> are being held down, a <c>keypress</c>/<c>input</c> event will also generated.
-        /// Modifier keys DO effect <see cref="IElementHandle.PressAsync(string, int)"/>. Holding down <c>Shift</c> will type the text in upper case.
+        /// Modifier keys DO effect <see cref="IElementHandle.PressAsync(string, int, int?, bool?)"/>. Holding down <c>Shift</c> will type the text in upper case.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
         Task PressAsync(string key, int delay = 0);

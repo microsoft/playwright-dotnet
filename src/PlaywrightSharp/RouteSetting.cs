@@ -9,6 +9,8 @@ namespace PlaywrightSharp
 
         public Regex Regex { get; set; }
 
+        public Func<string, bool> Function { get; set; }
+
         public Action<Route, IRequest> Handler { get; set; }
     }
 }

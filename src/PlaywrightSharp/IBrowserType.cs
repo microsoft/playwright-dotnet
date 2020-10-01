@@ -45,6 +45,10 @@ namespace PlaywrightSharp
         /// <param name="env">Specify environment variables that will be visible to browser. Defaults to Environment variables.</param>
         /// <param name="firefoxUserPrefs">Firefox user preferences. Learn more about the Firefox user preferences at about:config.</param>
         /// <param name="proxy">Network proxy settings.</param>
+        /// <param name="chromiumSandbox">Enable Chromium sandboxing. Defaults to true.</param>
+        /// <param name="handleSIGINT">Close the browser process on Ctrl-C. Defaults to true.</param>
+        /// <param name="handleSIGTERM">Close the browser process on SIGTERM. Defaults to true.</param>
+        /// <param name="handleSIGHUP">Close the browser process on SIGHUP. Defaults to true.</param>
         /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the browser.</returns>
         Task<IBrowser> LaunchAsync(
             bool? headless = null,
@@ -59,9 +63,13 @@ namespace PlaywrightSharp
             int? slowMo = null,
             bool? ignoreDefaultArgs = null,
             string[] ignoredDefaultArgs = null,
-            IDictionary<string, string> env = null,
-            IDictionary<string, object> firefoxUserPrefs = null,
-            ProxySettings proxy = null);
+            Dictionary<string, string> env = null,
+            Dictionary<string, object> firefoxUserPrefs = null,
+            ProxySettings proxy = null,
+            bool? chromiumSandbox = null,
+            bool? handleSIGINT = null,
+            bool? handleSIGTERM = null,
+            bool? handleSIGHUP = null);
 
         /// <summary>
         /// Launches browser that uses persistent storage located at userDataDir and returns the only context. Closing this context will automatically close the browser.
@@ -106,6 +114,10 @@ namespace PlaywrightSharp
         /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
         /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
+        /// <param name="chromiumSandbox">Enable Chromium sandboxing. Defaults to true.</param>
+        /// <param name="handleSIGINT">Close the browser process on Ctrl-C. Defaults to true.</param>
+        /// <param name="handleSIGTERM">Close the browser process on SIGTERM. Defaults to true.</param>
+        /// <param name="handleSIGHUP">Close the browser process on SIGHUP. Defaults to true.</param>
         /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the browser server.</returns>
         Task<IBrowserContext> LaunchPersistentContextAsync(
             string userDataDir,
@@ -121,8 +133,8 @@ namespace PlaywrightSharp
             int? slowMo = null,
             bool? ignoreDefaultArgs = null,
             string[] ignoredDefaultArgs = null,
-            IDictionary<string, string> env = null,
-            IDictionary<string, object> firefoxUserPrefs = null,
+            Dictionary<string, string> env = null,
+            Dictionary<string, object> firefoxUserPrefs = null,
             ProxySettings proxy = null,
             string userAgent = null,
             bool? bypassCSP = null,
@@ -138,7 +150,11 @@ namespace PlaywrightSharp
             bool? acceptDownloads = null,
             ColorScheme? colorScheme = null,
             string locale = null,
-            Dictionary<string, string> extraHttpHeaders = null);
+            Dictionary<string, string> extraHttpHeaders = null,
+            bool? chromiumSandbox = null,
+            bool? handleSIGINT = null,
+            bool? handleSIGTERM = null,
+            bool? handleSIGHUP = null);
 
         /// <summary>
         /// Launches browser that uses persistent storage located at userDataDir and returns the only context. Closing this context will automatically close the browser.
@@ -174,6 +190,10 @@ namespace PlaywrightSharp
         /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
         /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
+        /// <param name="chromiumSandbox">Enable Chromium sandboxing. Defaults to true.</param>
+        /// <param name="handleSIGINT">Close the browser process on Ctrl-C. Defaults to true.</param>
+        /// <param name="handleSIGTERM">Close the browser process on SIGTERM. Defaults to true.</param>
+        /// <param name="handleSIGHUP">Close the browser process on SIGHUP. Defaults to true.</param>
         /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the browser server.</returns>
         Task<IBrowserContext> LaunchPersistentContextAsync(
             string userDataDir,
@@ -188,8 +208,8 @@ namespace PlaywrightSharp
             int? slowMo = null,
             bool? ignoreDefaultArgs = null,
             string[] ignoredDefaultArgs = null,
-            IDictionary<string, string> env = null,
-            IDictionary<string, object> firefoxUserPrefs = null,
+            Dictionary<string, string> env = null,
+            Dictionary<string, object> firefoxUserPrefs = null,
             ProxySettings proxy = null,
             string userAgent = null,
             bool? bypassCSP = null,
@@ -205,7 +225,11 @@ namespace PlaywrightSharp
             bool? acceptDownloads = null,
             ColorScheme? colorScheme = null,
             string locale = null,
-            Dictionary<string, string> extraHttpHeaders = null);
+            Dictionary<string, string> extraHttpHeaders = null,
+            bool? chromiumSandbox = null,
+            bool? handleSIGINT = null,
+            bool? handleSIGTERM = null,
+            bool? handleSIGHUP = null);
 
         /// <summary>
         /// Launches browser that uses persistent storage located at userDataDir and returns the only context. Closing this context will automatically close the browser.
