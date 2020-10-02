@@ -1,0 +1,30 @@
+name: Docfx
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  docs:
+    name: generate docs
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1.6.0
+        with:
+          dotnet-version: 3.1.100
+      - name: Build Documentation
+        uses: nikeee/docfx-action@v1.0.0
+        with:
+          args: docfx_project/docfx.son 
+      - uses: maxheld83/ghpages@master
+        name: Publish Documentation on GitHub Pages
+        env:
+          BUILD_DIR: _site # docfx's default output directory is _site
+          GH_PAT: ${{ secrets.GH_PAT }} # See https://github.com/maxheld83/ghpages
+        
