@@ -4,6 +4,7 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageVersion>0.111.2</PackageVersion>
         <AssemblyVersion>$(PackageVersion)</AssemblyVersion>
+        <ReleaseVersion>$(PackageVersion)</ReleaseVersion>
         <FileVersion>$(PackageVersion)</FileVersion>
         <Authors>Darío Kondratiuk</Authors>
         <Owners>Darío Kondratiuk</Owners>
