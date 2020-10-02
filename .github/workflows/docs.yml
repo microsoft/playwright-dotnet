@@ -18,6 +18,10 @@ jobs:
         uses: actions/setup-dotnet@v1.6.0
         with:
           dotnet-version: 3.1.100
+      - name: Extract Metadata
+        uses: nikeee/docfx-action@v1.0.0
+        with:
+          args: metadata docfx_project/docfx.json
       - name: Build Documentation
         uses: nikeee/docfx-action@v1.0.0
         with:
