@@ -1,12 +1,16 @@
-# Playwright-Sharp
+# 🎭 [Playwright](https://playwright.dev) for .NET [![NuGet version](https://buildstats.info/nuget/PlaywrightSharp)](https://www.nuget.org/packages/PlaywrightSharp) [![Join Slack](https://img.shields.io/badge/join-slack-infomational)](https://join.slack.com/t/playwright/shared_invite/enQtOTEyMTUxMzgxMjIwLThjMDUxZmIyNTRiMTJjNjIyMzdmZDA3MTQxZWUwZTFjZjQwNGYxZGM5MzRmNzZlMWI5ZWUyOTkzMjE5Njg1NDg)
 
-[![NuGetAbstractions](https://buildstats.info/nuget/PlaywrightSharp)][NuGet]
-[![Join Slack](https://img.shields.io/badge/join-slack-infomational)](https://join.slack.com/t/playwright/shared_invite/enQtOTEyMTUxMzgxMjIwLThjMDUxZmIyNTRiMTJjNjIyMzdmZDA3MTQxZWUwZTFjZjQwNGYxZGM5MzRmNzZlMWI5ZWUyOTkzMjE5Njg1NDg)
+[Website](https://playwright.dev/) | [.NET API reference](https://microsoft.github.io/playwright-sharp/)
 
-[NuGet]: https://www.nuget.org/packages/PlaywrightSharp/
-[NugetChromiumUrl]: https://www.nuget.org/packages/PlaywrightSharp.Chromium/
+PlaywrightSharp is a .Net library to automate [Chromium](https://www.chromium.org/Home), [Firefox](https://www.mozilla.org/en-US/firefox/new/) and [WebKit](https://webkit.org/) browsers with a single API. Playwright delivers automation that is **ever-green**, **capable**, **reliable** and **fast**. [See how Playwright is better](https://playwright.dev/#path=docs%2Fwhy-playwright.md&q=).
 
-Playwright Sharp is a .NET port of the official [Node.JS Playwright API](https://github.com/microsoft/playwright). 
+|          | Linux | macOS | Windows |
+|   :---   | :---: | :---: | :---:   |
+| Chromium <!-- GEN:chromium-version -->86.0.4238.0<!-- GEN:stop --> | ✅ | ✅ | ✅ |
+| WebKit 14.0 | ✅ | ✅ | ✅ |
+| Firefox <!-- GEN:firefox-version -->80.0b8<!-- GEN:stop --> | ✅ | ✅ | ✅ |
+
+Headless execution is supported for all browsers on all platforms.
 
 # Monthly reports
  * [September 2020](https://www.hardkoded.com/blog/playwright-sharp-monthly-sep-2020)
