@@ -10,7 +10,10 @@
         }
       ],
       "dest": "api",
-      "disableGitFeatures": false
+      "disableGitFeatures": false,
+      "properties": {
+        "TargetFramework": "netstandard2.0"
+      }
     }
   ],
   "build": {
