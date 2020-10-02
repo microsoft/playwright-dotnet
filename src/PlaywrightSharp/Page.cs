@@ -701,6 +701,11 @@ namespace PlaywrightSharp
             Margin margin = null,
             bool preferCSSPageSize = false)
         {
+            if (BrowserContext.BrowserName != "chromium")
+            {
+                throw new NotSupportedException($"{BrowserContext.BrowserName} doesn't support this action.");
+            }
+
             byte[] result = Convert.FromBase64String(await _channel.GetPdfAsync(
                 scale,
                 displayHeaderFooter,

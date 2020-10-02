@@ -465,21 +465,37 @@ namespace PlaywrightSharp.Transport.Channels
             PaperFormat format,
             string width,
             string height,
-            Margin marginOptions,
+            Margin margin,
             bool preferCSSPageSize)
         {
             var args = new Dictionary<string, object>
             {
                 ["scale"] = scale,
                 ["displayHeaderFooter"] = displayHeaderFooter,
-                ["headerTemplate"] = headerTemplate,
-                ["footerTemplate"] = footerTemplate,
                 ["printBackground"] = printBackground,
                 ["landscape"] = landscape,
-                ["pageRanges"] = pageRanges,
-                ["marginOptions"] = marginOptions,
                 ["preferCSSPageSize"] = preferCSSPageSize,
             };
+
+            if (pageRanges != null)
+            {
+                args["pageRanges"] = pageRanges;
+            }
+
+            if (headerTemplate != null)
+            {
+                args["headerTemplate"] = headerTemplate;
+            }
+
+            if (footerTemplate != null)
+            {
+                args["footerTemplate"] = footerTemplate;
+            }
+
+            if (margin != null)
+            {
+                args["margin"] = margin;
+            }
 
             if (!string.IsNullOrEmpty(width))
             {
