@@ -19,4 +19,4 @@ Playwright Sharp is a .NET port of the official [Node.JS Playwright API](https:/
 # Useful links
 
 * [StackOverflow](https://stackoverflow.com/search?q=playwright-sharp)
-* [Issues](https://github.com/kblok/playwright-sharp/issues?utf8=%E2%9C%93&q=is%3Aissue)
+* [Issues](https://github.com/microsoft/playwright-sharp/issues?utf8=%E2%9C%93&q=is%3Aissue)
