@@ -37,7 +37,7 @@ namespace PlaywrightSharp
             _frames.Add(MainFrame);
             ViewportSize = initializer.ViewportSize;
             Accessibility = new Accesibility(_channel);
-            Coverage = BrowserContext.BrowserName == "chromium" ? new Coverage(_channel) : null;
+            Coverage = BrowserContext.BrowserName == BrowserType.Chromium ? new Coverage(_channel) : null;
             Keyboard = new Keyboard(_channel);
             Mouse = new Mouse(_channel);
             _channel.Closed += Channel_Closed;
@@ -701,6 +701,11 @@ namespace PlaywrightSharp
             Margin margin = null,
             bool preferCSSPageSize = false)
         {
+            if (BrowserContext.BrowserName != BrowserType.Chromium)
+            {
+                throw new NotSupportedException($"{BrowserContext.BrowserName} doesn't support this action.");
+            }
+
             byte[] result = Convert.FromBase64String(await _channel.GetPdfAsync(
                 scale,
                 displayHeaderFooter,

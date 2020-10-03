@@ -1,18 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Chromium
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>chromium/pdf.spec.js</playwright-file>
-    ///<playwright-describe>Page.pdf</playwright-describe>
+    ///<playwright-file>pdf.spec.js</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PdfTests : PlaywrightSharpPageBaseTest
     {
@@ -21,8 +17,7 @@ namespace PlaywrightSharp.Tests.Chromium
         {
         }
 
-        ///<playwright-file>chromium/pdf.spec.js</playwright-file>
-        ///<playwright-describe>Page.pdf</playwright-describe>
+        ///<playwright-file>pdf.spec.js</playwright-file>
         ///<playwright-it>should be able to save file</playwright-it>
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldBeAbleToSaveFile()
@@ -41,5 +36,11 @@ namespace PlaywrightSharp.Tests.Chromium
                 fileInfo.Delete();
             }
         }
+
+        ///<playwright-file>pdf.spec.js</playwright-file>
+        ///<playwright-it>should only have pdf in chromium</playwright-it>
+        [SkipBrowserAndPlatformFact(skipChromium: true)]
+        public Task ShouldOnlyHavePdfInChromium()
+            => Assert.ThrowsAsync<NotSupportedException>(() => Page.GetPdfAsync());
     }
 }
