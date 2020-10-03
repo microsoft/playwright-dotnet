@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - master
-
+  pull_request:
+    branches:
+      - master
 jobs:
   docs:
     name: generate docs
@@ -23,9 +25,9 @@ jobs:
         uses: nikeee/docfx-action@v1.0.0
         with:
           args: build docfx_project/docfx.json -o docs
-      - uses: maxheld83/ghpages@master
-        name: Publish Documentation on GitHub Pages
-        env:
-          BUILD_DIR: docs/_site
-          GH_PAT: ${{ secrets.GH_PAT }} # See https://github.com/maxheld83/ghpages
-        
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: docs/_site
