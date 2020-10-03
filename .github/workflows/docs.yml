@@ -1,9 +1,10 @@
 name: Docfx
 
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [published]
+  workflow_dispatch:
+
 jobs:
   docs:
     name: generate docs
