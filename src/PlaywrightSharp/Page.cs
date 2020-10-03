@@ -540,7 +540,18 @@ namespace PlaywrightSharp
             ScreenshotFormat? type = null,
             int? quality = null,
             int? timeout = null)
-            => Convert.FromBase64String(await _channel.ScreenshotAsync(path, fullPage, clip, omitBackground, type, quality, timeout).ConfigureAwait(false));
+        {
+            type = !string.IsNullOrEmpty(path) ? ElementHandle.DetermineScreenshotType(path) : type;
+            byte[] result = Convert.FromBase64String(await _channel.ScreenshotAsync(path, fullPage, clip, omitBackground, type, quality, timeout).ConfigureAwait(false));
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                Directory.CreateDirectory(new FileInfo(path).Directory.FullName);
+                File.WriteAllBytes(path, result);
+            }
+
+            return result;
+        }
 
         /// <inheritdoc />
         public Task SetContentAsync(string html, LifecycleEvent? waitUntil = null, int? timeout = null) => MainFrame.SetContentAsync(true, html, waitUntil, timeout);
@@ -722,6 +733,7 @@ namespace PlaywrightSharp
 
             if (!string.IsNullOrEmpty(path))
             {
+                Directory.CreateDirectory(new FileInfo(path).Directory.FullName);
                 File.WriteAllBytes(path, result);
             }
 

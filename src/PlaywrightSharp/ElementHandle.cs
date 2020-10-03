@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -57,7 +58,18 @@ namespace PlaywrightSharp
             ScreenshotFormat? type = null,
             int? quality = null,
             int? timeout = null)
-            => Convert.FromBase64String(await _channel.ScreenshotAsync(path, omitBackground, type, quality, timeout).ConfigureAwait(false));
+        {
+            type = !string.IsNullOrEmpty(path) ? DetermineScreenshotType(path) : type;
+            byte[] result = Convert.FromBase64String(await _channel.ScreenshotAsync(path, omitBackground, type, quality, timeout).ConfigureAwait(false));
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                Directory.CreateDirectory(new FileInfo(path).Directory.FullName);
+                File.WriteAllBytes(path, result);
+            }
+
+            return result;
+        }
 
         /// <inheritdoc />
         public Task FillAsync(string value, int? timeout = null, bool? noWaitAfter = null)
@@ -263,6 +275,17 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task UncheckAsync(int? timeout = null, bool force = false, bool? noWaitAfter = null)
             => _channel.UncheckAsync(timeout, force, noWaitAfter);
+
+        internal static ScreenshotFormat? DetermineScreenshotType(string path)
+        {
+            string mimeType = path.MimeType();
+            return mimeType switch
+            {
+                "image/png" => ScreenshotFormat.Png,
+                "image/jpeg" => ScreenshotFormat.Jpeg,
+                _ => throw new ArgumentException($"path: unsupported mime type \"{mimeType}\""),
+            };
+        }
 
         internal Task<string> CreateSelectorForTestAsync(string name) => _channel.CreateSelectorForTestAsync(name);
     }

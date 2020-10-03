@@ -784,6 +784,9 @@ namespace PlaywrightSharp.Helpers
 
         internal static bool UrlMatches(this string url, string glob) => GlobToRegex(glob).Match(url).Success;
 
+        internal static string MimeType(this string file)
+            => _mappings.TryGetValue(new FileInfo(file).Extension, out string mime) ? mime : "application/octet-stream";
+
         internal static FilePayload ToFilePayload(this string file)
         {
             var fileInfo = new FileInfo(file);
@@ -792,7 +795,7 @@ namespace PlaywrightSharp.Helpers
             {
                 Name = fileInfo.Name,
                 Buffer = Convert.ToBase64String(File.ReadAllBytes(file)),
-                MimeType = _mappings.TryGetValue(fileInfo.Extension, out string mime) ? mime : "application/octet-stream",
+                MimeType = file.MimeType(),
             };
         }
 
