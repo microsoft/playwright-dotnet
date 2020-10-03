@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -34,12 +35,12 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
             };
 
             await using var context = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, options);
-            var backgroundPage = context.BackgroundPages.Any()
-                ? context.BackgroundPages.First()
+            var backgroundPage = ((IChromiumBrowserContext)context).BackgroundPages.Any()
+                ? ((IChromiumBrowserContext)context).BackgroundPages.First()
                 : (await context.WaitForEvent(ContextEvent.BackgroundPage)).Page;
 
             Assert.NotNull(backgroundPage);
-            Assert.Contains(backgroundPage, context.BackgroundPages);
+            Assert.Contains(backgroundPage, ((IChromiumBrowserContext)context).BackgroundPages);
             Assert.DoesNotContain(backgroundPage, context.Pages);
         }
     }

@@ -51,4 +51,9 @@
       <EmbeddedResource Include="Drivers\browsers.json">
       </EmbeddedResource>
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Chromium\" />
+      <Folder Include="Firefox\" />
+      <Folder Include="Webkit\" />
+    </ItemGroup>
 </Project>

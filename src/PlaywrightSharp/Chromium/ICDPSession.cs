@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp
+namespace PlaywrightSharp.Chromium
 {
     /// <summary>
     /// The CDPSession instances are used to talk raw Chrome Devtools Protocol.

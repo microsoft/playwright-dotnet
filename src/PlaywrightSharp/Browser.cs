@@ -11,16 +11,15 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IBrowser"/>
     public class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
     {
-        private readonly BrowserChannel _channel;
         private readonly BrowserInitializer _initializer;
         private readonly TaskCompletionSource<bool> _closedTcs = new TaskCompletionSource<bool>();
         private bool _isClosedOrClosing;
 
         internal Browser(IChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
         {
-            _channel = new BrowserChannel(guid, parent.Connection, this);
+            Channel = new BrowserChannel(guid, parent.Connection, this);
             IsConnected = true;
-            _channel.Closed += (sender, e) => DidClose();
+            Channel.Closed += (sender, e) => DidClose();
             _initializer = initializer;
         }
 
@@ -28,10 +27,10 @@ namespace PlaywrightSharp
         public event EventHandler Disconnected;
 
         /// <inheritdoc/>
-        ChannelBase IChannelOwner.Channel => _channel;
+        ChannelBase IChannelOwner.Channel => Channel;
 
         /// <inheritdoc/>
-        IChannel<Browser> IChannelOwner<Browser>.Channel => _channel;
+        IChannel<Browser> IChannelOwner<Browser>.Channel => Channel;
 
         /// <inheritdoc/>
         public bool IsConnected { get; private set; }
@@ -44,16 +43,7 @@ namespace PlaywrightSharp
 
         internal List<BrowserContext> BrowserContextsList { get; } = new List<BrowserContext>();
 
-        /// <inheritdoc/>
-        public Task StartTracingAsync(IPage page = null, bool screenshots = false, string path = null, IEnumerable<string> categories = null)
-            => _channel.StartTracingAsync(page, screenshots, path, categories);
-
-        /// <inheritdoc/>
-        public async Task<string> StopTracingAsync()
-        {
-            string result = await _channel.StopTracingAsync().ConfigureAwait(false);
-            return Encoding.UTF8.GetString(Convert.FromBase64String(result));
-        }
+        internal BrowserChannel Channel { get; }
 
         /// <inheritdoc/>
         public async Task CloseAsync()
@@ -61,7 +51,7 @@ namespace PlaywrightSharp
             if (!_isClosedOrClosing)
             {
                 _isClosedOrClosing = true;
-                await _channel.CloseAsync().ConfigureAwait(false);
+                await Channel.CloseAsync().ConfigureAwait(false);
             }
 
             await _closedTcs.Task.ConfigureAwait(false);
@@ -121,6 +111,7 @@ namespace PlaywrightSharp
             Credentials httpCredentials = null,
             bool? hasTouch = null,
             bool? acceptDownloads = null,
+            bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null)
@@ -138,6 +129,7 @@ namespace PlaywrightSharp
                 HttpCredentials = httpCredentials,
                 HasTouch = hasTouch,
                 AcceptDownloads = acceptDownloads,
+                IgnoreHTTPSErrors = ignoreHTTPSErrors,
                 ColorScheme = colorScheme,
                 Locale = locale,
                 ExtraHttpHeaders = extraHttpHeaders,
@@ -146,14 +138,11 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         public async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options)
         {
-            var context = (await _channel.NewContextAsync(options ?? new BrowserContextOptions()).ConfigureAwait(false)).Object;
+            var context = (await Channel.NewContextAsync(options ?? new BrowserContextOptions()).ConfigureAwait(false)).Object;
             BrowserContextsList.Add(context);
             context.Browser = this;
             return context;
         }
-
-        /// <inheritdoc/>
-        public async Task<ICDPSession> NewBrowserCDPSessionAsync() => (await _channel.NewBrowserCDPSessionAsync().ConfigureAwait(false)).Object;
 
         /// <inheritdoc/>
         public Task<IPage> NewPageAsync(
@@ -209,6 +198,7 @@ namespace PlaywrightSharp
             Credentials httpCredentials = null,
             bool? hasTouch = null,
             bool? acceptDownloads = null,
+            bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null)
@@ -226,6 +216,7 @@ namespace PlaywrightSharp
                 HttpCredentials = httpCredentials,
                 HasTouch = hasTouch,
                 AcceptDownloads = acceptDownloads,
+                IgnoreHTTPSErrors = ignoreHTTPSErrors,
                 ColorScheme = colorScheme,
                 Locale = locale,
                 ExtraHttpHeaders = extraHttpHeaders,

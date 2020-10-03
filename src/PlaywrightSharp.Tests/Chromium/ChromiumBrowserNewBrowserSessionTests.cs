@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -26,7 +27,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWork()
         {
-            var session = await Browser.NewBrowserCDPSessionAsync();
+            var session = await ((IChromiumBrowser)Browser).NewBrowserCDPSessionAsync();
             Assert.NotNull(await session.SendAsync<object>("Browser.getVersion"));
 
             bool gotEvent = false;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium;
 
 namespace PlaywrightSharp
 {
@@ -12,7 +13,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Gets the Chromium browser type from the playwright server.
         /// </summary>
-        IBrowserType Chromium { get; }
+        IChromiumBrowserType Chromium { get; }
 
         /// <summary>
         /// Gets the Firefox browser type from the playwright server.

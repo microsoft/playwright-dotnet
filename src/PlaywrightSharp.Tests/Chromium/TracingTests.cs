@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -60,9 +61,9 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldOutputATrace()
         {
-            await Browser.StartTracingAsync(Page, screenshots: true, path: _file);
+            await ((IChromiumBrowser)Browser).StartTracingAsync(Page, screenshots: true, path: _file);
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            await Browser.StopTracingAsync();
+            await ((IChromiumBrowser)Browser).StopTracingAsync();
 
             Assert.True(File.Exists(_file));
         }
@@ -73,9 +74,9 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldRunWithCustomCategoriesProvided()
         {
-            await Browser.StartTracingAsync(Page, true, _file, new[] { "disabled-by-default-v8.cpu_profiler.hires" });
+            await ((IChromiumBrowser)Browser).StartTracingAsync(Page, true, _file, new[] { "disabled-by-default-v8.cpu_profiler.hires" });
 
-            await Browser.StopTracingAsync();
+            await ((IChromiumBrowser)Browser).StopTracingAsync();
 
             string jsonString = File.ReadAllText(_file);
             var traceJson = JsonDocument.Parse(jsonString);
@@ -88,15 +89,15 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldThrowIfTracingOnTwoPages()
         {
-            await Browser.StartTracingAsync(Page, path: _file);
+            await ((IChromiumBrowser)Browser).StartTracingAsync(Page, path: _file);
             var newPage = await Browser.NewPageAsync();
             await Assert.ThrowsAsync<PlaywrightSharpException>(async () =>
             {
-                await Browser.StartTracingAsync(newPage, path: _file);
+                await ((IChromiumBrowser)Browser).StartTracingAsync(newPage, path: _file);
             });
 
             await newPage.CloseAsync();
-            await Browser.StopTracingAsync();
+            await ((IChromiumBrowser)Browser).StopTracingAsync();
         }
 
         ///<playwright-file>chromium/tracing.spec.js</playwright-file>
@@ -105,9 +106,9 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReturnABuffer()
         {
-            await Browser.StartTracingAsync(Page, true, _file);
+            await ((IChromiumBrowser)Browser).StartTracingAsync(Page, true, _file);
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            string trace = await Browser.StopTracingAsync();
+            string trace = await ((IChromiumBrowser)Browser).StopTracingAsync();
             string buf = File.ReadAllText(_file);
             Assert.Equal(trace, buf);
         }
@@ -118,9 +119,9 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWorkWithoutOptions()
         {
-            await Browser.StartTracingAsync(Page);
+            await ((IChromiumBrowser)Browser).StartTracingAsync(Page);
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            string trace = await Browser.StopTracingAsync();
+            string trace = await ((IChromiumBrowser)Browser).StopTracingAsync();
             Assert.NotNull(trace);
         }
 
@@ -130,9 +131,9 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldSupportABufferWithoutAPath()
         {
-            await Browser.StartTracingAsync(Page, true);
+            await ((IChromiumBrowser)Browser).StartTracingAsync(Page, true);
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            string trace = await Browser.StopTracingAsync();
+            string trace = await ((IChromiumBrowser)Browser).StopTracingAsync();
             Assert.Contains("screenshot", trace);
         }
     }

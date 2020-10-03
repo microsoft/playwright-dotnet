@@ -1,4 +1,5 @@
 using System;
+using PlaywrightSharp.Chromium;
 
 namespace PlaywrightSharp
 {
@@ -13,17 +14,17 @@ namespace PlaywrightSharp
         public static PlaywrightEvent<PageEventArgs> Page { get; } = new PlaywrightEvent<PageEventArgs>() { Name = "Page" };
 
         /// <summary>
-        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IBrowserContext.Closed"/>.
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IBrowserContext.Close"/>.
         /// </summary>
-        public static PlaywrightEvent<EventArgs> Closed { get; } = new PlaywrightEvent<EventArgs>() { Name = "Closed" };
+        public static PlaywrightEvent<EventArgs> Close { get; } = new PlaywrightEvent<EventArgs>() { Name = "Close" };
 
         /// <summary>
-        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IBrowserContext.BackgroundPage"/>.
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IChromiumBrowserContext.BackgroundPage"/>.
         /// </summary>
         public static PlaywrightEvent<PageEventArgs> BackgroundPage { get; } = new PlaywrightEvent<PageEventArgs>() { Name = "BackgroundPage" };
 
         /// <summary>
-        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IBrowserContext.ServiceWorker"/>.
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IChromiumBrowserContext.ServiceWorker"/>.
         /// </summary>
         public static PlaywrightEvent<WorkerEventArgs> ServiceWorker { get; } = new PlaywrightEvent<WorkerEventArgs>() { Name = "ServiceWorker" };
     }

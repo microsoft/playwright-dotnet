@@ -35,22 +35,6 @@ namespace PlaywrightSharp
         IBrowserContext[] Contexts { get; }
 
         /// <summary>
-        /// Starts tracing.
-        /// </summary>
-        /// <param name="page">Optional, if specified, tracing includes screenshots of the given page.</param>
-        /// <param name="screenshots">Gets or sets a value indicating whether Tracing should captures screenshots in the trace.</param>
-        /// <param name="path">A path to write the trace file to.</param>
-        /// <param name="categories">Specify custom categories to use instead of default.</param>
-        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
-        Task StartTracingAsync(IPage page = null, bool screenshots = false, string path = null, IEnumerable<string> categories = null);
-
-        /// <summary>
-        /// Stops tracing.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser, yielding the tracing result.</returns>
-        Task<string> StopTracingAsync();
-
-        /// <summary>
         /// Closes browser and all of its pages (if any were opened).
         /// The Browser object itself is considered to be disposed and cannot be used anymore.
         /// </summary>
@@ -122,6 +106,7 @@ namespace PlaywrightSharp
         /// <param name="httpCredentials">Credentials for HTTP authentication.</param>
         /// <param name="hasTouch">Specifies if viewport supports touch events. Defaults to false.</param>
         /// <param name="acceptDownloads">Whether to automatically download all the attachments. Defaults to false where all the downloads are canceled.</param>
+        /// <param name="ignoreHTTPSErrors"> Whether to ignore HTTPS errors during navigation. Defaults to false.</param>
         /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
         /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
@@ -149,6 +134,7 @@ namespace PlaywrightSharp
             Credentials httpCredentials = null,
             bool? hasTouch = null,
             bool? acceptDownloads = null,
+            bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null);
@@ -235,6 +221,7 @@ namespace PlaywrightSharp
         /// <param name="httpCredentials">Credentials for HTTP authentication.</param>
         /// <param name="hasTouch">Specifies if viewport supports touch events. Defaults to false.</param>
         /// <param name="acceptDownloads">Whether to automatically download all the attachments. Defaults to false where all the downloads are canceled.</param>
+        /// <param name="ignoreHTTPSErrors"> Whether to ignore HTTPS errors during navigation. Defaults to false.</param>
         /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
         /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
@@ -262,6 +249,7 @@ namespace PlaywrightSharp
             Credentials httpCredentials = null,
             bool? hasTouch = null,
             bool? acceptDownloads = null,
+            bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null);
@@ -272,11 +260,5 @@ namespace PlaywrightSharp
         /// <param name="options">Context options.</param>
         /// <returns>A <see cref="Task{IPage}"/> that completes when a new <see cref="IPage"/> is created.</returns>
         Task<IPage> NewPageAsync(BrowserContextOptions options);
-
-        /// <summary>
-        /// Creates a new browser session.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> that completes when the browser session was created, yielding the new session.</returns>
-        Task<ICDPSession> NewBrowserCDPSessionAsync();
     }
 }

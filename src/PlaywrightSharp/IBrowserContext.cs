@@ -28,22 +28,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// Raised when Browser context gets closed.
         /// </summary>
-        event EventHandler<EventArgs> Closed;
+        event EventHandler<EventArgs> Close;
 
         /// <summary>
         /// Raised when a new page is created in the Browser context.
         /// </summary>
         event EventHandler<PageEventArgs> Page;
-
-        /// <summary>
-        /// Raised when new background page is created in the context. Chromium only
-        /// </summary>
-        event EventHandler<PageEventArgs> BackgroundPage;
-
-        /// <summary>
-        /// Raised when new service worker is created in the context. Chromium only
-        /// </summary>
-        event EventHandler<WorkerEventArgs> ServiceWorker;
 
         /// <summary>
         /// This setting will change the default maximum time for all the methods accepting timeout option.
@@ -59,16 +49,6 @@ namespace PlaywrightSharp
         /// An array of all pages inside the browser context.
         /// </summary>
         IPage[] Pages { get; }
-
-        /// <summary>
-        /// All existing background pages in the context. Chromium Only.
-        /// </summary>
-        IPage[] BackgroundPages { get; }
-
-        /// <summary>
-        /// All existing service workers in the context. Chromium Only.
-        /// </summary>
-        IWorker[] ServiceWorkers { get; }
 
         /// <summary>
         /// Creates a new page in the browser context and optionally navigates it to the specified URL.
@@ -465,12 +445,5 @@ namespace PlaywrightSharp
         /// <param name="headers">Additional http headers to be sent with every request.</param>
         /// <returns>A <see cref="Task"/> that completes when the headers are set.</returns>
         Task SetExtraHttpHeadersAsync(Dictionary<string, string> headers);
-
-        /// <summary>
-        /// Creates a new browser session.
-        /// </summary>
-        /// <param name="page">Page to create a new session for.</param>
-        /// <returns>A <see cref="Task"/> that completes when the browser session was created, yielding the new session.</returns>
-        Task<ICDPSession> NewCDPSessionAsync(IPage page);
     }
 }

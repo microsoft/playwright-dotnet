@@ -53,7 +53,7 @@ namespace PlaywrightSharp.Tests.Browser
             var context = await browser.NewContextAsync();
             var closeTask = new TaskCompletionSource<bool>();
 
-            context.Closed += (sender, e) => closeTask.TrySetResult(true);
+            context.Close += (sender, e) => closeTask.TrySetResult(true);
 
             await TaskUtils.WhenAll(browser.CloseAsync(), closeTask.Task);
         }

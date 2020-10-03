@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace PlaywrightSharp
+namespace PlaywrightSharp.Chromium
 {
     /// <summary>
     /// See <see cref="ICDPSession.MessageReceived"/>.

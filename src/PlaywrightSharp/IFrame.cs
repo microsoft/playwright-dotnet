@@ -50,11 +50,6 @@ namespace PlaywrightSharp
         bool IsDetached { get; }
 
         /// <summary>
-        /// FrameID.
-        /// </summary>
-        string Id { get; set; }
-
-        /// <summary>
         /// Owner page.
         /// </summary>
         IPage Page { get; }

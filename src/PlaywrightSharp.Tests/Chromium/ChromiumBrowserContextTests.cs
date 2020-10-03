@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -41,15 +42,15 @@ namespace PlaywrightSharp.Tests.Chromium
                 Context.WaitForEvent(ContextEvent.ServiceWorker),
                 Page.GoToAsync(TestConstants.ServerUrl + "/serviceworkers/empty/sw.html"));
 
-            Assert.Single(Context.ServiceWorkers);
+            Assert.Single(((IChromiumBrowserContext)Context).ServiceWorkers);
 
             var (worker2, _) = await TaskUtils.WhenAll(
                 Context.WaitForEvent(ContextEvent.ServiceWorker),
                 Page.GoToAsync(TestConstants.CrossProcessUrl + "/serviceworkers/empty/sw.html"));
 
-            Assert.Equal(2, Context.ServiceWorkers.Length);
-            Assert.Contains(worker1.Worker, Context.ServiceWorkers);
-            Assert.Contains(worker2.Worker, Context.ServiceWorkers);
+            Assert.Equal(2, ((IChromiumBrowserContext)Context).ServiceWorkers.Length);
+            Assert.Contains(worker1.Worker, ((IChromiumBrowserContext)Context).ServiceWorkers);
+            Assert.Contains(worker2.Worker, ((IChromiumBrowserContext)Context).ServiceWorkers);
         }
 
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
@@ -60,7 +61,7 @@ namespace PlaywrightSharp.Tests.Chromium
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             bool serviceWorkerCreated = false;
-            Context.ServiceWorker += (sender, e) => serviceWorkerCreated = true;
+            ((IChromiumBrowserContext)Context).ServiceWorker += (sender, e) => serviceWorkerCreated = true;
 
             await Page.EvaluateAsync(@"() =>
             {
@@ -80,7 +81,7 @@ namespace PlaywrightSharp.Tests.Chromium
                 Page.GoToAsync(TestConstants.ServerUrl + "/serviceworkers/empty/sw.html"));
 
             var messages = new List<string>();
-            Context.Closed += (sender, e) => messages.Add("context");
+            Context.Close += (sender, e) => messages.Add("context");
             worker.Worker.Close += (sender, e) => messages.Add("worker");
 
             await Context.CloseAsync();

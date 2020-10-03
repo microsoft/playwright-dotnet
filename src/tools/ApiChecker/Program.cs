@@ -59,6 +59,11 @@ namespace ApiChecker
 
             if (playwrightSharpEntity == null)
             {
+                playwrightSharpEntity = assembly.GetType($"PlaywrightSharp.Chromium.{name}");
+            }
+
+            if (playwrightSharpEntity == null)
+            {
                 playwrightSharpEntity = assembly.GetType($"PlaywrightSharp.{name}EventArgs");
             }
 
@@ -369,6 +374,7 @@ namespace ApiChecker
                 "RegExp" => parameterType == typeof(Regex),
                 "EvaluationArgument" => parameterType == typeof(object),
                 "ElementHandle" => parameterType == typeof(IElementHandle),
+                "Page" => parameterType == typeof(IPage),
                 "Buffer" => parameterType == typeof(string) || parameterType == typeof(byte[]),
                 "Object" => parameterType != typeof(string),
                 "Serializable" => true,

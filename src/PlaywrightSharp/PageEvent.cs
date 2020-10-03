@@ -23,9 +23,9 @@ namespace PlaywrightSharp
         public static PlaywrightEvent<EventArgs> Crash { get; } = new PlaywrightEvent<EventArgs>() { Name = "Crash" };
 
         /// <summary>
-        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Closed"/>.
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Close"/>.
         /// </summary>
-        public static PlaywrightEvent<EventArgs> Closed { get; } = new PlaywrightEvent<EventArgs>() { Name = "Closed" };
+        public static PlaywrightEvent<EventArgs> Close { get; } = new PlaywrightEvent<EventArgs>() { Name = "Close" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Response"/>.

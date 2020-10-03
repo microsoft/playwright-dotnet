@@ -141,7 +141,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Raised when the page closes.
         /// </summary>
-        event EventHandler<EventArgs> Closed;
+        event EventHandler<EventArgs> Close;
 
         /// <summary>
         /// Raised when the page crashes.

@@ -6,7 +6,7 @@ using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
 
-namespace PlaywrightSharp
+namespace PlaywrightSharp.Chromium
 {
     /// <inheritdoc/>
     public class CDPSession : ChannelOwnerBase, IChannelOwner<CDPSession>, ICDPSession
