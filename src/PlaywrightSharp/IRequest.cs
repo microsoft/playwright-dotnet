@@ -24,7 +24,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Gets or sets the HTTP headers.
         /// </summary>
-        IDictionary<string, string> Headers { get; }
+        Dictionary<string, string> Headers { get; }
 
         /// <summary>
         /// Post data as string.

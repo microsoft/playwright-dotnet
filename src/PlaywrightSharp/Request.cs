@@ -17,7 +17,6 @@ namespace PlaywrightSharp
     {
         private readonly RequestChannel _channel;
         private readonly RequestInitializer _initializer;
-        private readonly Dictionary<string, string> _headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         internal Request(IChannelOwner parent, string guid, RequestInitializer initializer) : base(parent, guid)
         {
@@ -35,7 +34,7 @@ namespace PlaywrightSharp
             {
                 foreach (var kv in initializer.Headers)
                 {
-                    _headers[kv.Name] = kv.Value;
+                    Headers[kv.Name] = kv.Value;
                 }
             }
         }
@@ -53,7 +52,7 @@ namespace PlaywrightSharp
         public HttpMethod Method => _initializer.Method;
 
         /// <inheritdoc />
-        public IDictionary<string, string> Headers => _headers;
+        public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         /// <inheritdoc />
         public string PostData => PostDataBuffer == null ? null : Encoding.UTF8.GetString(PostDataBuffer);

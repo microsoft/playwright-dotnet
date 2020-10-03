@@ -34,9 +34,6 @@ namespace PlaywrightSharp
         IChannel<Browser> IChannelOwner<Browser>.Channel => _channel;
 
         /// <inheritdoc/>
-        public IEnumerable<IBrowserContext> BrowserContexts => BrowserContextsList.ToArray();
-
-        /// <inheritdoc/>
         public bool IsConnected { get; private set; }
 
         /// <inheritdoc/>

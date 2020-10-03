@@ -124,7 +124,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.RouteAsync("**/*", (route, request) =>
             {
                 var headers = new Dictionary<string, string>(route.Request.Headers) { ["foo"] = "bar" };
-                route.ContinueAsync(new RouteContinueOverrides { Headers = headers });
+                route.ContinueAsync(headers: headers);
             });
             await Page.GoToAsync(TestConstants.ServerUrl + "/rrredirect");
         }
@@ -139,7 +139,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             {
                 var headers = new Dictionary<string, string>(route.Request.Headers) { ["foo"] = "bar" };
                 headers.Remove("origin");
-                route.ContinueAsync(new RouteContinueOverrides { Headers = headers });
+                route.ContinueAsync(headers: headers);
             });
 
             var originRequestHeader = Server.WaitForRequest("/empty.html", request => request.Headers["origin"]);
@@ -597,14 +597,12 @@ namespace PlaywrightSharp.Tests.RequestInterception
                     return;
                 }
 
-                _ = route.FulfillAsync(new RouteFilfillResponse
-                {
-                    Status = HttpStatusCode.Redirect,
-                    Headers = new Dictionary<string, string>
+                _ = route.FulfillAsync(
+                    status: HttpStatusCode.Redirect,
+                    headers: new Dictionary<string, string>
                     {
                         ["location"] = "empty.html",
-                    },
-                });
+                    });
             });
 
             string text = await Page.EvaluateAsync<string>(@"async url => {
@@ -628,13 +626,11 @@ namespace PlaywrightSharp.Tests.RequestInterception
                     ? new Dictionary<string, string> { ["access-control-allow-origin"] = "*" }
                     : new Dictionary<string, string>();
 
-                _ = route.FulfillAsync(new RouteFilfillResponse
-                {
-                    ContentType = "application/json",
-                    Headers = headers,
-                    Status = HttpStatusCode.OK,
-                    Body = "[\"electric\", \"cars\"]",
-                });
+                _ = route.FulfillAsync(
+                    contentType: "application/json",
+                    headers: headers,
+                    status: HttpStatusCode.OK,
+                    body: "[\"electric\", \"cars\"]");
             });
 
             string[] resp = await Page.EvaluateAsync<string[]>(@"async () => {
@@ -661,13 +657,11 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.RouteAsync("**/cars*", (route, request) =>
             {
-                _ = route.FulfillAsync(new RouteFilfillResponse
-                {
-                    ContentType = "application/json",
-                    Headers = new Dictionary<string, string> { ["access-control-allow-origin"] = "*" },
-                    Status = HttpStatusCode.OK,
-                    Body = "[\"electric\", \"cars\"]",
-                });
+                _ = route.FulfillAsync(
+                    contentType: "application/json",
+                    headers: new Dictionary<string, string> { ["access-control-allow-origin"] = "*" },
+                    status: HttpStatusCode.OK,
+                    body: "[\"electric\", \"cars\"]");
             });
 
             string[] resp = await Page.EvaluateAsync<string[]>(@"async () => {
@@ -692,13 +686,11 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.RouteAsync("**/cars*", (route, request) =>
             {
-                _ = route.FulfillAsync(new RouteFilfillResponse
-                {
-                    ContentType = "application/json",
-                    Headers = new Dictionary<string, string> { ["access-control-allow-origin"] = "*" },
-                    Status = HttpStatusCode.OK,
-                    Body = $"[\"{ request.Method.ToString().ToUpper() }\", \"electric\", \"cars\"]",
-                });
+                _ = route.FulfillAsync(
+                    contentType: "application/json",
+                    headers: new Dictionary<string, string> { ["access-control-allow-origin"] = "*" },
+                    status: HttpStatusCode.OK,
+                    body: $"[\"{ request.Method.ToString().ToUpper() }\", \"electric\", \"cars\"]");
             });
 
             string[] resp = await Page.EvaluateAsync<string[]>(@"async () => {

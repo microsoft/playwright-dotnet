@@ -44,22 +44,14 @@ namespace PlaywrightSharp
         public string Url => _initializer.Url;
 
         /// <inheritdoc/>
-        IPage IWorker.Page => Page;
-
-        /// <inheritdoc cref="IWorker.Page"/>
-        public Page Page { get; internal set; }
-
-        /// <inheritdoc/>
-        IBrowserContext IWorker.BrowserContext => BrowserContext;
-
-        /// <inheritdoc cref="IWorker.BrowserContext"/>
-        public BrowserContext BrowserContext { get; internal set; }
-
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>
         IChannel<Worker> IChannelOwner<Worker>.Channel => _channel;
+
+        internal Page Page { get; set; }
+
+        internal BrowserContext BrowserContext { get; set; }
 
         /// <inheritdoc />
         public async Task<IJSHandle> EvaluateHandleAsync(string pageFunction)

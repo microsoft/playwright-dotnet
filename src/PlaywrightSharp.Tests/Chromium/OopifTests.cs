@@ -318,7 +318,7 @@ namespace PlaywrightSharp.Tests.Chromium
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
             var page = await browser.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
-            await page.RouteAsync("**/*", (route, _) => route.FulfillAsync(new RouteFilfillResponse { Body = "YO, GOOGLE.COM" }));
+            await page.RouteAsync("**/*", (route, _) => route.FulfillAsync(body: "YO, GOOGLE.COM"));
 
             await page.EvaluateAsync(@"() => {
               const frame = document.createElement('iframe');

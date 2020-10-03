@@ -16,16 +16,6 @@ namespace PlaywrightSharp
         event EventHandler<EventArgs> Close;
 
         /// <summary>
-        /// Get the page that the service worker belongs to.
-        /// </summary>
-        IPage Page { get; }
-
-        /// <summary>
-        /// Get the browser context that the service worker belongs to.
-        /// </summary>
-        IBrowserContext BrowserContext { get; }
-
-        /// <summary>
         /// Gets the Worker URL.
         /// </summary>
         string Url { get; }

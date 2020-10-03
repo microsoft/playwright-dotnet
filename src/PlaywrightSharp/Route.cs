@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
@@ -39,11 +40,25 @@ namespace PlaywrightSharp
         /// <summary>
         /// Fulfills route's request with given response.
         /// </summary>
-        /// <param name="response">Response that will fulfill this route's request.</param>
+        /// <param name="status">Status code of the response.</param>
+        /// <param name="body">Optional response body as text.</param>
+        /// <param name="headers">Optional response headers.</param>
+        /// <param name="contentType">If set, equals to setting Content-Type response header.</param>
+        /// <param name="bodyContent">Optional response body as binary.</param>
+        /// <param name="path">Optional file path to respond with. The content type will be inferred from file extension.
+        /// If path is a relative path, then it is resolved relative to current working directory.</param>
         /// <returns>A <see cref="Task"/> that completes when the message was sent.</returns>
-        public Task FulfillAsync(RouteFilfillResponse response)
+        public Task FulfillAsync(
+            HttpStatusCode? status = null,
+            string body = null,
+            Dictionary<string, string> headers = null,
+            string contentType = null,
+            byte[] bodyContent = null,
+            string path = null)
         {
-            var normalized = NormalizeFulfillParameters(response ?? new RouteFilfillResponse());
+#pragma warning disable CA1062 // Validate arguments of public methods
+            var normalized = NormalizeFulfillParameters(status, headers, contentType, body, bodyContent, path);
+#pragma warning restore CA1062 // Validate arguments of public methods
             return _channel.FulfillAsync(normalized);
         }
 
@@ -57,65 +72,74 @@ namespace PlaywrightSharp
         /// <summary>
         /// Continues route's request with optional overrides.
         /// </summary>
-        /// <param name="overrides">Optional request overrides.</param>
+        /// <param name="method">HTTP method.</param>
+        /// <param name="postData">Post data.</param>
+        /// <param name="headers">HTTP headers.</param>
         /// <returns>A <see cref="Task"/> that completes when the message was sent.</returns>
-        public Task ContinueAsync(RouteContinueOverrides overrides = null) => _channel.ContinueAsync(overrides);
+        public Task ContinueAsync(HttpMethod method = null, string postData = null, Dictionary<string, string> headers = null)
+            => _channel.ContinueAsync(method, postData, headers);
 
-        private NormalizedFulfillResponse NormalizeFulfillParameters(RouteFilfillResponse response)
+        private NormalizedFulfillResponse NormalizeFulfillParameters(
+            HttpStatusCode? status,
+            Dictionary<string, string> headers,
+            string contentType,
+            string body,
+            byte[] bodyContent,
+            string path)
         {
-            string body = string.Empty;
+            string resultBody = string.Empty;
             bool isBase64 = false;
             int length = 0;
 
-            if (!string.IsNullOrEmpty(response.Path))
+            if (!string.IsNullOrEmpty(path))
             {
-                byte[] content = File.ReadAllBytes(response.Path);
-                body = Convert.ToBase64String(content);
+                byte[] content = File.ReadAllBytes(path);
+                resultBody = Convert.ToBase64String(content);
                 isBase64 = true;
-                length = body.Length;
+                length = resultBody.Length;
             }
-            else if (!string.IsNullOrEmpty(response.Body))
+            else if (!string.IsNullOrEmpty(body))
             {
-                body = response.Body;
+                resultBody = body;
                 isBase64 = false;
-                length = body.Length;
+                length = resultBody.Length;
             }
-            else if (response.BodyContent != null)
+            else if (bodyContent != null)
             {
-                body = Convert.ToBase64String(response.BodyContent);
+                resultBody = Convert.ToBase64String(bodyContent);
                 isBase64 = true;
-                length = body.Length;
+                length = resultBody.Length;
             }
 
-            var headers = new Dictionary<string, string>();
+            var resultHeaders = new Dictionary<string, string>();
 
-            if (response.Headers != null)
+            if (headers != null)
             {
-                foreach (var header in response.Headers)
+                foreach (var header in headers)
                 {
-                    headers[header.Key.ToLower()] = header.Value;
+                    resultHeaders[header.Key.ToLower()] = header.Value;
                 }
             }
 
-            if (!string.IsNullOrEmpty(response.ContentType))
+            if (!string.IsNullOrEmpty(contentType))
             {
-                headers["content-type'"] = response.ContentType;
+                resultHeaders["content-type'"] = contentType;
             }
-            else if (!string.IsNullOrEmpty(response.Path))
+            else if (!string.IsNullOrEmpty(path))
             {
-                headers["content-type"] = response.Path.GetContentType();
+                resultHeaders["content-type"] = path.GetContentType();
             }
 
-            if (length > 0 && !headers.ContainsKey("content-length"))
+            if (length > 0 && !resultHeaders.ContainsKey("content-length"))
             {
-                headers["content-length"] = length.ToString();
+                resultHeaders["content-length"] = length.ToString();
             }
 
             return new NormalizedFulfillResponse
             {
-                Status = (int)(response.Status ?? HttpStatusCode.OK),
-                Headers = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
-                Body = body,
+                Status = (int)(status ?? HttpStatusCode.OK),
+                Headers = resultHeaders.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
+                Body = resultBody,
                 IsBase64 = isBase64,
             };
         }

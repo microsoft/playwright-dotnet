@@ -20,12 +20,6 @@ namespace PlaywrightSharp
         public event EventHandler Disconnected;
 
         /// <summary>
-        /// Returns an array of all open browser contexts.
-        /// In a newly created browser, this will return a single instance of <seealso cref="IBrowserContext"/>.
-        /// </summary>
-        IEnumerable<IBrowserContext> BrowserContexts { get; }
-
-        /// <summary>
         /// Returns the browser version.
         /// </summary>
         string Version { get; }

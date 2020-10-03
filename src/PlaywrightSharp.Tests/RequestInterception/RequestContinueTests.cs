@@ -39,7 +39,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.RouteAsync("**/*", (route, request) =>
             {
                 var headers = new Dictionary<string, string>(request.Headers) { ["FOO"] = "bar" };
-                route.ContinueAsync(new RouteContinueOverrides { Headers = headers });
+                route.ContinueAsync(headers: headers);
             });
             await Page.GoToAsync(TestConstants.EmptyPage);
             var requestTask = Server.WaitForRequest("/sleep.zzz", request => request.Headers["foo"]);
@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         public async Task ShouldAmendMethodOnMainRequest()
         {
             var methodTask = Server.WaitForRequest("/empty.html", r => r.Method);
-            await Page.RouteAsync("**/*", (route, request) => route.ContinueAsync(new RouteContinueOverrides { Method = HttpMethod.Post }));
+            await Page.RouteAsync("**/*", (route, request) => route.ContinueAsync(HttpMethod.Post));
             await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Equal("POST", await methodTask);
         }
@@ -71,7 +71,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.RouteAsync("**/*", (route, request) =>
             {
-                route.ContinueAsync(new RouteContinueOverrides { PostData = "doggo" });
+                route.ContinueAsync(postData: "doggo");
             });
             var requestTask = Server.WaitForRequest("/sleep.zzz", request =>
             {
