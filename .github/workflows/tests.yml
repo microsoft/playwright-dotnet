@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    name: Chromium on MacOS
+    name: ${{ matrix.product }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -19,6 +19,7 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-18.04]
     steps:
       - uses: actions/checkout@v2
+      - uses: microsoft/playwright-github-action@v1
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1.6.0
         with:
