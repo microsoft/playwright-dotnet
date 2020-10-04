@@ -111,13 +111,13 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await using var context = await Browser.NewContextAsync();
             await context.RouteAsync("**/empty.html", (route, _) =>
             {
-                route.FulfillAsync(new RouteFilfillResponse { Status = HttpStatusCode.OK, Body = "context" });
+                route.FulfillAsync(HttpStatusCode.OK, "context");
             });
 
             var page = await context.NewPageAsync();
             await page.RouteAsync("**/empty.html", (route, _) =>
             {
-                route.FulfillAsync(new RouteFilfillResponse { Status = HttpStatusCode.OK, Body = "page" });
+                route.FulfillAsync(HttpStatusCode.OK, "page");
             });
 
             var response = await page.GoToAsync(TestConstants.EmptyPage);
@@ -133,13 +133,13 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await using var context = await Browser.NewContextAsync();
             await context.RouteAsync("**/empty.html", (route, _) =>
             {
-                route.FulfillAsync(new RouteFilfillResponse { Status = HttpStatusCode.OK, Body = "context" });
+                route.FulfillAsync(HttpStatusCode.OK, "context");
             });
 
             var page = await context.NewPageAsync();
             await page.RouteAsync("**/non-empty.html", (route, _) =>
             {
-                route.FulfillAsync(new RouteFilfillResponse { Status = HttpStatusCode.OK, Body = "page" });
+                route.FulfillAsync(HttpStatusCode.OK, "page");
             });
 
             var response = await page.GoToAsync(TestConstants.EmptyPage);

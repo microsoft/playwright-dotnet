@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using PlaywrightSharp.Transport.Protocol;
@@ -28,26 +29,23 @@ namespace PlaywrightSharp.Transport.Channels
                 "fulfill",
                 response);
 
-        public Task ContinueAsync(RouteContinueOverrides overrides = null)
+        public Task ContinueAsync(HttpMethod method, string postData, Dictionary<string, string> headers)
         {
             var args = new Dictionary<string, object>();
 
-            if (overrides != null)
+            if (method != null)
             {
-                if (overrides.Method != null)
-                {
-                    args["method"] = overrides.Method;
-                }
+                args["method"] = method;
+            }
 
-                if (!string.IsNullOrEmpty(overrides.PostData))
-                {
-                    args["postData"] = Convert.ToBase64String(Encoding.UTF8.GetBytes(overrides.PostData));
-                }
+            if (!string.IsNullOrEmpty(postData))
+            {
+                args["postData"] = Convert.ToBase64String(Encoding.UTF8.GetBytes(postData));
+            }
 
-                if (overrides.Headers != null)
-                {
-                    args["headers"] = overrides.Headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray();
-                }
+            if (headers != null)
+            {
+                args["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray();
             }
 
             return Connection.SendMessageToServer(

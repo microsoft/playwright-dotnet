@@ -24,13 +24,13 @@ namespace PlaywrightSharp.Tests.BrowserContext
         public async Task ShouldCreateNewContext()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
-            Assert.Empty(browser.BrowserContexts);
+            Assert.Empty(browser.Contexts);
             await using var context = await browser.NewContextAsync();
-            Assert.Single(browser.BrowserContexts);
-            Assert.Contains(context, browser.BrowserContexts);
+            Assert.Single(browser.Contexts);
+            Assert.Contains(context, browser.Contexts);
             Assert.Contains(context, browser.Contexts);
             await context.CloseAsync();
-            Assert.Empty(browser.BrowserContexts);
+            Assert.Empty(browser.Contexts);
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>
@@ -99,7 +99,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             // Cleanup contexts.
             await TaskUtils.WhenAll(context1.CloseAsync(), context2.CloseAsync());
-            Assert.Empty(browser.BrowserContexts);
+            Assert.Empty(browser.Contexts);
         }
 
         ///<playwright-file>browsercontext.spec.js</playwright-file>

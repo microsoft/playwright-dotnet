@@ -103,9 +103,6 @@ namespace PlaywrightSharp
         IChannel<BrowserContext> IChannelOwner<BrowserContext>.Channel => _channel;
 
         /// <inheritdoc />
-        public BrowserContextOptions Options { get; }
-
-        /// <inheritdoc />
         public IPage[] Pages => PagesList.ToArray();
 
         /// <inheritdoc />
@@ -113,9 +110,6 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public IWorker[] ServiceWorkers => ServiceWorkersList.ToArray();
-
-        /// <inheritdoc />
-        public Browser Browser { get; internal set; }
 
         /// <inheritdoc />
         public int DefaultTimeout
@@ -138,6 +132,8 @@ namespace PlaywrightSharp
                 _ = _channel.SetDefaultNavigationTimeoutNoReplyAsync(value);
             }
         }
+
+        internal Browser Browser { get; set; }
 
         internal Page OwnerPage { get; set; }
 

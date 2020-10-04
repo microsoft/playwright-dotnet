@@ -64,6 +64,13 @@ namespace ApiChecker
 
             if (playwrightSharpEntity != null)
             {
+                var membersQueue = new List<object>();
+                membersQueue.AddRange(playwrightSharpEntity.GetProperties());
+                membersQueue.AddRange(playwrightSharpEntity.GetEvents());
+                membersQueue.AddRange(playwrightSharpEntity.GetMethods().Where(m =>
+                    !m.IsSpecialName &&
+                    !new[] { "GetType", "ToString", "Equals", "GetHashCode" }.Contains(m.Name)));
+
                 report.AppendLine("<li>");
                 report.AppendLine($"{name}: found as {playwrightSharpEntity.Name}");
 
@@ -71,7 +78,14 @@ namespace ApiChecker
 
                 foreach (var kv in entity.Members)
                 {
-                    EvaluateMember(kv.Key, kv.Value, playwrightSharpEntity, report);
+                    EvaluateMember(kv.Key, kv.Value, playwrightSharpEntity, report, membersQueue);
+                }
+
+                foreach (object memberInPLaywrightSharp in membersQueue)
+                {
+                    report.AppendLine("<li style='color: blue'>");
+                    report.AppendLine($"{memberInPLaywrightSharp} FOUND IN PLAYWRIGHT SHARP");
+                    report.AppendLine("</li>");
                 }
 
                 report.AppendLine("</ul>");
@@ -86,20 +100,30 @@ namespace ApiChecker
             }
         }
 
-        private static void EvaluateMember(string memberName, PlaywrightMember member, Type playwrightSharpEntity, StringBuilder report)
+        private static void EvaluateMember(
+            string memberName,
+            PlaywrightMember member,
+            Type playwrightSharpEntity,
+            StringBuilder report,
+            List<object> membersQueue)
         {
             switch (member.Kind)
             {
                 case "event":
-                    EvaluateEvent(memberName, playwrightSharpEntity, report);
+                    EvaluateEvent(memberName, playwrightSharpEntity, report, membersQueue);
                     return;
                 case "method":
-                    EvaluateMethod(memberName, member, playwrightSharpEntity, report);
+                    EvaluateMethod(memberName, member, playwrightSharpEntity, report, membersQueue);
                     return;
             }
         }
 
-        private static void EvaluateMethod(string memberName, PlaywrightMember member, Type playwrightSharpEntity, StringBuilder report)
+        private static void EvaluateMethod(
+            string memberName,
+            PlaywrightMember member,
+            Type playwrightSharpEntity,
+            StringBuilder report,
+            List<object> membersQueue)
         {
             memberName = TranslateMethodName(memberName);
             var typeToCheck = playwrightSharpEntity;
@@ -143,6 +167,8 @@ namespace ApiChecker
 
             if (playwrightSharpMethod != null)
             {
+                membersQueue.Remove(playwrightSharpMethod);
+
                 report.AppendLine("<li>");
                 report.AppendLine($"{memberName}: found as {playwrightSharpMethod.Name}");
 
@@ -162,12 +188,12 @@ namespace ApiChecker
                         {
                             foreach (var arg in kv.Value.Type.Properties)
                             {
-                                EvaluateArgument(arg.Key, arg.Value, typeToCheck, playwrightSharpMethod, report);
+                                EvaluateArgument(arg.Key, arg.Value, typeToCheck, playwrightSharpMethod, report, membersQueue);
                             }
                         }
                         else
                         {
-                            EvaluateArgument(kv.Key, kv.Value, typeToCheck, playwrightSharpMethod, report);
+                            EvaluateArgument(kv.Key, kv.Value, typeToCheck, playwrightSharpMethod, report, membersQueue);
                         }
                     }
                 }
@@ -187,6 +213,7 @@ namespace ApiChecker
 
                 if (playwrightSharpProperty != null)
                 {
+                    membersQueue.Remove(playwrightSharpProperty);
                     report.AppendLine("<li>");
                     report.AppendLine($"{memberName}: found as as Property {playwrightSharpProperty.Name}");
                     report.AppendLine("</li>");
@@ -215,7 +242,13 @@ namespace ApiChecker
                 .Replace("$", "querySelector");
         }
 
-        private static void EvaluateArgument(string name, PlaywrightArgument arg, Type playwrightSharpEntity, MethodInfo playwrightSharpMethod, StringBuilder report)
+        private static void EvaluateArgument(
+            string name,
+            PlaywrightArgument arg,
+            Type playwrightSharpEntity,
+            MethodInfo playwrightSharpMethod,
+            StringBuilder report,
+            List<object> membersQueue)
         {
             foreach (string type in arg.Type.Name.Split("|").Where(t => t != "null"))
             {
@@ -232,6 +265,7 @@ namespace ApiChecker
 
                         if (overrideMethod != null)
                         {
+                            membersQueue.Remove(overrideMethod);
                             playwrightSharpArgument = overrideMethod.GetParameters().FirstOrDefault(p => IsParameterNameMatch(p.Name, name));
                             report.AppendLine("<li>");
                             report.AppendLine($"{name} ({type.ToHtml()}): found as {playwrightSharpArgument.Name} ({playwrightSharpArgument.ParameterType})");
@@ -271,6 +305,7 @@ namespace ApiChecker
 
                     if (overrideMethod != null)
                     {
+                        membersQueue.Remove(overrideMethod);
                         playwrightSharpArgument = overrideMethod.GetParameters().FirstOrDefault(p => IsParameterNameMatch(p.Name, name));
                         report.AppendLine("<li>");
                         report.AppendLine($"{name} ({type.ToHtml()}): found as {playwrightSharpArgument.Name} ({playwrightSharpArgument.ParameterType})");
@@ -367,12 +402,18 @@ namespace ApiChecker
             }
         }
 
-        private static void EvaluateEvent(string memberName, Type playwrightSharpEntity, StringBuilder report)
+        private static void EvaluateEvent(
+            string memberName,
+            Type playwrightSharpEntity,
+            StringBuilder report,
+            List<object> membersQueue)
         {
             var playwrightSharpEvent = playwrightSharpEntity.GetEvents().FirstOrDefault(e => e.Name.ToLower() == memberName.ToLower());
 
             if (playwrightSharpEvent != null)
             {
+                membersQueue.Remove(playwrightSharpEvent);
+
                 report.AppendLine("<li>");
                 report.AppendLine($"{memberName}: found as {playwrightSharpEvent.Name}");
                 report.AppendLine("</li>");
