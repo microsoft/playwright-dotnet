@@ -44,4 +44,3 @@ jobs:
         with:
           name: TestResult.xml
           path: ./src/PlaywrightSharp.Tests/TestResults/TestResults.xml
- 
