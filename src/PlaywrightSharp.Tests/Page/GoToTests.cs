@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests.Page
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithFileURL()
         {
-            string fileurl = "file://" + TestUtils.GetWebServerFile(Path.Combine("frames", "two-frames.html")).Replace("\\", "/");
+            string fileurl = new Uri(TestUtils.GetWebServerFile(Path.Combine("frames", "two-frames.html"))).AbsoluteUri;
             await Page.GoToAsync(fileurl);
             Assert.Equal(fileurl.ToLower(), Page.Url.ToLower());
             Assert.Equal(3, Page.Frames.Length);
