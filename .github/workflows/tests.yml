@@ -38,3 +38,34 @@ jobs:
         with:
           name: TestResult.xml
           path: ./src/PlaywrightSharp.Tests/TestResults/TestResults.xml
+  test_linux:
+    name: ${{ matrix.product }} on ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        product: [CHROMIUM, FIREFOX, WEBKIT]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: microsoft/playwright-github-action@v1
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1.6.0
+        with:
+          dotnet-version: 3.1.100
+      - name: Create Certificate
+        run: |
+          dotnet dev-certs https --clean
+          dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
+      - uses: microsoft/playwright-github-action@v1
+      - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- bash -c "ulimit -c unlimited && npx test-runner test/ --jobs=1 --forbid-only --timeout=30000 --global-timeout=5400000 --retries=3 --reporter=dot,json"
+      - name: Linux setup
+      - name: Run tests
+        env:
+          PRODUCT: ${{ matrix.product }}
+        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger "trx;LogFileName=TestResults.xml"
+      - name: Test results
+        uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: TestResult.xml
+          path: ./src/PlaywrightSharp.Tests/TestResults/TestResults.xml
