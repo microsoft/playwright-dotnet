@@ -1,0 +1,3030 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Interface IElementHandle
+   | Playwright Sharp </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Interface IElementHandle
+   | Playwright Sharp ">
+    <meta name="generator" content="docfx 2.45.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="PlaywrightSharp.IElementHandle">
+  
+  
+  <h1 id="PlaywrightSharp_IElementHandle" data-uid="PlaywrightSharp.IElementHandle" class="text-break">Interface IElementHandle
+  </h1>
+  <div class="markdown level0 summary"><p>It represents an in-page DOM element.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="PlaywrightSharp.IJSHandle.html#PlaywrightSharp_IJSHandle_EvaluateHandleAsync_System_String_">IJSHandle.EvaluateHandleAsync(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.IJSHandle.html#PlaywrightSharp_IJSHandle_EvaluateHandleAsync_System_String_System_Object_">IJSHandle.EvaluateHandleAsync(String, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.IJSHandle.html#PlaywrightSharp_IJSHandle_EvaluateAsync__1_System_String_">IJSHandle.EvaluateAsync&lt;T&gt;(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.IJSHandle.html#PlaywrightSharp_IJSHandle_EvaluateAsync_System_String_">IJSHandle.EvaluateAsync(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.IJSHandle.html#PlaywrightSharp_IJSHandle_EvaluateAsync__1_System_String_System_Object_">IJSHandle.EvaluateAsync&lt;T&gt;(String, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.IJSHandle.html#PlaywrightSharp_IJSHandle_EvaluateAsync_System_String_System_Object_">IJSHandle.EvaluateAsync(String, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.IJSHandle.html#PlaywrightSharp_IJSHandle_GetJsonValueAsync__1">IJSHandle.GetJsonValueAsync&lt;T&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.IJSHandle.html#PlaywrightSharp_IJSHandle_GetPropertyAsync_System_String_">IJSHandle.GetPropertyAsync(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.IJSHandle.html#PlaywrightSharp_IJSHandle_GetPropertiesAsync">IJSHandle.GetPropertiesAsync()</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.IJSHandle.html#PlaywrightSharp_IJSHandle_DisposeAsync">IJSHandle.DisposeAsync()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="PlaywrightSharp.html">PlaywrightSharp</a></h6>
+  <h6><strong>Assembly</strong>: PlaywrightSharp.dll</h6>
+  <h5 id="PlaywrightSharp_IElementHandle_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IElementHandle : IJSHandle</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_CheckAsync_System_Nullable_System_Int32__System_Boolean_System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.CheckAsync(System.Nullable%7BSystem.Int32%7D%2CSystem.Boolean%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L544">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_CheckAsync_" data-uid="PlaywrightSharp.IElementHandle.CheckAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_CheckAsync_System_Nullable_System_Int32__System_Boolean_System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.CheckAsync(System.Nullable{System.Int32},System.Boolean,System.Nullable{System.Boolean})">CheckAsync(Nullable&lt;Int32&gt;, Boolean, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>This method fetches an element with selector, if element is not already checked, it scrolls it into view if needed, and then uses <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_ClickAsync_System_String_System_Int32_PlaywrightSharp_Input_MouseButton_System_Int32_PlaywrightSharp_Input_Modifier___System_Nullable_Point__System_Nullable_System_Int32__System_Boolean_System_Nullable_System_Boolean__">ClickAsync(String, Int32, MouseButton, Int32, Modifier[], Nullable&lt;Point&gt;, Nullable&lt;Int32&gt;, Boolean, Nullable&lt;Boolean&gt;)</a> to click in the center of the element.
+If there's no element matching selector, the method waits until a matching element appears in the DOM.
+If the element is detached during the actionability checks, the action is retried.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task CheckAsync(int? timeout = null, bool force = false, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">force</span></td>
+        <td><p>Whether to pass the accionability checks.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the element is successfully clicked.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_ClickAsync_System_Int32_PlaywrightSharp_Input_MouseButton_System_Int32_PlaywrightSharp_Input_Modifier___System_Nullable_Point__System_Nullable_System_Int32__System_Boolean_System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.ClickAsync(System.Int32%2CPlaywrightSharp.Input.MouseButton%2CSystem.Int32%2CPlaywrightSharp.Input.Modifier%5B%5D%2CSystem.Nullable%7BPoint%7D%2CSystem.Nullable%7BSystem.Int32%7D%2CSystem.Boolean%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L200">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_ClickAsync_" data-uid="PlaywrightSharp.IElementHandle.ClickAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_ClickAsync_System_Int32_PlaywrightSharp_Input_MouseButton_System_Int32_PlaywrightSharp_Input_Modifier___System_Nullable_Point__System_Nullable_System_Int32__System_Boolean_System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.ClickAsync(System.Int32,PlaywrightSharp.Input.MouseButton,System.Int32,PlaywrightSharp.Input.Modifier[],System.Nullable{Point},System.Nullable{System.Int32},System.Boolean,System.Nullable{System.Boolean})">ClickAsync(Int32, MouseButton, Int32, Modifier[], Nullable&lt;Point&gt;, Nullable&lt;Int32&gt;, Boolean, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>Scrolls element into view if needed, and then uses <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_Mouse">Mouse</a> to click in the center of the element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task ClickAsync(int delay = 0, MouseButton button = MouseButton.Left, int clickCount = 1, Modifier[] modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">delay</span></td>
+        <td><p>Time to wait between <code>mousedown</code> and <code>mouseup</code> in milliseconds. Defaults to 0.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.Input.MouseButton.html">MouseButton</a></td>
+        <td><span class="parametername">button</span></td>
+        <td><p>Button to click. Details to <a class="xref" href="PlaywrightSharp.Input.MouseButton.html#PlaywrightSharp_Input_MouseButton_Left">Left</a>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">clickCount</span></td>
+        <td><p>Click count. Defaults to 1.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.Input.Modifier.html">Modifier</a>[]</td>
+        <td><span class="parametername">modifiers</span></td>
+        <td><p>Modifier keys to press. Ensures that only these modifiers are pressed during the click, and then restores current modifiers back. If not specified, currently pressed modifiers are used.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">Point</span>&gt;</td>
+        <td><span class="parametername">position</span></td>
+        <td><p>A point to click relative to the top-left corner of element padding box. If not specified, clicks to some visible point of the element.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">force</span></td>
+        <td><p>Whether to pass the accionability checks.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the message is confirmed by the browser.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_DblClickAsync_System_Int32_PlaywrightSharp_Input_MouseButton_PlaywrightSharp_Input_Modifier___System_Nullable_Point__System_Nullable_System_Int32__System_Boolean_System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.DblClickAsync(System.Int32%2CPlaywrightSharp.Input.MouseButton%2CPlaywrightSharp.Input.Modifier%5B%5D%2CSystem.Nullable%7BPoint%7D%2CSystem.Nullable%7BSystem.Int32%7D%2CSystem.Boolean%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L224">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_DblClickAsync_" data-uid="PlaywrightSharp.IElementHandle.DblClickAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_DblClickAsync_System_Int32_PlaywrightSharp_Input_MouseButton_PlaywrightSharp_Input_Modifier___System_Nullable_Point__System_Nullable_System_Int32__System_Boolean_System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.DblClickAsync(System.Int32,PlaywrightSharp.Input.MouseButton,PlaywrightSharp.Input.Modifier[],System.Nullable{Point},System.Nullable{System.Int32},System.Boolean,System.Nullable{System.Boolean})">DblClickAsync(Int32, MouseButton, Modifier[], Nullable&lt;Point&gt;, Nullable&lt;Int32&gt;, Boolean, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>Scrolls element into view if needed, and then uses <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_Mouse">Mouse</a> to double click in the center of the element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task DblClickAsync(int delay = 0, MouseButton button = MouseButton.Left, Modifier[] modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">delay</span></td>
+        <td><p>Time to wait between <code>mousedown</code> and <code>mouseup</code> in milliseconds. Defaults to 0.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.Input.MouseButton.html">MouseButton</a></td>
+        <td><span class="parametername">button</span></td>
+        <td><p>Button to click. Details to <a class="xref" href="PlaywrightSharp.Input.MouseButton.html#PlaywrightSharp_Input_MouseButton_Left">Left</a>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.Input.Modifier.html">Modifier</a>[]</td>
+        <td><span class="parametername">modifiers</span></td>
+        <td><p>Modifier keys to press. Ensures that only these modifiers are pressed during the click, and then restores current modifiers back. If not specified, currently pressed modifiers are used.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">Point</span>&gt;</td>
+        <td><span class="parametername">position</span></td>
+        <td><p>A point to click relative to the top-left corner of element padding box. If not specified, clicks to some visible point of the element.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">force</span></td>
+        <td><p>Whether to pass the accionability checks.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the element is successfully double clicked.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_DispatchEventAsync_System_String_System_Object_System_Nullable_System_Int32__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.DispatchEventAsync(System.String%2CSystem.Object%2CSystem.Nullable%7BSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L47">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_DispatchEventAsync_" data-uid="PlaywrightSharp.IElementHandle.DispatchEventAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_DispatchEventAsync_System_String_System_Object_System_Nullable_System_Int32__" data-uid="PlaywrightSharp.IElementHandle.DispatchEventAsync(System.String,System.Object,System.Nullable{System.Int32})">DispatchEventAsync(String, Object, Nullable&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"><p>Under the hood, it creates an instance of an event based on the given type, initializes it with eventInit properties and dispatches it on the element.
+Events are composed, cancelable and bubble by default.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task DispatchEventAsync(string type, object eventInit = null, int? timeout = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">type</span></td>
+        <td><p>DOM event type: &quot;click&quot;, &quot;dragstart&quot;, etc.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">eventInit</span></td>
+        <td><p>Event-specific initialization properties.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+The default value can be changed by using the <a class="xref" href="PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_DefaultTimeout">DefaultTimeout</a> or <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the event was dispatched.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_EvalOnSelectorAllAsync_System_String_System_String_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.EvalOnSelectorAllAsync(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L368">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_EvalOnSelectorAllAsync_" data-uid="PlaywrightSharp.IElementHandle.EvalOnSelectorAllAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_EvalOnSelectorAllAsync_System_String_System_String_" data-uid="PlaywrightSharp.IElementHandle.EvalOnSelectorAllAsync(System.String,System.String)">EvalOnSelectorAllAsync(String, String)</h4>
+  <div class="markdown level1 summary"><p>This method runs <code>Array.from(document.querySelectorAll(selector))</code> within the page and passes it as the first argument to <code data-dev-comment-type="paramref" class="paramref">pageFunction</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;JsonElement? &gt; EvalOnSelectorAllAsync(string selector, string pageFunction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">selector</span></td>
+        <td><p>A selector to query element for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">pageFunction</span></td>
+        <td><p>Script to be evaluated in browser context.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.Nullable</span>&lt;<span class="xref">JsonElement</span>&gt;&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the script finishes or the promise is resolved, yielding the result of the script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_IElementHandle_EvalOnSelectorAllAsync_System_String_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_EvalOnSelectorAllAsync_System_String_System_String_System_Object_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.EvalOnSelectorAllAsync(System.String%2CSystem.String%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L380">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_EvalOnSelectorAllAsync_" data-uid="PlaywrightSharp.IElementHandle.EvalOnSelectorAllAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_EvalOnSelectorAllAsync_System_String_System_String_System_Object_" data-uid="PlaywrightSharp.IElementHandle.EvalOnSelectorAllAsync(System.String,System.String,System.Object)">EvalOnSelectorAllAsync(String, String, Object)</h4>
+  <div class="markdown level1 summary"><p>This method runs <code>Array.from(document.querySelectorAll(selector))</code> within the page and passes it as the first argument to <code data-dev-comment-type="paramref" class="paramref">pageFunction</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;JsonElement? &gt; EvalOnSelectorAllAsync(string selector, string pageFunction, object arg)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">selector</span></td>
+        <td><p>A selector to query element for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">pageFunction</span></td>
+        <td><p>Script to be evaluated in browser context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">arg</span></td>
+        <td><p>Arguments to pass to script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.Nullable</span>&lt;<span class="xref">JsonElement</span>&gt;&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the script finishes or the promise is resolved, yielding the result of the script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_IElementHandle_EvalOnSelectorAllAsync_System_String_System_String_System_Object__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_EvalOnSelectorAllAsync__1_System_String_System_String_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.EvalOnSelectorAllAsync%60%601(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L392">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_EvalOnSelectorAllAsync_" data-uid="PlaywrightSharp.IElementHandle.EvalOnSelectorAllAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_EvalOnSelectorAllAsync__1_System_String_System_String_" data-uid="PlaywrightSharp.IElementHandle.EvalOnSelectorAllAsync``1(System.String,System.String)">EvalOnSelectorAllAsync&lt;T&gt;(String, String)</h4>
+  <div class="markdown level1 summary"><p>This method runs <code>Array.from(document.querySelectorAll(selector))</code> within the element and passes it as the first argument to <code data-dev-comment-type="paramref" class="paramref">pageFunction</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;T&gt; EvalOnSelectorAllAsync&lt;T&gt;(string selector, string pageFunction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">selector</span></td>
+        <td><p>A selector to query element for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">pageFunction</span></td>
+        <td><p>Script to be evaluated in browser context.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;T&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the script finishes or the promise is resolved, yielding the result of the script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Result type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_IElementHandle_EvalOnSelectorAllAsync__1_System_String_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_EvalOnSelectorAllAsync__1_System_String_System_String_System_Object_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.EvalOnSelectorAllAsync%60%601(System.String%2CSystem.String%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L405">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_EvalOnSelectorAllAsync_" data-uid="PlaywrightSharp.IElementHandle.EvalOnSelectorAllAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_EvalOnSelectorAllAsync__1_System_String_System_String_System_Object_" data-uid="PlaywrightSharp.IElementHandle.EvalOnSelectorAllAsync``1(System.String,System.String,System.Object)">EvalOnSelectorAllAsync&lt;T&gt;(String, String, Object)</h4>
+  <div class="markdown level1 summary"><p>This method runs <code>Array.from(document.querySelectorAll(selector))</code> within the element and passes it as the first argument to <code data-dev-comment-type="paramref" class="paramref">pageFunction</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;T&gt; EvalOnSelectorAllAsync&lt;T&gt;(string selector, string pageFunction, object arg)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">selector</span></td>
+        <td><p>A selector to query element for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">pageFunction</span></td>
+        <td><p>Script to be evaluated in browser context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">arg</span></td>
+        <td><p>Arguments to pass to script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;T&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the script finishes or the promise is resolved, yielding the result of the script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Result type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_IElementHandle_EvalOnSelectorAllAsync__1_System_String_System_String_System_Object__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_EvalOnSelectorAsync_System_String_System_String_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.EvalOnSelectorAsync(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L317">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_EvalOnSelectorAsync_" data-uid="PlaywrightSharp.IElementHandle.EvalOnSelectorAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_EvalOnSelectorAsync_System_String_System_String_" data-uid="PlaywrightSharp.IElementHandle.EvalOnSelectorAsync(System.String,System.String)">EvalOnSelectorAsync(String, String)</h4>
+  <div class="markdown level1 summary"><p>This method runs <code>document.querySelector</code> within the page and passes it as the first argument to <code data-dev-comment-type="paramref" class="paramref">pageFunction</code>.
+If there's no element matching selector, the method throws an error.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;JsonElement? &gt; EvalOnSelectorAsync(string selector, string pageFunction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">selector</span></td>
+        <td><p>A selector to query element for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">pageFunction</span></td>
+        <td><p>Script to be evaluated in browser context.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.Nullable</span>&lt;<span class="xref">JsonElement</span>&gt;&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the script finishes or the promise is resolved, yielding the result of the script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_IElementHandle_EvalOnSelectorAsync_System_String_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_EvalOnSelectorAsync_System_String_System_String_System_Object_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.EvalOnSelectorAsync(System.String%2CSystem.String%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L330">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_EvalOnSelectorAsync_" data-uid="PlaywrightSharp.IElementHandle.EvalOnSelectorAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_EvalOnSelectorAsync_System_String_System_String_System_Object_" data-uid="PlaywrightSharp.IElementHandle.EvalOnSelectorAsync(System.String,System.String,System.Object)">EvalOnSelectorAsync(String, String, Object)</h4>
+  <div class="markdown level1 summary"><p>This method runs <code>document.querySelector</code> within the page and passes it as the first argument to <code data-dev-comment-type="paramref" class="paramref">pageFunction</code>.
+If there's no element matching selector, the method throws an error.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;JsonElement? &gt; EvalOnSelectorAsync(string selector, string pageFunction, object arg)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">selector</span></td>
+        <td><p>A selector to query element for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">pageFunction</span></td>
+        <td><p>Script to be evaluated in browser context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">arg</span></td>
+        <td><p>Arguments to pass to script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.Nullable</span>&lt;<span class="xref">JsonElement</span>&gt;&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the script finishes or the promise is resolved, yielding the result of the script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_IElementHandle_EvalOnSelectorAsync_System_String_System_String_System_Object__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_EvalOnSelectorAsync__1_System_String_System_String_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.EvalOnSelectorAsync%60%601(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L343">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_EvalOnSelectorAsync_" data-uid="PlaywrightSharp.IElementHandle.EvalOnSelectorAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_EvalOnSelectorAsync__1_System_String_System_String_" data-uid="PlaywrightSharp.IElementHandle.EvalOnSelectorAsync``1(System.String,System.String)">EvalOnSelectorAsync&lt;T&gt;(String, String)</h4>
+  <div class="markdown level1 summary"><p>This method runs <code>document.querySelector</code> within the element and passes it as the first argument to <code data-dev-comment-type="paramref" class="paramref">pageFunction</code>.
+If there's no element matching selector, the method throws an error.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;T&gt; EvalOnSelectorAsync&lt;T&gt;(string selector, string pageFunction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">selector</span></td>
+        <td><p>A selector to query element for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">pageFunction</span></td>
+        <td><p>Script to be evaluated in browser context.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;T&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the script finishes or the promise is resolved, yielding the result of the script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Result type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_IElementHandle_EvalOnSelectorAsync__1_System_String_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_EvalOnSelectorAsync__1_System_String_System_String_System_Object_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.EvalOnSelectorAsync%60%601(System.String%2CSystem.String%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L357">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_EvalOnSelectorAsync_" data-uid="PlaywrightSharp.IElementHandle.EvalOnSelectorAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_EvalOnSelectorAsync__1_System_String_System_String_System_Object_" data-uid="PlaywrightSharp.IElementHandle.EvalOnSelectorAsync``1(System.String,System.String,System.Object)">EvalOnSelectorAsync&lt;T&gt;(String, String, Object)</h4>
+  <div class="markdown level1 summary"><p>This method runs <code>document.querySelector</code> within the element and passes it as the first argument to <code data-dev-comment-type="paramref" class="paramref">pageFunction</code>.
+If there's no element matching selector, the method throws an error.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;T&gt; EvalOnSelectorAsync&lt;T&gt;(string selector, string pageFunction, object arg)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">selector</span></td>
+        <td><p>A selector to query element for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">pageFunction</span></td>
+        <td><p>Script to be evaluated in browser context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">arg</span></td>
+        <td><p>Arguments to pass to script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;T&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the script finishes or the promise is resolved, yielding the result of the script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Result type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_IElementHandle_EvalOnSelectorAsync__1_System_String_System_String_System_Object__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_FillAsync_System_String_System_Nullable_System_Int32__System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.FillAsync(System.String%2CSystem.Nullable%7BSystem.Int32%7D%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L141">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_FillAsync_" data-uid="PlaywrightSharp.IElementHandle.FillAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_FillAsync_System_String_System_Nullable_System_Int32__System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.FillAsync(System.String,System.Nullable{System.Int32},System.Nullable{System.Boolean})">FillAsync(String, Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>Focuses the element and triggers an <code>input</code> event after filling.
+If element is not a text <code>&amp;lt;input&gt;</code>, <code>&amp;lt;textarea&gt;</code> or <code>[contenteditable]</code> element, the method throws an error.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task FillAsync(string value, int? timeout = null, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>Value to set for the <code>&amp;lt;input&gt;</code>, <code>&amp;lt;textarea&gt;</code> or <code>[contenteditable]</code> element.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the fill action is done.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_FocusAsync.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.FocusAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L411">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_FocusAsync_" data-uid="PlaywrightSharp.IElementHandle.FocusAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_FocusAsync" data-uid="PlaywrightSharp.IElementHandle.FocusAsync">FocusAsync()</h4>
+  <div class="markdown level1 summary"><p>Calls focus on the element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task FocusAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the message is confirmed by the browser.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_GetAttributeAsync_System_String_System_Nullable_System_Int32__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.GetAttributeAsync(System.String%2CSystem.Nullable%7BSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L56">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_GetAttributeAsync_" data-uid="PlaywrightSharp.IElementHandle.GetAttributeAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_GetAttributeAsync_System_String_System_Nullable_System_Int32__" data-uid="PlaywrightSharp.IElementHandle.GetAttributeAsync(System.String,System.Nullable{System.Int32})">GetAttributeAsync(String, Nullable&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"><p>Returns element attribute value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;string&gt; GetAttributeAsync(string name, int? timeout = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>Attribute name to get the value for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+The default value can be changed by using the <a class="xref" href="PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_DefaultTimeout">DefaultTimeout</a> or <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the attribute was evaluated (or timeout), yielding the value or the attribute.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_GetBoundingBoxAsync.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.GetBoundingBoxAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L183">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_GetBoundingBoxAsync_" data-uid="PlaywrightSharp.IElementHandle.GetBoundingBoxAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_GetBoundingBoxAsync" data-uid="PlaywrightSharp.IElementHandle.GetBoundingBoxAsync">GetBoundingBoxAsync()</h4>
+  <div class="markdown level1 summary"><p>Gets the bounding box of the element (relative to the main frame), or null if the element is not visible.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;Rect&gt; GetBoundingBoxAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="PlaywrightSharp.Rect.html">Rect</a>&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the <a class="xref" href="PlaywrightSharp.Rect.html">Rect</a> is resolved, yielding element's <a class="xref" href="PlaywrightSharp.Rect.html">Rect</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_GetContentFrameAsync.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.GetContentFrameAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L147">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_GetContentFrameAsync_" data-uid="PlaywrightSharp.IElementHandle.GetContentFrameAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_GetContentFrameAsync" data-uid="PlaywrightSharp.IElementHandle.GetContentFrameAsync">GetContentFrameAsync()</h4>
+  <div class="markdown level1 summary"><p>Content frame for element handles referencing iframe nodes, or null otherwise.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;IFrame&gt; GetContentFrameAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="PlaywrightSharp.IFrame.html">IFrame</a>&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the frame is resolved, yielding element's parent <a class="xref" href="PlaywrightSharp.IFrame.html">IFrame</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_GetInnerHtmlAsync_System_Nullable_System_Int32__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.GetInnerHtmlAsync(System.Nullable%7BSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L64">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_GetInnerHtmlAsync_" data-uid="PlaywrightSharp.IElementHandle.GetInnerHtmlAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_GetInnerHtmlAsync_System_Nullable_System_Int32__" data-uid="PlaywrightSharp.IElementHandle.GetInnerHtmlAsync(System.Nullable{System.Int32})">GetInnerHtmlAsync(Nullable&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"><p>Resolves to the element.innerHTML.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;string&gt; GetInnerHtmlAsync(int? timeout = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+The default value can be changed by using the <a class="xref" href="PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_DefaultTimeout">DefaultTimeout</a> or <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the attribute was evaluated (or timeout), yielding the innerHTML of the element.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_GetInnerTextAsync_System_Nullable_System_Int32__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.GetInnerTextAsync(System.Nullable%7BSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L72">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_GetInnerTextAsync_" data-uid="PlaywrightSharp.IElementHandle.GetInnerTextAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_GetInnerTextAsync_System_Nullable_System_Int32__" data-uid="PlaywrightSharp.IElementHandle.GetInnerTextAsync(System.Nullable{System.Int32})">GetInnerTextAsync(Nullable&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"><p>Resolves to the element.innerText.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;string&gt; GetInnerTextAsync(int? timeout = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+The default value can be changed by using the <a class="xref" href="PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_DefaultTimeout">DefaultTimeout</a> or <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the attribute was evaluated (or timeout), yielding the innerText of the element.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_GetOwnerFrameAsync.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.GetOwnerFrameAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L177">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_GetOwnerFrameAsync_" data-uid="PlaywrightSharp.IElementHandle.GetOwnerFrameAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_GetOwnerFrameAsync" data-uid="PlaywrightSharp.IElementHandle.GetOwnerFrameAsync">GetOwnerFrameAsync()</h4>
+  <div class="markdown level1 summary"><p>Returns the frame containing the given element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;IFrame&gt; GetOwnerFrameAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="PlaywrightSharp.IFrame.html">IFrame</a>&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the frame is resolved, yielding element's owner <a class="xref" href="PlaywrightSharp.IFrame.html">IFrame</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_GetTextContentAsync_System_Nullable_System_Int32__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.GetTextContentAsync(System.Nullable%7BSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L80">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_GetTextContentAsync_" data-uid="PlaywrightSharp.IElementHandle.GetTextContentAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_GetTextContentAsync_System_Nullable_System_Int32__" data-uid="PlaywrightSharp.IElementHandle.GetTextContentAsync(System.Nullable{System.Int32})">GetTextContentAsync(Nullable&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"><p>Resolves to the element.textContent.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;string&gt; GetTextContentAsync(int? timeout = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+The default value can be changed by using the <a class="xref" href="PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_DefaultTimeout">DefaultTimeout</a> or <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the attribute was evaluated (or timeout), yielding the textContent of the element.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_HoverAsync_PlaywrightSharp_Input_Modifier___System_Nullable_Point__System_Nullable_System_Int32__System_Boolean_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.HoverAsync(PlaywrightSharp.Input.Modifier%5B%5D%2CSystem.Nullable%7BPoint%7D%2CSystem.Nullable%7BSystem.Int32%7D%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L159">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_HoverAsync_" data-uid="PlaywrightSharp.IElementHandle.HoverAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_HoverAsync_PlaywrightSharp_Input_Modifier___System_Nullable_Point__System_Nullable_System_Int32__System_Boolean_" data-uid="PlaywrightSharp.IElementHandle.HoverAsync(PlaywrightSharp.Input.Modifier[],System.Nullable{Point},System.Nullable{System.Int32},System.Boolean)">HoverAsync(Modifier[], Nullable&lt;Point&gt;, Nullable&lt;Int32&gt;, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Scrolls element into view if needed, and then uses <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_Mouse">Mouse</a> to hover over the center of the element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task HoverAsync(Modifier[] modifiers = null, Point? position = null, int? timeout = null, bool force = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.Input.Modifier.html">Modifier</a>[]</td>
+        <td><span class="parametername">modifiers</span></td>
+        <td><p>Modifier keys to press. Ensures that only these modifiers are pressed during the click, and then restores current modifiers back. If not specified, currently pressed modifiers are used.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">Point</span>&gt;</td>
+        <td><span class="parametername">position</span></td>
+        <td><p>A point to click relative to the top-left corner of element padding box. If not specified, clicks to some visible point of the element.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">force</span></td>
+        <td><p>Whether to pass the accionability checks.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the element is successfully hovered.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_PressAsync_System_String_System_Int32_System_Nullable_System_Int32__System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.PressAsync(System.String%2CSystem.Int32%2CSystem.Nullable%7BSystem.Int32%7D%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L28">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_PressAsync_" data-uid="PlaywrightSharp.IElementHandle.PressAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_PressAsync_System_String_System_Int32_System_Nullable_System_Int32__System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.PressAsync(System.String,System.Int32,System.Nullable{System.Int32},System.Nullable{System.Boolean})">PressAsync(String, Int32, Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>Focuses the element, and then uses <a class="xref" href="PlaywrightSharp.IKeyboard.html#PlaywrightSharp_IKeyboard_DownAsync_System_String_">DownAsync(String)</a> and <a class="xref" href="PlaywrightSharp.IKeyboard.html#PlaywrightSharp_IKeyboard_UpAsync_System_String_">UpAsync(String)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task PressAsync(string key, int delay = 0, int? timeout = null, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>Name of key to press, such as <code>ArrowLeft</code>. See <a class="xref" href="PlaywrightSharp.KeyDefinitions.html">KeyDefinitions</a> for a list of all key names.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">delay</span></td>
+        <td><p>Time to wait between <code>keydown</code> and <code>keyup</code> in milliseconds. Defaults to 0.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the message is confirmed by the browser.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_IElementHandle_PressAsync_System_String_System_Int32_System_Nullable_System_Int32__System_Nullable_System_Boolean___remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If <code>key</code> is a single character and no modifier keys besides <code>Shift</code> are being held down, a <code>keypress</code>/<code>input</code> event will also be generated.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_QuerySelectorAllAsync_System_String_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.QuerySelectorAllAsync(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L305">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_QuerySelectorAllAsync_" data-uid="PlaywrightSharp.IElementHandle.QuerySelectorAllAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_QuerySelectorAllAsync_System_String_" data-uid="PlaywrightSharp.IElementHandle.QuerySelectorAllAsync(System.String)">QuerySelectorAllAsync(String)</h4>
+  <div class="markdown level1 summary"><p>The method runs <code>Array.from(document.querySelectorAll(selector))</code> within the element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;IEnumerable&lt;IElementHandle&gt;&gt; QuerySelectorAllAsync(string selector)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">selector</span></td>
+        <td><p>A selector to query element for.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">IEnumerable</span>&lt;<a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a>&gt;&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the javascript function finishes, yielding an array of <a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_QuerySelectorAsync_System_String_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.QuerySelectorAsync(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L296">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_QuerySelectorAsync_" data-uid="PlaywrightSharp.IElementHandle.QuerySelectorAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_QuerySelectorAsync_System_String_" data-uid="PlaywrightSharp.IElementHandle.QuerySelectorAsync(System.String)">QuerySelectorAsync(String)</h4>
+  <div class="markdown level1 summary"><p>The method runs <code>document.querySelector</code> within the element. If no element matches the selector, the return value resolve to <code>null</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;IElementHandle&gt; QuerySelectorAsync(string selector)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">selector</span></td>
+        <td><p>A selector to query element for.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a>&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the javascript function finishes, yielding an <a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_ScreenshotAsync_System_String_System_Boolean_System_Nullable_PlaywrightSharp_ScreenshotFormat__System_Nullable_System_Int32__System_Nullable_System_Int32__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.ScreenshotAsync(System.String%2CSystem.Boolean%2CSystem.Nullable%7BPlaywrightSharp.ScreenshotFormat%7D%2CSystem.Nullable%7BSystem.Int32%7D%2CSystem.Nullable%7BSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L124">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_ScreenshotAsync_" data-uid="PlaywrightSharp.IElementHandle.ScreenshotAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_ScreenshotAsync_System_String_System_Boolean_System_Nullable_PlaywrightSharp_ScreenshotFormat__System_Nullable_System_Int32__System_Nullable_System_Int32__" data-uid="PlaywrightSharp.IElementHandle.ScreenshotAsync(System.String,System.Boolean,System.Nullable{PlaywrightSharp.ScreenshotFormat},System.Nullable{System.Int32},System.Nullable{System.Int32})">ScreenshotAsync(String, Boolean, Nullable&lt;ScreenshotFormat&gt;, Nullable&lt;Int32&gt;, Nullable&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"><p>Takes a screenshot of the element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;byte[]&gt; ScreenshotAsync(string path = null, bool omitBackground = false, ScreenshotFormat? type = null, int? quality = null, int? timeout = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">path</span></td>
+        <td><p>The file path to save the image to.
+The screenshot type will be inferred from file extension.
+If path is a relative path, then it is resolved relative to current working directory.
+If no path is provided, the image won't be saved to the disk.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">omitBackground</span></td>
+        <td><p>Hides default white background and allows capturing screenshots with transparency. Defaults to <code>false</code>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="PlaywrightSharp.ScreenshotFormat.html">ScreenshotFormat</a>&gt;</td>
+        <td><span class="parametername">type</span></td>
+        <td><p>Specify screenshot type, can be either jpeg or png. Defaults to 'png'.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">quality</span></td>
+        <td><p>The quality of the image, between 0-100. Not applicable to png images.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+The default value can be changed by using the <a class="xref" href="PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_DefaultTimeout">DefaultTimeout</a> or <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.Byte</span>[]&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the screenshot is done, yielding the screenshot as a <see cref="t:byte[]"></see>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_ScrollIntoViewIfNeededAsync_System_Nullable_System_Int32__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.ScrollIntoViewIfNeededAsync(System.Nullable%7BSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L171">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_ScrollIntoViewIfNeededAsync_" data-uid="PlaywrightSharp.IElementHandle.ScrollIntoViewIfNeededAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_ScrollIntoViewIfNeededAsync_System_Nullable_System_Int32__" data-uid="PlaywrightSharp.IElementHandle.ScrollIntoViewIfNeededAsync(System.Nullable{System.Int32})">ScrollIntoViewIfNeededAsync(Nullable&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"><p>Tries to scroll element into view, unless it is completely visible as defined by <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API</a>'s <strong>ratio</strong>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task ScrollIntoViewIfNeededAsync(int? timeout = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+The default value can be changed by using the <a class="xref" href="PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_DefaultTimeout">DefaultTimeout</a> or <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the element is successfully scrolled into view.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_SelectOptionAsync_PlaywrightSharp_IElementHandle_System_Nullable_System_Int32__System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.SelectOptionAsync(PlaywrightSharp.IElementHandle%2CSystem.Nullable%7BSystem.Int32%7D%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L461">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_SelectOptionAsync_" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_SelectOptionAsync_PlaywrightSharp_IElementHandle_System_Nullable_System_Int32__System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync(PlaywrightSharp.IElementHandle,System.Nullable{System.Int32},System.Nullable{System.Boolean})">SelectOptionAsync(IElementHandle, Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>Triggers a change and input event once all the provided options have been selected.
+If there's no &lt;select&gt; element matching selector, the method throws an error.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;string[]&gt; SelectOptionAsync(IElementHandle value, int? timeout = null, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>Value to select. If the &lt;select&gt; has the multiple attribute.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
+        <td><p>A <see cref="!:Task"></see> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_SelectOptionAsync_PlaywrightSharp_IElementHandle___.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.SelectOptionAsync(PlaywrightSharp.IElementHandle%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L530">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_SelectOptionAsync_" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_SelectOptionAsync_PlaywrightSharp_IElementHandle___" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync(PlaywrightSharp.IElementHandle[])">SelectOptionAsync(IElementHandle[])</h4>
+  <div class="markdown level1 summary"><p>Triggers a change and input event once all the provided options have been selected.
+If there's no &lt;select&gt; element matching selector, the method throws an error.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;string[]&gt; SelectOptionAsync(params IElementHandle[] values)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a>[]</td>
+        <td><span class="parametername">values</span></td>
+        <td><p>Values of options to select. If the &lt;select&gt; has the multiple attribute,
+all values are considered, otherwise only the first one is taken into account.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
+        <td><p>A <see cref="!:Task"></see> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_SelectOptionAsync_PlaywrightSharp_IElementHandle___System_Nullable_System_Int32__System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.SelectOptionAsync(PlaywrightSharp.IElementHandle%5B%5D%2CSystem.Nullable%7BSystem.Int32%7D%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L503">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_SelectOptionAsync_" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_SelectOptionAsync_PlaywrightSharp_IElementHandle___System_Nullable_System_Int32__System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync(PlaywrightSharp.IElementHandle[],System.Nullable{System.Int32},System.Nullable{System.Boolean})">SelectOptionAsync(IElementHandle[], Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>Triggers a change and input event once all the provided options have been selected.
+If there's no &lt;select&gt; element matching selector, the method throws an error.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;string[]&gt; SelectOptionAsync(IElementHandle[] values, int? timeout = null, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a>[]</td>
+        <td><span class="parametername">values</span></td>
+        <td><p>Values of options to select. If the &lt;select&gt; has the multiple attribute,
+all values are considered, otherwise only the first one is taken into account.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
+        <td><p>A <see cref="!:Task"></see> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_SelectOptionAsync_PlaywrightSharp_SelectOption_System_Nullable_System_Int32__System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.SelectOptionAsync(PlaywrightSharp.SelectOption%2CSystem.Nullable%7BSystem.Int32%7D%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L448">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_SelectOptionAsync_" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_SelectOptionAsync_PlaywrightSharp_SelectOption_System_Nullable_System_Int32__System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync(PlaywrightSharp.SelectOption,System.Nullable{System.Int32},System.Nullable{System.Boolean})">SelectOptionAsync(SelectOption, Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>Triggers a change and input event once all the provided options have been selected.
+If there's no &lt;select&gt; element matching selector, the method throws an error.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;string[]&gt; SelectOptionAsync(SelectOption value, int? timeout = null, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.SelectOption.html">SelectOption</a></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>Value to select. If the &lt;select&gt; has the multiple attribute.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
+        <td><p>A <see cref="!:Task"></see> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_SelectOptionAsync_PlaywrightSharp_SelectOption___.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.SelectOptionAsync(PlaywrightSharp.SelectOption%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L521">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_SelectOptionAsync_" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_SelectOptionAsync_PlaywrightSharp_SelectOption___" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync(PlaywrightSharp.SelectOption[])">SelectOptionAsync(SelectOption[])</h4>
+  <div class="markdown level1 summary"><p>Triggers a change and input event once all the provided options have been selected.
+If there's no &lt;select&gt; element matching selector, the method throws an error.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;string[]&gt; SelectOptionAsync(params SelectOption[] values)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.SelectOption.html">SelectOption</a>[]</td>
+        <td><span class="parametername">values</span></td>
+        <td><p>Values of options to select. If the &lt;select&gt; has the multiple attribute,
+all values are considered, otherwise only the first one is taken into account.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
+        <td><p>A <see cref="!:Task"></see> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_SelectOptionAsync_PlaywrightSharp_SelectOption___System_Nullable_System_Int32__System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.SelectOptionAsync(PlaywrightSharp.SelectOption%5B%5D%2CSystem.Nullable%7BSystem.Int32%7D%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L489">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_SelectOptionAsync_" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_SelectOptionAsync_PlaywrightSharp_SelectOption___System_Nullable_System_Int32__System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync(PlaywrightSharp.SelectOption[],System.Nullable{System.Int32},System.Nullable{System.Boolean})">SelectOptionAsync(SelectOption[], Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>Triggers a change and input event once all the provided options have been selected.
+If there's no &lt;select&gt; element matching selector, the method throws an error.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;string[]&gt; SelectOptionAsync(SelectOption[] values, int? timeout = null, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.SelectOption.html">SelectOption</a>[]</td>
+        <td><span class="parametername">values</span></td>
+        <td><p>Values of options to select. If the &lt;select&gt; has the multiple attribute,
+all values are considered, otherwise only the first one is taken into account.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
+        <td><p>A <see cref="!:Task"></see> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_SelectOptionAsync_System_Nullable_System_Int32__System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.SelectOptionAsync(System.Nullable%7BSystem.Int32%7D%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L422">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_SelectOptionAsync_" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_SelectOptionAsync_System_Nullable_System_Int32__System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync(System.Nullable{System.Int32},System.Nullable{System.Boolean})">SelectOptionAsync(Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>Triggers a change and input event once all, unselecting all the selected elements.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;string[]&gt; SelectOptionAsync(int? timeout = null, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
+        <td><p>A <see cref="!:Task"></see> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_SelectOptionAsync_System_String_System_Nullable_System_Int32__System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.SelectOptionAsync(System.String%2CSystem.Nullable%7BSystem.Int32%7D%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L435">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_SelectOptionAsync_" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_SelectOptionAsync_System_String_System_Nullable_System_Int32__System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync(System.String,System.Nullable{System.Int32},System.Nullable{System.Boolean})">SelectOptionAsync(String, Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>Triggers a change and input event once all the provided options have been selected.
+If there's no &lt;select&gt; element matching selector, the method throws an error.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;string[]&gt; SelectOptionAsync(string value, int? timeout = null, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>Value to select. If the &lt;select&gt; has the multiple attribute.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
+        <td><p>A <see cref="!:Task"></see> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_SelectOptionAsync_System_String___.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.SelectOptionAsync(System.String%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L512">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_SelectOptionAsync_" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_SelectOptionAsync_System_String___" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync(System.String[])">SelectOptionAsync(String[])</h4>
+  <div class="markdown level1 summary"><p>Triggers a change and input event once all the provided options have been selected.
+If there's no &lt;select&gt; element matching selector, the method throws an error.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;string[]&gt; SelectOptionAsync(params string[] values)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td><span class="parametername">values</span></td>
+        <td><p>Values of options to select. If the &lt;select&gt; has the multiple attribute,
+all values are considered, otherwise only the first one is taken into account.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
+        <td><p>A <see cref="!:Task"></see> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_SelectOptionAsync_System_String___System_Nullable_System_Int32__System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.SelectOptionAsync(System.String%5B%5D%2CSystem.Nullable%7BSystem.Int32%7D%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L475">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_SelectOptionAsync_" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_SelectOptionAsync_System_String___System_Nullable_System_Int32__System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.SelectOptionAsync(System.String[],System.Nullable{System.Int32},System.Nullable{System.Boolean})">SelectOptionAsync(String[], Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>Triggers a change and input event once all the provided options have been selected.
+If there's no &lt;select&gt; element matching selector, the method throws an error.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;string[]&gt; SelectOptionAsync(string[] values, int? timeout = null, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td><span class="parametername">values</span></td>
+        <td><p>Values of options to select. If the &lt;select&gt; has the multiple attribute,
+all values are considered, otherwise only the first one is taken into account.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
+        <td><p>A <see cref="!:Task"></see> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_SelectTextAsync_System_Nullable_System_Int32__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.SelectTextAsync(System.Nullable%7BSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L36">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_SelectTextAsync_" data-uid="PlaywrightSharp.IElementHandle.SelectTextAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_SelectTextAsync_System_Nullable_System_Int32__" data-uid="PlaywrightSharp.IElementHandle.SelectTextAsync(System.Nullable{System.Int32})">SelectTextAsync(Nullable&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"><p>This method waits for actionability checks, then focuses the element and selects all its text content.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task SelectTextAsync(int? timeout = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+The default value can be changed by using the <a class="xref" href="PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_DefaultTimeout">DefaultTimeout</a> or <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the text is selected or timeout.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_SetInputFilesAsync_PlaywrightSharp_FilePayload_System_Nullable_System_Int32__System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.SetInputFilesAsync(PlaywrightSharp.FilePayload%2CSystem.Nullable%7BSystem.Int32%7D%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L273">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_SetInputFilesAsync_" data-uid="PlaywrightSharp.IElementHandle.SetInputFilesAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_SetInputFilesAsync_PlaywrightSharp_FilePayload_System_Nullable_System_Int32__System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.SetInputFilesAsync(PlaywrightSharp.FilePayload,System.Nullable{System.Int32},System.Nullable{System.Boolean})">SetInputFilesAsync(FilePayload, Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>Sets the value of the file input to these file paths or files. If some of the  <code data-dev-comment-type="paramref" class="paramref">file</code> are relative paths, then they are resolved relative to the <see cref="!:Directory.GetCurrentDirectory"></see>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task SetInputFilesAsync(FilePayload file, int? timeout = null, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.FilePayload.html">FilePayload</a></td>
+        <td><span class="parametername">file</span></td>
+        <td><p>The file payload.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the files are successfully set.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_IElementHandle_SetInputFilesAsync_PlaywrightSharp_FilePayload_System_Nullable_System_Int32__System_Nullable_System_Boolean___remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This method expects <a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input</a>.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_SetInputFilesAsync_PlaywrightSharp_FilePayload___System_Nullable_System_Int32__System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.SetInputFilesAsync(PlaywrightSharp.FilePayload%5B%5D%2CSystem.Nullable%7BSystem.Int32%7D%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L287">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_SetInputFilesAsync_" data-uid="PlaywrightSharp.IElementHandle.SetInputFilesAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_SetInputFilesAsync_PlaywrightSharp_FilePayload___System_Nullable_System_Int32__System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.SetInputFilesAsync(PlaywrightSharp.FilePayload[],System.Nullable{System.Int32},System.Nullable{System.Boolean})">SetInputFilesAsync(FilePayload[], Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>Sets the value of the file input to these file paths or files. If some of the  <code data-dev-comment-type="paramref" class="paramref">files</code> are relative paths, then they are resolved relative to the <see cref="!:Directory.GetCurrentDirectory"></see>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task SetInputFilesAsync(FilePayload[] files, int? timeout = null, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.FilePayload.html">FilePayload</a>[]</td>
+        <td><span class="parametername">files</span></td>
+        <td><p>File payloads.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the files are successfully set.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_IElementHandle_SetInputFilesAsync_PlaywrightSharp_FilePayload___System_Nullable_System_Int32__System_Nullable_System_Boolean___remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This method expects <a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input</a>.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_SetInputFilesAsync_System_String_System_Nullable_System_Int32__System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.SetInputFilesAsync(System.String%2CSystem.Nullable%7BSystem.Int32%7D%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L245">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_SetInputFilesAsync_" data-uid="PlaywrightSharp.IElementHandle.SetInputFilesAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_SetInputFilesAsync_System_String_System_Nullable_System_Int32__System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.SetInputFilesAsync(System.String,System.Nullable{System.Int32},System.Nullable{System.Boolean})">SetInputFilesAsync(String, Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>Sets the value of the file input to these file paths or files. If some of the  <code data-dev-comment-type="paramref" class="paramref">file</code> are relative paths, then they are resolved relative to the <see cref="!:Directory.GetCurrentDirectory"></see>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task SetInputFilesAsync(string file, int? timeout = null, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">file</span></td>
+        <td><p>The file path.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the files are successfully set.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_IElementHandle_SetInputFilesAsync_System_String_System_Nullable_System_Int32__System_Nullable_System_Boolean___remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This method expects <a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input</a>.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_SetInputFilesAsync_System_String___System_Nullable_System_Int32__System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.SetInputFilesAsync(System.String%5B%5D%2CSystem.Nullable%7BSystem.Int32%7D%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L259">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_SetInputFilesAsync_" data-uid="PlaywrightSharp.IElementHandle.SetInputFilesAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_SetInputFilesAsync_System_String___System_Nullable_System_Int32__System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.SetInputFilesAsync(System.String[],System.Nullable{System.Int32},System.Nullable{System.Boolean})">SetInputFilesAsync(String[], Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>Sets the value of the file input to these file paths or files. If some of the  <code data-dev-comment-type="paramref" class="paramref">files</code> are relative paths, then they are resolved relative to the <see cref="!:Directory.GetCurrentDirectory"></see>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task SetInputFilesAsync(string[] files, int? timeout = null, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td><span class="parametername">files</span></td>
+        <td><p>File paths.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the files are successfully set.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_IElementHandle_SetInputFilesAsync_System_String___System_Nullable_System_Int32__System_Nullable_System_Boolean___remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This method expects <a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input</a>.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_TypeAsync_System_String_System_Int32_System_Nullable_System_Int32__System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.TypeAsync(System.String%2CSystem.Int32%2CSystem.Nullable%7BSystem.Int32%7D%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L107">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_TypeAsync_" data-uid="PlaywrightSharp.IElementHandle.TypeAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_TypeAsync_System_String_System_Int32_System_Nullable_System_Int32__System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.TypeAsync(System.String,System.Int32,System.Nullable{System.Int32},System.Nullable{System.Boolean})">TypeAsync(String, Int32, Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>Focuses the element, and sends a <code>keydown</code>, <code>keypress</code>/<code>input</code>, and <code>keyup</code> event for each character in the text.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task TypeAsync(string text, int delay = 0, int? timeout = null, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">text</span></td>
+        <td><p>A text to type into a focused element.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">delay</span></td>
+        <td><p>Delay between key press.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the message is confirmed by the browser.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_IElementHandle_TypeAsync_System_String_System_Int32_System_Nullable_System_Int32__System_Nullable_System_Boolean___remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>To press a special key, like <code>Control</code> or <code>ArrowDown</code> use <a class="xref" href="PlaywrightSharp.IElementHandle.html#PlaywrightSharp_IElementHandle_PressAsync_System_String_System_Int32_System_Nullable_System_Int32__System_Nullable_System_Boolean__">PressAsync(String, Int32, Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</a>.</p>
+</div>
+  <h5 id="PlaywrightSharp_IElementHandle_TypeAsync_System_String_System_Int32_System_Nullable_System_Int32__System_Nullable_System_Boolean___examples">Examples</h5>
+  <pre><code>elementHandle.TypeAsync(&quot;#mytextarea&quot;, &quot;Hello&quot;); // Types instantly
+elementHandle.TypeAsync(&quot;#mytextarea&quot;, &quot;World&quot;, new TypeOptions { Delay = 100 }); // Types slower, like a user</code></pre>
+<p>An example of typing into a text field and then submitting the form:</p>
+<pre><code>var elementHandle = await page.GetElementAsync(&quot;input&quot;);
+await elementHandle.TypeAsync(&quot;some text&quot;);
+await elementHandle.PressAsync(&quot;Enter&quot;);</code></pre>
+
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_UncheckAsync_System_Nullable_System_Int32__System_Boolean_System_Nullable_System_Boolean__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.UncheckAsync(System.Nullable%7BSystem.Int32%7D%2CSystem.Boolean%2CSystem.Nullable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L558">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_UncheckAsync_" data-uid="PlaywrightSharp.IElementHandle.UncheckAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_UncheckAsync_System_Nullable_System_Int32__System_Boolean_System_Nullable_System_Boolean__" data-uid="PlaywrightSharp.IElementHandle.UncheckAsync(System.Nullable{System.Int32},System.Boolean,System.Nullable{System.Boolean})">UncheckAsync(Nullable&lt;Int32&gt;, Boolean, Nullable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"><p>This method fetches an element with selector, if element is not already unchecked, it scrolls it into view if needed, and then uses <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_ClickAsync_System_String_System_Int32_PlaywrightSharp_Input_MouseButton_System_Int32_PlaywrightSharp_Input_Modifier___System_Nullable_Point__System_Nullable_System_Int32__System_Boolean_System_Nullable_System_Boolean__">ClickAsync(String, Int32, MouseButton, Int32, Modifier[], Nullable&lt;Point&gt;, Nullable&lt;Int32&gt;, Boolean, Nullable&lt;Boolean&gt;)</a> to click in the center of the element.
+If there's no element matching selector, the method waits until a matching element appears in the DOM.
+If the element is detached during the actionability checks, the action is retried.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task UncheckAsync(int? timeout = null, bool force = false, bool? noWaitAfter = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">force</span></td>
+        <td><p>Whether to pass the accionability checks.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">noWaitAfter</span></td>
+        <td><p>Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
+You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the element is successfully clicked.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_WaitForElementStateAsync_PlaywrightSharp_ElementState_System_Nullable_System_Int32__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.WaitForElementStateAsync(PlaywrightSharp.ElementState%2CSystem.Nullable%7BSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L585">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_WaitForElementStateAsync_" data-uid="PlaywrightSharp.IElementHandle.WaitForElementStateAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_WaitForElementStateAsync_PlaywrightSharp_ElementState_System_Nullable_System_Int32__" data-uid="PlaywrightSharp.IElementHandle.WaitForElementStateAsync(PlaywrightSharp.ElementState,System.Nullable{System.Int32})">WaitForElementStateAsync(ElementState, Nullable&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"><p>Depending on the state parameter, this method waits for one of the actionability checks to pass.
+This method throws when the element is detached while waiting, unless waiting for the &quot;hidden&quot; state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task WaitForElementStateAsync(ElementState state, int? timeout = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.ElementState.html">ElementState</a></td>
+        <td><span class="parametername">state</span></td>
+        <td><p>State to wait for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the wait condition matches or timed out.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle_WaitForSelectorAsync_System_String_System_Nullable_PlaywrightSharp_WaitForState__System_Nullable_System_Int32__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle.WaitForSelectorAsync(System.String%2CSystem.Nullable%7BPlaywrightSharp.WaitForState%7D%2CSystem.Nullable%7BSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L572">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_IElementHandle_WaitForSelectorAsync_" data-uid="PlaywrightSharp.IElementHandle.WaitForSelectorAsync*"></a>
+  <h4 id="PlaywrightSharp_IElementHandle_WaitForSelectorAsync_System_String_System_Nullable_PlaywrightSharp_WaitForState__System_Nullable_System_Int32__" data-uid="PlaywrightSharp.IElementHandle.WaitForSelectorAsync(System.String,System.Nullable{PlaywrightSharp.WaitForState},System.Nullable{System.Int32})">WaitForSelectorAsync(String, Nullable&lt;WaitForState&gt;, Nullable&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"><p>Waits for a selector to be added to the DOM.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;IElementHandle&gt; WaitForSelectorAsync(string selector, WaitForState? state = null, int? timeout = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">selector</span></td>
+        <td><p>A selector of an element to wait for, relative to the <a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="PlaywrightSharp.WaitForState.html">WaitForState</a>&gt;</td>
+        <td><span class="parametername">state</span></td>
+        <td><p>Wait for element to become in the specified state.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Maximum time to wait for in milliseconds. Defaults to <code>30000</code> (30 seconds).
+Pass <code>0</code> to disable timeout.
+The default value can be changed by using <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_DefaultTimeout">DefaultTimeout</a> method.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a>&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when element specified by selector string is added to DOM, yielding the <a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a> to wait for.
+Resolves to <code>null</code> if waiting for <code>hidden: true</code> and selector is not found in DOM.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_IElementHandle.md&amp;value=---%0Auid%3A%20PlaywrightSharp.IElementHandle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/IElementHandle.cs/#L13" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

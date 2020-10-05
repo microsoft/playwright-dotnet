@@ -1,0 +1,721 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class JSHandle
+   | Playwright Sharp </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class JSHandle
+   | Playwright Sharp ">
+    <meta name="generator" content="docfx 2.45.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="PlaywrightSharp.JSHandle">
+  
+  
+  <h1 id="PlaywrightSharp_JSHandle" data-uid="PlaywrightSharp.JSHandle" class="text-break">Class JSHandle
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="PlaywrightSharp.Transport.ChannelOwnerBase.html">ChannelOwnerBase</a></div>
+    <div class="level2"><span class="xref">JSHandle</span></div>
+      <div class="level3"><a class="xref" href="PlaywrightSharp.ElementHandle.html">ElementHandle</a></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="PlaywrightSharp.IJSHandle.html">IJSHandle</a></div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="PlaywrightSharp.html">PlaywrightSharp</a></h6>
+  <h6><strong>Assembly</strong>: PlaywrightSharp.dll</h6>
+  <h5 id="PlaywrightSharp_JSHandle_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class JSHandle : ChannelOwnerBase, IChannelOwner&lt;JSHandle&gt;, IChannelOwner, IJSHandle</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_JSHandle_DisposeAsync.md&amp;value=---%0Auid%3A%20PlaywrightSharp.JSHandle.DisposeAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/JSHandle.cs/#L96">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_JSHandle_DisposeAsync_" data-uid="PlaywrightSharp.JSHandle.DisposeAsync*"></a>
+  <h4 id="PlaywrightSharp_JSHandle_DisposeAsync" data-uid="PlaywrightSharp.JSHandle.DisposeAsync">DisposeAsync()</h4>
+  <div class="markdown level1 summary"><p>Disposes the Handle. It will mark the JSHandle as disposed and release the <a class="xref" href="PlaywrightSharp.IJSHandle.html">IJSHandle</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task DisposeAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the handle is disposed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_JSHandle_EvaluateAsync_System_String_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.JSHandle.EvaluateAsync(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/JSHandle.cs/#L55">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_JSHandle_EvaluateAsync_" data-uid="PlaywrightSharp.JSHandle.EvaluateAsync*"></a>
+  <h4 id="PlaywrightSharp_JSHandle_EvaluateAsync_System_String_" data-uid="PlaywrightSharp.JSHandle.EvaluateAsync(System.String)">EvaluateAsync(String)</h4>
+  <div class="markdown level1 summary"><p>Executes a function in browser context, passing the current <a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a> as the first argument.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;JsonElement? &gt; EvaluateAsync(string pageFunction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">pageFunction</span></td>
+        <td><p>Script to be evaluated in browser context.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.Nullable</span>&lt;<span class="xref">JsonElement</span>&gt;&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the script is executed, yieling the return value of that script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_JSHandle_EvaluateAsync_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+<a class="xref" href="PlaywrightSharp.IJSHandle.html">IJSHandle</a> instances can be passed as arguments.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_JSHandle_EvaluateAsync_System_String_System_Object_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.JSHandle.EvaluateAsync(System.String%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/JSHandle.cs/#L62">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_JSHandle_EvaluateAsync_" data-uid="PlaywrightSharp.JSHandle.EvaluateAsync*"></a>
+  <h4 id="PlaywrightSharp_JSHandle_EvaluateAsync_System_String_System_Object_" data-uid="PlaywrightSharp.JSHandle.EvaluateAsync(System.String,System.Object)">EvaluateAsync(String, Object)</h4>
+  <div class="markdown level1 summary"><p>Executes a function in browser context, passing the current <a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a> as the first argument.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;JsonElement? &gt; EvaluateAsync(string pageFunction, object arg)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">pageFunction</span></td>
+        <td><p>Script to be evaluated in browser context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">arg</span></td>
+        <td><p>Arguments to pass to script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.Nullable</span>&lt;<span class="xref">JsonElement</span>&gt;&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the script is executed, yieling the return value of that script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_JSHandle_EvaluateAsync_System_String_System_Object__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+<a class="xref" href="PlaywrightSharp.IJSHandle.html">IJSHandle</a> instances can be passed as arguments.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_JSHandle_EvaluateAsync__1_System_String_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.JSHandle.EvaluateAsync%60%601(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/JSHandle.cs/#L48">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_JSHandle_EvaluateAsync_" data-uid="PlaywrightSharp.JSHandle.EvaluateAsync*"></a>
+  <h4 id="PlaywrightSharp_JSHandle_EvaluateAsync__1_System_String_" data-uid="PlaywrightSharp.JSHandle.EvaluateAsync``1(System.String)">EvaluateAsync&lt;T&gt;(String)</h4>
+  <div class="markdown level1 summary"><p>Executes a function in browser context, passing the current <a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a> as the first argument.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;T&gt; EvaluateAsync&lt;T&gt;(string pageFunction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">pageFunction</span></td>
+        <td><p>Script to be evaluated in browser context.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;T&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the script is executed, yieling the return value of that script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Type to parse the result to.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_JSHandle_EvaluateAsync__1_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+<a class="xref" href="PlaywrightSharp.IJSHandle.html">IJSHandle</a> instances can be passed as arguments.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_JSHandle_EvaluateAsync__1_System_String_System_Object_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.JSHandle.EvaluateAsync%60%601(System.String%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/JSHandle.cs/#L69">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_JSHandle_EvaluateAsync_" data-uid="PlaywrightSharp.JSHandle.EvaluateAsync*"></a>
+  <h4 id="PlaywrightSharp_JSHandle_EvaluateAsync__1_System_String_System_Object_" data-uid="PlaywrightSharp.JSHandle.EvaluateAsync``1(System.String,System.Object)">EvaluateAsync&lt;T&gt;(String, Object)</h4>
+  <div class="markdown level1 summary"><p>Executes a function in browser context, passing the current <a class="xref" href="PlaywrightSharp.IElementHandle.html">IElementHandle</a> as the first argument.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;T&gt; EvaluateAsync&lt;T&gt;(string pageFunction, object arg)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">pageFunction</span></td>
+        <td><p>Script to be evaluated in browser context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">arg</span></td>
+        <td><p>Arguments to pass to script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;T&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the script is executed, yieling the return value of that script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Type to parse the result to.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_JSHandle_EvaluateAsync__1_System_String_System_Object__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+<a class="xref" href="PlaywrightSharp.IJSHandle.html">IJSHandle</a> instances can be passed as arguments.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_JSHandle_EvaluateHandleAsync_System_String_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.JSHandle.EvaluateHandleAsync(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/JSHandle.cs/#L34">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_JSHandle_EvaluateHandleAsync_" data-uid="PlaywrightSharp.JSHandle.EvaluateHandleAsync*"></a>
+  <h4 id="PlaywrightSharp_JSHandle_EvaluateHandleAsync_System_String_" data-uid="PlaywrightSharp.JSHandle.EvaluateHandleAsync(System.String)">EvaluateHandleAsync(String)</h4>
+  <div class="markdown level1 summary"><p>Executes a function in browser context, passing the current <a class="xref" href="PlaywrightSharp.IJSHandle.html">IJSHandle</a> as the first argument.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;IJSHandle&gt; EvaluateHandleAsync(string pageFunction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">pageFunction</span></td>
+        <td><p>Script to be evaluated in browser context.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="PlaywrightSharp.IJSHandle.html">IJSHandle</a>&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the script is executed, yielding the return value of that script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_JSHandle_EvaluateHandleAsync_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+<a class="xref" href="PlaywrightSharp.IJSHandle.html">IJSHandle</a> instances can be passed as arguments.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_JSHandle_EvaluateHandleAsync_System_String_System_Object_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.JSHandle.EvaluateHandleAsync(System.String%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/JSHandle.cs/#L41">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_JSHandle_EvaluateHandleAsync_" data-uid="PlaywrightSharp.JSHandle.EvaluateHandleAsync*"></a>
+  <h4 id="PlaywrightSharp_JSHandle_EvaluateHandleAsync_System_String_System_Object_" data-uid="PlaywrightSharp.JSHandle.EvaluateHandleAsync(System.String,System.Object)">EvaluateHandleAsync(String, Object)</h4>
+  <div class="markdown level1 summary"><p>Executes a function in browser context, passing the current <a class="xref" href="PlaywrightSharp.IJSHandle.html">IJSHandle</a> as the first argument.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;IJSHandle&gt; EvaluateHandleAsync(string pageFunction, object arg)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">pageFunction</span></td>
+        <td><p>Script to be evaluated in browser context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">arg</span></td>
+        <td><p>Arguments to pass to script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="PlaywrightSharp.IJSHandle.html">IJSHandle</a>&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the script is executed, yielding the return value of that script.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_JSHandle_EvaluateHandleAsync_System_String_System_Object__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
+<a class="xref" href="PlaywrightSharp.IJSHandle.html">IJSHandle</a> instances can be passed as arguments.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_JSHandle_GetJsonValueAsync__1.md&amp;value=---%0Auid%3A%20PlaywrightSharp.JSHandle.GetJsonValueAsync%60%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/JSHandle.cs/#L76">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_JSHandle_GetJsonValueAsync_" data-uid="PlaywrightSharp.JSHandle.GetJsonValueAsync*"></a>
+  <h4 id="PlaywrightSharp_JSHandle_GetJsonValueAsync__1" data-uid="PlaywrightSharp.JSHandle.GetJsonValueAsync``1">GetJsonValueAsync&lt;T&gt;()</h4>
+  <div class="markdown level1 summary"><p>Returns a JSON representation of the object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;T&gt; GetJsonValueAsync&lt;T&gt;()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;T&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the evaluation is completed, yielding an <see cref="!:System.Object"></see> with the json value of the handle.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Return type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_JSHandle_GetJsonValueAsync__1_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The method will return an empty JSON if the referenced object is not stringifiable. It will throw an error if the object has circular references.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_JSHandle_GetPropertiesAsync.md&amp;value=---%0Auid%3A%20PlaywrightSharp.JSHandle.GetPropertiesAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/JSHandle.cs/#L82">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_JSHandle_GetPropertiesAsync_" data-uid="PlaywrightSharp.JSHandle.GetPropertiesAsync*"></a>
+  <h4 id="PlaywrightSharp_JSHandle_GetPropertiesAsync" data-uid="PlaywrightSharp.JSHandle.GetPropertiesAsync">GetPropertiesAsync()</h4>
+  <div class="markdown level1 summary"><p>Returns a <see cref="!:IDictionary&lt;TKey, TValue>"></see> with property names as keys and <a class="xref" href="PlaywrightSharp.IJSHandle.html">IJSHandle</a> instances for the property values.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;IDictionary&lt;string, IJSHandle&gt;&gt; GetPropertiesAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="PlaywrightSharp.IJSHandle.html">IJSHandle</a>&gt;&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the evaluation is completed, yielding a <see cref="!:IDictionary&lt;TKey, TValue>"></see>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_JSHandle_GetPropertyAsync_System_String_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.JSHandle.GetPropertyAsync(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/JSHandle.cs/#L79">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_JSHandle_GetPropertyAsync_" data-uid="PlaywrightSharp.JSHandle.GetPropertyAsync*"></a>
+  <h4 id="PlaywrightSharp_JSHandle_GetPropertyAsync_System_String_" data-uid="PlaywrightSharp.JSHandle.GetPropertyAsync(System.String)">GetPropertyAsync(String)</h4>
+  <div class="markdown level1 summary"><p>Fetches a single property from the referenced object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;IJSHandle&gt; GetPropertyAsync(string propertyName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">propertyName</span></td>
+        <td><p>property to get.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="PlaywrightSharp.IJSHandle.html">IJSHandle</a>&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the evaluation is completed, yielding a <a class="xref" href="PlaywrightSharp.IJSHandle.html">IJSHandle</a> from the referenced object.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_JSHandle_ToString.md&amp;value=---%0Auid%3A%20PlaywrightSharp.JSHandle.ToString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/JSHandle.cs/#L99">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_JSHandle_ToString_" data-uid="PlaywrightSharp.JSHandle.ToString*"></a>
+  <h4 id="PlaywrightSharp_JSHandle_ToString" data-uid="PlaywrightSharp.JSHandle.ToString">ToString()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="PlaywrightSharp.IJSHandle.html">IJSHandle</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_JSHandle.md&amp;value=---%0Auid%3A%20PlaywrightSharp.JSHandle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/JSHandle.cs/#L13" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,2684 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class BrowserContext
+   | Playwright Sharp </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class BrowserContext
+   | Playwright Sharp ">
+    <meta name="generator" content="docfx 2.45.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="PlaywrightSharp.BrowserContext">
+  
+  
+  <h1 id="PlaywrightSharp_BrowserContext" data-uid="PlaywrightSharp.BrowserContext" class="text-break">Class BrowserContext
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="PlaywrightSharp.Transport.ChannelOwnerBase.html">ChannelOwnerBase</a></div>
+    <div class="level2"><span class="xref">BrowserContext</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="PlaywrightSharp.IBrowserContext.html">IBrowserContext</a></div>
+    <div><span class="xref">IAsyncDisposable</span></div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="PlaywrightSharp.html">PlaywrightSharp</a></h6>
+  <h6><strong>Assembly</strong>: PlaywrightSharp.dll</h6>
+  <h5 id="PlaywrightSharp_BrowserContext_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class BrowserContext : ChannelOwnerBase, IChannelOwner&lt;BrowserContext&gt;, IChannelOwner, IBrowserContext, IAsyncDisposable</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_BackgroundPages.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.BackgroundPages%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L109">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_BackgroundPages_" data-uid="PlaywrightSharp.BrowserContext.BackgroundPages*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_BackgroundPages" data-uid="PlaywrightSharp.BrowserContext.BackgroundPages">BackgroundPages</h4>
+  <div class="markdown level1 summary"><p>All existing background pages in the context. Chromium Only.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IPage[] BackgroundPages { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.IPage.html">IPage</a>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_DefaultNavigationTimeout.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.DefaultNavigationTimeout%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L126">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_DefaultNavigationTimeout_" data-uid="PlaywrightSharp.BrowserContext.DefaultNavigationTimeout*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_DefaultNavigationTimeout" data-uid="PlaywrightSharp.BrowserContext.DefaultNavigationTimeout">DefaultNavigationTimeout</h4>
+  <div class="markdown level1 summary"><p>Maximum navigation time in milliseconds.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int DefaultNavigationTimeout { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_DefaultTimeout.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.DefaultTimeout%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L115">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_DefaultTimeout_" data-uid="PlaywrightSharp.BrowserContext.DefaultTimeout*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_DefaultTimeout" data-uid="PlaywrightSharp.BrowserContext.DefaultTimeout">DefaultTimeout</h4>
+  <div class="markdown level1 summary"><p>This setting will change the default maximum time for all the methods accepting timeout option.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int DefaultTimeout { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_Pages.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.Pages%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L106">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_Pages_" data-uid="PlaywrightSharp.BrowserContext.Pages*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_Pages" data-uid="PlaywrightSharp.BrowserContext.Pages">Pages</h4>
+  <div class="markdown level1 summary"><p>An array of all pages inside the browser context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IPage[] Pages { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.IPage.html">IPage</a>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ServiceWorkers.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ServiceWorkers%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L112">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_ServiceWorkers_" data-uid="PlaywrightSharp.BrowserContext.ServiceWorkers*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_ServiceWorkers" data-uid="PlaywrightSharp.BrowserContext.ServiceWorkers">ServiceWorkers</h4>
+  <div class="markdown level1 summary"><p>All existing service workers in the context. Chromium Only.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IWorker[] ServiceWorkers { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.IWorker.html">IWorker</a>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_AddCookiesAsync_IEnumerable_PlaywrightSharp_SetNetworkCookieParam__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.AddCookiesAsync(IEnumerable%7BPlaywrightSharp.SetNetworkCookieParam%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L173">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_AddCookiesAsync_" data-uid="PlaywrightSharp.BrowserContext.AddCookiesAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_AddCookiesAsync_IEnumerable_PlaywrightSharp_SetNetworkCookieParam__" data-uid="PlaywrightSharp.BrowserContext.AddCookiesAsync(IEnumerable{PlaywrightSharp.SetNetworkCookieParam})">AddCookiesAsync(IEnumerable&lt;SetNetworkCookieParam&gt;)</h4>
+  <div class="markdown level1 summary"><p>Clears all of the current cookies and then sets the cookies for the context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task AddCookiesAsync(IEnumerable&lt;SetNetworkCookieParam&gt; cookies)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="PlaywrightSharp.SetNetworkCookieParam.html">SetNetworkCookieParam</a>&gt;</td>
+        <td><span class="parametername">cookies</span></td>
+        <td><p>Cookies to set.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the cookies are set.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_AddCookiesAsync_PlaywrightSharp_SetNetworkCookieParam___.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.AddCookiesAsync(PlaywrightSharp.SetNetworkCookieParam%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L176">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_AddCookiesAsync_" data-uid="PlaywrightSharp.BrowserContext.AddCookiesAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_AddCookiesAsync_PlaywrightSharp_SetNetworkCookieParam___" data-uid="PlaywrightSharp.BrowserContext.AddCookiesAsync(PlaywrightSharp.SetNetworkCookieParam[])">AddCookiesAsync(SetNetworkCookieParam[])</h4>
+  <div class="markdown level1 summary"><p>Clears all of the current cookies and then sets the cookies for the context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task AddCookiesAsync(params SetNetworkCookieParam[] cookies)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.SetNetworkCookieParam.html">SetNetworkCookieParam</a>[]</td>
+        <td><span class="parametername">cookies</span></td>
+        <td><p>Cookies to set.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the cookies are set.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_AddInitScriptAsync_System_String_System_Object___System_String_System_String_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.AddInitScriptAsync(System.String%2CSystem.Object%5B%5D%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L278">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_AddInitScriptAsync_" data-uid="PlaywrightSharp.BrowserContext.AddInitScriptAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_AddInitScriptAsync_System_String_System_Object___System_String_System_String_" data-uid="PlaywrightSharp.BrowserContext.AddInitScriptAsync(System.String,System.Object[],System.String,System.String)">AddInitScriptAsync(String, Object[], String, String)</h4>
+  <div class="markdown level1 summary"><p>Adds a script which would be evaluated in one of the following scenarios:</p>
+<ul>
+<li>Whenever a page is created in the browser context or is navigated.</li>
+<li>Whenever a child frame is attached or navigated in any page in the browser context.In this case, the script is evaluated in the context of the newly attached frame.</li>
+</ul>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task AddInitScriptAsync(string script = null, object[] arg = null, string path = null, string content = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">script</span></td>
+        <td><p>Script to be evaluated in all pages in the browser context or script path.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span>[]</td>
+        <td><span class="parametername">arg</span></td>
+        <td><p>Optional argument to pass to script .</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">path</span></td>
+        <td><p>Gets or sets the path to the JavaScript file to be injected into frame. If its a relative path, then it is resolved relative to <see cref="!:System.IO.Directory.GetCurrentDirectory"></see>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">content</span></td>
+        <td><p>Gets or sets the raw JavaScript content to be injected into frame.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the registration was completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ClearCookiesAsync.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ClearCookiesAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L179">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_ClearCookiesAsync_" data-uid="PlaywrightSharp.BrowserContext.ClearCookiesAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_ClearCookiesAsync" data-uid="PlaywrightSharp.BrowserContext.ClearCookiesAsync">ClearCookiesAsync()</h4>
+  <div class="markdown level1 summary"><p>Clears the context's cookies.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ClearCookiesAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the cookies are cleared.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ClearPermissionsAsync.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ClearPermissionsAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L195">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_ClearPermissionsAsync_" data-uid="PlaywrightSharp.BrowserContext.ClearPermissionsAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_ClearPermissionsAsync" data-uid="PlaywrightSharp.BrowserContext.ClearPermissionsAsync">ClearPermissionsAsync()</h4>
+  <div class="markdown level1 summary"><p>Clears all permission overrides for the browser context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ClearPermissionsAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the message was confirmed by the browser.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_CloseAsync.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.CloseAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L158">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_CloseAsync_" data-uid="PlaywrightSharp.BrowserContext.CloseAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_CloseAsync" data-uid="PlaywrightSharp.BrowserContext.CloseAsync">CloseAsync()</h4>
+  <div class="markdown level1 summary"><p>Closes the browser context. All the targets that belong to the browser context will be closed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task CloseAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the browser context is closed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_BrowserContext_CloseAsync_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>NOTE only incognito browser contexts can be closed.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_DisposeAsync.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.DisposeAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L198">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_DisposeAsync_" data-uid="PlaywrightSharp.BrowserContext.DisposeAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_DisposeAsync" data-uid="PlaywrightSharp.BrowserContext.DisposeAsync">DisposeAsync()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ValueTask DisposeAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">ValueTask</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ExposeBindingAsync_System_String_Action_PlaywrightSharp_BindingSource__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ExposeBindingAsync(System.String%2CAction%7BPlaywrightSharp.BindingSource%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L201">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_ExposeBindingAsync_" data-uid="PlaywrightSharp.BrowserContext.ExposeBindingAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_ExposeBindingAsync_System_String_Action_PlaywrightSharp_BindingSource__" data-uid="PlaywrightSharp.BrowserContext.ExposeBindingAsync(System.String,Action{PlaywrightSharp.BindingSource})">ExposeBindingAsync(String, Action&lt;BindingSource&gt;)</h4>
+  <div class="markdown level1 summary"><p>The method adds a function called name on the window object of every frame in every page in the context.
+When called, the function executes <code data-dev-comment-type="paramref" class="paramref">playwrightBinding</code> in C# and returns a <see cref="!:Task"></see> which resolves when <code data-dev-comment-type="paramref" class="paramref">playwrightBinding</code> completes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ExposeBindingAsync(string name, Action&lt;BindingSource&gt; playwrightBinding)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>Name of the function on the window object.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Action</span>&lt;<a class="xref" href="PlaywrightSharp.BindingSource.html">BindingSource</a>&gt;</td>
+        <td><span class="parametername">playwrightBinding</span></td>
+        <td><p>Callback function which will be called in Playwright's context.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>Task.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_BrowserContext_ExposeBindingAsync_System_String_Action_PlaywrightSharp_BindingSource___remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the <code data-dev-comment-type="paramref" class="paramref">playwrightBinding</code> returns a <see cref="!:Task"></see>, it will be awaited.
+Functions installed via <a class="xref" href="PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_ExposeBindingAsync_System_String_Action_PlaywrightSharp_BindingSource__">ExposeBindingAsync(String, Action&lt;BindingSource&gt;)</a> survive navigations.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ExposeBindingAsync__1_System_String_Action_PlaywrightSharp_BindingSource___0__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ExposeBindingAsync%60%601(System.String%2CAction%7BPlaywrightSharp.BindingSource%2C%60%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L205">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_ExposeBindingAsync_" data-uid="PlaywrightSharp.BrowserContext.ExposeBindingAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_ExposeBindingAsync__1_System_String_Action_PlaywrightSharp_BindingSource___0__" data-uid="PlaywrightSharp.BrowserContext.ExposeBindingAsync``1(System.String,Action{PlaywrightSharp.BindingSource,``0})">ExposeBindingAsync&lt;T&gt;(String, Action&lt;BindingSource, T&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ExposeBindingAsync&lt;T&gt;(string name, Action&lt;BindingSource, T&gt; playwrightBinding)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Action</span>&lt;<a class="xref" href="PlaywrightSharp.BindingSource.html">BindingSource</a>, T&gt;</td>
+        <td><span class="parametername">playwrightBinding</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ExposeBindingAsync__1_System_String_Func_PlaywrightSharp_BindingSource___0__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ExposeBindingAsync%60%601(System.String%2CFunc%7BPlaywrightSharp.BindingSource%2C%60%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L209">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_ExposeBindingAsync_" data-uid="PlaywrightSharp.BrowserContext.ExposeBindingAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_ExposeBindingAsync__1_System_String_Func_PlaywrightSharp_BindingSource___0__" data-uid="PlaywrightSharp.BrowserContext.ExposeBindingAsync``1(System.String,Func{PlaywrightSharp.BindingSource,``0})">ExposeBindingAsync&lt;TResult&gt;(String, Func&lt;BindingSource, TResult&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ExposeBindingAsync&lt;TResult&gt;(string name, Func&lt;BindingSource, TResult&gt; playwrightBinding)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;<a class="xref" href="PlaywrightSharp.BindingSource.html">BindingSource</a>, TResult&gt;</td>
+        <td><span class="parametername">playwrightBinding</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TResult</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ExposeBindingAsync__2_System_String_Func_PlaywrightSharp_BindingSource___0___1__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ExposeBindingAsync%60%602(System.String%2CFunc%7BPlaywrightSharp.BindingSource%2C%60%600%2C%60%601%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L213">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_ExposeBindingAsync_" data-uid="PlaywrightSharp.BrowserContext.ExposeBindingAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_ExposeBindingAsync__2_System_String_Func_PlaywrightSharp_BindingSource___0___1__" data-uid="PlaywrightSharp.BrowserContext.ExposeBindingAsync``2(System.String,Func{PlaywrightSharp.BindingSource,``0,``1})">ExposeBindingAsync&lt;T, TResult&gt;(String, Func&lt;BindingSource, T, TResult&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ExposeBindingAsync&lt;T, TResult&gt;(string name, Func&lt;BindingSource, T, TResult&gt; playwrightBinding)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;<a class="xref" href="PlaywrightSharp.BindingSource.html">BindingSource</a>, T, TResult&gt;</td>
+        <td><span class="parametername">playwrightBinding</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TResult</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ExposeBindingAsync__3_System_String_Func_PlaywrightSharp_BindingSource___0___1___2__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ExposeBindingAsync%60%603(System.String%2CFunc%7BPlaywrightSharp.BindingSource%2C%60%600%2C%60%601%2C%60%602%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L217">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_ExposeBindingAsync_" data-uid="PlaywrightSharp.BrowserContext.ExposeBindingAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_ExposeBindingAsync__3_System_String_Func_PlaywrightSharp_BindingSource___0___1___2__" data-uid="PlaywrightSharp.BrowserContext.ExposeBindingAsync``3(System.String,Func{PlaywrightSharp.BindingSource,``0,``1,``2})">ExposeBindingAsync&lt;T1, T2, TResult&gt;(String, Func&lt;BindingSource, T1, T2, TResult&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ExposeBindingAsync&lt;T1, T2, TResult&gt;(string name, Func&lt;BindingSource, T1, T2, TResult&gt; playwrightBinding)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;<a class="xref" href="PlaywrightSharp.BindingSource.html">BindingSource</a>, T1, T2, TResult&gt;</td>
+        <td><span class="parametername">playwrightBinding</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T1</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">T2</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TResult</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ExposeBindingAsync__4_System_String_Func_PlaywrightSharp_BindingSource___0___1___2___3__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ExposeBindingAsync%60%604(System.String%2CFunc%7BPlaywrightSharp.BindingSource%2C%60%600%2C%60%601%2C%60%602%2C%60%603%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L221">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_ExposeBindingAsync_" data-uid="PlaywrightSharp.BrowserContext.ExposeBindingAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_ExposeBindingAsync__4_System_String_Func_PlaywrightSharp_BindingSource___0___1___2___3__" data-uid="PlaywrightSharp.BrowserContext.ExposeBindingAsync``4(System.String,Func{PlaywrightSharp.BindingSource,``0,``1,``2,``3})">ExposeBindingAsync&lt;T1, T2, T3, TResult&gt;(String, Func&lt;BindingSource, T1, T2, T3, TResult&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ExposeBindingAsync&lt;T1, T2, T3, TResult&gt;(string name, Func&lt;BindingSource, T1, T2, T3, TResult&gt; playwrightBinding)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;<a class="xref" href="PlaywrightSharp.BindingSource.html">BindingSource</a>, T1, T2, T3, TResult&gt;</td>
+        <td><span class="parametername">playwrightBinding</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T1</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">T2</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">T3</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TResult</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ExposeBindingAsync__5_System_String_Func_PlaywrightSharp_BindingSource___0___1___2___3___4__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ExposeBindingAsync%60%605(System.String%2CFunc%7BPlaywrightSharp.BindingSource%2C%60%600%2C%60%601%2C%60%602%2C%60%603%2C%60%604%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L225">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_ExposeBindingAsync_" data-uid="PlaywrightSharp.BrowserContext.ExposeBindingAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_ExposeBindingAsync__5_System_String_Func_PlaywrightSharp_BindingSource___0___1___2___3___4__" data-uid="PlaywrightSharp.BrowserContext.ExposeBindingAsync``5(System.String,Func{PlaywrightSharp.BindingSource,``0,``1,``2,``3,``4})">ExposeBindingAsync&lt;T1, T2, T3, T4, TResult&gt;(String, Func&lt;BindingSource, T1, T2, T3, T4, TResult&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ExposeBindingAsync&lt;T1, T2, T3, T4, TResult&gt;(string name, Func&lt;BindingSource, T1, T2, T3, T4, TResult&gt; playwrightBinding)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;<a class="xref" href="PlaywrightSharp.BindingSource.html">BindingSource</a>, T1, T2, T3, T4, TResult&gt;</td>
+        <td><span class="parametername">playwrightBinding</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T1</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">T2</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">T3</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">T4</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TResult</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ExposeFunctionAsync_System_String_Action_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ExposeFunctionAsync(System.String%2CAction)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L229">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_ExposeFunctionAsync_" data-uid="PlaywrightSharp.BrowserContext.ExposeFunctionAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_ExposeFunctionAsync_System_String_Action_" data-uid="PlaywrightSharp.BrowserContext.ExposeFunctionAsync(System.String,Action)">ExposeFunctionAsync(String, Action)</h4>
+  <div class="markdown level1 summary"><p>The method adds a function called name on the window object of every frame in every page in the context.
+When called, the function executes <code data-dev-comment-type="paramref" class="paramref">playwrightFunction</code> in C# and returns a <see cref="!:Task"></see> which resolves when <code data-dev-comment-type="paramref" class="paramref">playwrightFunction</code> completes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ExposeFunctionAsync(string name, Action playwrightFunction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>Name of the function on the window object.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Action</span></td>
+        <td><span class="parametername">playwrightFunction</span></td>
+        <td><p>Callback function which will be called in Playwright's context.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>Task.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_BrowserContext_ExposeFunctionAsync_System_String_Action__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the <code data-dev-comment-type="paramref" class="paramref">playwrightFunction</code> returns a <see cref="!:Task"></see>, it will be awaited.
+Functions installed via <a class="xref" href="PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_ExposeFunctionAsync_System_String_Action_">ExposeFunctionAsync(String, Action)</a> survive navigations.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ExposeFunctionAsync__1_System_String_Action___0__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ExposeFunctionAsync%60%601(System.String%2CAction%7B%60%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L233">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_ExposeFunctionAsync_" data-uid="PlaywrightSharp.BrowserContext.ExposeFunctionAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_ExposeFunctionAsync__1_System_String_Action___0__" data-uid="PlaywrightSharp.BrowserContext.ExposeFunctionAsync``1(System.String,Action{``0})">ExposeFunctionAsync&lt;T&gt;(String, Action&lt;T&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ExposeFunctionAsync&lt;T&gt;(string name, Action&lt;T&gt; playwrightFunction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Action</span>&lt;T&gt;</td>
+        <td><span class="parametername">playwrightFunction</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ExposeFunctionAsync__1_System_String_Func___0__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ExposeFunctionAsync%60%601(System.String%2CFunc%7B%60%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L237">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_ExposeFunctionAsync_" data-uid="PlaywrightSharp.BrowserContext.ExposeFunctionAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_ExposeFunctionAsync__1_System_String_Func___0__" data-uid="PlaywrightSharp.BrowserContext.ExposeFunctionAsync``1(System.String,Func{``0})">ExposeFunctionAsync&lt;TResult&gt;(String, Func&lt;TResult&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ExposeFunctionAsync&lt;TResult&gt;(string name, Func&lt;TResult&gt; playwrightFunction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;TResult&gt;</td>
+        <td><span class="parametername">playwrightFunction</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TResult</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ExposeFunctionAsync__2_System_String_Func___0___1__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ExposeFunctionAsync%60%602(System.String%2CFunc%7B%60%600%2C%60%601%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L241">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_ExposeFunctionAsync_" data-uid="PlaywrightSharp.BrowserContext.ExposeFunctionAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_ExposeFunctionAsync__2_System_String_Func___0___1__" data-uid="PlaywrightSharp.BrowserContext.ExposeFunctionAsync``2(System.String,Func{``0,``1})">ExposeFunctionAsync&lt;T, TResult&gt;(String, Func&lt;T, TResult&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ExposeFunctionAsync&lt;T, TResult&gt;(string name, Func&lt;T, TResult&gt; playwrightFunction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;T, TResult&gt;</td>
+        <td><span class="parametername">playwrightFunction</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TResult</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ExposeFunctionAsync__3_System_String_Func___0___1___2__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ExposeFunctionAsync%60%603(System.String%2CFunc%7B%60%600%2C%60%601%2C%60%602%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L245">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_ExposeFunctionAsync_" data-uid="PlaywrightSharp.BrowserContext.ExposeFunctionAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_ExposeFunctionAsync__3_System_String_Func___0___1___2__" data-uid="PlaywrightSharp.BrowserContext.ExposeFunctionAsync``3(System.String,Func{``0,``1,``2})">ExposeFunctionAsync&lt;T1, T2, TResult&gt;(String, Func&lt;T1, T2, TResult&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ExposeFunctionAsync&lt;T1, T2, TResult&gt;(string name, Func&lt;T1, T2, TResult&gt; playwrightFunction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;T1, T2, TResult&gt;</td>
+        <td><span class="parametername">playwrightFunction</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T1</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">T2</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TResult</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ExposeFunctionAsync__4_System_String_Func___0___1___2___3__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ExposeFunctionAsync%60%604(System.String%2CFunc%7B%60%600%2C%60%601%2C%60%602%2C%60%603%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L249">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_ExposeFunctionAsync_" data-uid="PlaywrightSharp.BrowserContext.ExposeFunctionAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_ExposeFunctionAsync__4_System_String_Func___0___1___2___3__" data-uid="PlaywrightSharp.BrowserContext.ExposeFunctionAsync``4(System.String,Func{``0,``1,``2,``3})">ExposeFunctionAsync&lt;T1, T2, T3, TResult&gt;(String, Func&lt;T1, T2, T3, TResult&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ExposeFunctionAsync&lt;T1, T2, T3, TResult&gt;(string name, Func&lt;T1, T2, T3, TResult&gt; playwrightFunction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;T1, T2, T3, TResult&gt;</td>
+        <td><span class="parametername">playwrightFunction</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T1</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">T2</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">T3</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TResult</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ExposeFunctionAsync__5_System_String_Func___0___1___2___3___4__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ExposeFunctionAsync%60%605(System.String%2CFunc%7B%60%600%2C%60%601%2C%60%602%2C%60%603%2C%60%604%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L253">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_ExposeFunctionAsync_" data-uid="PlaywrightSharp.BrowserContext.ExposeFunctionAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_ExposeFunctionAsync__5_System_String_Func___0___1___2___3___4__" data-uid="PlaywrightSharp.BrowserContext.ExposeFunctionAsync``5(System.String,Func{``0,``1,``2,``3,``4})">ExposeFunctionAsync&lt;T1, T2, T3, T4, TResult&gt;(String, Func&lt;T1, T2, T3, T4, TResult&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ExposeFunctionAsync&lt;T1, T2, T3, T4, TResult&gt;(string name, Func&lt;T1, T2, T3, T4, TResult&gt; playwrightFunction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;T1, T2, T3, T4, TResult&gt;</td>
+        <td><span class="parametername">playwrightFunction</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T1</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">T2</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">T3</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">T4</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TResult</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_GetCookiesAsync_System_String___.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.GetCookiesAsync(System.String%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L170">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_GetCookiesAsync_" data-uid="PlaywrightSharp.BrowserContext.GetCookiesAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_GetCookiesAsync_System_String___" data-uid="PlaywrightSharp.BrowserContext.GetCookiesAsync(System.String[])">GetCookiesAsync(String[])</h4>
+  <div class="markdown level1 summary"><p>Returns the context's cookies.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;IEnumerable&lt;NetworkCookie&gt;&gt; GetCookiesAsync(params string[] urls)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td><span class="parametername">urls</span></td>
+        <td><p>Url's to return cookies for.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">IEnumerable</span>&lt;<a class="xref" href="PlaywrightSharp.NetworkCookie.html">NetworkCookie</a>&gt;&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the cookies are sent by the browser, yielding a <see cref="t:NetworkCookie[]"></see>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_BrowserContext_GetCookiesAsync_System_String____remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If no URLs are specified, this method returns cookies for the current page URL.
+If URLs are specified, only cookies for those URLs are returned.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_GrantPermissionsAsync_PlaywrightSharp_ContextPermission_System_String_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.GrantPermissionsAsync(PlaywrightSharp.ContextPermission%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L185">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_GrantPermissionsAsync_" data-uid="PlaywrightSharp.BrowserContext.GrantPermissionsAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_GrantPermissionsAsync_PlaywrightSharp_ContextPermission_System_String_" data-uid="PlaywrightSharp.BrowserContext.GrantPermissionsAsync(PlaywrightSharp.ContextPermission,System.String)">GrantPermissionsAsync(ContextPermission, String)</h4>
+  <div class="markdown level1 summary"><p>Grants permissions to an URL.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task GrantPermissionsAsync(ContextPermission permission, string origin = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.ContextPermission.html">ContextPermission</a></td>
+        <td><span class="parametername">permission</span></td>
+        <td><p>Permission to grant.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">origin</span></td>
+        <td><p>The origin to grant permissions to, e.g. &quot;https://example.com&quot;.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the message was confirmed by the browser.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_GrantPermissionsAsync_PlaywrightSharp_ContextPermission___System_String_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.GrantPermissionsAsync(PlaywrightSharp.ContextPermission%5B%5D%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L182">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_GrantPermissionsAsync_" data-uid="PlaywrightSharp.BrowserContext.GrantPermissionsAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_GrantPermissionsAsync_PlaywrightSharp_ContextPermission___System_String_" data-uid="PlaywrightSharp.BrowserContext.GrantPermissionsAsync(PlaywrightSharp.ContextPermission[],System.String)">GrantPermissionsAsync(ContextPermission[], String)</h4>
+  <div class="markdown level1 summary"><p>Grants permissions to an URL.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task GrantPermissionsAsync(ContextPermission[] permissions, string origin = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.ContextPermission.html">ContextPermission</a>[]</td>
+        <td><span class="parametername">permissions</span></td>
+        <td><p>An array of permissions to grant.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">origin</span></td>
+        <td><p>The origin to grant permissions to, e.g. &quot;https://example.com&quot;.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the message was confirmed by the browser.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_NewCDPSessionAsync_PlaywrightSharp_IPage_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.NewCDPSessionAsync(PlaywrightSharp.IPage)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L295">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_NewCDPSessionAsync_" data-uid="PlaywrightSharp.BrowserContext.NewCDPSessionAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_NewCDPSessionAsync_PlaywrightSharp_IPage_" data-uid="PlaywrightSharp.BrowserContext.NewCDPSessionAsync(PlaywrightSharp.IPage)">NewCDPSessionAsync(IPage)</h4>
+  <div class="markdown level1 summary"><p>Creates a new browser session.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;ICDPSession&gt; NewCDPSessionAsync(IPage page)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.IPage.html">IPage</a></td>
+        <td><span class="parametername">page</span></td>
+        <td><p>Page to create a new session for.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="PlaywrightSharp.ICDPSession.html">ICDPSession</a>&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the browser session was created, yielding the new session.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_NewPageAsync_System_String_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.NewPageAsync(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L147">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_NewPageAsync_" data-uid="PlaywrightSharp.BrowserContext.NewPageAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_NewPageAsync_System_String_" data-uid="PlaywrightSharp.BrowserContext.NewPageAsync(System.String)">NewPageAsync(String)</h4>
+  <div class="markdown level1 summary"><p>Creates a new page in the browser context and optionally navigates it to the specified URL.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;IPage&gt; NewPageAsync(string url = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">url</span></td>
+        <td><p>URL to navigate after the page is created.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="PlaywrightSharp.IPage.html">IPage</a>&gt;</td>
+        <td><p>A <see cref="!:Task&lt;IPage>"></see> that completes when a new <a class="xref" href="PlaywrightSharp.IPage.html">IPage</a> is created, yielding the new <a class="xref" href="PlaywrightSharp.IPage.html">IPage</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_RouteAsync_Func_System_String_System_Boolean__Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.RouteAsync(Func%7BSystem.String%2CSystem.Boolean%7D%2CAction%7BPlaywrightSharp.Route%2CPlaywrightSharp.IRequest%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L316">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_RouteAsync_" data-uid="PlaywrightSharp.BrowserContext.RouteAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_RouteAsync_Func_System_String_System_Boolean__Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__" data-uid="PlaywrightSharp.BrowserContext.RouteAsync(Func{System.String,System.Boolean},Action{PlaywrightSharp.Route,PlaywrightSharp.IRequest})">RouteAsync(Func&lt;String, Boolean&gt;, Action&lt;Route, IRequest&gt;)</h4>
+  <div class="markdown level1 summary"><p>Routing provides the capability to modify network requests that are made by a page.
+Once route is enabled, every request matching the url pattern will stall unless it's continued, fulfilled or aborted.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task RouteAsync(Func&lt;string, bool&gt; url, Action&lt;Route, IRequest&gt; handler)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Func</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">url</span></td>
+        <td><p>A fucntion that evaluate the URL match.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Action</span>&lt;<a class="xref" href="PlaywrightSharp.Route.html">Route</a>, <a class="xref" href="PlaywrightSharp.IRequest.html">IRequest</a>&gt;</td>
+        <td><span class="parametername">handler</span></td>
+        <td><p>Handler function to route the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the registration was completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_RouteAsync_Regex_Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.RouteAsync(Regex%2CAction%7BPlaywrightSharp.Route%2CPlaywrightSharp.IRequest%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L307">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_RouteAsync_" data-uid="PlaywrightSharp.BrowserContext.RouteAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_RouteAsync_Regex_Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__" data-uid="PlaywrightSharp.BrowserContext.RouteAsync(Regex,Action{PlaywrightSharp.Route,PlaywrightSharp.IRequest})">RouteAsync(Regex, Action&lt;Route, IRequest&gt;)</h4>
+  <div class="markdown level1 summary"><p>Routing provides the capability to modify network requests that are made by a page.
+Once route is enabled, every request matching the url pattern will stall unless it's continued, fulfilled or aborted.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task RouteAsync(Regex url, Action&lt;Route, IRequest&gt; handler)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Regex</span></td>
+        <td><span class="parametername">url</span></td>
+        <td><p>A regex to match while routing.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Action</span>&lt;<a class="xref" href="PlaywrightSharp.Route.html">Route</a>, <a class="xref" href="PlaywrightSharp.IRequest.html">IRequest</a>&gt;</td>
+        <td><span class="parametername">handler</span></td>
+        <td><p>Handler function to route the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the registration was completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_RouteAsync_System_String_Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.RouteAsync(System.String%2CAction%7BPlaywrightSharp.Route%2CPlaywrightSharp.IRequest%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L298">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_RouteAsync_" data-uid="PlaywrightSharp.BrowserContext.RouteAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_RouteAsync_System_String_Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__" data-uid="PlaywrightSharp.BrowserContext.RouteAsync(System.String,Action{PlaywrightSharp.Route,PlaywrightSharp.IRequest})">RouteAsync(String, Action&lt;Route, IRequest&gt;)</h4>
+  <div class="markdown level1 summary"><p>Routing provides the capability to modify network requests that are made by any page in the browser context.
+Once route is enabled, every request matching the url pattern will stall unless it's continued, fulfilled or aborted.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task RouteAsync(string url, Action&lt;Route, IRequest&gt; handler)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">url</span></td>
+        <td><p>A glob pattern to match while routing.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Action</span>&lt;<a class="xref" href="PlaywrightSharp.Route.html">Route</a>, <a class="xref" href="PlaywrightSharp.IRequest.html">IRequest</a>&gt;</td>
+        <td><span class="parametername">handler</span></td>
+        <td><p>Handler function to route the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the registration was completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_SetExtraHttpHeadersAsync_Dictionary_System_String_System_String__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.SetExtraHttpHeadersAsync(Dictionary%7BSystem.String%2CSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L352">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_SetExtraHttpHeadersAsync_" data-uid="PlaywrightSharp.BrowserContext.SetExtraHttpHeadersAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_SetExtraHttpHeadersAsync_Dictionary_System_String_System_String__" data-uid="PlaywrightSharp.BrowserContext.SetExtraHttpHeadersAsync(Dictionary{System.String,System.String})">SetExtraHttpHeadersAsync(Dictionary&lt;String, String&gt;)</h4>
+  <div class="markdown level1 summary"><p>Sets extra HTTP headers that will be sent with every request in every page in the context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task SetExtraHttpHeadersAsync(Dictionary&lt;string, string&gt; headers)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Dictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">headers</span></td>
+        <td><p>Additional http headers to be sent with every request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the headers are set.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_SetGeolocationAsync_PlaywrightSharp_Geolocation_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.SetGeolocationAsync(PlaywrightSharp.Geolocation)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L192">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_SetGeolocationAsync_" data-uid="PlaywrightSharp.BrowserContext.SetGeolocationAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_SetGeolocationAsync_PlaywrightSharp_Geolocation_" data-uid="PlaywrightSharp.BrowserContext.SetGeolocationAsync(PlaywrightSharp.Geolocation)">SetGeolocationAsync(Geolocation)</h4>
+  <div class="markdown level1 summary"><p>Sets the page's geolocation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task SetGeolocationAsync(Geolocation geolocation)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.Geolocation.html">Geolocation</a></td>
+        <td><span class="parametername">geolocation</span></td>
+        <td><p>Geolocation.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the message was confirmed by the browser.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_SetGeolocationAsync_System_Decimal_System_Decimal_System_Decimal_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.SetGeolocationAsync(System.Decimal%2CSystem.Decimal%2CSystem.Decimal)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L188">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_SetGeolocationAsync_" data-uid="PlaywrightSharp.BrowserContext.SetGeolocationAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_SetGeolocationAsync_System_Decimal_System_Decimal_System_Decimal_" data-uid="PlaywrightSharp.BrowserContext.SetGeolocationAsync(System.Decimal,System.Decimal,System.Decimal)">SetGeolocationAsync(Decimal, Decimal, Decimal)</h4>
+  <div class="markdown level1 summary"><p>Sets the page's geolocation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task SetGeolocationAsync(decimal latitude, decimal longitude, decimal accuracy = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Decimal</span></td>
+        <td><span class="parametername">latitude</span></td>
+        <td><p>Latitude between -90 and 90.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Decimal</span></td>
+        <td><span class="parametername">longitude</span></td>
+        <td><p>Longitude between -180 and 180.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Decimal</span></td>
+        <td><span class="parametername">accuracy</span></td>
+        <td><p>Optional non-negative accuracy value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the message was confirmed by the browser.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_SetHttpCredentialsAsync_PlaywrightSharp_Credentials_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.SetHttpCredentialsAsync(PlaywrightSharp.Credentials)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L289">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_SetHttpCredentialsAsync_" data-uid="PlaywrightSharp.BrowserContext.SetHttpCredentialsAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_SetHttpCredentialsAsync_PlaywrightSharp_Credentials_" data-uid="PlaywrightSharp.BrowserContext.SetHttpCredentialsAsync(PlaywrightSharp.Credentials)">SetHttpCredentialsAsync(Credentials)</h4>
+  <div class="markdown level1 summary"><p>Provide credentials for http authentication <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication">https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task SetHttpCredentialsAsync(Credentials httpCredentials)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.Credentials.html">Credentials</a></td>
+        <td><span class="parametername">httpCredentials</span></td>
+        <td><p>The credentials.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the credentials are set.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="PlaywrightSharp_BrowserContext_SetHttpCredentialsAsync_PlaywrightSharp_Credentials__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>To disable authentication, pass <code>null</code>.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_SetOfflineAsync_System_Boolean_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.SetOfflineAsync(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L292">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_SetOfflineAsync_" data-uid="PlaywrightSharp.BrowserContext.SetOfflineAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_SetOfflineAsync_System_Boolean_" data-uid="PlaywrightSharp.BrowserContext.SetOfflineAsync(System.Boolean)">SetOfflineAsync(Boolean)</h4>
+  <div class="markdown level1 summary"><p>Set offline mode for the context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task SetOfflineAsync(bool offline)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">offline</span></td>
+        <td><p>When <code>true</code> enables offline mode for the page.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A<see cref="!:Task"></see> that completes when the message is confirmed by the browser.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_UnrouteAsync_Func_System_String_System_Boolean__Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.UnrouteAsync(Func%7BSystem.String%2CSystem.Boolean%7D%2CAction%7BPlaywrightSharp.Route%2CPlaywrightSharp.IRequest%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L343">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_UnrouteAsync_" data-uid="PlaywrightSharp.BrowserContext.UnrouteAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_UnrouteAsync_Func_System_String_System_Boolean__Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__" data-uid="PlaywrightSharp.BrowserContext.UnrouteAsync(Func{System.String,System.Boolean},Action{PlaywrightSharp.Route,PlaywrightSharp.IRequest})">UnrouteAsync(Func&lt;String, Boolean&gt;, Action&lt;Route, IRequest&gt;)</h4>
+  <div class="markdown level1 summary"><p>Removes a route created with <a class="xref" href="PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_RouteAsync_System_String_Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__">RouteAsync(String, Action&lt;Route, IRequest&gt;)</a>. When handler is not specified, removes all routes for the url.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task UnrouteAsync(Func&lt;string, bool&gt; url, Action&lt;Route, IRequest&gt; handler = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Func</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">url</span></td>
+        <td><p>A function used to match while routing.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Action</span>&lt;<a class="xref" href="PlaywrightSharp.Route.html">Route</a>, <a class="xref" href="PlaywrightSharp.IRequest.html">IRequest</a>&gt;</td>
+        <td><span class="parametername">handler</span></td>
+        <td><p>Handler function used to route a request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the registration was completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_UnrouteAsync_Regex_Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.UnrouteAsync(Regex%2CAction%7BPlaywrightSharp.Route%2CPlaywrightSharp.IRequest%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L334">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_UnrouteAsync_" data-uid="PlaywrightSharp.BrowserContext.UnrouteAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_UnrouteAsync_Regex_Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__" data-uid="PlaywrightSharp.BrowserContext.UnrouteAsync(Regex,Action{PlaywrightSharp.Route,PlaywrightSharp.IRequest})">UnrouteAsync(Regex, Action&lt;Route, IRequest&gt;)</h4>
+  <div class="markdown level1 summary"><p>Removes a route created with <a class="xref" href="PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_RouteAsync_System_String_Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__">RouteAsync(String, Action&lt;Route, IRequest&gt;)</a>. When handler is not specified, removes all routes for the url.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task UnrouteAsync(Regex url, Action&lt;Route, IRequest&gt; handler = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Regex</span></td>
+        <td><span class="parametername">url</span></td>
+        <td><p>A glob pattern used to match while routing.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Action</span>&lt;<a class="xref" href="PlaywrightSharp.Route.html">Route</a>, <a class="xref" href="PlaywrightSharp.IRequest.html">IRequest</a>&gt;</td>
+        <td><span class="parametername">handler</span></td>
+        <td><p>Handler function used to route a request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the registration was completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_UnrouteAsync_System_String_Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.UnrouteAsync(System.String%2CAction%7BPlaywrightSharp.Route%2CPlaywrightSharp.IRequest%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L325">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_UnrouteAsync_" data-uid="PlaywrightSharp.BrowserContext.UnrouteAsync*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_UnrouteAsync_System_String_Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__" data-uid="PlaywrightSharp.BrowserContext.UnrouteAsync(System.String,Action{PlaywrightSharp.Route,PlaywrightSharp.IRequest})">UnrouteAsync(String, Action&lt;Route, IRequest&gt;)</h4>
+  <div class="markdown level1 summary"><p>Removes a route created with <a class="xref" href="PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_RouteAsync_System_String_Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__">RouteAsync(String, Action&lt;Route, IRequest&gt;)</a>. When handler is not specified, removes all routes for the url.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task UnrouteAsync(string url, Action&lt;Route, IRequest&gt; handler = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">url</span></td>
+        <td><p>A glob pattern used to match while routing.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Action</span>&lt;<a class="xref" href="PlaywrightSharp.Route.html">Route</a>, <a class="xref" href="PlaywrightSharp.IRequest.html">IRequest</a>&gt;</td>
+        <td><span class="parametername">handler</span></td>
+        <td><p>Handler function used to route a request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>A <see cref="!:Task"></see> that completes when the registration was completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_WaitForEvent__1_PlaywrightSharp_PlaywrightEvent___0__Func___0_System_Boolean__System_Nullable_System_Int32__.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.WaitForEvent%60%601(PlaywrightSharp.PlaywrightEvent%7B%60%600%7D%2CFunc%7B%60%600%2CSystem.Boolean%7D%2CSystem.Nullable%7BSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L257">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_BrowserContext_WaitForEvent_" data-uid="PlaywrightSharp.BrowserContext.WaitForEvent*"></a>
+  <h4 id="PlaywrightSharp_BrowserContext_WaitForEvent__1_PlaywrightSharp_PlaywrightEvent___0__Func___0_System_Boolean__System_Nullable_System_Int32__" data-uid="PlaywrightSharp.BrowserContext.WaitForEvent``1(PlaywrightSharp.PlaywrightEvent{``0},Func{``0,System.Boolean},System.Nullable{System.Int32})">WaitForEvent&lt;T&gt;(PlaywrightEvent&lt;T&gt;, Func&lt;T, Boolean&gt;, Nullable&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;T&gt; WaitForEvent&lt;T&gt;(PlaywrightEvent&lt;T&gt; e, Func&lt;T, bool&gt; predicate = null, int? timeout = null)
+    where T : EventArgs</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.PlaywrightEvent-1.html">PlaywrightEvent</a>&lt;T&gt;</td>
+        <td><span class="parametername">e</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;T, <span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">timeout</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;T&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="events">Events
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_BackgroundPage.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.BackgroundPage%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L94">View Source</a>
+  </span>
+  <h4 id="PlaywrightSharp_BrowserContext_BackgroundPage" data-uid="PlaywrightSharp.BrowserContext.BackgroundPage">BackgroundPage</h4>
+  <div class="markdown level1 summary"><p>Raised when new background page is created in the context. Chromium only</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler&lt;PageEventArgs&gt; BackgroundPage</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventHandler</span>&lt;<a class="xref" href="PlaywrightSharp.PageEventArgs.html">PageEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_Closed.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.Closed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L88">View Source</a>
+  </span>
+  <h4 id="PlaywrightSharp_BrowserContext_Closed" data-uid="PlaywrightSharp.BrowserContext.Closed">Closed</h4>
+  <div class="markdown level1 summary"><p>Raised when Browser context gets closed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler&lt;EventArgs&gt; Closed</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventHandler</span>&lt;<span class="xref">EventArgs</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_Page.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.Page%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L91">View Source</a>
+  </span>
+  <h4 id="PlaywrightSharp_BrowserContext_Page" data-uid="PlaywrightSharp.BrowserContext.Page">Page</h4>
+  <div class="markdown level1 summary"><p>Raised when a new page is created in the Browser context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler&lt;PageEventArgs&gt; Page</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventHandler</span>&lt;<a class="xref" href="PlaywrightSharp.PageEventArgs.html">PageEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext_ServiceWorker.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext.ServiceWorker%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L97">View Source</a>
+  </span>
+  <h4 id="PlaywrightSharp_BrowserContext_ServiceWorker" data-uid="PlaywrightSharp.BrowserContext.ServiceWorker">ServiceWorker</h4>
+  <div class="markdown level1 summary"><p>Raised when new service worker is created in the context. Chromium only</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler&lt;WorkerEventArgs&gt; ServiceWorker</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventHandler</span>&lt;<a class="xref" href="PlaywrightSharp.WorkerEventArgs.html">WorkerEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="PlaywrightSharp.IBrowserContext.html">IBrowserContext</a>
+  </div>
+  <div>
+      <span class="xref">IAsyncDisposable</span>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/microsoft/playwright-sharp/new/master/apiSpec/new?filename=PlaywrightSharp_BrowserContext.md&amp;value=---%0Auid%3A%20PlaywrightSharp.BrowserContext%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/microsoft/playwright-sharp/blob/master/src/PlaywrightSharp/BrowserContext.cs/#L16" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
