@@ -56,7 +56,6 @@ jobs:
         run: |
           dotnet dev-certs https --clean
           dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
-      - uses: microsoft/playwright-github-action@v1
       - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- bash -c "ulimit -c unlimited && npx test-runner test/ --jobs=1 --forbid-only --timeout=30000 --global-timeout=5400000 --retries=3 --reporter=dot,json"
       - name: Linux setup
       - name: Run tests
