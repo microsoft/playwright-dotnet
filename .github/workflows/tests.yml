@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         product: [CHROMIUM, FIREFOX, WEBKIT]
-        os: [windows-latest, macos-latest]
+        os: [windows-latest, ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@v2
       - uses: microsoft/playwright-github-action@v1
@@ -28,35 +28,13 @@ jobs:
         run: |
           dotnet dev-certs https --clean
           dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
-      - name: Run tests
+      - name: Run tests (!Linux)
+        if: ${{ matrix.os != 'ubuntu-latest' }}
         env:
           PRODUCT: ${{ matrix.product }}
         run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger "trx;LogFileName=TestResults.xml"
-      - name: Test results
-        uses: actions/upload-artifact@v1
-        if: always()
-        with:
-          name: TestResult.xml
-          path: ./src/PlaywrightSharp.Tests/TestResults/TestResults.xml
-  test_linux:
-    name: ${{ matrix.product }} on ubuntu-latest
-    runs-on: ubuntu-18.04
-    strategy:
-      fail-fast: false
-      matrix:
-        product: [CHROMIUM, FIREFOX, WEBKIT]
-    steps:
-      - uses: actions/checkout@v2
-      - uses: microsoft/playwright-github-action@v1
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1.6.0
-        with:
-          dotnet-version: 3.1.100
-      - name: Create Certificate
-        run: |
-          dotnet dev-certs https --clean
-          dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
-      - name: Run tests
+      - name: Run tests (Linux)
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         env:
           PRODUCT: ${{ matrix.product }}
         run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- bash -c "ulimit -c unlimited && dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger \"trx;LogFileName=TestResults.xml\""
