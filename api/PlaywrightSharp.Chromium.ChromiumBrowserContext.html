@@ -1,0 +1,465 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class ChromiumBrowserContext
+   | Playwright Sharp </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class ChromiumBrowserContext
+   | Playwright Sharp ">
+    <meta name="generator" content="docfx 2.45.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="PlaywrightSharp.Chromium.ChromiumBrowserContext">
+  
+  
+  <h1 id="PlaywrightSharp_Chromium_ChromiumBrowserContext" data-uid="PlaywrightSharp.Chromium.ChromiumBrowserContext" class="text-break">Class ChromiumBrowserContext
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="PlaywrightSharp.Transport.ChannelOwnerBase.html">ChannelOwnerBase</a></div>
+    <div class="level2"><a class="xref" href="PlaywrightSharp.BrowserContext.html">BrowserContext</a></div>
+    <div class="level3"><span class="xref">ChromiumBrowserContext</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="PlaywrightSharp.Chromium.IChromiumBrowserContext.html">IChromiumBrowserContext</a></div>
+    <div><a class="xref" href="PlaywrightSharp.IBrowserContext.html">IBrowserContext</a></div>
+    <div><span class="xref">IAsyncDisposable</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_Close">BrowserContext.Close</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_Page">BrowserContext.Page</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_Pages">BrowserContext.Pages</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_DefaultTimeout">BrowserContext.DefaultTimeout</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_DefaultNavigationTimeout">BrowserContext.DefaultNavigationTimeout</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_NewPageAsync_System_String_">BrowserContext.NewPageAsync(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_CloseAsync">BrowserContext.CloseAsync()</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_GetCookiesAsync_System_String___">BrowserContext.GetCookiesAsync(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_AddCookiesAsync_IEnumerable_PlaywrightSharp_SetNetworkCookieParam__">BrowserContext.AddCookiesAsync(IEnumerable&lt;SetNetworkCookieParam&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_AddCookiesAsync_PlaywrightSharp_SetNetworkCookieParam___">BrowserContext.AddCookiesAsync(SetNetworkCookieParam[])</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ClearCookiesAsync">BrowserContext.ClearCookiesAsync()</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_GrantPermissionsAsync_PlaywrightSharp_ContextPermission___System_String_">BrowserContext.GrantPermissionsAsync(ContextPermission[], String)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_GrantPermissionsAsync_PlaywrightSharp_ContextPermission_System_String_">BrowserContext.GrantPermissionsAsync(ContextPermission, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_SetGeolocationAsync_System_Decimal_System_Decimal_System_Decimal_">BrowserContext.SetGeolocationAsync(Decimal, Decimal, Decimal)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_SetGeolocationAsync_PlaywrightSharp_Geolocation_">BrowserContext.SetGeolocationAsync(Geolocation)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ClearPermissionsAsync">BrowserContext.ClearPermissionsAsync()</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_DisposeAsync">BrowserContext.DisposeAsync()</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ExposeBindingAsync_System_String_Action_PlaywrightSharp_BindingSource__">BrowserContext.ExposeBindingAsync(String, Action&lt;BindingSource&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ExposeBindingAsync__1_System_String_Action_PlaywrightSharp_BindingSource___0__">BrowserContext.ExposeBindingAsync&lt;T&gt;(String, Action&lt;BindingSource, T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ExposeBindingAsync__1_System_String_Func_PlaywrightSharp_BindingSource___0__">BrowserContext.ExposeBindingAsync&lt;TResult&gt;(String, Func&lt;BindingSource, TResult&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ExposeBindingAsync__2_System_String_Func_PlaywrightSharp_BindingSource___0___1__">BrowserContext.ExposeBindingAsync&lt;T, TResult&gt;(String, Func&lt;BindingSource, T, TResult&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ExposeBindingAsync__3_System_String_Func_PlaywrightSharp_BindingSource___0___1___2__">BrowserContext.ExposeBindingAsync&lt;T1, T2, TResult&gt;(String, Func&lt;BindingSource, T1, T2, TResult&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ExposeBindingAsync__4_System_String_Func_PlaywrightSharp_BindingSource___0___1___2___3__">BrowserContext.ExposeBindingAsync&lt;T1, T2, T3, TResult&gt;(String, Func&lt;BindingSource, T1, T2, T3, TResult&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ExposeBindingAsync__5_System_String_Func_PlaywrightSharp_BindingSource___0___1___2___3___4__">BrowserContext.ExposeBindingAsync&lt;T1, T2, T3, T4, TResult&gt;(String, Func&lt;BindingSource, T1, T2, T3, T4, TResult&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ExposeFunctionAsync_System_String_Action_">BrowserContext.ExposeFunctionAsync(String, Action)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ExposeFunctionAsync__1_System_String_Action___0__">BrowserContext.ExposeFunctionAsync&lt;T&gt;(String, Action&lt;T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ExposeFunctionAsync__1_System_String_Func___0__">BrowserContext.ExposeFunctionAsync&lt;TResult&gt;(String, Func&lt;TResult&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ExposeFunctionAsync__2_System_String_Func___0___1__">BrowserContext.ExposeFunctionAsync&lt;T, TResult&gt;(String, Func&lt;T, TResult&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ExposeFunctionAsync__3_System_String_Func___0___1___2__">BrowserContext.ExposeFunctionAsync&lt;T1, T2, TResult&gt;(String, Func&lt;T1, T2, TResult&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ExposeFunctionAsync__4_System_String_Func___0___1___2___3__">BrowserContext.ExposeFunctionAsync&lt;T1, T2, T3, TResult&gt;(String, Func&lt;T1, T2, T3, TResult&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ExposeFunctionAsync__5_System_String_Func___0___1___2___3___4__">BrowserContext.ExposeFunctionAsync&lt;T1, T2, T3, T4, TResult&gt;(String, Func&lt;T1, T2, T3, T4, TResult&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_WaitForEvent__1_PlaywrightSharp_PlaywrightEvent___0__Func___0_System_Boolean__System_Nullable_System_Int32__">BrowserContext.WaitForEvent&lt;T&gt;(PlaywrightEvent&lt;T&gt;, Func&lt;T, Boolean&gt;, Nullable&lt;Int32&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_AddInitScriptAsync_System_String_System_Object___System_String_System_String_">BrowserContext.AddInitScriptAsync(String, Object[], String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_SetHttpCredentialsAsync_PlaywrightSharp_Credentials_">BrowserContext.SetHttpCredentialsAsync(Credentials)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_SetOfflineAsync_System_Boolean_">BrowserContext.SetOfflineAsync(Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_RouteAsync_System_String_Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__">BrowserContext.RouteAsync(String, Action&lt;Route, IRequest&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_RouteAsync_Regex_Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__">BrowserContext.RouteAsync(Regex, Action&lt;Route, IRequest&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_RouteAsync_Func_System_String_System_Boolean__Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__">BrowserContext.RouteAsync(Func&lt;String, Boolean&gt;, Action&lt;Route, IRequest&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_UnrouteAsync_System_String_Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__">BrowserContext.UnrouteAsync(String, Action&lt;Route, IRequest&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_UnrouteAsync_Regex_Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__">BrowserContext.UnrouteAsync(Regex, Action&lt;Route, IRequest&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_UnrouteAsync_Func_System_String_System_Boolean__Action_PlaywrightSharp_Route_PlaywrightSharp_IRequest__">BrowserContext.UnrouteAsync(Func&lt;String, Boolean&gt;, Action&lt;Route, IRequest&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_SetExtraHttpHeadersAsync_Dictionary_System_String_System_String__">BrowserContext.SetExtraHttpHeadersAsync(Dictionary&lt;String, String&gt;)</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="PlaywrightSharp.Chromium.html">PlaywrightSharp.Chromium</a></h6>
+  <h6><strong>Assembly</strong>: PlaywrightSharp.dll</h6>
+  <h5 id="PlaywrightSharp_Chromium_ChromiumBrowserContext_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class ChromiumBrowserContext : BrowserContext, IChannelOwner&lt;BrowserContext&gt;, IChannelOwner, IChromiumBrowserContext, IBrowserContext, IAsyncDisposable</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/0f6a1a713ec0e7bd6ac1688017dfd9f8a25b7dc4/apiSpec/new?filename=PlaywrightSharp_Chromium_ChromiumBrowserContext_BackgroundPages.md&amp;value=---%0Auid%3A%20PlaywrightSharp.Chromium.ChromiumBrowserContext.BackgroundPages%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/0f6a1a713ec0e7bd6ac1688017dfd9f8a25b7dc4/src/PlaywrightSharp/Chromium/ChromiumBrowserContext.cs/#L62">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_Chromium_ChromiumBrowserContext_BackgroundPages_" data-uid="PlaywrightSharp.Chromium.ChromiumBrowserContext.BackgroundPages*"></a>
+  <h4 id="PlaywrightSharp_Chromium_ChromiumBrowserContext_BackgroundPages" data-uid="PlaywrightSharp.Chromium.ChromiumBrowserContext.BackgroundPages">BackgroundPages</h4>
+  <div class="markdown level1 summary"><p>All existing background pages in the context. Chromium Only.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IPage[] BackgroundPages { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.IPage.html">IPage</a>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/0f6a1a713ec0e7bd6ac1688017dfd9f8a25b7dc4/apiSpec/new?filename=PlaywrightSharp_Chromium_ChromiumBrowserContext_ServiceWorkers.md&amp;value=---%0Auid%3A%20PlaywrightSharp.Chromium.ChromiumBrowserContext.ServiceWorkers%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/0f6a1a713ec0e7bd6ac1688017dfd9f8a25b7dc4/src/PlaywrightSharp/Chromium/ChromiumBrowserContext.cs/#L65">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_Chromium_ChromiumBrowserContext_ServiceWorkers_" data-uid="PlaywrightSharp.Chromium.ChromiumBrowserContext.ServiceWorkers*"></a>
+  <h4 id="PlaywrightSharp_Chromium_ChromiumBrowserContext_ServiceWorkers" data-uid="PlaywrightSharp.Chromium.ChromiumBrowserContext.ServiceWorkers">ServiceWorkers</h4>
+  <div class="markdown level1 summary"><p>All existing service workers in the context. Chromium Only.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IWorker[] ServiceWorkers { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.IWorker.html">IWorker</a>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/0f6a1a713ec0e7bd6ac1688017dfd9f8a25b7dc4/apiSpec/new?filename=PlaywrightSharp_Chromium_ChromiumBrowserContext_NewCDPSessionAsync_PlaywrightSharp_IPage_.md&amp;value=---%0Auid%3A%20PlaywrightSharp.Chromium.ChromiumBrowserContext.NewCDPSessionAsync(PlaywrightSharp.IPage)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/0f6a1a713ec0e7bd6ac1688017dfd9f8a25b7dc4/src/PlaywrightSharp/Chromium/ChromiumBrowserContext.cs/#L68">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_Chromium_ChromiumBrowserContext_NewCDPSessionAsync_" data-uid="PlaywrightSharp.Chromium.ChromiumBrowserContext.NewCDPSessionAsync*"></a>
+  <h4 id="PlaywrightSharp_Chromium_ChromiumBrowserContext_NewCDPSessionAsync_PlaywrightSharp_IPage_" data-uid="PlaywrightSharp.Chromium.ChromiumBrowserContext.NewCDPSessionAsync(PlaywrightSharp.IPage)">NewCDPSessionAsync(IPage)</h4>
+  <div class="markdown level1 summary"><p>Creates a new browser session.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;ICDPSession&gt; NewCDPSessionAsync(IPage page)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PlaywrightSharp.IPage.html">IPage</a></td>
+        <td><span class="parametername">page</span></td>
+        <td><p>Page to create a new session for.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="PlaywrightSharp.Chromium.ICDPSession.html">ICDPSession</a>&gt;</td>
+        <td><p>A <see cref="!:Task"></see> that completes when the browser session was created, yielding the new session.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="events">Events
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/0f6a1a713ec0e7bd6ac1688017dfd9f8a25b7dc4/apiSpec/new?filename=PlaywrightSharp_Chromium_ChromiumBrowserContext_BackgroundPage.md&amp;value=---%0Auid%3A%20PlaywrightSharp.Chromium.ChromiumBrowserContext.BackgroundPage%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/0f6a1a713ec0e7bd6ac1688017dfd9f8a25b7dc4/src/PlaywrightSharp/Chromium/ChromiumBrowserContext.cs/#L56">View Source</a>
+  </span>
+  <h4 id="PlaywrightSharp_Chromium_ChromiumBrowserContext_BackgroundPage" data-uid="PlaywrightSharp.Chromium.ChromiumBrowserContext.BackgroundPage">BackgroundPage</h4>
+  <div class="markdown level1 summary"><p>Raised when new background page is created in the context. Chromium only</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler&lt;PageEventArgs&gt; BackgroundPage</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventHandler</span>&lt;<a class="xref" href="PlaywrightSharp.PageEventArgs.html">PageEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/new/0f6a1a713ec0e7bd6ac1688017dfd9f8a25b7dc4/apiSpec/new?filename=PlaywrightSharp_Chromium_ChromiumBrowserContext_ServiceWorker.md&amp;value=---%0Auid%3A%20PlaywrightSharp.Chromium.ChromiumBrowserContext.ServiceWorker%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/0f6a1a713ec0e7bd6ac1688017dfd9f8a25b7dc4/src/PlaywrightSharp/Chromium/ChromiumBrowserContext.cs/#L59">View Source</a>
+  </span>
+  <h4 id="PlaywrightSharp_Chromium_ChromiumBrowserContext_ServiceWorker" data-uid="PlaywrightSharp.Chromium.ChromiumBrowserContext.ServiceWorker">ServiceWorker</h4>
+  <div class="markdown level1 summary"><p>Raised when new service worker is created in the context. Chromium only</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler&lt;WorkerEventArgs&gt; ServiceWorker</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventHandler</span>&lt;<a class="xref" href="PlaywrightSharp.WorkerEventArgs.html">WorkerEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="PlaywrightSharp.Chromium.IChromiumBrowserContext.html">IChromiumBrowserContext</a>
+  </div>
+  <div>
+      <a class="xref" href="PlaywrightSharp.IBrowserContext.html">IBrowserContext</a>
+  </div>
+  <div>
+      <span class="xref">IAsyncDisposable</span>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/microsoft/playwright-sharp/new/0f6a1a713ec0e7bd6ac1688017dfd9f8a25b7dc4/apiSpec/new?filename=PlaywrightSharp_Chromium_ChromiumBrowserContext.md&amp;value=---%0Auid%3A%20PlaywrightSharp.Chromium.ChromiumBrowserContext%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/microsoft/playwright-sharp/blob/0f6a1a713ec0e7bd6ac1688017dfd9f8a25b7dc4/src/PlaywrightSharp/Chromium/ChromiumBrowserContext.cs/#L10" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

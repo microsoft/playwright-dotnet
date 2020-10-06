@@ -116,19 +116,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.Browser.IsConnected
   nameWithType: Browser.IsConnected
-- uid: PlaywrightSharp.Browser.NewBrowserCDPSessionAsync
-  name: NewBrowserCDPSessionAsync()
-  href: api/PlaywrightSharp.Browser.html#PlaywrightSharp_Browser_NewBrowserCDPSessionAsync
-  commentId: M:PlaywrightSharp.Browser.NewBrowserCDPSessionAsync
-  fullName: PlaywrightSharp.Browser.NewBrowserCDPSessionAsync()
-  nameWithType: Browser.NewBrowserCDPSessionAsync()
-- uid: PlaywrightSharp.Browser.NewBrowserCDPSessionAsync*
-  name: NewBrowserCDPSessionAsync
-  href: api/PlaywrightSharp.Browser.html#PlaywrightSharp_Browser_NewBrowserCDPSessionAsync_
-  commentId: Overload:PlaywrightSharp.Browser.NewBrowserCDPSessionAsync
-  isSpec: "True"
-  fullName: PlaywrightSharp.Browser.NewBrowserCDPSessionAsync
-  nameWithType: Browser.NewBrowserCDPSessionAsync
 - uid: PlaywrightSharp.Browser.NewContextAsync(PlaywrightSharp.BrowserContextOptions)
   name: NewContextAsync(BrowserContextOptions)
   href: api/PlaywrightSharp.Browser.html#PlaywrightSharp_Browser_NewContextAsync_PlaywrightSharp_BrowserContextOptions_
@@ -144,15 +131,15 @@ references:
   fullName.vb: PlaywrightSharp.Browser.NewContextAsync(PlaywrightSharp.ViewportSize, System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String))
   nameWithType: Browser.NewContextAsync(ViewportSize, String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
   nameWithType.vb: Browser.NewContextAsync(ViewportSize, String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
-- uid: PlaywrightSharp.Browser.NewContextAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
-  name: NewContextAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
-  href: api/PlaywrightSharp.Browser.html#PlaywrightSharp_Browser_NewContextAsync_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_String_PlaywrightSharp_Geolocation_PlaywrightSharp_ContextPermission___System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Decimal__PlaywrightSharp_Credentials_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_PlaywrightSharp_ColorScheme__System_String_Dictionary_System_String_System_String__
-  commentId: M:PlaywrightSharp.Browser.NewContextAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
-  name.vb: NewContextAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
-  fullName: PlaywrightSharp.Browser.NewContextAsync(System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission[], System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Decimal>, PlaywrightSharp.Credentials, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<PlaywrightSharp.ColorScheme>, System.String, Dictionary<System.String, System.String>)
-  fullName.vb: PlaywrightSharp.Browser.NewContextAsync(System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String))
-  nameWithType: Browser.NewContextAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
-  nameWithType.vb: Browser.NewContextAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
+- uid: PlaywrightSharp.Browser.NewContextAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
+  name: NewContextAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
+  href: api/PlaywrightSharp.Browser.html#PlaywrightSharp_Browser_NewContextAsync_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_String_PlaywrightSharp_Geolocation_PlaywrightSharp_ContextPermission___System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Decimal__PlaywrightSharp_Credentials_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_PlaywrightSharp_ColorScheme__System_String_Dictionary_System_String_System_String__
+  commentId: M:PlaywrightSharp.Browser.NewContextAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
+  name.vb: NewContextAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
+  fullName: PlaywrightSharp.Browser.NewContextAsync(System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission[], System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Decimal>, PlaywrightSharp.Credentials, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<PlaywrightSharp.ColorScheme>, System.String, Dictionary<System.String, System.String>)
+  fullName.vb: PlaywrightSharp.Browser.NewContextAsync(System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String))
+  nameWithType: Browser.NewContextAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
+  nameWithType.vb: Browser.NewContextAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
 - uid: PlaywrightSharp.Browser.NewContextAsync*
   name: NewContextAsync
   href: api/PlaywrightSharp.Browser.html#PlaywrightSharp_Browser_NewContextAsync_
@@ -175,15 +162,15 @@ references:
   fullName.vb: PlaywrightSharp.Browser.NewPageAsync(PlaywrightSharp.ViewportSize, System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String))
   nameWithType: Browser.NewPageAsync(ViewportSize, String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
   nameWithType.vb: Browser.NewPageAsync(ViewportSize, String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
-- uid: PlaywrightSharp.Browser.NewPageAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
-  name: NewPageAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
-  href: api/PlaywrightSharp.Browser.html#PlaywrightSharp_Browser_NewPageAsync_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_String_PlaywrightSharp_Geolocation_PlaywrightSharp_ContextPermission___System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Decimal__PlaywrightSharp_Credentials_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_PlaywrightSharp_ColorScheme__System_String_Dictionary_System_String_System_String__
-  commentId: M:PlaywrightSharp.Browser.NewPageAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
-  name.vb: NewPageAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
-  fullName: PlaywrightSharp.Browser.NewPageAsync(System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission[], System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Decimal>, PlaywrightSharp.Credentials, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<PlaywrightSharp.ColorScheme>, System.String, Dictionary<System.String, System.String>)
-  fullName.vb: PlaywrightSharp.Browser.NewPageAsync(System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String))
-  nameWithType: Browser.NewPageAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
-  nameWithType.vb: Browser.NewPageAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
+- uid: PlaywrightSharp.Browser.NewPageAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
+  name: NewPageAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
+  href: api/PlaywrightSharp.Browser.html#PlaywrightSharp_Browser_NewPageAsync_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_String_PlaywrightSharp_Geolocation_PlaywrightSharp_ContextPermission___System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Decimal__PlaywrightSharp_Credentials_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_PlaywrightSharp_ColorScheme__System_String_Dictionary_System_String_System_String__
+  commentId: M:PlaywrightSharp.Browser.NewPageAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
+  name.vb: NewPageAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
+  fullName: PlaywrightSharp.Browser.NewPageAsync(System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission[], System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Decimal>, PlaywrightSharp.Credentials, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<PlaywrightSharp.ColorScheme>, System.String, Dictionary<System.String, System.String>)
+  fullName.vb: PlaywrightSharp.Browser.NewPageAsync(System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String))
+  nameWithType: Browser.NewPageAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
+  nameWithType.vb: Browser.NewPageAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
 - uid: PlaywrightSharp.Browser.NewPageAsync*
   name: NewPageAsync
   href: api/PlaywrightSharp.Browser.html#PlaywrightSharp_Browser_NewPageAsync_
@@ -191,35 +178,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.Browser.NewPageAsync
   nameWithType: Browser.NewPageAsync
-- uid: PlaywrightSharp.Browser.StartTracingAsync(PlaywrightSharp.IPage,System.Boolean,System.String,IEnumerable{System.String})
-  name: StartTracingAsync(IPage, Boolean, String, IEnumerable<String>)
-  href: api/PlaywrightSharp.Browser.html#PlaywrightSharp_Browser_StartTracingAsync_PlaywrightSharp_IPage_System_Boolean_System_String_IEnumerable_System_String__
-  commentId: M:PlaywrightSharp.Browser.StartTracingAsync(PlaywrightSharp.IPage,System.Boolean,System.String,IEnumerable{System.String})
-  name.vb: StartTracingAsync(IPage, Boolean, String, IEnumerable(Of String))
-  fullName: PlaywrightSharp.Browser.StartTracingAsync(PlaywrightSharp.IPage, System.Boolean, System.String, IEnumerable<System.String>)
-  fullName.vb: PlaywrightSharp.Browser.StartTracingAsync(PlaywrightSharp.IPage, System.Boolean, System.String, IEnumerable(Of System.String))
-  nameWithType: Browser.StartTracingAsync(IPage, Boolean, String, IEnumerable<String>)
-  nameWithType.vb: Browser.StartTracingAsync(IPage, Boolean, String, IEnumerable(Of String))
-- uid: PlaywrightSharp.Browser.StartTracingAsync*
-  name: StartTracingAsync
-  href: api/PlaywrightSharp.Browser.html#PlaywrightSharp_Browser_StartTracingAsync_
-  commentId: Overload:PlaywrightSharp.Browser.StartTracingAsync
-  isSpec: "True"
-  fullName: PlaywrightSharp.Browser.StartTracingAsync
-  nameWithType: Browser.StartTracingAsync
-- uid: PlaywrightSharp.Browser.StopTracingAsync
-  name: StopTracingAsync()
-  href: api/PlaywrightSharp.Browser.html#PlaywrightSharp_Browser_StopTracingAsync
-  commentId: M:PlaywrightSharp.Browser.StopTracingAsync
-  fullName: PlaywrightSharp.Browser.StopTracingAsync()
-  nameWithType: Browser.StopTracingAsync()
-- uid: PlaywrightSharp.Browser.StopTracingAsync*
-  name: StopTracingAsync
-  href: api/PlaywrightSharp.Browser.html#PlaywrightSharp_Browser_StopTracingAsync_
-  commentId: Overload:PlaywrightSharp.Browser.StopTracingAsync
-  isSpec: "True"
-  fullName: PlaywrightSharp.Browser.StopTracingAsync
-  nameWithType: Browser.StopTracingAsync
 - uid: PlaywrightSharp.Browser.Version
   name: Version
   href: api/PlaywrightSharp.Browser.html#PlaywrightSharp_Browser_Version
@@ -280,25 +238,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.BrowserContext.AddInitScriptAsync
   nameWithType: BrowserContext.AddInitScriptAsync
-- uid: PlaywrightSharp.BrowserContext.BackgroundPage
-  name: BackgroundPage
-  href: api/PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_BackgroundPage
-  commentId: E:PlaywrightSharp.BrowserContext.BackgroundPage
-  fullName: PlaywrightSharp.BrowserContext.BackgroundPage
-  nameWithType: BrowserContext.BackgroundPage
-- uid: PlaywrightSharp.BrowserContext.BackgroundPages
-  name: BackgroundPages
-  href: api/PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_BackgroundPages
-  commentId: P:PlaywrightSharp.BrowserContext.BackgroundPages
-  fullName: PlaywrightSharp.BrowserContext.BackgroundPages
-  nameWithType: BrowserContext.BackgroundPages
-- uid: PlaywrightSharp.BrowserContext.BackgroundPages*
-  name: BackgroundPages
-  href: api/PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_BackgroundPages_
-  commentId: Overload:PlaywrightSharp.BrowserContext.BackgroundPages
-  isSpec: "True"
-  fullName: PlaywrightSharp.BrowserContext.BackgroundPages
-  nameWithType: BrowserContext.BackgroundPages
 - uid: PlaywrightSharp.BrowserContext.ClearCookiesAsync
   name: ClearCookiesAsync()
   href: api/PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ClearCookiesAsync
@@ -325,6 +264,12 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.BrowserContext.ClearPermissionsAsync
   nameWithType: BrowserContext.ClearPermissionsAsync
+- uid: PlaywrightSharp.BrowserContext.Close
+  name: Close
+  href: api/PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_Close
+  commentId: E:PlaywrightSharp.BrowserContext.Close
+  fullName: PlaywrightSharp.BrowserContext.Close
+  nameWithType: BrowserContext.Close
 - uid: PlaywrightSharp.BrowserContext.CloseAsync
   name: CloseAsync()
   href: api/PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_CloseAsync
@@ -338,12 +283,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.BrowserContext.CloseAsync
   nameWithType: BrowserContext.CloseAsync
-- uid: PlaywrightSharp.BrowserContext.Closed
-  name: Closed
-  href: api/PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_Closed
-  commentId: E:PlaywrightSharp.BrowserContext.Closed
-  fullName: PlaywrightSharp.BrowserContext.Closed
-  nameWithType: BrowserContext.Closed
 - uid: PlaywrightSharp.BrowserContext.DefaultNavigationTimeout
   name: DefaultNavigationTimeout
   href: api/PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_DefaultNavigationTimeout
@@ -558,19 +497,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.BrowserContext.GrantPermissionsAsync
   nameWithType: BrowserContext.GrantPermissionsAsync
-- uid: PlaywrightSharp.BrowserContext.NewCDPSessionAsync(PlaywrightSharp.IPage)
-  name: NewCDPSessionAsync(IPage)
-  href: api/PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_NewCDPSessionAsync_PlaywrightSharp_IPage_
-  commentId: M:PlaywrightSharp.BrowserContext.NewCDPSessionAsync(PlaywrightSharp.IPage)
-  fullName: PlaywrightSharp.BrowserContext.NewCDPSessionAsync(PlaywrightSharp.IPage)
-  nameWithType: BrowserContext.NewCDPSessionAsync(IPage)
-- uid: PlaywrightSharp.BrowserContext.NewCDPSessionAsync*
-  name: NewCDPSessionAsync
-  href: api/PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_NewCDPSessionAsync_
-  commentId: Overload:PlaywrightSharp.BrowserContext.NewCDPSessionAsync
-  isSpec: "True"
-  fullName: PlaywrightSharp.BrowserContext.NewCDPSessionAsync
-  nameWithType: BrowserContext.NewCDPSessionAsync
 - uid: PlaywrightSharp.BrowserContext.NewPageAsync(System.String)
   name: NewPageAsync(String)
   href: api/PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_NewPageAsync_System_String_
@@ -637,25 +563,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.BrowserContext.RouteAsync
   nameWithType: BrowserContext.RouteAsync
-- uid: PlaywrightSharp.BrowserContext.ServiceWorker
-  name: ServiceWorker
-  href: api/PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ServiceWorker
-  commentId: E:PlaywrightSharp.BrowserContext.ServiceWorker
-  fullName: PlaywrightSharp.BrowserContext.ServiceWorker
-  nameWithType: BrowserContext.ServiceWorker
-- uid: PlaywrightSharp.BrowserContext.ServiceWorkers
-  name: ServiceWorkers
-  href: api/PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ServiceWorkers
-  commentId: P:PlaywrightSharp.BrowserContext.ServiceWorkers
-  fullName: PlaywrightSharp.BrowserContext.ServiceWorkers
-  nameWithType: BrowserContext.ServiceWorkers
-- uid: PlaywrightSharp.BrowserContext.ServiceWorkers*
-  name: ServiceWorkers
-  href: api/PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_ServiceWorkers_
-  commentId: Overload:PlaywrightSharp.BrowserContext.ServiceWorkers
-  isSpec: "True"
-  fullName: PlaywrightSharp.BrowserContext.ServiceWorkers
-  nameWithType: BrowserContext.ServiceWorkers
 - uid: PlaywrightSharp.BrowserContext.SetExtraHttpHeadersAsync(Dictionary{System.String,System.String})
   name: SetExtraHttpHeadersAsync(Dictionary<String, String>)
   href: api/PlaywrightSharp.BrowserContext.html#PlaywrightSharp_BrowserContext_SetExtraHttpHeadersAsync_Dictionary_System_String_System_String__
@@ -1116,85 +1023,6 @@ references:
   commentId: F:PlaywrightSharp.BrowserType.Webkit
   fullName: PlaywrightSharp.BrowserType.Webkit
   nameWithType: BrowserType.Webkit
-- uid: PlaywrightSharp.CDPEventArgs
-  name: CDPEventArgs
-  href: api/PlaywrightSharp.CDPEventArgs.html
-  commentId: T:PlaywrightSharp.CDPEventArgs
-  fullName: PlaywrightSharp.CDPEventArgs
-  nameWithType: CDPEventArgs
-- uid: PlaywrightSharp.CDPEventArgs.Method
-  name: Method
-  href: api/PlaywrightSharp.CDPEventArgs.html#PlaywrightSharp_CDPEventArgs_Method
-  commentId: P:PlaywrightSharp.CDPEventArgs.Method
-  fullName: PlaywrightSharp.CDPEventArgs.Method
-  nameWithType: CDPEventArgs.Method
-- uid: PlaywrightSharp.CDPEventArgs.Method*
-  name: Method
-  href: api/PlaywrightSharp.CDPEventArgs.html#PlaywrightSharp_CDPEventArgs_Method_
-  commentId: Overload:PlaywrightSharp.CDPEventArgs.Method
-  isSpec: "True"
-  fullName: PlaywrightSharp.CDPEventArgs.Method
-  nameWithType: CDPEventArgs.Method
-- uid: PlaywrightSharp.CDPEventArgs.Params
-  name: Params
-  href: api/PlaywrightSharp.CDPEventArgs.html#PlaywrightSharp_CDPEventArgs_Params
-  commentId: P:PlaywrightSharp.CDPEventArgs.Params
-  fullName: PlaywrightSharp.CDPEventArgs.Params
-  nameWithType: CDPEventArgs.Params
-- uid: PlaywrightSharp.CDPEventArgs.Params*
-  name: Params
-  href: api/PlaywrightSharp.CDPEventArgs.html#PlaywrightSharp_CDPEventArgs_Params_
-  commentId: Overload:PlaywrightSharp.CDPEventArgs.Params
-  isSpec: "True"
-  fullName: PlaywrightSharp.CDPEventArgs.Params
-  nameWithType: CDPEventArgs.Params
-- uid: PlaywrightSharp.CDPSession
-  name: CDPSession
-  href: api/PlaywrightSharp.CDPSession.html
-  commentId: T:PlaywrightSharp.CDPSession
-  fullName: PlaywrightSharp.CDPSession
-  nameWithType: CDPSession
-- uid: PlaywrightSharp.CDPSession.DetachAsync
-  name: DetachAsync()
-  href: api/PlaywrightSharp.CDPSession.html#PlaywrightSharp_CDPSession_DetachAsync
-  commentId: M:PlaywrightSharp.CDPSession.DetachAsync
-  fullName: PlaywrightSharp.CDPSession.DetachAsync()
-  nameWithType: CDPSession.DetachAsync()
-- uid: PlaywrightSharp.CDPSession.DetachAsync*
-  name: DetachAsync
-  href: api/PlaywrightSharp.CDPSession.html#PlaywrightSharp_CDPSession_DetachAsync_
-  commentId: Overload:PlaywrightSharp.CDPSession.DetachAsync
-  isSpec: "True"
-  fullName: PlaywrightSharp.CDPSession.DetachAsync
-  nameWithType: CDPSession.DetachAsync
-- uid: PlaywrightSharp.CDPSession.MessageReceived
-  name: MessageReceived
-  href: api/PlaywrightSharp.CDPSession.html#PlaywrightSharp_CDPSession_MessageReceived
-  commentId: E:PlaywrightSharp.CDPSession.MessageReceived
-  fullName: PlaywrightSharp.CDPSession.MessageReceived
-  nameWithType: CDPSession.MessageReceived
-- uid: PlaywrightSharp.CDPSession.SendAsync(System.String,System.Object)
-  name: SendAsync(String, Object)
-  href: api/PlaywrightSharp.CDPSession.html#PlaywrightSharp_CDPSession_SendAsync_System_String_System_Object_
-  commentId: M:PlaywrightSharp.CDPSession.SendAsync(System.String,System.Object)
-  fullName: PlaywrightSharp.CDPSession.SendAsync(System.String, System.Object)
-  nameWithType: CDPSession.SendAsync(String, Object)
-- uid: PlaywrightSharp.CDPSession.SendAsync*
-  name: SendAsync
-  href: api/PlaywrightSharp.CDPSession.html#PlaywrightSharp_CDPSession_SendAsync_
-  commentId: Overload:PlaywrightSharp.CDPSession.SendAsync
-  isSpec: "True"
-  fullName: PlaywrightSharp.CDPSession.SendAsync
-  nameWithType: CDPSession.SendAsync
-- uid: PlaywrightSharp.CDPSession.SendAsync``1(System.String,System.Object)
-  name: SendAsync<T>(String, Object)
-  href: api/PlaywrightSharp.CDPSession.html#PlaywrightSharp_CDPSession_SendAsync__1_System_String_System_Object_
-  commentId: M:PlaywrightSharp.CDPSession.SendAsync``1(System.String,System.Object)
-  name.vb: SendAsync(Of T)(String, Object)
-  fullName: PlaywrightSharp.CDPSession.SendAsync<T>(System.String, System.Object)
-  fullName.vb: PlaywrightSharp.CDPSession.SendAsync(Of T)(System.String, System.Object)
-  nameWithType: CDPSession.SendAsync<T>(String, Object)
-  nameWithType.vb: CDPSession.SendAsync(Of T)(String, Object)
 - uid: PlaywrightSharp.CheckedState
   name: CheckedState
   href: api/PlaywrightSharp.CheckedState.html
@@ -1219,6 +1047,624 @@ references:
   commentId: F:PlaywrightSharp.CheckedState.Unchecked
   fullName: PlaywrightSharp.CheckedState.Unchecked
   nameWithType: CheckedState.Unchecked
+- uid: PlaywrightSharp.Chromium
+  name: PlaywrightSharp.Chromium
+  href: api/PlaywrightSharp.Chromium.html
+  commentId: N:PlaywrightSharp.Chromium
+  fullName: PlaywrightSharp.Chromium
+  nameWithType: PlaywrightSharp.Chromium
+- uid: PlaywrightSharp.Chromium.CDPEventArgs
+  name: CDPEventArgs
+  href: api/PlaywrightSharp.Chromium.CDPEventArgs.html
+  commentId: T:PlaywrightSharp.Chromium.CDPEventArgs
+  fullName: PlaywrightSharp.Chromium.CDPEventArgs
+  nameWithType: CDPEventArgs
+- uid: PlaywrightSharp.Chromium.CDPEventArgs.Method
+  name: Method
+  href: api/PlaywrightSharp.Chromium.CDPEventArgs.html#PlaywrightSharp_Chromium_CDPEventArgs_Method
+  commentId: P:PlaywrightSharp.Chromium.CDPEventArgs.Method
+  fullName: PlaywrightSharp.Chromium.CDPEventArgs.Method
+  nameWithType: CDPEventArgs.Method
+- uid: PlaywrightSharp.Chromium.CDPEventArgs.Method*
+  name: Method
+  href: api/PlaywrightSharp.Chromium.CDPEventArgs.html#PlaywrightSharp_Chromium_CDPEventArgs_Method_
+  commentId: Overload:PlaywrightSharp.Chromium.CDPEventArgs.Method
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.CDPEventArgs.Method
+  nameWithType: CDPEventArgs.Method
+- uid: PlaywrightSharp.Chromium.CDPEventArgs.Params
+  name: Params
+  href: api/PlaywrightSharp.Chromium.CDPEventArgs.html#PlaywrightSharp_Chromium_CDPEventArgs_Params
+  commentId: P:PlaywrightSharp.Chromium.CDPEventArgs.Params
+  fullName: PlaywrightSharp.Chromium.CDPEventArgs.Params
+  nameWithType: CDPEventArgs.Params
+- uid: PlaywrightSharp.Chromium.CDPEventArgs.Params*
+  name: Params
+  href: api/PlaywrightSharp.Chromium.CDPEventArgs.html#PlaywrightSharp_Chromium_CDPEventArgs_Params_
+  commentId: Overload:PlaywrightSharp.Chromium.CDPEventArgs.Params
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.CDPEventArgs.Params
+  nameWithType: CDPEventArgs.Params
+- uid: PlaywrightSharp.Chromium.CDPSession
+  name: CDPSession
+  href: api/PlaywrightSharp.Chromium.CDPSession.html
+  commentId: T:PlaywrightSharp.Chromium.CDPSession
+  fullName: PlaywrightSharp.Chromium.CDPSession
+  nameWithType: CDPSession
+- uid: PlaywrightSharp.Chromium.CDPSession.DetachAsync
+  name: DetachAsync()
+  href: api/PlaywrightSharp.Chromium.CDPSession.html#PlaywrightSharp_Chromium_CDPSession_DetachAsync
+  commentId: M:PlaywrightSharp.Chromium.CDPSession.DetachAsync
+  fullName: PlaywrightSharp.Chromium.CDPSession.DetachAsync()
+  nameWithType: CDPSession.DetachAsync()
+- uid: PlaywrightSharp.Chromium.CDPSession.DetachAsync*
+  name: DetachAsync
+  href: api/PlaywrightSharp.Chromium.CDPSession.html#PlaywrightSharp_Chromium_CDPSession_DetachAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.CDPSession.DetachAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.CDPSession.DetachAsync
+  nameWithType: CDPSession.DetachAsync
+- uid: PlaywrightSharp.Chromium.CDPSession.MessageReceived
+  name: MessageReceived
+  href: api/PlaywrightSharp.Chromium.CDPSession.html#PlaywrightSharp_Chromium_CDPSession_MessageReceived
+  commentId: E:PlaywrightSharp.Chromium.CDPSession.MessageReceived
+  fullName: PlaywrightSharp.Chromium.CDPSession.MessageReceived
+  nameWithType: CDPSession.MessageReceived
+- uid: PlaywrightSharp.Chromium.CDPSession.SendAsync(System.String,System.Object)
+  name: SendAsync(String, Object)
+  href: api/PlaywrightSharp.Chromium.CDPSession.html#PlaywrightSharp_Chromium_CDPSession_SendAsync_System_String_System_Object_
+  commentId: M:PlaywrightSharp.Chromium.CDPSession.SendAsync(System.String,System.Object)
+  fullName: PlaywrightSharp.Chromium.CDPSession.SendAsync(System.String, System.Object)
+  nameWithType: CDPSession.SendAsync(String, Object)
+- uid: PlaywrightSharp.Chromium.CDPSession.SendAsync*
+  name: SendAsync
+  href: api/PlaywrightSharp.Chromium.CDPSession.html#PlaywrightSharp_Chromium_CDPSession_SendAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.CDPSession.SendAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.CDPSession.SendAsync
+  nameWithType: CDPSession.SendAsync
+- uid: PlaywrightSharp.Chromium.CDPSession.SendAsync``1(System.String,System.Object)
+  name: SendAsync<T>(String, Object)
+  href: api/PlaywrightSharp.Chromium.CDPSession.html#PlaywrightSharp_Chromium_CDPSession_SendAsync__1_System_String_System_Object_
+  commentId: M:PlaywrightSharp.Chromium.CDPSession.SendAsync``1(System.String,System.Object)
+  name.vb: SendAsync(Of T)(String, Object)
+  fullName: PlaywrightSharp.Chromium.CDPSession.SendAsync<T>(System.String, System.Object)
+  fullName.vb: PlaywrightSharp.Chromium.CDPSession.SendAsync(Of T)(System.String, System.Object)
+  nameWithType: CDPSession.SendAsync<T>(String, Object)
+  nameWithType.vb: CDPSession.SendAsync(Of T)(String, Object)
+- uid: PlaywrightSharp.Chromium.ChromiumBrowser
+  name: ChromiumBrowser
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowser.html
+  commentId: T:PlaywrightSharp.Chromium.ChromiumBrowser
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowser
+  nameWithType: ChromiumBrowser
+- uid: PlaywrightSharp.Chromium.ChromiumBrowser.Contexts
+  name: Contexts
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowser.html#PlaywrightSharp_Chromium_ChromiumBrowser_Contexts
+  commentId: P:PlaywrightSharp.Chromium.ChromiumBrowser.Contexts
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowser.Contexts
+  nameWithType: ChromiumBrowser.Contexts
+- uid: PlaywrightSharp.Chromium.ChromiumBrowser.Contexts*
+  name: Contexts
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowser.html#PlaywrightSharp_Chromium_ChromiumBrowser_Contexts_
+  commentId: Overload:PlaywrightSharp.Chromium.ChromiumBrowser.Contexts
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowser.Contexts
+  nameWithType: ChromiumBrowser.Contexts
+- uid: PlaywrightSharp.Chromium.ChromiumBrowser.NewBrowserCDPSessionAsync
+  name: NewBrowserCDPSessionAsync()
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowser.html#PlaywrightSharp_Chromium_ChromiumBrowser_NewBrowserCDPSessionAsync
+  commentId: M:PlaywrightSharp.Chromium.ChromiumBrowser.NewBrowserCDPSessionAsync
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowser.NewBrowserCDPSessionAsync()
+  nameWithType: ChromiumBrowser.NewBrowserCDPSessionAsync()
+- uid: PlaywrightSharp.Chromium.ChromiumBrowser.NewBrowserCDPSessionAsync*
+  name: NewBrowserCDPSessionAsync
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowser.html#PlaywrightSharp_Chromium_ChromiumBrowser_NewBrowserCDPSessionAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.ChromiumBrowser.NewBrowserCDPSessionAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowser.NewBrowserCDPSessionAsync
+  nameWithType: ChromiumBrowser.NewBrowserCDPSessionAsync
+- uid: PlaywrightSharp.Chromium.ChromiumBrowser.NewContextAsync(PlaywrightSharp.BrowserContextOptions)
+  name: NewContextAsync(BrowserContextOptions)
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowser.html#PlaywrightSharp_Chromium_ChromiumBrowser_NewContextAsync_PlaywrightSharp_BrowserContextOptions_
+  commentId: M:PlaywrightSharp.Chromium.ChromiumBrowser.NewContextAsync(PlaywrightSharp.BrowserContextOptions)
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowser.NewContextAsync(PlaywrightSharp.BrowserContextOptions)
+  nameWithType: ChromiumBrowser.NewContextAsync(BrowserContextOptions)
+- uid: PlaywrightSharp.Chromium.ChromiumBrowser.NewContextAsync(PlaywrightSharp.ViewportSize,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
+  name: NewContextAsync(ViewportSize, String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowser.html#PlaywrightSharp_Chromium_ChromiumBrowser_NewContextAsync_PlaywrightSharp_ViewportSize_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_String_PlaywrightSharp_Geolocation_PlaywrightSharp_ContextPermission___System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Decimal__PlaywrightSharp_Credentials_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_PlaywrightSharp_ColorScheme__System_String_Dictionary_System_String_System_String__
+  commentId: M:PlaywrightSharp.Chromium.ChromiumBrowser.NewContextAsync(PlaywrightSharp.ViewportSize,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
+  name.vb: NewContextAsync(ViewportSize, String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowser.NewContextAsync(PlaywrightSharp.ViewportSize, System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission[], System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Decimal>, PlaywrightSharp.Credentials, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<PlaywrightSharp.ColorScheme>, System.String, Dictionary<System.String, System.String>)
+  fullName.vb: PlaywrightSharp.Chromium.ChromiumBrowser.NewContextAsync(PlaywrightSharp.ViewportSize, System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String))
+  nameWithType: ChromiumBrowser.NewContextAsync(ViewportSize, String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
+  nameWithType.vb: ChromiumBrowser.NewContextAsync(ViewportSize, String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
+- uid: PlaywrightSharp.Chromium.ChromiumBrowser.NewContextAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
+  name: NewContextAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowser.html#PlaywrightSharp_Chromium_ChromiumBrowser_NewContextAsync_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_String_PlaywrightSharp_Geolocation_PlaywrightSharp_ContextPermission___System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Decimal__PlaywrightSharp_Credentials_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_PlaywrightSharp_ColorScheme__System_String_Dictionary_System_String_System_String__
+  commentId: M:PlaywrightSharp.Chromium.ChromiumBrowser.NewContextAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
+  name.vb: NewContextAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowser.NewContextAsync(System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission[], System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Decimal>, PlaywrightSharp.Credentials, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<PlaywrightSharp.ColorScheme>, System.String, Dictionary<System.String, System.String>)
+  fullName.vb: PlaywrightSharp.Chromium.ChromiumBrowser.NewContextAsync(System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String))
+  nameWithType: ChromiumBrowser.NewContextAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
+  nameWithType.vb: ChromiumBrowser.NewContextAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
+- uid: PlaywrightSharp.Chromium.ChromiumBrowser.NewContextAsync*
+  name: NewContextAsync
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowser.html#PlaywrightSharp_Chromium_ChromiumBrowser_NewContextAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.ChromiumBrowser.NewContextAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowser.NewContextAsync
+  nameWithType: ChromiumBrowser.NewContextAsync
+- uid: PlaywrightSharp.Chromium.ChromiumBrowser.StartTracingAsync(PlaywrightSharp.IPage,System.Boolean,System.String,IEnumerable{System.String})
+  name: StartTracingAsync(IPage, Boolean, String, IEnumerable<String>)
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowser.html#PlaywrightSharp_Chromium_ChromiumBrowser_StartTracingAsync_PlaywrightSharp_IPage_System_Boolean_System_String_IEnumerable_System_String__
+  commentId: M:PlaywrightSharp.Chromium.ChromiumBrowser.StartTracingAsync(PlaywrightSharp.IPage,System.Boolean,System.String,IEnumerable{System.String})
+  name.vb: StartTracingAsync(IPage, Boolean, String, IEnumerable(Of String))
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowser.StartTracingAsync(PlaywrightSharp.IPage, System.Boolean, System.String, IEnumerable<System.String>)
+  fullName.vb: PlaywrightSharp.Chromium.ChromiumBrowser.StartTracingAsync(PlaywrightSharp.IPage, System.Boolean, System.String, IEnumerable(Of System.String))
+  nameWithType: ChromiumBrowser.StartTracingAsync(IPage, Boolean, String, IEnumerable<String>)
+  nameWithType.vb: ChromiumBrowser.StartTracingAsync(IPage, Boolean, String, IEnumerable(Of String))
+- uid: PlaywrightSharp.Chromium.ChromiumBrowser.StartTracingAsync*
+  name: StartTracingAsync
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowser.html#PlaywrightSharp_Chromium_ChromiumBrowser_StartTracingAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.ChromiumBrowser.StartTracingAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowser.StartTracingAsync
+  nameWithType: ChromiumBrowser.StartTracingAsync
+- uid: PlaywrightSharp.Chromium.ChromiumBrowser.StopTracingAsync
+  name: StopTracingAsync()
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowser.html#PlaywrightSharp_Chromium_ChromiumBrowser_StopTracingAsync
+  commentId: M:PlaywrightSharp.Chromium.ChromiumBrowser.StopTracingAsync
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowser.StopTracingAsync()
+  nameWithType: ChromiumBrowser.StopTracingAsync()
+- uid: PlaywrightSharp.Chromium.ChromiumBrowser.StopTracingAsync*
+  name: StopTracingAsync
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowser.html#PlaywrightSharp_Chromium_ChromiumBrowser_StopTracingAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.ChromiumBrowser.StopTracingAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowser.StopTracingAsync
+  nameWithType: ChromiumBrowser.StopTracingAsync
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserContext
+  name: ChromiumBrowserContext
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserContext.html
+  commentId: T:PlaywrightSharp.Chromium.ChromiumBrowserContext
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserContext
+  nameWithType: ChromiumBrowserContext
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserContext.BackgroundPage
+  name: BackgroundPage
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserContext.html#PlaywrightSharp_Chromium_ChromiumBrowserContext_BackgroundPage
+  commentId: E:PlaywrightSharp.Chromium.ChromiumBrowserContext.BackgroundPage
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserContext.BackgroundPage
+  nameWithType: ChromiumBrowserContext.BackgroundPage
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserContext.BackgroundPages
+  name: BackgroundPages
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserContext.html#PlaywrightSharp_Chromium_ChromiumBrowserContext_BackgroundPages
+  commentId: P:PlaywrightSharp.Chromium.ChromiumBrowserContext.BackgroundPages
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserContext.BackgroundPages
+  nameWithType: ChromiumBrowserContext.BackgroundPages
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserContext.BackgroundPages*
+  name: BackgroundPages
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserContext.html#PlaywrightSharp_Chromium_ChromiumBrowserContext_BackgroundPages_
+  commentId: Overload:PlaywrightSharp.Chromium.ChromiumBrowserContext.BackgroundPages
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserContext.BackgroundPages
+  nameWithType: ChromiumBrowserContext.BackgroundPages
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserContext.NewCDPSessionAsync(PlaywrightSharp.IPage)
+  name: NewCDPSessionAsync(IPage)
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserContext.html#PlaywrightSharp_Chromium_ChromiumBrowserContext_NewCDPSessionAsync_PlaywrightSharp_IPage_
+  commentId: M:PlaywrightSharp.Chromium.ChromiumBrowserContext.NewCDPSessionAsync(PlaywrightSharp.IPage)
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserContext.NewCDPSessionAsync(PlaywrightSharp.IPage)
+  nameWithType: ChromiumBrowserContext.NewCDPSessionAsync(IPage)
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserContext.NewCDPSessionAsync*
+  name: NewCDPSessionAsync
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserContext.html#PlaywrightSharp_Chromium_ChromiumBrowserContext_NewCDPSessionAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.ChromiumBrowserContext.NewCDPSessionAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserContext.NewCDPSessionAsync
+  nameWithType: ChromiumBrowserContext.NewCDPSessionAsync
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserContext.ServiceWorker
+  name: ServiceWorker
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserContext.html#PlaywrightSharp_Chromium_ChromiumBrowserContext_ServiceWorker
+  commentId: E:PlaywrightSharp.Chromium.ChromiumBrowserContext.ServiceWorker
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserContext.ServiceWorker
+  nameWithType: ChromiumBrowserContext.ServiceWorker
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserContext.ServiceWorkers
+  name: ServiceWorkers
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserContext.html#PlaywrightSharp_Chromium_ChromiumBrowserContext_ServiceWorkers
+  commentId: P:PlaywrightSharp.Chromium.ChromiumBrowserContext.ServiceWorkers
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserContext.ServiceWorkers
+  nameWithType: ChromiumBrowserContext.ServiceWorkers
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserContext.ServiceWorkers*
+  name: ServiceWorkers
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserContext.html#PlaywrightSharp_Chromium_ChromiumBrowserContext_ServiceWorkers_
+  commentId: Overload:PlaywrightSharp.Chromium.ChromiumBrowserContext.ServiceWorkers
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserContext.ServiceWorkers
+  nameWithType: ChromiumBrowserContext.ServiceWorkers
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserType
+  name: ChromiumBrowserType
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserType.html
+  commentId: T:PlaywrightSharp.Chromium.ChromiumBrowserType
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserType
+  nameWithType: ChromiumBrowserType
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchAsync(PlaywrightSharp.LaunchOptions)
+  name: LaunchAsync(LaunchOptions)
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserType.html#PlaywrightSharp_Chromium_ChromiumBrowserType_LaunchAsync_PlaywrightSharp_LaunchOptions_
+  commentId: M:PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchAsync(PlaywrightSharp.LaunchOptions)
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchAsync(PlaywrightSharp.LaunchOptions)
+  nameWithType: ChromiumBrowserType.LaunchAsync(LaunchOptions)
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchAsync(System.Nullable{System.Boolean},System.String[],System.String,System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String[],Dictionary{System.String,System.String},Dictionary{System.String,System.Object},PlaywrightSharp.ProxySettings,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+  name: LaunchAsync(Nullable<Boolean>, String[], String, Nullable<Boolean>, String, String, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, String[], Dictionary<String, String>, Dictionary<String, Object>, ProxySettings, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserType.html#PlaywrightSharp_Chromium_ChromiumBrowserType_LaunchAsync_System_Nullable_System_Boolean__System_String___System_String_System_Nullable_System_Boolean__System_String_System_String_System_Nullable_System_Boolean__System_Nullable_System_Int32__System_Nullable_System_Boolean__System_Nullable_System_Int32__System_Nullable_System_Boolean__System_String___Dictionary_System_String_System_String__Dictionary_System_String_System_Object__PlaywrightSharp_ProxySettings_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
+  commentId: M:PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchAsync(System.Nullable{System.Boolean},System.String[],System.String,System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String[],Dictionary{System.String,System.String},Dictionary{System.String,System.Object},PlaywrightSharp.ProxySettings,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+  name.vb: LaunchAsync(Nullable(Of Boolean), String(), String, Nullable(Of Boolean), String, String, Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), String(), Dictionary(Of String, String), Dictionary(Of String, Object), ProxySettings, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchAsync(System.Nullable<System.Boolean>, System.String[], System.String, System.Nullable<System.Boolean>, System.String, System.String, System.Nullable<System.Boolean>, System.Nullable<System.Int32>, System.Nullable<System.Boolean>, System.Nullable<System.Int32>, System.Nullable<System.Boolean>, System.String[], Dictionary<System.String, System.String>, Dictionary<System.String, System.Object>, PlaywrightSharp.ProxySettings, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>)
+  fullName.vb: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchAsync(System.Nullable(Of System.Boolean), System.String(), System.String, System.Nullable(Of System.Boolean), System.String, System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Int32), System.Nullable(Of System.Boolean), System.Nullable(Of System.Int32), System.Nullable(Of System.Boolean), System.String(), Dictionary(Of System.String, System.String), Dictionary(Of System.String, System.Object), PlaywrightSharp.ProxySettings, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean))
+  nameWithType: ChromiumBrowserType.LaunchAsync(Nullable<Boolean>, String[], String, Nullable<Boolean>, String, String, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, String[], Dictionary<String, String>, Dictionary<String, Object>, ProxySettings, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
+  nameWithType.vb: ChromiumBrowserType.LaunchAsync(Nullable(Of Boolean), String(), String, Nullable(Of Boolean), String, String, Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), String(), Dictionary(Of String, String), Dictionary(Of String, Object), ProxySettings, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchAsync*
+  name: LaunchAsync
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserType.html#PlaywrightSharp_Chromium_ChromiumBrowserType_LaunchAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchAsync
+  nameWithType: ChromiumBrowserType.LaunchAsync
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchPersistentContextAsync(System.String,PlaywrightSharp.LaunchOptions)
+  name: LaunchPersistentContextAsync(String, LaunchOptions)
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserType.html#PlaywrightSharp_Chromium_ChromiumBrowserType_LaunchPersistentContextAsync_System_String_PlaywrightSharp_LaunchOptions_
+  commentId: M:PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchPersistentContextAsync(System.String,PlaywrightSharp.LaunchOptions)
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchPersistentContextAsync(System.String, PlaywrightSharp.LaunchOptions)
+  nameWithType: ChromiumBrowserType.LaunchPersistentContextAsync(String, LaunchOptions)
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchPersistentContextAsync(System.String,PlaywrightSharp.LaunchPersistentOptions)
+  name: LaunchPersistentContextAsync(String, LaunchPersistentOptions)
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserType.html#PlaywrightSharp_Chromium_ChromiumBrowserType_LaunchPersistentContextAsync_System_String_PlaywrightSharp_LaunchPersistentOptions_
+  commentId: M:PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchPersistentContextAsync(System.String,PlaywrightSharp.LaunchPersistentOptions)
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchPersistentContextAsync(System.String, PlaywrightSharp.LaunchPersistentOptions)
+  nameWithType: ChromiumBrowserType.LaunchPersistentContextAsync(String, LaunchPersistentOptions)
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchPersistentContextAsync(System.String,PlaywrightSharp.ViewportSize,System.Nullable{System.Boolean},System.String[],System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String[],Dictionary{System.String,System.String},Dictionary{System.String,System.Object},PlaywrightSharp.ProxySettings,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+  name: LaunchPersistentContextAsync(String, ViewportSize, Nullable<Boolean>, String[], Nullable<Boolean>, String, String, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, String[], Dictionary<String, String>, Dictionary<String, Object>, ProxySettings, String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserType.html#PlaywrightSharp_Chromium_ChromiumBrowserType_LaunchPersistentContextAsync_System_String_PlaywrightSharp_ViewportSize_System_Nullable_System_Boolean__System_String___System_Nullable_System_Boolean__System_String_System_String_System_Nullable_System_Boolean__System_Nullable_System_Int32__System_Nullable_System_Boolean__System_Nullable_System_Int32__System_Nullable_System_Boolean__System_String___Dictionary_System_String_System_String__Dictionary_System_String_System_Object__PlaywrightSharp_ProxySettings_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_String_PlaywrightSharp_Geolocation_PlaywrightSharp_ContextPermission___System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Decimal__PlaywrightSharp_Credentials_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_PlaywrightSharp_ColorScheme__System_String_Dictionary_System_String_System_String__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
+  commentId: M:PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchPersistentContextAsync(System.String,PlaywrightSharp.ViewportSize,System.Nullable{System.Boolean},System.String[],System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String[],Dictionary{System.String,System.String},Dictionary{System.String,System.Object},PlaywrightSharp.ProxySettings,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+  name.vb: LaunchPersistentContextAsync(String, ViewportSize, Nullable(Of Boolean), String(), Nullable(Of Boolean), String, String, Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), String(), Dictionary(Of String, String), Dictionary(Of String, Object), ProxySettings, String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchPersistentContextAsync(System.String, PlaywrightSharp.ViewportSize, System.Nullable<System.Boolean>, System.String[], System.Nullable<System.Boolean>, System.String, System.String, System.Nullable<System.Boolean>, System.Nullable<System.Int32>, System.Nullable<System.Boolean>, System.Nullable<System.Int32>, System.Nullable<System.Boolean>, System.String[], Dictionary<System.String, System.String>, Dictionary<System.String, System.Object>, PlaywrightSharp.ProxySettings, System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission[], System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Decimal>, PlaywrightSharp.Credentials, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<PlaywrightSharp.ColorScheme>, System.String, Dictionary<System.String, System.String>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>)
+  fullName.vb: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchPersistentContextAsync(System.String, PlaywrightSharp.ViewportSize, System.Nullable(Of System.Boolean), System.String(), System.Nullable(Of System.Boolean), System.String, System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Int32), System.Nullable(Of System.Boolean), System.Nullable(Of System.Int32), System.Nullable(Of System.Boolean), System.String(), Dictionary(Of System.String, System.String), Dictionary(Of System.String, System.Object), PlaywrightSharp.ProxySettings, System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean))
+  nameWithType: ChromiumBrowserType.LaunchPersistentContextAsync(String, ViewportSize, Nullable<Boolean>, String[], Nullable<Boolean>, String, String, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, String[], Dictionary<String, String>, Dictionary<String, Object>, ProxySettings, String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
+  nameWithType.vb: ChromiumBrowserType.LaunchPersistentContextAsync(String, ViewportSize, Nullable(Of Boolean), String(), Nullable(Of Boolean), String, String, Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), String(), Dictionary(Of String, String), Dictionary(Of String, Object), ProxySettings, String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchPersistentContextAsync(System.String,System.Nullable{System.Boolean},System.String[],System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String[],Dictionary{System.String,System.String},Dictionary{System.String,System.Object},PlaywrightSharp.ProxySettings,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+  name: LaunchPersistentContextAsync(String, Nullable<Boolean>, String[], Nullable<Boolean>, String, String, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, String[], Dictionary<String, String>, Dictionary<String, Object>, ProxySettings, String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserType.html#PlaywrightSharp_Chromium_ChromiumBrowserType_LaunchPersistentContextAsync_System_String_System_Nullable_System_Boolean__System_String___System_Nullable_System_Boolean__System_String_System_String_System_Nullable_System_Boolean__System_Nullable_System_Int32__System_Nullable_System_Boolean__System_Nullable_System_Int32__System_Nullable_System_Boolean__System_String___Dictionary_System_String_System_String__Dictionary_System_String_System_Object__PlaywrightSharp_ProxySettings_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_String_PlaywrightSharp_Geolocation_PlaywrightSharp_ContextPermission___System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Decimal__PlaywrightSharp_Credentials_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_PlaywrightSharp_ColorScheme__System_String_Dictionary_System_String_System_String__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
+  commentId: M:PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchPersistentContextAsync(System.String,System.Nullable{System.Boolean},System.String[],System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String[],Dictionary{System.String,System.String},Dictionary{System.String,System.Object},PlaywrightSharp.ProxySettings,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+  name.vb: LaunchPersistentContextAsync(String, Nullable(Of Boolean), String(), Nullable(Of Boolean), String, String, Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), String(), Dictionary(Of String, String), Dictionary(Of String, Object), ProxySettings, String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchPersistentContextAsync(System.String, System.Nullable<System.Boolean>, System.String[], System.Nullable<System.Boolean>, System.String, System.String, System.Nullable<System.Boolean>, System.Nullable<System.Int32>, System.Nullable<System.Boolean>, System.Nullable<System.Int32>, System.Nullable<System.Boolean>, System.String[], Dictionary<System.String, System.String>, Dictionary<System.String, System.Object>, PlaywrightSharp.ProxySettings, System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission[], System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Decimal>, PlaywrightSharp.Credentials, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<PlaywrightSharp.ColorScheme>, System.String, Dictionary<System.String, System.String>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>)
+  fullName.vb: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchPersistentContextAsync(System.String, System.Nullable(Of System.Boolean), System.String(), System.Nullable(Of System.Boolean), System.String, System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Int32), System.Nullable(Of System.Boolean), System.Nullable(Of System.Int32), System.Nullable(Of System.Boolean), System.String(), Dictionary(Of System.String, System.String), Dictionary(Of System.String, System.Object), PlaywrightSharp.ProxySettings, System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean))
+  nameWithType: ChromiumBrowserType.LaunchPersistentContextAsync(String, Nullable<Boolean>, String[], Nullable<Boolean>, String, String, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, String[], Dictionary<String, String>, Dictionary<String, Object>, ProxySettings, String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
+  nameWithType.vb: ChromiumBrowserType.LaunchPersistentContextAsync(String, Nullable(Of Boolean), String(), Nullable(Of Boolean), String, String, Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), String(), Dictionary(Of String, String), Dictionary(Of String, Object), ProxySettings, String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
+- uid: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchPersistentContextAsync*
+  name: LaunchPersistentContextAsync
+  href: api/PlaywrightSharp.Chromium.ChromiumBrowserType.html#PlaywrightSharp_Chromium_ChromiumBrowserType_LaunchPersistentContextAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchPersistentContextAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.ChromiumBrowserType.LaunchPersistentContextAsync
+  nameWithType: ChromiumBrowserType.LaunchPersistentContextAsync
+- uid: PlaywrightSharp.Chromium.ICDPSession
+  name: ICDPSession
+  href: api/PlaywrightSharp.Chromium.ICDPSession.html
+  commentId: T:PlaywrightSharp.Chromium.ICDPSession
+  fullName: PlaywrightSharp.Chromium.ICDPSession
+  nameWithType: ICDPSession
+- uid: PlaywrightSharp.Chromium.ICDPSession.DetachAsync
+  name: DetachAsync()
+  href: api/PlaywrightSharp.Chromium.ICDPSession.html#PlaywrightSharp_Chromium_ICDPSession_DetachAsync
+  commentId: M:PlaywrightSharp.Chromium.ICDPSession.DetachAsync
+  fullName: PlaywrightSharp.Chromium.ICDPSession.DetachAsync()
+  nameWithType: ICDPSession.DetachAsync()
+- uid: PlaywrightSharp.Chromium.ICDPSession.DetachAsync*
+  name: DetachAsync
+  href: api/PlaywrightSharp.Chromium.ICDPSession.html#PlaywrightSharp_Chromium_ICDPSession_DetachAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.ICDPSession.DetachAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.ICDPSession.DetachAsync
+  nameWithType: ICDPSession.DetachAsync
+- uid: PlaywrightSharp.Chromium.ICDPSession.MessageReceived
+  name: MessageReceived
+  href: api/PlaywrightSharp.Chromium.ICDPSession.html#PlaywrightSharp_Chromium_ICDPSession_MessageReceived
+  commentId: E:PlaywrightSharp.Chromium.ICDPSession.MessageReceived
+  fullName: PlaywrightSharp.Chromium.ICDPSession.MessageReceived
+  nameWithType: ICDPSession.MessageReceived
+- uid: PlaywrightSharp.Chromium.ICDPSession.SendAsync(System.String,System.Object)
+  name: SendAsync(String, Object)
+  href: api/PlaywrightSharp.Chromium.ICDPSession.html#PlaywrightSharp_Chromium_ICDPSession_SendAsync_System_String_System_Object_
+  commentId: M:PlaywrightSharp.Chromium.ICDPSession.SendAsync(System.String,System.Object)
+  fullName: PlaywrightSharp.Chromium.ICDPSession.SendAsync(System.String, System.Object)
+  nameWithType: ICDPSession.SendAsync(String, Object)
+- uid: PlaywrightSharp.Chromium.ICDPSession.SendAsync*
+  name: SendAsync
+  href: api/PlaywrightSharp.Chromium.ICDPSession.html#PlaywrightSharp_Chromium_ICDPSession_SendAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.ICDPSession.SendAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.ICDPSession.SendAsync
+  nameWithType: ICDPSession.SendAsync
+- uid: PlaywrightSharp.Chromium.ICDPSession.SendAsync``1(System.String,System.Object)
+  name: SendAsync<T>(String, Object)
+  href: api/PlaywrightSharp.Chromium.ICDPSession.html#PlaywrightSharp_Chromium_ICDPSession_SendAsync__1_System_String_System_Object_
+  commentId: M:PlaywrightSharp.Chromium.ICDPSession.SendAsync``1(System.String,System.Object)
+  name.vb: SendAsync(Of T)(String, Object)
+  fullName: PlaywrightSharp.Chromium.ICDPSession.SendAsync<T>(System.String, System.Object)
+  fullName.vb: PlaywrightSharp.Chromium.ICDPSession.SendAsync(Of T)(System.String, System.Object)
+  nameWithType: ICDPSession.SendAsync<T>(String, Object)
+  nameWithType.vb: ICDPSession.SendAsync(Of T)(String, Object)
+- uid: PlaywrightSharp.Chromium.IChromiumBrowser
+  name: IChromiumBrowser
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowser.html
+  commentId: T:PlaywrightSharp.Chromium.IChromiumBrowser
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowser
+  nameWithType: IChromiumBrowser
+- uid: PlaywrightSharp.Chromium.IChromiumBrowser.Contexts
+  name: Contexts
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowser.html#PlaywrightSharp_Chromium_IChromiumBrowser_Contexts
+  commentId: P:PlaywrightSharp.Chromium.IChromiumBrowser.Contexts
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowser.Contexts
+  nameWithType: IChromiumBrowser.Contexts
+- uid: PlaywrightSharp.Chromium.IChromiumBrowser.Contexts*
+  name: Contexts
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowser.html#PlaywrightSharp_Chromium_IChromiumBrowser_Contexts_
+  commentId: Overload:PlaywrightSharp.Chromium.IChromiumBrowser.Contexts
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowser.Contexts
+  nameWithType: IChromiumBrowser.Contexts
+- uid: PlaywrightSharp.Chromium.IChromiumBrowser.NewBrowserCDPSessionAsync
+  name: NewBrowserCDPSessionAsync()
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowser.html#PlaywrightSharp_Chromium_IChromiumBrowser_NewBrowserCDPSessionAsync
+  commentId: M:PlaywrightSharp.Chromium.IChromiumBrowser.NewBrowserCDPSessionAsync
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowser.NewBrowserCDPSessionAsync()
+  nameWithType: IChromiumBrowser.NewBrowserCDPSessionAsync()
+- uid: PlaywrightSharp.Chromium.IChromiumBrowser.NewBrowserCDPSessionAsync*
+  name: NewBrowserCDPSessionAsync
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowser.html#PlaywrightSharp_Chromium_IChromiumBrowser_NewBrowserCDPSessionAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.IChromiumBrowser.NewBrowserCDPSessionAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowser.NewBrowserCDPSessionAsync
+  nameWithType: IChromiumBrowser.NewBrowserCDPSessionAsync
+- uid: PlaywrightSharp.Chromium.IChromiumBrowser.NewContextAsync(PlaywrightSharp.BrowserContextOptions)
+  name: NewContextAsync(BrowserContextOptions)
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowser.html#PlaywrightSharp_Chromium_IChromiumBrowser_NewContextAsync_PlaywrightSharp_BrowserContextOptions_
+  commentId: M:PlaywrightSharp.Chromium.IChromiumBrowser.NewContextAsync(PlaywrightSharp.BrowserContextOptions)
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowser.NewContextAsync(PlaywrightSharp.BrowserContextOptions)
+  nameWithType: IChromiumBrowser.NewContextAsync(BrowserContextOptions)
+- uid: PlaywrightSharp.Chromium.IChromiumBrowser.NewContextAsync(PlaywrightSharp.ViewportSize,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
+  name: NewContextAsync(ViewportSize, String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowser.html#PlaywrightSharp_Chromium_IChromiumBrowser_NewContextAsync_PlaywrightSharp_ViewportSize_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_String_PlaywrightSharp_Geolocation_PlaywrightSharp_ContextPermission___System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Decimal__PlaywrightSharp_Credentials_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_PlaywrightSharp_ColorScheme__System_String_Dictionary_System_String_System_String__
+  commentId: M:PlaywrightSharp.Chromium.IChromiumBrowser.NewContextAsync(PlaywrightSharp.ViewportSize,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
+  name.vb: NewContextAsync(ViewportSize, String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowser.NewContextAsync(PlaywrightSharp.ViewportSize, System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission[], System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Decimal>, PlaywrightSharp.Credentials, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<PlaywrightSharp.ColorScheme>, System.String, Dictionary<System.String, System.String>)
+  fullName.vb: PlaywrightSharp.Chromium.IChromiumBrowser.NewContextAsync(PlaywrightSharp.ViewportSize, System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String))
+  nameWithType: IChromiumBrowser.NewContextAsync(ViewportSize, String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
+  nameWithType.vb: IChromiumBrowser.NewContextAsync(ViewportSize, String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
+- uid: PlaywrightSharp.Chromium.IChromiumBrowser.NewContextAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
+  name: NewContextAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowser.html#PlaywrightSharp_Chromium_IChromiumBrowser_NewContextAsync_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_String_PlaywrightSharp_Geolocation_PlaywrightSharp_ContextPermission___System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Decimal__PlaywrightSharp_Credentials_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_PlaywrightSharp_ColorScheme__System_String_Dictionary_System_String_System_String__
+  commentId: M:PlaywrightSharp.Chromium.IChromiumBrowser.NewContextAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
+  name.vb: NewContextAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowser.NewContextAsync(System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission[], System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Decimal>, PlaywrightSharp.Credentials, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<PlaywrightSharp.ColorScheme>, System.String, Dictionary<System.String, System.String>)
+  fullName.vb: PlaywrightSharp.Chromium.IChromiumBrowser.NewContextAsync(System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String))
+  nameWithType: IChromiumBrowser.NewContextAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
+  nameWithType.vb: IChromiumBrowser.NewContextAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
+- uid: PlaywrightSharp.Chromium.IChromiumBrowser.NewContextAsync*
+  name: NewContextAsync
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowser.html#PlaywrightSharp_Chromium_IChromiumBrowser_NewContextAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.IChromiumBrowser.NewContextAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowser.NewContextAsync
+  nameWithType: IChromiumBrowser.NewContextAsync
+- uid: PlaywrightSharp.Chromium.IChromiumBrowser.StartTracingAsync(PlaywrightSharp.IPage,System.Boolean,System.String,IEnumerable{System.String})
+  name: StartTracingAsync(IPage, Boolean, String, IEnumerable<String>)
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowser.html#PlaywrightSharp_Chromium_IChromiumBrowser_StartTracingAsync_PlaywrightSharp_IPage_System_Boolean_System_String_IEnumerable_System_String__
+  commentId: M:PlaywrightSharp.Chromium.IChromiumBrowser.StartTracingAsync(PlaywrightSharp.IPage,System.Boolean,System.String,IEnumerable{System.String})
+  name.vb: StartTracingAsync(IPage, Boolean, String, IEnumerable(Of String))
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowser.StartTracingAsync(PlaywrightSharp.IPage, System.Boolean, System.String, IEnumerable<System.String>)
+  fullName.vb: PlaywrightSharp.Chromium.IChromiumBrowser.StartTracingAsync(PlaywrightSharp.IPage, System.Boolean, System.String, IEnumerable(Of System.String))
+  nameWithType: IChromiumBrowser.StartTracingAsync(IPage, Boolean, String, IEnumerable<String>)
+  nameWithType.vb: IChromiumBrowser.StartTracingAsync(IPage, Boolean, String, IEnumerable(Of String))
+- uid: PlaywrightSharp.Chromium.IChromiumBrowser.StartTracingAsync*
+  name: StartTracingAsync
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowser.html#PlaywrightSharp_Chromium_IChromiumBrowser_StartTracingAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.IChromiumBrowser.StartTracingAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowser.StartTracingAsync
+  nameWithType: IChromiumBrowser.StartTracingAsync
+- uid: PlaywrightSharp.Chromium.IChromiumBrowser.StopTracingAsync
+  name: StopTracingAsync()
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowser.html#PlaywrightSharp_Chromium_IChromiumBrowser_StopTracingAsync
+  commentId: M:PlaywrightSharp.Chromium.IChromiumBrowser.StopTracingAsync
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowser.StopTracingAsync()
+  nameWithType: IChromiumBrowser.StopTracingAsync()
+- uid: PlaywrightSharp.Chromium.IChromiumBrowser.StopTracingAsync*
+  name: StopTracingAsync
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowser.html#PlaywrightSharp_Chromium_IChromiumBrowser_StopTracingAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.IChromiumBrowser.StopTracingAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowser.StopTracingAsync
+  nameWithType: IChromiumBrowser.StopTracingAsync
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserContext
+  name: IChromiumBrowserContext
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserContext.html
+  commentId: T:PlaywrightSharp.Chromium.IChromiumBrowserContext
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserContext
+  nameWithType: IChromiumBrowserContext
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserContext.BackgroundPage
+  name: BackgroundPage
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserContext.html#PlaywrightSharp_Chromium_IChromiumBrowserContext_BackgroundPage
+  commentId: E:PlaywrightSharp.Chromium.IChromiumBrowserContext.BackgroundPage
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserContext.BackgroundPage
+  nameWithType: IChromiumBrowserContext.BackgroundPage
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserContext.BackgroundPages
+  name: BackgroundPages
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserContext.html#PlaywrightSharp_Chromium_IChromiumBrowserContext_BackgroundPages
+  commentId: P:PlaywrightSharp.Chromium.IChromiumBrowserContext.BackgroundPages
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserContext.BackgroundPages
+  nameWithType: IChromiumBrowserContext.BackgroundPages
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserContext.BackgroundPages*
+  name: BackgroundPages
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserContext.html#PlaywrightSharp_Chromium_IChromiumBrowserContext_BackgroundPages_
+  commentId: Overload:PlaywrightSharp.Chromium.IChromiumBrowserContext.BackgroundPages
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserContext.BackgroundPages
+  nameWithType: IChromiumBrowserContext.BackgroundPages
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserContext.NewCDPSessionAsync(PlaywrightSharp.IPage)
+  name: NewCDPSessionAsync(IPage)
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserContext.html#PlaywrightSharp_Chromium_IChromiumBrowserContext_NewCDPSessionAsync_PlaywrightSharp_IPage_
+  commentId: M:PlaywrightSharp.Chromium.IChromiumBrowserContext.NewCDPSessionAsync(PlaywrightSharp.IPage)
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserContext.NewCDPSessionAsync(PlaywrightSharp.IPage)
+  nameWithType: IChromiumBrowserContext.NewCDPSessionAsync(IPage)
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserContext.NewCDPSessionAsync*
+  name: NewCDPSessionAsync
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserContext.html#PlaywrightSharp_Chromium_IChromiumBrowserContext_NewCDPSessionAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.IChromiumBrowserContext.NewCDPSessionAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserContext.NewCDPSessionAsync
+  nameWithType: IChromiumBrowserContext.NewCDPSessionAsync
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserContext.ServiceWorker
+  name: ServiceWorker
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserContext.html#PlaywrightSharp_Chromium_IChromiumBrowserContext_ServiceWorker
+  commentId: E:PlaywrightSharp.Chromium.IChromiumBrowserContext.ServiceWorker
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserContext.ServiceWorker
+  nameWithType: IChromiumBrowserContext.ServiceWorker
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserContext.ServiceWorkers
+  name: ServiceWorkers
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserContext.html#PlaywrightSharp_Chromium_IChromiumBrowserContext_ServiceWorkers
+  commentId: P:PlaywrightSharp.Chromium.IChromiumBrowserContext.ServiceWorkers
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserContext.ServiceWorkers
+  nameWithType: IChromiumBrowserContext.ServiceWorkers
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserContext.ServiceWorkers*
+  name: ServiceWorkers
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserContext.html#PlaywrightSharp_Chromium_IChromiumBrowserContext_ServiceWorkers_
+  commentId: Overload:PlaywrightSharp.Chromium.IChromiumBrowserContext.ServiceWorkers
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserContext.ServiceWorkers
+  nameWithType: IChromiumBrowserContext.ServiceWorkers
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserType
+  name: IChromiumBrowserType
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserType.html
+  commentId: T:PlaywrightSharp.Chromium.IChromiumBrowserType
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserType
+  nameWithType: IChromiumBrowserType
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchAsync(PlaywrightSharp.LaunchOptions)
+  name: LaunchAsync(LaunchOptions)
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserType.html#PlaywrightSharp_Chromium_IChromiumBrowserType_LaunchAsync_PlaywrightSharp_LaunchOptions_
+  commentId: M:PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchAsync(PlaywrightSharp.LaunchOptions)
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchAsync(PlaywrightSharp.LaunchOptions)
+  nameWithType: IChromiumBrowserType.LaunchAsync(LaunchOptions)
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchAsync(System.Nullable{System.Boolean},System.String[],System.String,System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String[],Dictionary{System.String,System.String},Dictionary{System.String,System.Object},PlaywrightSharp.ProxySettings,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+  name: LaunchAsync(Nullable<Boolean>, String[], String, Nullable<Boolean>, String, String, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, String[], Dictionary<String, String>, Dictionary<String, Object>, ProxySettings, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserType.html#PlaywrightSharp_Chromium_IChromiumBrowserType_LaunchAsync_System_Nullable_System_Boolean__System_String___System_String_System_Nullable_System_Boolean__System_String_System_String_System_Nullable_System_Boolean__System_Nullable_System_Int32__System_Nullable_System_Boolean__System_Nullable_System_Int32__System_Nullable_System_Boolean__System_String___Dictionary_System_String_System_String__Dictionary_System_String_System_Object__PlaywrightSharp_ProxySettings_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
+  commentId: M:PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchAsync(System.Nullable{System.Boolean},System.String[],System.String,System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String[],Dictionary{System.String,System.String},Dictionary{System.String,System.Object},PlaywrightSharp.ProxySettings,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+  name.vb: LaunchAsync(Nullable(Of Boolean), String(), String, Nullable(Of Boolean), String, String, Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), String(), Dictionary(Of String, String), Dictionary(Of String, Object), ProxySettings, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchAsync(System.Nullable<System.Boolean>, System.String[], System.String, System.Nullable<System.Boolean>, System.String, System.String, System.Nullable<System.Boolean>, System.Nullable<System.Int32>, System.Nullable<System.Boolean>, System.Nullable<System.Int32>, System.Nullable<System.Boolean>, System.String[], Dictionary<System.String, System.String>, Dictionary<System.String, System.Object>, PlaywrightSharp.ProxySettings, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>)
+  fullName.vb: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchAsync(System.Nullable(Of System.Boolean), System.String(), System.String, System.Nullable(Of System.Boolean), System.String, System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Int32), System.Nullable(Of System.Boolean), System.Nullable(Of System.Int32), System.Nullable(Of System.Boolean), System.String(), Dictionary(Of System.String, System.String), Dictionary(Of System.String, System.Object), PlaywrightSharp.ProxySettings, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean))
+  nameWithType: IChromiumBrowserType.LaunchAsync(Nullable<Boolean>, String[], String, Nullable<Boolean>, String, String, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, String[], Dictionary<String, String>, Dictionary<String, Object>, ProxySettings, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
+  nameWithType.vb: IChromiumBrowserType.LaunchAsync(Nullable(Of Boolean), String(), String, Nullable(Of Boolean), String, String, Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), String(), Dictionary(Of String, String), Dictionary(Of String, Object), ProxySettings, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchAsync*
+  name: LaunchAsync
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserType.html#PlaywrightSharp_Chromium_IChromiumBrowserType_LaunchAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchAsync
+  nameWithType: IChromiumBrowserType.LaunchAsync
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchPersistentContextAsync(System.String,PlaywrightSharp.LaunchOptions)
+  name: LaunchPersistentContextAsync(String, LaunchOptions)
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserType.html#PlaywrightSharp_Chromium_IChromiumBrowserType_LaunchPersistentContextAsync_System_String_PlaywrightSharp_LaunchOptions_
+  commentId: M:PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchPersistentContextAsync(System.String,PlaywrightSharp.LaunchOptions)
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchPersistentContextAsync(System.String, PlaywrightSharp.LaunchOptions)
+  nameWithType: IChromiumBrowserType.LaunchPersistentContextAsync(String, LaunchOptions)
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchPersistentContextAsync(System.String,PlaywrightSharp.LaunchPersistentOptions)
+  name: LaunchPersistentContextAsync(String, LaunchPersistentOptions)
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserType.html#PlaywrightSharp_Chromium_IChromiumBrowserType_LaunchPersistentContextAsync_System_String_PlaywrightSharp_LaunchPersistentOptions_
+  commentId: M:PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchPersistentContextAsync(System.String,PlaywrightSharp.LaunchPersistentOptions)
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchPersistentContextAsync(System.String, PlaywrightSharp.LaunchPersistentOptions)
+  nameWithType: IChromiumBrowserType.LaunchPersistentContextAsync(String, LaunchPersistentOptions)
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchPersistentContextAsync(System.String,PlaywrightSharp.ViewportSize,System.Nullable{System.Boolean},System.String[],System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String[],Dictionary{System.String,System.String},Dictionary{System.String,System.Object},PlaywrightSharp.ProxySettings,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+  name: LaunchPersistentContextAsync(String, ViewportSize, Nullable<Boolean>, String[], Nullable<Boolean>, String, String, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, String[], Dictionary<String, String>, Dictionary<String, Object>, ProxySettings, String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserType.html#PlaywrightSharp_Chromium_IChromiumBrowserType_LaunchPersistentContextAsync_System_String_PlaywrightSharp_ViewportSize_System_Nullable_System_Boolean__System_String___System_Nullable_System_Boolean__System_String_System_String_System_Nullable_System_Boolean__System_Nullable_System_Int32__System_Nullable_System_Boolean__System_Nullable_System_Int32__System_Nullable_System_Boolean__System_String___Dictionary_System_String_System_String__Dictionary_System_String_System_Object__PlaywrightSharp_ProxySettings_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_String_PlaywrightSharp_Geolocation_PlaywrightSharp_ContextPermission___System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Decimal__PlaywrightSharp_Credentials_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_PlaywrightSharp_ColorScheme__System_String_Dictionary_System_String_System_String__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
+  commentId: M:PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchPersistentContextAsync(System.String,PlaywrightSharp.ViewportSize,System.Nullable{System.Boolean},System.String[],System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String[],Dictionary{System.String,System.String},Dictionary{System.String,System.Object},PlaywrightSharp.ProxySettings,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+  name.vb: LaunchPersistentContextAsync(String, ViewportSize, Nullable(Of Boolean), String(), Nullable(Of Boolean), String, String, Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), String(), Dictionary(Of String, String), Dictionary(Of String, Object), ProxySettings, String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchPersistentContextAsync(System.String, PlaywrightSharp.ViewportSize, System.Nullable<System.Boolean>, System.String[], System.Nullable<System.Boolean>, System.String, System.String, System.Nullable<System.Boolean>, System.Nullable<System.Int32>, System.Nullable<System.Boolean>, System.Nullable<System.Int32>, System.Nullable<System.Boolean>, System.String[], Dictionary<System.String, System.String>, Dictionary<System.String, System.Object>, PlaywrightSharp.ProxySettings, System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission[], System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Decimal>, PlaywrightSharp.Credentials, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<PlaywrightSharp.ColorScheme>, System.String, Dictionary<System.String, System.String>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>)
+  fullName.vb: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchPersistentContextAsync(System.String, PlaywrightSharp.ViewportSize, System.Nullable(Of System.Boolean), System.String(), System.Nullable(Of System.Boolean), System.String, System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Int32), System.Nullable(Of System.Boolean), System.Nullable(Of System.Int32), System.Nullable(Of System.Boolean), System.String(), Dictionary(Of System.String, System.String), Dictionary(Of System.String, System.Object), PlaywrightSharp.ProxySettings, System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean))
+  nameWithType: IChromiumBrowserType.LaunchPersistentContextAsync(String, ViewportSize, Nullable<Boolean>, String[], Nullable<Boolean>, String, String, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, String[], Dictionary<String, String>, Dictionary<String, Object>, ProxySettings, String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
+  nameWithType.vb: IChromiumBrowserType.LaunchPersistentContextAsync(String, ViewportSize, Nullable(Of Boolean), String(), Nullable(Of Boolean), String, String, Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), String(), Dictionary(Of String, String), Dictionary(Of String, Object), ProxySettings, String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchPersistentContextAsync(System.String,System.Nullable{System.Boolean},System.String[],System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String[],Dictionary{System.String,System.String},Dictionary{System.String,System.Object},PlaywrightSharp.ProxySettings,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+  name: LaunchPersistentContextAsync(String, Nullable<Boolean>, String[], Nullable<Boolean>, String, String, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, String[], Dictionary<String, String>, Dictionary<String, Object>, ProxySettings, String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserType.html#PlaywrightSharp_Chromium_IChromiumBrowserType_LaunchPersistentContextAsync_System_String_System_Nullable_System_Boolean__System_String___System_Nullable_System_Boolean__System_String_System_String_System_Nullable_System_Boolean__System_Nullable_System_Int32__System_Nullable_System_Boolean__System_Nullable_System_Int32__System_Nullable_System_Boolean__System_String___Dictionary_System_String_System_String__Dictionary_System_String_System_Object__PlaywrightSharp_ProxySettings_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_String_PlaywrightSharp_Geolocation_PlaywrightSharp_ContextPermission___System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Decimal__PlaywrightSharp_Credentials_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_PlaywrightSharp_ColorScheme__System_String_Dictionary_System_String_System_String__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__
+  commentId: M:PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchPersistentContextAsync(System.String,System.Nullable{System.Boolean},System.String[],System.Nullable{System.Boolean},System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String[],Dictionary{System.String,System.String},Dictionary{System.String,System.Object},PlaywrightSharp.ProxySettings,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+  name.vb: LaunchPersistentContextAsync(String, Nullable(Of Boolean), String(), Nullable(Of Boolean), String, String, Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), String(), Dictionary(Of String, String), Dictionary(Of String, Object), ProxySettings, String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchPersistentContextAsync(System.String, System.Nullable<System.Boolean>, System.String[], System.Nullable<System.Boolean>, System.String, System.String, System.Nullable<System.Boolean>, System.Nullable<System.Int32>, System.Nullable<System.Boolean>, System.Nullable<System.Int32>, System.Nullable<System.Boolean>, System.String[], Dictionary<System.String, System.String>, Dictionary<System.String, System.Object>, PlaywrightSharp.ProxySettings, System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission[], System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Decimal>, PlaywrightSharp.Credentials, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<PlaywrightSharp.ColorScheme>, System.String, Dictionary<System.String, System.String>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>)
+  fullName.vb: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchPersistentContextAsync(System.String, System.Nullable(Of System.Boolean), System.String(), System.Nullable(Of System.Boolean), System.String, System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Int32), System.Nullable(Of System.Boolean), System.Nullable(Of System.Int32), System.Nullable(Of System.Boolean), System.String(), Dictionary(Of System.String, System.String), Dictionary(Of System.String, System.Object), PlaywrightSharp.ProxySettings, System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean))
+  nameWithType: IChromiumBrowserType.LaunchPersistentContextAsync(String, Nullable<Boolean>, String[], Nullable<Boolean>, String, String, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, Nullable<Int32>, Nullable<Boolean>, String[], Dictionary<String, String>, Dictionary<String, Object>, ProxySettings, String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>)
+  nameWithType.vb: IChromiumBrowserType.LaunchPersistentContextAsync(String, Nullable(Of Boolean), String(), Nullable(Of Boolean), String, String, Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), Nullable(Of Int32), Nullable(Of Boolean), String(), Dictionary(Of String, String), Dictionary(Of String, Object), ProxySettings, String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean))
+- uid: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchPersistentContextAsync*
+  name: LaunchPersistentContextAsync
+  href: api/PlaywrightSharp.Chromium.IChromiumBrowserType.html#PlaywrightSharp_Chromium_IChromiumBrowserType_LaunchPersistentContextAsync_
+  commentId: Overload:PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchPersistentContextAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Chromium.IChromiumBrowserType.LaunchPersistentContextAsync
+  nameWithType: IChromiumBrowserType.LaunchPersistentContextAsync
+- uid: PlaywrightSharp.ChromiumCoverage
+  name: ChromiumCoverage
+  href: api/PlaywrightSharp.ChromiumCoverage.html
+  commentId: T:PlaywrightSharp.ChromiumCoverage
+  fullName: PlaywrightSharp.ChromiumCoverage
+  nameWithType: ChromiumCoverage
+- uid: PlaywrightSharp.ChromiumCoverage.StartCSSCoverageAsync(System.Boolean)
+  name: StartCSSCoverageAsync(Boolean)
+  href: api/PlaywrightSharp.ChromiumCoverage.html#PlaywrightSharp_ChromiumCoverage_StartCSSCoverageAsync_System_Boolean_
+  commentId: M:PlaywrightSharp.ChromiumCoverage.StartCSSCoverageAsync(System.Boolean)
+  fullName: PlaywrightSharp.ChromiumCoverage.StartCSSCoverageAsync(System.Boolean)
+  nameWithType: ChromiumCoverage.StartCSSCoverageAsync(Boolean)
+- uid: PlaywrightSharp.ChromiumCoverage.StartCSSCoverageAsync*
+  name: StartCSSCoverageAsync
+  href: api/PlaywrightSharp.ChromiumCoverage.html#PlaywrightSharp_ChromiumCoverage_StartCSSCoverageAsync_
+  commentId: Overload:PlaywrightSharp.ChromiumCoverage.StartCSSCoverageAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.ChromiumCoverage.StartCSSCoverageAsync
+  nameWithType: ChromiumCoverage.StartCSSCoverageAsync
+- uid: PlaywrightSharp.ChromiumCoverage.StartJSCoverageAsync(System.Boolean,System.Boolean)
+  name: StartJSCoverageAsync(Boolean, Boolean)
+  href: api/PlaywrightSharp.ChromiumCoverage.html#PlaywrightSharp_ChromiumCoverage_StartJSCoverageAsync_System_Boolean_System_Boolean_
+  commentId: M:PlaywrightSharp.ChromiumCoverage.StartJSCoverageAsync(System.Boolean,System.Boolean)
+  fullName: PlaywrightSharp.ChromiumCoverage.StartJSCoverageAsync(System.Boolean, System.Boolean)
+  nameWithType: ChromiumCoverage.StartJSCoverageAsync(Boolean, Boolean)
+- uid: PlaywrightSharp.ChromiumCoverage.StartJSCoverageAsync*
+  name: StartJSCoverageAsync
+  href: api/PlaywrightSharp.ChromiumCoverage.html#PlaywrightSharp_ChromiumCoverage_StartJSCoverageAsync_
+  commentId: Overload:PlaywrightSharp.ChromiumCoverage.StartJSCoverageAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.ChromiumCoverage.StartJSCoverageAsync
+  nameWithType: ChromiumCoverage.StartJSCoverageAsync
+- uid: PlaywrightSharp.ChromiumCoverage.StopCSSCoverageAsync
+  name: StopCSSCoverageAsync()
+  href: api/PlaywrightSharp.ChromiumCoverage.html#PlaywrightSharp_ChromiumCoverage_StopCSSCoverageAsync
+  commentId: M:PlaywrightSharp.ChromiumCoverage.StopCSSCoverageAsync
+  fullName: PlaywrightSharp.ChromiumCoverage.StopCSSCoverageAsync()
+  nameWithType: ChromiumCoverage.StopCSSCoverageAsync()
+- uid: PlaywrightSharp.ChromiumCoverage.StopCSSCoverageAsync*
+  name: StopCSSCoverageAsync
+  href: api/PlaywrightSharp.ChromiumCoverage.html#PlaywrightSharp_ChromiumCoverage_StopCSSCoverageAsync_
+  commentId: Overload:PlaywrightSharp.ChromiumCoverage.StopCSSCoverageAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.ChromiumCoverage.StopCSSCoverageAsync
+  nameWithType: ChromiumCoverage.StopCSSCoverageAsync
+- uid: PlaywrightSharp.ChromiumCoverage.StopJSCoverageAsync
+  name: StopJSCoverageAsync()
+  href: api/PlaywrightSharp.ChromiumCoverage.html#PlaywrightSharp_ChromiumCoverage_StopJSCoverageAsync
+  commentId: M:PlaywrightSharp.ChromiumCoverage.StopJSCoverageAsync
+  fullName: PlaywrightSharp.ChromiumCoverage.StopJSCoverageAsync()
+  nameWithType: ChromiumCoverage.StopJSCoverageAsync()
+- uid: PlaywrightSharp.ChromiumCoverage.StopJSCoverageAsync*
+  name: StopJSCoverageAsync
+  href: api/PlaywrightSharp.ChromiumCoverage.html#PlaywrightSharp_ChromiumCoverage_StopJSCoverageAsync_
+  commentId: Overload:PlaywrightSharp.ChromiumCoverage.StopJSCoverageAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.ChromiumCoverage.StopJSCoverageAsync
+  nameWithType: ChromiumCoverage.StopJSCoverageAsync
 - uid: PlaywrightSharp.ColorScheme
   name: ColorScheme
   href: api/PlaywrightSharp.ColorScheme.html
@@ -1455,19 +1901,19 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.ContextEvent.BackgroundPage
   nameWithType: ContextEvent.BackgroundPage
-- uid: PlaywrightSharp.ContextEvent.Closed
-  name: Closed
-  href: api/PlaywrightSharp.ContextEvent.html#PlaywrightSharp_ContextEvent_Closed
-  commentId: P:PlaywrightSharp.ContextEvent.Closed
-  fullName: PlaywrightSharp.ContextEvent.Closed
-  nameWithType: ContextEvent.Closed
-- uid: PlaywrightSharp.ContextEvent.Closed*
-  name: Closed
-  href: api/PlaywrightSharp.ContextEvent.html#PlaywrightSharp_ContextEvent_Closed_
-  commentId: Overload:PlaywrightSharp.ContextEvent.Closed
+- uid: PlaywrightSharp.ContextEvent.Close
+  name: Close
+  href: api/PlaywrightSharp.ContextEvent.html#PlaywrightSharp_ContextEvent_Close
+  commentId: P:PlaywrightSharp.ContextEvent.Close
+  fullName: PlaywrightSharp.ContextEvent.Close
+  nameWithType: ContextEvent.Close
+- uid: PlaywrightSharp.ContextEvent.Close*
+  name: Close
+  href: api/PlaywrightSharp.ContextEvent.html#PlaywrightSharp_ContextEvent_Close_
+  commentId: Overload:PlaywrightSharp.ContextEvent.Close
   isSpec: "True"
-  fullName: PlaywrightSharp.ContextEvent.Closed
-  nameWithType: ContextEvent.Closed
+  fullName: PlaywrightSharp.ContextEvent.Close
+  nameWithType: ContextEvent.Close
 - uid: PlaywrightSharp.ContextEvent.Page
   name: Page
   href: api/PlaywrightSharp.ContextEvent.html#PlaywrightSharp_ContextEvent_Page
@@ -3625,19 +4071,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.Frame.HoverAsync
   nameWithType: Frame.HoverAsync
-- uid: PlaywrightSharp.Frame.Id
-  name: Id
-  href: api/PlaywrightSharp.Frame.html#PlaywrightSharp_Frame_Id
-  commentId: P:PlaywrightSharp.Frame.Id
-  fullName: PlaywrightSharp.Frame.Id
-  nameWithType: Frame.Id
-- uid: PlaywrightSharp.Frame.Id*
-  name: Id
-  href: api/PlaywrightSharp.Frame.html#PlaywrightSharp_Frame_Id_
-  commentId: Overload:PlaywrightSharp.Frame.Id
-  isSpec: "True"
-  fullName: PlaywrightSharp.Frame.Id
-  nameWithType: Frame.Id
 - uid: PlaywrightSharp.Frame.IsDetached
   name: IsDetached
   href: api/PlaywrightSharp.Frame.html#PlaywrightSharp_Frame_IsDetached
@@ -4425,19 +4858,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.IBrowser.IsConnected
   nameWithType: IBrowser.IsConnected
-- uid: PlaywrightSharp.IBrowser.NewBrowserCDPSessionAsync
-  name: NewBrowserCDPSessionAsync()
-  href: api/PlaywrightSharp.IBrowser.html#PlaywrightSharp_IBrowser_NewBrowserCDPSessionAsync
-  commentId: M:PlaywrightSharp.IBrowser.NewBrowserCDPSessionAsync
-  fullName: PlaywrightSharp.IBrowser.NewBrowserCDPSessionAsync()
-  nameWithType: IBrowser.NewBrowserCDPSessionAsync()
-- uid: PlaywrightSharp.IBrowser.NewBrowserCDPSessionAsync*
-  name: NewBrowserCDPSessionAsync
-  href: api/PlaywrightSharp.IBrowser.html#PlaywrightSharp_IBrowser_NewBrowserCDPSessionAsync_
-  commentId: Overload:PlaywrightSharp.IBrowser.NewBrowserCDPSessionAsync
-  isSpec: "True"
-  fullName: PlaywrightSharp.IBrowser.NewBrowserCDPSessionAsync
-  nameWithType: IBrowser.NewBrowserCDPSessionAsync
 - uid: PlaywrightSharp.IBrowser.NewContextAsync(PlaywrightSharp.BrowserContextOptions)
   name: NewContextAsync(BrowserContextOptions)
   href: api/PlaywrightSharp.IBrowser.html#PlaywrightSharp_IBrowser_NewContextAsync_PlaywrightSharp_BrowserContextOptions_
@@ -4453,15 +4873,15 @@ references:
   fullName.vb: PlaywrightSharp.IBrowser.NewContextAsync(PlaywrightSharp.ViewportSize, System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String))
   nameWithType: IBrowser.NewContextAsync(ViewportSize, String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
   nameWithType.vb: IBrowser.NewContextAsync(ViewportSize, String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
-- uid: PlaywrightSharp.IBrowser.NewContextAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
-  name: NewContextAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
-  href: api/PlaywrightSharp.IBrowser.html#PlaywrightSharp_IBrowser_NewContextAsync_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_String_PlaywrightSharp_Geolocation_PlaywrightSharp_ContextPermission___System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Decimal__PlaywrightSharp_Credentials_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_PlaywrightSharp_ColorScheme__System_String_Dictionary_System_String_System_String__
-  commentId: M:PlaywrightSharp.IBrowser.NewContextAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
-  name.vb: NewContextAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
-  fullName: PlaywrightSharp.IBrowser.NewContextAsync(System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission[], System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Decimal>, PlaywrightSharp.Credentials, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<PlaywrightSharp.ColorScheme>, System.String, Dictionary<System.String, System.String>)
-  fullName.vb: PlaywrightSharp.IBrowser.NewContextAsync(System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String))
-  nameWithType: IBrowser.NewContextAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
-  nameWithType.vb: IBrowser.NewContextAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
+- uid: PlaywrightSharp.IBrowser.NewContextAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
+  name: NewContextAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
+  href: api/PlaywrightSharp.IBrowser.html#PlaywrightSharp_IBrowser_NewContextAsync_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_String_PlaywrightSharp_Geolocation_PlaywrightSharp_ContextPermission___System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Decimal__PlaywrightSharp_Credentials_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_PlaywrightSharp_ColorScheme__System_String_Dictionary_System_String_System_String__
+  commentId: M:PlaywrightSharp.IBrowser.NewContextAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
+  name.vb: NewContextAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
+  fullName: PlaywrightSharp.IBrowser.NewContextAsync(System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission[], System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Decimal>, PlaywrightSharp.Credentials, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<PlaywrightSharp.ColorScheme>, System.String, Dictionary<System.String, System.String>)
+  fullName.vb: PlaywrightSharp.IBrowser.NewContextAsync(System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String))
+  nameWithType: IBrowser.NewContextAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
+  nameWithType.vb: IBrowser.NewContextAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
 - uid: PlaywrightSharp.IBrowser.NewContextAsync*
   name: NewContextAsync
   href: api/PlaywrightSharp.IBrowser.html#PlaywrightSharp_IBrowser_NewContextAsync_
@@ -4484,15 +4904,15 @@ references:
   fullName.vb: PlaywrightSharp.IBrowser.NewPageAsync(PlaywrightSharp.ViewportSize, System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String))
   nameWithType: IBrowser.NewPageAsync(ViewportSize, String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
   nameWithType.vb: IBrowser.NewPageAsync(ViewportSize, String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
-- uid: PlaywrightSharp.IBrowser.NewPageAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
-  name: NewPageAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
-  href: api/PlaywrightSharp.IBrowser.html#PlaywrightSharp_IBrowser_NewPageAsync_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_String_PlaywrightSharp_Geolocation_PlaywrightSharp_ContextPermission___System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Decimal__PlaywrightSharp_Credentials_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_PlaywrightSharp_ColorScheme__System_String_Dictionary_System_String_System_String__
-  commentId: M:PlaywrightSharp.IBrowser.NewPageAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
-  name.vb: NewPageAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
-  fullName: PlaywrightSharp.IBrowser.NewPageAsync(System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission[], System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Decimal>, PlaywrightSharp.Credentials, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<PlaywrightSharp.ColorScheme>, System.String, Dictionary<System.String, System.String>)
-  fullName.vb: PlaywrightSharp.IBrowser.NewPageAsync(System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String))
-  nameWithType: IBrowser.NewPageAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
-  nameWithType.vb: IBrowser.NewPageAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
+- uid: PlaywrightSharp.IBrowser.NewPageAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
+  name: NewPageAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
+  href: api/PlaywrightSharp.IBrowser.html#PlaywrightSharp_IBrowser_NewPageAsync_System_String_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_String_PlaywrightSharp_Geolocation_PlaywrightSharp_ContextPermission___System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Decimal__PlaywrightSharp_Credentials_System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_System_Boolean__System_Nullable_PlaywrightSharp_ColorScheme__System_String_Dictionary_System_String_System_String__
+  commentId: M:PlaywrightSharp.IBrowser.NewPageAsync(System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,PlaywrightSharp.Geolocation,PlaywrightSharp.ContextPermission[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Decimal},PlaywrightSharp.Credentials,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{PlaywrightSharp.ColorScheme},System.String,Dictionary{System.String,System.String})
+  name.vb: NewPageAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
+  fullName: PlaywrightSharp.IBrowser.NewPageAsync(System.String, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission[], System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Decimal>, PlaywrightSharp.Credentials, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<System.Boolean>, System.Nullable<PlaywrightSharp.ColorScheme>, System.String, Dictionary<System.String, System.String>)
+  fullName.vb: PlaywrightSharp.IBrowser.NewPageAsync(System.String, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.String, PlaywrightSharp.Geolocation, PlaywrightSharp.ContextPermission(), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Decimal), PlaywrightSharp.Credentials, System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of System.Boolean), System.Nullable(Of PlaywrightSharp.ColorScheme), System.String, Dictionary(Of System.String, System.String))
+  nameWithType: IBrowser.NewPageAsync(String, Nullable<Boolean>, Nullable<Boolean>, String, Geolocation, ContextPermission[], Nullable<Boolean>, Nullable<Boolean>, Nullable<Decimal>, Credentials, Nullable<Boolean>, Nullable<Boolean>, Nullable<Boolean>, Nullable<ColorScheme>, String, Dictionary<String, String>)
+  nameWithType.vb: IBrowser.NewPageAsync(String, Nullable(Of Boolean), Nullable(Of Boolean), String, Geolocation, ContextPermission(), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Decimal), Credentials, Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of Boolean), Nullable(Of ColorScheme), String, Dictionary(Of String, String))
 - uid: PlaywrightSharp.IBrowser.NewPageAsync*
   name: NewPageAsync
   href: api/PlaywrightSharp.IBrowser.html#PlaywrightSharp_IBrowser_NewPageAsync_
@@ -4500,35 +4920,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.IBrowser.NewPageAsync
   nameWithType: IBrowser.NewPageAsync
-- uid: PlaywrightSharp.IBrowser.StartTracingAsync(PlaywrightSharp.IPage,System.Boolean,System.String,IEnumerable{System.String})
-  name: StartTracingAsync(IPage, Boolean, String, IEnumerable<String>)
-  href: api/PlaywrightSharp.IBrowser.html#PlaywrightSharp_IBrowser_StartTracingAsync_PlaywrightSharp_IPage_System_Boolean_System_String_IEnumerable_System_String__
-  commentId: M:PlaywrightSharp.IBrowser.StartTracingAsync(PlaywrightSharp.IPage,System.Boolean,System.String,IEnumerable{System.String})
-  name.vb: StartTracingAsync(IPage, Boolean, String, IEnumerable(Of String))
-  fullName: PlaywrightSharp.IBrowser.StartTracingAsync(PlaywrightSharp.IPage, System.Boolean, System.String, IEnumerable<System.String>)
-  fullName.vb: PlaywrightSharp.IBrowser.StartTracingAsync(PlaywrightSharp.IPage, System.Boolean, System.String, IEnumerable(Of System.String))
-  nameWithType: IBrowser.StartTracingAsync(IPage, Boolean, String, IEnumerable<String>)
-  nameWithType.vb: IBrowser.StartTracingAsync(IPage, Boolean, String, IEnumerable(Of String))
-- uid: PlaywrightSharp.IBrowser.StartTracingAsync*
-  name: StartTracingAsync
-  href: api/PlaywrightSharp.IBrowser.html#PlaywrightSharp_IBrowser_StartTracingAsync_
-  commentId: Overload:PlaywrightSharp.IBrowser.StartTracingAsync
-  isSpec: "True"
-  fullName: PlaywrightSharp.IBrowser.StartTracingAsync
-  nameWithType: IBrowser.StartTracingAsync
-- uid: PlaywrightSharp.IBrowser.StopTracingAsync
-  name: StopTracingAsync()
-  href: api/PlaywrightSharp.IBrowser.html#PlaywrightSharp_IBrowser_StopTracingAsync
-  commentId: M:PlaywrightSharp.IBrowser.StopTracingAsync
-  fullName: PlaywrightSharp.IBrowser.StopTracingAsync()
-  nameWithType: IBrowser.StopTracingAsync()
-- uid: PlaywrightSharp.IBrowser.StopTracingAsync*
-  name: StopTracingAsync
-  href: api/PlaywrightSharp.IBrowser.html#PlaywrightSharp_IBrowser_StopTracingAsync_
-  commentId: Overload:PlaywrightSharp.IBrowser.StopTracingAsync
-  isSpec: "True"
-  fullName: PlaywrightSharp.IBrowser.StopTracingAsync
-  nameWithType: IBrowser.StopTracingAsync
 - uid: PlaywrightSharp.IBrowser.Version
   name: Version
   href: api/PlaywrightSharp.IBrowser.html#PlaywrightSharp_IBrowser_Version
@@ -4589,25 +4980,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.IBrowserContext.AddInitScriptAsync
   nameWithType: IBrowserContext.AddInitScriptAsync
-- uid: PlaywrightSharp.IBrowserContext.BackgroundPage
-  name: BackgroundPage
-  href: api/PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_BackgroundPage
-  commentId: E:PlaywrightSharp.IBrowserContext.BackgroundPage
-  fullName: PlaywrightSharp.IBrowserContext.BackgroundPage
-  nameWithType: IBrowserContext.BackgroundPage
-- uid: PlaywrightSharp.IBrowserContext.BackgroundPages
-  name: BackgroundPages
-  href: api/PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_BackgroundPages
-  commentId: P:PlaywrightSharp.IBrowserContext.BackgroundPages
-  fullName: PlaywrightSharp.IBrowserContext.BackgroundPages
-  nameWithType: IBrowserContext.BackgroundPages
-- uid: PlaywrightSharp.IBrowserContext.BackgroundPages*
-  name: BackgroundPages
-  href: api/PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_BackgroundPages_
-  commentId: Overload:PlaywrightSharp.IBrowserContext.BackgroundPages
-  isSpec: "True"
-  fullName: PlaywrightSharp.IBrowserContext.BackgroundPages
-  nameWithType: IBrowserContext.BackgroundPages
 - uid: PlaywrightSharp.IBrowserContext.ClearCookiesAsync
   name: ClearCookiesAsync()
   href: api/PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_ClearCookiesAsync
@@ -4634,6 +5006,12 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.IBrowserContext.ClearPermissionsAsync
   nameWithType: IBrowserContext.ClearPermissionsAsync
+- uid: PlaywrightSharp.IBrowserContext.Close
+  name: Close
+  href: api/PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_Close
+  commentId: E:PlaywrightSharp.IBrowserContext.Close
+  fullName: PlaywrightSharp.IBrowserContext.Close
+  nameWithType: IBrowserContext.Close
 - uid: PlaywrightSharp.IBrowserContext.CloseAsync
   name: CloseAsync()
   href: api/PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_CloseAsync
@@ -4647,12 +5025,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.IBrowserContext.CloseAsync
   nameWithType: IBrowserContext.CloseAsync
-- uid: PlaywrightSharp.IBrowserContext.Closed
-  name: Closed
-  href: api/PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_Closed
-  commentId: E:PlaywrightSharp.IBrowserContext.Closed
-  fullName: PlaywrightSharp.IBrowserContext.Closed
-  nameWithType: IBrowserContext.Closed
 - uid: PlaywrightSharp.IBrowserContext.DefaultNavigationTimeout
   name: DefaultNavigationTimeout
   href: api/PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_DefaultNavigationTimeout
@@ -4854,19 +5226,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.IBrowserContext.GrantPermissionsAsync
   nameWithType: IBrowserContext.GrantPermissionsAsync
-- uid: PlaywrightSharp.IBrowserContext.NewCDPSessionAsync(PlaywrightSharp.IPage)
-  name: NewCDPSessionAsync(IPage)
-  href: api/PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_NewCDPSessionAsync_PlaywrightSharp_IPage_
-  commentId: M:PlaywrightSharp.IBrowserContext.NewCDPSessionAsync(PlaywrightSharp.IPage)
-  fullName: PlaywrightSharp.IBrowserContext.NewCDPSessionAsync(PlaywrightSharp.IPage)
-  nameWithType: IBrowserContext.NewCDPSessionAsync(IPage)
-- uid: PlaywrightSharp.IBrowserContext.NewCDPSessionAsync*
-  name: NewCDPSessionAsync
-  href: api/PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_NewCDPSessionAsync_
-  commentId: Overload:PlaywrightSharp.IBrowserContext.NewCDPSessionAsync
-  isSpec: "True"
-  fullName: PlaywrightSharp.IBrowserContext.NewCDPSessionAsync
-  nameWithType: IBrowserContext.NewCDPSessionAsync
 - uid: PlaywrightSharp.IBrowserContext.NewPageAsync(System.String)
   name: NewPageAsync(String)
   href: api/PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_NewPageAsync_System_String_
@@ -4933,25 +5292,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.IBrowserContext.RouteAsync
   nameWithType: IBrowserContext.RouteAsync
-- uid: PlaywrightSharp.IBrowserContext.ServiceWorker
-  name: ServiceWorker
-  href: api/PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_ServiceWorker
-  commentId: E:PlaywrightSharp.IBrowserContext.ServiceWorker
-  fullName: PlaywrightSharp.IBrowserContext.ServiceWorker
-  nameWithType: IBrowserContext.ServiceWorker
-- uid: PlaywrightSharp.IBrowserContext.ServiceWorkers
-  name: ServiceWorkers
-  href: api/PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_ServiceWorkers
-  commentId: P:PlaywrightSharp.IBrowserContext.ServiceWorkers
-  fullName: PlaywrightSharp.IBrowserContext.ServiceWorkers
-  nameWithType: IBrowserContext.ServiceWorkers
-- uid: PlaywrightSharp.IBrowserContext.ServiceWorkers*
-  name: ServiceWorkers
-  href: api/PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_ServiceWorkers_
-  commentId: Overload:PlaywrightSharp.IBrowserContext.ServiceWorkers
-  isSpec: "True"
-  fullName: PlaywrightSharp.IBrowserContext.ServiceWorkers
-  nameWithType: IBrowserContext.ServiceWorkers
 - uid: PlaywrightSharp.IBrowserContext.SetExtraHttpHeadersAsync(Dictionary{System.String,System.String})
   name: SetExtraHttpHeadersAsync(Dictionary<String, String>)
   href: api/PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_SetExtraHttpHeadersAsync_Dictionary_System_String_System_String__
@@ -5154,53 +5494,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.IBrowserType.Name
   nameWithType: IBrowserType.Name
-- uid: PlaywrightSharp.ICDPSession
-  name: ICDPSession
-  href: api/PlaywrightSharp.ICDPSession.html
-  commentId: T:PlaywrightSharp.ICDPSession
-  fullName: PlaywrightSharp.ICDPSession
-  nameWithType: ICDPSession
-- uid: PlaywrightSharp.ICDPSession.DetachAsync
-  name: DetachAsync()
-  href: api/PlaywrightSharp.ICDPSession.html#PlaywrightSharp_ICDPSession_DetachAsync
-  commentId: M:PlaywrightSharp.ICDPSession.DetachAsync
-  fullName: PlaywrightSharp.ICDPSession.DetachAsync()
-  nameWithType: ICDPSession.DetachAsync()
-- uid: PlaywrightSharp.ICDPSession.DetachAsync*
-  name: DetachAsync
-  href: api/PlaywrightSharp.ICDPSession.html#PlaywrightSharp_ICDPSession_DetachAsync_
-  commentId: Overload:PlaywrightSharp.ICDPSession.DetachAsync
-  isSpec: "True"
-  fullName: PlaywrightSharp.ICDPSession.DetachAsync
-  nameWithType: ICDPSession.DetachAsync
-- uid: PlaywrightSharp.ICDPSession.MessageReceived
-  name: MessageReceived
-  href: api/PlaywrightSharp.ICDPSession.html#PlaywrightSharp_ICDPSession_MessageReceived
-  commentId: E:PlaywrightSharp.ICDPSession.MessageReceived
-  fullName: PlaywrightSharp.ICDPSession.MessageReceived
-  nameWithType: ICDPSession.MessageReceived
-- uid: PlaywrightSharp.ICDPSession.SendAsync(System.String,System.Object)
-  name: SendAsync(String, Object)
-  href: api/PlaywrightSharp.ICDPSession.html#PlaywrightSharp_ICDPSession_SendAsync_System_String_System_Object_
-  commentId: M:PlaywrightSharp.ICDPSession.SendAsync(System.String,System.Object)
-  fullName: PlaywrightSharp.ICDPSession.SendAsync(System.String, System.Object)
-  nameWithType: ICDPSession.SendAsync(String, Object)
-- uid: PlaywrightSharp.ICDPSession.SendAsync*
-  name: SendAsync
-  href: api/PlaywrightSharp.ICDPSession.html#PlaywrightSharp_ICDPSession_SendAsync_
-  commentId: Overload:PlaywrightSharp.ICDPSession.SendAsync
-  isSpec: "True"
-  fullName: PlaywrightSharp.ICDPSession.SendAsync
-  nameWithType: ICDPSession.SendAsync
-- uid: PlaywrightSharp.ICDPSession.SendAsync``1(System.String,System.Object)
-  name: SendAsync<T>(String, Object)
-  href: api/PlaywrightSharp.ICDPSession.html#PlaywrightSharp_ICDPSession_SendAsync__1_System_String_System_Object_
-  commentId: M:PlaywrightSharp.ICDPSession.SendAsync``1(System.String,System.Object)
-  name.vb: SendAsync(Of T)(String, Object)
-  fullName: PlaywrightSharp.ICDPSession.SendAsync<T>(System.String, System.Object)
-  fullName.vb: PlaywrightSharp.ICDPSession.SendAsync(Of T)(System.String, System.Object)
-  nameWithType: ICDPSession.SendAsync<T>(String, Object)
-  nameWithType.vb: ICDPSession.SendAsync(Of T)(String, Object)
 - uid: PlaywrightSharp.ICoverage
   name: ICoverage
   href: api/PlaywrightSharp.ICoverage.html
@@ -6341,19 +6634,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.IFrame.HoverAsync
   nameWithType: IFrame.HoverAsync
-- uid: PlaywrightSharp.IFrame.Id
-  name: Id
-  href: api/PlaywrightSharp.IFrame.html#PlaywrightSharp_IFrame_Id
-  commentId: P:PlaywrightSharp.IFrame.Id
-  fullName: PlaywrightSharp.IFrame.Id
-  nameWithType: IFrame.Id
-- uid: PlaywrightSharp.IFrame.Id*
-  name: Id
-  href: api/PlaywrightSharp.IFrame.html#PlaywrightSharp_IFrame_Id_
-  commentId: Overload:PlaywrightSharp.IFrame.Id
-  isSpec: "True"
-  fullName: PlaywrightSharp.IFrame.Id
-  nameWithType: IFrame.Id
 - uid: PlaywrightSharp.IFrame.IsDetached
   name: IsDetached
   href: api/PlaywrightSharp.IFrame.html#PlaywrightSharp_IFrame_IsDetached
@@ -7232,6 +7512,12 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.IPage.ClickAsync
   nameWithType: IPage.ClickAsync
+- uid: PlaywrightSharp.IPage.Close
+  name: Close
+  href: api/PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_Close
+  commentId: E:PlaywrightSharp.IPage.Close
+  fullName: PlaywrightSharp.IPage.Close
+  nameWithType: IPage.Close
 - uid: PlaywrightSharp.IPage.CloseAsync(System.Boolean)
   name: CloseAsync(Boolean)
   href: api/PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_CloseAsync_System_Boolean_
@@ -7245,12 +7531,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.IPage.CloseAsync
   nameWithType: IPage.CloseAsync
-- uid: PlaywrightSharp.IPage.Closed
-  name: Closed
-  href: api/PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_Closed
-  commentId: E:PlaywrightSharp.IPage.Closed
-  fullName: PlaywrightSharp.IPage.Closed
-  nameWithType: IPage.Closed
 - uid: PlaywrightSharp.IPage.Console
   name: Console
   href: api/PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_Console
@@ -8817,22 +9097,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.IRequest.Frame
   nameWithType: IRequest.Frame
-- uid: PlaywrightSharp.IRequest.GetJsonAsync*
-  name: GetJsonAsync
-  href: api/PlaywrightSharp.IRequest.html#PlaywrightSharp_IRequest_GetJsonAsync_
-  commentId: Overload:PlaywrightSharp.IRequest.GetJsonAsync
-  isSpec: "True"
-  fullName: PlaywrightSharp.IRequest.GetJsonAsync
-  nameWithType: IRequest.GetJsonAsync
-- uid: PlaywrightSharp.IRequest.GetJsonAsync``1(JsonSerializerOptions)
-  name: GetJsonAsync<T>(JsonSerializerOptions)
-  href: api/PlaywrightSharp.IRequest.html#PlaywrightSharp_IRequest_GetJsonAsync__1_JsonSerializerOptions_
-  commentId: M:PlaywrightSharp.IRequest.GetJsonAsync``1(JsonSerializerOptions)
-  name.vb: GetJsonAsync(Of T)(JsonSerializerOptions)
-  fullName: PlaywrightSharp.IRequest.GetJsonAsync<T>(JsonSerializerOptions)
-  fullName.vb: PlaywrightSharp.IRequest.GetJsonAsync(Of T)(JsonSerializerOptions)
-  nameWithType: IRequest.GetJsonAsync<T>(JsonSerializerOptions)
-  nameWithType.vb: IRequest.GetJsonAsync(Of T)(JsonSerializerOptions)
 - uid: PlaywrightSharp.IRequest.GetPostDataJsonAsync(JsonDocumentOptions)
   name: GetPostDataJsonAsync(JsonDocumentOptions)
   href: api/PlaywrightSharp.IRequest.html#PlaywrightSharp_IRequest_GetPostDataJsonAsync_JsonDocumentOptions_
@@ -10725,6 +10989,12 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.Page.ClickAsync
   nameWithType: Page.ClickAsync
+- uid: PlaywrightSharp.Page.Close
+  name: Close
+  href: api/PlaywrightSharp.Page.html#PlaywrightSharp_Page_Close
+  commentId: E:PlaywrightSharp.Page.Close
+  fullName: PlaywrightSharp.Page.Close
+  nameWithType: Page.Close
 - uid: PlaywrightSharp.Page.CloseAsync(System.Boolean)
   name: CloseAsync(Boolean)
   href: api/PlaywrightSharp.Page.html#PlaywrightSharp_Page_CloseAsync_System_Boolean_
@@ -10738,12 +11008,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.Page.CloseAsync
   nameWithType: Page.CloseAsync
-- uid: PlaywrightSharp.Page.Closed
-  name: Closed
-  href: api/PlaywrightSharp.Page.html#PlaywrightSharp_Page_Closed
-  commentId: E:PlaywrightSharp.Page.Closed
-  fullName: PlaywrightSharp.Page.Closed
-  nameWithType: Page.Closed
 - uid: PlaywrightSharp.Page.Console
   name: Console
   href: api/PlaywrightSharp.Page.html#PlaywrightSharp_Page_Console
@@ -12276,19 +12540,19 @@ references:
   commentId: T:PlaywrightSharp.PageEvent
   fullName: PlaywrightSharp.PageEvent
   nameWithType: PageEvent
-- uid: PlaywrightSharp.PageEvent.Closed
-  name: Closed
-  href: api/PlaywrightSharp.PageEvent.html#PlaywrightSharp_PageEvent_Closed
-  commentId: P:PlaywrightSharp.PageEvent.Closed
-  fullName: PlaywrightSharp.PageEvent.Closed
-  nameWithType: PageEvent.Closed
-- uid: PlaywrightSharp.PageEvent.Closed*
-  name: Closed
-  href: api/PlaywrightSharp.PageEvent.html#PlaywrightSharp_PageEvent_Closed_
-  commentId: Overload:PlaywrightSharp.PageEvent.Closed
+- uid: PlaywrightSharp.PageEvent.Close
+  name: Close
+  href: api/PlaywrightSharp.PageEvent.html#PlaywrightSharp_PageEvent_Close
+  commentId: P:PlaywrightSharp.PageEvent.Close
+  fullName: PlaywrightSharp.PageEvent.Close
+  nameWithType: PageEvent.Close
+- uid: PlaywrightSharp.PageEvent.Close*
+  name: Close
+  href: api/PlaywrightSharp.PageEvent.html#PlaywrightSharp_PageEvent_Close_
+  commentId: Overload:PlaywrightSharp.PageEvent.Close
   isSpec: "True"
-  fullName: PlaywrightSharp.PageEvent.Closed
-  nameWithType: PageEvent.Closed
+  fullName: PlaywrightSharp.PageEvent.Close
+  nameWithType: PageEvent.Close
 - uid: PlaywrightSharp.PageEvent.Console
   name: Console
   href: api/PlaywrightSharp.PageEvent.html#PlaywrightSharp_PageEvent_Console
@@ -13230,22 +13494,6 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.Request.Frame
   nameWithType: Request.Frame
-- uid: PlaywrightSharp.Request.GetJsonAsync*
-  name: GetJsonAsync
-  href: api/PlaywrightSharp.Request.html#PlaywrightSharp_Request_GetJsonAsync_
-  commentId: Overload:PlaywrightSharp.Request.GetJsonAsync
-  isSpec: "True"
-  fullName: PlaywrightSharp.Request.GetJsonAsync
-  nameWithType: Request.GetJsonAsync
-- uid: PlaywrightSharp.Request.GetJsonAsync``1(JsonSerializerOptions)
-  name: GetJsonAsync<T>(JsonSerializerOptions)
-  href: api/PlaywrightSharp.Request.html#PlaywrightSharp_Request_GetJsonAsync__1_JsonSerializerOptions_
-  commentId: M:PlaywrightSharp.Request.GetJsonAsync``1(JsonSerializerOptions)
-  name.vb: GetJsonAsync(Of T)(JsonSerializerOptions)
-  fullName: PlaywrightSharp.Request.GetJsonAsync<T>(JsonSerializerOptions)
-  fullName.vb: PlaywrightSharp.Request.GetJsonAsync(Of T)(JsonSerializerOptions)
-  nameWithType: Request.GetJsonAsync<T>(JsonSerializerOptions)
-  nameWithType.vb: Request.GetJsonAsync(Of T)(JsonSerializerOptions)
 - uid: PlaywrightSharp.Request.GetPostDataJsonAsync(JsonDocumentOptions)
   name: GetPostDataJsonAsync(JsonDocumentOptions)
   href: api/PlaywrightSharp.Request.html#PlaywrightSharp_Request_GetPostDataJsonAsync_JsonDocumentOptions_
