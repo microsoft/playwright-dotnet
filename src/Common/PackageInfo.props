@@ -2,13 +2,13 @@
 <Project>
     <PropertyGroup>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>0.111.2</PackageVersion>
+        <PackageVersion>0.142.0</PackageVersion>
         <AssemblyVersion>$(PackageVersion)</AssemblyVersion>
         <ReleaseVersion>$(PackageVersion)</ReleaseVersion>
         <FileVersion>$(PackageVersion)</FileVersion>
         <Authors>Darío Kondratiuk</Authors>
         <Owners>Darío Kondratiuk</Owners>
-        <PackageProjectUrl>https://github.com/hardkoded/playwright-sharp</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/microsoft/playwright-sharp</PackageProjectUrl>
         <PackageTags>headless,chrome,firefox,webkit,playwright</PackageTags>
         <PackageReleaseNotes><![CDATA[
 ]]></PackageReleaseNotes>
