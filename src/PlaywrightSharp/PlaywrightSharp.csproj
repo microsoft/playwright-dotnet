@@ -9,7 +9,6 @@
         <LangVersion>8.0</LangVersion>
         <DebugType>embedded</DebugType>
         <DebugSymbols>true</DebugSymbols>
-        <PackageProjectUrl>https://github.com/hardkoded/playwright-sharp</PackageProjectUrl>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <DocumentationFile>bin\$(Configuration)\netstandard2.0\PlaywrightSharp.xml</DocumentationFile>
         <RunWithWarnings>true</RunWithWarnings>
