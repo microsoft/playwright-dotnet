@@ -10,6 +10,7 @@
         <Owners>Darío Kondratiuk</Owners>
         <PackageProjectUrl>https://github.com/microsoft/playwright-sharp</PackageProjectUrl>
         <PackageTags>headless,chrome,firefox,webkit,playwright</PackageTags>
+        <RepositoryUrl>https://github.com/microsoft/playwright-sharp.git</RepositoryUrl>
         <PackageReleaseNotes><![CDATA[
 ]]></PackageReleaseNotes>
     </PropertyGroup>
