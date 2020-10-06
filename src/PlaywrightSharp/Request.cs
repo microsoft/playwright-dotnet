@@ -96,19 +96,6 @@ namespace PlaywrightSharp
             return JsonDocument.Parse(content, options);
         }
 
-        /// <inheritdoc />
-        public T GetJsonAsync<T>(JsonSerializerOptions options = null)
-        {
-            string content = GetRequestForJson();
-
-            if (content == null)
-            {
-                return default;
-            }
-
-            return JsonSerializer.Deserialize<T>(content, options ?? _channel.Connection.GetDefaultJsonSerializerOptions());
-        }
-
         private string GetRequestForJson()
         {
             if (PostData == null)
