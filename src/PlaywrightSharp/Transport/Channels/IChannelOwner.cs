@@ -21,6 +21,11 @@ namespace PlaywrightSharp.Transport.Channels
         /// Child objects.
         /// </summary>
         ConcurrentDictionary<string, IChannelOwner> Objects { get; }
+
+        /// <summary>
+        /// Removes the object from the parent and the connection list.
+        /// </summary>
+        void DisposeOwner();
     }
 
     /// <summary>

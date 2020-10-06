@@ -15,6 +15,7 @@ namespace PlaywrightSharp.Transport
     public class ChannelOwnerBase : IChannelOwner
     {
         private readonly Connection _connection;
+        private readonly ConcurrentDictionary<string, IChannelOwner> _objects = new ConcurrentDictionary<string, IChannelOwner>();
 
         internal ChannelOwnerBase(IChannelOwner parent, string guid) : this(parent, null, guid)
         {
@@ -41,10 +42,23 @@ namespace PlaywrightSharp.Transport
         ChannelBase IChannelOwner.Channel => null;
 
         /// <inheritdoc/>
-        ConcurrentDictionary<string, IChannelOwner> IChannelOwner.Objects { get; } = new ConcurrentDictionary<string, IChannelOwner>();
+        ConcurrentDictionary<string, IChannelOwner> IChannelOwner.Objects => _objects;
 
         internal string Guid { get; set; }
 
         internal IChannelOwner Parent { get; set; }
+
+        /// <inheritdoc/>
+        void IChannelOwner.DisposeOwner()
+        {
+            Parent?.Objects?.TryRemove(Guid, out var _);
+            _connection?.Objects.TryRemove(Guid, out var _);
+
+            foreach (var item in _objects.Values)
+            {
+                item.DisposeOwner();
+                _objects.Clear();
+            }
+        }
     }
 }

@@ -335,10 +335,16 @@ namespace PlaywrightSharp.Transport
             {
                 if (message.Method == "__create__")
                 {
-                    Objects.TryGetValue(message.Guid, out var scopeObject);
                     var createObjectInfo = message.Params.Value.ToObject<CreateObjectInfo>(GetDefaultJsonSerializerOptions());
                     CreateRemoteObject(message.Guid, createObjectInfo.Type, createObjectInfo.Guid, createObjectInfo.Initializer);
 
+                    return;
+                }
+
+                if (message.Method == "__dispose__")
+                {
+                    Objects.TryGetValue(message.Guid, out var disableObject);
+                    disableObject?.DisposeOwner();
                     return;
                 }
 
