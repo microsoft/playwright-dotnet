@@ -95,9 +95,6 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public bool IsDetached { get; internal set; }
 
-        /// <inheritdoc />
-        public string Id { get; set; }
-
         internal List<Frame> ChildFramesList { get; } = new List<Frame>();
 
         /// <inheritdoc />
@@ -697,8 +694,8 @@ namespace PlaywrightSharp
         private Waiter SetupNavigationWaiter(int? timeout)
         {
             var waiter = new Waiter();
-            waiter.RejectOnEvent<EventArgs>(Page, "Closed", new NavigationException("Navigation failed because page was closed!"));
-            waiter.RejectOnEvent<EventArgs>(Page, "Crash", new NavigationException("Navigation failed because page was crashed!"));
+            waiter.RejectOnEvent<EventArgs>(Page, PageEvent.Close.Name, new NavigationException("Navigation failed because page was closed!"));
+            waiter.RejectOnEvent<EventArgs>(Page, PageEvent.Crash.Name, new NavigationException("Navigation failed because page was crashed!"));
             waiter.RejectOnEvent<FrameEventArgs>(
                 Page,
                 "FrameDetached",

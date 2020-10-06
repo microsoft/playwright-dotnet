@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
@@ -63,7 +64,7 @@ namespace PlaywrightSharp
         public IReadOnlyDictionary<string, DeviceDescriptor> Devices => _devices;
 
         /// <inheritdoc/>
-        public IBrowserType Chromium => _initializer.Chromium;
+        public IChromiumBrowserType Chromium => _initializer.Chromium;
 
         /// <inheritdoc/>
         public IBrowserType Firefox => _initializer.Firefox;

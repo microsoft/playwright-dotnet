@@ -15,8 +15,6 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IBrowserContext" />
     public class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>, IBrowserContext
     {
-        private readonly BrowserContextChannel _channel;
-        private readonly List<Page> _crBackgroundPages = new List<Page>();
         private readonly TaskCompletionSource<bool> _closeTcs = new TaskCompletionSource<bool>();
         private readonly List<(IEvent contextEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(IEvent contextEvent, TaskCompletionSource<bool> waitTcs)>();
         private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
@@ -28,11 +26,11 @@ namespace PlaywrightSharp
 
         internal BrowserContext(IChannelOwner parent, string guid, BrowserContextInitializer initializer) : base(parent, guid)
         {
-            _channel = new BrowserContextChannel(guid, parent.Connection, this);
-            _channel.Close += Channel_Closed;
-            _channel.Page += Channel_OnPage;
-            _channel.BindingCall += Channel_BindingCall;
-            _channel.Route += Channel_Route;
+            Channel = new BrowserContextChannel(guid, parent.Connection, this);
+            Channel.Close += Channel_Closed;
+            Channel.Page += Channel_OnPage;
+            Channel.BindingCall += Channel_BindingCall;
+            Channel.Route += Channel_Route;
             _initializer = initializer;
 
             if (initializer.Pages != null)
@@ -44,72 +42,22 @@ namespace PlaywrightSharp
                     page.BrowserContext = this;
                 }
             }
-
-            if (initializer.CrBackgroundPages != null)
-            {
-                foreach (var pageChannel in initializer.CrBackgroundPages)
-                {
-                    var page = ((PageChannel)pageChannel).Object;
-                    _crBackgroundPages.Add(page);
-                    page.BrowserContext = this;
-                    BackgroundPage?.Invoke(this, new PageEventArgs { Page = page });
-                }
-            }
-
-            _channel.BackgroundPage += (sender, e) =>
-            {
-                var page = e.PageChannel.Object;
-                page.BrowserContext = this;
-                _crBackgroundPages.Add(page);
-                BackgroundPage?.Invoke(this, new PageEventArgs { Page = page });
-            };
-
-            if (initializer.CrServiceWorkers != null)
-            {
-                foreach (var workerChannel in initializer.CrServiceWorkers)
-                {
-                    var worker = ((WorkerChannel)workerChannel).Object;
-                    ServiceWorkersList.Add(worker);
-                    worker.BrowserContext = this;
-                    ServiceWorker?.Invoke(this, new WorkerEventArgs(worker));
-                }
-            }
-
-            _channel.ServiceWorker += (sender, e) =>
-            {
-                var worker = e.WorkerChannel.Object;
-                ServiceWorkersList.Add(worker);
-                worker.BrowserContext = this;
-                ServiceWorker?.Invoke(this, new WorkerEventArgs(worker));
-            };
         }
 
         /// <inheritdoc/>
-        public event EventHandler<EventArgs> Closed;
+        public event EventHandler<EventArgs> Close;
 
         /// <inheritdoc/>
         public event EventHandler<PageEventArgs> Page;
 
         /// <inheritdoc/>
-        public event EventHandler<PageEventArgs> BackgroundPage;
+        ChannelBase IChannelOwner.Channel => Channel;
 
         /// <inheritdoc/>
-        public event EventHandler<WorkerEventArgs> ServiceWorker;
-
-        /// <inheritdoc/>
-        ChannelBase IChannelOwner.Channel => _channel;
-
-        /// <inheritdoc/>
-        IChannel<BrowserContext> IChannelOwner<BrowserContext>.Channel => _channel;
+        IChannel<BrowserContext> IChannelOwner<BrowserContext>.Channel => Channel;
 
         /// <inheritdoc />
         public IPage[] Pages => PagesList.ToArray();
-
-        /// <inheritdoc />
-        public IPage[] BackgroundPages => _crBackgroundPages.ToArray();
-
-        /// <inheritdoc />
-        public IWorker[] ServiceWorkers => ServiceWorkersList.ToArray();
 
         /// <inheritdoc />
         public int DefaultTimeout
@@ -118,7 +66,7 @@ namespace PlaywrightSharp
             set
             {
                 _timeoutSettings.SetDefaultTimeout(value);
-                _ = _channel.SetDefaultTimeoutNoReplyAsync(value);
+                _ = Channel.SetDefaultTimeoutNoReplyAsync(value);
             }
         }
 
@@ -129,9 +77,11 @@ namespace PlaywrightSharp
             set
             {
                 _timeoutSettings.SetDefaultNavigationTimeout(value);
-                _ = _channel.SetDefaultNavigationTimeoutNoReplyAsync(value);
+                _ = Channel.SetDefaultNavigationTimeoutNoReplyAsync(value);
             }
         }
+
+        internal BrowserContextChannel Channel { get; }
 
         internal Browser Browser { get; set; }
 
@@ -151,7 +101,7 @@ namespace PlaywrightSharp
                 throw new PlaywrightSharpException("Please use Browser.NewContextAsync()");
             }
 
-            return (await _channel.NewPageAsync(url).ConfigureAwait(false)).Object;
+            return (await Channel.NewPageAsync(url).ConfigureAwait(false)).Object;
         }
 
         /// <inheritdoc />
@@ -160,26 +110,26 @@ namespace PlaywrightSharp
             if (!_isClosedOrClosing)
             {
                 _isClosedOrClosing = true;
-                return Task.WhenAny(_closeTcs.Task, _channel.CloseAsync());
+                return Task.WhenAny(_closeTcs.Task, Channel.CloseAsync());
             }
 
             return _closeTcs.Task;
         }
 
         /// <inheritdoc />
-        public Task<IEnumerable<NetworkCookie>> GetCookiesAsync(params string[] urls) => _channel.GetCookiesAsync(urls);
+        public Task<IEnumerable<NetworkCookie>> GetCookiesAsync(params string[] urls) => Channel.GetCookiesAsync(urls);
 
         /// <inheritdoc />
         public Task AddCookiesAsync(IEnumerable<SetNetworkCookieParam> cookies) => AddCookiesAsync(cookies.ToArray());
 
         /// <inheritdoc />
-        public Task AddCookiesAsync(params SetNetworkCookieParam[] cookies) => _channel.AddCookiesAsync(cookies);
+        public Task AddCookiesAsync(params SetNetworkCookieParam[] cookies) => Channel.AddCookiesAsync(cookies);
 
         /// <inheritdoc />
-        public Task ClearCookiesAsync() => _channel.ClearCookiesAsync();
+        public Task ClearCookiesAsync() => Channel.ClearCookiesAsync();
 
         /// <inheritdoc />
-        public Task GrantPermissionsAsync(ContextPermission[] permissions, string origin = null) => _channel.GrantPermissionsAsync(permissions, origin);
+        public Task GrantPermissionsAsync(ContextPermission[] permissions, string origin = null) => Channel.GrantPermissionsAsync(permissions, origin);
 
         /// <inheritdoc />
         public Task GrantPermissionsAsync(ContextPermission permission, string origin = null) => GrantPermissionsAsync(new[] { permission }, origin);
@@ -189,10 +139,10 @@ namespace PlaywrightSharp
             => SetGeolocationAsync(new Geolocation { Latitude = latitude, Longitude = longitude, Accuracy = accuracy });
 
         /// <inheritdoc />
-        public Task SetGeolocationAsync(Geolocation geolocation) => _channel.SetGeolocationAsync(geolocation);
+        public Task SetGeolocationAsync(Geolocation geolocation) => Channel.SetGeolocationAsync(geolocation);
 
         /// <inheritdoc />
-        public Task ClearPermissionsAsync() => _channel.ClearPermissionsAsync();
+        public Task ClearPermissionsAsync() => Channel.ClearPermissionsAsync();
 
         /// <inheritdoc/>
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
@@ -266,9 +216,9 @@ namespace PlaywrightSharp
             using var waiter = new Waiter();
             waiter.RejectOnTimeout(timeout, $"Timeout while waiting for event \"{typeof(T)}\"");
 
-            if (e.Name != ContextEvent.Closed.Name)
+            if (e.Name != ContextEvent.Close.Name)
             {
-                waiter.RejectOnEvent<EventArgs>(this, "Closed", new TargetClosedException("Context closed"));
+                waiter.RejectOnEvent<EventArgs>(this, ContextEvent.Close.Name, new TargetClosedException("Context closed"));
             }
 
             return await waiter.WaitForEventAsync(this, e.Name, predicate).ConfigureAwait(false);
@@ -282,17 +232,14 @@ namespace PlaywrightSharp
                 script = ScriptsHelper.EvaluationScript(content, path);
             }
 
-            return _channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(script, arg));
+            return Channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(script, arg));
         }
 
         /// <inheritdoc />
-        public Task SetHttpCredentialsAsync(Credentials httpCredentials) => _channel.SetHttpCredentialsAsync(httpCredentials);
+        public Task SetHttpCredentialsAsync(Credentials httpCredentials) => Channel.SetHttpCredentialsAsync(httpCredentials);
 
         /// <inheritdoc />
-        public Task SetOfflineAsync(bool offline) => _channel.SetOfflineAsync(offline);
-
-        /// <inheritdoc />
-        public async Task<ICDPSession> NewCDPSessionAsync(IPage page) => (await _channel.NewCDPSessionAsync(page).ConfigureAwait(false))?.Object;
+        public Task SetOfflineAsync(bool offline) => Channel.SetOfflineAsync(offline);
 
         /// <inheritdoc />
         public Task RouteAsync(string url, Action<Route, IRequest> handler)
@@ -349,7 +296,7 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task SetExtraHttpHeadersAsync(Dictionary<string, string> headers) => _channel.SetExtraHttpHeadersAsync(headers);
+        public Task SetExtraHttpHeadersAsync(Dictionary<string, string> headers) => Channel.SetExtraHttpHeadersAsync(headers);
 
         internal void OnRoute(Route route, Request request)
         {
@@ -374,7 +321,7 @@ namespace PlaywrightSharp
 
             if (_routes.Count == 1)
             {
-                return _channel.SetNetworkInterceptionEnabledAsync(true);
+                return Channel.SetNetworkInterceptionEnabledAsync(true);
             }
 
             return Task.CompletedTask;
@@ -392,7 +339,7 @@ namespace PlaywrightSharp
 
             if (_routes.Count == 0)
             {
-                return _channel.SetNetworkInterceptionEnabledAsync(false);
+                return Channel.SetNetworkInterceptionEnabledAsync(false);
             }
 
             return Task.CompletedTask;
@@ -406,7 +353,7 @@ namespace PlaywrightSharp
                 Browser.BrowserContextsList.Remove(this);
             }
 
-            Closed?.Invoke(this, EventArgs.Empty);
+            Close?.Invoke(this, EventArgs.Empty);
             _closeTcs.TrySetResult(true);
             RejectPendingOperations();
         }
@@ -431,7 +378,7 @@ namespace PlaywrightSharp
 
         private void RejectPendingOperations()
         {
-            foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.contextEvent != ContextEvent.Closed))
+            foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.contextEvent != ContextEvent.Close))
             {
                 waitTcs.TrySetException(new TargetClosedException("Context closed"));
             }
@@ -456,7 +403,7 @@ namespace PlaywrightSharp
 
             _bindings.Add(name, playwrightFunction);
 
-            return _channel.ExposeBindingAsync(name);
+            return Channel.ExposeBindingAsync(name);
         }
     }
 }

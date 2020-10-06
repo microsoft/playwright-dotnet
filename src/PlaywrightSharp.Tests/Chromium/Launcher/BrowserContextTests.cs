@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -27,7 +28,7 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
         public async Task ShouldNotCreatePagesAutomatically()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
-            var browserSession = await browser.NewBrowserCDPSessionAsync();
+            var browserSession = await ((IChromiumBrowser)browser).NewBrowserCDPSessionAsync();
 
             var targets = new List<JsonElement?>();
 

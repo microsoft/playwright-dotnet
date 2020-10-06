@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -26,7 +27,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWork()
         {
-            var client = await Page.Context.NewCDPSessionAsync(Page);
+            var client = await ((IChromiumBrowserContext)Page.Context).NewCDPSessionAsync(Page);
 
             await TaskUtils.WhenAll(
               client.SendAsync("Runtime.enable"),
@@ -42,7 +43,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldSendEvents()
         {
-            var client = await Page.Context.NewCDPSessionAsync(Page);
+            var client = await ((IChromiumBrowserContext)Page.Context).NewCDPSessionAsync(Page);
 
             await client.SendAsync("Network.enable");
             var events = new List<CDPEventArgs>();
@@ -65,7 +66,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldEnableAndDisableDomainsIndependently()
         {
-            var client = await Page.Context.NewCDPSessionAsync(Page);
+            var client = await ((IChromiumBrowserContext)Page.Context).NewCDPSessionAsync(Page);
             await client.SendAsync("Runtime.enable");
             await client.SendAsync("Debugger.enable");
             // JS coverage enables and then disables Debugger domain.
@@ -93,7 +94,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldBeAbleToDetachSession()
         {
-            var client = await Page.Context.NewCDPSessionAsync(Page);
+            var client = await ((IChromiumBrowserContext)Page.Context).NewCDPSessionAsync(Page);
             await client.SendAsync("Runtime.enable");
             var evalResponse = await client.SendAsync("Runtime.evaluate", new
             {
@@ -118,7 +119,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldThrowNiceErrors()
         {
-            var client = await Page.Context.NewCDPSessionAsync(Page);
+            var client = await ((IChromiumBrowserContext)Page.Context).NewCDPSessionAsync(Page);
             async Task TheSourceOfTheProblems() => await client.SendAsync("ThisCommand.DoesNotExist");
 
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async () =>
@@ -135,7 +136,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldNotBreakPageClose()
         {
-            var session = await Page.Context.NewCDPSessionAsync(Page);
+            var session = await ((IChromiumBrowserContext)Page.Context).NewCDPSessionAsync(Page);
             await session.DetachAsync();
             await Page.CloseAsync();
         }
@@ -146,7 +147,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldDetachWhenPageCloses()
         {
-            var session = await Page.Context.NewCDPSessionAsync(Page);
+            var session = await ((IChromiumBrowserContext)Page.Context).NewCDPSessionAsync(Page);
             await Page.CloseAsync();
             await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => session.DetachAsync());
         }

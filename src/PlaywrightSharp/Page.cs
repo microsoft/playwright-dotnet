@@ -37,7 +37,7 @@ namespace PlaywrightSharp
             _frames.Add(MainFrame);
             ViewportSize = initializer.ViewportSize;
             Accessibility = new Accesibility(_channel);
-            Coverage = BrowserContext.BrowserName == BrowserType.Chromium ? new Coverage(_channel) : null;
+            Coverage = BrowserContext.BrowserName == BrowserType.Chromium ? new ChromiumCoverage(_channel) : null;
             Keyboard = new Keyboard(_channel);
             Mouse = new Mouse(_channel);
             _channel.Closed += Channel_Closed;
@@ -144,7 +144,7 @@ namespace PlaywrightSharp
         public event EventHandler<EventArgs> DOMContentLoaded;
 
         /// <inheritdoc />
-        public event EventHandler<EventArgs> Closed;
+        public event EventHandler<EventArgs> Close;
 
         /// <inheritdoc />
         public event EventHandler<EventArgs> Crash;
@@ -379,12 +379,12 @@ namespace PlaywrightSharp
 
             if (pageEvent.Name != PageEvent.Crash.Name)
             {
-                waiter.RejectOnEvent<EventArgs>(this, "Crash", new TargetClosedException("Page crashed"));
+                waiter.RejectOnEvent<EventArgs>(this, PageEvent.Crash.Name, new TargetClosedException("Page crashed"));
             }
 
-            if (pageEvent.Name != PageEvent.Closed.Name)
+            if (pageEvent.Name != PageEvent.Close.Name)
             {
-                waiter.RejectOnEvent<EventArgs>(this, "Closed", new TargetClosedException("Page closed"));
+                waiter.RejectOnEvent<EventArgs>(this, PageEvent.Close.Name, new TargetClosedException("Page closed"));
             }
 
             return await waiter.WaitForEventAsync(this, pageEvent.Name, predicate).ConfigureAwait(false);
@@ -886,7 +886,7 @@ namespace PlaywrightSharp
             IsClosed = true;
             BrowserContext?.PagesList.Remove(this);
             RejectPendingOperations(false);
-            Closed?.Invoke(this, EventArgs.Empty);
+            Close?.Invoke(this, EventArgs.Empty);
         }
 
         private void Channel_Crashed(object sender, EventArgs e)
@@ -940,7 +940,7 @@ namespace PlaywrightSharp
 
         private void RejectPendingOperations(bool isCrash)
         {
-            foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.pageEvent != (isCrash ? PageEvent.Crash : PageEvent.Closed)))
+            foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.pageEvent != (isCrash ? PageEvent.Crash : PageEvent.Close)))
             {
                 waitTcs.TrySetException(new TargetClosedException(isCrash ? "Page crashed" : "Page closed"));
             }

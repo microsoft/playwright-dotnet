@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -347,7 +348,7 @@ namespace PlaywrightSharp.Tests.Chromium
 
         private async Task<int> CountOOPIFsASync(IBrowser browser)
         {
-            var browserSession = await browser.NewBrowserCDPSessionAsync();
+            var browserSession = await ((IChromiumBrowser)browser).NewBrowserCDPSessionAsync();
             var oopifs = new List<JsonElement?>();
 
             browserSession.MessageReceived += (sender, e) =>

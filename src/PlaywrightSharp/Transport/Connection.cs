@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Helpers.Linux;
 using PlaywrightSharp.Transport;
@@ -366,13 +367,43 @@ namespace PlaywrightSharp.Transport
 #pragma warning restore CA2000 // Dispose objects before losing scope
                     break;
                 case ChannelOwnerType.Browser:
-                    result = new Browser(parent, guid, initializer?.ToObject<BrowserInitializer>(GetDefaultJsonSerializerOptions()));
+                    var browserInitializer = initializer?.ToObject<BrowserInitializer>(GetDefaultJsonSerializerOptions());
+
+                    if (browserInitializer.Name == BrowserType.Chromium)
+                    {
+                        result = new ChromiumBrowser(parent, guid, browserInitializer);
+                    }
+                    else
+                    {
+                        result = new Browser(parent, guid, browserInitializer);
+                    }
+
                     break;
                 case ChannelOwnerType.BrowserType:
-                    result = new BrowserType(parent, guid, initializer?.ToObject<BrowserTypeInitializer>(GetDefaultJsonSerializerOptions()));
+                    var browserTypeInitializer = initializer?.ToObject<BrowserTypeInitializer>(GetDefaultJsonSerializerOptions());
+
+                    if (browserTypeInitializer.Name == BrowserType.Chromium)
+                    {
+                        result = new ChromiumBrowserType(parent, guid, browserTypeInitializer);
+                    }
+                    else
+                    {
+                        result = new BrowserType(parent, guid, browserTypeInitializer);
+                    }
+
                     break;
                 case ChannelOwnerType.BrowserContext:
-                    result = new BrowserContext(parent, guid, initializer?.ToObject<BrowserContextInitializer>(GetDefaultJsonSerializerOptions()));
+                    var browserContextInitializer = initializer?.ToObject<BrowserContextInitializer>(GetDefaultJsonSerializerOptions());
+
+                    if (browserContextInitializer.BrowserName == BrowserType.Chromium)
+                    {
+                        result = new ChromiumBrowserContext(parent, guid, browserContextInitializer);
+                    }
+                    else
+                    {
+                        result = new BrowserContext(parent, guid, browserContextInitializer);
+                    }
+
                     break;
                 case ChannelOwnerType.ConsoleMessage:
                     result = new ConsoleMessage(parent, guid, initializer?.ToObject<ConsoleMessageInitializer>(GetDefaultJsonSerializerOptions()));

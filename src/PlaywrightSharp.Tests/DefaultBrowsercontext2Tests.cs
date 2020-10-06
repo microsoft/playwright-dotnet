@@ -315,7 +315,7 @@ namespace PlaywrightSharp.Tests
         {
             var (tmp, context, page) = await LaunchAsync();
             bool closed = false;
-            context.Closed += (sender, e) => closed = true;
+            context.Close += (sender, e) => closed = true;
             await context.CloseAsync();
 
             Assert.True(closed);
