@@ -14,6 +14,11 @@ namespace PlaywrightSharp.Transport
         event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
         /// <summary>
+        /// Occurs when a log message is received.
+        /// </summary>
+        event EventHandler<LogReceivedEventArgs> LogReceived;
+
+        /// <summary>
         /// Occurs when the transport is closed.
         /// </summary>
         event EventHandler<TransportClosedEventArgs> TransportClosed;
