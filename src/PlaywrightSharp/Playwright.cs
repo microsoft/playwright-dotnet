@@ -97,7 +97,7 @@ namespace PlaywrightSharp
         /// <param name="browsersPath">Specify a shared folder that playwright will use to download browsers and to look for browsers when launching browser instances.
         /// It is a shortcut to the PLAYWRIGHT_BROWSERS_PATH environment variable.
         /// </param>
-        /// <param name="debug">Enabled the playwright driver log.
+        /// <param name="debug">Enables the playwright driver log. Pass `pw:api` to get the Playwright API log.
         /// It is a shortcut to the DEBUG=pw:api environment variable.
         /// </param>
         /// <returns>A <see cref="Task"/> that completes when the playwright driver is ready to be used.</returns>
@@ -107,11 +107,11 @@ namespace PlaywrightSharp
             string driversLocationPath = null,
             string driverExecutablePath = null,
             string browsersPath = null,
-            bool debug = false)
+            string debug = null)
         {
-            if (debug)
+            if (!string.IsNullOrEmpty(debug))
             {
-                Environment.SetEnvironmentVariable("DEBUG", "pw:api");
+                Environment.SetEnvironmentVariable("DEBUG", debug);
             }
 
             var connection = new Connection(loggerFactory, scheduler, driversLocationPath, driverExecutablePath, browsersPath);
