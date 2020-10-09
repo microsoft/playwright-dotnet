@@ -14913,6 +14913,12 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.Transport.IConnectionTransport.Close
   nameWithType: IConnectionTransport.Close
+- uid: PlaywrightSharp.Transport.IConnectionTransport.LogReceived
+  name: LogReceived
+  href: api/PlaywrightSharp.Transport.IConnectionTransport.html#PlaywrightSharp_Transport_IConnectionTransport_LogReceived
+  commentId: E:PlaywrightSharp.Transport.IConnectionTransport.LogReceived
+  fullName: PlaywrightSharp.Transport.IConnectionTransport.LogReceived
+  nameWithType: IConnectionTransport.LogReceived
 - uid: PlaywrightSharp.Transport.IConnectionTransport.MessageReceived
   name: MessageReceived
   href: api/PlaywrightSharp.Transport.IConnectionTransport.html#PlaywrightSharp_Transport_IConnectionTransport_MessageReceived
@@ -14938,6 +14944,38 @@ references:
   commentId: E:PlaywrightSharp.Transport.IConnectionTransport.TransportClosed
   fullName: PlaywrightSharp.Transport.IConnectionTransport.TransportClosed
   nameWithType: IConnectionTransport.TransportClosed
+- uid: PlaywrightSharp.Transport.LogReceivedEventArgs
+  name: LogReceivedEventArgs
+  href: api/PlaywrightSharp.Transport.LogReceivedEventArgs.html
+  commentId: T:PlaywrightSharp.Transport.LogReceivedEventArgs
+  fullName: PlaywrightSharp.Transport.LogReceivedEventArgs
+  nameWithType: LogReceivedEventArgs
+- uid: PlaywrightSharp.Transport.LogReceivedEventArgs.#ctor(System.String)
+  name: LogReceivedEventArgs(String)
+  href: api/PlaywrightSharp.Transport.LogReceivedEventArgs.html#PlaywrightSharp_Transport_LogReceivedEventArgs__ctor_System_String_
+  commentId: M:PlaywrightSharp.Transport.LogReceivedEventArgs.#ctor(System.String)
+  fullName: PlaywrightSharp.Transport.LogReceivedEventArgs.LogReceivedEventArgs(System.String)
+  nameWithType: LogReceivedEventArgs.LogReceivedEventArgs(String)
+- uid: PlaywrightSharp.Transport.LogReceivedEventArgs.#ctor*
+  name: LogReceivedEventArgs
+  href: api/PlaywrightSharp.Transport.LogReceivedEventArgs.html#PlaywrightSharp_Transport_LogReceivedEventArgs__ctor_
+  commentId: Overload:PlaywrightSharp.Transport.LogReceivedEventArgs.#ctor
+  isSpec: "True"
+  fullName: PlaywrightSharp.Transport.LogReceivedEventArgs.LogReceivedEventArgs
+  nameWithType: LogReceivedEventArgs.LogReceivedEventArgs
+- uid: PlaywrightSharp.Transport.LogReceivedEventArgs.Message
+  name: Message
+  href: api/PlaywrightSharp.Transport.LogReceivedEventArgs.html#PlaywrightSharp_Transport_LogReceivedEventArgs_Message
+  commentId: P:PlaywrightSharp.Transport.LogReceivedEventArgs.Message
+  fullName: PlaywrightSharp.Transport.LogReceivedEventArgs.Message
+  nameWithType: LogReceivedEventArgs.Message
+- uid: PlaywrightSharp.Transport.LogReceivedEventArgs.Message*
+  name: Message
+  href: api/PlaywrightSharp.Transport.LogReceivedEventArgs.html#PlaywrightSharp_Transport_LogReceivedEventArgs_Message_
+  commentId: Overload:PlaywrightSharp.Transport.LogReceivedEventArgs.Message
+  isSpec: "True"
+  fullName: PlaywrightSharp.Transport.LogReceivedEventArgs.Message
+  nameWithType: LogReceivedEventArgs.Message
 - uid: PlaywrightSharp.Transport.MessageReceivedEventArgs
   name: MessageReceivedEventArgs
   href: api/PlaywrightSharp.Transport.MessageReceivedEventArgs.html
