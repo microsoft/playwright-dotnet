@@ -18,6 +18,8 @@ namespace PlaywrightSharp.Transport
         {
             _process = process;
             scheduler ??= ScheduleTransportTask;
+            process.ErrorDataReceived += (s, e) => LogReceived?.Invoke(this, new LogReceivedEventArgs(e.Data));
+            process.BeginErrorReadLine();
 
             scheduler(GetResponseAsync, _readerCancellationSource.Token);
         }
@@ -28,6 +30,8 @@ namespace PlaywrightSharp.Transport
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
         public event EventHandler<TransportClosedEventArgs> TransportClosed;
+
+        public event EventHandler<LogReceivedEventArgs> LogReceived;
 
         public bool IsClosed { get; private set; }
 

@@ -50,6 +50,10 @@ namespace PlaywrightSharp.Transport
                 Environment.SetEnvironmentVariable(BrowsersPathEnvironmentVariable, Path.GetFullPath(browsersPath));
             }
 
+            _loggerFactory = loggerFactory;
+            _logger = _loggerFactory?.CreateLogger<Connection>();
+            var debugLogger = _loggerFactory?.CreateLogger<Playwright>();
+
             _rootObject = new ChannelOwnerBase(null, this, string.Empty);
 
             _playwrightServerProcess = GetProcess(driversLocationPath, driverExecutablePath);
@@ -58,9 +62,8 @@ namespace PlaywrightSharp.Transport
             _playwrightServerProcess.Exited += (sender, e) => Close("Process exited");
             _transport = new StdIOTransport(_playwrightServerProcess, scheduler);
             _transport.MessageReceived += Transport_MessageReceived;
+            _transport.LogReceived += (s, e) => debugLogger?.LogInformation(e.Message);
             _transport.TransportClosed += (sender, e) => Close(e.CloseReason);
-            _loggerFactory = loggerFactory;
-            _logger = _loggerFactory?.CreateLogger<Connection>();
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
@@ -88,6 +91,7 @@ namespace PlaywrightSharp.Transport
             process.StartInfo.Arguments = "--install";
             process.StartInfo.RedirectStandardOutput = false;
             process.StartInfo.RedirectStandardInput = false;
+            process.StartInfo.RedirectStandardError = false;
             process.EnableRaisingEvents = true;
             process.Exited += (sender, e) => tcs.TrySetResult(true);
             process.Start();
@@ -250,6 +254,7 @@ namespace PlaywrightSharp.Transport
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardInput = true,
+                    RedirectStandardError = true,
                     CreateNoWindow = true,
                 },
             };
