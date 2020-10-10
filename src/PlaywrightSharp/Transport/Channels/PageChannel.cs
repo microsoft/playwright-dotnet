@@ -462,7 +462,7 @@ namespace PlaywrightSharp.Transport.Channels
             bool printBackground,
             bool landscape,
             string pageRanges,
-            PaperFormat format,
+            PaperFormat? format,
             string width,
             string height,
             Margin margin,
