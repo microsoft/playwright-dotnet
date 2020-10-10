@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Margin options used in <see cref="IPage.GetPdfAsync(string, decimal, bool, string, string, bool, bool, string, PaperFormat, string, string, Margin, bool)"/>.
+    /// Margin options used in <see cref="IPage.GetPdfAsync(string, decimal, bool, string, string, bool, bool, string, PaperFormat?, string, string, Margin, bool)"/>.
     /// </summary>
     public class Margin : IEquatable<Margin>
     {

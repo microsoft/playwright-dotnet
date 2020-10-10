@@ -2,7 +2,7 @@
 <Project>
     <PropertyGroup>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>0.142.1</PackageVersion>
+        <PackageVersion>0.142.2</PackageVersion>
         <AssemblyVersion>$(PackageVersion)</AssemblyVersion>
         <ReleaseVersion>$(PackageVersion)</ReleaseVersion>
         <FileVersion>$(PackageVersion)</FileVersion>

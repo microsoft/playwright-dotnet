@@ -706,7 +706,7 @@ namespace PlaywrightSharp
             bool printBackground = false,
             bool landscape = false,
             string pageRanges = "",
-            PaperFormat format = null,
+            PaperFormat? format = null,
             string width = null,
             string height = null,
             Margin margin = null,

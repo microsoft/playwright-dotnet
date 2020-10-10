@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Tests
             {
                 fileInfo.Delete();
             }
-            await Page.GetPdfAsync(outputFile);
+            await Page.GetPdfAsync(outputFile, format: PaperFormat.Letter);
             fileInfo = new FileInfo(outputFile);
             Assert.True(new FileInfo(outputFile).Length > 0);
             if (fileInfo.Exists)
