@@ -8123,12 +8123,15 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.IPage.GetOpenerAsync
   nameWithType: IPage.GetOpenerAsync
-- uid: PlaywrightSharp.IPage.GetPdfAsync(System.String,System.Decimal,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.String,PlaywrightSharp.PaperFormat,System.String,System.String,PlaywrightSharp.Margin,System.Boolean)
-  name: GetPdfAsync(String, Decimal, Boolean, String, String, Boolean, Boolean, String, PaperFormat, String, String, Margin, Boolean)
-  href: api/PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_GetPdfAsync_System_String_System_Decimal_System_Boolean_System_String_System_String_System_Boolean_System_Boolean_System_String_PlaywrightSharp_PaperFormat_System_String_System_String_PlaywrightSharp_Margin_System_Boolean_
-  commentId: M:PlaywrightSharp.IPage.GetPdfAsync(System.String,System.Decimal,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.String,PlaywrightSharp.PaperFormat,System.String,System.String,PlaywrightSharp.Margin,System.Boolean)
-  fullName: PlaywrightSharp.IPage.GetPdfAsync(System.String, System.Decimal, System.Boolean, System.String, System.String, System.Boolean, System.Boolean, System.String, PlaywrightSharp.PaperFormat, System.String, System.String, PlaywrightSharp.Margin, System.Boolean)
-  nameWithType: IPage.GetPdfAsync(String, Decimal, Boolean, String, String, Boolean, Boolean, String, PaperFormat, String, String, Margin, Boolean)
+- uid: PlaywrightSharp.IPage.GetPdfAsync(System.String,System.Decimal,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.String,System.Nullable{PlaywrightSharp.PaperFormat},System.String,System.String,PlaywrightSharp.Margin,System.Boolean)
+  name: GetPdfAsync(String, Decimal, Boolean, String, String, Boolean, Boolean, String, Nullable<PaperFormat>, String, String, Margin, Boolean)
+  href: api/PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_GetPdfAsync_System_String_System_Decimal_System_Boolean_System_String_System_String_System_Boolean_System_Boolean_System_String_System_Nullable_PlaywrightSharp_PaperFormat__System_String_System_String_PlaywrightSharp_Margin_System_Boolean_
+  commentId: M:PlaywrightSharp.IPage.GetPdfAsync(System.String,System.Decimal,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.String,System.Nullable{PlaywrightSharp.PaperFormat},System.String,System.String,PlaywrightSharp.Margin,System.Boolean)
+  name.vb: GetPdfAsync(String, Decimal, Boolean, String, String, Boolean, Boolean, String, Nullable(Of PaperFormat), String, String, Margin, Boolean)
+  fullName: PlaywrightSharp.IPage.GetPdfAsync(System.String, System.Decimal, System.Boolean, System.String, System.String, System.Boolean, System.Boolean, System.String, System.Nullable<PlaywrightSharp.PaperFormat>, System.String, System.String, PlaywrightSharp.Margin, System.Boolean)
+  fullName.vb: PlaywrightSharp.IPage.GetPdfAsync(System.String, System.Decimal, System.Boolean, System.String, System.String, System.Boolean, System.Boolean, System.String, System.Nullable(Of PlaywrightSharp.PaperFormat), System.String, System.String, PlaywrightSharp.Margin, System.Boolean)
+  nameWithType: IPage.GetPdfAsync(String, Decimal, Boolean, String, String, Boolean, Boolean, String, Nullable<PaperFormat>, String, String, Margin, Boolean)
+  nameWithType.vb: IPage.GetPdfAsync(String, Decimal, Boolean, String, String, Boolean, Boolean, String, Nullable(Of PaperFormat), String, String, Margin, Boolean)
 - uid: PlaywrightSharp.IPage.GetPdfAsync*
   name: GetPdfAsync
   href: api/PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_GetPdfAsync_
@@ -11587,12 +11590,15 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.Page.GetOpenerAsync
   nameWithType: Page.GetOpenerAsync
-- uid: PlaywrightSharp.Page.GetPdfAsync(System.String,System.Decimal,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.String,PlaywrightSharp.PaperFormat,System.String,System.String,PlaywrightSharp.Margin,System.Boolean)
-  name: GetPdfAsync(String, Decimal, Boolean, String, String, Boolean, Boolean, String, PaperFormat, String, String, Margin, Boolean)
-  href: api/PlaywrightSharp.Page.html#PlaywrightSharp_Page_GetPdfAsync_System_String_System_Decimal_System_Boolean_System_String_System_String_System_Boolean_System_Boolean_System_String_PlaywrightSharp_PaperFormat_System_String_System_String_PlaywrightSharp_Margin_System_Boolean_
-  commentId: M:PlaywrightSharp.Page.GetPdfAsync(System.String,System.Decimal,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.String,PlaywrightSharp.PaperFormat,System.String,System.String,PlaywrightSharp.Margin,System.Boolean)
-  fullName: PlaywrightSharp.Page.GetPdfAsync(System.String, System.Decimal, System.Boolean, System.String, System.String, System.Boolean, System.Boolean, System.String, PlaywrightSharp.PaperFormat, System.String, System.String, PlaywrightSharp.Margin, System.Boolean)
-  nameWithType: Page.GetPdfAsync(String, Decimal, Boolean, String, String, Boolean, Boolean, String, PaperFormat, String, String, Margin, Boolean)
+- uid: PlaywrightSharp.Page.GetPdfAsync(System.String,System.Decimal,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.String,System.Nullable{PlaywrightSharp.PaperFormat},System.String,System.String,PlaywrightSharp.Margin,System.Boolean)
+  name: GetPdfAsync(String, Decimal, Boolean, String, String, Boolean, Boolean, String, Nullable<PaperFormat>, String, String, Margin, Boolean)
+  href: api/PlaywrightSharp.Page.html#PlaywrightSharp_Page_GetPdfAsync_System_String_System_Decimal_System_Boolean_System_String_System_String_System_Boolean_System_Boolean_System_String_System_Nullable_PlaywrightSharp_PaperFormat__System_String_System_String_PlaywrightSharp_Margin_System_Boolean_
+  commentId: M:PlaywrightSharp.Page.GetPdfAsync(System.String,System.Decimal,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.String,System.Nullable{PlaywrightSharp.PaperFormat},System.String,System.String,PlaywrightSharp.Margin,System.Boolean)
+  name.vb: GetPdfAsync(String, Decimal, Boolean, String, String, Boolean, Boolean, String, Nullable(Of PaperFormat), String, String, Margin, Boolean)
+  fullName: PlaywrightSharp.Page.GetPdfAsync(System.String, System.Decimal, System.Boolean, System.String, System.String, System.Boolean, System.Boolean, System.String, System.Nullable<PlaywrightSharp.PaperFormat>, System.String, System.String, PlaywrightSharp.Margin, System.Boolean)
+  fullName.vb: PlaywrightSharp.Page.GetPdfAsync(System.String, System.Decimal, System.Boolean, System.String, System.String, System.Boolean, System.Boolean, System.String, System.Nullable(Of PlaywrightSharp.PaperFormat), System.String, System.String, PlaywrightSharp.Margin, System.Boolean)
+  nameWithType: Page.GetPdfAsync(String, Decimal, Boolean, String, String, Boolean, Boolean, String, Nullable<PaperFormat>, String, String, Margin, Boolean)
+  nameWithType.vb: Page.GetPdfAsync(String, Decimal, Boolean, String, String, Boolean, Boolean, String, Nullable(Of PaperFormat), String, String, Margin, Boolean)
 - uid: PlaywrightSharp.Page.GetPdfAsync*
   name: GetPdfAsync
   href: api/PlaywrightSharp.Page.html#PlaywrightSharp_Page_GetPdfAsync_
@@ -12773,246 +12779,72 @@ references:
   commentId: T:PlaywrightSharp.PaperFormat
   fullName: PlaywrightSharp.PaperFormat
   nameWithType: PaperFormat
-- uid: PlaywrightSharp.PaperFormat.#ctor(System.Decimal,System.Decimal)
-  name: PaperFormat(Decimal, Decimal)
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat__ctor_System_Decimal_System_Decimal_
-  commentId: M:PlaywrightSharp.PaperFormat.#ctor(System.Decimal,System.Decimal)
-  fullName: PlaywrightSharp.PaperFormat.PaperFormat(System.Decimal, System.Decimal)
-  nameWithType: PaperFormat.PaperFormat(Decimal, Decimal)
-- uid: PlaywrightSharp.PaperFormat.#ctor*
-  name: PaperFormat
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat__ctor_
-  commentId: Overload:PlaywrightSharp.PaperFormat.#ctor
-  isSpec: "True"
-  fullName: PlaywrightSharp.PaperFormat.PaperFormat
-  nameWithType: PaperFormat.PaperFormat
 - uid: PlaywrightSharp.PaperFormat.A0
   name: A0
   href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_A0
-  commentId: P:PlaywrightSharp.PaperFormat.A0
-  fullName: PlaywrightSharp.PaperFormat.A0
-  nameWithType: PaperFormat.A0
-- uid: PlaywrightSharp.PaperFormat.A0*
-  name: A0
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_A0_
-  commentId: Overload:PlaywrightSharp.PaperFormat.A0
-  isSpec: "True"
+  commentId: F:PlaywrightSharp.PaperFormat.A0
   fullName: PlaywrightSharp.PaperFormat.A0
   nameWithType: PaperFormat.A0
 - uid: PlaywrightSharp.PaperFormat.A1
   name: A1
   href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_A1
-  commentId: P:PlaywrightSharp.PaperFormat.A1
-  fullName: PlaywrightSharp.PaperFormat.A1
-  nameWithType: PaperFormat.A1
-- uid: PlaywrightSharp.PaperFormat.A1*
-  name: A1
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_A1_
-  commentId: Overload:PlaywrightSharp.PaperFormat.A1
-  isSpec: "True"
+  commentId: F:PlaywrightSharp.PaperFormat.A1
   fullName: PlaywrightSharp.PaperFormat.A1
   nameWithType: PaperFormat.A1
 - uid: PlaywrightSharp.PaperFormat.A2
   name: A2
   href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_A2
-  commentId: P:PlaywrightSharp.PaperFormat.A2
-  fullName: PlaywrightSharp.PaperFormat.A2
-  nameWithType: PaperFormat.A2
-- uid: PlaywrightSharp.PaperFormat.A2*
-  name: A2
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_A2_
-  commentId: Overload:PlaywrightSharp.PaperFormat.A2
-  isSpec: "True"
+  commentId: F:PlaywrightSharp.PaperFormat.A2
   fullName: PlaywrightSharp.PaperFormat.A2
   nameWithType: PaperFormat.A2
 - uid: PlaywrightSharp.PaperFormat.A3
   name: A3
   href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_A3
-  commentId: P:PlaywrightSharp.PaperFormat.A3
-  fullName: PlaywrightSharp.PaperFormat.A3
-  nameWithType: PaperFormat.A3
-- uid: PlaywrightSharp.PaperFormat.A3*
-  name: A3
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_A3_
-  commentId: Overload:PlaywrightSharp.PaperFormat.A3
-  isSpec: "True"
+  commentId: F:PlaywrightSharp.PaperFormat.A3
   fullName: PlaywrightSharp.PaperFormat.A3
   nameWithType: PaperFormat.A3
 - uid: PlaywrightSharp.PaperFormat.A4
   name: A4
   href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_A4
-  commentId: P:PlaywrightSharp.PaperFormat.A4
-  fullName: PlaywrightSharp.PaperFormat.A4
-  nameWithType: PaperFormat.A4
-- uid: PlaywrightSharp.PaperFormat.A4*
-  name: A4
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_A4_
-  commentId: Overload:PlaywrightSharp.PaperFormat.A4
-  isSpec: "True"
+  commentId: F:PlaywrightSharp.PaperFormat.A4
   fullName: PlaywrightSharp.PaperFormat.A4
   nameWithType: PaperFormat.A4
 - uid: PlaywrightSharp.PaperFormat.A5
   name: A5
   href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_A5
-  commentId: P:PlaywrightSharp.PaperFormat.A5
-  fullName: PlaywrightSharp.PaperFormat.A5
-  nameWithType: PaperFormat.A5
-- uid: PlaywrightSharp.PaperFormat.A5*
-  name: A5
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_A5_
-  commentId: Overload:PlaywrightSharp.PaperFormat.A5
-  isSpec: "True"
+  commentId: F:PlaywrightSharp.PaperFormat.A5
   fullName: PlaywrightSharp.PaperFormat.A5
   nameWithType: PaperFormat.A5
 - uid: PlaywrightSharp.PaperFormat.A6
   name: A6
   href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_A6
-  commentId: P:PlaywrightSharp.PaperFormat.A6
+  commentId: F:PlaywrightSharp.PaperFormat.A6
   fullName: PlaywrightSharp.PaperFormat.A6
   nameWithType: PaperFormat.A6
-- uid: PlaywrightSharp.PaperFormat.A6*
-  name: A6
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_A6_
-  commentId: Overload:PlaywrightSharp.PaperFormat.A6
-  isSpec: "True"
-  fullName: PlaywrightSharp.PaperFormat.A6
-  nameWithType: PaperFormat.A6
-- uid: PlaywrightSharp.PaperFormat.Equals(PlaywrightSharp.PaperFormat)
-  name: Equals(PaperFormat)
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_Equals_PlaywrightSharp_PaperFormat_
-  commentId: M:PlaywrightSharp.PaperFormat.Equals(PlaywrightSharp.PaperFormat)
-  fullName: PlaywrightSharp.PaperFormat.Equals(PlaywrightSharp.PaperFormat)
-  nameWithType: PaperFormat.Equals(PaperFormat)
-- uid: PlaywrightSharp.PaperFormat.Equals(System.Object)
-  name: Equals(Object)
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_Equals_System_Object_
-  commentId: M:PlaywrightSharp.PaperFormat.Equals(System.Object)
-  fullName: PlaywrightSharp.PaperFormat.Equals(System.Object)
-  nameWithType: PaperFormat.Equals(Object)
-- uid: PlaywrightSharp.PaperFormat.Equals*
-  name: Equals
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_Equals_
-  commentId: Overload:PlaywrightSharp.PaperFormat.Equals
-  isSpec: "True"
-  fullName: PlaywrightSharp.PaperFormat.Equals
-  nameWithType: PaperFormat.Equals
-- uid: PlaywrightSharp.PaperFormat.GetHashCode
-  name: GetHashCode()
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_GetHashCode
-  commentId: M:PlaywrightSharp.PaperFormat.GetHashCode
-  fullName: PlaywrightSharp.PaperFormat.GetHashCode()
-  nameWithType: PaperFormat.GetHashCode()
-- uid: PlaywrightSharp.PaperFormat.GetHashCode*
-  name: GetHashCode
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_GetHashCode_
-  commentId: Overload:PlaywrightSharp.PaperFormat.GetHashCode
-  isSpec: "True"
-  fullName: PlaywrightSharp.PaperFormat.GetHashCode
-  nameWithType: PaperFormat.GetHashCode
-- uid: PlaywrightSharp.PaperFormat.Height
-  name: Height
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_Height
-  commentId: P:PlaywrightSharp.PaperFormat.Height
-  fullName: PlaywrightSharp.PaperFormat.Height
-  nameWithType: PaperFormat.Height
-- uid: PlaywrightSharp.PaperFormat.Height*
-  name: Height
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_Height_
-  commentId: Overload:PlaywrightSharp.PaperFormat.Height
-  isSpec: "True"
-  fullName: PlaywrightSharp.PaperFormat.Height
-  nameWithType: PaperFormat.Height
 - uid: PlaywrightSharp.PaperFormat.Ledger
   name: Ledger
   href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_Ledger
-  commentId: P:PlaywrightSharp.PaperFormat.Ledger
-  fullName: PlaywrightSharp.PaperFormat.Ledger
-  nameWithType: PaperFormat.Ledger
-- uid: PlaywrightSharp.PaperFormat.Ledger*
-  name: Ledger
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_Ledger_
-  commentId: Overload:PlaywrightSharp.PaperFormat.Ledger
-  isSpec: "True"
+  commentId: F:PlaywrightSharp.PaperFormat.Ledger
   fullName: PlaywrightSharp.PaperFormat.Ledger
   nameWithType: PaperFormat.Ledger
 - uid: PlaywrightSharp.PaperFormat.Legal
   name: Legal
   href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_Legal
-  commentId: P:PlaywrightSharp.PaperFormat.Legal
-  fullName: PlaywrightSharp.PaperFormat.Legal
-  nameWithType: PaperFormat.Legal
-- uid: PlaywrightSharp.PaperFormat.Legal*
-  name: Legal
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_Legal_
-  commentId: Overload:PlaywrightSharp.PaperFormat.Legal
-  isSpec: "True"
+  commentId: F:PlaywrightSharp.PaperFormat.Legal
   fullName: PlaywrightSharp.PaperFormat.Legal
   nameWithType: PaperFormat.Legal
 - uid: PlaywrightSharp.PaperFormat.Letter
   name: Letter
   href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_Letter
-  commentId: P:PlaywrightSharp.PaperFormat.Letter
+  commentId: F:PlaywrightSharp.PaperFormat.Letter
   fullName: PlaywrightSharp.PaperFormat.Letter
   nameWithType: PaperFormat.Letter
-- uid: PlaywrightSharp.PaperFormat.Letter*
-  name: Letter
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_Letter_
-  commentId: Overload:PlaywrightSharp.PaperFormat.Letter
-  isSpec: "True"
-  fullName: PlaywrightSharp.PaperFormat.Letter
-  nameWithType: PaperFormat.Letter
-- uid: PlaywrightSharp.PaperFormat.op_Equality(PlaywrightSharp.PaperFormat,PlaywrightSharp.PaperFormat)
-  name: Equality(PaperFormat, PaperFormat)
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_op_Equality_PlaywrightSharp_PaperFormat_PlaywrightSharp_PaperFormat_
-  commentId: M:PlaywrightSharp.PaperFormat.op_Equality(PlaywrightSharp.PaperFormat,PlaywrightSharp.PaperFormat)
-  fullName: PlaywrightSharp.PaperFormat.Equality(PlaywrightSharp.PaperFormat, PlaywrightSharp.PaperFormat)
-  nameWithType: PaperFormat.Equality(PaperFormat, PaperFormat)
-- uid: PlaywrightSharp.PaperFormat.op_Equality*
-  name: Equality
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_op_Equality_
-  commentId: Overload:PlaywrightSharp.PaperFormat.op_Equality
-  isSpec: "True"
-  fullName: PlaywrightSharp.PaperFormat.Equality
-  nameWithType: PaperFormat.Equality
-- uid: PlaywrightSharp.PaperFormat.op_Inequality(PlaywrightSharp.PaperFormat,PlaywrightSharp.PaperFormat)
-  name: Inequality(PaperFormat, PaperFormat)
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_op_Inequality_PlaywrightSharp_PaperFormat_PlaywrightSharp_PaperFormat_
-  commentId: M:PlaywrightSharp.PaperFormat.op_Inequality(PlaywrightSharp.PaperFormat,PlaywrightSharp.PaperFormat)
-  fullName: PlaywrightSharp.PaperFormat.Inequality(PlaywrightSharp.PaperFormat, PlaywrightSharp.PaperFormat)
-  nameWithType: PaperFormat.Inequality(PaperFormat, PaperFormat)
-- uid: PlaywrightSharp.PaperFormat.op_Inequality*
-  name: Inequality
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_op_Inequality_
-  commentId: Overload:PlaywrightSharp.PaperFormat.op_Inequality
-  isSpec: "True"
-  fullName: PlaywrightSharp.PaperFormat.Inequality
-  nameWithType: PaperFormat.Inequality
 - uid: PlaywrightSharp.PaperFormat.Tabloid
   name: Tabloid
   href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_Tabloid
-  commentId: P:PlaywrightSharp.PaperFormat.Tabloid
+  commentId: F:PlaywrightSharp.PaperFormat.Tabloid
   fullName: PlaywrightSharp.PaperFormat.Tabloid
   nameWithType: PaperFormat.Tabloid
-- uid: PlaywrightSharp.PaperFormat.Tabloid*
-  name: Tabloid
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_Tabloid_
-  commentId: Overload:PlaywrightSharp.PaperFormat.Tabloid
-  isSpec: "True"
-  fullName: PlaywrightSharp.PaperFormat.Tabloid
-  nameWithType: PaperFormat.Tabloid
-- uid: PlaywrightSharp.PaperFormat.Width
-  name: Width
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_Width
-  commentId: P:PlaywrightSharp.PaperFormat.Width
-  fullName: PlaywrightSharp.PaperFormat.Width
-  nameWithType: PaperFormat.Width
-- uid: PlaywrightSharp.PaperFormat.Width*
-  name: Width
-  href: api/PlaywrightSharp.PaperFormat.html#PlaywrightSharp_PaperFormat_Width_
-  commentId: Overload:PlaywrightSharp.PaperFormat.Width
-  isSpec: "True"
-  fullName: PlaywrightSharp.PaperFormat.Width
-  nameWithType: PaperFormat.Width
 - uid: PlaywrightSharp.Payload
   name: Payload
   href: api/PlaywrightSharp.Payload.html
