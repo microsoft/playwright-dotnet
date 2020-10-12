@@ -61,8 +61,7 @@
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
-      "default",
-	  "./template/playwright-sharp"
+      "default"
     ],
     "postProcessors": [],
     "markdownEngineName": "markdig",
