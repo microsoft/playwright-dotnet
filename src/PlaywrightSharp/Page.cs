@@ -36,6 +36,7 @@ namespace PlaywrightSharp
             MainFrame.Page = this;
             _frames.Add(MainFrame);
             ViewportSize = initializer.ViewportSize;
+            IsClosed = initializer.IsClosed;
             Accessibility = new Accesibility(_channel);
             Coverage = BrowserContext.BrowserName == BrowserType.Chromium ? new ChromiumCoverage(_channel) : null;
             Keyboard = new Keyboard(_channel);
