@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.Json;
@@ -57,7 +58,7 @@ namespace PlaywrightSharp.Transport
             _rootObject = new ChannelOwnerBase(null, this, string.Empty);
 
             _playwrightServerProcess = GetProcess(driversLocationPath, driverExecutablePath);
-            _playwrightServerProcess.StartInfo.Arguments = "--run";
+            _playwrightServerProcess.StartInfo.Arguments = "run-driver";
             _playwrightServerProcess.Start();
             _playwrightServerProcess.Exited += (sender, e) => Close("Process exited");
             _transport = new StdIOTransport(_playwrightServerProcess, scheduler);
@@ -88,7 +89,7 @@ namespace PlaywrightSharp.Transport
 
             var tcs = new TaskCompletionSource<bool>();
             using var process = GetProcess(driverPath);
-            process.StartInfo.Arguments = "--install";
+            process.StartInfo.Arguments = "install";
             process.StartInfo.RedirectStandardOutput = false;
             process.StartInfo.RedirectStandardInput = false;
             process.StartInfo.RedirectStandardError = false;
@@ -109,20 +110,23 @@ namespace PlaywrightSharp.Transport
             var assembly = typeof(Playwright).Assembly;
             string tempDirectory = new FileInfo(assembly.Location).Directory.FullName;
             driversPath ??= Path.Combine(tempDirectory, "playwright-sharp-drivers");
-            string driver = "playwright-driver-win.exe";
+            string driver = "playwright-cli-win32_x64.zip";
+            string executableFile = "playwright-cli.exe";
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                driver = "playwright-driver-macos";
+                driver = "playwright-cli-mac.zip";
+                executableFile = "playwright-cli";
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                driver = "playwright-driver-linux";
+                driver = "playwright-cli-linux.zip";
+                executableFile = "playwright-cli";
             }
 
             string file = Path.Combine(driversPath, assembly.GetName().Version.ToString(), driver);
             ExtractDriver(file, driver);
-            return file;
+            return Path.Combine(driversPath, assembly.GetName().Version.ToString(), executableFile);
         }
 
         internal void RemoveObject(string guid) => Objects.TryRemove(guid, out _);
@@ -271,39 +275,28 @@ namespace PlaywrightSharp.Transport
 
         private static void ExtractDriver(string file, string driver)
         {
-            string directory = new FileInfo(file).Directory.FullName;
-            Directory.CreateDirectory(directory);
+            var directory = new FileInfo(file).Directory;
 
-            using (var resource = typeof(Playwright).Assembly.GetManifestResourceStream($"PlaywrightSharp.Drivers.browsers.json"))
+            if (!directory.Exists)
             {
-                var browserFileInfo = new FileInfo(Path.Combine(directory, "browsers.json"));
+                Directory.CreateDirectory(directory.FullName);
 
-                if (!browserFileInfo.Exists)
+                using (var resource = typeof(Playwright).Assembly.GetManifestResourceStream($"PlaywrightSharp.Drivers.{driver}"))
+                using (var zipStream = new ZipArchive(resource))
                 {
-                    var fileInfo = browserFileInfo;
-                    if (fileInfo.Exists)
+                    zipStream.ExtractToDirectory(directory.FullName);
+                }
+
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    foreach (var executable in directory.GetFiles().Where(f => f.Name == "playwright-cli" || f.Name.Contains("ffmpeg")))
                     {
-                        fileInfo.Delete();
+                        if (LinuxSysCall.Chmod(executable.FullName, LinuxSysCall.ExecutableFilePermissions) != 0)
+                        {
+                            throw new PlaywrightSharpException($"Unable to chmod the driver ({Marshal.GetLastWin32Error()})");
+                        }
                     }
                 }
-
-                using var fileStream = new FileStream(browserFileInfo.FullName, FileMode.OpenOrCreate, FileAccess.Write);
-                resource.CopyTo(fileStream);
-            }
-
-            using (var resource = typeof(Playwright).Assembly.GetManifestResourceStream($"PlaywrightSharp.Drivers.{driver}"))
-            {
-                var fileInfo = new FileInfo(file);
-                if (!fileInfo.Exists)
-                {
-                    using var fileStream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write);
-                    resource.CopyTo(fileStream);
-                }
-            }
-
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && LinuxSysCall.Chmod(file, LinuxSysCall.ExecutableFilePermissions) != 0)
-            {
-                throw new PlaywrightSharpException($"Unable to chmod the driver ({Marshal.GetLastWin32Error()})");
             }
         }
 
