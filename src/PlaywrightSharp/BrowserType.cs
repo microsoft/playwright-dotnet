@@ -138,9 +138,11 @@ namespace PlaywrightSharp
             bool? chromiumSandbox = null,
             bool? handleSIGINT = null,
             bool? handleSIGTERM = null,
-            bool? handleSIGHUP = null)
+            bool? handleSIGHUP = null,
+            string videosPath = null,
+            ViewportSize videoSize = null)
             => LaunchPersistentContextAsync(
-                userAgent,
+                userDataDir,
                 new LaunchPersistentOptions
                 {
                     Headless = headless,
@@ -178,6 +180,8 @@ namespace PlaywrightSharp
                     HandleSIGHUP = handleSIGHUP,
                     HandleSIGINT = handleSIGINT,
                     HandleSIGTERM = handleSIGTERM,
+                    VideosPath = videosPath,
+                    VideoSize = videoSize,
                 });
 
         /// <inheritdoc />
@@ -215,9 +219,11 @@ namespace PlaywrightSharp
             bool? chromiumSandbox = null,
             bool? handleSIGINT = null,
             bool? handleSIGTERM = null,
-            bool? handleSIGHUP = null)
+            bool? handleSIGHUP = null,
+            string videosPath = null,
+            ViewportSize videoSize = null)
             => LaunchPersistentContextAsync(
-                userAgent,
+                userDataDir,
                 new LaunchPersistentOptions
                 {
                     Headless = headless,
@@ -254,6 +260,8 @@ namespace PlaywrightSharp
                     HandleSIGHUP = handleSIGHUP,
                     HandleSIGINT = handleSIGINT,
                     HandleSIGTERM = handleSIGTERM,
+                    VideosPath = videosPath,
+                    VideoSize = videoSize,
                 });
 
         /// <inheritdoc />

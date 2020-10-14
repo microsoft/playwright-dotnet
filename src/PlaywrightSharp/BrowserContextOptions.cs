@@ -96,6 +96,18 @@ namespace PlaywrightSharp
         public Dictionary<string, string> ExtraHttpHeaders { get; set; }
 
         /// <summary>
+        /// Enables video recording for all pages to videosPath folder. If not specified, videos are not recorded.
+        /// </summary>
+        public string VideosPath { get; set; }
+
+        /// <summary>
+        /// Specifies dimensions of the automatically recorded video. Can only be used if <see cref="VideosPath"/> is set.
+        /// If not specified the size will be equal to viewport. If viewport is not configured explicitly the video size defaults to 1280x720.
+        /// Actual picture of the page will be scaled down if necessary to fit specified size.
+        /// </summary>
+        public ViewportSize VideoSize { get; set; }
+
+        /// <summary>
         /// Clones the <see cref="BrowserContextOptions"/>.
         /// </summary>
         /// <returns>A copy of the current <see cref="BrowserContextOptions"/>.</returns>
@@ -103,6 +115,7 @@ namespace PlaywrightSharp
         {
             var copy = (BrowserContextOptions)MemberwiseClone();
             copy.Viewport = Viewport?.Clone();
+            copy.VideoSize = VideoSize?.Clone();
             copy.Geolocation = Geolocation?.Clone();
             return copy;
         }
@@ -198,6 +211,16 @@ namespace PlaywrightSharp
             if (ExtraHttpHeaders != null)
             {
                 args["extraHTTPHeaders"] = ExtraHttpHeaders.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray();
+            }
+
+            if (VideosPath != null)
+            {
+                args["videosPath"] = VideosPath;
+            }
+
+            if (VideoSize != null)
+            {
+                args["videoSize"] = VideoSize;
             }
 
             return args;
