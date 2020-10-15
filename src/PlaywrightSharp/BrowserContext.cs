@@ -162,6 +162,10 @@ namespace PlaywrightSharp
             => ExposeBindingAsync(name, (Delegate)playwrightBinding);
 
         /// <inheritdoc/>
+        public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> playwrightBinding)
+            => ExposeBindingAsync(name, (Delegate)playwrightBinding, true);
+
+        /// <inheritdoc/>
         public Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> playwrightBinding)
             => ExposeBindingAsync(name, (Delegate)playwrightBinding);
 
@@ -388,7 +392,7 @@ namespace PlaywrightSharp
             _waitForCancellationTcs.Clear();
         }
 
-        private Task ExposeBindingAsync(string name, Delegate playwrightFunction)
+        private Task ExposeBindingAsync(string name, Delegate playwrightFunction, bool handle = false)
         {
             foreach (var page in PagesList)
             {
@@ -405,7 +409,7 @@ namespace PlaywrightSharp
 
             _bindings.Add(name, playwrightFunction);
 
-            return Channel.ExposeBindingAsync(name);
+            return Channel.ExposeBindingAsync(name, handle);
         }
     }
 }

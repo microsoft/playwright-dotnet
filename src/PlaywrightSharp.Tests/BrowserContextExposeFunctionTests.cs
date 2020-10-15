@@ -2,14 +2,12 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.BrowserContext
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>browsercontext.spec.js</playwright-file>
-    ///<playwright-describe>BrowserContext.exposeFunction</playwright-describe>
+    ///<playwright-file>browsercontext-expose-function.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class BrowserContextExposeFunctionTests : PlaywrightSharpBrowserBaseTest
     {
@@ -18,8 +16,33 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
         }
 
-        ///<playwright-file>browsercontext.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext.exposeFunction</playwright-describe>
+        ///<playwright-file>browsercontext-expose-function.spec.ts</playwright-file>
+        ///<playwright-it>expose binding should work</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ExposeBindingShouldWork()
+        {
+            var context = await Browser.NewContextAsync();
+            BindingSource bindingSource = null;
+
+            await context.ExposeBindingAsync("add", (BindingSource source, int a, int b) =>
+            {
+                bindingSource = source;
+                return a + b;
+            });
+
+            var page = await context.NewPageAsync();
+            int result = await page.EvaluateAsync<int>(@"async function() {
+                return await add(5, 6);
+            }");
+
+            Assert.Same(context, bindingSource.Context);
+            Assert.Same(page, bindingSource.Page);
+            Assert.Same(page.MainFrame, bindingSource.Frame);
+
+            Assert.Equal(11, result);
+        }
+
+        ///<playwright-file>browsercontext-expose-function.spec.ts</playwright-file>
         ///<playwright-it>should work</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
@@ -39,8 +62,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(5, result.GetProperty("sub").GetInt32());
         }
 
-        ///<playwright-file>browsercontext.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext.exposeFunction</playwright-describe>
+        ///<playwright-file>browsercontext-expose-function.spec.ts</playwright-file>
         ///<playwright-it>should throw for duplicate registrations</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldThrowForDuplicateRegistrations()
@@ -61,8 +83,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal("Function \"baz\" has been already registered in one of the pages", exception.Message);
         }
 
-        ///<playwright-file>browsercontext.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext.exposeFunction</playwright-describe>
+        ///<playwright-file>browsercontext-expose-function.spec.ts</playwright-file>
         ///<playwright-it>should be callable from-inside addInitScript</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldBeCallableFromInsideAddInitScript()
@@ -78,6 +99,30 @@ namespace PlaywrightSharp.Tests.BrowserContext
             args.Clear();
             await page.ReloadAsync();
             Assert.Equal(new List<object> { "context", "page" }, args);
+        }
+
+        ///<playwright-file>browsercontext-expose-function.spec.ts</playwright-file>
+        ///<playwright-it>exposeBindingHandle should work</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ExposeBindingHandleShouldWork()
+        {
+            IJSHandle target = null;
+            var context = await Browser.NewContextAsync();
+            await context.ExposeBindingAsync(
+                "logme",
+                (BindingSource source, IJSHandle t) =>
+                {
+                    target = t;
+                    return 17;
+                });
+
+            var page = await context.NewPageAsync();
+            int result = await page.EvaluateAsync<int>(@"async function() {
+                return window['logme']({ foo: 42 });
+            }");
+
+            Assert.Equal(42, await target.EvaluateAsync<int>("x => x.foo"));
+            Assert.Equal(17, result);
         }
     }
 }

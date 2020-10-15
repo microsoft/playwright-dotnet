@@ -172,13 +172,14 @@ namespace PlaywrightSharp.Transport.Channels
                     ["runBeforeUnload"] = runBeforeUnload,
                 });
 
-        internal Task ExposeBindingAsync(string name)
+        internal Task ExposeBindingAsync(string name, bool needsHandle)
             => Connection.SendMessageToServer<PageChannel>(
                 Guid,
                 "exposeBinding",
                 new Dictionary<string, object>
                 {
                     ["name"] = name,
+                    ["needsHandle"] = needsHandle,
                 });
 
         internal Task AddInitScriptAsync(string script)
