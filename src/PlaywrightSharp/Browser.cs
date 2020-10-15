@@ -148,7 +148,6 @@ namespace PlaywrightSharp
         {
             var context = (await Channel.NewContextAsync(options ?? new BrowserContextOptions()).ConfigureAwait(false)).Object;
             BrowserContextsList.Add(context);
-            context.Browser = this;
             return context;
         }
 

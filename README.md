@@ -12,7 +12,7 @@ PlaywrightSharp is a .Net library to automate [Chromium](https://www.chromium.or
 
 Headless execution is supported for all browsers on all platforms.
 
-#Usage 
+# Usage 
 Playwright Sharp relies on two external components: The browsers and the Playwright driver.
 
 ```cs 
