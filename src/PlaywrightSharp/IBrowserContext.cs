@@ -46,6 +46,11 @@ namespace PlaywrightSharp
         int DefaultNavigationTimeout { get; set; }
 
         /// <summary>
+        /// Returns the browser instance of the context. If it was launched as a persistent context null gets returned.
+        /// </summary>
+        IBrowser Browser { get; }
+
+        /// <summary>
         /// An array of all pages inside the browser context.
         /// </summary>
         IPage[] Pages { get; }

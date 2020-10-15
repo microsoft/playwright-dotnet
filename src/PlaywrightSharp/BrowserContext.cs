@@ -32,6 +32,7 @@ namespace PlaywrightSharp
             Channel.BindingCall += Channel_BindingCall;
             Channel.Route += Channel_Route;
             _initializer = initializer;
+            Browser = parent as IBrowser;
 
             if (initializer.Pages != null)
             {
@@ -55,6 +56,9 @@ namespace PlaywrightSharp
 
         /// <inheritdoc/>
         IChannel<BrowserContext> IChannelOwner<BrowserContext>.Channel => Channel;
+
+        /// <inheritdoc />
+        public IBrowser Browser { get; }
 
         /// <inheritdoc />
         public IPage[] Pages => PagesList.ToArray();
@@ -82,8 +86,6 @@ namespace PlaywrightSharp
         }
 
         internal BrowserContextChannel Channel { get; }
-
-        internal Browser Browser { get; set; }
 
         internal Page OwnerPage { get; set; }
 
@@ -350,7 +352,7 @@ namespace PlaywrightSharp
             _isClosedOrClosing = true;
             if (Browser != null)
             {
-                Browser.BrowserContextsList.Remove(this);
+                ((Browser)Browser).BrowserContextsList.Remove(this);
             }
 
             Close?.Invoke(this, EventArgs.Empty);
