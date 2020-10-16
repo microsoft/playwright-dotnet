@@ -1,0 +1,29 @@
+name: Nuget
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  docs:
+    name: Push to nuget
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Publish Playwright Sharp
+        id: publish_nuget_playwright_sharp
+        uses: rohith/publish-nuget@v2
+        with:
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          PROJECT_FILE_PATH: src/PlaywrightSharp/PlaywrightSharp.csproj
+          INCLUDE_SYMBOLS: true
+          TAG_COMMIT: false
+      - name: Publish Playwright Sharp Tools
+        id: publish_nuget_playwright_sharp_tools
+        uses: rohith/publish-nuget@v2
+        with:
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          PROJECT_FILE_PATH: src/tools/PlaywrightSharpTool/PlaywrightSharpTool.csproj
+          INCLUDE_SYMBOLS: true
+          TAG_COMMIT: false
