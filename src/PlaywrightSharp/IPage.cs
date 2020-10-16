@@ -1352,6 +1352,20 @@ namespace PlaywrightSharp
         /// The method adds a function called name on the window object of every frame in every page in the context.
         /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightFunction"/>.
         /// </summary>
+        /// <typeparam name="TResult">The result of <paramref name="playwrightFunction"/>.</typeparam>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="playwrightFunction">Callback function which will be called in Playwright's context.</param>
+        /// <remarks>
+        /// If the <paramref name="playwrightFunction"/> returns a <see cref="Task"/>, it will be awaited.
+        /// Functions installed via <see cref="ExposeBindingAsync{T, TResult}(string, Func{BindingSource, T, TResult})"/> survive navigations.
+        /// </remarks>
+        /// <returns>Task.</returns>
+        Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> playwrightFunction);
+
+        /// <summary>
+        /// The method adds a function called name on the window object of every frame in every page in the context.
+        /// When called, the function executes <paramref name="playwrightFunction"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightFunction"/>.
+        /// </summary>
         /// <typeparam name="T1">The first parameter of <paramref name="playwrightFunction"/>.</typeparam>
         /// <typeparam name="T2">The second parameter of <paramref name="playwrightFunction"/>.</typeparam>
         /// <typeparam name="TResult">The result of <paramref name="playwrightFunction"/>.</typeparam>

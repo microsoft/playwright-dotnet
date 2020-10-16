@@ -633,6 +633,10 @@ namespace PlaywrightSharp
             => ExposeBindingAsync(name, (Delegate)playwrightFunction);
 
         /// <inheritdoc/>
+        public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (Delegate)playwrightFunction, true);
+
+        /// <inheritdoc/>
         public Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> playwrightFunction)
             => ExposeBindingAsync(name, (Delegate)playwrightFunction);
 
@@ -949,7 +953,7 @@ namespace PlaywrightSharp
             _waitForCancellationTcs.Clear();
         }
 
-        private Task ExposeBindingAsync(string name, Delegate playwrightFunction)
+        private Task ExposeBindingAsync(string name, Delegate playwrightFunction, bool handle = false)
         {
             if (Bindings.ContainsKey(name))
             {
@@ -958,7 +962,7 @@ namespace PlaywrightSharp
 
             Bindings.Add(name, playwrightFunction);
 
-            return _channel.ExposeBindingAsync(name);
+            return _channel.ExposeBindingAsync(name, handle);
         }
     }
 }
