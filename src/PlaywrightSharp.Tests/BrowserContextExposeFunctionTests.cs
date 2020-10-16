@@ -9,7 +9,7 @@ namespace PlaywrightSharp.Tests
 {
     ///<playwright-file>browsercontext-expose-function.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class BrowserContextExposeFunctionTests : PlaywrightSharpBrowserBaseTest
+    public class BrowserContextExposeFunctionTests : PlaywrightSharpBrowserContextBaseTest
     {
         /// <inheritdoc/>
         public BrowserContextExposeFunctionTests(ITestOutputHelper output) : base(output)
@@ -21,21 +21,20 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ExposeBindingShouldWork()
         {
-            var context = await Browser.NewContextAsync();
             BindingSource bindingSource = null;
 
-            await context.ExposeBindingAsync("add", (BindingSource source, int a, int b) =>
+            await Context.ExposeBindingAsync("add", (BindingSource source, int a, int b) =>
             {
                 bindingSource = source;
                 return a + b;
             });
 
-            var page = await context.NewPageAsync();
+            var page = await Context.NewPageAsync();
             int result = await page.EvaluateAsync<int>(@"async function() {
                 return await add(5, 6);
             }");
 
-            Assert.Same(context, bindingSource.Context);
+            Assert.Same(Context, bindingSource.Context);
             Assert.Same(page, bindingSource.Page);
             Assert.Same(page.MainFrame, bindingSource.Frame);
 
@@ -47,12 +46,11 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
-            var context = await Browser.NewContextAsync();
-            await context.ExposeFunctionAsync("add", (int a, int b) => a + b);
-            var page = await context.NewPageAsync();
+            await Context.ExposeFunctionAsync("add", (int a, int b) => a + b);
+            var page = await Context.NewPageAsync();
 
             await page.ExposeFunctionAsync("mul", (int a, int b) => a * b);
-            await context.ExposeFunctionAsync("sub", (int a, int b) => a - b);
+            await Context.ExposeFunctionAsync("sub", (int a, int b) => a - b);
 
             var result = await page.EvaluateAsync<JsonElement>(@"async function() {
                 return { mul: await mul(9, 4), add: await add(9, 4), sub: await sub(9, 4) };
@@ -67,19 +65,18 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldThrowForDuplicateRegistrations()
         {
-            await using var context = await Browser.NewContextAsync();
-            await context.ExposeFunctionAsync("foo", () => { });
-            await context.ExposeFunctionAsync("bar", () => { });
+            await Context.ExposeFunctionAsync("foo", () => { });
+            await Context.ExposeFunctionAsync("bar", () => { });
 
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => context.ExposeFunctionAsync("foo", () => { }));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Context.ExposeFunctionAsync("foo", () => { }));
             Assert.Equal("Function \"foo\" has been already registered", exception.Message);
 
-            var page = await context.NewPageAsync();
+            var page = await Context.NewPageAsync();
             exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.ExposeFunctionAsync("foo", () => { }));
             Assert.Equal("Function \"foo\" has been already registered in the browser context", exception.Message);
 
             await page.ExposeFunctionAsync("baz", () => { });
-            exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => context.ExposeFunctionAsync("baz", () => { }));
+            exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Context.ExposeFunctionAsync("baz", () => { }));
             Assert.Equal("Function \"baz\" has been already registered in one of the pages", exception.Message);
         }
 
@@ -107,8 +104,7 @@ namespace PlaywrightSharp.Tests
         public async Task ExposeBindingHandleShouldWork()
         {
             IJSHandle target = null;
-            var context = await Browser.NewContextAsync();
-            await context.ExposeBindingAsync(
+            await Context.ExposeBindingAsync(
                 "logme",
                 (BindingSource source, IJSHandle t) =>
                 {
@@ -116,7 +112,7 @@ namespace PlaywrightSharp.Tests
                     return 17;
                 });
 
-            var page = await context.NewPageAsync();
+            var page = await Context.NewPageAsync();
             int result = await page.EvaluateAsync<int>(@"async function() {
                 return window['logme']({ foo: 42 });
             }");
