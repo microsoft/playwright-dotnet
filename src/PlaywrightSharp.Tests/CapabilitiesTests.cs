@@ -2,14 +2,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Capabilities
+namespace PlaywrightSharp.Tests
 {
     ///<playwright-file>capabilities.spec.js</playwright-file>
-    ///<playwright-describe>Capabilities</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class CapabilitiesTests : PlaywrightSharpPageBaseTest
     {
@@ -18,8 +16,7 @@ namespace PlaywrightSharp.Tests.Capabilities
         {
         }
 
-        ///<playwright-file>capabilities.spec.js</playwright-file>
-        ///<playwright-describe>Capabilities</playwright-describe>
+        ///<playwright-file>capabilities.spec.js</playwright-file>     
         ///<playwright-it>Web Assembly should work</playwright-it>
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true)]
         public async Task WebAssemblyShouldWork()
@@ -30,7 +27,6 @@ namespace PlaywrightSharp.Tests.Capabilities
 
 #if NETCOREAPP
         ///<playwright-file>capabilities.spec.js</playwright-file>
-        ///<playwright-describe>Capabilities</playwright-describe>
         ///<playwright-it>WebSocket should work</playwright-it>
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true)]
         public async Task WebSocketShouldWork()
@@ -50,7 +46,6 @@ namespace PlaywrightSharp.Tests.Capabilities
 #endif
 
         ///<playwright-file>capabilities.spec.js</playwright-file>
-        ///<playwright-describe>Capabilities</playwright-describe>
         ///<playwright-it>should respect CSP</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRespectCSP()
@@ -74,7 +69,6 @@ namespace PlaywrightSharp.Tests.Capabilities
         }
 
         ///<playwright-file>capabilities.spec.js</playwright-file>
-        ///<playwright-describe>Capabilities</playwright-describe>
         ///<playwright-it>should play video</playwright-it>
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true, skipOSX: true)]
         public async Task ShouldPlayVideo()

@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Chromium
         /// <returns>A <see cref="Task"/> that completes when the browser session was created, yielding the new session.</returns>
         Task<ICDPSession> NewBrowserCDPSessionAsync();
 
-        /// <inheritdoc cref="IBrowser.NewContextAsync(ViewportSize, string, bool?, bool?, string, Geolocation, ContextPermission[], bool?, bool?, decimal?, Credentials, bool?, bool?, bool?, ColorScheme?, string, Dictionary{string, string})"/>
+        /// <inheritdoc cref="IBrowser.NewContextAsync(ViewportSize, string, bool?, bool?, string, Geolocation, ContextPermission[], bool?, bool?, decimal?, Credentials, bool?, bool?, bool?, ColorScheme?, string, Dictionary{string, string}, string, ViewportSize)"/>
         new Task<IChromiumBrowserContext> NewContextAsync(
             ViewportSize viewport,
             string userAgent = null,
@@ -52,9 +52,11 @@ namespace PlaywrightSharp.Chromium
             bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
-            Dictionary<string, string> extraHttpHeaders = null);
+            Dictionary<string, string> extraHttpHeaders = null,
+            string videosPath = null,
+            ViewportSize videoSize = null);
 
-        /// <inheritdoc cref="IBrowser.NewContextAsync(string, bool?, bool?, string, Geolocation, ContextPermission[], bool?, bool?, decimal?, Credentials, bool?, bool?, bool?, ColorScheme?, string, Dictionary{string, string})"/>
+        /// <inheritdoc cref="IBrowser.NewContextAsync(string, bool?, bool?, string, Geolocation, ContextPermission[], bool?, bool?, decimal?, Credentials, bool?, bool?, bool?, ColorScheme?, string, Dictionary{string, string}, string, ViewportSize)"/>
         new Task<IChromiumBrowserContext> NewContextAsync(
             string userAgent = null,
             bool? bypassCSP = null,
@@ -71,7 +73,9 @@ namespace PlaywrightSharp.Chromium
             bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
-            Dictionary<string, string> extraHttpHeaders = null);
+            Dictionary<string, string> extraHttpHeaders = null,
+            string videosPath = null,
+            ViewportSize videoSize = null);
 
         /// <inheritdoc cref="IBrowser.NewContextAsync(BrowserContextOptions)"/>
         new Task<IChromiumBrowserContext> NewContextAsync(BrowserContextOptions options);

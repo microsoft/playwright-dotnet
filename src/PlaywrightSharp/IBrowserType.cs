@@ -118,6 +118,10 @@ namespace PlaywrightSharp
         /// <param name="handleSIGINT">Close the browser process on Ctrl-C. Defaults to true.</param>
         /// <param name="handleSIGTERM">Close the browser process on SIGTERM. Defaults to true.</param>
         /// <param name="handleSIGHUP">Close the browser process on SIGHUP. Defaults to true.</param>
+        /// <param name="videosPath">Enables video recording for all pages to videosPath folder. If not specified, videos are not recorded.</param>
+        /// <param name="videoSize">Specifies dimensions of the automatically recorded video. Can only be used if <paramref name="videosPath"/> is set.
+        /// If not specified the size will be equal to viewport. If viewport is not configured explicitly the video size defaults to 1280x720.
+        /// Actual picture of the page will be scaled down if necessary to fit specified size.</param>
         /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the browser server.</returns>
         Task<IBrowserContext> LaunchPersistentContextAsync(
             string userDataDir,
@@ -154,7 +158,9 @@ namespace PlaywrightSharp
             bool? chromiumSandbox = null,
             bool? handleSIGINT = null,
             bool? handleSIGTERM = null,
-            bool? handleSIGHUP = null);
+            bool? handleSIGHUP = null,
+            string videosPath = null,
+            ViewportSize videoSize = null);
 
         /// <summary>
         /// Launches browser that uses persistent storage located at userDataDir and returns the only context. Closing this context will automatically close the browser.
@@ -194,6 +200,10 @@ namespace PlaywrightSharp
         /// <param name="handleSIGINT">Close the browser process on Ctrl-C. Defaults to true.</param>
         /// <param name="handleSIGTERM">Close the browser process on SIGTERM. Defaults to true.</param>
         /// <param name="handleSIGHUP">Close the browser process on SIGHUP. Defaults to true.</param>
+        /// <param name="videosPath">Enables video recording for all pages to videosPath folder. If not specified, videos are not recorded.</param>
+        /// <param name="videoSize">Specifies dimensions of the automatically recorded video. Can only be used if <paramref name="videosPath"/> is set.
+        /// If not specified the size will be equal to viewport. If viewport is not configured explicitly the video size defaults to 1280x720.
+        /// Actual picture of the page will be scaled down if necessary to fit specified size.</param>
         /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the browser server.</returns>
         Task<IBrowserContext> LaunchPersistentContextAsync(
             string userDataDir,
@@ -229,7 +239,9 @@ namespace PlaywrightSharp
             bool? chromiumSandbox = null,
             bool? handleSIGINT = null,
             bool? handleSIGTERM = null,
-            bool? handleSIGHUP = null);
+            bool? handleSIGHUP = null,
+            string videosPath = null,
+            ViewportSize videoSize = null);
 
         /// <summary>
         /// Launches browser that uses persistent storage located at userDataDir and returns the only context. Closing this context will automatically close the browser.

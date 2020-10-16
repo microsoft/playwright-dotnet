@@ -75,7 +75,9 @@ namespace PlaywrightSharp
             bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
-            Dictionary<string, string> extraHttpHeaders = null)
+            Dictionary<string, string> extraHttpHeaders = null,
+            string videosPath = null,
+            ViewportSize videoSize = null)
             => NewContextAsync(new BrowserContextOptions
             {
                 Viewport = viewport,
@@ -95,6 +97,8 @@ namespace PlaywrightSharp
                 Locale = locale,
                 IgnoreHTTPSErrors = ignoreHTTPSErrors,
                 ExtraHttpHeaders = extraHttpHeaders,
+                VideosPath = videosPath,
+                VideoSize = videoSize,
             });
 
         /// <inheritdoc/>
@@ -114,7 +118,9 @@ namespace PlaywrightSharp
             bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
-            Dictionary<string, string> extraHttpHeaders = null)
+            Dictionary<string, string> extraHttpHeaders = null,
+            string videosPath = null,
+            ViewportSize videoSize = null)
             => NewContextAsync(new BrowserContextOptions
             {
                 UserAgent = userAgent,
@@ -133,6 +139,8 @@ namespace PlaywrightSharp
                 ColorScheme = colorScheme,
                 Locale = locale,
                 ExtraHttpHeaders = extraHttpHeaders,
+                VideosPath = videosPath,
+                VideoSize = videoSize,
             });
 
         /// <inheritdoc/>
@@ -161,7 +169,9 @@ namespace PlaywrightSharp
             bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
-            Dictionary<string, string> extraHttpHeaders = null)
+            Dictionary<string, string> extraHttpHeaders = null,
+            string videosPath = null,
+            ViewportSize videoSize = null)
             => NewPageAsync(new BrowserContextOptions
             {
                 Viewport = viewport,
@@ -181,6 +191,8 @@ namespace PlaywrightSharp
                 ColorScheme = colorScheme,
                 Locale = locale,
                 ExtraHttpHeaders = extraHttpHeaders,
+                VideosPath = videosPath,
+                VideoSize = videoSize,
             });
 
         /// <inheritdoc/>
@@ -200,7 +212,9 @@ namespace PlaywrightSharp
             bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
-            Dictionary<string, string> extraHttpHeaders = null)
+            Dictionary<string, string> extraHttpHeaders = null,
+            string videosPath = null,
+            ViewportSize videoSize = null)
             => NewPageAsync(new BrowserContextOptions
             {
                 UserAgent = userAgent,
@@ -219,6 +233,8 @@ namespace PlaywrightSharp
                 ColorScheme = colorScheme,
                 Locale = locale,
                 ExtraHttpHeaders = extraHttpHeaders,
+                VideosPath = videosPath,
+                VideoSize = videoSize,
             });
 
         /// <inheritdoc/>
