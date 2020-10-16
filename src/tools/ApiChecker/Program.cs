@@ -25,6 +25,8 @@ namespace ApiChecker
             [("IJSHandle", "asElement")] = "Implicit from C# type casting",
             [("Selectors", "register")] = "C# signature: RegisterAsync(string name, string script = null, string path = null, string content = null, bool? contentScript = null)",
             [("IBrowserType", "launch")] = "The ignoreDefaultArgs list is ignoredDefaultArgs | firefoxUserPrefs and env are only exposed as a Dictionary<string, object>",
+            [("IBrowserContext", "exposeBinding")] = "handle is inferred from the palywrightBinding. If it's a function with only one argument and it's IJSHandle we will send handle true",
+            [("IPage", "exposeBinding")] = "handle is inferred from the palywrightBinding. If it's a function with only one argument and it's IJSHandle we will send handle true",
         };
 
         static void Main(string[] args)
@@ -291,9 +293,12 @@ namespace ApiChecker
                     {
                         report.AppendLine("<ul>");
 
-                        foreach (var kv in arg.Type.Properties)
+                        if (arg.Type.Properties != null)
                         {
-                            EvaluateProperty(kv.Key, kv.Value, GetBaseType(playwrightSharpArgument.ParameterType), report);
+                            foreach (var kv in arg.Type.Properties)
+                            {
+                                EvaluateProperty(kv.Key, kv.Value, GetBaseType(playwrightSharpArgument.ParameterType), report);
+                            }
                         }
 
                         report.AppendLine("</ul>");
