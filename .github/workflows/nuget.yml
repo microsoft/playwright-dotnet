@@ -17,6 +17,8 @@ jobs:
         with:
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           PROJECT_FILE_PATH: src/PlaywrightSharp/PlaywrightSharp.csproj
+          VERSION_FILE_PATH: src/Common/PackageInfo.props
+          VERSION_REGEX: ^\s*<PackageVersion>(.*)<\/PackageVersion>\s*$
           INCLUDE_SYMBOLS: true
           TAG_COMMIT: false
       - name: Publish Playwright Sharp Tools
@@ -25,5 +27,7 @@ jobs:
         with:
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           PROJECT_FILE_PATH: src/tools/PlaywrightSharpTool/PlaywrightSharpTool.csproj
+          VERSION_FILE_PATH: src/Common/PackageInfo.props
+          VERSION_REGEX: ^\s*<PackageVersion>(.*)<\/PackageVersion>\s*$
           INCLUDE_SYMBOLS: true
           TAG_COMMIT: false
