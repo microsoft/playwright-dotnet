@@ -19,7 +19,7 @@ jobs:
           PROJECT_FILE_PATH: src/PlaywrightSharp/PlaywrightSharp.csproj
           VERSION_FILE_PATH: src/Common/PackageInfo.props
           VERSION_REGEX: ^\s*<PackageVersion>(.*)<\/PackageVersion>\s*$
-          INCLUDE_SYMBOLS: true
+          INCLUDE_SYMBOLS: false
           TAG_COMMIT: false
       - name: Publish Playwright Sharp Tools
         id: publish_nuget_playwright_sharp_tools
@@ -29,5 +29,5 @@ jobs:
           PROJECT_FILE_PATH: src/tools/PlaywrightSharpTool/PlaywrightSharpTool.csproj
           VERSION_FILE_PATH: src/Common/PackageInfo.props
           VERSION_REGEX: ^\s*<PackageVersion>(.*)<\/PackageVersion>\s*$
-          INCLUDE_SYMBOLS: true
+          INCLUDE_SYMBOLS: false
           TAG_COMMIT: false
