@@ -230,6 +230,11 @@ namespace PlaywrightSharp
         ICoverage Coverage { get; }
 
         /// <summary>
+        /// Video object associated with this page.
+        /// </summary>
+        IVideo Video { get; }
+
+        /// <summary>
         /// Returns page's title.
         /// </summary>
         /// <returns>A <see cref="Task"/> the completes when the title is resolved, yielding the page's title.</returns>

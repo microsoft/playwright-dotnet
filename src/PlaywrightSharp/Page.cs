@@ -25,6 +25,7 @@ namespace PlaywrightSharp
         private List<RouteSetting> _routes = new List<RouteSetting>();
         private EventHandler<FileChooserEventArgs> _fileChooserEventHandler;
         private bool _fileChooserIntercepted;
+        private IVideo _video;
 
         internal Page(IChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
         {
@@ -68,6 +69,14 @@ namespace PlaywrightSharp
             _channel.Download += (sender, e) => Download?.Invoke(this, e);
             _channel.PageError += (sender, e) => PageError?.Invoke(this, e);
             _channel.Load += (sender, e) => Load?.Invoke(this, e);
+            _channel.Video += (sender, e) =>
+            {
+                if (Video != null)
+                {
+                    ((Video)Video).SetRelativePath(e.RelativePath);
+                }
+            };
+
             _channel.FileChooser += (sender, e) =>
             {
                 _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(this, e.Element.Object, e.IsMultiple));
@@ -233,6 +242,26 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public ICoverage Coverage { get; }
+
+        /// <inheritdoc />
+        public IVideo Video
+        {
+            get
+            {
+                if (_video != null)
+                {
+                    return _video;
+                }
+
+                if (string.IsNullOrEmpty(BrowserContext.Options?.VideosPath))
+                {
+                    return null;
+                }
+
+                _video = new Video(this);
+                return _video;
+            }
+        }
 
         internal BrowserContext OwnedContext { get; set; }
 

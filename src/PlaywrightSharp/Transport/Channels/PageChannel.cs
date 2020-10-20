@@ -53,6 +53,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<WorkerChannelEventArgs> Worker;
 
+        internal event EventHandler<VideoEventArgs> Video;
+
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
             switch (method)
@@ -124,6 +126,9 @@ namespace PlaywrightSharp.Transport.Channels
                     break;
                 case "download":
                     Download?.Invoke(this, new DownloadEventArgs() { Download = serverParams?.GetProperty("download").ToObject<DownloadChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
+                    break;
+                case "video":
+                    Video?.Invoke(this, new VideoEventArgs() { RelativePath = serverParams?.GetProperty("relativePath").ToString() });
                     break;
                 case "worker":
                     Worker?.Invoke(
