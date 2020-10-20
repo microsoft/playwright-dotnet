@@ -147,6 +147,7 @@ namespace PlaywrightSharp
         public async Task<IBrowserContext> NewContextAsync(BrowserContextOptions options)
         {
             var context = (await Channel.NewContextAsync(options ?? new BrowserContextOptions()).ConfigureAwait(false)).Object;
+            context.Options = options;
             BrowserContextsList.Add(context);
             return context;
         }

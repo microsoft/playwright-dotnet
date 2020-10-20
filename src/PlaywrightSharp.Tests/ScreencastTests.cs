@@ -46,6 +46,50 @@ namespace PlaywrightSharp.Tests
         }
 
         ///<playwright-file>screencast.spec.js</playwright-file>     
+        ///<playwright-it>should expose video path</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldExposeVideoPath()
+        {
+            using var tempDirectory = new TempDirectory();
+            var context = await Browser.NewContextAsync(
+                videosPath: tempDirectory.Path,
+                videoSize: new ViewportSize { Width = 100, Height = 100 });
+
+            var page = await context.NewPageAsync();
+            await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
+            string path = await page.Video.GetPathAsync();
+            Assert.Contains(tempDirectory.Path, path);
+            await context.CloseAsync();
+
+            Assert.True(new FileInfo(path).Exists);
+        }
+
+        ///<playwright-file>screencast.spec.js</playwright-file>     
+        ///<playwright-it>should expose video path blank page</playwright-it>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldExposeVideoPathBlankPage()
+        {
+            using var tempDirectory = new TempDirectory();
+            var context = await Browser.NewContextAsync(
+                videosPath: tempDirectory.Path,
+                videoSize: new ViewportSize { Width = 100, Height = 100 });
+
+            var page = await context.NewPageAsync();
+            string path = await page.Video.GetPathAsync();
+            Assert.Contains(tempDirectory.Path, path);
+            await context.CloseAsync();
+
+            Assert.True(new FileInfo(path).Exists);
+        }
+
+        ///<playwright-file>screencast.spec.js</playwright-file>     
+        ///<playwright-it>should expose video path blank popup</playwright-it>
+        [Fact(Skip = "We don't need to test video details")]
+        public void ShouldExposeVideoPathBlankPopup()
+        {
+        }
+
+        ///<playwright-file>screencast.spec.js</playwright-file>     
         ///<playwright-it>should capture navigation</playwright-it>
         [Fact(Skip = "We don't need to test video details")]
         public void ShouldCaptureNavigation()

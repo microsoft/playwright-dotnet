@@ -95,6 +95,8 @@ namespace PlaywrightSharp
 
         internal string BrowserName => _initializer.BrowserName;
 
+        internal BrowserContextOptions Options { get; set; }
+
         /// <inheritdoc />
         public async Task<IPage> NewPageAsync(string url = null)
         {
