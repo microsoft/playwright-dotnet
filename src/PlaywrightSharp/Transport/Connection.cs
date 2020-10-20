@@ -225,7 +225,7 @@ namespace PlaywrightSharp.Transport
                 return _transport.SendAsync(messageString);
             }).ConfigureAwait(false);
 
-            var result = await tcs.Task.WithTimeout(Playwright.DefaultTimeout).ConfigureAwait(false);
+            var result = await tcs.Task.ConfigureAwait(false);
 
             if (typeof(T) == typeof(JsonElement?))
             {
