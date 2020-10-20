@@ -37,19 +37,14 @@
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     </ItemGroup>
     <ItemGroup>
-      <None Remove="Drivers\playwright-cli-linux.zip" />
-      <EmbeddedResource Include="Drivers\playwright-cli-linux.zip">
-      </EmbeddedResource>
-      <None Remove="Drivers\playwright-cli-mac.zip" />
-      <EmbeddedResource Include="Drivers\playwright-cli-mac.zip">
-      </EmbeddedResource>
-      <None Remove="Drivers\playwright-cli-win32_x64.zip" />
-      <EmbeddedResource Include="Drivers\playwright-cli-win32_x64.zip">
-      </EmbeddedResource>
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Chromium\" />
-      <Folder Include="Firefox\" />
-      <Folder Include="Webkit\" />
+        <None Remove="Drivers\playwright-cli-linux.zip" />
+        <EmbeddedResource Include="Drivers\playwright-cli-linux.zip">
+        </EmbeddedResource>
+        <None Remove="Drivers\playwright-cli-mac.zip" />
+        <EmbeddedResource Include="Drivers\playwright-cli-mac.zip">
+        </EmbeddedResource>
+        <None Remove="Drivers\playwright-cli-win32_x64.zip" />
+        <EmbeddedResource Include="Drivers\playwright-cli-win32_x64.zip">
+        </EmbeddedResource>
     </ItemGroup>
 </Project>
