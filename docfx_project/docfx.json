@@ -26,8 +26,8 @@
       },
       {
         "files": [
-          "examples/**.yml",
-          "examples/**.md"
+          "documentation/**.yml",
+          "documentation/**.md"
         ]
       },
       {
@@ -41,8 +41,8 @@
       {
         "files": [
           "images/**",
-		  "logo.svg",
-		  "favicon.ico"
+          "logo.svg",
+          "favicon.ico"
         ]
       }
     ],
