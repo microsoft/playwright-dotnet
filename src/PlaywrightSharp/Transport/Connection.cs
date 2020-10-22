@@ -110,9 +110,15 @@ namespace PlaywrightSharp.Transport
             var assembly = typeof(Playwright).Assembly;
             string tempDirectory = new FileInfo(assembly.Location).Directory.FullName;
             driversPath ??= Path.Combine(tempDirectory, "playwright-sharp-drivers");
-            string platform = "win32_x64";
-            string driver = "playwright-cli-win32_x64.zip";
+            string platform = "win32";
+            string driver = "playwright-cli-win32.zip";
             string executableFile = "playwright-cli.exe";
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.OSArchitecture == Architecture.X64)
+            {
+                platform = "win32_x64";
+                driver = "playwright-cli-win32_x64.zip";
+            }
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
