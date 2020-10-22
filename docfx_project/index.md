@@ -14,7 +14,7 @@ footer{
       <strong>Playwright Sharp</strong>
     </div>
     <div class="buttons-unit-small">
-      <a class="version-link" href="https://github.com/microsoft/playwright-sharp/releases">Release Notes</a><span>|</span><a class="github-link" href="https://github.com/microsoft/playwright-sharp">View on Github</a>
+      <a class="version-link" href="https://github.com/microsoft/playwright-sharp/releases">Release Notes</a><span>|</span><a class="github-link" href="https://github.com/microsoft/playwright-sharp">View on GitHub</a>
     </div>
     <div class="minitext">
     .NET library to automate Chromium, Firefox and WebKit with a single API.
