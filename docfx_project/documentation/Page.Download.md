@@ -36,9 +36,9 @@ From there, you can read the file, delete it, or save it in another location.
 
 ```cs 
 await Playwright.InstallAsync();
-var playwright = await Playwright.CreateAsync();
+using var playwright = await Playwright.CreateAsync();
 var chromium = playwright.Chromium;
-var browser = await chromium.LaunchAsync(new LaunchOptions { Headless = false });
+await using var browser = await chromium.LaunchAsync(new LaunchOptions { Headless = false });
 var page = await browser.NewPageAsync(acceptDownloads: true);
 await page.GoToAsync("https://github.com/microsoft/playwright-sharp/releases/tag/v0.151.0");
 
