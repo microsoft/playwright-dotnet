@@ -110,23 +110,27 @@ namespace PlaywrightSharp.Transport
             var assembly = typeof(Playwright).Assembly;
             string tempDirectory = new FileInfo(assembly.Location).Directory.FullName;
             driversPath ??= Path.Combine(tempDirectory, "playwright-sharp-drivers");
+            string platform = "win32_x64";
             string driver = "playwright-cli-win32_x64.zip";
             string executableFile = "playwright-cli.exe";
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
+                platform = "macos";
                 driver = "playwright-cli-mac.zip";
                 executableFile = "playwright-cli";
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
+                platform = "linux";
                 driver = "playwright-cli-linux.zip";
                 executableFile = "playwright-cli";
             }
 
-            string file = Path.Combine(driversPath, assembly.GetName().Version.ToString(), driver);
+            string directory = Path.Combine(driversPath, assembly.GetName().Version.ToString(), platform);
+            string file = Path.Combine(directory, driver);
             ExtractDriver(file, driver);
-            return Path.Combine(driversPath, assembly.GetName().Version.ToString(), executableFile);
+            return Path.Combine(directory, executableFile);
         }
 
         internal void RemoveObject(string guid) => Objects.TryRemove(guid, out _);
