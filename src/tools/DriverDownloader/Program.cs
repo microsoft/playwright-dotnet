@@ -35,7 +35,7 @@ namespace DriverDownloader
 
                 versionFile.CreateText();
                 var tasks = new List<Task>();
-                foreach (string platform in new[] { "mac", "linux", "win32_x64" })
+                foreach (string platform in new[] { "mac", "linux", "win32_x64", "win32" })
                 {
                     tasks.Add(DownloadDriverAsync(destinationDirectory, driverVersion, platform));
                 }

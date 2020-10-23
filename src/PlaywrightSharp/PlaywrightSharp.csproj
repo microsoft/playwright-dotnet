@@ -46,5 +46,8 @@
         <None Remove="Drivers\playwright-cli-win32_x64.zip" />
         <EmbeddedResource Include="Drivers\playwright-cli-win32_x64.zip">
         </EmbeddedResource>
+        <None Remove="Drivers\playwright-cli-win32.zip" />
+        <EmbeddedResource Include="Drivers\playwright-cli-win32.zip">
+        </EmbeddedResource>
     </ItemGroup>
 </Project>
