@@ -12,6 +12,7 @@ To enable this behavior, you will need to set `acceptDownload` to true when you 
 
 ```cs
 var context = await browser.NewContextAsync(acceptDownloads: true);
+var persistentContext = await browser.LaunchPersistentContextAsync(userDataDir, acceptDownloads: true);
 ```
 
 Or 
