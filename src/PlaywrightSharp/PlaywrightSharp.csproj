@@ -35,6 +35,7 @@
         <PackageReference Include="System.Text.Json" Version="4.7.0" />
         <PackageReference Include="Macross.Json.Extensions" Version="1.5.0" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0-rc.2.20475.5" />
     </ItemGroup>
     <ItemGroup>
         <None Remove="Drivers\playwright-cli-linux.zip" />
