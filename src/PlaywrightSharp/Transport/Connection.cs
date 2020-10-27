@@ -33,6 +33,7 @@ namespace PlaywrightSharp.Transport
         private readonly ILogger<Connection> _logger;
         private readonly TaskQueue _queue = new TaskQueue();
         private int _lastId;
+        private string _reason = string.Empty;
 
         public Connection(
             ILoggerFactory loggerFactory,
@@ -180,6 +181,11 @@ namespace PlaywrightSharp.Transport
             if (Objects.TryGetValue(guid, out var channel))
             {
                 return channel as T;
+            }
+
+            if (IsClosed)
+            {
+                throw new TargetClosedException(_reason);
             }
 
             var tcs = new TaskCompletionSource<IChannelOwner>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -469,11 +475,17 @@ namespace PlaywrightSharp.Transport
 
         private void Close(string reason)
         {
+            _reason = reason;
             if (!IsClosed)
             {
                 foreach (var callback in _callbacks)
                 {
                     callback.Value.TaskCompletionSource.TrySetException(new TargetClosedException(reason));
+                }
+
+                foreach (var callback in _waitingForObject)
+                {
+                    callback.Value.TrySetException(new TargetClosedException(reason));
                 }
 
                 Dispose();
