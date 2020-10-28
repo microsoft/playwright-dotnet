@@ -5,22 +5,23 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>&#127917; Playwright for .NET   | Playwright Sharp </title>
+    <title>Playwright Sharp | Playwright Sharp </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="&#127917; Playwright for .NET   | Playwright Sharp ">
+    <meta name="title" content="Playwright Sharp | Playwright Sharp ">
     <meta name="generator" content="docfx 2.45.1.0">
     
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="styles/docfx.vendor.css">
     <link rel="stylesheet" href="styles/docfx.css">
+    <link rel="stylesheet" href="styles/home.css">
     <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
     <meta property="docfx:navrel" content="toc.html">
     <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="">
     
-  </head>
-  <body data-spy="scroll" data-target="#affix" data-offset="120">
+  </head>  <body data-spy="scroll" data-target="#affix">
     <div id="wrapper">
       <header>
         
@@ -47,169 +48,70 @@
             </div>
           </div>
         </nav>
-        
-        <div class="subnav navbar navbar-default">
-          <div class="container hide-when-search" id="breadcrumb">
-            <ul class="breadcrumb">
-              <li></li>
-            </ul>
-          </div>
-        </div>
       </header>
-      <div class="container body-content">
-        
-        <div id="search-results">
-          <div class="search-list"></div>
-          <div class="sr-items">
-            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
-          </div>
-          <ul id="pagination"></ul>
-        </div>
+      <style type="text/css">
+footer{
+  position: relative;
+}
+</style>
+<div class="hero">
+  <div class="wrap">
+    <div class="text">
+      <strong>Playwright Sharp</strong>
+    </div>
+    <div class="buttons-unit-small">
+      <a class="version-link" href="https://github.com/microsoft/playwright-sharp/releases">Release Notes</a><span>|</span><a class="github-link" href="https://github.com/microsoft/playwright-sharp">View on GitHub</a>
+    </div>
+    <div class="minitext">
+    .NET library to automate Chromium, Firefox and WebKit with a single API.
+    </div>
+    <div class="buttons-unit">
+      <a href="documentation/index.html" class="button"><i class="glyphicon glyphicon-send"></i>Get Started</a>
+      <a href="https://github.com/microsoft/playwright-sharp/releases" class="button"><i class="glyphicon glyphicon-download"></i>Download</a>
+    </div>
+  </div>
+</div>
+<div class="key-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2 text-center">
+        <i class="glyphicon glyphicon-globe"></i>
+        <section>
+            <h2>Support for all browsers</h2>
+          <p class="lead">Playwright-Sharp has full API coverage for all modern browsers, including Google Chrome and Microsoft Edge (with Chromium), Apple Safari (with WebKit) and Mozilla Firefox.</p>
+        </section>
       </div>
-      <div role="main" class="container body-content hide-when-search">
-        <div class="article row grid">
-          <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="">
-<h1 id="-playwright-for-net-nuget-version-join-slack">🎭 <a href="https://playwright.dev">Playwright</a> for .NET <a href="https://www.nuget.org/packages/PlaywrightSharp"><img src="https://buildstats.info/nuget/PlaywrightSharp" alt="NuGet version"></a> <a href="https://join.slack.com/t/playwright/shared_invite/enQtOTEyMTUxMzgxMjIwLThjMDUxZmIyNTRiMTJjNjIyMzdmZDA3MTQxZWUwZTFjZjQwNGYxZGM5MzRmNzZlMWI5ZWUyOTkzMjE5Njg1NDg"><img src="https://img.shields.io/badge/join-slack-infomational" alt="Join Slack"></a></h1>
-
-<h4 id="website--net-api-reference"><a href="https://playwright.dev/">Website</a> | <a href="https://playwrightsharp.dev/api/index.html">.NET API reference</a></h4>
-<p>PlaywrightSharp is a .Net library to automate <a href="https://www.chromium.org/Home">Chromium</a>, <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a> and <a href="https://webkit.org/">WebKit</a> browsers with a single API. Playwright delivers automation that is <strong>ever-green</strong>, <strong>capable</strong>, <strong>reliable</strong> and <strong>fast</strong>. <a href="https://playwright.dev/#path=docs%2Fwhy-playwright.md&amp;q=">See how Playwright is better</a>.</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;"></th>
-<th style="text-align: center;">Linux</th>
-<th style="text-align: center;">macOS</th>
-<th style="text-align: center;">Windows</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">Chromium <!-- GEN:chromium-version -->86.0.4238.0<!-- GEN:stop --></td>
-<td style="text-align: center;">✅</td>
-<td style="text-align: center;">✅</td>
-<td style="text-align: center;">✅</td>
-</tr>
-<tr>
-<td style="text-align: left;">WebKit 14.0</td>
-<td style="text-align: center;">✅</td>
-<td style="text-align: center;">✅</td>
-<td style="text-align: center;">✅</td>
-</tr>
-<tr>
-<td style="text-align: left;">Firefox <!-- GEN:firefox-version -->80.0b8<!-- GEN:stop --></td>
-<td style="text-align: center;">✅</td>
-<td style="text-align: center;">✅</td>
-<td style="text-align: center;">✅</td>
-</tr>
-</tbody>
-</table>
-<p>Headless execution is supported for all browsers on all platforms.</p>
-<p>#Usage
-Playwright Sharp relies on two external components: The browsers and the Playwright driver.</p>
-<pre><code class="lang-cs">await Playwright.InstallAsync();
-var playwright = await Playwright.CreateAsync();
-</code></pre>
-<p><code>Playwright.InstallAsync()</code> will download the required browsers. <code>Playwright.CreateAsync()</code> will create and launch the playwright driver.</p>
-<pre><code class="lang-cs">await Playwright.InstallAsync();
-using var playwright = await Playwright.CreateAsync();
-await using var browser = await playwright.Chromium.LaunchAsync();
-var page = await browser.NewPageAsync();
-await page.GoToAsync(&quot;http://www.bing.com&quot;);
-await page.ScreenshotAsync(path: outputFile);
-</code></pre>
-<p>To avoid downloading the browsers in runtime, you can install the playwright-sharp dotnet tool:</p>
-<pre><code>dotnet tool install playwright-sharp-tool -g
-playwright-sharp install-browsers
-</code></pre>
-<p>By running these two commands, you can avoid having the <code>await Playwright.InstallAsync();</code> line in your code.</p>
-<h1 id="examples">Examples</h1>
-<h2 id="mobile-and-geolocation">Mobile and geolocation</h2>
-<p>This snippet emulates Mobile Safari on a device at a given geolocation, navigates to maps.google.com, performs an action, and takes a screenshot.</p>
-<pre><code class="lang-cs">await Playwright.InstallAsync();
-
-using var playwright = await Playwright.CreateAsync();
-await using var browser = await playwright.Webkit.LaunchAsync(false);
-
-var contextOptions = playwright.Devices[&quot;iPhone 11 Pro&quot;].ToBrowserContextOptions();
-contextOptions.Locale = &quot;en-US&quot;;
-contextOptions.Geolocation = new Geolocation { Longitude = 12.492507m, Latitude = 41.889938m };
-contextOptions.Permissions = new[] { ContextPermission.Geolocation };
-
-var context = await browser.NewContextAsync(contextOptions);
-var page = await context.NewPageAsync();
-await page.GoToAsync(&quot;https://maps.google.com&quot;);
-page.ClickAsync(&quot;text='Your location'&quot;); //
-await page.ScreenshotAsync(&quot;colosseum-iphone.png&quot;);
-</code></pre>
-<h2 id="evaluate-in-browser-context">Evaluate in browser context</h2>
-<p>This code snippet navigates to example.com in Firefox, and executes a script in the page context.</p>
-<pre><code class="lang-cs">await Playwright.InstallAsync();
-using var playwright = await Playwright.CreateAsync();
-await using var browser = await playwright.Firefox.LaunchAsync();
-
-var context = await browser.NewContextAsync();
-var page = await context.NewPageAsync();
-await page.GoToAsync(&quot;https://www.example.com/&quot;);
-var dimensions = await page.EvaluateAsync&lt;Size&gt;(@&quot;() =&gt; {
-    return {
-        width: document.documentElement.clientWidth,
-        height: document.documentElement.clientHeight,
-    }
-}&quot;);
-Console.WriteLine(dimensions);
-</code></pre>
-<h2 id="intercept-network-requests">Intercept network requests</h2>
-<p>This code snippet sets up request routing for a WebKit page to log all network requests.</p>
-<pre><code class="lang-cs">await Playwright.InstallAsync();
-using var playwright = await Playwright.CreateAsync();
-await using var browser = await playwright.Firefox.LaunchAsync();
-
-var context = await browser.NewContextAsync();
-var page = await context.NewPageAsync();
-// Log and continue all network requests
-await page.RouteAsync(&quot;**&quot;, (route, _) =&gt;
-{
-    Console.WriteLine(route.Request.Url);
-    route.ContinueAsync();
-});
-
-await page.GoToAsync(&quot;http://todomvc.com&quot;);
-</code></pre>
-<h1 id="monthly-reports">Monthly reports</h1>
-<ul>
-<li><a href="https://www.hardkoded.com/blog/playwright-sharp-monthly-oct-2020">October 2020</a></li>
-<li><a href="https://www.hardkoded.com/blog/playwright-sharp-monthly-sep-2020">September 2020</a></li>
-<li><a href="https://www.hardkoded.com/blog/playwright-sharp-monthly-jul-2020">July 2020</a></li>
-<li><a href="https://www.hardkoded.com/blog/playwright-sharp-monthly-jun-2020">June 2020</a></li>
-<li><a href="https://www.hardkoded.com/blog/playwright-sharp-monthly-may-2020">May 2020</a></li>
-<li><a href="https://www.hardkoded.com/blog/playwright-sharp-monthly-apr-2020">April 2020</a></li>
-<li><a href="https://www.hardkoded.com/blog/playwright-sharp-monthly-march-2020">March 2020</a></li>
-</ul>
-<h1 id="useful-links">Useful links</h1>
-<ul>
-<li><a href="https://stackoverflow.com/search?q=playwright-sharp">StackOverflow</a></li>
-<li><a href="https://github.com/microsoft/playwright-sharp/issues?utf8=%E2%9C%93&amp;q=is%3Aissue">Issues</a></li>
-</ul>
-</article>
-          </div>
-          
-          <div class="hidden-sm col-md-2" role="complementary">
-            <div class="sideaffix">
-              <div class="contribution">
-                <ul class="nav">
-                  <li>
-                    <a href="https://github.com/microsoft/playwright-sharp/blob/afacf0314889440e196625c5be334c8443e028c0/docfx_project/index.md/#L1" class="contribution-link">Improve this Doc</a>
-                  </li>
-                </ul>
-              </div>
-              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
-              </nav>
-            </div>
-          </div>
-        </div>
+    </div>
+  </div>
+</div>
+<div class="counter-key-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2 text-center">
+        <i class="glyphicon glyphicon-phone"></i>
+        <section>
+            <h2>Test for mobile</h2>
+          <p class="lead">Use device emulation to test your responsive web apps in mobile web browsers.</p>
+        </section>
       </div>
+    </div>
+  </div>
+</div>
+<div class="key-section">
+  <div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2 text-center">
+            <i class="glyphicon glyphicon-ok"></i>
+            <section>
+                <h2>Fast and reliable execution</h2>
+            <p class="lead">Playwright interactions auto-wait for elements to be ready. This improves reliability and simplifies test authoring.</p>
+            </section>
+        </div>
+        </div>
+    </div>
+  </div>
+
+
       
       <footer>
         <div class="grad-bottom"></div>

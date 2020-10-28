@@ -5,11 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Enum Polling
-   | Playwright Sharp </title>
+    <title>How to get download files | Playwright Sharp </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Enum Polling
-   | Playwright Sharp ">
+    <meta name="title" content="How to get download files | Playwright Sharp ">
     <meta name="generator" content="docfx 2.45.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -79,38 +77,49 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="PlaywrightSharp.Polling">
-  
-  
-  <h1 id="PlaywrightSharp_Polling" data-uid="PlaywrightSharp.Polling" class="text-break">Enum Polling
-  </h1>
-  <div class="markdown level0 summary"><p>An interval at which the <code>pageFunction</code> is executed.</p>
-</div>
-  <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="PlaywrightSharp.html">PlaywrightSharp</a></h6>
-  <h6><strong>Assembly</strong>: PlaywrightSharp.dll</h6>
-  <h5 id="PlaywrightSharp_Polling_syntax">Syntax</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public enum Polling : int</code></pre>
-  </div>
-  <h3 id="fields">Fields
-  </h3>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    <thead>
-    <tbody>
-      <tr>
-        <td id="PlaywrightSharp_Polling_Raf">Raf</td>
-        <td><p>To constantly execute <code>pageFunction</code> in <code>requestAnimationFrame</code> callback.
-This is the tightest polling mode which is suitable to observe styling changes.</p>
-</td>
-      </tr>
-    </tbody>
-  </thead></thead></table>
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="how-to-get-download-files">How to get download files</h1>
+
+<p><em>Contributors: <a href="https://www.hardkoded.com/">Dario Kondratiuk</a></em></p>
+<h2 id="problem">Problem</h2>
+<p>You want to download and process a file.</p>
+<h2 id="solution">Solution</h2>
+<p><a href="https://playwrightsharp.dev/api/PlaywrightSharp.IPage.html">Page</a> will raise a <a href="https://playwrightsharp.dev/api/PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_Download">Download</a> event when the browser downloads a file.<br>
+To enable this behavior, you will need to set <code>acceptDownload</code> to true when you create a new BrowserContext.</p>
+<pre><code class="lang-cs">var context = await browser.NewContextAsync(acceptDownloads: true);
+var persistentContext = await browser.LaunchPersistentContextAsync(userDataDir, acceptDownloads: true);
+</code></pre>
+<p>Or</p>
+<pre><code class="lang-cs">var page = await browser.NewPageAsync(acceptDownloads: true);
+</code></pre>
+<p>Once <code>acceptDownloads</code> is enabled, you can wait for the download event.</p>
+<pre><code class="lang-cs">page.Download += (sender, e) =&gt; Console.WriteLine(e.Download.SuggestedFilename);
+</code></pre>
+<p>You can also use the <a href="https://playwrightsharp.dev/api/PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_WaitForEvent__1_PlaywrightSharp_PlaywrightEvent___0__Func___0_System_Boolean__System_Nullable_System_Int32__">WaitForEvent</a> method, to wait for a download.</p>
+<pre><code class="lang-cs">var downloadTask = page.WaitForEvent(PageEvent.Download);
+</code></pre>
+<p><a href="https://playwrightsharp.dev/api/PlaywrightSharp.DownloadEventArgs.html">DownloadEventArgs</a> has a property call <a href="https://playwrightsharp.dev/api/PlaywrightSharp.Download.html">Download</a>, which will give you access to all the download information.
+From there, you can read the file, delete it, or save it in another location.</p>
+<pre><code class="lang-cs">await Playwright.InstallAsync();
+using var playwright = await Playwright.CreateAsync();
+var chromium = playwright.Chromium;
+await using var browser = await chromium.LaunchAsync(new LaunchOptions { Headless = false });
+var page = await browser.NewPageAsync(acceptDownloads: true);
+await page.GoToAsync(&quot;https://github.com/microsoft/playwright-sharp/releases/tag/v0.151.0&quot;);
+
+var downloadTask = page.WaitForEvent(PageEvent.Download);
+
+await page.ClickAsync(&quot;text=Source Code&quot;);
+
+var downloadEvent = await downloadTask;
+string filePath = await downloadEvent.Download.GetPathAsync();
+Console.WriteLine($&quot;Original path: {filePath}&quot;);
+
+await downloadEvent.Download.SaveAsAsync(&quot;version.zip&quot;);
+Console.WriteLine($&quot;New file exists: {new FileInfo(&quot;version.zip&quot;).Exists}&quot;);
+
+Console.ReadLine();
+</code></pre>
 </article>
           </div>
           
@@ -119,10 +128,7 @@ This is the tightest polling mode which is suitable to observe styling changes.<
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20Polling&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/708a23dcea163c6a7393faf750947638b8ef2e55/src/PlaywrightSharp/Polling.cs/%23L6" class="contribution-link">Improve this Doc</a>
-                  </li>
-                  <li>
-                    <a href="https://github.com/microsoft/playwright-sharp/blob/708a23dcea163c6a7393faf750947638b8ef2e55/src/PlaywrightSharp/Polling.cs/#L6" class="contribution-link">View Source</a>
+                    <a href="https://github.com/microsoft/playwright-sharp/blob/708a23dcea163c6a7393faf750947638b8ef2e55/docfx_project/documentation/Page.Download.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
