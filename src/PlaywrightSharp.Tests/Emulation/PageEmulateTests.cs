@@ -13,13 +13,11 @@ namespace PlaywrightSharp.Tests.Emulation
     public class PageEmulateTests : PlaywrightSharpBrowserBaseTest
     {
         private readonly BrowserContextOptions _iPhone;
-        private readonly BrowserContextOptions _iPhoneLandscape;
 
         /// <inheritdoc/>
         public PageEmulateTests(ITestOutputHelper output) : base(output)
         {
             _iPhone = Playwright.Devices["iPhone 6"];
-            _iPhoneLandscape = Playwright.Devices["iPhone 6 landscape"];
         }
 
         ///<playwright-file>emulation.spec.js</playwright-file>
