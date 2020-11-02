@@ -36,7 +36,7 @@ dotnet tool install playwright-sharp-tool -g
 playwright-sharp install-browsers
 ```
 
-If you runthese two commands, you can call `CreateAsync` passing `installIfNeeded` in false.
+If you run these two commands, you can call `CreateAsync` passing `installIfNeeded` in false.
 
 ```cs
  using var playwright = await Playwright.CreateAsync(installIfNeeded: false);
