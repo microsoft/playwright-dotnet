@@ -100,7 +100,7 @@ namespace PlaywrightSharp
         /// <param name="debug">Enables the playwright driver log. Pass `pw:api` to get the Playwright API log.
         /// It is a shortcut to the DEBUG=pw:api environment variable.
         /// </param>
-        /// <param name=installIfNeeded">Call <see cref="InstallAsync(string, string)"/> before starting the driver</param>
+        /// <param name="installIfNeeded">Call <see cref="InstallAsync(string, string)"/> before starting the driver.</param>
         /// <returns>A <see cref="Task"/> that completes when the playwright driver is ready to be used.</returns>
         public static async Task<IPlaywright> CreateAsync(
             ILoggerFactory loggerFactory = null,
