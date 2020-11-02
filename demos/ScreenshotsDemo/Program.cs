@@ -10,7 +10,6 @@ namespace PdfDemo
         static async Task Main(string[] args)
         {
             Console.WriteLine("Installing playwright");
-            await Playwright.InstallAsync();
             using var playwright = await Playwright.CreateAsync();
             await using var browser = await playwright.Chromium.LaunchAsync(new LaunchOptions { Headless = true });
 

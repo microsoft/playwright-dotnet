@@ -10,18 +10,16 @@ PlaywrightSharp is a .Net library to automate [Chromium](https://www.chromium.or
 
 Headless execution is supported for all browsers on all platforms.
 
-#Usage 
+# Usage 
 Playwright Sharp relies on two external components: The browsers and the Playwright driver.
 
 ```cs 
-await Playwright.InstallAsync();
 var playwright = await Playwright.CreateAsync();
 ```
 
-`Playwright.InstallAsync()` will download the required browsers. `Playwright.CreateAsync()` will create and launch the playwright driver.
+`Playwright.CreateAsync()` will create and launch the playwright driver. It will also install the required browsers unless `installIfNeeded` is set to `false`.
 
 ```cs
-await Playwright.InstallAsync();
 using var playwright = await Playwright.CreateAsync();
 await using var browser = await playwright.Chromium.LaunchAsync();
 var page = await browser.NewPageAsync();
@@ -36,15 +34,17 @@ dotnet tool install playwright-sharp-tool -g
 playwright-sharp install-browsers
 ```
 
-By running these two commands, you can avoid having the `await Playwright.InstallAsync();` line in your code.
+If you runthese two commands, you can call `CreateAsync` passing `installIfNeeded` in false.
+
+```cs
+ using var playwright = await Playwright.CreateAsync(installIfNeeded: false);
+```
 
 # Examples
 ## Mobile and geolocation
 This snippet emulates Mobile Safari on a device at a given geolocation, navigates to maps.google.com, performs an action, and takes a screenshot.
 
 ```cs 
-await Playwright.InstallAsync();
-
 using var playwright = await Playwright.CreateAsync();
 await using var browser = await playwright.Webkit.LaunchAsync(false);
 
@@ -64,7 +64,6 @@ await page.ScreenshotAsync("colosseum-iphone.png");
 This code snippet navigates to example.com in Firefox, and executes a script in the page context.
 
 ```cs
-await Playwright.InstallAsync();
 using var playwright = await Playwright.CreateAsync();
 await using var browser = await playwright.Firefox.LaunchAsync();
 
@@ -84,7 +83,6 @@ Console.WriteLine(dimensions);
 This code snippet sets up request routing for a WebKit page to log all network requests.
 
 ```cs 
-await Playwright.InstallAsync();
 using var playwright = await Playwright.CreateAsync();
 await using var browser = await playwright.Firefox.LaunchAsync();
 

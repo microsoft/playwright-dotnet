@@ -12,7 +12,6 @@ namespace PdfDemo
         static async Task Main(string[] args)
         {
             Console.WriteLine("Installing playwright");
-            await Playwright.InstallAsync();
             ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
             {
                 builder.SetMinimumLevel(LogLevel.Debug);
