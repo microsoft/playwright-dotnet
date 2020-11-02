@@ -109,7 +109,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         public async Task ShouldWorkForAdoptedElements()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForEvent(PageEvent.Popup);
+            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
             await TaskUtils.WhenAll(
               popupTask,
               Page.EvaluateAsync("url => window.__popup = window.open(url)", TestConstants.EmptyPage));

@@ -333,21 +333,21 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public async Task<IRequest> WaitForRequestAsync(string url, int? timeout = null)
         {
-            var result = await WaitForEvent(PageEvent.Request, e => e.Request.Url.Equals(url), timeout).ConfigureAwait(false);
+            var result = await WaitForEventAsync(PageEvent.Request, e => e.Request.Url.Equals(url), timeout).ConfigureAwait(false);
             return result.Request;
         }
 
         /// <inheritdoc />
         public async Task<IRequest> WaitForRequestAsync(Regex url, int? timeout = null)
         {
-            var result = await WaitForEvent(PageEvent.Request, e => url.IsMatch(e.Request.Url), timeout).ConfigureAwait(false);
+            var result = await WaitForEventAsync(PageEvent.Request, e => url.IsMatch(e.Request.Url), timeout).ConfigureAwait(false);
             return result.Request;
         }
 
         /// <inheritdoc />
         public async Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> predicate, int? timeout = null)
         {
-            var result = await WaitForEvent(PageEvent.Request, e => predicate(e.Request), timeout).ConfigureAwait(false);
+            var result = await WaitForEventAsync(PageEvent.Request, e => predicate(e.Request), timeout).ConfigureAwait(false);
             return result.Request;
         }
 
@@ -395,7 +395,7 @@ namespace PlaywrightSharp
             => MainFrame.WaitForFunctionAsync(true, pageFunction, arg, timeout, null, polling);
 
         /// <inheritdoc />
-        public async Task<T> WaitForEvent<T>(PlaywrightEvent<T> pageEvent, Func<T, bool> predicate = null, int? timeout = null)
+        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<T, bool> predicate = null, int? timeout = null)
             where T : EventArgs
         {
             if (pageEvent == null)
@@ -712,21 +712,21 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public async Task<IResponse> WaitForResponseAsync(string url, int? timeout = null)
         {
-            var result = await WaitForEvent(PageEvent.Response, e => e.Response.Url.Equals(url), timeout).ConfigureAwait(false);
+            var result = await WaitForEventAsync(PageEvent.Response, e => e.Response.Url.Equals(url), timeout).ConfigureAwait(false);
             return result.Response;
         }
 
         /// <inheritdoc />
         public async Task<IResponse> WaitForResponseAsync(Regex url, int? timeout = null)
         {
-            var result = await WaitForEvent(PageEvent.Response, e => url.IsMatch(e.Response.Url), timeout).ConfigureAwait(false);
+            var result = await WaitForEventAsync(PageEvent.Response, e => url.IsMatch(e.Response.Url), timeout).ConfigureAwait(false);
             return result.Response;
         }
 
         /// <inheritdoc />
         public async Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> predicate, int? timeout = null)
         {
-            var result = await WaitForEvent(PageEvent.Response, e => predicate(e.Response), timeout).ConfigureAwait(false);
+            var result = await WaitForEventAsync(PageEvent.Response, e => predicate(e.Response), timeout).ConfigureAwait(false);
             return result.Response;
         }
 

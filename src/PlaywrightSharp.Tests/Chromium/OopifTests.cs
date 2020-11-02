@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal(TestConstants.CrossProcessHttpPrefix + "/grid.html", await frame.EvaluateAsync<string>("() => '' + location.href"));
 
             var (frameDetached, _) = await TaskUtils.WhenAll(
-                _page.WaitForEvent(PageEvent.FrameDetached),
+                _page.WaitForEventAsync(PageEvent.FrameDetached),
                 _page.EvaluateAsync<string>("() => document.querySelector('iframe').remove()"));
 
             Assert.Equal(frame, frameDetached.Frame);

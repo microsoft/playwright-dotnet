@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.Page
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldFailWithErrorUponDisconnect()
         {
-            var task = Page.WaitForEvent(PageEvent.Download);
+            var task = Page.WaitForEventAsync(PageEvent.Download);
             await Page.CloseAsync();
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => task);
             Assert.Contains("Page closed", exception.Message);

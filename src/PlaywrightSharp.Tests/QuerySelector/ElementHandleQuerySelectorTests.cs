@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             await Page.GoToAsync(TestConstants.EmptyPage);
 
             var (popup, _) = await TaskUtils.WhenAll(
-                Page.WaitForEvent(PageEvent.Popup),
+                Page.WaitForEventAsync(PageEvent.Popup),
                 Page.EvaluateAsync("url => window.__popup = window.open(url)", TestConstants.EmptyPage));
 
             var divHandle = await Page.EvaluateHandleAsync(@"() => {

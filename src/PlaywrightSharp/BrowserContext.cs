@@ -212,7 +212,7 @@ namespace PlaywrightSharp
             => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => playwrightFunction(t1, t2, t3, t4));
 
         /// <inheritdoc/>
-        public async Task<T> WaitForEvent<T>(PlaywrightEvent<T> e, Func<T, bool> predicate = null, int? timeout = null)
+        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> e, Func<T, bool> predicate = null, int? timeout = null)
             where T : EventArgs
         {
             if (e == null)

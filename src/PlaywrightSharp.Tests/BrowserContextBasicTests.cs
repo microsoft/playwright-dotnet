@@ -196,7 +196,7 @@ namespace PlaywrightSharp.Tests
         public async Task CloseShouldAbortWaitForEvent()
         {
             var context = await Browser.NewContextAsync();
-            var waitTask = context.WaitForEvent(ContextEvent.Page);
+            var waitTask = context.WaitForEventAsync(ContextEvent.Page);
             await context.CloseAsync();
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => waitTask);
             Assert.Equal("Context closed", exception.Message);

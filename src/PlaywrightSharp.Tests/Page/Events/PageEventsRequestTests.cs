@@ -65,7 +65,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             await Page.EvaluateAsync("() => window.activationPromise");
 
             var (request, swResponse) = await TaskUtils.WhenAll(
-                Page.WaitForEvent(PageEvent.Request),
+                Page.WaitForEventAsync(PageEvent.Request),
                 Page.EvaluateAsync<string>("() => fetchDummy('foo')"));
 
             Assert.Equal("responseFromServiceWorker:foo", swResponse);
