@@ -29,7 +29,7 @@ namespace PlaywrightSharp.Tests.Popup
             _ = Server.WaitForRequest("/popup/popup.html", request => requestTcs.TrySetResult(request.Headers["user-agent"]));
 
             await page.SetContentAsync("<a target=_blank rel=noopener href=\"/popup/popup.html\">link</a>");
-            var popupTask = context.WaitForEvent(ContextEvent.Page);
+            var popupTask = context.WaitForEventAsync(ContextEvent.Page);
             await TaskUtils.WhenAll(popupTask, page.ClickAsync("a"));
 
             await popupTask.Result.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
@@ -59,7 +59,7 @@ namespace PlaywrightSharp.Tests.Popup
                 intercepted = true;
             });
 
-            var popupTask = context.WaitForEvent(ContextEvent.Page);
+            var popupTask = context.WaitForEventAsync(ContextEvent.Page);
             await TaskUtils.WhenAll(popupTask, page.ClickAsync("a"));
 
             Assert.True(intercepted);

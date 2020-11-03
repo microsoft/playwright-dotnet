@@ -92,7 +92,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         public async Task PageEventsRequestFinished()
         {
             var (_, response) = await TaskUtils.WhenAll(
-                Page.WaitForEvent(PageEvent.RequestFinished),
+                Page.WaitForEventAsync(PageEvent.RequestFinished),
                 Page.GoToAsync(TestConstants.EmptyPage));
 
             var request = response.Request;

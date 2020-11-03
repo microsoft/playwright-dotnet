@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         public async Task ShouldFire()
         {
             var (error, _) = await TaskUtils.WhenAll(
-                Page.WaitForEvent(PageEvent.PageError),
+                Page.WaitForEventAsync(PageEvent.PageError),
                 Page.GoToAsync(TestConstants.ServerUrl + "/error.html")
             );
 
@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         public async Task ShouldContainSourceURL()
         {
             var (error, _) = await TaskUtils.WhenAll(
-                Page.WaitForEvent(PageEvent.PageError),
+                Page.WaitForEventAsync(PageEvent.PageError),
                 Page.GoToAsync(TestConstants.ServerUrl + "/error.html"));
 
             Assert.Contains("myscript.js", error.Stack);
@@ -70,7 +70,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             foreach (object[] kv in cases)
             {
                 var (error, _) = await TaskUtils.WhenAll(
-                    Page.WaitForEvent(PageEvent.PageError),
+                    Page.WaitForEventAsync(PageEvent.PageError),
                     Page.EvaluateAsync<JsonElement>("value => setTimeout(() => { throw value; }, 0)", kv[0]));
 
                 Assert.Contains(TestConstants.IsFirefox ? "uncaught exception: " + kv[1].ToString() : kv[1].ToString(), error.Message);
@@ -84,7 +84,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         public async Task ShouldHandleObject()
         {
             var (error, _) = await TaskUtils.WhenAll(
-                Page.WaitForEvent(PageEvent.PageError),
+                Page.WaitForEventAsync(PageEvent.PageError),
                 Page.EvaluateAsync<JsonElement>("value => setTimeout(() => { throw {}; }, 0)", 0));
 
             Assert.Contains(TestConstants.IsChromium ? "Object" : "[object Object]", error.Message);
@@ -97,7 +97,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         public async Task ShouldHandleWindow()
         {
             var (error, _) = await TaskUtils.WhenAll(
-                Page.WaitForEvent(PageEvent.PageError),
+                Page.WaitForEventAsync(PageEvent.PageError),
                 Page.EvaluateAsync<JsonElement>("value => setTimeout(() => { throw window ; }, 0)", 0));
 
             Assert.Contains(TestConstants.IsChromium ? "Window" : "[object Window]", error.Message);

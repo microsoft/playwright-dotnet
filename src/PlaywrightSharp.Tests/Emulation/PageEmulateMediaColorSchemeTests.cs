@@ -88,7 +88,7 @@ namespace PlaywrightSharp.Tests.Emulation
             {
                 var page = await context.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
-                var popupTask = page.WaitForEvent(PageEvent.Popup);
+                var popupTask = page.WaitForEventAsync(PageEvent.Popup);
 
                 await TaskUtils.WhenAll(
                     popupTask,
@@ -107,7 +107,7 @@ namespace PlaywrightSharp.Tests.Emulation
             {
                 var page = await context.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
-                var popupTask = page.WaitForEvent(PageEvent.Popup);
+                var popupTask = page.WaitForEventAsync(PageEvent.Popup);
 
                 await TaskUtils.WhenAll(
                     popupTask,

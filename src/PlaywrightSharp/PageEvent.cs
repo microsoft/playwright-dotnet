@@ -3,7 +3,7 @@ using System;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Page events for <see cref="IPage.WaitForEvent{T}(PlaywrightEvent{T}, Func{T, bool}, int?)"/>.
+    /// Page events for <see cref="IPage.WaitForEventAsync{T}(PlaywrightEvent{T}, Func{T, bool}, int?)"/>.
     /// </summary>
     public static class PageEvent
     {

@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Popup
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
-            var popupTask = Page.WaitForEvent(PageEvent.Popup);
+            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
             await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync("() => window.open('about:blank')")
@@ -40,7 +40,7 @@ namespace PlaywrightSharp.Tests.Popup
         public async Task ShouldWorkWithWindowFeatures()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForEvent(PageEvent.Popup);
+            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
             await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync<string>("() => window.open('about:blank', 'Title', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top=0,left=0')")
@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests.Popup
         public async Task ShouldEmitForImmediatelyClosedPopups()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForEvent(PageEvent.Popup);
+            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
             await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync<string>(@"() => {
@@ -75,7 +75,7 @@ namespace PlaywrightSharp.Tests.Popup
         public async Task ShouldEmitForImmediatelyClosedPopupsWithLocation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForEvent(PageEvent.Popup);
+            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
             await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync<string>(@"() => {
@@ -93,14 +93,14 @@ namespace PlaywrightSharp.Tests.Popup
         public async Task ShouldBeAbleToCaptureAlert()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForEvent(PageEvent.Popup);
+            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
             var evaluateTask = Page.EvaluateAsync<string>(@"() => {
                 const win = window.open('');
                 win.alert('hello');
             }");
 
             var popup = await popupTask;
-            var dialog = await popup.Page.WaitForEvent(PageEvent.Dialog);
+            var dialog = await popup.Page.WaitForEventAsync(PageEvent.Dialog);
 
             Assert.Equal("hello", dialog.Dialog.Message);
             await dialog.Dialog.DismissAsync();
@@ -114,7 +114,7 @@ namespace PlaywrightSharp.Tests.Popup
         public async Task ShouldWorkWithEmptyUrl()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForEvent(PageEvent.Popup);
+            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
             await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync("() => window.open('')")
@@ -131,7 +131,7 @@ namespace PlaywrightSharp.Tests.Popup
         public async Task ShouldWorkWithNoopenerAndNoUrl()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForEvent(PageEvent.Popup);
+            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
             await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync("() => window.open(undefined, null, 'noopener')")
@@ -149,7 +149,7 @@ namespace PlaywrightSharp.Tests.Popup
         public async Task ShouldWorkWithNoopenerAndAboutBlank()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForEvent(PageEvent.Popup);
+            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
             await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync("() => window.open('about:blank', null, 'noopener')")
@@ -166,7 +166,7 @@ namespace PlaywrightSharp.Tests.Popup
         public async Task ShouldWorkWithNoopenerAndUrl()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForEvent(PageEvent.Popup);
+            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
             await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync("url => window.open(url, null, 'noopener')", TestConstants.EmptyPage)
@@ -184,7 +184,7 @@ namespace PlaywrightSharp.Tests.Popup
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync("<a target=_blank rel=\"opener\" href=\"/one-style.html\">yo</a>");
-            var popupTask = Page.WaitForEvent(PageEvent.Popup).ContinueWith(async task =>
+            var popupTask = Page.WaitForEventAsync(PageEvent.Popup).ContinueWith(async task =>
             {
                 var popup = task.Result.Page;
                 await popup.WaitForLoadStateAsync();
@@ -209,7 +209,7 @@ namespace PlaywrightSharp.Tests.Popup
             // TODO: FFOX sends events for "one-style.html" request to both pages.
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
-            var popupTask = Page.WaitForEvent(PageEvent.Popup).ContinueWith(async task =>
+            var popupTask = Page.WaitForEventAsync(PageEvent.Popup).ContinueWith(async task =>
             {
                 var popup = task.Result.Page;
                 await popup.WaitForLoadStateAsync();
@@ -234,7 +234,7 @@ namespace PlaywrightSharp.Tests.Popup
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
-            var popupTask = Page.WaitForEvent(PageEvent.Popup).ContinueWith(async task =>
+            var popupTask = Page.WaitForEventAsync(PageEvent.Popup).ContinueWith(async task =>
             {
                 var popup = task.Result.Page;
                 await popup.WaitForLoadStateAsync();
@@ -257,7 +257,7 @@ namespace PlaywrightSharp.Tests.Popup
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
-            var popupTask = Page.WaitForEvent(PageEvent.Popup).ContinueWith(async task =>
+            var popupTask = Page.WaitForEventAsync(PageEvent.Popup).ContinueWith(async task =>
             {
                 var popup = task.Result.Page;
                 await popup.WaitForLoadStateAsync();
