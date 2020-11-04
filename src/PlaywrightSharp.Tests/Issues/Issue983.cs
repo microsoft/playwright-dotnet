@@ -9,6 +9,9 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Issues
 {
+    /// <summary>
+    /// See https://github.com/microsoft/playwright-sharp/issues/983.
+    /// </summary>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class Issue983 : PlaywrightSharpPageBaseTest
     {
@@ -17,6 +20,9 @@ namespace PlaywrightSharp.Tests.Issues
         {
         }
 
+        /// <summary>
+        /// See https://github.com/microsoft/playwright-sharp/issues/983.
+        /// </summary>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWork()
         {
