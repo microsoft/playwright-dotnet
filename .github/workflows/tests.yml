@@ -39,7 +39,9 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' }}
         env:
           PRODUCT: ${{ matrix.product }}
-        run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- bash -c "ulimit -c unlimited && dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger \"trx;LogFileName=TestResults.xml\""
+        run: |
+          dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug
+          xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- bash -c "ulimit -c unlimited && dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger \"trx;LogFileName=TestResults.xml\""
       - name: Test results
         uses: actions/upload-artifact@v1
         if: always()
