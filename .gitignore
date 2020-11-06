@@ -350,3 +350,4 @@ MigrationBackup/
 .ionide/
 .idea
 src/PlaywrightSharp.sln.DotSettings
+src/PlaywrightSharp/Drivers
