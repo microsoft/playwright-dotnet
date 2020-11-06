@@ -51,7 +51,7 @@
         <EmbeddedResource Include="Drivers\playwright-cli-win32.zip">
         </EmbeddedResource>
     </ItemGroup>
-    <Target Name="Download Drivers" BeforeTargets="Build">
+    <Target Name="Download Drivers" BeforeTargets="CoreCompile">
         <ConvertToAbsolutePath Paths="$(ProjectDir)..\tools\DriverDownloader\">
             <Output TaskParameter="AbsolutePaths" PropertyName="DriverDownloaderPath" />
         </ConvertToAbsolutePath>
