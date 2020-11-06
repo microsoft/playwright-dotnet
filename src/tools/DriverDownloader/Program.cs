@@ -22,8 +22,8 @@ namespace DriverDownloader
             if (!destinationDirectory.Exists)
             {
                 destinationDirectory.Create();
-                return;
             }
+
             var versionFile = new FileInfo(Path.Combine(destinationDirectory.FullName, driverVersion));
 
             if (!versionFile.Exists)

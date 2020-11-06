@@ -58,7 +58,6 @@
         <ConvertToAbsolutePath Paths="$(ProjectDir)\Drivers\">
             <Output TaskParameter="AbsolutePaths" PropertyName="DriversPath" />
         </ConvertToAbsolutePath>
-        <Exec WorkingDirectory="$(DriverDownloaderPath)" Command="dotnet build" />
-        <Exec WorkingDirectory="$(DriverDownloaderPath)" Command="dotnet run -- $(DriversPath) $(DriverVersion)" />
+        <Exec WorkingDirectory="$(DriverDownloaderPath)" Command="dotnet run -p DriverDownloader.csproj -- $(DriversPath) $(DriverVersion)" />
     </Target>
 </Project>
