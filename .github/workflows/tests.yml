@@ -59,14 +59,19 @@ jobs:
           dotnet-version: 3.1.100
       - name: Build Project
         run: dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug
+      - uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: nugetpackage
+          path: /home/runner/work/playwright-sharp/playwright-sharp/src
       - name: Run .NET Framwork tests (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
         run: dotnet test ./src/NugetTests/PlaywrightSharp.WithPackageConfig/PlaywrightSharp.WithPackageConfig.csproj
+      - name: Delete browsers on Mac
+        if: ${{ matrix.os == 'macos-latest' }}
+        run: rm -R /Users/runner/Library/Caches/ms-playwright
+      - name: Delete browsers on Linux
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: rm -R /home/runner/.cache/ms-playwright
       - name: Run .NET Core tests
         run: dotnet test ./src/NugetTests/PlaywrightSharp.LocalNugetTest/PlaywrightSharp.LocalNugetTest.csproj
-      - name: Generated package
-        uses: actions/upload-artifact@v1
-        if: always()
-        with:
-          name: nugetpackage.nupkg
-          path: ./src/playwright-sharp/src/PlaywrightSharp/bin/Debug/PlaywrightSharp.*.nupkg
