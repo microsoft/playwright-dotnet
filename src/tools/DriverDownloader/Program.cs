@@ -75,11 +75,15 @@ namespace DriverDownloader
 
             var directory = new DirectoryInfo(Path.Combine(destinationDirectory.FullName, runtime));
             new ZipArchive(await response.Content.ReadAsStreamAsync()).ExtractToDirectory(directory.FullName);
-            foreach (var executable in directory.GetFiles().Where(f => f.Name == "playwright-cli" || f.Name.Contains("ffmpeg")))
+
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                if (LinuxSysCall.Chmod(executable.FullName, LinuxSysCall.ExecutableFilePermissions) != 0)
+                foreach (var executable in directory.GetFiles().Where(f => f.Name == "playwright-cli" || f.Name.Contains("ffmpeg")))
                 {
-                    throw new Exception($"Unable to chmod the driver ({Marshal.GetLastWin32Error()})");
+                    if (LinuxSysCall.Chmod(executable.FullName, LinuxSysCall.ExecutableFilePermissions) != 0)
+                    {
+                        throw new Exception($"Unable to chmod the driver ({Marshal.GetLastWin32Error()})");
+                    }
                 }
             }
             Console.WriteLine($"Driver for {platform} downloaded");
