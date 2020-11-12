@@ -32,12 +32,16 @@ jobs:
         if: ${{ matrix.os != 'ubuntu-latest' }}
         env:
           PRODUCT: ${{ matrix.product }}
-        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger "trx;LogFileName=TestResults.xml"
+        run: |
+          dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug
+          dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger "trx;LogFileName=TestResults.xml"
       - name: Run tests (Linux)
         if: ${{ matrix.os == 'ubuntu-latest' }}
         env:
           PRODUCT: ${{ matrix.product }}
-        run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- bash -c "ulimit -c unlimited && dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger \"trx;LogFileName=TestResults.xml\""
+        run: |
+          dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug
+          xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- bash -c "ulimit -c unlimited && dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger \"trx;LogFileName=TestResults.xml\""
       - name: Test results
         uses: actions/upload-artifact@v1
         if: always()
@@ -59,11 +63,6 @@ jobs:
           dotnet-version: 3.1.100
       - name: Build Project
         run: dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug
-      - uses: actions/upload-artifact@v1
-        if: always()
-        with:
-          name: nugetpackage
-          path: /home/runner/work/playwright-sharp/playwright-sharp/src
       - name: Run .NET Framwork tests (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
         run: dotnet test ./src/NugetTests/PlaywrightSharp.WithPackageConfig/PlaywrightSharp.WithPackageConfig.csproj
@@ -73,5 +72,8 @@ jobs:
       - name: Delete browsers on Linux
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: rm -R /home/runner/.cache/ms-playwright
+      - name: Delete browsers on windows
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: Remove-Item -path C:\Users\runneradmin\AppData\Local\ms-playwright -recurse
       - name: Run .NET Core tests
         run: dotnet test ./src/NugetTests/PlaywrightSharp.LocalNugetTest/PlaywrightSharp.LocalNugetTest.csproj
