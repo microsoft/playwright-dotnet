@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace PlaywrightSharp.Helpers.Linux
+namespace DriverDownloader.Linux
 {
     internal static class LinuxSysCall
     {

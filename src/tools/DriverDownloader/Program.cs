@@ -1,13 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using DriverDownloader.Linux;
 
 namespace DriverDownloader
 {
     class Program
     {
+        private static readonly (string Platform, string Runtime)[] _platforms = new[]
+        {
+            ("mac", "osx"),
+            ("linux", "unix"),
+            ("win32_x64", "win-x64"),
+            ("win32", "win-x86")
+        };
+
         static async Task Main(string[] args)
         {
             if (args.Length < 2)
@@ -35,9 +47,9 @@ namespace DriverDownloader
 
                 versionFile.CreateText();
                 var tasks = new List<Task>();
-                foreach (string platform in new[] { "mac", "linux", "win32_x64", "win32" })
+                foreach (var platform in _platforms)
                 {
-                    tasks.Add(DownloadDriverAsync(destinationDirectory, driverVersion, platform));
+                    tasks.Add(DownloadDriverAsync(destinationDirectory, driverVersion, platform.Platform, platform.Runtime));
                 }
 
                 await Task.WhenAll(tasks);
@@ -48,7 +60,7 @@ namespace DriverDownloader
             }
         }
 
-        private static async Task DownloadDriverAsync(DirectoryInfo destinationDirectory, string driverVersion, string platform)
+        private static async Task DownloadDriverAsync(DirectoryInfo destinationDirectory, string driverVersion, string platform, string runtime)
         {
             Console.WriteLine("Downloading driver for " + platform);
             const string cdn = "https://playwright.azureedge.net/builds/cli";
@@ -61,8 +73,15 @@ namespace DriverDownloader
                 return;
             }
 
-            using var fs = new FileStream(Path.Combine(destinationDirectory.FullName, $"playwright-cli-{platform}.zip"), FileMode.CreateNew);
-            await response.Content.CopyToAsync(fs);
+            var directory = new DirectoryInfo(Path.Combine(destinationDirectory.FullName, runtime));
+            new ZipArchive(await response.Content.ReadAsStreamAsync()).ExtractToDirectory(directory.FullName);
+            foreach (var executable in directory.GetFiles().Where(f => f.Name == "playwright-cli" || f.Name.Contains("ffmpeg")))
+            {
+                if (LinuxSysCall.Chmod(executable.FullName, LinuxSysCall.ExecutableFilePermissions) != 0)
+                {
+                    throw new Exception($"Unable to chmod the driver ({Marshal.GetLastWin32Error()})");
+                }
+            }
             Console.WriteLine($"Driver for {platform} downloaded");
         }
     }
