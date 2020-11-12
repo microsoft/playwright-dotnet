@@ -44,7 +44,7 @@ jobs:
         with:
           name: TestResult.xml
           path: ./src/PlaywrightSharp.Tests/TestResults/TestResults.xml
-  test:
+  test-nuget-packages:
     name: Nuget Tests on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -62,5 +62,11 @@ jobs:
       - name: Run .NET Framwork tests (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
         run: dotnet test ./src/NugetTests/PlaywrightSharp.WithPackageConfig/PlaywrightSharp.WithPackageConfig.csproj
-      - name: Run .NET Core tests (Windows)
+      - name: Run .NET Core tests
         run: dotnet test ./src/NugetTests/PlaywrightSharp.LocalNugetTest/PlaywrightSharp.LocalNugetTest.csproj
+      - name: Generated package
+        uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: nugetpackage.nupkg
+          path: ./src/playwright-sharp/src/PlaywrightSharp/bin/Debug/PlaywrightSharp.*.nupkg
