@@ -8,27 +8,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		Common\Dependencies.props = Common\Dependencies.props
-		PlaywrightSharp.ruleset = PlaywrightSharp.ruleset
-		stylecop.json = stylecop.json
-		Common\SignAssembly.props = Common\SignAssembly.props
 		Common\PackageInfo.props = Common\PackageInfo.props
+		PlaywrightSharp.ruleset = PlaywrightSharp.ruleset
+		Common\SignAssembly.props = Common\SignAssembly.props
+		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharp.TestServer", "PlaywrightSharp.TestServer\PlaywrightSharp.TestServer.csproj", "{A907B324-4541-4FAF-8CAE-D0B512B4BC36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Tests", "PlaywrightSharp.Tests\PlaywrightSharp.Tests.csproj", "{162425E9-A05E-4ECE-8DBE-5AEC68C5DD23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharp.Tests", "PlaywrightSharp.Tests\PlaywrightSharp.Tests.csproj", "{162425E9-A05E-4ECE-8DBE-5AEC68C5DD23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp", "PlaywrightSharp\PlaywrightSharp.csproj", "{EAB878F1-E9FE-4C0B-8DF5-AE58522F8D0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharp", "PlaywrightSharp\PlaywrightSharp.csproj", "{EAB878F1-E9FE-4C0B-8DF5-AE58522F8D0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.Demo", "PlaywrightSharp.Demo\PlaywrightSharp.Demo.csproj", "{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharp.Demo", "PlaywrightSharp.Demo\PlaywrightSharp.Demo.csproj", "{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5C6D57B1-C82A-48D6-9EBD-73B712CAE476}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiChecker", "tools\ApiChecker\ApiChecker.csproj", "{9430DBAB-C5E3-4D37-84B2-EF86566D5AAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharpTool", "tools\PlaywrightSharpTool\PlaywrightSharpTool.csproj", "{795BA2A6-D983-4D96-B817-6921A145AB56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharpTool", "tools\PlaywrightSharpTool\PlaywrightSharpTool.csproj", "{795BA2A6-D983-4D96-B817-6921A145AB56}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriverDownloader", "tools\DriverDownloader\DriverDownloader.csproj", "{27C6BCBD-94DC-4D1F-8F61-85DD3258A8EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DriverDownloader", "tools\DriverDownloader\DriverDownloader.csproj", "{27C6BCBD-94DC-4D1F-8F61-85DD3258A8EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,24 +50,19 @@ Global
 		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9430DBAB-C5E3-4D37-84B2-EF86566D5AAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9430DBAB-C5E3-4D37-84B2-EF86566D5AAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9430DBAB-C5E3-4D37-84B2-EF86566D5AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9430DBAB-C5E3-4D37-84B2-EF86566D5AAA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{795BA2A6-D983-4D96-B817-6921A145AB56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{795BA2A6-D983-4D96-B817-6921A145AB56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{795BA2A6-D983-4D96-B817-6921A145AB56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{795BA2A6-D983-4D96-B817-6921A145AB56}.Release|Any CPU.Build.0 = Release|Any CPU
 		{27C6BCBD-94DC-4D1F-8F61-85DD3258A8EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{27C6BCBD-94DC-4D1F-8F61-85DD3258A8EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27C6BCBD-94DC-4D1F-8F61-85DD3258A8EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27C6BCBD-94DC-4D1F-8F61-85DD3258A8EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A907B324-4541-4FAF-8CAE-D0B512B4BC36} = {D250D790-5A30-4C38-8F60-50FA96DB4E67}
-		{9430DBAB-C5E3-4D37-84B2-EF86566D5AAA} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
 		{795BA2A6-D983-4D96-B817-6921A145AB56} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
 		{27C6BCBD-94DC-4D1F-8F61-85DD3258A8EB} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
 	EndGlobalSection
