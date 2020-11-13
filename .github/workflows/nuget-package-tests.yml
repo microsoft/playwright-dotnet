@@ -32,6 +32,6 @@ jobs:
         run: rm -r ~/.cache/ms-playwright
       - name: Delete browsers on windows
         if: matrix.os == 'windows-latest'
-        run: Remove-Item -path C:\Users\runneradmin\AppData\Local\ms-playwright -recurse
+        run: Remove-Item -path $env:USERPROFILE\AppData\Local\ms-playwright -recurse
       - name: Run Tests
         run: dotnet test ./src/PlaywrightSharp.LocalNugetTest/PlaywrightSharp.LocalNugetTest.csproj
