@@ -63,9 +63,6 @@ jobs:
           dotnet-version: 3.1.100
       - name: Build Project
         run: dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug
-      - name: Run .NET Framwork tests (Windows)
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: dotnet test ./src/NugetTests/PlaywrightSharp.WithPackageConfig/PlaywrightSharp.WithPackageConfig.csproj
       - name: Delete browsers on Mac
         if: ${{ matrix.os == 'macos-latest' }}
         run: rm -R /Users/runner/Library/Caches/ms-playwright
@@ -73,6 +70,12 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: rm -R /home/runner/.cache/ms-playwright
       - name: Delete browsers on windows
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: Remove-Item -path C:\Users\runneradmin\AppData\Local\ms-playwright -recurse
+      - name: Run .NET Framwork tests (Windows)
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: dotnet test ./src/NugetTests/PlaywrightSharp.WithPackageConfig/PlaywrightSharp.WithPackageConfig.csproj
+      - name: Delete browsers on windows again
         if: ${{ matrix.os == 'windows-latest' }}
         run: Remove-Item -path C:\Users\runneradmin\AppData\Local\ms-playwright -recurse
       - name: Run .NET Core tests
