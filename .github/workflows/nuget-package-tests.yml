@@ -1,0 +1,37 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test-nuget-packages:
+    name: Nuget Tests on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1.6.0
+        with:
+          dotnet-version: 3.1.100
+      - name: Build Project
+        run: dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug
+      - name: Delete browsers on Mac
+        if: ${{ matrix.os == 'macos-latest' }}
+        run: rm -R /Users/runner/Library/Caches/ms-playwright
+      - name: Delete browsers on Linux
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: rm -R /home/runner/.cache/ms-playwright
+      - name: Delete browsers on windows
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: Remove-Item -path C:\Users\runneradmin\AppData\Local\ms-playwright -recurse
+      - name: Run Tests
+        run: dotnet test ./src/PlaywrightSharp.LocalNugetTest/PlaywrightSharp.LocalNugetTest.csproj
