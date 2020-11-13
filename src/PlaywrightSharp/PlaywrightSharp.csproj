@@ -46,7 +46,7 @@
         <None Include="runtimes\win-x86\**" Pack="true" PackagePath="runtimes\win-x86\native" />
         <None Include="build\**" Pack="true" PackagePath="build" />
     </ItemGroup>
-    <Target Name="Download Drivers" BeforeTargets="Restore">
+    <Target Name="Download Drivers" BeforeTargets="BeforeBuild">
         <ConvertToAbsolutePath Paths="$(ProjectDir)..\tools\DriverDownloader\">
             <Output TaskParameter="AbsolutePaths" PropertyName="DriverDownloaderPath" />
         </ConvertToAbsolutePath>
@@ -56,60 +56,20 @@
         <Exec WorkingDirectory="$(DriverDownloaderPath)" Command="dotnet run -p DriverDownloader.csproj -- $(DriversPath) $(DriverVersion)" />
     </Target>
     <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-        <ContentWithTargetPath Include="runtimes\win-x64\browsers.json">
-            <TargetPath>browsers.json</TargetPath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="runtimes\win-x64\ffmpeg.COPYING.GPLv3">
-            <TargetPath>ffmpeg.COPYING.GPLv3</TargetPath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="runtimes\win-x64\ffmpeg-win64.exe">
-            <TargetPath>ffmpeg-win64.exe</TargetPath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="runtimes\win-x64\PrintDeps.exe">
-            <TargetPath>PrintDeps.exe</TargetPath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="runtimes\win-x64\playwright-cli.exe">
-            <TargetPath>playwright-cli.exe</TargetPath>
+        <ContentWithTargetPath Include="runtimes\win-x64\*.*">
+            <TargetPath>%(Filename)%(Extension)</TargetPath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </ContentWithTargetPath>
     </ItemGroup>
     <ItemGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
-        <ContentWithTargetPath Include="runtimes\osx\browsers.json">
-            <TargetPath>browsers.json</TargetPath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="runtimes\osx\ffmpeg.COPYING.GPLv3">
-            <TargetPath>ffmpeg.COPYING.GPLv3</TargetPath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="runtimes\osx\ffmpeg-mac">
-            <TargetPath>ffmpeg-mac</TargetPath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="runtimes\osx\playwright-cli">
-            <TargetPath>playwright-cli</TargetPath>
+        <ContentWithTargetPath Include="runtimes\osx\*.*">
+            <TargetPath>%(Filename)%(Extension)</TargetPath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </ContentWithTargetPath>
     </ItemGroup>
     <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-        <ContentWithTargetPath Include="runtimes\unix\browsers.json">
-            <TargetPath>browsers.json</TargetPath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="runtimes\unix\ffmpeg.COPYING.GPLv3">
-            <TargetPath>ffmpeg.COPYING.GPLv3</TargetPath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="runtimes\unix\ffmpeg-linux">
-            <TargetPath>ffmpeg-linux</TargetPath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="runtimes\unix\playwright-cli">
-            <TargetPath>playwright-cli</TargetPath>
+        <ContentWithTargetPath Include="runtimes\unix\*.*">
+            <TargetPath>%(Filename)%(Extension)</TargetPath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </ContentWithTargetPath>
     </ItemGroup>

@@ -8,8 +8,8 @@
     <Target Name="InstallBrowsers" AfterTargets="CopyFilesToOutputDirectory">
         <Message Text="Playwright is checking browser dependencies">
         </Message>
-        <Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" WorkingDirectory="$(MSBuildThisFileDirectory)\..\..\runtimes\unix$(NativeFolder)" Command="./playwright-cli install" />
-        <Exec Condition="$([MSBuild]::IsOSPlatform('OSX'))" WorkingDirectory="$(MSBuildThisFileDirectory)\..\..\runtimes\osx$(NativeFolder)" Command="./playwright-cli install" />
+        <Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" WorkingDirectory="$(MSBuildThisFileDirectory)..\..\runtimes\unix$(NativeFolder)" Command="./playwright-cli install" />
+        <Exec Condition="$([MSBuild]::IsOSPlatform('OSX'))" WorkingDirectory="$(MSBuildThisFileDirectory)..\..\runtimes\osx$(NativeFolder)" Command="./playwright-cli install" />
         <Exec Condition="'$(PlatformTarget)' != 'x86' AND $([MSBuild]::IsOSPlatform('Windows'))" WorkingDirectory="$(MSBuildThisFileDirectory)\..\..\runtimes\win-x64$(NativeFolder)" Command="playwright-cli.exe install" />
         <Exec Condition="'$(PlatformTarget)' == 'x86' AND $([MSBuild]::IsOSPlatform('Windows'))" WorkingDirectory="$(MSBuildThisFileDirectory)\..\..\runtimes\win-x89$(NativeFolder)" Command="playwright-cli.exe install" />
     </Target>
