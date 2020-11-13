@@ -72,11 +72,5 @@ jobs:
       - name: Delete browsers on windows
         if: ${{ matrix.os == 'windows-latest' }}
         run: Remove-Item -path C:\Users\runneradmin\AppData\Local\ms-playwright -recurse
-      - name: Run .NET Framwork tests (Windows)
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: dotnet test ./src/NugetTests/PlaywrightSharp.WithPackageConfig/PlaywrightSharp.WithPackageConfig.csproj
-      - name: Delete browsers on windows again
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: Remove-Item -path C:\Users\runneradmin\AppData\Local\ms-playwright -recurse
-      - name: Run .NET Core tests
-        run: dotnet test ./src/NugetTests/PlaywrightSharp.LocalNugetTest/PlaywrightSharp.LocalNugetTest.csproj
+      - name: Run Tests
+        run: dotnet test ./src/PlaywrightSharp.LocalNugetTest/PlaywrightSharp.LocalNugetTest.csproj
