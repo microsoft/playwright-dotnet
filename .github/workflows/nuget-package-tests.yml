@@ -25,13 +25,13 @@ jobs:
       - name: Build Project
         run: dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug
       - name: Delete browsers on Mac
-        if: ${{ matrix.os == 'macos-latest' }}
-        run: rm -R /Users/runner/Library/Caches/ms-playwright
+        if: matrix.os == 'macos-latest'
+        run: rm -r ~/Library/Caches/ms-playwright
       - name: Delete browsers on Linux
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        run: rm -R /home/runner/.cache/ms-playwright
+        run: rm -r ~/.cache/ms-playwright
       - name: Delete browsers on windows
-        if: ${{ matrix.os == 'windows-latest' }}
+        if: matrix.os == 'windows-latest'
         run: Remove-Item -path C:\Users\runneradmin\AppData\Local\ms-playwright -recurse
       - name: Run Tests
         run: dotnet test ./src/PlaywrightSharp.LocalNugetTest/PlaywrightSharp.LocalNugetTest.csproj
