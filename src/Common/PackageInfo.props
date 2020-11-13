@@ -2,9 +2,9 @@
 <Project>
     <PropertyGroup>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <AssemblyVersion>0.160.0</AssemblyVersion>
+        <AssemblyVersion>0.161.0</AssemblyVersion>
         <PackageVersion>$(AssemblyVersion)-alpha</PackageVersion>
-        <DriverVersion>0.152.0</DriverVersion>
+        <DriverVersion>0.161.0</DriverVersion>
         <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
         <FileVersion>$(AssemblyVersion)</FileVersion>
         <Authors>Darío Kondratiuk</Authors>
