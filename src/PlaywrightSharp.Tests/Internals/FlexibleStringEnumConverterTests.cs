@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Internals
             },
         };
 
-        public enum TestEnum
+        private enum TestEnum
         {
             Default,
             Document,
