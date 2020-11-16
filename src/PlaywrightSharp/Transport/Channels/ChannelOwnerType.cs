@@ -63,5 +63,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         [EnumMember(Value = "selectors")]
         Selectors,
+
+        [EnumMember(Value = "WebSocket")]
+        WebSocket,
     }
 }
