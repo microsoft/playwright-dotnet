@@ -18,6 +18,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
+        /*
         ///<playwright-file>screencast.spec.js</playwright-file>     
         ///<playwright-it>videoSize should require videosPath</playwright-it>
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true)]
@@ -150,5 +151,6 @@ namespace PlaywrightSharp.Tests
 
             Assert.NotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
         }
+        */
     }
 }
