@@ -21,6 +21,7 @@ namespace PlaywrightSharp
         {
             _channel = new ResponseChannel(guid, parent.Connection, this);
             _initializer = initializer;
+            _initializer.Request.Object.Timing = _initializer.Timing;
 
             if (initializer.Headers != null)
             {

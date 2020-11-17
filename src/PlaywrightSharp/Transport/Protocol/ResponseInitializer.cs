@@ -15,5 +15,7 @@ namespace PlaywrightSharp.Transport.Protocol
         public IEnumerable<HeaderEntry> Headers { get; set; }
 
         public RequestChannel Request { get; set; }
+
+        public ResourceTiming Timing { get; set; }
     }
 }
