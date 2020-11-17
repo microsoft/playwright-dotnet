@@ -423,10 +423,17 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public async Task CloseAsync(bool runBeforeUnload = false)
         {
-            await _channel.CloseAsync(runBeforeUnload).ConfigureAwait(false);
-            if (OwnedContext != null)
+            try
             {
-                await OwnedContext.CloseAsync().ConfigureAwait(false);
+                await _channel.CloseAsync(runBeforeUnload).ConfigureAwait(false);
+                if (OwnedContext != null)
+                {
+                    await OwnedContext.CloseAsync().ConfigureAwait(false);
+                }
+            }
+            catch (Exception e) when (IsSafeCloseException(e))
+            {
+                // Swallow exception
             }
         }
 
@@ -914,6 +921,10 @@ namespace PlaywrightSharp
 
             return Task.CompletedTask;
         }
+
+        private bool IsSafeCloseException(Exception e)
+            => e.Message.Contains(PlaywrightSharpException.BrowserClosedExceptionMessage) ||
+               e.Message.Contains(PlaywrightSharpException.BrowserOrContextClosedExceptionMessage);
 
         private void Channel_Closed(object sender, EventArgs e)
         {
