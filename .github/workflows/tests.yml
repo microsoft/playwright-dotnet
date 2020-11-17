@@ -20,12 +20,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: microsoft/playwright-github-action@v1
-      - name: Setup .NET Core
+      - name: Setup .NET Core (On Mac)
+        if: ${{ matrix.os == 'macos-latest' }}
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.100
         env:
           DOTNET_INSTALL_DIR: /users/runner/alternate/dotnet
+      - name: Setup .NET Core (Not on mac)
+        if: ${{ matrix.os != 'macos-latest' }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.100
       - name: Create Certificate
         run: |
           dotnet dev-certs https --clean
