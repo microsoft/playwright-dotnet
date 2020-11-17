@@ -100,8 +100,7 @@ namespace PlaywrightSharp.Chromium
             bool? handleSIGINT = null,
             bool? handleSIGTERM = null,
             bool? handleSIGHUP = null,
-            string videosPath = null,
-            ViewportSize videoSize = null)
+            RecordVideoOptions recordVideo = null)
             => await LaunchPersistentContextAsync(
                 userDataDir,
                 viewport,
@@ -138,8 +137,7 @@ namespace PlaywrightSharp.Chromium
                 handleSIGINT,
                 handleSIGTERM,
                 handleSIGHUP,
-                videosPath,
-                videoSize).ConfigureAwait(false) as IChromiumBrowserContext;
+                recordVideo).ConfigureAwait(false) as IChromiumBrowserContext;
 
         /// <inheritdoc/>
         public new async Task<IChromiumBrowserContext> LaunchPersistentContextAsync(
@@ -177,8 +175,7 @@ namespace PlaywrightSharp.Chromium
             bool? handleSIGINT = null,
             bool? handleSIGTERM = null,
             bool? handleSIGHUP = null,
-            string videosPath = null,
-            ViewportSize videoSize = null)
+            RecordVideoOptions recordVideo = null)
             => await LaunchPersistentContextAsync(
                 userDataDir,
                 headless,
@@ -214,8 +211,7 @@ namespace PlaywrightSharp.Chromium
                 handleSIGINT,
                 handleSIGTERM,
                 handleSIGHUP,
-                videosPath,
-                videoSize).ConfigureAwait(false) as IChromiumBrowserContext;
+                recordVideo).ConfigureAwait(false) as IChromiumBrowserContext;
 
         /// <inheritdoc/>
         public new async Task<IChromiumBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options)
