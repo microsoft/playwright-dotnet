@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Chromium
         /// <inheritdoc cref="IBrowserType.LaunchPersistentContextAsync(string, LaunchOptions)"/>
         new Task<IChromiumBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchOptions options);
 
-        /// <inheritdoc cref="IBrowserType.LaunchPersistentContextAsync(string, ViewportSize, bool?, string[], bool?, string, string, bool?, int?, bool?, int?, bool?, string[], Dictionary{string, string}, Dictionary{string, object}, ProxySettings, string, bool?, bool?, string, Geolocation, ContextPermission[], bool?, bool?, decimal?, Credentials, bool?, bool?, ColorScheme?, string, Dictionary{string, string}, bool?, bool?, bool?, bool?, string, ViewportSize)"/>
+        /// <inheritdoc cref="IBrowserType.LaunchPersistentContextAsync(string, ViewportSize, bool?, string[], bool?, string, string, bool?, int?, bool?, int?, bool?, string[], Dictionary{string, string}, Dictionary{string, object}, ProxySettings, string, bool?, bool?, string, Geolocation, ContextPermission[], bool?, bool?, decimal?, Credentials, bool?, bool?, ColorScheme?, string, Dictionary{string, string}, bool?, bool?, bool?, bool?, RecordVideoOptions)"/>
         new Task<IChromiumBrowserContext> LaunchPersistentContextAsync(
             string userDataDir,
             ViewportSize viewport,
@@ -72,10 +72,9 @@ namespace PlaywrightSharp.Chromium
             bool? handleSIGINT = null,
             bool? handleSIGTERM = null,
             bool? handleSIGHUP = null,
-            string videosPath = null,
-            ViewportSize videoSize = null);
+            RecordVideoOptions recordVideo = null);
 
-        /// <inheritdoc cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, string[], bool?, string, string, bool?, int?, bool?, int?, bool?, string[], Dictionary{string, string}, Dictionary{string, object}, ProxySettings, string, bool?, bool?, string, Geolocation, ContextPermission[], bool?, bool?, decimal?, Credentials, bool?, bool?, ColorScheme?, string, Dictionary{string, string}, bool?, bool?, bool?, bool?, string, ViewportSize)"/>
+        /// <inheritdoc cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, string[], bool?, string, string, bool?, int?, bool?, int?, bool?, string[], Dictionary{string, string}, Dictionary{string, object}, ProxySettings, string, bool?, bool?, string, Geolocation, ContextPermission[], bool?, bool?, decimal?, Credentials, bool?, bool?, ColorScheme?, string, Dictionary{string, string}, bool?, bool?, bool?, bool?, RecordVideoOptions)"/>
         new Task<IChromiumBrowserContext> LaunchPersistentContextAsync(
             string userDataDir,
             bool? headless = null,
@@ -111,8 +110,7 @@ namespace PlaywrightSharp.Chromium
             bool? handleSIGINT = null,
             bool? handleSIGTERM = null,
             bool? handleSIGHUP = null,
-            string videosPath = null,
-            ViewportSize videoSize = null);
+            RecordVideoOptions recordVideo = null);
 
         /// <inheritdoc cref="IBrowserType.LaunchPersistentContextAsync(string, LaunchPersistentOptions)"/>
         new Task<IChromiumBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options);

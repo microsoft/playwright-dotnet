@@ -17,6 +17,6 @@ namespace PlaywrightSharp
         public Task<string> GetPathAsync() => _pathTask.Task;
 
         internal void SetRelativePath(string relativePath)
-            => _pathTask.TrySetResult(Path.Combine(_page.BrowserContext.Options.VideosPath, relativePath));
+            => _pathTask.TrySetResult(Path.Combine(_page.BrowserContext.Options.RecordVideo.Dir, relativePath));
     }
 }

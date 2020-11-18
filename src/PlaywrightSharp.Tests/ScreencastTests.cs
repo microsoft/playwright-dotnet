@@ -18,14 +18,25 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        /*
         ///<playwright-file>screencast.spec.js</playwright-file>     
         ///<playwright-it>videoSize should require videosPath</playwright-it>
-        [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true)]
-        public async Task VideoSizeShouldRequireVideosPath()
+        [Fact(Skip = "We are not using old properties")]
+        public void VideoSizeShouldRequireVideosPath()
         {
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Browser.NewContextAsync(videoSize: new ViewportSize { Width = 100, Height = 100 }));
-            Assert.Contains("\"videoSize\" option requires \"videosPath\" to be specified", exception.Message);
+        }
+
+        ///<playwright-file>screencast.spec.js</playwright-file>     
+        ///<playwright-it>should work with old options</playwright-it>
+        [Fact(Skip = "We are not using old properties")]
+        public void ShouldWorkWithOldOptions()
+        {
+        }
+
+        ///<playwright-file>screencast.spec.js</playwright-file>     
+        ///<playwright-it>should throw without recordVideo.dir</playwright-it>
+        [Fact(Skip = "We don't need to test this")]
+        public void ShouldThrowWithoutRecordVideoDir()
+        {
         }
 
         ///<playwright-file>screencast.spec.js</playwright-file>     
@@ -35,8 +46,11 @@ namespace PlaywrightSharp.Tests
         {
             using var tempDirectory = new TempDirectory();
             var context = await Browser.NewContextAsync(
-                videosPath: tempDirectory.Path,
-                videoSize: new ViewportSize { Width = 100, Height = 100 });
+                recordVideo: new RecordVideoOptions
+                {
+                    Dir = tempDirectory.Path,
+                    Size = new ViewportSize { Width = 100, Height = 100 },
+                });
 
             var page = await context.NewPageAsync();
             await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
@@ -53,8 +67,11 @@ namespace PlaywrightSharp.Tests
         {
             using var tempDirectory = new TempDirectory();
             var context = await Browser.NewContextAsync(
-                videosPath: tempDirectory.Path,
-                videoSize: new ViewportSize { Width = 100, Height = 100 });
+                recordVideo: new RecordVideoOptions
+                {
+                    Dir = tempDirectory.Path,
+                    Size = new ViewportSize { Width = 100, Height = 100 }
+                });
 
             var page = await context.NewPageAsync();
             await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
@@ -72,8 +89,11 @@ namespace PlaywrightSharp.Tests
         {
             using var tempDirectory = new TempDirectory();
             var context = await Browser.NewContextAsync(
-                videosPath: tempDirectory.Path,
-                videoSize: new ViewportSize { Width = 100, Height = 100 });
+                recordVideo: new RecordVideoOptions
+                {
+                    Dir = tempDirectory.Path,
+                    Size = new ViewportSize { Width = 100, Height = 100 }
+                });
 
             var page = await context.NewPageAsync();
             string path = await page.Video.GetPathAsync();
@@ -141,8 +161,12 @@ namespace PlaywrightSharp.Tests
             using var tempDirectory = new TempDirectory();
             var context = await BrowserType.LaunchPersistentContextAsync(
                 userDirectory.Path,
-                videosPath: tempDirectory.Path,
-                videoSize: new ViewportSize { Width = 100, Height = 100 });
+                recordVideo: new RecordVideoOptions
+                {
+                    Dir = tempDirectory.Path,
+                    Size = new ViewportSize { Width = 100, Height = 100 }
+                });
+
 
             var page = await context.NewPageAsync();
             await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
@@ -151,6 +175,5 @@ namespace PlaywrightSharp.Tests
 
             Assert.NotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
         }
-        */
     }
 }

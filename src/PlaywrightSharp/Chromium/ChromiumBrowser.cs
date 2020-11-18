@@ -51,8 +51,7 @@ namespace PlaywrightSharp.Chromium
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
-            string videosPath = null,
-            ViewportSize videoSize = null)
+            RecordVideoOptions recordVideo = null)
             => await base.NewContextAsync(
                 viewport,
                 userAgent,
@@ -70,7 +69,8 @@ namespace PlaywrightSharp.Chromium
                 ignoreHTTPSErrors,
                 colorScheme,
                 locale,
-                extraHttpHeaders).ConfigureAwait(false) as IChromiumBrowserContext;
+                extraHttpHeaders,
+                recordVideo).ConfigureAwait(false) as IChromiumBrowserContext;
 
         /// <inheritdoc/>
         public new async Task<IChromiumBrowserContext> NewContextAsync(
@@ -90,8 +90,7 @@ namespace PlaywrightSharp.Chromium
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
-            string videosPath = null,
-            ViewportSize videoSize = null)
+            RecordVideoOptions recordVideo = null)
             => await base.NewContextAsync(
                 userAgent,
                 bypassCSP,
@@ -108,7 +107,8 @@ namespace PlaywrightSharp.Chromium
                 ignoreHTTPSErrors,
                 colorScheme,
                 locale,
-                extraHttpHeaders).ConfigureAwait(false) as IChromiumBrowserContext;
+                extraHttpHeaders,
+                recordVideo).ConfigureAwait(false) as IChromiumBrowserContext;
 
         /// <inheritdoc/>
         public new async Task<IChromiumBrowserContext> NewContextAsync(BrowserContextOptions options)
