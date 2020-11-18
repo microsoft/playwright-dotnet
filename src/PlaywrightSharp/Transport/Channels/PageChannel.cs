@@ -27,6 +27,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<ResponseEventArgs> Response;
 
+        internal event EventHandler<WebSocketEventArgs> WebSocket;
+
         internal event EventHandler DOMContentLoaded;
 
         internal event EventHandler<PageChannelPopupEventArgs> Popup;
@@ -123,6 +125,9 @@ namespace PlaywrightSharp.Transport.Channels
                     break;
                 case "response":
                     Response?.Invoke(this, new ResponseEventArgs { Response = serverParams?.GetProperty("response").ToObject<ResponseChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
+                    break;
+                case "webSocket":
+                    WebSocket?.Invoke(this, new WebSocketEventArgs { WebSocket = serverParams?.GetProperty("webSocket").ToObject<WebSocketChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
                     break;
                 case "download":
                     Download?.Invoke(this, new DownloadEventArgs() { Download = serverParams?.GetProperty("download").ToObject<DownloadChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });

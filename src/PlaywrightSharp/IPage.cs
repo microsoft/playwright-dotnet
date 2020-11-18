@@ -93,6 +93,11 @@ namespace PlaywrightSharp
         event EventHandler<ResponseEventArgs> Response;
 
         /// <summary>
+        /// Raised when a <see cref="IWebSocket"/> is sent.
+        /// </summary>
+        event EventHandler<WebSocketEventArgs> WebSocket;
+
+        /// <summary>
         /// Raised when a request finishes successfully.
         /// </summary>
         event EventHandler<RequestEventArgs> RequestFinished;
