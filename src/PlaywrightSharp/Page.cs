@@ -48,7 +48,7 @@ namespace PlaywrightSharp
             _channel.RequestFailed += (sender, e) =>
             {
                 e.Request.Object.Failure = e.FailureText;
-
+                e.Request.Object.Timing.ResponseEnd = e.ResponseEndTiming;
                 RequestFailed?.Invoke(this, new RequestFailedEventArgs
                 {
                     Request = e.Request.Object,
@@ -57,7 +57,11 @@ namespace PlaywrightSharp
             };
 
             _channel.Request += (sender, e) => Request?.Invoke(this, e);
-            _channel.RequestFinished += (sender, e) => RequestFinished?.Invoke(this, e);
+            _channel.RequestFinished += (sender, e) =>
+            {
+                e.Request.Object.Timing.ResponseEnd = e.ResponseEndTiming;
+                RequestFinished?.Invoke(this, new RequestEventArgs { Request = e.Request.Object });
+            };
             _channel.Response += (sender, e) => Response?.Invoke(this, e);
             _channel.BindingCall += Channel_BindingCall;
             _channel.Route += Channel_Route;
