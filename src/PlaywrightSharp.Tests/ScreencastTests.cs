@@ -18,7 +18,6 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        /*
         ///<playwright-file>screencast.spec.js</playwright-file>     
         ///<playwright-it>videoSize should require videosPath</playwright-it>
         [Fact(Skip = "We are not using old properties")]
@@ -176,6 +175,5 @@ namespace PlaywrightSharp.Tests
 
             Assert.NotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
         }
-        */
     }
 }
