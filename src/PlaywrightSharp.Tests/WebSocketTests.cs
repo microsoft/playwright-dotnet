@@ -169,16 +169,23 @@ namespace PlaywrightSharp.Tests
         [Fact]
         public async Task ShouldNotHaveStrayErrorEvents()
         {
-            var (ws, _) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.WebSocket),
+            var frameReceivedTcs = new TaskCompletionSource<bool>();
+            WebSocketErrorEventArgs socketError = null;
+            IWebSocket ws = null;
+
+            Page.WebSocket += (_, e) =>
+            {
+                ws = e.WebSocket;
+                e.WebSocket.SocketError += (_, e) => socketError = e;
+                e.WebSocket.FrameReceived += (_, e) => frameReceivedTcs.TrySetResult(true);
+            };
+
+            await TaskUtils.WhenAll(
+                frameReceivedTcs.Task,
                 Page.EvaluateAsync(@"port => {
                     window.ws = new WebSocket('ws://localhost:' + port + '/ws');
                 }", TestConstants.Port));
 
-            WebSocketErrorEventArgs socketError = null;
-
-            ws.WebSocket.SocketError += (_, e) => socketError = e;
-            await ws.WebSocket.WaitForEventAsync(WebSocketEvent.FrameReceived);
             await Page.EvaluateAsync("window.ws.close();");
             Assert.Null(socketError);
         }
