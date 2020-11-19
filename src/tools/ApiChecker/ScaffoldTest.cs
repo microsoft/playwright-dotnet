@@ -91,11 +91,13 @@ namespace ApiChecker
 
             targetClass.BaseTypes.Add(new CodeTypeReference("PlaywrightSharpBrowserBaseTest"));
 
-            ///
-            targetClass.CustomAttributes.Add(new CodeAttributeDeclaration("Collection",
-            new CodeAttributeArgument[] {
-                new CodeAttributeArgument(new CodeFieldReferenceExpression(new CodeTypeReferenceExpression("TestConstants"), "TestFixtureBrowserCollectionName"))
-            }));
+            targetClass.CustomAttributes.Add(new CodeAttributeDeclaration(
+                "Collection",
+                new CodeAttributeArgument[] {
+                    new CodeAttributeArgument(
+                        new CodeFieldReferenceExpression(
+                            new CodeTypeReferenceExpression("TestConstants"), "TestFixtureBrowserCollectionName")),
+                }));
 
             targetClass.Comments.Add(new CodeCommentStatement($"<playwright-file>{fileOrigin}</playwright-file>", true));
             codeNamespace.Types.Add(targetClass);
@@ -105,7 +107,7 @@ namespace ApiChecker
             // add constructor
             var constructor = new CodeConstructor()
             {
-                Attributes = MemberAttributes.Public | MemberAttributes.Final
+                Attributes = MemberAttributes.Public | MemberAttributes.Final,
             };
 
             constructor.Parameters.Add(new CodeParameterDeclarationExpression("ITestOutputHelper", "output"));
