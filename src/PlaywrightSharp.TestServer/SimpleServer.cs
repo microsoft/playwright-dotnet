@@ -230,7 +230,6 @@ namespace PlaywrightSharp.TestServer
                     }
 
                     var data = await ReadFrames(result, webSocket, buffer, token);
-                    Console.WriteLine(Encoding.UTF8.GetString(data.Array));
 
                     if (data.Count == 0)
                         break;
