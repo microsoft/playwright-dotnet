@@ -18,10 +18,18 @@ jobs:
         os: [windows-latest, ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1.6.0
+      - name: Setup .NET Core (On Mac)
+        if: ${{ matrix.os == 'macos-latest' }}
+        uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.100
+        env:
+          DOTNET_INSTALL_DIR: /users/runner/alternate/dotnet
+      - name: Setup .NET Core (Not on mac)
+        if: ${{ matrix.os != 'macos-latest' }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.100      
       - name: Build Project
         run: dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug
       - name: Delete browsers on Mac
