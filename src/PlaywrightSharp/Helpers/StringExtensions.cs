@@ -770,6 +770,13 @@ namespace PlaywrightSharp.Helpers
             return new Regex(string.Concat(tokens.ToArray()));
         }
 
+        /// <summary>
+        /// Converts a string to a byte array. It's a shortcut for Convert.FromBase64String.
+        /// </summary>
+        /// <param name="value">Value to parse.</param>
+        /// <returns>Value as an array of bytes.</returns>
+        public static byte[] AsBinary(this string value) => Convert.FromBase64String(value);
+
         internal static string GetContentType(this string path)
         {
             const string defaultContentType = "application/octet-stream";

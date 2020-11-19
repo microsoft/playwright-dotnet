@@ -3,7 +3,7 @@
     <PropertyGroup>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageVersion>0.152.0</PackageVersion>
-        <DriverVersion>0.161.0</DriverVersion>
+        <DriverVersion>0.162.1</DriverVersion>
         <AssemblyVersion>$(PackageVersion)</AssemblyVersion>
         <ReleaseVersion>$(PackageVersion)</ReleaseVersion>
         <FileVersion>$(PackageVersion)</FileVersion>
