@@ -232,7 +232,9 @@ namespace PlaywrightSharp.TestServer
                     var data = await ReadFrames(result, webSocket, buffer, token);
 
                     if (data.Count == 0)
+                    {
                         break;
+                    }
                 }
             }
             finally
