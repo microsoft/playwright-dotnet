@@ -139,8 +139,7 @@ namespace PlaywrightSharp
             bool? handleSIGINT = null,
             bool? handleSIGTERM = null,
             bool? handleSIGHUP = null,
-            string videosPath = null,
-            ViewportSize videoSize = null)
+            RecordVideoOptions recordVideo = null)
             => LaunchPersistentContextAsync(
                 userDataDir,
                 new LaunchPersistentOptions
@@ -180,8 +179,7 @@ namespace PlaywrightSharp
                     HandleSIGHUP = handleSIGHUP,
                     HandleSIGINT = handleSIGINT,
                     HandleSIGTERM = handleSIGTERM,
-                    VideosPath = videosPath,
-                    VideoSize = videoSize,
+                    RecordVideo = recordVideo,
                 });
 
         /// <inheritdoc />
@@ -220,8 +218,7 @@ namespace PlaywrightSharp
             bool? handleSIGINT = null,
             bool? handleSIGTERM = null,
             bool? handleSIGHUP = null,
-            string videosPath = null,
-            ViewportSize videoSize = null)
+            RecordVideoOptions recordVideo = null)
             => LaunchPersistentContextAsync(
                 userDataDir,
                 new LaunchPersistentOptions
@@ -260,8 +257,7 @@ namespace PlaywrightSharp
                     HandleSIGHUP = handleSIGHUP,
                     HandleSIGINT = handleSIGINT,
                     HandleSIGTERM = handleSIGTERM,
-                    VideosPath = videosPath,
-                    VideoSize = videoSize,
+                    RecordVideo = recordVideo,
                 });
 
         /// <inheritdoc />

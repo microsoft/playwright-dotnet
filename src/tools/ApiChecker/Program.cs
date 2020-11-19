@@ -83,9 +83,14 @@ namespace ApiChecker
 
                 report.AppendLine("<ul>");
 
-                foreach (var kv in entity.Members)
+                foreach (var kv in entity.Methods)
                 {
-                    EvaluateMember(kv.Key, kv.Value, playwrightSharpEntity, report, membersQueue);
+                    EvaluateMethod(kv.Key, kv.Value, playwrightSharpEntity, report, membersQueue);
+                }
+
+                foreach (var kv in entity.Events)
+                {
+                    EvaluateEvent(kv.Key, playwrightSharpEntity, report, membersQueue);
                 }
 
                 foreach (object memberInPLaywrightSharp in membersQueue)
@@ -104,24 +109,6 @@ namespace ApiChecker
                 report.AppendLine("<li style='color: red'>");
                 report.AppendLine($"{name} NOT FOUND");
                 report.AppendLine("</li>");
-            }
-        }
-
-        private static void EvaluateMember(
-            string memberName,
-            PlaywrightMember member,
-            Type playwrightSharpEntity,
-            StringBuilder report,
-            List<object> membersQueue)
-        {
-            switch (member.Kind)
-            {
-                case "event":
-                    EvaluateEvent(memberName, playwrightSharpEntity, report, membersQueue);
-                    return;
-                case "method":
-                    EvaluateMethod(memberName, member, playwrightSharpEntity, report, membersQueue);
-                    return;
             }
         }
 

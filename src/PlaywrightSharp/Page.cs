@@ -48,7 +48,7 @@ namespace PlaywrightSharp
             _channel.RequestFailed += (sender, e) =>
             {
                 e.Request.Object.Failure = e.FailureText;
-
+                e.Request.Object.Timing.ResponseEnd = e.ResponseEndTiming;
                 RequestFailed?.Invoke(this, new RequestFailedEventArgs
                 {
                     Request = e.Request.Object,
@@ -57,7 +57,11 @@ namespace PlaywrightSharp
             };
 
             _channel.Request += (sender, e) => Request?.Invoke(this, e);
-            _channel.RequestFinished += (sender, e) => RequestFinished?.Invoke(this, e);
+            _channel.RequestFinished += (sender, e) =>
+            {
+                e.Request.Object.Timing.ResponseEnd = e.ResponseEndTiming;
+                RequestFinished?.Invoke(this, new RequestEventArgs { Request = e.Request.Object });
+            };
             _channel.Response += (sender, e) => Response?.Invoke(this, e);
             _channel.BindingCall += Channel_BindingCall;
             _channel.Route += Channel_Route;
@@ -253,7 +257,7 @@ namespace PlaywrightSharp
                     return _video;
                 }
 
-                if (string.IsNullOrEmpty(BrowserContext.Options?.VideosPath))
+                if (string.IsNullOrEmpty(BrowserContext.Options?.RecordVideo?.Dir))
                 {
                     return null;
                 }
@@ -423,10 +427,17 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public async Task CloseAsync(bool runBeforeUnload = false)
         {
-            await _channel.CloseAsync(runBeforeUnload).ConfigureAwait(false);
-            if (OwnedContext != null)
+            try
             {
-                await OwnedContext.CloseAsync().ConfigureAwait(false);
+                await _channel.CloseAsync(runBeforeUnload).ConfigureAwait(false);
+                if (OwnedContext != null)
+                {
+                    await OwnedContext.CloseAsync().ConfigureAwait(false);
+                }
+            }
+            catch (Exception e) when (IsSafeCloseException(e))
+            {
+                // Swallow exception
             }
         }
 
@@ -914,6 +925,10 @@ namespace PlaywrightSharp
 
             return Task.CompletedTask;
         }
+
+        private bool IsSafeCloseException(Exception e)
+            => e.Message.Contains(PlaywrightSharpException.BrowserClosedExceptionMessage) ||
+               e.Message.Contains(PlaywrightSharpException.BrowserOrContextClosedExceptionMessage);
 
         private void Channel_Closed(object sender, EventArgs e)
         {

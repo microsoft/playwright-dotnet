@@ -61,10 +61,8 @@ namespace PlaywrightSharp
         /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
         /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
-        /// <param name="videosPath">Enables video recording for all pages to videosPath folder. If not specified, videos are not recorded.</param>
-        /// <param name="videoSize">Specifies dimensions of the automatically recorded video. Can only be used if <paramref name="videosPath"/> is set.
-        /// If not specified the size will be equal to viewport. If viewport is not configured explicitly the video size defaults to 1280x720.
-        /// Actual picture of the page will be scaled down if necessary to fit specified size.</param>
+        /// <param name="recordVideo">Enables video recording for all pages into recordVideo.dir directory. If not specified videos are not recorded.
+        /// Make sure to await <seealso cref="BrowserContext.CloseAsync"/> for videos to be saved.</param>
         /// <example>.
         /// <code>
         /// <![CDATA[
@@ -94,8 +92,7 @@ namespace PlaywrightSharp
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
-            string videosPath = null,
-            ViewportSize videoSize = null);
+            RecordVideoOptions recordVideo = null);
 
         /// <summary>
         /// Creates a new browser context. It won't share cookies/cache with other browser contexts.
@@ -116,10 +113,8 @@ namespace PlaywrightSharp
         /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
         /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
-        /// <param name="videosPath">Enables video recording for all pages to videosPath folder. If not specified, videos are not recorded.</param>
-        /// <param name="videoSize">Specifies dimensions of the automatically recorded video. Can only be used if <paramref name="videosPath"/> is set.
-        /// If not specified the size will be equal to viewport. If viewport is not configured explicitly the video size defaults to 1280x720.
-        /// Actual picture of the page will be scaled down if necessary to fit specified size.</param>
+        /// <param name="recordVideo">Enables video recording for all pages into recordVideo.dir directory. If not specified videos are not recorded.
+        /// Make sure to await <seealso cref="BrowserContext.CloseAsync"/> for videos to be saved.</param>
         /// <example>.
         /// <code>
         /// <![CDATA[
@@ -148,8 +143,7 @@ namespace PlaywrightSharp
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
-            string videosPath = null,
-            ViewportSize videoSize = null);
+            RecordVideoOptions recordVideo = null);
 
         /// <summary>
         /// Creates a new browser context. It won't share cookies/cache with other browser contexts.
@@ -188,10 +182,8 @@ namespace PlaywrightSharp
         /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
         /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
-        /// <param name="videosPath">Enables video recording for all pages to videosPath folder. If not specified, videos are not recorded.</param>
-        /// <param name="videoSize">Specifies dimensions of the automatically recorded video. Can only be used if <paramref name="videosPath"/> is set.
-        /// If not specified the size will be equal to viewport. If viewport is not configured explicitly the video size defaults to 1280x720.
-        /// Actual picture of the page will be scaled down if necessary to fit specified size.</param>
+        /// <param name="recordVideo">Enables video recording for all pages into recordVideo.dir directory. If not specified videos are not recorded.
+        /// Make sure to await <seealso cref="BrowserContext.CloseAsync"/> for videos to be saved.</param>
         /// <example>.
         /// <code>
         /// <![CDATA[
@@ -221,8 +213,7 @@ namespace PlaywrightSharp
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
-            string videosPath = null,
-            ViewportSize videoSize = null);
+            RecordVideoOptions recordVideo = null);
 
         /// <summary>
         /// Creates a new page in a new browser context. Closing this page will close the context as well.
@@ -243,10 +234,8 @@ namespace PlaywrightSharp
         /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
         /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
-        /// <param name="videosPath">Enables video recording for all pages to videosPath folder. If not specified, videos are not recorded.</param>
-        /// <param name="videoSize">Specifies dimensions of the automatically recorded video. Can only be used if <paramref name="videosPath"/> is set.
-        /// If not specified the size will be equal to viewport. If viewport is not configured explicitly the video size defaults to 1280x720.
-        /// Actual picture of the page will be scaled down if necessary to fit specified size.</param>
+        /// <param name="recordVideo">Enables video recording for all pages into recordVideo.dir directory. If not specified videos are not recorded.
+        /// Make sure to await <seealso cref="BrowserContext.CloseAsync"/> for videos to be saved.</param>
         /// <example>.
         /// <code>
         /// <![CDATA[
@@ -275,8 +264,7 @@ namespace PlaywrightSharp
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
-            string videosPath = null,
-            ViewportSize videoSize = null);
+            RecordVideoOptions recordVideo = null);
 
         /// <summary>
         /// Creates a new page in a new browser context. Closing this page will close the context as well.
