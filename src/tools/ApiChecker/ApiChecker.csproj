@@ -3,9 +3,10 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <CodeAnalysisRuleSet>../../PlaywrightSharp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
-    <IsTool>True</IsTool>
+    <IsTool>true</IsTool>
   </PropertyGroup>
   <Import Project="../../Common/PackageInfo.props" />
   <Import Project="../../Common/Dependencies.props" />

@@ -1,38 +1,27 @@
 using System;
 using System.CodeDom;
+using System.CodeDom.Compiler;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using CommandLine;
-using System.Globalization;
-using System.CodeDom.Compiler;
 
 namespace ApiChecker
 {
-    static class ScaffoldTest
+    [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:ParameterMustNotSpanMultipleLines", Justification = "CodeDom is complicated.")]
+    internal static class ScaffoldTest
     {
-        static readonly TextInfo _textInfo = CultureInfo.InvariantCulture.TextInfo;
-
-        [Verb("scaffold-test", HelpText = "Takes a spec.ts file and scaffolds the C# test.")]
-        public class ScaffoldTestOptions
-        {
-            [Option(Required = true, HelpText = "Name of the spec file to use.")]
-            public string SpecFile { get; set; }
-
-            [Option(Required = false, HelpText = "The location of the scaffold code. If not present, will output to console.")]
-            public string OutputFile { get; set; }
-
-            [Option(Required = false, HelpText = "The namespace of the generated class.", Default = "PlaywrightSharp.Tests")]
-            public string Namespace { get; set; }
-        }
+        private static readonly TextInfo _textInfo = CultureInfo.InvariantCulture.TextInfo;
 
         public static Task Run(ScaffoldTestOptions options)
         {
             if (!File.Exists(options.SpecFile))
+            {
                 return Task.FromException(new FileNotFoundException());
+            }
 
             var fileInfo = new FileInfo(options.SpecFile);
-            string specName = fileInfo.Name; // we want this when generating the code
 
             int dotSeparator = fileInfo.Name.IndexOf('.');
             string name = _textInfo.ToTitleCase(fileInfo.Name.Substring(0, dotSeparator)) + "Tests";
@@ -46,14 +35,16 @@ namespace ApiChecker
             {
                 var m = rx.Match(line);
                 if (m?.Success == false)
+                {
                     continue;
+                }
 
-                // keep in mind, group 0 is the entire match, but 
+                // keep in mind, group 0 is the entire match, but
                 // first (and only group), should give us the describe value
                 AddTest(targetClass, m.Groups[1].Value, fileInfo.Name);
             }
 
-            CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
+            using CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
             CodeGeneratorOptions codegenOptions = new CodeGeneratorOptions()
             {
                 BracingStyle = "C",
@@ -91,12 +82,14 @@ namespace ApiChecker
 
             targetClass.BaseTypes.Add(new CodeTypeReference("PlaywrightSharpBrowserBaseTest"));
 
-            targetClass.CustomAttributes.Add(new CodeAttributeDeclaration(
+            _ = targetClass.CustomAttributes.Add(new CodeAttributeDeclaration(
                 "Collection",
-                new CodeAttributeArgument[] {
+                new CodeAttributeArgument[]
+                {
                     new CodeAttributeArgument(
                         new CodeFieldReferenceExpression(
-                            new CodeTypeReferenceExpression("TestConstants"), "TestFixtureBrowserCollectionName")),
+                            new CodeTypeReferenceExpression("TestConstants"),
+                            "TestFixtureBrowserCollectionName")),
                 }));
 
             targetClass.Comments.Add(new CodeCommentStatement($"<playwright-file>{fileOrigin}</playwright-file>", true));
@@ -107,13 +100,12 @@ namespace ApiChecker
             // add constructor
             var constructor = new CodeConstructor()
             {
-                Attributes = MemberAttributes.Public | MemberAttributes.Final,
+                Attributes = MemberAttributes.Public,
             };
 
             constructor.Parameters.Add(new CodeParameterDeclarationExpression("ITestOutputHelper", "output"));
             constructor.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("output"));
             constructor.Comments.Add(new CodeCommentStatement("<inheritdoc/>", true));
-            
             targetClass.Members.Add(constructor);
 
             return targetUnit;
@@ -122,30 +114,36 @@ namespace ApiChecker
         private static void AddTest(CodeCompileUnit @class, string testDescribe, string testOrigin)
         {
             // make name out of the describe
-            string name = _textInfo.ToTitleCase(testDescribe).Replace(" ", String.Empty);
+            string name = _textInfo.ToTitleCase(testDescribe).Replace(" ", string.Empty);
             Console.WriteLine($"Adding {name}");
 
             CodeMemberMethod method = new CodeMemberMethod()
             {
                 Attributes = MemberAttributes.Public | MemberAttributes.Final,
                 ReturnType = new CodeTypeReference("async Task"),
-                Name = name
+                Name = name,
             };
 
             @class.Namespaces[1].Types[0].Members.Add(method);
 
             method.Comments.Add(new CodeCommentStatement($"<playwright-file>{testOrigin}</playwright-file>", true));
             method.Comments.Add(new CodeCommentStatement($"<playwright-it>{testDescribe}</playwright-it>", true));
-            method.CustomAttributes.Add(new CodeAttributeDeclaration("Fact",
-            new CodeAttributeArgument[] {
-                new CodeAttributeArgument("Timeout", new CodeFieldReferenceExpression(new CodeTypeReferenceExpression("PlaywrightSharp.Playwright"), "DefaultTimeout"))
-            }));
+            method.CustomAttributes.Add(new CodeAttributeDeclaration(
+                "Fact",
+                new CodeAttributeArgument[]
+                {
+                    new CodeAttributeArgument(
+                        "Timeout",
+                        new CodeFieldReferenceExpression(
+                            new CodeTypeReferenceExpression("PlaywrightSharp.Playwright"),
+                            "DefaultTimeout")),
+                }));
 
             method.Statements.Add(
             new CodeThrowExceptionStatement(
                 new CodeObjectCreateExpression(
                     new CodeTypeReference(typeof(NotImplementedException)),
-                    new CodeExpression[] { })));
+                    Array.Empty<CodeExpression>())));
         }
     }
 }

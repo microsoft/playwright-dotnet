@@ -1,11 +1,11 @@
 <Project>
-  <ItemGroup Condition="'$(IsTool)' != 'True'">
+  <ItemGroup Condition=" '$(IsTool)'!='True' ">
     <AdditionalFiles Include="..\stylecop.json">
       <Link>stylecop.json</Link>
     </AdditionalFiles>
   </ItemGroup>
-  <ItemGroup Condition="'$(IsTool)' == 'True'">
-    <AdditionalFiles Include="../../stylecop.json">
+  <ItemGroup Condition=" '$(IsTool)'=='True' ">
+    <AdditionalFiles Include="..\..\stylecop.json">
       <Link>stylecop.json</Link>
     </AdditionalFiles>
   </ItemGroup>

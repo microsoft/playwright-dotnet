@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -15,11 +14,22 @@ using PlaywrightSharp;
 
 namespace ApiChecker
 {
-    [Verb("check-api", isDefault: true)]
-    public class CheckerOptions { }
-
-    public static class Checker
+    internal static class Checker
     {
+        private static readonly Dictionary<(string className, string memberName), string> _memberAnnotations = new Dictionary<(string className, string memberName), string>
+        {
+            [("IBrowserContext", "addInitScript")] = "C# signature: AddInitScriptAsync(string script = null, object[] arg = null, string path = null, string content = null)",
+            [("IBrowserContext", "waitForEvent")] = "event is a reserved word. optionsOrPredicate was flatten: Task<T> WaitForEvent<T>(PlaywrightEvent<T> e, Func<T, bool> predicate = null, int? timeout = null)",
+            [("IPage", "addInitScript")] = "C# signature: AddInitScriptAsync(string script = null, object[] arg = null, string path = null, string content = null)",
+            [("IPage", "waitForEvent")] = "event is a reserved word. optionsOrPredicate was flatten: Task<T> WaitForEvent<T>(PlaywrightEvent<T> e, Func<T, bool> predicate = null, int? timeout = null)",
+            [("IElementHandle", "asElement")] = "Implicit from C# type casting",
+            [("IJSHandle", "asElement")] = "Implicit from C# type casting",
+            [("Selectors", "register")] = "C# signature: RegisterAsync(string name, string script = null, string path = null, string content = null, bool? contentScript = null)",
+            [("IBrowserType", "launch")] = "The ignoreDefaultArgs list is ignoredDefaultArgs | firefoxUserPrefs and env are only exposed as a Dictionary<string, object>",
+            [("IBrowserContext", "exposeBinding")] = "handle is inferred from the palywrightBinding. If it's a function with only one argument and it's IJSHandle we will send handle true",
+            [("IPage", "exposeBinding")] = "handle is inferred from the palywrightBinding. If it's a function with only one argument and it's IJSHandle we will send handle true",
+        };
+
         public static Task Run()
         {
             var report = new StringBuilder("<html><body><ul>");
@@ -41,20 +51,6 @@ namespace ApiChecker
 
             return Task.CompletedTask;
         }
-
-        private static readonly Dictionary<(string className, string memberName), string> _memberAnnotations = new Dictionary<(string className, string memberName), string>
-        {
-            [("IBrowserContext", "addInitScript")] = "C# signature: AddInitScriptAsync(string script = null, object[] arg = null, string path = null, string content = null)",
-            [("IBrowserContext", "waitForEvent")] = "event is a reserved word. optionsOrPredicate was flatten: Task<T> WaitForEvent<T>(PlaywrightEvent<T> e, Func<T, bool> predicate = null, int? timeout = null)",
-            [("IPage", "addInitScript")] = "C# signature: AddInitScriptAsync(string script = null, object[] arg = null, string path = null, string content = null)",
-            [("IPage", "waitForEvent")] = "event is a reserved word. optionsOrPredicate was flatten: Task<T> WaitForEvent<T>(PlaywrightEvent<T> e, Func<T, bool> predicate = null, int? timeout = null)",
-            [("IElementHandle", "asElement")] = "Implicit from C# type casting",
-            [("IJSHandle", "asElement")] = "Implicit from C# type casting",
-            [("Selectors", "register")] = "C# signature: RegisterAsync(string name, string script = null, string path = null, string content = null, bool? contentScript = null)",
-            [("IBrowserType", "launch")] = "The ignoreDefaultArgs list is ignoredDefaultArgs | firefoxUserPrefs and env are only exposed as a Dictionary<string, object>",
-            [("IBrowserContext", "exposeBinding")] = "handle is inferred from the palywrightBinding. If it's a function with only one argument and it's IJSHandle we will send handle true",
-            [("IPage", "exposeBinding")] = "handle is inferred from the palywrightBinding. If it's a function with only one argument and it's IJSHandle we will send handle true",
-        };
 
         private static void EvaluateEntity(string name, PlaywrightEntity entity, StringBuilder report)
         {
@@ -431,6 +427,6 @@ namespace ApiChecker
             }
         }
 
-        public static string ToHtml(this string value) => WebUtility.HtmlEncode(value);
+        private static string ToHtml(this string value) => WebUtility.HtmlEncode(value);
     }
 }
