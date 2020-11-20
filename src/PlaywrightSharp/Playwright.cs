@@ -116,7 +116,7 @@ namespace PlaywrightSharp
 
             var connection = new Connection(loggerFactory, scheduler, driversLocationPath, driverExecutablePath, browsersPath);
 
-            var playwright = await connection.WaitForObjectWithKnownName<Playwright>("Playwright").ConfigureAwait(false);
+            var playwright = await connection.WaitForObjectWithKnownNameAsync<Playwright>("Playwright").ConfigureAwait(false);
             playwright.Connection = connection;
 
             return playwright;

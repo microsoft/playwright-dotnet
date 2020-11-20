@@ -142,7 +142,7 @@ namespace PlaywrightSharp.Transport
 
         internal void RemoveObject(string guid) => Objects.TryRemove(guid, out _);
 
-        internal Task<JsonElement?> SendMessageToServer(
+        internal Task<JsonElement?> SendMessageToServerAsync(
             string guid,
             string method,
             object args = null,
@@ -150,64 +150,12 @@ namespace PlaywrightSharp.Transport
             bool treatErrorPropertyAsError = true)
             => SendMessageToServerAsync<JsonElement?>(guid, method, args, ignoreNullValues, treatErrorPropertyAsError: treatErrorPropertyAsError);
 
-        internal Task<T> SendMessageToServer<T>(
-            string guid,
-            string method,
-            object args,
-            bool ignoreNullValues = true,
-            bool treatErrorPropertyAsError = true,
-            JsonSerializerOptions serializerOptions = null)
-            => SendMessageToServerAsync<T>(guid, method, args, ignoreNullValues, serializerOptions, treatErrorPropertyAsError);
-
-        internal IChannelOwner GetObject(string guid)
-        {
-            Objects.TryGetValue(guid, out var result);
-            return result;
-        }
-
-        internal JsonSerializerOptions GetDefaultJsonSerializerOptions(bool ignoreNullValues = false)
-        {
-            var options = JsonExtensions.GetNewDefaultSerializerOptions(ignoreNullValues);
-            options.Converters.Add(new ChannelOwnerToGuidConverter(this));
-            options.Converters.Add(new ChannelToGuidConverter(this));
-            options.Converters.Add(new HttpMethodConverter());
-
-            return options;
-        }
-
-        internal async Task<T> WaitForObjectWithKnownName<T>(string guid)
-            where T : class
-        {
-            if (Objects.TryGetValue(guid, out var channel))
-            {
-                return channel as T;
-            }
-
-            if (IsClosed)
-            {
-                throw new TargetClosedException(_reason);
-            }
-
-            var tcs = new TaskCompletionSource<IChannelOwner>(TaskCreationOptions.RunContinuationsAsynchronously);
-            _waitingForObject.TryAdd(guid, tcs);
-            return await tcs.Task.ConfigureAwait(false) as T;
-        }
-
-        internal void OnObjectCreated(string guid, IChannelOwner result)
-        {
-            Objects.TryAdd(guid, result);
-            if (_waitingForObject.TryRemove(guid, out var callback))
-            {
-                callback.TrySetResult(result);
-            }
-        }
-
         internal async Task<T> SendMessageToServerAsync<T>(
             string guid,
             string method,
             object args,
             bool ignoreNullValues = true,
-            JsonSerializerOptions options = null,
+            JsonSerializerOptions serializerOptions = null,
             bool treatErrorPropertyAsError = true)
         {
             if (IsClosed)
@@ -225,7 +173,7 @@ namespace PlaywrightSharp.Transport
 
             _callbacks.TryAdd(id, callback);
 
-            await _queue.Enqueue(() =>
+            await _queue.EnqueueAsync(() =>
             {
                 var message = new MessageRequest
                 {
@@ -235,7 +183,7 @@ namespace PlaywrightSharp.Transport
                     Params = args,
                 };
 
-                string messageString = JsonSerializer.Serialize(message, options ?? GetDefaultJsonSerializerOptions(ignoreNullValues));
+                string messageString = JsonSerializer.Serialize(message, serializerOptions ?? GetDefaultJsonSerializerOptions(ignoreNullValues));
                 _logger?.LogInformation($"pw:channel:command {messageString}");
 
                 return _transport.SendAsync(messageString);
@@ -262,6 +210,49 @@ namespace PlaywrightSharp.Transport
             else
             {
                 return result.Value.ToObject<T>(GetDefaultJsonSerializerOptions());
+            }
+        }
+
+        internal IChannelOwner GetObject(string guid)
+        {
+            Objects.TryGetValue(guid, out var result);
+            return result;
+        }
+
+        internal JsonSerializerOptions GetDefaultJsonSerializerOptions(bool ignoreNullValues = false)
+        {
+            var options = JsonExtensions.GetNewDefaultSerializerOptions(ignoreNullValues);
+            options.Converters.Add(new ChannelOwnerToGuidConverter(this));
+            options.Converters.Add(new ChannelToGuidConverter(this));
+            options.Converters.Add(new HttpMethodConverter());
+
+            return options;
+        }
+
+        internal async Task<T> WaitForObjectWithKnownNameAsync<T>(string guid)
+            where T : class
+        {
+            if (Objects.TryGetValue(guid, out var channel))
+            {
+                return channel as T;
+            }
+
+            if (IsClosed)
+            {
+                throw new TargetClosedException(_reason);
+            }
+
+            var tcs = new TaskCompletionSource<IChannelOwner>(TaskCreationOptions.RunContinuationsAsynchronously);
+            _waitingForObject.TryAdd(guid, tcs);
+            return await tcs.Task.ConfigureAwait(false) as T;
+        }
+
+        internal void OnObjectCreated(string guid, IChannelOwner result)
+        {
+            Objects.TryAdd(guid, result);
+            if (_waitingForObject.TryRemove(guid, out var callback))
+            {
+                callback.TrySetResult(result);
             }
         }
 

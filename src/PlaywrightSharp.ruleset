@@ -31,4 +31,8 @@
     <Rule Id="CA1307" Action="None" /><!-- GetHashCode with locale settings-->
     <Rule Id="CA1725" Action="Error" /><!-- Parameter names should match base declaration-->
   </Rules>
+  <Rules AnalyzerId="Microsoft.VisualStudio.Threading.Analyzers" RuleNamespace="Microsoft.VisualStudio.Threading.Analyzers">
+    <Rule Id="VSTHRD200" Action="Error" /><!-- Use Async naming convention -->
+    <Rule Id="VSTHRD003" Action="Hidden" /><!-- Avoid awaiting or returning a Task representing work that was not started within your context as that can lead to deadlocks -->
+  </Rules>
 </RuleSet>
