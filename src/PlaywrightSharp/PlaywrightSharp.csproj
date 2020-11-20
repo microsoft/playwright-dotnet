@@ -17,6 +17,7 @@
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <RootNamespace>PlaywrightSharp</RootNamespace>
         <ReleaseVersion>0.0.0</ReleaseVersion>
+        <BuildFromSource>True</BuildFromSource>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <NoWarn>1701;1702;CS0067</NoWarn>
@@ -24,6 +25,7 @@
     <Import Project="../Common/Dependencies.props" />
     <Import Project="../Common/SignAssembly.props" />
     <Import Project="../Common/PackageInfo.props" />
+    <Import Project="build/netstandard2.0/PlaywrightSharp.targets" />
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
             <_Parameter1>PlaywrightSharp.Tests, PublicKey=$(AssemblyPublicKey)</_Parameter1>
@@ -32,32 +34,43 @@
     <ItemGroup>
         <PackageReference Include="Esprima" Version="1.0.1270" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
-        <PackageReference Include="System.Text.Json" Version="4.7.0" />
+        <PackageReference Include="System.Text.Json" Version="4.7.2" />
         <PackageReference Include="Macross.Json.Extensions" Version="1.5.0" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
         <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
     </ItemGroup>
     <ItemGroup>
-        <None Remove="Drivers\playwright-cli-linux.zip" />
-        <EmbeddedResource Include="Drivers\playwright-cli-linux.zip">
-        </EmbeddedResource>
-        <None Remove="Drivers\playwright-cli-mac.zip" />
-        <EmbeddedResource Include="Drivers\playwright-cli-mac.zip">
-        </EmbeddedResource>
-        <None Remove="Drivers\playwright-cli-win32_x64.zip" />
-        <EmbeddedResource Include="Drivers\playwright-cli-win32_x64.zip">
-        </EmbeddedResource>
-        <None Remove="Drivers\playwright-cli-win32.zip" />
-        <EmbeddedResource Include="Drivers\playwright-cli-win32.zip">
-        </EmbeddedResource>
+        <None Include="runtimes\osx\**" Pack="true" PackagePath="runtimes\osx\native" />
+        <None Include="runtimes\unix\**" Pack="true" PackagePath="runtimes\unix\native" />
+        <None Include="runtimes\win-x64\**" Pack="true" PackagePath="runtimes\win-x64\native" />
+        <None Include="runtimes\win-x86\**" Pack="true" PackagePath="runtimes\win-x86\native" />
+        <None Include="build\**" Pack="true" PackagePath="build" />
     </ItemGroup>
-    <Target Name="Download Drivers" BeforeTargets="BeforeBuild">
+    <Target Name="Download Drivers" BeforeTargets="Restore">
         <ConvertToAbsolutePath Paths="$(ProjectDir)..\tools\DriverDownloader\">
             <Output TaskParameter="AbsolutePaths" PropertyName="DriverDownloaderPath" />
         </ConvertToAbsolutePath>
-        <ConvertToAbsolutePath Paths="$(ProjectDir)\Drivers\">
+        <ConvertToAbsolutePath Paths="$(ProjectDir)\runtimes\">
             <Output TaskParameter="AbsolutePaths" PropertyName="DriversPath" />
         </ConvertToAbsolutePath>
         <Exec WorkingDirectory="$(DriverDownloaderPath)" Command="dotnet run -p DriverDownloader.csproj -- $(DriversPath) $(DriverVersion)" />
     </Target>
+    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+        <ContentWithTargetPath Include="runtimes\win-x64\*.*">
+            <TargetPath>%(Filename)%(Extension)</TargetPath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </ContentWithTargetPath>
+    </ItemGroup>
+    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+        <ContentWithTargetPath Include="runtimes\osx\*.*">
+            <TargetPath>%(Filename)%(Extension)</TargetPath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </ContentWithTargetPath>
+    </ItemGroup>
+    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+        <ContentWithTargetPath Include="runtimes\unix\*.*">
+            <TargetPath>%(Filename)%(Extension)</TargetPath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </ContentWithTargetPath>
+    </ItemGroup>
 </Project>

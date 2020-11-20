@@ -351,3 +351,4 @@ MigrationBackup/
 .idea
 src/PlaywrightSharp.sln.DotSettings
 src/PlaywrightSharp/Drivers
+src/PlaywrightSharp/runtimes
