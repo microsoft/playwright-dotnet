@@ -428,6 +428,9 @@ namespace PlaywrightSharp.Transport
                 case ChannelOwnerType.Worker:
                     result = new Worker(parent, guid, initializer?.ToObject<WorkerInitializer>(GetDefaultJsonSerializerOptions()));
                     break;
+                case ChannelOwnerType.WebSocket:
+                    result = new WebSocket(parent, guid, initializer?.ToObject<WebSocketInitializer>(GetDefaultJsonSerializerOptions()));
+                    break;
                 case ChannelOwnerType.CDPSession:
                     result = new CDPSession(parent, guid);
                     break;
