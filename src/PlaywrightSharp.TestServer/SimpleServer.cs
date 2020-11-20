@@ -226,6 +226,7 @@ namespace PlaywrightSharp.TestServer
 
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
+                        await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close", CancellationToken.None);
                         break;
                     }
 
