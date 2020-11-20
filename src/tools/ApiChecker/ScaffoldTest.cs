@@ -80,7 +80,7 @@ namespace ApiChecker
                 TypeAttributes = System.Reflection.TypeAttributes.Public | System.Reflection.TypeAttributes.Sealed,
             };
 
-            targetClass.BaseTypes.Add(new CodeTypeReference("PlaywrightSharpBrowserBaseTest"));
+            targetClass.BaseTypes.Add(new CodeTypeReference("PlaywrightSharpPageBaseTest"));
 
             _ = targetClass.CustomAttributes.Add(new CodeAttributeDeclaration(
                 "Collection",
@@ -137,13 +137,10 @@ namespace ApiChecker
                         new CodeFieldReferenceExpression(
                             new CodeTypeReferenceExpression("PlaywrightSharp.Playwright"),
                             "DefaultTimeout")),
+                    new CodeAttributeArgument(
+                        "Skip",
+                        new CodePrimitiveExpression("This test is not yet implemented.")),
                 }));
-
-            method.Statements.Add(
-            new CodeThrowExceptionStatement(
-                new CodeObjectCreateExpression(
-                    new CodeTypeReference(typeof(NotImplementedException)),
-                    Array.Empty<CodeExpression>())));
         }
     }
 }
