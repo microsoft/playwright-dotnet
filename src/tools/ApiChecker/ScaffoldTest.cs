@@ -14,11 +14,11 @@ namespace ApiChecker
     {
         private static readonly TextInfo _textInfo = CultureInfo.InvariantCulture.TextInfo;
 
-        public static Task Run(ScaffoldTestOptions options)
+        public static void Run(ScaffoldTestOptions options)
         {
             if (!File.Exists(options.SpecFile))
             {
-                return Task.FromException(new FileNotFoundException());
+                throw new FileNotFoundException();
             }
 
             var fileInfo = new FileInfo(options.SpecFile);
@@ -27,11 +27,8 @@ namespace ApiChecker
             string name = _textInfo.ToTitleCase(fileInfo.Name.Substring(0, dotSeparator)) + "Tests";
             var targetClass = GenerateClass(options.Namespace, name, fileInfo.Name);
 
-            // this is a naive implementation, but it'll do
-            string[] lines = File.ReadAllLines(options.SpecFile);
-
             Regex rx = new Regex(@"it\(\'(.*)\',");
-            foreach (string line in lines)
+            foreach (string line in File.ReadAllLines(options.SpecFile))
             {
                 var m = rx.Match(line);
                 if (m?.Success == false)
@@ -50,19 +47,14 @@ namespace ApiChecker
                 BracingStyle = "C",
             };
 
-            using (StreamWriter sourceWriter = new StreamWriter(options.OutputFile))
-            {
-                provider.GenerateCodeFromCompileUnit(
-                    targetClass, sourceWriter, codegenOptions);
-            }
-
-            return Task.CompletedTask;
+            using StreamWriter sourceWriter = new StreamWriter(options.OutputFile);
+            provider.GenerateCodeFromCompileUnit(
+                targetClass, sourceWriter, codegenOptions);
         }
 
         private static CodeCompileUnit GenerateClass(string @namespace, string @class, string fileOrigin)
         {
             var targetUnit = new CodeCompileUnit();
-
             var globalNamespace = new CodeNamespace();
 
             // add imports

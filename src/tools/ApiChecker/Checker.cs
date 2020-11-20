@@ -30,7 +30,7 @@ namespace ApiChecker
             [("IPage", "exposeBinding")] = "handle is inferred from the palywrightBinding. If it's a function with only one argument and it's IJSHandle we will send handle true",
         };
 
-        public static Task Run()
+        public static void Run()
         {
             var report = new StringBuilder("<html><body><ul>");
             string json = File.ReadAllText(Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName, "api.json"));
@@ -48,8 +48,6 @@ namespace ApiChecker
             File.WriteAllText(
                 Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName, "report.html"),
                 report.ToString());
-
-            return Task.CompletedTask;
         }
 
         private static void EvaluateEntity(string name, PlaywrightEntity entity, StringBuilder report)

@@ -5,14 +5,11 @@ namespace ApiChecker
 {
     internal static class Program
     {
-        internal static Task Main(string[] args)
+        internal static void Main(string[] args)
         {
-            return Parser.Default.ParseArguments<ScaffoldTestOptions, CheckerOptions>(args).MapResult(
-                async (ScaffoldTestOptions opts) => await DoScaffoldTest(opts).ConfigureAwait(false),
-                async (CheckerOptions opts) => await Checker.Run().ConfigureAwait(false),
-                _ => Task.CompletedTask);
+            Parser.Default.ParseArguments<ScaffoldTestOptions, CheckerOptions>(args)
+                .WithParsed<ScaffoldTestOptions>(o => ScaffoldTest.Run(o))
+                .WithParsed<CheckerOptions>(_ => Checker.Run());
         }
-
-        private static Task DoScaffoldTest(ScaffoldTestOptions opts) => ScaffoldTest.Run(opts);
     }
 }
