@@ -376,6 +376,10 @@ namespace PlaywrightSharp
         public Task<string> GetTextContentAsync(string selector, int? timeout = null)
             => GetTextContentAsync(false, selector, timeout);
 
+        /// <inheritdoc />
+        public Task TapAsync(string selector, FrameTapOptions options)
+            => _channel.TapAsync(selector, options ?? new FrameTapOptions());
+
         internal async Task<IResponse> WaitForNavigationAsync(
             LifecycleEvent? waitUntil = null,
             string url = null,

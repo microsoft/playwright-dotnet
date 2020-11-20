@@ -913,5 +913,18 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the attribute was evaluated (or timeout), yielding the textContent of the element.</returns>
         Task<string> GetTextContentAsync(string selector, int? timeout = null);
+
+        /// <summary>
+        /// This method taps an element matching selector by performing the following steps:
+        /// 1. Find an element match matching selector.If there is none, wait until a matching element is attached to the DOM.
+        /// 2. Wait for actionability checks on the matched element, unless force option is set.If the element is detached during the checks, the whole action is retried.
+        /// 3. Scroll the element into view if needed.
+        /// 4. Use page.touchscreen to tap the center of the element, or the specified position.
+        /// 5. Wait for initiated navigations to either succeed or fail, unless noWaitAfter option is set.
+        /// </summary>
+        /// <param name="selector">A selector to search for element to tap. If there are multiple elements satisfying the selector, the first will be tapped. See working with selectors for more details.</param>
+        /// <param name="options">See <see cref="FrameTapOptions"/>.</param>
+        /// <returns>A <see cref="Task"/> that completes when all steps combined succeeded. Or, if they have not finished during the specified timeout, this method rejects with a TimeoutError.</returns>
+        Task TapAsync(string selector, FrameTapOptions options = null);
     }
 }

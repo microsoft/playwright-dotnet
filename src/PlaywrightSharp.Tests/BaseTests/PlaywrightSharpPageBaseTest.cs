@@ -14,7 +14,7 @@ namespace PlaywrightSharp.Tests.BaseTests
         {
         }
 
-        internal IPage Page { get; private set; }
+        protected IPage Page { get; set; }
 
         /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
         public override async Task InitializeAsync()

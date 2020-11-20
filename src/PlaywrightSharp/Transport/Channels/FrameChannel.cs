@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
@@ -811,6 +812,36 @@ namespace PlaywrightSharp.Transport.Channels
             }
 
             return (await Connection.SendMessageToServerAsync(Guid, "textContent", args).ConfigureAwait(false))?.GetProperty("value").ToString();
+        }
+
+        internal Task TapAsync(string selector, FrameTapOptions options)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["force"] = options.Force,
+                ["noWaitAfter"] = options.NoWaitAfter,
+            };
+
+            if (options.Modifiers != null)
+            {
+                args["modifiers"] = options.Modifiers.Select(m => m.ToValueString());
+            }
+
+            if (options.Timeout != 0)
+            {
+                args["timeout"] = options?.Timeout;
+            }
+
+            if (options.Position.HasValue)
+            {
+                args["position"] = new Dictionary<string, object>
+                {
+                    ["x"] = options.Position.Value.x,
+                    ["y"] = options.Position.Value.y,
+                };
+            }
+
+            return Connection.SendMessageToServer(Guid, "tap", args);
         }
     }
 }
