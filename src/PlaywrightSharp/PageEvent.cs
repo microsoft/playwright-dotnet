@@ -86,5 +86,10 @@ namespace PlaywrightSharp
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.DOMContentLoaded"/>.
         /// </summary>
         public static PlaywrightEvent<EventArgs> DOMContentLoaded { get; } = new PlaywrightEvent<EventArgs>() { Name = "DOMContentLoaded" };
+
+        /// <summary>
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.WebSocket"/>.
+        /// </summary>
+        public static PlaywrightEvent<WebSocketEventArgs> WebSocket { get; } = new PlaywrightEvent<WebSocketEventArgs>() { Name = "WebSocket" };
     }
 }
