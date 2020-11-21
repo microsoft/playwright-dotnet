@@ -1,6 +1,6 @@
 using System;
 
-namespace PlaywrightSharp.Helpers.Linux
+namespace DriverDownloader.Linux
 {
     [Flags]
     internal enum FileAccessPermissions : uint

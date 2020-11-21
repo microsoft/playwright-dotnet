@@ -14,15 +14,13 @@ namespace PlaywrightSharp.Tests.BaseTests
 
         internal static async Task SetupAsync()
         {
-            var downloaderTask = PlaywrightSharp.Playwright.InstallAsync();
-
             Server = SimpleServer.Create(TestConstants.Port, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
             HttpsServer = SimpleServer.CreateHttps(TestConstants.HttpsPort, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"));
 
             var serverStart = Server.StartAsync();
             var httpsServerStart = HttpsServer.StartAsync();
 
-            await Task.WhenAll(downloaderTask, serverStart, httpsServerStart);
+            await Task.WhenAll(serverStart, httpsServerStart);
         }
 
         internal static Task TeardownAsync() => Task.WhenAll(Server.StopAsync(), HttpsServer.StopAsync());

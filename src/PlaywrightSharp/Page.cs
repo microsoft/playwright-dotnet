@@ -63,6 +63,7 @@ namespace PlaywrightSharp
                 RequestFinished?.Invoke(this, new RequestEventArgs { Request = e.Request.Object });
             };
             _channel.Response += (sender, e) => Response?.Invoke(this, e);
+            _channel.WebSocket += (sender, e) => WebSocket?.Invoke(this, e);
             _channel.BindingCall += Channel_BindingCall;
             _channel.Route += Channel_Route;
             _channel.FrameAttached += Channel_FrameAttached;
@@ -101,6 +102,9 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public event EventHandler<RequestEventArgs> Request;
+
+        /// <inheritdoc />
+        public event EventHandler<WebSocketEventArgs> WebSocket;
 
         /// <inheritdoc />
         public event EventHandler<ResponseEventArgs> Response;

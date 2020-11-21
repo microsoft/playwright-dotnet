@@ -2,11 +2,11 @@
 <Project>
     <PropertyGroup>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>0.152.0</PackageVersion>
-        <DriverVersion>0.161.0</DriverVersion>
-        <AssemblyVersion>$(PackageVersion)</AssemblyVersion>
-        <ReleaseVersion>$(PackageVersion)</ReleaseVersion>
-        <FileVersion>$(PackageVersion)</FileVersion>
+        <AssemblyVersion>0.162.0</AssemblyVersion>
+        <PackageVersion>$(AssemblyVersion)-alpha</PackageVersion>
+        <DriverVersion>0.162.1</DriverVersion>
+        <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
+        <FileVersion>$(AssemblyVersion)</FileVersion>
         <Authors>Darío Kondratiuk</Authors>
         <Owners>Darío Kondratiuk</Owners>
         <PackageProjectUrl>https://github.com/microsoft/playwright-sharp</PackageProjectUrl>
