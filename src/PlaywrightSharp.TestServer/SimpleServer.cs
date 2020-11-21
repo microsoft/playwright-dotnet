@@ -56,7 +56,7 @@ namespace PlaywrightSharp.TestServer
                             {
                                 var webSocket = await context.WebSockets.AcceptWebSocketAsync();
                                 await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes("incoming")), WebSocketMessageType.Text, true, CancellationToken.None);
-                                await ReceiveLoopAsync(webSocket, CancellationToken.None);
+                                await ReceiveLoopAsync(webSocket, context.Request.Headers["User-Agent"].ToString().Contains("Firefox"), CancellationToken.None);
                             }
                             else if (!context.Response.HasStarted)
                             {
@@ -211,7 +211,7 @@ namespace PlaywrightSharp.TestServer
             return false;
         }
 
-        private async Task ReceiveLoopAsync(WebSocket webSocket, CancellationToken token)
+        private async Task ReceiveLoopAsync(WebSocket webSocket, bool sendCloseMessage, CancellationToken token)
         {
             int connectionId = NextConnectionId();
             _clients.Add(connectionId, webSocket);
@@ -226,6 +226,10 @@ namespace PlaywrightSharp.TestServer
 
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
+                        if (sendCloseMessage)
+                        {
+                            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close", CancellationToken.None);
+                        }
                         break;
                     }
 
