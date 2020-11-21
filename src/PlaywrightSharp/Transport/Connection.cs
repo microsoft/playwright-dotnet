@@ -209,7 +209,6 @@ namespace PlaywrightSharp.Transport
         }
 
         private static Process GetProcess(string driverExecutablePath = null)
-
             => new Process
             {
                 StartInfo =
