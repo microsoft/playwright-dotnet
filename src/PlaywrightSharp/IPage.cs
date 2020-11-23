@@ -1717,7 +1717,7 @@ namespace PlaywrightSharp
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
         Task BringToFrontAsync();
 
-        /// <inheritdoc cref="IFrame.TapAsync(string, FrameTapOptions)"/>
-        Task TapAsync(string selector, FrameTapOptions options = null);
+        /// <inheritdoc cref="IFrame.TapAsync(string, bool, bool, Modifier[], Point?, int)"/>
+        Task TapAsync(string selector, bool force = false, bool noWaitAfter = false, Modifier[] modifiers = null, Point? position = null, int timeout = 0);
     }
 }

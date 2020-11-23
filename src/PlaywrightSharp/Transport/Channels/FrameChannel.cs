@@ -814,30 +814,31 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "textContent", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task TapAsync(string selector, FrameTapOptions options)
+        internal Task TapAsync(string selector, bool force = false, bool noWaitAfter = false, Modifier[] modifiers = null, Point? position = null, int timeout = 0)
         {
             var args = new Dictionary<string, object>
             {
-                ["force"] = options.Force,
-                ["noWaitAfter"] = options.NoWaitAfter,
+                ["selector"] = selector,
+                ["force"] = force,
+                ["noWaitAfter"] = noWaitAfter,
             };
 
-            if (options.Modifiers != null)
+            if (modifiers != null)
             {
-                args["modifiers"] = options.Modifiers.Select(m => m.ToValueString());
+                args["modifiers"] = modifiers.Select(m => m.ToValueString());
             }
 
-            if (options.Timeout != 0)
+            if (timeout != 0)
             {
-                args["timeout"] = options?.Timeout;
+                args["timeout"] = timeout;
             }
 
-            if (options.Position.HasValue)
+            if (position.HasValue)
             {
                 args["position"] = new Dictionary<string, object>
                 {
-                    ["x"] = options.Position.Value.x,
-                    ["y"] = options.Position.Value.y,
+                    ["x"] = position.Value.X,
+                    ["y"] = position.Value.Y,
                 };
             }
 
