@@ -139,6 +139,7 @@ namespace PlaywrightSharp
             bool? handleSIGINT = null,
             bool? handleSIGTERM = null,
             bool? handleSIGHUP = null,
+            RecordHarOptions recordHar = null,
             RecordVideoOptions recordVideo = null)
             => LaunchPersistentContextAsync(
                 userDataDir,
@@ -179,6 +180,7 @@ namespace PlaywrightSharp
                     HandleSIGHUP = handleSIGHUP,
                     HandleSIGINT = handleSIGINT,
                     HandleSIGTERM = handleSIGTERM,
+                    RecordHar = recordHar,
                     RecordVideo = recordVideo,
                 });
 
@@ -218,6 +220,7 @@ namespace PlaywrightSharp
             bool? handleSIGINT = null,
             bool? handleSIGTERM = null,
             bool? handleSIGHUP = null,
+            RecordHarOptions recordHar = null,
             RecordVideoOptions recordVideo = null)
             => LaunchPersistentContextAsync(
                 userDataDir,
@@ -257,6 +260,7 @@ namespace PlaywrightSharp
                     HandleSIGHUP = handleSIGHUP,
                     HandleSIGINT = handleSIGINT,
                     HandleSIGTERM = handleSIGTERM,
+                    RecordHar = recordHar,
                     RecordVideo = recordVideo,
                 });
 

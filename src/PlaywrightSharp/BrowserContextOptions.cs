@@ -109,6 +109,12 @@ namespace PlaywrightSharp
         public Dictionary<string, string> ExtraHttpHeaders { get; set; }
 
         /// <summary>
+        /// Enables HAR recording for all pages into recordHar.path file. If not specified, the HAR is not recorded.
+        /// Make sure to await <see cref="IPage.CloseAsync(bool)"/> for the HAR to be saved.
+        /// </summary>
+        public RecordHarOptions RecordHar { get; set; }
+
+        /// <summary>
         /// Enables video recording for all pages into recordVideo.dir directory. If not specified videos are not recorded.
         /// Make sure to await <seealso cref="BrowserContext.CloseAsync"/> for videos to be saved.
         /// </summary>
@@ -217,6 +223,11 @@ namespace PlaywrightSharp
             if (ExtraHttpHeaders != null)
             {
                 args["extraHTTPHeaders"] = ExtraHttpHeaders.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray();
+            }
+
+            if (RecordHar != null)
+            {
+                args["recordHar"] = RecordHar;
             }
 
             if (RecordVideo != null)

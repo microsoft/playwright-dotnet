@@ -51,6 +51,7 @@ namespace PlaywrightSharp.Chromium
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
+            RecordHarOptions recordHar = null,
             RecordVideoOptions recordVideo = null)
             => await base.NewContextAsync(
                 viewport,
@@ -70,6 +71,7 @@ namespace PlaywrightSharp.Chromium
                 colorScheme,
                 locale,
                 extraHttpHeaders,
+                recordHar,
                 recordVideo).ConfigureAwait(false) as IChromiumBrowserContext;
 
         /// <inheritdoc/>
@@ -90,6 +92,7 @@ namespace PlaywrightSharp.Chromium
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
+            RecordHarOptions recordHar = null,
             RecordVideoOptions recordVideo = null)
             => await base.NewContextAsync(
                 userAgent,
@@ -108,6 +111,7 @@ namespace PlaywrightSharp.Chromium
                 colorScheme,
                 locale,
                 extraHttpHeaders,
+                recordHar,
                 recordVideo).ConfigureAwait(false) as IChromiumBrowserContext;
 
         /// <inheritdoc/>
