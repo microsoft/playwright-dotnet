@@ -10,13 +10,13 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal async Task<string> GetPathAsync()
-            => (await Connection.SendMessageToServer(Guid, "path", null).ConfigureAwait(false))?.GetProperty("value").ToString();
+            => (await Connection.SendMessageToServerAsync(Guid, "path", null).ConfigureAwait(false))?.GetProperty("value").ToString();
 
         internal async Task<string> GetFailureAsync()
-            => (await Connection.SendMessageToServer(Guid, "failure", treatErrorPropertyAsError: false).ConfigureAwait(false))?.GetProperty("error").ToString();
+            => (await Connection.SendMessageToServerAsync(Guid, "failure", treatErrorPropertyAsError: false).ConfigureAwait(false))?.GetProperty("error").ToString();
 
-        internal Task DeleteAsync() => Connection.SendMessageToServer(Guid, "delete", null);
+        internal Task DeleteAsync() => Connection.SendMessageToServerAsync(Guid, "delete", null);
 
-        internal Task SaveAsAsync(string path) => Connection.SendMessageToServer(Guid, "saveAs", new { path });
+        internal Task SaveAsAsync(string path) => Connection.SendMessageToServerAsync(Guid, "saveAs", new { path });
     }
 }

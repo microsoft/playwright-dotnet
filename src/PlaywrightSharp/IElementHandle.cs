@@ -154,7 +154,7 @@ namespace PlaywrightSharp
         /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
         /// Pass `0` to disable timeout.
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
-        /// <param name="force">Whether to pass the accionability checks.</param>
+        /// <param name="force">Whether to pass the actionability checks.</param>
         /// <returns>A <see cref="Task"/> that completes when the element is successfully hovered.</returns>
         Task HoverAsync(
             Modifier[] modifiers = null,
@@ -193,7 +193,7 @@ namespace PlaywrightSharp
         /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
         /// Pass `0` to disable timeout.
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
-        /// <param name="force">Whether to pass the accionability checks.</param>
+        /// <param name="force">Whether to pass the actionability checks.</param>
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
         /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
@@ -217,7 +217,7 @@ namespace PlaywrightSharp
         /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
         /// Pass `0` to disable timeout.
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
-        /// <param name="force">Whether to pass the accionability checks.</param>
+        /// <param name="force">Whether to pass the actionability checks.</param>
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
         /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> that completes when the element is successfully double clicked.</returns>
@@ -537,7 +537,7 @@ namespace PlaywrightSharp
         /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
         /// Pass `0` to disable timeout.
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
-        /// <param name="force">Whether to pass the accionability checks.</param>
+        /// <param name="force">Whether to pass the actionability checks.</param>
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
         /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> that completes when the element is successfully clicked.</returns>
@@ -551,7 +551,7 @@ namespace PlaywrightSharp
         /// <param name="timeout">Maximum time to wait for in milliseconds. Defaults to `30000` (30 seconds).
         /// Pass `0` to disable timeout.
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
-        /// <param name="force">Whether to pass the accionability checks.</param>
+        /// <param name="force">Whether to pass the actionability checks.</param>
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
         /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> that completes when the element is successfully clicked.</returns>

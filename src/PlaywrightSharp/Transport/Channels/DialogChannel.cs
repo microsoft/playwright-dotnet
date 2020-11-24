@@ -11,7 +11,7 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal Task AcceptAsync(string promptText)
-            => Connection.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "accept",
                 new Dictionary<string, object>
@@ -19,6 +19,6 @@ namespace PlaywrightSharp.Transport.Channels
                     ["promptText"] = promptText,
                 });
 
-        internal Task DismissAsync() => Connection.SendMessageToServer<PageChannel>(Guid, "dismiss", null);
+        internal Task DismissAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "dismiss", null);
     }
 }

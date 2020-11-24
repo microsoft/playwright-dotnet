@@ -12,7 +12,7 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal Task ResolveAsync(object result)
-            => Connection.SendMessageToServer<ResponseChannel>(
+            => Connection.SendMessageToServerAsync<ResponseChannel>(
                 Guid,
                 "resolve",
                 new Dictionary<string, object>
@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task RejectAsync(Exception ex)
-            => Connection.SendMessageToServer<ResponseChannel>(
+            => Connection.SendMessageToServerAsync<ResponseChannel>(
                 Guid,
                 "reject",
                 new Dictionary<string, object>

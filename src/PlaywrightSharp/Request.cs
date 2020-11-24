@@ -88,7 +88,7 @@ namespace PlaywrightSharp
         public async Task<IResponse> GetResponseAsync() => (await _channel.GetResponseAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public JsonDocument GetPostDataJsonAsync(JsonDocumentOptions options = default)
+        public JsonDocument GetPostDataJson(JsonDocumentOptions options = default)
         {
             string content = GetRequestForJson();
 

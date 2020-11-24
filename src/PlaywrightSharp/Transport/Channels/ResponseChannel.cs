@@ -10,8 +10,8 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal async Task<string> GetBodyAsync()
-            => (await Connection.SendMessageToServer(Guid, "body", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
+            => (await Connection.SendMessageToServerAsync(Guid, "body", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
 
-        internal Task FinishedAsync() => Connection.SendMessageToServer(Guid, "finished", null);
+        internal Task FinishedAsync() => Connection.SendMessageToServerAsync(Guid, "finished", null);
     }
 }

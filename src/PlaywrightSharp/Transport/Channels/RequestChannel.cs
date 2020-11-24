@@ -9,6 +9,6 @@ namespace PlaywrightSharp.Transport.Channels
         {
         }
 
-        internal Task<ResponseChannel> GetResponseAsync() => Connection.SendMessageToServer<ResponseChannel>(Guid, "response", null);
+        internal Task<ResponseChannel> GetResponseAsync() => Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "response", null);
     }
 }
