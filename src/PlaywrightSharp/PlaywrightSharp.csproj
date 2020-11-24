@@ -73,4 +73,7 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </ContentWithTargetPath>
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Har\" />
+    </ItemGroup>
 </Project>
