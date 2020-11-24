@@ -13,7 +13,7 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal Task<JsonElement?> EvaluateExpressionAsync(string script, bool isFunction, EvaluateArgument arg)
-            => Connection.SendMessageToServer<JsonElement?>(
+            => Connection.SendMessageToServerAsync<JsonElement?>(
                 Guid,
                 "evaluateExpression",
                 new Dictionary<string, object>
@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, bool isFunction, object arg)
-            => Connection.SendMessageToServer<JSHandleChannel>(
+            => Connection.SendMessageToServerAsync<JSHandleChannel>(
                 Guid,
                 "evaluateExpressionHandle",
                 new Dictionary<string, object>
@@ -34,12 +34,12 @@ namespace PlaywrightSharp.Transport.Channels
                     ["arg"] = arg,
                 });
 
-        internal Task<JsonElement> GetJsonValue() => Connection.SendMessageToServer<JsonElement>(Guid, "jsonValue", null);
+        internal Task<JsonElement> GetJsonValueAsync() => Connection.SendMessageToServerAsync<JsonElement>(Guid, "jsonValue", null);
 
-        internal Task DisposeAsync() => Connection.SendMessageToServer(Guid, "dispose", null);
+        internal Task DisposeAsync() => Connection.SendMessageToServerAsync(Guid, "dispose", null);
 
         internal Task<JSHandleChannel> GetPropertyAsync(string propertyName)
-            => Connection.SendMessageToServer<JSHandleChannel>(
+            => Connection.SendMessageToServerAsync<JSHandleChannel>(
                 Guid,
                 "getProperty",
                 new Dictionary<string, object>
@@ -48,7 +48,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal async Task<List<JSElementProperty>> GetPropertiesAsync()
-            => (await Connection.SendMessageToServer(Guid, "getPropertyList", null).ConfigureAwait(false))?
+            => (await Connection.SendMessageToServerAsync(Guid, "getPropertyList", null).ConfigureAwait(false))?
                 .GetProperty("properties").ToObject<List<JSElementProperty>>(Connection.GetDefaultJsonSerializerOptions());
 
         internal class JSElementProperty

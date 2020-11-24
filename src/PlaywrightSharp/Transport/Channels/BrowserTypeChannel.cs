@@ -11,7 +11,7 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         public Task<BrowserChannel> LaunchAsync(LaunchOptions options)
-            => Connection.SendMessageToServer<BrowserChannel>(
+            => Connection.SendMessageToServerAsync<BrowserChannel>(
                 Guid,
                 "launch",
                 options.ToChannelDictionary(),
@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Transport.Channels
             var args = options.ToChannelDictionary();
             args["userDataDir"] = userDataDir;
 
-            return Connection.SendMessageToServer<BrowserContextChannel>(Guid, "launchPersistentContext", args, false);
+            return Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "launchPersistentContext", args, false);
         }
     }
 }

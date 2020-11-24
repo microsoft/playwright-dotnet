@@ -87,7 +87,7 @@ namespace PlaywrightSharp
         /// Returns the parsed request's body for form-urlencoded and JSON as a fallback if any.
         /// </summary>
         /// <param name="options">Parser options.</param>
-        /// <returns>A <see cref="Task"/> that completes when the json body is parsed, yielding a <see cref="JsonDocument"/> representation of request body.</returns>
-        JsonDocument GetPostDataJsonAsync(JsonDocumentOptions options = default);
+        /// <returns>A <see cref="JsonDocument"/> representing the request body.</returns>
+        JsonDocument GetPostDataJson(JsonDocumentOptions options = default);
     }
 }

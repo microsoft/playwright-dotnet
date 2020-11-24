@@ -147,7 +147,7 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal Task SetDefaultTimeoutNoReplyAsync(int timeout)
-            => Connection.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "setDefaultTimeoutNoReply",
                 new Dictionary<string, object>
@@ -156,7 +156,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task SetDefaultNavigationTimeoutNoReplyAsync(int timeout)
-            => Connection.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "setDefaultNavigationTimeoutNoReply",
                 new Dictionary<string, object>
@@ -165,7 +165,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task SetFileChooserInterceptedNoReplyAsync(bool intercepted)
-            => Connection.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "setFileChooserInterceptedNoReply",
                 new Dictionary<string, object>
@@ -174,7 +174,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task CloseAsync(bool runBeforeUnload)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "close",
                 new Dictionary<string, object>
@@ -183,7 +183,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task ExposeBindingAsync(string name, bool needsHandle)
-            => Connection.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "exposeBinding",
                 new Dictionary<string, object>
@@ -193,7 +193,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task AddInitScriptAsync(string script)
-            => Connection.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "addInitScript",
                 new Dictionary<string, object>
@@ -201,7 +201,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["source"] = script,
                 });
 
-        internal Task BringToFrontAsync() => Connection.SendMessageToServer(Guid, "bringToFront");
+        internal Task BringToFrontAsync() => Connection.SendMessageToServerAsync(Guid, "bringToFront");
 
         internal Task<ResponseChannel> GoBackAsync(int? timeout, LifecycleEvent? waitUntil)
         {
@@ -217,7 +217,7 @@ namespace PlaywrightSharp.Transport.Channels
                 args["waitUntil"] = waitUntil;
             }
 
-            return Connection.SendMessageToServer<ResponseChannel>(Guid, "goBack", args);
+            return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "goBack", args);
         }
 
         internal Task<ResponseChannel> GoForwardAsync(int? timeout, LifecycleEvent? waitUntil)
@@ -234,7 +234,7 @@ namespace PlaywrightSharp.Transport.Channels
                 args["waitUntil"] = waitUntil;
             }
 
-            return Connection.SendMessageToServer<ResponseChannel>(Guid, "goForward", args);
+            return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "goForward", args);
         }
 
         internal Task<ResponseChannel> ReloadAsync(int? timeout, LifecycleEvent? waitUntil)
@@ -251,11 +251,11 @@ namespace PlaywrightSharp.Transport.Channels
                 args["waitUntil"] = waitUntil;
             }
 
-            return Connection.SendMessageToServer<ResponseChannel>(Guid, "reload", args);
+            return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "reload", args);
         }
 
         internal Task SetNetworkInterceptionEnabledAsync(bool enabled)
-            => Connection.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "setNetworkInterceptionEnabled",
                 new Dictionary<string, object>
@@ -263,7 +263,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["enabled"] = enabled,
                 });
 
-        internal Task<PageChannel> GetOpenerAsync() => Connection.SendMessageToServer<PageChannel>(Guid, "opener", null);
+        internal Task<PageChannel> GetOpenerAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "opener", null);
 
         internal async Task<SerializedAXNode> AccessibilitySnapshotAsync(bool? interestingOnly, IChannel<ElementHandle> root)
         {
@@ -277,7 +277,7 @@ namespace PlaywrightSharp.Transport.Channels
                 args["root"] = root;
             }
 
-            if ((await Connection.SendMessageToServer(Guid, "accessibilitySnapshot", args).ConfigureAwait(false)).Value.TryGetProperty("rootAXNode", out var jsonElement))
+            if ((await Connection.SendMessageToServerAsync(Guid, "accessibilitySnapshot", args).ConfigureAwait(false)).Value.TryGetProperty("rootAXNode", out var jsonElement))
             {
                 return jsonElement.ToObject<SerializedAXNode>(Connection.GetDefaultJsonSerializerOptions());
             }
@@ -286,7 +286,7 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal Task SetViewportSizeAsync(ViewportSize viewport)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "setViewportSize",
                 new Dictionary<string, object>
@@ -295,7 +295,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task KeyboardDownAsync(string key)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "keyboardDown",
                 new Dictionary<string, object>
@@ -304,10 +304,10 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task EmulateMediaAsync(Dictionary<string, object> args)
-            => Connection.SendMessageToServer(Guid, "emulateMedia", args);
+            => Connection.SendMessageToServerAsync(Guid, "emulateMedia", args);
 
         internal Task KeyboardUpAsync(string key)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "keyboardUp",
                 new Dictionary<string, object>
@@ -316,7 +316,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task TypeAsync(string text, int delay)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "keyboardType",
                 new Dictionary<string, object>
@@ -326,7 +326,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task PressAsync(string key, int delay)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "keyboardPress",
                 new Dictionary<string, object>
@@ -336,7 +336,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task InsertTextAsync(string text)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "keyboardInsertText",
                 new Dictionary<string, object>
@@ -345,7 +345,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task MouseDownAsync(MouseButton button, int clickCount)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "mouseDown",
                 new Dictionary<string, object>
@@ -355,7 +355,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task MouseMoveAsync(decimal x, decimal y, int? steps)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "mouseMove",
                 new Dictionary<string, object>
@@ -366,7 +366,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task MouseUpAsync(MouseButton button, int clickCount)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "mouseUp",
                 new Dictionary<string, object>
@@ -376,7 +376,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task MouseClickAsync(decimal x, decimal y, int delay, MouseButton button, int clickCount)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "mouseClick",
                 new Dictionary<string, object>
@@ -389,7 +389,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "setExtraHTTPHeaders",
                 new Dictionary<string, object>
@@ -437,11 +437,11 @@ namespace PlaywrightSharp.Transport.Channels
                 args["quality"] = quality;
             }
 
-            return (await Connection.SendMessageToServer(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").ToString();
+            return (await Connection.SendMessageToServerAsync(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").ToString();
         }
 
         internal Task StartCSSCoverageAsync(bool resetOnNavigation)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "crStartCSSCoverage",
                 new Dictionary<string, object>
@@ -450,7 +450,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task StartJSCoverageAsync(bool resetOnNavigation, bool reportAnonymousScripts)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "crStartJSCoverage",
                 new Dictionary<string, object>
@@ -460,10 +460,10 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal async Task<CSSCoverageEntry[]> StopCSSCoverageAsync()
-            => (await Connection.SendMessageToServer(Guid, "crStopCSSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<CSSCoverageEntry[]>();
+            => (await Connection.SendMessageToServerAsync(Guid, "crStopCSSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<CSSCoverageEntry[]>();
 
         internal async Task<JSCoverageEntry[]> StopJSCoverageAsync()
-            => (await Connection.SendMessageToServer(Guid, "crStopJSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<JSCoverageEntry[]>();
+            => (await Connection.SendMessageToServerAsync(Guid, "crStopJSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<JSCoverageEntry[]>();
 
         internal async Task<string> GetPdfAsync(
             decimal scale,
@@ -523,7 +523,7 @@ namespace PlaywrightSharp.Transport.Channels
                 args["height"] = height;
             }
 
-            return (await Connection.SendMessageToServer(Guid, "pdf", args).ConfigureAwait(false))?.GetProperty("pdf").ToString();
+            return (await Connection.SendMessageToServerAsync(Guid, "pdf", args).ConfigureAwait(false))?.GetProperty("pdf").ToString();
         }
     }
 }

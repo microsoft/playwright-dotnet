@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@ namespace PlaywrightSharp.Helpers
     /// <summary>
     /// Task helper.
     /// </summary>
+    [SuppressMessage("Microsoft.VisualStudio.Threading.Analyzers", "VSTHRD200", Justification = "Calling the method WithTimeoutAsync doesn't make any sense.")]
     internal static class TaskHelper
     {
         private static readonly Func<TimeSpan, Exception> _defaultExceptionFactory =

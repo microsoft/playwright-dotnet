@@ -26,7 +26,7 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, bool isFunction, object arg)
-            => Connection.SendMessageToServer<JSHandleChannel>(
+            => Connection.SendMessageToServerAsync<JSHandleChannel>(
                 Guid,
                 "evaluateExpressionHandle",
                 new Dictionary<string, object>
@@ -59,7 +59,7 @@ namespace PlaywrightSharp.Transport.Channels
                 serializerOptions = Connection.GetDefaultJsonSerializerOptions(false);
             }
 
-            return Connection.SendMessageToServer<JsonElement?>(
+            return Connection.SendMessageToServerAsync<JsonElement?>(
                 Guid,
                 "evaluateExpression",
                 new Dictionary<string, object>

@@ -10,6 +10,6 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal Task RegisterAsync(SelectorsRegisterParams registration)
-            => Connection.SendMessageToServer(Guid, "register", registration);
+            => Connection.SendMessageToServerAsync(Guid, "register", registration);
     }
 }

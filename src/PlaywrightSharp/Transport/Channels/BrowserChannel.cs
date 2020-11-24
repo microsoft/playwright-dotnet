@@ -25,16 +25,16 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal Task<BrowserContextChannel> NewContextAsync(BrowserContextOptions options)
-            => Connection.SendMessageToServer<BrowserContextChannel>(
+            => Connection.SendMessageToServerAsync<BrowserContextChannel>(
                 Guid,
                 "newContext",
                 options.ToChannelDictionary(),
                 true);
 
-        internal Task CloseAsync() => Connection.SendMessageToServer<BrowserContextChannel>(Guid, "close", null);
+        internal Task CloseAsync() => Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "close", null);
 
         internal Task<CDPSessionChannel> NewBrowserCDPSessionAsync()
-            => Connection.SendMessageToServer<CDPSessionChannel>(Guid, "crNewBrowserCDPSession", null);
+            => Connection.SendMessageToServerAsync<CDPSessionChannel>(Guid, "crNewBrowserCDPSession", null);
 
         internal Task StartTracingAsync(IPage page, bool screenshots, string path, IEnumerable<string> categories)
         {
@@ -58,10 +58,10 @@ namespace PlaywrightSharp.Transport.Channels
                 args["categories"] = categories;
             }
 
-            return Connection.SendMessageToServer(Guid, "crStartTracing", args);
+            return Connection.SendMessageToServerAsync(Guid, "crStartTracing", args);
         }
 
         internal async Task<string> StopTracingAsync()
-            => (await Connection.SendMessageToServer(Guid, "crStopTracing", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
+            => (await Connection.SendMessageToServerAsync(Guid, "crStopTracing", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
     }
 }
