@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace PlaywrightSharp.Har
 {
     /// <summary>
@@ -18,6 +21,6 @@ namespace PlaywrightSharp.Har
         /// <summary>
         /// Post Params.
         /// </summary>
-        public (string Name, string Value)[] Params { get; set; } = System.Array.Empty<(string Name, string Value)>();
+        public IEnumerable<HarPostDataParam> Params { get; set; } = Array.Empty<HarPostDataParam>();
     }
 }

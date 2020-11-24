@@ -119,7 +119,8 @@ namespace PlaywrightSharp
         /// <param name="handleSIGTERM">Close the browser process on SIGTERM. Defaults to true.</param>
         /// <param name="handleSIGHUP">Close the browser process on SIGHUP. Defaults to true.</param>
         /// <param name="recordHar">Enables HAR recording for all pages into recordHar.path file. If not specified, the HAR is not recorded.
-        /// Make sure to await <see cref="IPage.CloseAsync(bool)"/> for the HAR to be saved.</param>
+        /// Make sure to await <see cref="IPage.CloseAsync(bool)"/> for the HAR to be saved.
+        /// You can use <see cref="Har.HarResult"/> to deserialize the generated JSON file.</param>
         /// <param name="recordVideo">Enables video recording for all pages into recordVideo.dir directory. If not specified videos are not recorded.
         /// Make sure to await <seealso cref="BrowserContext.CloseAsync"/> for videos to be saved.</param>
         /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the browser server.</returns>
@@ -201,7 +202,8 @@ namespace PlaywrightSharp
         /// <param name="handleSIGTERM">Close the browser process on SIGTERM. Defaults to true.</param>
         /// <param name="handleSIGHUP">Close the browser process on SIGHUP. Defaults to true.</param>
         /// <param name="recordHar">Enables HAR recording for all pages into recordHar.path file. If not specified, the HAR is not recorded.
-        /// Make sure to await <see cref="IPage.CloseAsync(bool)"/> for the HAR to be saved.</param>
+        /// Make sure to await <see cref="IPage.CloseAsync(bool)"/> for the HAR to be saved.
+        /// You can use <see cref="Har.HarResult"/> to deserialize the generated JSON file.</param>
         /// <param name="recordVideo">Enables video recording for all pages into recordVideo.dir directory. If not specified videos are not recorded.
         /// Make sure to await <seealso cref="BrowserContext.CloseAsync"/> for videos to be saved.</param>
         /// <returns>A <see cref="Task"/> that completes when the browser is launched, yielding the browser server.</returns>

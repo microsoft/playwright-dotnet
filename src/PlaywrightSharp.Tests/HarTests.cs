@@ -229,10 +229,18 @@ namespace PlaywrightSharp.Tests
                 new HarPostData
                 {
                     MimeType = "application/x-www-form-urlencoded",
-                    Params = new (string Name, string Value)[]
+                    Params = new HarPostDataParam[]
                     {
-                        ("foo", "bar"),
-                        ("baz", "123"),
+                        new HarPostDataParam
+                        {
+                            Name ="foo",
+                            Value= "bar"
+                        },
+                        new HarPostDataParam
+                        {
+                            Name = "baz",
+                            Value = "123"
+                        },
                     },
                     Text = "foo=bar&baz=123",
                 }.ToJson(),

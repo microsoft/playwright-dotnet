@@ -19,5 +19,15 @@ namespace PlaywrightSharp.Har
         /// Text.
         /// </summary>
         public string Text { get; set; }
+
+        /// <summary>
+        /// Size.
+        /// </summary>
+        public decimal Size { get; set; }
+
+        /// <summary>
+        /// Compression.
+        /// </summary>
+        public decimal? Compression { get; set; }
     }
 }
