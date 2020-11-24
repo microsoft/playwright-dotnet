@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp.Har
+namespace PlaywrightSharp.Har
 {
     /// <summary>
     /// HAR Entry timings.
