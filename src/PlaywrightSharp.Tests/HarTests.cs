@@ -355,10 +355,7 @@ namespace PlaywrightSharp.Tests
         }
 
         private HarLog GetHarResult(string harPath)
-        {
-            string json = File.ReadAllText(harPath);
-            Console.WriteLine(json);
-            return JsonSerializer.Deserialize<HarResult>(
+            => JsonSerializer.Deserialize<HarResult>(
                 File.ReadAllText(harPath),
                 new JsonSerializerOptions
                 {
@@ -369,6 +366,5 @@ namespace PlaywrightSharp.Tests
                 new JsonStringEnumMemberConverter(JsonNamingPolicy.CamelCase),
                     },
                 }).Log;
-        }
     }
 }
