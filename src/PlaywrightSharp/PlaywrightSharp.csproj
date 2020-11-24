@@ -46,7 +46,7 @@
         <None Include="runtimes\win-x86\**" Pack="true" PackagePath="runtimes\win-x86\native" />
         <None Include="build\**" Pack="true" PackagePath="build" />
     </ItemGroup>
-    <Target Name="Download Drivers" BeforeTargets="Restore">
+    <Target Name="Download Drivers" BeforeTargets="Restore;CoreCompile">
         <ConvertToAbsolutePath Paths="$(ProjectDir)..\tools\DriverDownloader\">
             <Output TaskParameter="AbsolutePaths" PropertyName="DriverDownloaderPath" />
         </ConvertToAbsolutePath>

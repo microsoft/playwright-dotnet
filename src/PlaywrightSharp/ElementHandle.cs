@@ -276,6 +276,10 @@ namespace PlaywrightSharp
         public Task UncheckAsync(int? timeout = null, bool force = false, bool? noWaitAfter = null)
             => _channel.UncheckAsync(timeout, force, noWaitAfter);
 
+        /// <inheritdoc />
+        public Task TapAsync(Point? position = null, Modifier[] modifiers = null, bool force = false, bool noWaitAfter = false, int timeout = 0)
+            => _channel.TapAsync(position, modifiers, force, noWaitAfter, timeout);
+
         internal static ScreenshotFormat? DetermineScreenshotType(string path)
         {
             string mimeType = path.MimeType();

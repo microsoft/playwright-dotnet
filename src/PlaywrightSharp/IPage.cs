@@ -215,6 +215,11 @@ namespace PlaywrightSharp
         IKeyboard Keyboard { get; }
 
         /// <summary>
+        /// Gets this page's touchscreen.
+        /// </summary>
+        ITouchscreen Touchscreen { get; }
+
+        /// <summary>
         /// This setting will change the default maximum time for all the methods accepting timeout option.
         /// </summary>
         int DefaultTimeout { get; set; }

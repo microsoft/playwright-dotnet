@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -386,6 +387,16 @@ namespace PlaywrightSharp.Transport.Channels
                     ["delay"] = delay,
                     ["button"] = button,
                     ["clickCount"] = clickCount,
+                });
+
+        internal Task TouchscreenTapAsync(Point point)
+            => Connection.SendMessageToServer(
+                Guid,
+                "touchscreenTap",
+                new Dictionary<string, object>
+                {
+                    ["x"] = point.X,
+                    ["y"] = point.Y,
                 });
 
         internal Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)

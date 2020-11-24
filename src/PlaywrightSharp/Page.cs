@@ -41,6 +41,7 @@ namespace PlaywrightSharp
             Accessibility = new Accesibility(_channel);
             Coverage = BrowserContext.BrowserName == BrowserType.Chromium ? new ChromiumCoverage(_channel) : null;
             Keyboard = new Keyboard(_channel);
+            Touchscreen = new Touchscreen(_channel);
             Mouse = new Mouse(_channel);
             _channel.Closed += Channel_Closed;
             _channel.Crashed += Channel_Crashed;
@@ -214,6 +215,9 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public IKeyboard Keyboard { get; }
+
+        /// <inheritdoc />
+        public ITouchscreen Touchscreen { get; }
 
         /// <inheritdoc/>
         public int DefaultTimeout

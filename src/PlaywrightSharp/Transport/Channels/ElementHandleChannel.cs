@@ -537,5 +537,35 @@ namespace PlaywrightSharp.Transport.Channels
 
             return Connection.SendMessageToServerAsync(Guid, "press", args);
         }
+
+        internal Task TapAsync(Point? position = null, Modifier[] modifiers = null, bool force = false, bool noWaitAfter = false, int timeout = 0)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["force"] = force,
+                ["noWaitAfter"] = noWaitAfter,
+            };
+
+            if (position.HasValue)
+            {
+                args["position"] = new Dictionary<string, object>
+                {
+                    ["x"] = position.Value.X,
+                    ["y"] = position.Value.Y,
+                };
+            }
+
+            if (modifiers != null)
+            {
+                args["modifiers"] = modifiers.Select(m => m.ToValueString());
+            }
+
+            if (timeout != 0)
+            {
+                args["timeout"] = timeout;
+            }
+
+            return Connection.SendMessageToServer(Guid, "tap", args);
+        }
     }
 }
