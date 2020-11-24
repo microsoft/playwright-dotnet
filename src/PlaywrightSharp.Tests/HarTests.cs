@@ -46,9 +46,11 @@ namespace PlaywrightSharp.Tests
             await base.InitializeAsync();
         }
 
+        /// <inheritdoc cref="IAsyncLifetime.DisposeAsync"/>
         public override Task DisposeAsync()
             => Task.WhenAll(_context.CloseAsync(), base.DisposeAsync());
 
+        /// <inheritdoc cref="IDisposable.Dispose"/>
         public override void Dispose() => _tempDir.Dispose();
 
         /// <playwright-file>har.spec.ts</playwright-file>
