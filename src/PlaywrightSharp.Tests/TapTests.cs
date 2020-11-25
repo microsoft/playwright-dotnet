@@ -1,10 +1,10 @@
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Input;
 using PlaywrightSharp.Tests.Autowaiting;
 using PlaywrightSharp.Tests.BaseTests;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 

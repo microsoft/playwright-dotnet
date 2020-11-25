@@ -14,6 +14,9 @@ namespace PlaywrightSharp.Tests.BaseTests
         {
         }
 
+        /// <summary>
+        /// Gets or sets the Page.
+        /// </summary>
         protected IPage Page { get; set; }
 
         /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
