@@ -10,18 +10,9 @@ PlaywrightSharp is a .Net library to automate [Chromium](https://www.chromium.or
 
 Headless execution is supported for all browsers on all platforms.
 
-#Usage 
-Playwright Sharp relies on two external components: The browsers and the Playwright driver.
-
-```cs 
-await Playwright.InstallAsync();
-var playwright = await Playwright.CreateAsync();
-```
-
-`Playwright.InstallAsync()` will download the required browsers. `Playwright.CreateAsync()` will create and launch the playwright driver.
+# Usage 
 
 ```cs
-await Playwright.InstallAsync();
 using var playwright = await Playwright.CreateAsync();
 await using var browser = await playwright.Chromium.LaunchAsync();
 var page = await browser.NewPageAsync();
@@ -29,22 +20,41 @@ await page.GoToAsync("http://www.bing.com");
 await page.ScreenshotAsync(path: outputFile);
 ```
 
-To avoid downloading the browsers in runtime, you can install the playwright-sharp dotnet tool:
+# Playwright Dependencies
+Playwright Sharp relies on two external components: The Playwright driver and the browsers.
 
-```
-dotnet tool install playwright-sharp-tool -g
-playwright-sharp install-browsers
-```
+## Playwright Driver
 
-By running these two commands, you can avoid having the `await Playwright.InstallAsync();` line in your code.
+Playwright drivers will be copied to the `bin` folder at build time. Nuget will rely on the [RuntimeIdentifier](https://docs.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props?WT.mc_id=DT-MVP-5003814#runtimeidentifier) to copy a platform-specific driver, or on the [runtime used on dotnet publish](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-publish?WT.mc_id=DT-MVP-5003814).
+If the [RuntimeIdentifier](https://docs.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props?WT.mc_id=DT-MVP-5003814#runtimeidentifier) is not set, all runtimes will be copied inside a runtimes folder. Then, the platform-specific driver will be picked at run-time.
+
+## Browsers
+
+The way browsers are installed will vary depending on the use case scenario. 
+
+### Playwright in test projects
+
+If you use Playwright in test projects, all required browsers will be install at build time.
+
+### Using Playwright in Docker
+
+If you use the [official Docker images](https://hub.docker.com/_/microsoft-playwright), all the required browsers will be installed in that image. 
+The minor version of the package will tell you which docker image tag to use. For instance, PlaywrightSharp 0.162.0 will work with the tag **v1.6.2**.
+
+### Using Playwright in a Remote Server.
+
+If you run Playwright in a remote server. For instance, as part of a web application, you will need to run `.\bin\playwright-cli.exe install` in Windows or `./bin/playwright-cli install` in OSX/Linux, as part of your deploy script. 
+
+### Other possible scenarios.
+
+If none of the scenarios mentioned above cover your scenario, you can install the browsers programmatically using `await Playwright.InstallAsync();`
+
 
 # Examples
 ## Mobile and geolocation
 This snippet emulates Mobile Safari on a device at a given geolocation, navigates to maps.google.com, performs an action, and takes a screenshot.
 
 ```cs 
-await Playwright.InstallAsync();
-
 using var playwright = await Playwright.CreateAsync();
 await using var browser = await playwright.Webkit.LaunchAsync(false);
 
@@ -61,10 +71,9 @@ await page.ScreenshotAsync("colosseum-iphone.png");
 ```
 
 ## Evaluate in browser context
-This code snippet navigates to example.com in Firefox, and executes a script in the page context.
+This code snippet navigates to example.com in Firefox and executes a script in the page context.
 
 ```cs
-await Playwright.InstallAsync();
 using var playwright = await Playwright.CreateAsync();
 await using var browser = await playwright.Firefox.LaunchAsync();
 
@@ -84,7 +93,6 @@ Console.WriteLine(dimensions);
 This code snippet sets up request routing for a WebKit page to log all network requests.
 
 ```cs 
-await Playwright.InstallAsync();
 using var playwright = await Playwright.CreateAsync();
 await using var browser = await playwright.Firefox.LaunchAsync();
 

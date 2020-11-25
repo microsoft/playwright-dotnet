@@ -92,7 +92,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="loggerFactory">Logger.</param>
         /// <param name="scheduler">Task scheduler for long running tasks.</param>
-        /// <param name="driverExecutablePath">Playwright driver path. If not set <see cref="InstallAsync(string, string)"/> needs to be used.</param>
+        /// <param name="driverExecutablePath">Playwright driver path.</param>
         /// <param name="browsersPath">Specify a shared folder that playwright will use to download browsers and to look for browsers when launching browser instances.
         /// It is a shortcut to the PLAYWRIGHT_BROWSERS_PATH environment variable.
         /// </param>

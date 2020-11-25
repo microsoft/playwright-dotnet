@@ -36,7 +36,6 @@ var downloadTask = page.WaitForEvent(PageEvent.Download);
 From there, you can read the file, delete it, or save it in another location.
 
 ```cs 
-await Playwright.InstallAsync();
 using var playwright = await Playwright.CreateAsync();
 var chromium = playwright.Chromium;
 await using var browser = await chromium.LaunchAsync(new LaunchOptions { Headless = false });
