@@ -903,7 +903,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task TapAsync(string selector, Modifier[] modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)
-            => MainFrame.TapAsync(selector, modifiers, position, timeout, force, noWaitAfter);
+            => MainFrame.TapAsync(true, selector, modifiers, position, timeout, force, noWaitAfter);
 
         internal void OnFrameNavigated(Frame frame)
             => FrameNavigated?.Invoke(this, new FrameEventArgs(frame));
