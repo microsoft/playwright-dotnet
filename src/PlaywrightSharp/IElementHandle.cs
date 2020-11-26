@@ -597,13 +597,13 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="position">A point to tap relative to the top-left corner of element padding box. If not specified, taps some visible point of the element.</param>
         /// <param name="modifiers">Modifier keys to press. Ensures that only these modifiers are pressed during the tap, and then restores current modifiers back. If not specified, currently pressed modifiers are used.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <param name="force">Whether to bypass the actionability checks. Defaults to false.</param>
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and
         /// for pages to start loading. You can opt out of waiting via setting this flag.
         /// You would only need this option in the exceptional cases such as navigating to inaccessible pages.
         /// Defaults to false.</param>
-        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
-        Task TapAsync(Point? position = null, Modifier[] modifiers = null, bool force = false, bool noWaitAfter = false, int timeout = 0);
+        Task TapAsync(Point? position = null, Modifier[] modifiers = null, int? timeout = null, bool force = false, bool? noWaitAfter = null);
     }
 }

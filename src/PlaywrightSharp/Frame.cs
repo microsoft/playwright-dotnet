@@ -377,8 +377,8 @@ namespace PlaywrightSharp
             => GetTextContentAsync(false, selector, timeout);
 
         /// <inheritdoc />
-        public Task TapAsync(string selector, bool force = false, bool noWaitAfter = false, Modifier[] modifiers = null, Point? position = null, int timeout = 0)
-            => _channel.TapAsync(selector, force, noWaitAfter, modifiers, position, timeout);
+        public Task TapAsync(string selector, Modifier[] modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)
+            => _channel.TapAsync(selector, modifiers, position, timeout, force, noWaitAfter);
 
         internal async Task<IResponse> WaitForNavigationAsync(
             LifecycleEvent? waitUntil = null,

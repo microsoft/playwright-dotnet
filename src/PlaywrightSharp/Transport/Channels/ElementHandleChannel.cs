@@ -538,13 +538,17 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "press", args);
         }
 
-        internal Task TapAsync(Point? position = null, Modifier[] modifiers = null, bool force = false, bool noWaitAfter = false, int timeout = 0)
+        internal Task TapAsync(Point? position = null, Modifier[] modifiers = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)
         {
             var args = new Dictionary<string, object>
             {
                 ["force"] = force,
-                ["noWaitAfter"] = noWaitAfter,
             };
+
+            if (noWaitAfter != null)
+            {
+                args["noWaitAfter"] = noWaitAfter;
+            }
 
             if (position.HasValue)
             {
@@ -560,7 +564,7 @@ namespace PlaywrightSharp.Transport.Channels
                 args["modifiers"] = modifiers.Select(m => m.ToValueString());
             }
 
-            if (timeout != 0)
+            if (timeout != null)
             {
                 args["timeout"] = timeout;
             }
