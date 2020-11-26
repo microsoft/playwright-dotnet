@@ -162,7 +162,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.SetContentAsync("hello world");
 
-            var altKeyTask = Page.EvaluateAsync<JsonElement>(@"() => 
+            var altKeyTask = Page.EvaluateAsync<bool>(@"() => 
                    new Promise(resolve => {
                         document.addEventListener('touchstart', event => {
                           resolve(event.altKey);
@@ -171,7 +171,7 @@ namespace PlaywrightSharp.Tests
 
             await Page.EvaluateAsync("() => void 0");
             await Page.TapAsync("body", modifiers: new[] { Modifier.Alt });
-            Assert.True((await altKeyTask).GetBoolean());
+            Assert.True((await altKeyTask));
         }
 
         /// <playwright-file>tap.specs.ts</playwright-file>
