@@ -61,13 +61,22 @@ namespace PlaywrightSharp.Tests.Helpers
                         {
                             if (px.Name != py.Name)
                             {
-                                Console.WriteLine($"{px.Name} not found");
                                 return false;
                             }
-                            if (!Equals(px.Value, py.Value))
+
+                            if (px.Value.ValueKind == JsonValueKind.String && px.Value.TryGetDateTime(out var pxDate))
                             {
-                                Console.WriteLine($"{px.Name} not equals");
-                                return false;
+                                if (!py.Value.TryGetDateTime(out var pyDate) || pxDate != pyDate)
+                                {
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                if (!Equals(px.Value, py.Value))
+                                {
+                                    return false;
+                                }
                             }
                         }
                         return true;
