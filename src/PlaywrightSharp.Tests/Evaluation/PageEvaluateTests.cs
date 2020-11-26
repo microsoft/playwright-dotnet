@@ -635,7 +635,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         ///<playwright-file>evaluation.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluate</playwright-describe>
         ///<playwright-it>should transfer 100Mb of data from page to node.js</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        [Fact(Skip = "SKIP WIRE")]
         public async Task ShouldTransfer100MbOfDataFromPageToNodeJs()
         {
             string a = await Page.EvaluateAsync<string>("() => Array(100 * 1024 * 1024 + 1).join('a')");
