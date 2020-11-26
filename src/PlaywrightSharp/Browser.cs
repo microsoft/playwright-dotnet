@@ -76,6 +76,7 @@ namespace PlaywrightSharp
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
+            RecordHarOptions recordHar = null,
             RecordVideoOptions recordVideo = null)
             => NewContextAsync(new BrowserContextOptions
             {
@@ -96,6 +97,7 @@ namespace PlaywrightSharp
                 Locale = locale,
                 IgnoreHTTPSErrors = ignoreHTTPSErrors,
                 ExtraHttpHeaders = extraHttpHeaders,
+                RecordHar = recordHar,
                 RecordVideo = recordVideo,
             });
 
@@ -117,6 +119,7 @@ namespace PlaywrightSharp
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
+            RecordHarOptions recordHar = null,
             RecordVideoOptions recordVideo = null)
             => NewContextAsync(new BrowserContextOptions
             {
@@ -136,6 +139,7 @@ namespace PlaywrightSharp
                 ColorScheme = colorScheme,
                 Locale = locale,
                 ExtraHttpHeaders = extraHttpHeaders,
+                RecordHar = recordHar,
                 RecordVideo = recordVideo,
             });
 
@@ -167,6 +171,7 @@ namespace PlaywrightSharp
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
+            RecordHarOptions recordHar = null,
             RecordVideoOptions recordVideo = null)
             => NewPageAsync(new BrowserContextOptions
             {
@@ -187,6 +192,7 @@ namespace PlaywrightSharp
                 ColorScheme = colorScheme,
                 Locale = locale,
                 ExtraHttpHeaders = extraHttpHeaders,
+                RecordHar = recordHar,
                 RecordVideo = recordVideo,
             });
 
@@ -208,6 +214,7 @@ namespace PlaywrightSharp
             ColorScheme? colorScheme = null,
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
+            RecordHarOptions recordHar = null,
             RecordVideoOptions recordVideo = null)
             => NewPageAsync(new BrowserContextOptions
             {
@@ -227,6 +234,7 @@ namespace PlaywrightSharp
                 ColorScheme = colorScheme,
                 Locale = locale,
                 ExtraHttpHeaders = extraHttpHeaders,
+                RecordHar = recordHar,
                 RecordVideo = recordVideo,
             });
 

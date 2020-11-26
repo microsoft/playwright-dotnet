@@ -100,6 +100,7 @@ namespace PlaywrightSharp.Chromium
             bool? handleSIGINT = null,
             bool? handleSIGTERM = null,
             bool? handleSIGHUP = null,
+            RecordHarOptions recordHar = null,
             RecordVideoOptions recordVideo = null)
             => await LaunchPersistentContextAsync(
                 userDataDir,
@@ -137,6 +138,7 @@ namespace PlaywrightSharp.Chromium
                 handleSIGINT,
                 handleSIGTERM,
                 handleSIGHUP,
+                recordHar,
                 recordVideo).ConfigureAwait(false) as IChromiumBrowserContext;
 
         /// <inheritdoc/>
@@ -175,6 +177,7 @@ namespace PlaywrightSharp.Chromium
             bool? handleSIGINT = null,
             bool? handleSIGTERM = null,
             bool? handleSIGHUP = null,
+            RecordHarOptions recordHar = null,
             RecordVideoOptions recordVideo = null)
             => await LaunchPersistentContextAsync(
                 userDataDir,
@@ -211,6 +214,7 @@ namespace PlaywrightSharp.Chromium
                 handleSIGINT,
                 handleSIGTERM,
                 handleSIGHUP,
+                recordHar,
                 recordVideo).ConfigureAwait(false) as IChromiumBrowserContext;
 
         /// <inheritdoc/>
