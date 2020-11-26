@@ -1,9 +1,6 @@
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Input;
-using PlaywrightSharp.Tests.Autowaiting;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
@@ -25,7 +22,6 @@ namespace PlaywrightSharp.Tests
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
-            Context = await Browser.NewContextAsync();
             Page = await Browser.NewPageAsync(hasTouch: true);
         }
 
@@ -39,7 +35,7 @@ namespace PlaywrightSharp.Tests
                 @"<div id=""b"" style=""background: pink; width: 50px; height: 50px"">b</div>");
 
             await Page.TapAsync("#a");
-            var handle = await TrackEvents("#b");
+            var handle = await TrackEventsAsync("#b");
             await Page.TapAsync("#b");
 
             string[] result = await handle.GetJsonValueAsync<string[]>();
@@ -67,7 +63,7 @@ namespace PlaywrightSharp.Tests
                     document.addEventListener('touchstart', t => t.preventDefault(), {passive: false});
                 }");
 
-            var handle = await TrackEvents("div");
+            var handle = await TrackEventsAsync("div");
             await Page.TapAsync("div");
 
             string[] result = await handle.GetJsonValueAsync<string[]>();
@@ -92,7 +88,7 @@ namespace PlaywrightSharp.Tests
                     document.addEventListener('touchend', t => t.preventDefault());
                 }");
 
-            var handle = await TrackEvents("div");
+            var handle = await TrackEventsAsync("div");
             await Page.TapAsync("div");
 
             string[] result = await handle.GetJsonValueAsync<string[]>();
@@ -142,17 +138,18 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldWorkWithModifiers()
         {
-            await Page.SetContentAsync("Hello World!");
+            await Page.SetContentAsync("hello world");
 
-            var eval = Page.EvaluateAsync<JsonElement>(@"() => 
+            var altKeyTask = Page.EvaluateAsync<JsonElement>(@"() => 
                    new Promise(resolve => {
                         document.addEventListener('touchstart', event => {
                           resolve(event.altKey);
                         }, { passive: false })
                     })");
 
+            await Page.EvaluateAsync("() => void 0");
             await Page.TapAsync("body", modifiers: new[] { Modifier.Alt });
-            Assert.True((await eval).GetBoolean());
+            Assert.True((await altKeyTask).GetBoolean());
         }
 
         /// <playwright-file>tap.specs.ts</playwright-file>
@@ -160,7 +157,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldSendWellFormedTouchPoints()
         {
-            var touchStartPromise = Page.EvaluateAsync<dynamic>(@"() =>
+            var touchStartTask = Page.EvaluateAsync<dynamic>(@"() =>
                 new Promise(resolve => {
                     document.addEventListener('touchstart', event => {
                         resolve([...event.touches].map(t => ({
@@ -177,7 +174,7 @@ namespace PlaywrightSharp.Tests
                     }, false);
                 })");
 
-            var touchEndPromise = Page.EvaluateAsync<dynamic>(@"() =>
+            var touchEndTask = Page.EvaluateAsync<dynamic>(@"() =>
                 new Promise(resolve => {
                     document.addEventListener('touchend', event => {
                         resolve([...event.touches].map(t => ({
@@ -194,9 +191,11 @@ namespace PlaywrightSharp.Tests
                     }, false);
                 })");
 
+            await Page.EvaluateAsync("() => void 0");
+
             await Page.Touchscreen.TapAsync(new System.Drawing.Point(40, 60));
-            var touchStartResult = (await touchStartPromise)[0];
-            var touchEndResult = await touchEndPromise;
+            var touchStartResult = (await touchStartTask)[0];
+            var touchEndResult = await touchEndTask;
 
             Assert.Null(touchEndResult);
             Assert.Equal(40, touchStartResult.clientX);
@@ -223,17 +222,17 @@ namespace PlaywrightSharp.Tests
                 return button;
             }") as IElementHandle;
 
-            var tapPromise = div.TapAsync();
+            var tapTask = div.TapAsync();
 
             await div.EvaluateAsync(@"div => div.onclick = () => div.textContent = 'clicked'");
             await div.EvaluateAsync(@"div => div.style.display = 'block'");
 
-            await tapPromise;
+            await tapTask;
 
             Assert.Equal("clicked", await div.GetTextContentAsync());
         }
 
-        private async Task<IJSHandle> TrackEvents(string selector)
+        private async Task<IJSHandle> TrackEventsAsync(string selector)
         {
             var target = await Page.QuerySelectorAsync(selector);
             string jsFunc = @"(target) => {
