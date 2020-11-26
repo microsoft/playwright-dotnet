@@ -71,12 +71,9 @@ namespace PlaywrightSharp.Tests.Helpers
                                     return false;
                                 }
                             }
-                            else
+                            else if (!Equals(px.Value, py.Value))
                             {
-                                if (!Equals(px.Value, py.Value))
-                                {
-                                    return false;
-                                }
+                                return false;
                             }
                         }
                         return true;
