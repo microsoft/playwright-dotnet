@@ -10,9 +10,7 @@ You need to take an screenshot of a page.
 Use `Page.ScreenshotAsync` passing a file path as an argument.
 
 ```cs
-await Playwright.InstallAsync();
-
-var playwright = await Playwright.CreateAsync();
+using var playwright = await Playwright.CreateAsync();
 
 var url = "https://www.somepage.com";
 var file = ".\\somepage.jpg";
