@@ -8,7 +8,7 @@ namespace PlaywrightSharp.Har
         /// <summary>
         /// Blocked.
         /// </summary>
-        public decimal Blocked { get; set; }
+        public decimal? Blocked { get; set; }
 
         /// <summary>
         /// Dns time.

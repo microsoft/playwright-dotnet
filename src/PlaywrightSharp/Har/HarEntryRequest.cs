@@ -24,9 +24,9 @@ namespace PlaywrightSharp.Har
         public string HttpVersion { get; set; }
 
         /// <summary>
-        /// Header Size.
+        /// Headers Size.
         /// </summary>
-        public decimal HeaderSize { get; set; }
+        public decimal HeadersSize { get; set; }
 
         /// <summary>
         /// Body Size.

@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Har
         /// <summary>
         /// HTTP Status Code.
         /// </summary>
-        public HttpStatusCode Status { get; set; }
+        public int Status { get; set; }
 
         /// <summary>
         /// HTTP Status Text.
@@ -42,5 +42,15 @@ namespace PlaywrightSharp.Har
         /// Content.
         /// </summary>
         public HarContent Content { get; set; }
+
+        /// <summary>
+        /// Headers Size.
+        /// </summary>
+        public decimal HeadersSize { get; set; }
+
+        /// <summary>
+        /// Body Size.
+        /// </summary>
+        public decimal BodySize { get; set; }
     }
 }

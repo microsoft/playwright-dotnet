@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -13,6 +14,7 @@ using PlaywrightSharp.Har;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.Helpers;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
 using Xunit;
@@ -118,7 +120,7 @@ namespace PlaywrightSharp.Tests
 
             await context.CloseAsync();
 
-            var log = GetHarResult(harFilePath);
+            var log = GetHarResult(harFilePath).Log;
             Assert.Single(log.Pages);
             var pageEntry = log.Pages.First();
             Assert.Equal("page_0", pageEntry.Id);
@@ -151,7 +153,7 @@ namespace PlaywrightSharp.Tests
             var log = await GetLogAsync();
             Assert.Single(log.Entries);
             var entry = log.Entries.First();
-            Assert.Equal(HttpStatusCode.OK, entry.Response.Status);
+            Assert.Equal(200, entry.Response.Status);
             Assert.Equal("OK", entry.Response.StatusText);
             Assert.Equal("HTTP/1.1", entry.Response.HttpVersion);
             Assert.True(entry.Response.Headers.Count() > 1);
@@ -168,7 +170,7 @@ namespace PlaywrightSharp.Tests
             var log = await GetLogAsync();
             Assert.Equal(2, log.Entries.Count());
             var entry = log.Entries.First();
-            Assert.Equal(HttpStatusCode.Redirect, entry.Response.Status);
+            Assert.Equal(302, entry.Response.Status);
             Assert.Equal(TestConstants.EmptyPage, entry.Response.RedirectURL);
         }
 
@@ -348,23 +350,46 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("pink", System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(content2.Text)));
         }
 
+#if NETCOREAPP
+        /// <summary>
+        /// We test that the har class we have, contains all the properties in the JSON file
+        /// </summary>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldRepresentTheHarFile()
+        {
+            await _page.GoToAsync(TestConstants.ServerUrl + "/har.html");
+            await _context.CloseAsync();
+            var log = GetHarResult(_harPath);
+            string serialized = JsonSerializer.Serialize(log, SerializerOptions);
+            string curatedHar = File.ReadAllText(_harPath)
+                .Replace("\"beforeRequest\": null,", string.Empty)
+                .Replace("\"afterRequest\": null", string.Empty);
+
+            var logAsDynamic = JsonDocument.Parse(curatedHar);
+            var serializedAsDynamic = JsonDocument.Parse(serialized);
+
+            Assert.True(new JsonElementComparer().Equals(logAsDynamic.RootElement, serializedAsDynamic.RootElement));
+        }
+#endif
+
         private async Task<HarLog> GetLogAsync()
         {
             await _context.CloseAsync();
-            return GetHarResult(_harPath);
+            return GetHarResult(_harPath).Log;
         }
 
-        private HarLog GetHarResult(string harPath)
-            => JsonSerializer.Deserialize<HarResult>(
-                File.ReadAllText(harPath),
-                new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    Converters =
-                    {
+        private HarResult GetHarResult(string harPath)
+            => JsonSerializer.Deserialize<HarResult>(File.ReadAllText(harPath), SerializerOptions);
+
+        private JsonSerializerOptions SerializerOptions { get; } = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            IgnoreNullValues = true,
+            Converters =
+            {
                 new HttpMethodConverter(),
                 new JsonStringEnumMemberConverter(JsonNamingPolicy.CamelCase),
-                    },
-                }).Log;
+            },
+        };
     }
 }
