@@ -842,7 +842,7 @@ namespace PlaywrightSharp.Transport.Channels
                 };
             }
 
-            return Connection.SendMessageToServer(Guid, "tap", args);
+            return Connection.SendMessageToServerAsync(Guid, "tap", args);
         }
     }
 }

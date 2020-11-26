@@ -565,7 +565,7 @@ namespace PlaywrightSharp.Transport.Channels
                 args["timeout"] = timeout;
             }
 
-            return Connection.SendMessageToServer(Guid, "tap", args);
+            return Connection.SendMessageToServerAsync(Guid, "tap", args);
         }
     }
 }

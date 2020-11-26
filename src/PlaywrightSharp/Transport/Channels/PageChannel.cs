@@ -390,7 +390,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task TouchscreenTapAsync(Point point)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "touchscreenTap",
                 new Dictionary<string, object>
