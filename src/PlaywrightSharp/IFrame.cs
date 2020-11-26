@@ -1,3 +1,28 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020 Darío Kondratiuk
+ * Copyright (c) 2020 Stafford Williams
+ * Modifications copyright (c) Microsoft Corporation.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -913,5 +938,25 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the attribute was evaluated (or timeout), yielding the textContent of the element.</returns>
         Task<string> GetTextContentAsync(string selector, int? timeout = null);
+
+        /// <summary>
+        /// This method taps an element matching selector by performing the following steps:
+        /// 1. Find an element match matching selector.If there is none, wait until a matching element is attached to the DOM.
+        /// 2. Wait for actionability checks on the matched element, unless force option is set.If the element is detached during the checks, the whole action is retried.
+        /// 3. Scroll the element into view if needed.
+        /// 4. Use page.touchscreen to tap the center of the element, or the specified position.
+        /// 5. Wait for initiated navigations to either succeed or fail, unless noWaitAfter option is set.
+        /// </summary>
+        /// <param name="selector">A selector to search for element to tap. If there are multiple elements satisfying the selector, the first will be tapped. See working with selectors for more details.</param>
+        /// <param name="modifiers">Modifier keys to press. Ensures that only these modifiers are pressed during the tap, and then restores current modifiers back. If not specified, currently pressed modifiers are used.</param>
+        /// <param name="position">A point to tap relative to the top-left corner of element padding box. If not specified, taps some visible point of the element.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <param name="force">Whether to bypass the actionability checks. Defaults to false.</param>
+        /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and
+        /// for pages to start loading. You can opt out of waiting via setting this flag.
+        /// You would only need this option in the exceptional cases such as navigating to inaccessible pages.
+        /// Defaults to false.</param>
+        /// <returns>A <see cref="Task"/> that completes when all steps combined succeeded. Or, if they have not finished during the specified timeout, this method rejects with a TimeoutError.</returns>
+        Task TapAsync(string selector, Modifier[] modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null);
     }
 }
