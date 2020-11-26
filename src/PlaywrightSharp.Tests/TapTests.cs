@@ -11,7 +11,6 @@ namespace PlaywrightSharp.Tests
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public sealed class TapTests : PlaywrightSharpPageBaseTest
     {
-
         /// <inheritdoc/>
         public TapTests(ITestOutputHelper output) :
                 base(output)
@@ -31,8 +30,8 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldSendAllOfTheCorrectEvents()
         {
             await Page.SetContentAsync(
-                @"<div id=""a"" style=""background: lightblue; width: 50px; height: 50px"">a</div>" +
-                @"<div id=""b"" style=""background: pink; width: 50px; height: 50px"">b</div>");
+                @"<div id=""a"" style=""background: lightblue; width: 50px; height: 50px"">a</div>
+                <div id=""b"" style=""background: pink; width: 50px; height: 50px"">b</div>");
 
             await Page.TapAsync("#a");
             var handle = await TrackEventsAsync("#b");

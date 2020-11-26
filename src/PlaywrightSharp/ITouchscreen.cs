@@ -13,7 +13,7 @@ namespace PlaywrightSharp
         /// Dispatches a touchstart and touchend event with a single touch at the position (x,y).
         /// </summary>
         /// <param name="point">The point at which to dispatch the touch.</param>
-        /// <returns>>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-        public Task TapAsync(Point point);
+        /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
+       Task TapAsync(Point point);
     }
 }
