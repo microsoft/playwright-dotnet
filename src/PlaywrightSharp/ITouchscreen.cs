@@ -14,6 +14,6 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="point">The point at which to dispatch the touch.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is confirmed by the browser.</returns>
-       Task TapAsync(Point point);
+        Task TapAsync(Point point);
     }
 }
