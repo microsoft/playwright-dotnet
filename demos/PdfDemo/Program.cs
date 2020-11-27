@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using PlaywrightSharp;
 
 namespace PdfDemo
@@ -10,9 +11,14 @@ namespace PdfDemo
     {
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Installing playwright");
-            await Playwright.InstallAsync();
             using var playwright = await Playwright.CreateAsync();
+            ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
+            {
+                builder.SetMinimumLevel(LogLevel.Debug);
+                builder.AddDebug();
+                builder.AddFilter((f, _) => f == "PlaywrightSharp.Playwright");
+            });
+			
             await using var browser = await playwright.Chromium.LaunchAsync(new LaunchOptions { Headless = true });
 
             var page = await browser.NewPageAsync();
