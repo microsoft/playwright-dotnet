@@ -6,9 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-    </ItemGroup>
-
-    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
       <PackageReference Include="PlaywrightSharp" Version="0.162.0" />
     </ItemGroup>
 </Project>
