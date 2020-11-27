@@ -18,7 +18,7 @@ namespace PlaywrightSharp.Transport
 {
     internal class Connection : IDisposable
     {
-        private const string BrowsersPathEnvironmentVariable = "PLAYWRIGHT_BROWSERS_PATH";
+        internal const string BrowsersPathEnvironmentVariable = "PLAYWRIGHT_BROWSERS_PATH";
         private const string DriverPathEnvironmentVariable = "PLAYWRIGHT_DRIVER_PATH";
 
         private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>>();

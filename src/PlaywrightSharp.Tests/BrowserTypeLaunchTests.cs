@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
+using PlaywrightSharp.Transport;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -85,14 +86,15 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldCurateTheLaunchError()
         {
-            var options = TestConstants.GetDefaultBrowserOptions();
-            options.ExecutablePath = Path.Combine(typeof(PlaywrightSharp.Playwright).Assembly.Location, "foo.exe");
-
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => BrowserType.LaunchAsync(options));
+            // Set an invalid location
+            using var playwright = await PlaywrightSharp.Playwright.CreateAsync(browsersPath: Path.Combine(typeof(PlaywrightSharp.Playwright).Assembly.Location));
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => playwright[TestConstants.Product].LaunchAsync());
 
             Assert.Contains("Failed to launch", exception.Message);
             Assert.Contains("Try re-installing the browsers running `playwright-cli.exe install` in windows or `playwright-cli install` in MacOS or Linux.", exception.Message);
             Assert.DoesNotContain("npm install playwright", exception.Message);
+            Assert.Contains("pass `debug: \"pw:api\"` to LaunchAsync", exception.Message);
+            Environment.SetEnvironmentVariable(Connection.BrowsersPathEnvironmentVariable, null);
         }
 
         ///<playwright-file>browsertype-launch.spec.ts</playwright-file>
@@ -106,6 +108,7 @@ namespace PlaywrightSharp.Tests
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => BrowserType.LaunchAsync(options));
 
             Assert.Contains("Failed to launch", exception.Message);
+            Assert.Contains("pass `debug: \"pw:api\"` to LaunchAsync", exception.Message);
         }
 
         ///<playwright-file>browsertype-launch.spec.ts</playwright-file>
