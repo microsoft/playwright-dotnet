@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1.6.0
+        uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.100
       - name: Extract Metadata
