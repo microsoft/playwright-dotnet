@@ -34,7 +34,7 @@ The way browsers are installed will vary depending on the use case scenario.
 
 ### Playwright in test projects
 
-If you use Playwright in test projects, all required browsers will be install at build time.
+If you use Playwright in test projects, all required browsers will be installed at build time.
 
 ### Using Playwright in Docker
 
