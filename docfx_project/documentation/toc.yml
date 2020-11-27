@@ -1,0 +1,8 @@
+- name: Documentation
+  href: index.md
+- name: Basic Examples
+  items:
+    - name: How to take screenshots and save it as a file
+      href: Page.ScreenshotAsync.md
+    - name: How to get internal logs
+      href: Playwright.Logger.md

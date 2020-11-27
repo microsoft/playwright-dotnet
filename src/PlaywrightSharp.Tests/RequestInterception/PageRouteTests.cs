@@ -554,7 +554,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.RouteAsync("**/*", (r, _) => route = r);
             _ = Page.EvalOnSelectorAsync("iframe", "(frame, url) => frame.src = url", TestConstants.EmptyPage);
             // Wait for request interception.
-            await Page.WaitForEvent(PageEvent.Request);
+            await Page.WaitForEventAsync(PageEvent.Request);
             // Delete frame to cause request to be canceled.
             await Page.EvalOnSelectorAsync("iframe", "frame => frame.remove()");
             await route.ContinueAsync();

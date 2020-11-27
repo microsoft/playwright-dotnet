@@ -15,7 +15,7 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         public Task AbortAsync(RequestAbortErrorCode errorCode)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "abort",
                 new Dictionary<string, object>
@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         public Task FulfillAsync(NormalizedFulfillResponse response)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "fulfill",
                 response);
@@ -48,7 +48,7 @@ namespace PlaywrightSharp.Transport.Channels
                 args["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray();
             }
 
-            return Connection.SendMessageToServer(
+            return Connection.SendMessageToServerAsync(
                 Guid,
                 "continue",
                 args,

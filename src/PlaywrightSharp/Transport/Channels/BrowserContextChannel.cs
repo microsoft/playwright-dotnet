@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal Task<PageChannel> NewPageAsync(string url)
-            => Connection.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "newPage",
                 new Dictionary<string, object>
@@ -86,10 +86,10 @@ namespace PlaywrightSharp.Transport.Channels
                     ["url"] = url,
                 });
 
-        internal Task CloseAsync() => Connection.SendMessageToServer(Guid, "close");
+        internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close");
 
         internal Task SetDefaultNavigationTimeoutNoReplyAsync(int timeout)
-            => Connection.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "setDefaultNavigationTimeoutNoReply",
                 new Dictionary<string, object>
@@ -98,7 +98,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task SetDefaultTimeoutNoReplyAsync(int timeout)
-            => Connection.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "setDefaultTimeoutNoReply",
                 new Dictionary<string, object>
@@ -106,17 +106,18 @@ namespace PlaywrightSharp.Transport.Channels
                     ["timeout"] = timeout,
                 });
 
-        internal Task ExposeBindingAsync(string name)
-            => Connection.SendMessageToServer<PageChannel>(
+        internal Task ExposeBindingAsync(string name, bool needsHandle)
+            => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "exposeBinding",
                 new Dictionary<string, object>
                 {
                     ["name"] = name,
+                    ["needsHandle"] = needsHandle,
                 });
 
         internal Task AddInitScriptAsync(string script)
-            => Connection.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "addInitScript",
                 new Dictionary<string, object>
@@ -125,7 +126,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task SetNetworkInterceptionEnabledAsync(bool enabled)
-            => Connection.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "setNetworkInterceptionEnabled",
                 new Dictionary<string, object>
@@ -134,7 +135,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task SetHttpCredentialsAsync(Credentials credentials)
-            => Connection.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "setHTTPCredentials",
                 new Dictionary<string, object>
@@ -143,7 +144,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task SetOfflineAsync(bool offline)
-            => Connection.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "setOffline",
                 new Dictionary<string, object>
@@ -153,7 +154,7 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal async Task<IEnumerable<NetworkCookie>> GetCookiesAsync(string[] urls)
         {
-            return (await Connection.SendMessageToServer(
+            return (await Connection.SendMessageToServerAsync(
                 Guid,
                 "cookies",
                 new Dictionary<string, object>
@@ -163,7 +164,7 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal Task AddCookiesAsync(IEnumerable<SetNetworkCookieParam> cookies)
-            => Connection.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "addCookies",
                 new Dictionary<string, object>
@@ -184,13 +185,13 @@ namespace PlaywrightSharp.Transport.Channels
                 args["origin"] = origin;
             }
 
-            return Connection.SendMessageToServer<PageChannel>(Guid, "grantPermissions", args, true);
+            return Connection.SendMessageToServerAsync<PageChannel>(Guid, "grantPermissions", args, true);
         }
 
-        internal Task ClearPermissionsAsync() => Connection.SendMessageToServer<PageChannel>(Guid, "clearPermissions", null);
+        internal Task ClearPermissionsAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "clearPermissions", null);
 
         internal Task SetGeolocationAsync(Geolocation geolocation)
-            => Connection.SendMessageToServer<PageChannel>(
+            => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "setGeolocation",
                 new Dictionary<string, object>
@@ -199,10 +200,10 @@ namespace PlaywrightSharp.Transport.Channels
                 },
                 true);
 
-        internal Task ClearCookiesAsync() => Connection.SendMessageToServer<PageChannel>(Guid, "clearCookies", null);
+        internal Task ClearCookiesAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "clearCookies", null);
 
         internal Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
-            => Connection.SendMessageToServer(
+            => Connection.SendMessageToServerAsync(
                 Guid,
                 "setExtraHTTPHeaders",
                 new Dictionary<string, object>
@@ -211,7 +212,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal Task<CDPSessionChannel> NewCDPSessionAsync(IPage page)
-            => Connection.SendMessageToServer<CDPSessionChannel>(
+            => Connection.SendMessageToServerAsync<CDPSessionChannel>(
                 Guid,
                 "crNewCDPSession",
                 new Dictionary<string, object>

@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal(TestConstants.CrossProcessHttpPrefix + "/grid.html", await frame.EvaluateAsync<string>("() => '' + location.href"));
 
             var (frameDetached, _) = await TaskUtils.WhenAll(
-                _page.WaitForEvent(PageEvent.FrameDetached),
+                _page.WaitForEventAsync(PageEvent.FrameDetached),
                 _page.EvaluateAsync<string>("() => document.querySelector('iframe').remove()"));
 
             Assert.Equal(frame, frameDetached.Frame);
@@ -147,11 +147,12 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldSupportContextOptions()
         {
-            BrowserContextOptions contextOptions = Playwright.Devices["iPhone 6"];
-            contextOptions.TimezoneId = "America/Jamaica";
-            contextOptions.Locale = "fr-CH";
-            contextOptions.UserAgent = "UA";
-            await using var context = await _browser.NewContextAsync(contextOptions);
+            await using var context = await _browser.NewContextAsync(new BrowserContextOptions(Playwright.Devices["iPhone 6"])
+            {
+                TimezoneId = "America/Jamaica",
+                Locale = "fr-CH",
+                UserAgent = "UA",
+            });
             var page = await context.NewPageAsync();
 
             var (userAgent, _) = await TaskUtils.WhenAll(

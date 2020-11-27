@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldCreateAWorkerFromAServiceWorker()
         {
-            var workerTask = Context.WaitForEvent(ContextEvent.ServiceWorker);
+            var workerTask = Context.WaitForEventAsync(ContextEvent.ServiceWorker);
             await Page.GoToAsync(TestConstants.ServerUrl + "/serviceworkers/empty/sw.html");
 
             var worker = (await workerTask).Worker;
@@ -39,13 +39,13 @@ namespace PlaywrightSharp.Tests.Chromium
         public async Task ServiceWorkersShouldReturnCurrentWorkers()
         {
             var (worker1, _) = await TaskUtils.WhenAll(
-                Context.WaitForEvent(ContextEvent.ServiceWorker),
+                Context.WaitForEventAsync(ContextEvent.ServiceWorker),
                 Page.GoToAsync(TestConstants.ServerUrl + "/serviceworkers/empty/sw.html"));
 
             Assert.Single(((IChromiumBrowserContext)Context).ServiceWorkers);
 
             var (worker2, _) = await TaskUtils.WhenAll(
-                Context.WaitForEvent(ContextEvent.ServiceWorker),
+                Context.WaitForEventAsync(ContextEvent.ServiceWorker),
                 Page.GoToAsync(TestConstants.CrossProcessUrl + "/serviceworkers/empty/sw.html"));
 
             Assert.Equal(2, ((IChromiumBrowserContext)Context).ServiceWorkers.Length);
@@ -77,7 +77,7 @@ namespace PlaywrightSharp.Tests.Chromium
         public async Task ShouldCloseServiceWorkerTogetherWithTheContext()
         {
             var (worker, _) = await TaskUtils.WhenAll(
-                Context.WaitForEvent(ContextEvent.ServiceWorker),
+                Context.WaitForEventAsync(ContextEvent.ServiceWorker),
                 Page.GoToAsync(TestConstants.ServerUrl + "/serviceworkers/empty/sw.html"));
 
             var messages = new List<string>();

@@ -26,8 +26,8 @@
       },
       {
         "files": [
-          "examples/**.yml",
-          "examples/**.md"
+          "documentation/**.yml",
+          "documentation/**.md"
         ]
       },
       {
@@ -40,7 +40,9 @@
     "resource": [
       {
         "files": [
-          "images/**"
+          "images/**",
+          "logo.svg",
+          "favicon.ico"
         ]
       }
     ],
@@ -59,7 +61,8 @@
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
-      "default"
+      "default",
+      "templates/material"
     ],
     "postProcessors": [],
     "markdownEngineName": "markdig",

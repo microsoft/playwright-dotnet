@@ -71,6 +71,13 @@ namespace PlaywrightSharp
         string Failure { get; }
 
         /// <summary>
+        /// Returns resource timing information for given request.
+        /// Most of the timing values become available upon the response, responseEnd becomes available when request finishes.
+        /// Find more information at <see href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceResourceTiming">Resource Timing API</see>.
+        /// </summary>
+        public ResourceTiming Timing { get; }
+
+        /// <summary>
         /// Responsed attached to the request.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the response is resolved.</returns>
@@ -80,15 +87,7 @@ namespace PlaywrightSharp
         /// Returns the parsed request's body for form-urlencoded and JSON as a fallback if any.
         /// </summary>
         /// <param name="options">Parser options.</param>
-        /// <returns>A <see cref="Task"/> that completes when the json body is parsed, yielding a <see cref="JsonDocument"/> representation of request body.</returns>
-        JsonDocument GetPostDataJsonAsync(JsonDocumentOptions options = default);
-
-        /// <summary>
-        /// Returns the parsed request's body for form-urlencoded and JSON as a fallback if any.
-        /// </summary>
-        /// <typeparam name="T">Return type.</typeparam>
-        /// <param name="options">Parser options.</param>
-        /// <returns>A <see cref="Task"/> that completes when the json body is parsed, yielding a <typeparamref name="T"/> representation of request body.</returns>
-        T GetJsonAsync<T>(JsonSerializerOptions options = null);
+        /// <returns>A <see cref="JsonDocument"/> representing the request body.</returns>
+        JsonDocument GetPostDataJson(JsonDocumentOptions options = default);
     }
 }

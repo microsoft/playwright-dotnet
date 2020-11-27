@@ -1,6 +1,4 @@
-- name: Api Documentation
+- name: Documentation
+  href: documentation/index.md
+- name: API
   href: api/
-  homepage: api/index.md
-- name: Examples
-  href: exmaples/
-  homepage: examples/index.md

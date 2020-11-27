@@ -80,7 +80,7 @@ namespace PlaywrightSharp.Tests.Page.Network
             Page.RequestFinished += (sender, e) => requestFinished = requestFinished || e.Request.Url.Contains("/get");
             // send request and wait for server response
             var (pageResponse, _) = await TaskUtils.WhenAll(
-                Page.WaitForEvent(PageEvent.Response),
+                Page.WaitForEventAsync(PageEvent.Response),
                 Page.EvaluateAsync("fetch('./get', { method: 'GET'})"),
                 Server.WaitForRequest("/get")
             );

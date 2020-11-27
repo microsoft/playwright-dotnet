@@ -1,4 +1,6 @@
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp
 {
@@ -96,5 +98,15 @@ namespace PlaywrightSharp
         /// CSPViolationReport.
         /// </summary>
         CSPViolationReport,
+
+        /// <summary>
+        /// Images.
+        /// </summary>
+        Images,
+
+        /// <summary>
+        /// Beacon.
+        /// </summary>
+        Beacon,
     }
 }

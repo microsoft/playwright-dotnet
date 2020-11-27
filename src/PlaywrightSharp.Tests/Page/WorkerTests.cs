@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task PageWorkers()
         {
             await TaskUtils.WhenAll(
-                Page.WaitForEvent(PageEvent.Worker),
+                Page.WaitForEventAsync(PageEvent.Worker),
                 Page.GoToAsync(TestConstants.ServerUrl + "/worker/worker.html"));
             var worker = Page.Workers.First();
             Assert.Contains("worker.js", worker.Url);
@@ -61,7 +61,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldReportConsoleLogs()
         {
             var (message, _) = await TaskUtils.WhenAll(
-                Page.WaitForEvent(PageEvent.Console),
+                Page.WaitForEventAsync(PageEvent.Console),
                 Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], {type: 'application/javascript'})))")
             );
 
@@ -91,7 +91,7 @@ namespace PlaywrightSharp.Tests.Page
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldEvaluate()
         {
-            var workerCreatedTask = Page.WaitForEvent(PageEvent.Worker);
+            var workerCreatedTask = Page.WaitForEventAsync(PageEvent.Worker);
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], {type: 'application/javascript'})))");
 
             await workerCreatedTask;
@@ -125,7 +125,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldClearUponNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var workerCreatedTask = Page.WaitForEvent(PageEvent.Worker);
+            var workerCreatedTask = Page.WaitForEventAsync(PageEvent.Worker);
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
             var worker = (await workerCreatedTask).Worker;
 
@@ -145,7 +145,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldClearUponCrossProcessNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var workerCreatedTask = Page.WaitForEvent(PageEvent.Worker);
+            var workerCreatedTask = Page.WaitForEventAsync(PageEvent.Worker);
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
             var worker = (await workerCreatedTask).Worker;
 
@@ -165,7 +165,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldReportNetworkActivity()
         {
             var (worker, _) = await TaskUtils.WhenAll(
-                Page.WaitForEvent(PageEvent.Worker),
+                Page.WaitForEventAsync(PageEvent.Worker),
                 Page.GoToAsync(TestConstants.ServerUrl + "/worker/worker.html")
             );
 
@@ -215,7 +215,7 @@ namespace PlaywrightSharp.Tests.Page
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
             var (worker, _) = await TaskUtils.WhenAll(
-                page.WaitForEvent(PageEvent.Worker),
+                page.WaitForEventAsync(PageEvent.Worker),
                 page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], {type: 'application/javascript'})))"));
 
             Assert.Equal("10\u00A0000,2", await worker.Worker.EvaluateAsync<string>("() => (10000.20).toLocaleString()"));

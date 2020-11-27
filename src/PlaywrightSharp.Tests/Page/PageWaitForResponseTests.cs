@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldRespectTimeout()
         {
             var exception = await Assert.ThrowsAsync<TimeoutException>(
-                () => Page.WaitForEvent<ResponseEventArgs>(PageEvent.Response, _ => false, 1));
+                () => Page.WaitForEventAsync<ResponseEventArgs>(PageEvent.Response, _ => false, 1));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -54,7 +54,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             Page.DefaultTimeout = 1;
             var exception = await Assert.ThrowsAsync<TimeoutException>(
-                () => Page.WaitForEvent<ResponseEventArgs>(PageEvent.Response, _ => false));
+                () => Page.WaitForEventAsync<ResponseEventArgs>(PageEvent.Response, _ => false));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithPredicate()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var task = Page.WaitForEvent<ResponseEventArgs>(PageEvent.Response, e => e.Response.Url == TestConstants.ServerUrl + "/digits/2.png");
+            var task = Page.WaitForEventAsync<ResponseEventArgs>(PageEvent.Response, e => e.Response.Url == TestConstants.ServerUrl + "/digits/2.png");
             var (responseEvent, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync<string>(@"() => {

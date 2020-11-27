@@ -3,7 +3,7 @@ using System;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Page events for <see cref="IPage.WaitForEvent{T}(PlaywrightEvent{T}, Func{T, bool}, int?)"/>.
+    /// Page events for <see cref="IPage.WaitForEventAsync{T}(PlaywrightEvent{T}, Func{T, bool}, int?)"/>.
     /// </summary>
     public static class PageEvent
     {
@@ -86,5 +86,10 @@ namespace PlaywrightSharp
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.DOMContentLoaded"/>.
         /// </summary>
         public static PlaywrightEvent<EventArgs> DOMContentLoaded { get; } = new PlaywrightEvent<EventArgs>() { Name = "DOMContentLoaded" };
+
+        /// <summary>
+        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.WebSocket"/>.
+        /// </summary>
+        public static PlaywrightEvent<WebSocketEventArgs> WebSocket { get; } = new PlaywrightEvent<WebSocketEventArgs>() { Name = "WebSocket" };
     }
 }

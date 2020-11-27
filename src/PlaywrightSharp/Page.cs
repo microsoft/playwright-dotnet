@@ -1,3 +1,28 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020 Darío Kondratiuk
+ * Copyright (c) 2020 Meir Blachman
+ * Modifications copyright (c) Microsoft Corporation.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -25,6 +50,7 @@ namespace PlaywrightSharp
         private List<RouteSetting> _routes = new List<RouteSetting>();
         private EventHandler<FileChooserEventArgs> _fileChooserEventHandler;
         private bool _fileChooserIntercepted;
+        private IVideo _video;
 
         internal Page(IChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
         {
@@ -36,9 +62,11 @@ namespace PlaywrightSharp
             MainFrame.Page = this;
             _frames.Add(MainFrame);
             ViewportSize = initializer.ViewportSize;
+            IsClosed = initializer.IsClosed;
             Accessibility = new Accesibility(_channel);
             Coverage = BrowserContext.BrowserName == BrowserType.Chromium ? new ChromiumCoverage(_channel) : null;
             Keyboard = new Keyboard(_channel);
+            Touchscreen = new Touchscreen(_channel);
             Mouse = new Mouse(_channel);
             _channel.Closed += Channel_Closed;
             _channel.Crashed += Channel_Crashed;
@@ -46,7 +74,7 @@ namespace PlaywrightSharp
             _channel.RequestFailed += (sender, e) =>
             {
                 e.Request.Object.Failure = e.FailureText;
-
+                e.Request.Object.Timing.ResponseEnd = e.ResponseEndTiming;
                 RequestFailed?.Invoke(this, new RequestFailedEventArgs
                 {
                     Request = e.Request.Object,
@@ -55,8 +83,13 @@ namespace PlaywrightSharp
             };
 
             _channel.Request += (sender, e) => Request?.Invoke(this, e);
-            _channel.RequestFinished += (sender, e) => RequestFinished?.Invoke(this, e);
+            _channel.RequestFinished += (sender, e) =>
+            {
+                e.Request.Object.Timing.ResponseEnd = e.ResponseEndTiming;
+                RequestFinished?.Invoke(this, new RequestEventArgs { Request = e.Request.Object });
+            };
             _channel.Response += (sender, e) => Response?.Invoke(this, e);
+            _channel.WebSocket += (sender, e) => WebSocket?.Invoke(this, e);
             _channel.BindingCall += Channel_BindingCall;
             _channel.Route += Channel_Route;
             _channel.FrameAttached += Channel_FrameAttached;
@@ -67,6 +100,14 @@ namespace PlaywrightSharp
             _channel.Download += (sender, e) => Download?.Invoke(this, e);
             _channel.PageError += (sender, e) => PageError?.Invoke(this, e);
             _channel.Load += (sender, e) => Load?.Invoke(this, e);
+            _channel.Video += (sender, e) =>
+            {
+                if (Video != null)
+                {
+                    ((Video)Video).SetRelativePath(e.RelativePath);
+                }
+            };
+
             _channel.FileChooser += (sender, e) =>
             {
                 _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(this, e.Element.Object, e.IsMultiple));
@@ -87,6 +128,9 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public event EventHandler<RequestEventArgs> Request;
+
+        /// <inheritdoc />
+        public event EventHandler<WebSocketEventArgs> WebSocket;
 
         /// <inheritdoc />
         public event EventHandler<ResponseEventArgs> Response;
@@ -197,6 +241,9 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public IKeyboard Keyboard { get; }
 
+        /// <inheritdoc />
+        public ITouchscreen Touchscreen { get; }
+
         /// <inheritdoc/>
         public int DefaultTimeout
         {
@@ -232,6 +279,26 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public ICoverage Coverage { get; }
+
+        /// <inheritdoc />
+        public IVideo Video
+        {
+            get
+            {
+                if (_video != null)
+                {
+                    return _video;
+                }
+
+                if (string.IsNullOrEmpty(BrowserContext.Options?.RecordVideo?.Dir))
+                {
+                    return null;
+                }
+
+                _video = new Video(this);
+                return _video;
+            }
+        }
 
         internal BrowserContext OwnedContext { get; set; }
 
@@ -303,21 +370,21 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public async Task<IRequest> WaitForRequestAsync(string url, int? timeout = null)
         {
-            var result = await WaitForEvent(PageEvent.Request, e => e.Request.Url.Equals(url), timeout).ConfigureAwait(false);
+            var result = await WaitForEventAsync(PageEvent.Request, e => e.Request.Url.Equals(url), timeout).ConfigureAwait(false);
             return result.Request;
         }
 
         /// <inheritdoc />
         public async Task<IRequest> WaitForRequestAsync(Regex url, int? timeout = null)
         {
-            var result = await WaitForEvent(PageEvent.Request, e => url.IsMatch(e.Request.Url), timeout).ConfigureAwait(false);
+            var result = await WaitForEventAsync(PageEvent.Request, e => url.IsMatch(e.Request.Url), timeout).ConfigureAwait(false);
             return result.Request;
         }
 
         /// <inheritdoc />
         public async Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> predicate, int? timeout = null)
         {
-            var result = await WaitForEvent(PageEvent.Request, e => predicate(e.Request), timeout).ConfigureAwait(false);
+            var result = await WaitForEventAsync(PageEvent.Request, e => predicate(e.Request), timeout).ConfigureAwait(false);
             return result.Request;
         }
 
@@ -365,7 +432,7 @@ namespace PlaywrightSharp
             => MainFrame.WaitForFunctionAsync(true, pageFunction, arg, timeout, null, polling);
 
         /// <inheritdoc />
-        public async Task<T> WaitForEvent<T>(PlaywrightEvent<T> pageEvent, Func<T, bool> predicate = null, int? timeout = null)
+        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<T, bool> predicate = null, int? timeout = null)
             where T : EventArgs
         {
             if (pageEvent == null)
@@ -393,10 +460,17 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public async Task CloseAsync(bool runBeforeUnload = false)
         {
-            await _channel.CloseAsync(runBeforeUnload).ConfigureAwait(false);
-            if (OwnedContext != null)
+            try
             {
-                await OwnedContext.CloseAsync().ConfigureAwait(false);
+                await _channel.CloseAsync(runBeforeUnload).ConfigureAwait(false);
+                if (OwnedContext != null)
+                {
+                    await OwnedContext.CloseAsync().ConfigureAwait(false);
+                }
+            }
+            catch (Exception e) when (IsSafeCloseException(e))
+            {
+                // Swallow exception
             }
         }
 
@@ -632,6 +706,10 @@ namespace PlaywrightSharp
             => ExposeBindingAsync(name, (Delegate)playwrightFunction);
 
         /// <inheritdoc/>
+        public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> playwrightFunction)
+            => ExposeBindingAsync(name, (Delegate)playwrightFunction, true);
+
+        /// <inheritdoc/>
         public Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> playwrightFunction)
             => ExposeBindingAsync(name, (Delegate)playwrightFunction);
 
@@ -678,21 +756,21 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public async Task<IResponse> WaitForResponseAsync(string url, int? timeout = null)
         {
-            var result = await WaitForEvent(PageEvent.Response, e => e.Response.Url.Equals(url), timeout).ConfigureAwait(false);
+            var result = await WaitForEventAsync(PageEvent.Response, e => e.Response.Url.Equals(url), timeout).ConfigureAwait(false);
             return result.Response;
         }
 
         /// <inheritdoc />
         public async Task<IResponse> WaitForResponseAsync(Regex url, int? timeout = null)
         {
-            var result = await WaitForEvent(PageEvent.Response, e => url.IsMatch(e.Response.Url), timeout).ConfigureAwait(false);
+            var result = await WaitForEventAsync(PageEvent.Response, e => url.IsMatch(e.Response.Url), timeout).ConfigureAwait(false);
             return result.Response;
         }
 
         /// <inheritdoc />
         public async Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> predicate, int? timeout = null)
         {
-            var result = await WaitForEvent(PageEvent.Response, e => predicate(e.Response), timeout).ConfigureAwait(false);
+            var result = await WaitForEventAsync(PageEvent.Response, e => predicate(e.Response), timeout).ConfigureAwait(false);
             return result.Response;
         }
 
@@ -706,7 +784,7 @@ namespace PlaywrightSharp
             bool printBackground = false,
             bool landscape = false,
             string pageRanges = "",
-            PaperFormat format = null,
+            PaperFormat? format = null,
             string width = null,
             string height = null,
             Margin margin = null,
@@ -848,6 +926,10 @@ namespace PlaywrightSharp
         public Task<string> GetTextContentAsync(string selector, int? timeout = null)
              => MainFrame.GetTextContentAsync(true, selector, timeout);
 
+        /// <inheritdoc />
+        public Task TapAsync(string selector, Modifier[] modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)
+            => MainFrame.TapAsync(true, selector, modifiers, position, timeout, force, noWaitAfter);
+
         internal void OnFrameNavigated(Frame frame)
             => FrameNavigated?.Invoke(this, new FrameEventArgs(frame));
 
@@ -880,6 +962,10 @@ namespace PlaywrightSharp
 
             return Task.CompletedTask;
         }
+
+        private bool IsSafeCloseException(Exception e)
+            => e.Message.Contains(PlaywrightSharpException.BrowserClosedExceptionMessage) ||
+               e.Message.Contains(PlaywrightSharpException.BrowserOrContextClosedExceptionMessage);
 
         private void Channel_Closed(object sender, EventArgs e)
         {
@@ -948,7 +1034,7 @@ namespace PlaywrightSharp
             _waitForCancellationTcs.Clear();
         }
 
-        private Task ExposeBindingAsync(string name, Delegate playwrightFunction)
+        private Task ExposeBindingAsync(string name, Delegate playwrightFunction, bool handle = false)
         {
             if (Bindings.ContainsKey(name))
             {
@@ -957,7 +1043,7 @@ namespace PlaywrightSharp
 
             Bindings.Add(name, playwrightFunction);
 
-            return _channel.ExposeBindingAsync(name);
+            return _channel.ExposeBindingAsync(name, handle);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace PlaywrightSharp.Helpers
             _semaphore.Dispose();
         }
 
-        internal async Task<T> Enqueue<T>(Func<Task<T>> taskGenerator)
+        internal async Task<T> EnqueueAsync<T>(Func<Task<T>> taskGenerator)
         {
             await _semaphore.WaitAsync().ConfigureAwait(false);
             try
@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Helpers
             }
         }
 
-        internal async Task Enqueue(Func<Task> taskGenerator)
+        internal async Task EnqueueAsync(Func<Task> taskGenerator)
         {
             await _semaphore.WaitAsync().ConfigureAwait(false);
             try

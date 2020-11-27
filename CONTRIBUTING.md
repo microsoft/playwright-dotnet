@@ -33,6 +33,23 @@ Though this list will change over time, these are the things to consider now:
  * Try to follow the current style.
  * Don’t reinvent the wheel.
 
+### Dotnet Format
+
+To help with formatting, you can make use of `dotnet format`. All you have to do is run
+
+```powershell
+dotnet tool update dotnet-format --add-source https://dotnet.myget.org/F/format/api/v3/index.json -g
+```
+
+and then
+
+```powershell
+dotnet format
+```
+
+and the result should be formatted code according to our style guide.
+
+
 ## Commit Messages
 
 Don’t worry about commit messages or about how many commits your PR has. [Your PR will be squashed](https://help.github.com/articles/about-pull-request-merges/#squash-and-merge-your-pull-request-commits), so the commit message will be set at that time.
@@ -41,3 +58,31 @@ Don’t worry about commit messages or about how many commits your PR has. [Your
 
 * Every feature should be accompanied by a test.
 * Every public api event/method should be accompanied by a test.
+
+### Running Tests Locally
+
+When you run the tests locally for the first time, you might be greeted with the following error message. 
+
+This happens because you're missing a certificate. To generate one, you can use the `dotnet dev-certs` tooling. 
+
+In your repository root, run the following:
+
+```powershell
+ dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
+ ```
+
+ You should be all set for running the tests now. You can run them by either executing all of them:
+
+ ```powershell
+dotnet test .\src\PlaywrightSharp.sln
+ ```
+
+ or specifying a filter, such as:
+
+```powershell
+dotnet test .\src\PlaywrightSharp.sln --filter PlaywrightSharp.Tests.TapTests
+```
+
+to narrow down the tests. 
+
+Additionally, you can use the Test Explorer if you're using Visual Studio.

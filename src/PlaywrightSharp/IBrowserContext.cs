@@ -46,6 +46,11 @@ namespace PlaywrightSharp
         int DefaultNavigationTimeout { get; set; }
 
         /// <summary>
+        /// Returns the browser instance of the context. If it was launched as a persistent context null gets returned.
+        /// </summary>
+        IBrowser Browser { get; }
+
+        /// <summary>
         /// An array of all pages inside the browser context.
         /// </summary>
         IPage[] Pages { get; }
@@ -154,7 +159,7 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <typeparam name="T">Return type.</typeparam>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
-        Task<T> WaitForEvent<T>(PlaywrightEvent<T> e, Func<T, bool> predicate = null, int? timeout = null)
+        Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> e, Func<T, bool> predicate = null, int? timeout = null)
             where T : EventArgs;
 
         /// <summary>
@@ -212,6 +217,20 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <returns>Task.</returns>
         Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> playwrightBinding);
+
+        /// <summary>
+        /// The method adds a function called name on the window object of every frame in every page in the context.
+        /// When called, the function executes <paramref name="playwrightBinding"/> in C# and returns a <see cref="Task"/> which resolves to the return value of <paramref name="playwrightBinding"/>.
+        /// </summary>
+        /// <typeparam name="TResult">The result of <paramref name="playwrightBinding"/>.</typeparam>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="playwrightBinding">Callback function which will be called in Playwright's context.</param>
+        /// <remarks>
+        /// If the <paramref name="playwrightBinding"/> returns a <see cref="Task"/>, it will be awaited.
+        /// Functions installed via <see cref="ExposeBindingAsync{T, TResult}(string, Func{BindingSource, T, TResult})"/> survive navigations.
+        /// </remarks>
+        /// <returns>Task.</returns>
+        Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> playwrightBinding);
 
         /// <summary>
         /// The method adds a function called name on the window object of every frame in every page in the context.

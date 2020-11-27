@@ -158,7 +158,7 @@ namespace PlaywrightSharp.Tests
             Page.Request += (sender, e) => request = e.Request;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: JSON.stringify({ foo: 'bar'})})");
             Assert.NotNull(request);
-            Assert.Equal("bar", request.GetPostDataJsonAsync().RootElement.GetProperty("foo").ToString());
+            Assert.Equal("bar", request.GetPostDataJson().RootElement.GetProperty("foo").ToString());
         }
 
         ///<playwright-file>network-request.spec.js</playwright-file>
@@ -174,7 +174,7 @@ namespace PlaywrightSharp.Tests
             await Page.ClickAsync("input[type=submit]");
 
             Assert.NotNull(request);
-            var element = request.GetPostDataJsonAsync().RootElement;
+            var element = request.GetPostDataJson().RootElement;
             Assert.Equal("bar", element.GetProperty("foo").ToString());
             Assert.Equal("123", element.GetProperty("baz").ToString());
         }
@@ -185,7 +185,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldBeUndefinedWhenThereIsNoPostData2()
         {
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Null(response.Request.GetPostDataJsonAsync());
+            Assert.Null(response.Request.GetPostDataJson());
         }
 
         ///<playwright-file>network-request.spec.js</playwright-file>

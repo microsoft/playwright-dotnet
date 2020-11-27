@@ -110,7 +110,7 @@ namespace PlaywrightSharp.Tests.Chromium
                     Expression = "3 + 1",
                     ReturnByValue = true
                 }));
-            Assert.Contains("Target browser or context has been closed", exception.Message);
+            Assert.Contains(PlaywrightSharpException.BrowserOrContextClosedExceptionMessage, exception.Message);
         }
 
         ///<playwright-file>chromium/session.spec.js</playwright-file>

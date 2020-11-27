@@ -122,7 +122,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         {
             var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            var alertTask = page.WaitForEvent(PageEvent.Dialog);
+            var alertTask = page.WaitForEventAsync(PageEvent.Dialog);
 
             await page.EvaluateAsync("() => setTimeout(() => alert('hello'), 0)");
             await alertTask;

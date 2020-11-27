@@ -1,3 +1,5 @@
+using System;
+
 namespace PlaywrightSharp
 {
     /// <summary>
@@ -46,14 +48,9 @@ namespace PlaywrightSharp
                 return null;
             }
 
-            return new BrowserContextOptions()
-            {
-                UserAgent = descriptor.UserAgent,
-                Viewport = descriptor.Viewport,
-                HasTouch = descriptor.HasTouch,
-                IsMobile = descriptor.IsMobile,
-                DeviceScaleFactor = descriptor.DeviceScaleFactor,
-            };
+            var options = new BrowserContextOptions();
+            descriptor.HydrateBrowserContextOptions(options);
+            return options;
         }
 
         /// <summary>
@@ -61,5 +58,14 @@ namespace PlaywrightSharp
         /// </summary>
         /// <returns>A <see cref="BrowserContextOptions"/> with the same information as the <see cref="DeviceDescriptor"/>.</returns>
         public BrowserContextOptions ToBrowserContextOptions() => this;
+
+        internal void HydrateBrowserContextOptions(BrowserContextOptions options)
+        {
+            options.UserAgent = UserAgent;
+            options.Viewport = Viewport;
+            options.HasTouch = HasTouch;
+            options.IsMobile = IsMobile;
+            options.DeviceScaleFactor = DeviceScaleFactor;
+        }
     }
 }

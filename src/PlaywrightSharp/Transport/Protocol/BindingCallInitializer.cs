@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text.Json;
+using PlaywrightSharp.Transport.Channels;
 
 namespace PlaywrightSharp.Transport.Protocol
 {
@@ -10,5 +11,7 @@ namespace PlaywrightSharp.Transport.Protocol
         public Frame Frame { get; set; }
 
         public JsonElement[] Args { get; set; }
+
+        public JSHandleChannel Handle { get; set; }
     }
 }

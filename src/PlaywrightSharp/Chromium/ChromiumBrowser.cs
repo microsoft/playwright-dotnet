@@ -35,22 +35,24 @@ namespace PlaywrightSharp.Chromium
         /// <inheritdoc/>
         public new async Task<IChromiumBrowserContext> NewContextAsync(
             ViewportSize viewport,
-            string userAgent,
-            bool? bypassCSP,
-            bool? javaScriptEnabled,
-            string timezoneId,
-            Geolocation geolocation,
-            ContextPermission[] permissions,
-            bool? isMobile,
-            bool? offline,
-            decimal? deviceScaleFactor,
-            Credentials httpCredentials,
-            bool? hasTouch,
-            bool? acceptDownloads,
-            bool? ignoreHTTPSErrors,
-            ColorScheme? colorScheme,
-            string locale,
-            Dictionary<string, string> extraHttpHeaders)
+            string userAgent = null,
+            bool? bypassCSP = null,
+            bool? javaScriptEnabled = null,
+            string timezoneId = null,
+            Geolocation geolocation = null,
+            ContextPermission[] permissions = null,
+            bool? isMobile = null,
+            bool? offline = null,
+            decimal? deviceScaleFactor = null,
+            Credentials httpCredentials = null,
+            bool? hasTouch = null,
+            bool? acceptDownloads = null,
+            bool? ignoreHTTPSErrors = null,
+            ColorScheme? colorScheme = null,
+            string locale = null,
+            Dictionary<string, string> extraHttpHeaders = null,
+            RecordHarOptions recordHar = null,
+            RecordVideoOptions recordVideo = null)
             => await base.NewContextAsync(
                 viewport,
                 userAgent,
@@ -68,26 +70,30 @@ namespace PlaywrightSharp.Chromium
                 ignoreHTTPSErrors,
                 colorScheme,
                 locale,
-                extraHttpHeaders).ConfigureAwait(false) as IChromiumBrowserContext;
+                extraHttpHeaders,
+                recordHar,
+                recordVideo).ConfigureAwait(false) as IChromiumBrowserContext;
 
         /// <inheritdoc/>
         public new async Task<IChromiumBrowserContext> NewContextAsync(
-            string userAgent,
-            bool? bypassCSP,
-            bool? javaScriptEnabled,
-            string timezoneId,
-            Geolocation geolocation,
-            ContextPermission[] permissions,
-            bool? isMobile,
-            bool? offline,
-            decimal? deviceScaleFactor,
-            Credentials httpCredentials,
-            bool? hasTouch,
-            bool? acceptDownloads,
-            bool? ignoreHTTPSErrors,
-            ColorScheme? colorScheme,
-            string locale,
-            Dictionary<string, string> extraHttpHeaders)
+            string userAgent = null,
+            bool? bypassCSP = null,
+            bool? javaScriptEnabled = null,
+            string timezoneId = null,
+            Geolocation geolocation = null,
+            ContextPermission[] permissions = null,
+            bool? isMobile = null,
+            bool? offline = null,
+            decimal? deviceScaleFactor = null,
+            Credentials httpCredentials = null,
+            bool? hasTouch = null,
+            bool? acceptDownloads = null,
+            bool? ignoreHTTPSErrors = null,
+            ColorScheme? colorScheme = null,
+            string locale = null,
+            Dictionary<string, string> extraHttpHeaders = null,
+            RecordHarOptions recordHar = null,
+            RecordVideoOptions recordVideo = null)
             => await base.NewContextAsync(
                 userAgent,
                 bypassCSP,
@@ -104,7 +110,9 @@ namespace PlaywrightSharp.Chromium
                 ignoreHTTPSErrors,
                 colorScheme,
                 locale,
-                extraHttpHeaders).ConfigureAwait(false) as IChromiumBrowserContext;
+                extraHttpHeaders,
+                recordHar,
+                recordVideo).ConfigureAwait(false) as IChromiumBrowserContext;
 
         /// <inheritdoc/>
         public new async Task<IChromiumBrowserContext> NewContextAsync(BrowserContextOptions options)

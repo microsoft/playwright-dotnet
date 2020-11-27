@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         internal Task<JsonElement?> SendAsync(string method, object args)
-            => Connection.SendMessageToServer<JsonElement?>(
+            => Connection.SendMessageToServerAsync<JsonElement?>(
                 Guid,
                 "send",
                 new Dictionary<string, object>
@@ -41,6 +41,6 @@ namespace PlaywrightSharp.Transport.Channels
                     ["params"] = args,
                 });
 
-        internal Task DetachAsync() => Connection.SendMessageToServer(Guid, "detach", null);
+        internal Task DetachAsync() => Connection.SendMessageToServerAsync(Guid, "detach", null);
     }
 }

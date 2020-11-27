@@ -45,9 +45,16 @@ namespace PlaywrightSharp
                     },
                 };
 
-                for (int i = 0; i < methodParams.Length; i++)
+                if (methodParams.Length == 1 && methodParams[0] == typeof(IJSHandle))
                 {
-                    args.Add(ScriptsHelper.ParseEvaluateResult(_initializer.Args[i], methodParams[i]));
+                    args.Add(_initializer.Handle.Object);
+                }
+                else
+                {
+                    for (int i = 0; i < methodParams.Length; i++)
+                    {
+                        args.Add(ScriptsHelper.ParseEvaluateResult(_initializer.Args[i], methodParams[i]));
+                    }
                 }
 
                 object result = binding.DynamicInvoke(args.ToArray());

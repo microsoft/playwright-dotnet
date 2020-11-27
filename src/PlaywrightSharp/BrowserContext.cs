@@ -32,6 +32,7 @@ namespace PlaywrightSharp
             Channel.BindingCall += Channel_BindingCall;
             Channel.Route += Channel_Route;
             _initializer = initializer;
+            Browser = parent as IBrowser;
 
             if (initializer.Pages != null)
             {
@@ -55,6 +56,9 @@ namespace PlaywrightSharp
 
         /// <inheritdoc/>
         IChannel<BrowserContext> IChannelOwner<BrowserContext>.Channel => Channel;
+
+        /// <inheritdoc />
+        public IBrowser Browser { get; }
 
         /// <inheritdoc />
         public IPage[] Pages => PagesList.ToArray();
@@ -83,8 +87,6 @@ namespace PlaywrightSharp
 
         internal BrowserContextChannel Channel { get; }
 
-        internal Browser Browser { get; set; }
-
         internal Page OwnerPage { get; set; }
 
         internal List<Page> PagesList { get; } = new List<Page>();
@@ -92,6 +94,8 @@ namespace PlaywrightSharp
         internal List<Worker> ServiceWorkersList { get; } = new List<Worker>();
 
         internal string BrowserName => _initializer.BrowserName;
+
+        internal BrowserContextOptions Options { get; set; }
 
         /// <inheritdoc />
         public async Task<IPage> NewPageAsync(string url = null)
@@ -160,6 +164,10 @@ namespace PlaywrightSharp
             => ExposeBindingAsync(name, (Delegate)playwrightBinding);
 
         /// <inheritdoc/>
+        public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> playwrightBinding)
+            => ExposeBindingAsync(name, (Delegate)playwrightBinding, true);
+
+        /// <inheritdoc/>
         public Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> playwrightBinding)
             => ExposeBindingAsync(name, (Delegate)playwrightBinding);
 
@@ -204,7 +212,7 @@ namespace PlaywrightSharp
             => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => playwrightFunction(t1, t2, t3, t4));
 
         /// <inheritdoc/>
-        public async Task<T> WaitForEvent<T>(PlaywrightEvent<T> e, Func<T, bool> predicate = null, int? timeout = null)
+        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> e, Func<T, bool> predicate = null, int? timeout = null)
             where T : EventArgs
         {
             if (e == null)
@@ -350,7 +358,7 @@ namespace PlaywrightSharp
             _isClosedOrClosing = true;
             if (Browser != null)
             {
-                Browser.BrowserContextsList.Remove(this);
+                ((Browser)Browser).BrowserContextsList.Remove(this);
             }
 
             Close?.Invoke(this, EventArgs.Empty);
@@ -386,7 +394,7 @@ namespace PlaywrightSharp
             _waitForCancellationTcs.Clear();
         }
 
-        private Task ExposeBindingAsync(string name, Delegate playwrightFunction)
+        private Task ExposeBindingAsync(string name, Delegate playwrightFunction, bool handle = false)
         {
             foreach (var page in PagesList)
             {
@@ -403,7 +411,7 @@ namespace PlaywrightSharp
 
             _bindings.Add(name, playwrightFunction);
 
-            return Channel.ExposeBindingAsync(name);
+            return Channel.ExposeBindingAsync(name, handle);
         }
     }
 }

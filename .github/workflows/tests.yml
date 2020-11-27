@@ -20,8 +20,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: microsoft/playwright-github-action@v1
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1.6.0
+      - name: Setup .NET Core (On Mac)
+        if: ${{ matrix.os == 'macos-latest' }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.100
+        env:
+          DOTNET_INSTALL_DIR: /users/runner/alternate/dotnet
+      - name: Setup .NET Core (Not on mac)
+        if: ${{ matrix.os != 'macos-latest' }}
+        uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.100
       - name: Create Certificate
@@ -32,12 +40,16 @@ jobs:
         if: ${{ matrix.os != 'ubuntu-latest' }}
         env:
           PRODUCT: ${{ matrix.product }}
-        run: dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger "trx;LogFileName=TestResults.xml"
+        run: |
+          dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug
+          dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger "trx;LogFileName=TestResults.xml"
       - name: Run tests (Linux)
         if: ${{ matrix.os == 'ubuntu-latest' }}
         env:
           PRODUCT: ${{ matrix.product }}
-        run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- bash -c "ulimit -c unlimited && dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger \"trx;LogFileName=TestResults.xml\""
+        run: |
+          dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug
+          xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- bash -c "ulimit -c unlimited && dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger \"trx;LogFileName=TestResults.xml\""
       - name: Test results
         uses: actions/upload-artifact@v1
         if: always()

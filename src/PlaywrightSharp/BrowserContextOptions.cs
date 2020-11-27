@@ -11,6 +11,19 @@ namespace PlaywrightSharp
     public class BrowserContextOptions
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="BrowserContextOptions"/> class.
+        /// </summary>
+        public BrowserContextOptions()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BrowserContextOptions"/> class.
+        /// </summary>
+        /// <param name="device">Device used to hydrate initial values.</param>
+        public BrowserContextOptions(DeviceDescriptor device) => device?.HydrateBrowserContextOptions(this);
+
+        /// <summary>
         /// Sets a consistent viewport for each page. Defaults to an 800x600 viewport. null disables the default viewport.
         /// </summary>
         public ViewportSize Viewport { get; set; } = ViewportSize.None;
@@ -94,6 +107,19 @@ namespace PlaywrightSharp
         /// An object containing additional HTTP headers to be sent with every request.
         /// </summary>
         public Dictionary<string, string> ExtraHttpHeaders { get; set; }
+
+        /// <summary>
+        /// Enables HAR recording for all pages into recordHar.path file. If not specified, the HAR is not recorded.
+        /// Make sure to await <see cref="IPage.CloseAsync(bool)"/> for the HAR to be saved.
+        /// You can use <see cref="Har.HarResult"/> to deserialize the generated JSON file.
+        /// </summary>
+        public RecordHarOptions RecordHar { get; set; }
+
+        /// <summary>
+        /// Enables video recording for all pages into recordVideo.dir directory. If not specified videos are not recorded.
+        /// Make sure to await <seealso cref="BrowserContext.CloseAsync"/> for videos to be saved.
+        /// </summary>
+        public RecordVideoOptions RecordVideo { get; set; }
 
         /// <summary>
         /// Clones the <see cref="BrowserContextOptions"/>.
@@ -198,6 +224,16 @@ namespace PlaywrightSharp
             if (ExtraHttpHeaders != null)
             {
                 args["extraHTTPHeaders"] = ExtraHttpHeaders.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray();
+            }
+
+            if (RecordHar != null)
+            {
+                args["recordHar"] = RecordHar;
+            }
+
+            if (RecordVideo != null)
+            {
+                args["recordVideo"] = RecordVideo;
             }
 
             return args;
