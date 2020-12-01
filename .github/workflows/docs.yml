@@ -27,8 +27,7 @@ jobs:
         with:
           args: build docfx_project/docfx.json -o docs
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: docs/_site
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/_site
