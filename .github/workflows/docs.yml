@@ -1,12 +1,8 @@
 name: Docfx
 
 on:
-  pull_request:
-    branches:
-      - master
-  release:
-    types: [published]
-  workflow_dispatch:
+  push:
+    branches: [ master ]
 
 jobs:
   docs:
