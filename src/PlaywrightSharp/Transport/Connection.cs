@@ -18,7 +18,7 @@ namespace PlaywrightSharp.Transport
 {
     internal class Connection : IDisposable
     {
-        private const string BrowsersPathEnvironmentVariable = "PLAYWRIGHT_BROWSERS_PATH";
+        internal const string BrowsersPathEnvironmentVariable = "PLAYWRIGHT_BROWSERS_PATH";
         private const string DriverPathEnvironmentVariable = "PLAYWRIGHT_DRIVER_PATH";
 
         private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>>();
@@ -479,7 +479,15 @@ namespace PlaywrightSharp.Transport
                 return new NavigationException(error.Message);
             }
 
-            return new PlaywrightSharpException(error.Message);
+            string message = error.Message
+                .Replace(
+                    "Try re-installing playwright with \"npm install playwright\"",
+                    "Try re-installing the browsers running `playwright-cli.exe install` in windows or `playwright-cli install` in MacOS or Linux.")
+                .Replace(
+                    "use DEBUG=pw:api environment variable and rerun",
+                    "pass `debug: \"pw:api\"` to LaunchAsync");
+
+            return new PlaywrightSharpException(message);
         }
 
         private Exception CreateException(string message)
