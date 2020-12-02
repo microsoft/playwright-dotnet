@@ -510,7 +510,7 @@ namespace PlaywrightSharp.Transport
             }
 
             _queue.Dispose();
-            _transport.Close("Connection closed");
+            _transport.Close("Connection disposed");
 
             try
             {
