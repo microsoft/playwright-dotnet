@@ -50,10 +50,10 @@
         <ConvertToAbsolutePath Paths="$(ProjectDir)..\tools\DriverDownloader\">
             <Output TaskParameter="AbsolutePaths" PropertyName="DriverDownloaderPath" />
         </ConvertToAbsolutePath>
-        <ConvertToAbsolutePath Paths="$(ProjectDir)\runtimes\">
-            <Output TaskParameter="AbsolutePaths" PropertyName="DriversPath" />
+        <ConvertToAbsolutePath Paths="$(ProjectDir)\..\..\">
+            <Output TaskParameter="AbsolutePaths" PropertyName="BasePath" />
         </ConvertToAbsolutePath>
-        <Exec WorkingDirectory="$(DriverDownloaderPath)" Command="dotnet run -p DriverDownloader.csproj -- $(DriversPath) $(DriverVersion)" />
+        <Exec WorkingDirectory="$(DriverDownloaderPath)" Command="dotnet run -p DriverDownloader.csproj -- $(BasePath) $(DriverVersion)" />
     </Target>
     <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
         <ContentWithTargetPath Include="runtimes\win-x64\*.*">
@@ -72,8 +72,5 @@
             <TargetPath>%(Filename)%(Extension)</TargetPath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </ContentWithTargetPath>
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Har\" />
     </ItemGroup>
 </Project>
