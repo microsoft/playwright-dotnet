@@ -439,7 +439,7 @@ namespace PlaywrightSharp.Transport
 
         private void Close(string reason)
         {
-            _reason = reason;
+            _reason = string.IsNullOrEmpty(_reason) ? reason : _reason;
             if (!IsClosed)
             {
                 foreach (var callback in _callbacks)
