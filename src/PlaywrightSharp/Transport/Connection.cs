@@ -112,7 +112,7 @@ namespace PlaywrightSharp.Transport
         {
             if (IsClosed)
             {
-                throw new PlaywrightSharpException("Connection closed");
+                throw new PlaywrightSharpException($"Connection closed ({_reason})");
             }
 
             int id = Interlocked.Increment(ref _lastId);
