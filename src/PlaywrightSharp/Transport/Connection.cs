@@ -479,7 +479,7 @@ namespace PlaywrightSharp.Transport
                 return new NavigationException(error.Message);
             }
 
-            string message = error.Message
+            string message = (error.Message ?? string.Empty)
                 .Replace(
                     "Try re-installing playwright with \"npm install playwright\"",
                     "Try re-installing the browsers running `playwright-cli.exe install` in windows or `playwright-cli install` in MacOS or Linux.")
