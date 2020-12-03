@@ -52,7 +52,7 @@ namespace PlaywrightSharp
             {
                 await Task.WhenAll(tasks).ConfigureAwait(false);
             }
-            catch (Exception ex) when (ex.Message.Contains("Connection closed"))
+            catch (Exception ex) when (!ex.Message.Contains("Connection closed"))
             {
                 throw new PlaywrightSharpException("Unable to register selector", ex);
             }
@@ -73,7 +73,7 @@ namespace PlaywrightSharp
             {
                 await Task.WhenAll(tasks).ConfigureAwait(false);
             }
-            catch (Exception ex) when (ex.Message.Contains("Connection closed"))
+            catch (Exception ex) when (!ex.Message.Contains("Connection closed"))
             {
                 throw new PlaywrightSharpException("Unable to register selector", ex);
             }
