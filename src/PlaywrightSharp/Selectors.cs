@@ -48,7 +48,14 @@ namespace PlaywrightSharp
                 tasks.Add(channel.RegisterAsync(registerParam));
             }
 
-            await Task.WhenAll(tasks).ConfigureAwait(false);
+            try
+            {
+                await Task.WhenAll(tasks).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (ex.Message.Contains("Connection closed"))
+            {
+                // Ignore connection closed exceptions.
+            }
 
             _registrations.Add(registerParam);
         }
@@ -66,8 +73,9 @@ namespace PlaywrightSharp
             {
                 await Task.WhenAll(tasks).ConfigureAwait(false);
             }
-            catch
+            catch (Exception ex) when (ex.Message.Contains("Connection closed"))
             {
+                // Ignore connection closed exceptions.
             }
         }
     }

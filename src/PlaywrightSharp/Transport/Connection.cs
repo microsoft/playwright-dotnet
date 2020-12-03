@@ -112,7 +112,7 @@ namespace PlaywrightSharp.Transport
         {
             if (IsClosed)
             {
-                throw new PlaywrightSharpException("Connection closed");
+                throw new PlaywrightSharpException($"Connection closed ({_reason})");
             }
 
             int id = Interlocked.Increment(ref _lastId);
@@ -439,7 +439,7 @@ namespace PlaywrightSharp.Transport
 
         private void Close(string reason)
         {
-            _reason = reason;
+            _reason = string.IsNullOrEmpty(_reason) ? reason : _reason;
             if (!IsClosed)
             {
                 foreach (var callback in _callbacks)
@@ -518,7 +518,7 @@ namespace PlaywrightSharp.Transport
             }
 
             _queue.Dispose();
-            _transport.Close("Connection closed");
+            _transport.Close("Connection disposed");
 
             try
             {
