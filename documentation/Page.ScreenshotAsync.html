@@ -85,9 +85,7 @@
 <p>You need to take an screenshot of a page.</p>
 <h2 id="solution">Solution</h2>
 <p>Use <code>Page.ScreenshotAsync</code> passing a file path as an argument.</p>
-<pre><code class="lang-cs">await Playwright.InstallAsync();
-
-var playwright = await Playwright.CreateAsync();
+<pre><code class="lang-cs">using var playwright = await Playwright.CreateAsync();
 
 var url = &quot;https://www.somepage.com&quot;;
 var file = &quot;.\\somepage.jpg&quot;;
@@ -106,7 +104,7 @@ await page.ScreenshotAsync(path: file);
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/microsoft/playwright-sharp/blob/708a23dcea163c6a7393faf750947638b8ef2e55/docfx_project/documentation/Page.ScreenshotAsync.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/microsoft/playwright-sharp/blob/5b0ad490548016bf2d7e4da8efec5a8600236ff6/docfx_project/documentation/Page.ScreenshotAsync.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

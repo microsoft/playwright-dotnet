@@ -92,7 +92,7 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">Chromium <!-- GEN:chromium-version -->86.0.4238.0<!-- GEN:stop --></td>
+<td style="text-align: left;">Chromium <!-- GEN:chromium-version -->88.0.4324.0<!-- GEN:stop --></td>
 <td style="text-align: center;">✅</td>
 <td style="text-align: center;">✅</td>
 <td style="text-align: center;">✅</td>
@@ -104,7 +104,7 @@
 <td style="text-align: center;">✅</td>
 </tr>
 <tr>
-<td style="text-align: left;">Firefox <!-- GEN:firefox-version -->80.0b8<!-- GEN:stop --></td>
+<td style="text-align: left;">Firefox <!-- GEN:firefox-version -->83.0b8<!-- GEN:stop --></td>
 <td style="text-align: center;">✅</td>
 <td style="text-align: center;">✅</td>
 <td style="text-align: center;">✅</td>
@@ -112,30 +112,33 @@
 </tbody>
 </table>
 <p>Headless execution is supported for all browsers on all platforms.</p>
-<p>#Usage
-Playwright Sharp relies on two external components: The browsers and the Playwright driver.</p>
-<pre><code class="lang-cs">await Playwright.InstallAsync();
-var playwright = await Playwright.CreateAsync();
-</code></pre>
-<p><code>Playwright.InstallAsync()</code> will download the required browsers. <code>Playwright.CreateAsync()</code> will create and launch the playwright driver.</p>
-<pre><code class="lang-cs">await Playwright.InstallAsync();
-using var playwright = await Playwright.CreateAsync();
+<h1 id="usage">Usage</h1>
+<pre><code class="lang-cs">using var playwright = await Playwright.CreateAsync();
 await using var browser = await playwright.Chromium.LaunchAsync();
 var page = await browser.NewPageAsync();
 await page.GoToAsync(&quot;http://www.bing.com&quot;);
 await page.ScreenshotAsync(path: outputFile);
 </code></pre>
-<p>To avoid downloading the browsers in runtime, you can install the playwright-sharp dotnet tool:</p>
-<pre><code>dotnet tool install playwright-sharp-tool -g
-playwright-sharp install-browsers
-</code></pre>
-<p>By running these two commands, you can avoid having the <code>await Playwright.InstallAsync();</code> line in your code.</p>
+<h1 id="playwright-dependencies">Playwright Dependencies</h1>
+<p>Playwright Sharp relies on two external components: The Playwright driver and the browsers.</p>
+<h2 id="playwright-driver">Playwright Driver</h2>
+<p>Playwright drivers will be copied to the <code>bin</code> folder at build time. Nuget will rely on the <a href="https://docs.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props?WT.mc_id=DT-MVP-5003814#runtimeidentifier">RuntimeIdentifier</a> to copy a platform-specific driver, or on the <a href="https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-publish?WT.mc_id=DT-MVP-5003814">runtime used on dotnet publish</a>.
+If the <a href="https://docs.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props?WT.mc_id=DT-MVP-5003814#runtimeidentifier">RuntimeIdentifier</a> is not set, all runtimes will be copied inside a runtimes folder. Then, the platform-specific driver will be picked at run-time.</p>
+<h2 id="browsers">Browsers</h2>
+<p>The way browsers are installed will vary depending on the use case scenario.</p>
+<h3 id="playwright-in-test-projects">Playwright in test projects</h3>
+<p>If you use Playwright in test projects, all required browsers will be installed at build time.</p>
+<h3 id="using-playwright-in-docker">Using Playwright in Docker</h3>
+<p>If you use the <a href="https://hub.docker.com/_/microsoft-playwright">official Docker images</a>, all the required browsers will be installed in that image.
+The minor version of the package will tell you which docker image tag to use. For instance, PlaywrightSharp 0.162.0 will work with the tag <strong>v1.6.2</strong>.</p>
+<h3 id="using-playwright-in-a-remote-server">Using Playwright in a Remote Server.</h3>
+<p>If you run Playwright in a remote server. For instance, as part of a web application, you will need to run <code>.\bin\playwright-cli.exe install</code> in Windows or <code>./bin/playwright-cli install</code> in OSX/Linux, as part of your deploy script.</p>
+<h3 id="other-possible-scenarios">Other possible scenarios.</h3>
+<p>If none of the scenarios mentioned above cover your scenario, you can install the browsers programmatically using <code>await Playwright.InstallAsync();</code></p>
 <h1 id="examples">Examples</h1>
 <h2 id="mobile-and-geolocation">Mobile and geolocation</h2>
 <p>This snippet emulates Mobile Safari on a device at a given geolocation, navigates to maps.google.com, performs an action, and takes a screenshot.</p>
-<pre><code class="lang-cs">await Playwright.InstallAsync();
-
-using var playwright = await Playwright.CreateAsync();
+<pre><code class="lang-cs">using var playwright = await Playwright.CreateAsync();
 await using var browser = await playwright.Webkit.LaunchAsync(false);
 
 var contextOptions = playwright.Devices[&quot;iPhone 11 Pro&quot;].ToBrowserContextOptions();
@@ -150,9 +153,8 @@ page.ClickAsync(&quot;text='Your location'&quot;); //
 await page.ScreenshotAsync(&quot;colosseum-iphone.png&quot;);
 </code></pre>
 <h2 id="evaluate-in-browser-context">Evaluate in browser context</h2>
-<p>This code snippet navigates to example.com in Firefox, and executes a script in the page context.</p>
-<pre><code class="lang-cs">await Playwright.InstallAsync();
-using var playwright = await Playwright.CreateAsync();
+<p>This code snippet navigates to example.com in Firefox and executes a script in the page context.</p>
+<pre><code class="lang-cs">using var playwright = await Playwright.CreateAsync();
 await using var browser = await playwright.Firefox.LaunchAsync();
 
 var context = await browser.NewContextAsync();
@@ -168,8 +170,7 @@ Console.WriteLine(dimensions);
 </code></pre>
 <h2 id="intercept-network-requests">Intercept network requests</h2>
 <p>This code snippet sets up request routing for a WebKit page to log all network requests.</p>
-<pre><code class="lang-cs">await Playwright.InstallAsync();
-using var playwright = await Playwright.CreateAsync();
+<pre><code class="lang-cs">using var playwright = await Playwright.CreateAsync();
 await using var browser = await playwright.Firefox.LaunchAsync();
 
 var context = await browser.NewContextAsync();
@@ -206,7 +207,7 @@ await page.GoToAsync(&quot;http://todomvc.com&quot;);
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/microsoft/playwright-sharp/blob/708a23dcea163c6a7393faf750947638b8ef2e55/docfx_project/documentation/index.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/microsoft/playwright-sharp/blob/5b0ad490548016bf2d7e4da8efec5a8600236ff6/docfx_project/documentation/index.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
