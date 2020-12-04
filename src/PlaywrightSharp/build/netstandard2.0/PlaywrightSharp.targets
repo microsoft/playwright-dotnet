@@ -13,4 +13,13 @@
         <Exec Condition="'$(PlatformTarget)' != 'x86' AND $([MSBuild]::IsOSPlatform('Windows'))" WorkingDirectory="$(MSBuildThisFileDirectory)\..\..\runtimes\win-x64$(NativeFolder)" Command="playwright-cli.exe install" />
         <Exec Condition="'$(PlatformTarget)' == 'x86' AND $([MSBuild]::IsOSPlatform('Windows'))" WorkingDirectory="$(MSBuildThisFileDirectory)\..\..\runtimes\win-x89$(NativeFolder)" Command="playwright-cli.exe install" />
     </Target>
+    <Target Name="CopyPlaywrightDriversToMonoBundle" AfterTargets="CopyFilesToOutputDirectory" Condition="$(TargetFrameworkIdentifier) == 'Xamarin.Mac'">
+        <Message Text="Copy drivers to MonoBundle" />
+        <CreateItem Include="$(MSBuildThisFileDirectory)\..\..\runtimes\osx\native\*.*">
+            <Output TaskParameter="Include" ItemName="PlaywrightDriverFiles" />
+        </CreateItem>
+        <Message Text="$(AppBundleDir)" />
+        <Message Text="@(PlaywrightDriverFiles)" />
+        <Copy SourceFiles="@(PlaywrightDriverFiles)" DestinationFolder="$(AppBundleDir)/Contents/MonoBundle/" />
+    </Target>
 </Project>

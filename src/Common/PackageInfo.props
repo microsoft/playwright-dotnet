@@ -2,7 +2,7 @@
 <Project>
     <PropertyGroup>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <AssemblyVersion>0.162.0</AssemblyVersion>
+        <AssemblyVersion>0.162.1</AssemblyVersion>
         <PackageVersion>$(AssemblyVersion)</PackageVersion>
         <DriverVersion>0.162.1</DriverVersion>
         <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
