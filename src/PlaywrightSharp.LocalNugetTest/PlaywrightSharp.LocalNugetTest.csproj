@@ -5,7 +5,7 @@
         <IsTestProject>true</IsTestProject>
         <LangVersion>8.0</LangVersion>
         <ReleaseVersion>0.0.0</ReleaseVersion>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="PlaywrightSharp" Version="0.160.0-alpha" />

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
-        <TargetFrameworks>netcoreapp3.1;net48</TargetFrameworks>
+        <TargetFrameworks>net5;net48</TargetFrameworks>
         <OutputType>Library</OutputType>
         <LangVersion>8</LangVersion>
         <ReleaseVersion>0.0.0</ReleaseVersion>

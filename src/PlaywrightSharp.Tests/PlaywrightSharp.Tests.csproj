@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netcoreapp3.1;net48</TargetFrameworks>
+        <TargetFrameworks>net5.0;net48</TargetFrameworks>
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
         <LangVersion>8.0</LangVersion>
@@ -10,7 +10,7 @@
     <Import Project="../Common/SignAssembly.props" />
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-        <DocumentationFile>bin\Debug\netcoreapp3.1\PlaywrightSharp.Tests.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\net5.0\PlaywrightSharp.Tests.xml</DocumentationFile>
         <NoWarn>1701;1702</NoWarn>
     </PropertyGroup>
     <ItemGroup>
@@ -31,11 +31,11 @@
         <ProjectReference Include="..\PlaywrightSharp.TestServer\PlaywrightSharp.TestServer.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <None Remove="xunit.runner.json" />
+        <None Remove="xunit.runner.json" />
     </ItemGroup>
     <ItemGroup>
-      <Content Include="xunit.runner.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
+        <Content Include="xunit.runner.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 </Project>

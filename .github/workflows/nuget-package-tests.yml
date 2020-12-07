@@ -22,14 +22,14 @@ jobs:
         if: ${{ matrix.os == 'macos-latest' }}
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.100
+          dotnet-version: 5.0.100
         env:
           DOTNET_INSTALL_DIR: /users/runner/alternate/dotnet
       - name: Setup .NET Core (Not on mac)
         if: ${{ matrix.os != 'macos-latest' }}
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.100      
+          dotnet-version: 5.0.100
       - name: Build Project
         run: dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug
       - name: Delete browsers on Mac

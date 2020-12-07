@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build-pdfdemo",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/demos/PdfDemo/bin/Debug/netcoreapp3.1/PdfDemo-Local.dll",
+            "program": "${workspaceFolder}/demos/PdfDemo/bin/Debug/net5.0/PdfDemo-Local.dll",
             "args": [],
             "cwd": "${workspaceFolder}/demos/PdfDemo",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
@@ -23,7 +23,7 @@
             "request": "launch",
             "preLaunchTask": "build-screenshotdemo",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/demos/ScreenshotsDemo/bin/Debug/netcoreapp3.1/ScreenshotsDemo-Local.dll",
+            "program": "${workspaceFolder}/demos/ScreenshotsDemo/bin/Debug/net5.0/ScreenshotsDemo-Local.dll",
             "args": [],
             "cwd": "${workspaceFolder}/demos/ScreenshotsDemo",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console

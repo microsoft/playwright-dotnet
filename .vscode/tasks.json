@@ -59,7 +59,7 @@
                 "test",
                 "${workspaceFolder}/src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj",
                 "-f",
-                "netcoreapp3.1"
+                "net5.0"
             ]
         }
     ]
