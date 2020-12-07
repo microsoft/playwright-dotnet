@@ -314,7 +314,5 @@ namespace PlaywrightSharp
                 _ => throw new ArgumentException($"path: unsupported mime type \"{mimeType}\""),
             };
         }
-
-        internal Task<string> CreateSelectorForTestAsync(string name) => _channel.CreateSelectorForTestAsync(name);
     }
 }

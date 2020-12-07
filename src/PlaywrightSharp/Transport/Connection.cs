@@ -18,7 +18,6 @@ namespace PlaywrightSharp.Transport
 {
     internal class Connection : IDisposable
     {
-        internal const string BrowsersPathEnvironmentVariable = "PLAYWRIGHT_BROWSERS_PATH";
         private const string DriverPathEnvironmentVariable = "PLAYWRIGHT_DRIVER_PATH";
 
         private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>>();
@@ -40,7 +39,7 @@ namespace PlaywrightSharp.Transport
         {
             if (!string.IsNullOrEmpty(browsersPath))
             {
-                Environment.SetEnvironmentVariable(BrowsersPathEnvironmentVariable, Path.GetFullPath(browsersPath));
+                Environment.SetEnvironmentVariable(Playwright.BrowsersPathEnvironmentVariable, Path.GetFullPath(browsersPath));
             }
 
             _loggerFactory = loggerFactory;
@@ -76,7 +75,7 @@ namespace PlaywrightSharp.Transport
         {
             if (!string.IsNullOrEmpty(browsersPath))
             {
-                Environment.SetEnvironmentVariable(BrowsersPathEnvironmentVariable, Path.GetFullPath(browsersPath));
+                Environment.SetEnvironmentVariable(Playwright.BrowsersPathEnvironmentVariable, Path.GetFullPath(browsersPath));
             }
 
             var tcs = new TaskCompletionSource<bool>();

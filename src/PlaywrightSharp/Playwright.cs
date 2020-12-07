@@ -23,6 +23,11 @@ namespace PlaywrightSharp
         /// </summary>
         public const int DefaultTimeout = 30_000;
 
+        /// <summary>
+        /// Environment variable use to set the browsers path.
+        /// </summary>
+        public const string BrowsersPathEnvironmentVariable = "PLAYWRIGHT_BROWSERS_PATH";
+
         private readonly ILoggerFactory _loggerFactory;
         private readonly PlaywrightInitializer _initializer;
         private readonly PlaywrightChannel _channel;

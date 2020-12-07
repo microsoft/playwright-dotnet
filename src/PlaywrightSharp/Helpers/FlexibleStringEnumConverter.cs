@@ -8,13 +8,21 @@ using System.Text.Json.Serialization;
 
 namespace PlaywrightSharp.Helpers
 {
-    internal class FlexibleStringEnumConverter<T> : JsonConverter<T>
+    /// <summary>
+    /// It converts a string to an enum, using a default value as a fallback.
+    /// </summary>
+    /// <typeparam name="T">Type to convert to.</typeparam>
+    public class FlexibleStringEnumConverter<T> : JsonConverter<T>
     {
         private readonly Type _enumType = typeof(T);
         private readonly Dictionary<int, EnumInfo> _rawToTransformed;
         private readonly Dictionary<string, EnumInfo> _transformedToRaw;
         private readonly T _default;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FlexibleStringEnumConverter{T}"/> class.
+        /// </summary>
+        /// <param name="defaultValue">Default value.</param>
         public FlexibleStringEnumConverter(T defaultValue)
         {
             _default = defaultValue;
@@ -39,8 +47,10 @@ namespace PlaywrightSharp.Helpers
             }
         }
 
+        /// <inheritdoc/>
         public override bool CanConvert(Type typeToConvert) => typeof(T).IsAssignableFrom(typeToConvert);
 
+        /// <inheritdoc/>
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var token = reader.TokenType;
@@ -68,6 +78,7 @@ namespace PlaywrightSharp.Helpers
             return _default;
         }
 
+        /// <inheritdoc/>
         public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options) => throw new NotImplementedException();
 
         private class EnumInfo
