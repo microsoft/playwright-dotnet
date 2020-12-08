@@ -22,4 +22,10 @@
         <Message Text="@(PlaywrightDriverFiles)" />
         <Copy SourceFiles="@(PlaywrightDriverFiles)" DestinationFolder="$(AppBundleDir)/Contents/MonoBundle/" />
     </Target>
+    <Target Name="ChmodOnLinuxExecutables" AfterTargets="CopyFilesToOutputDirectory" Condition="Exists('packages.config') OR Exists('$(MSBuildProjectName).packages.config') OR Exists('packages.$(MSBuildProjectName).config')">
+        <Message Text="chmod on Linux executables" />
+        <Exec Command="chmod u+x $(OutputPath)/runtimes/unix/native/ffmpeg-linux" />
+        <Exec Command="chmod u+x $(OutputPath)/runtimes/unix/native/ffmpeg.COPYING.GPLv3" />
+        <Exec Command="chmod u+x $(OutputPath)/runtimes/unix/native/playwright-cli" />
+    </Target>
 </Project>
