@@ -9,16 +9,6 @@ namespace PlaywrightSharp
     public class PlaywrightSharpException : Exception
     {
         /// <summary>
-        /// Message used when the browser gets closed.
-        /// </summary>
-        public const string BrowserClosedExceptionMessage = "Browser has been closed";
-
-        /// <summary>
-        /// Message used when the browser or the context get closed.
-        /// </summary>
-        public const string BrowserOrContextClosedExceptionMessage = "Target page, context or browser has been closed";
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="PlaywrightSharpException"/> class.
         /// </summary>
         public PlaywrightSharpException()

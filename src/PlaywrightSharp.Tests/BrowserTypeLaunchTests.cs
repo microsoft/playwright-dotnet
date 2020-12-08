@@ -94,7 +94,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("Try re-installing the browsers running `playwright-cli.exe install` in windows or `playwright-cli install` in MacOS or Linux.", exception.Message);
             Assert.DoesNotContain("npm install playwright", exception.Message);
             Assert.Contains("pass `debug: \"pw:api\"` to LaunchAsync", exception.Message);
-            Environment.SetEnvironmentVariable(PlaywrightSharp.Playwright.BrowsersPathEnvironmentVariable, null);
+            Environment.SetEnvironmentVariable(EnvironmentVariables.BrowsersPathEnvironmentVariable, null);
         }
 
         ///<playwright-file>browsertype-launch.spec.ts</playwright-file>

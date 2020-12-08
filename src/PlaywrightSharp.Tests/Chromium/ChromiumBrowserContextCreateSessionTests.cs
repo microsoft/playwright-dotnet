@@ -110,7 +110,7 @@ namespace PlaywrightSharp.Tests.Chromium
                     Expression = "3 + 1",
                     ReturnByValue = true
                 }));
-            Assert.Contains(PlaywrightSharpException.BrowserOrContextClosedExceptionMessage, exception.Message);
+            Assert.Contains(DriverMessages.BrowserOrContextClosedExceptionMessage, exception.Message);
         }
 
         ///<playwright-file>chromium/session.spec.js</playwright-file>
