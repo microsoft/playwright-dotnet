@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Helpers
             {
                 try
                 {
-                    _output.WriteLine(state.ToString());
+                    _output.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: {state}");
                 }
                 catch { }
             }
