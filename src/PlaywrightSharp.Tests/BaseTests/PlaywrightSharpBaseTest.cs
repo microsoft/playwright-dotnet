@@ -40,7 +40,6 @@ namespace PlaywrightSharp.Tests.BaseTests
             TestConstants.LoggerFactory.AddProvider(_loggerProvider);
 
             output.WriteLine($"Running {GetDisplayName(output)}");
-            output.WriteLine($"Using Browser: {((ChannelBase)((IChannelOwner<PlaywrightSharp.Browser>)PlaywrightSharpBrowserLoaderFixture.Browser).Channel).Guid}");
         }
 
         private static string GetDisplayName(ITestOutputHelper output)

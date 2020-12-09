@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using PathHelper = System.IO.Path;
 
-namespace PlaywrightSharp.Helpers
+namespace PlaywrightSharp.Tests.Helpers
 {
     /// <summary>
     /// Represents a directory that is deleted on disposal.

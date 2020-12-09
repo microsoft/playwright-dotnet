@@ -27,11 +27,6 @@
     <Import Project="../Common/PackageInfo.props" />
     <Import Project="build/netstandard2.0/PlaywrightSharp.targets" />
     <ItemGroup>
-        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>PlaywrightSharp.Tests, PublicKey=$(AssemblyPublicKey)</_Parameter1>
-        </AssemblyAttribute>
-    </ItemGroup>
-    <ItemGroup>
         <PackageReference Include="Esprima" Version="1.0.1270" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
         <PackageReference Include="System.Text.Json" Version="4.7.2" />

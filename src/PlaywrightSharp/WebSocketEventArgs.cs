@@ -10,6 +10,6 @@ namespace PlaywrightSharp
         /// <summary>
         /// The <see cref="IWebSocket"/>.
         /// </summary>
-        internal IWebSocket WebSocket { get; set; }
+        public IWebSocket WebSocket { get; set; }
     }
 }

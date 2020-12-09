@@ -9,7 +9,7 @@ namespace PlaywrightSharp.Helpers
     /// Task helper.
     /// </summary>
     [SuppressMessage("Microsoft.VisualStudio.Threading.Analyzers", "VSTHRD200", Justification = "Calling the method WithTimeoutAsync doesn't make any sense.")]
-    internal static class TaskHelper
+    public static class TaskHelper
     {
         private static readonly Func<TimeSpan, Exception> _defaultExceptionFactory =
             timeout => new TimeoutException($"Timeout of {timeout.TotalMilliseconds}ms exceeded");
@@ -74,7 +74,12 @@ namespace PlaywrightSharp.Helpers
         /// <param name="cancellationToken">Cancellation token.</param>
         public static async Task WithTimeout(this Task task, Func<Task> timeoutAction, TimeSpan timeout, CancellationToken cancellationToken)
         {
-            if (await TimeoutTask(task, timeout).ConfigureAwait(false) && !cancellationToken.IsCancellationRequested)
+            if (task == null)
+            {
+                return;
+            }
+
+            if (await TimeoutTask(task, timeout).ConfigureAwait(false) && !cancellationToken.IsCancellationRequested && timeoutAction != null)
             {
                 await timeoutAction().ConfigureAwait(false);
             }
@@ -103,7 +108,12 @@ namespace PlaywrightSharp.Helpers
         /// <typeparam name="T">Return type.</typeparam>
         public static async Task<T> WithTimeout<T>(this Task<T> task, Action timeoutAction, TimeSpan timeout)
         {
-            if (await TimeoutTask(task, timeout).ConfigureAwait(false))
+            if (task == null)
+            {
+                return default;
+            }
+
+            if (await TimeoutTask(task, timeout).ConfigureAwait(false) && timeoutAction != null)
             {
                 timeoutAction();
                 return default;
@@ -133,6 +143,11 @@ namespace PlaywrightSharp.Helpers
         /// <typeparam name="T">Task return type.</typeparam>
         public static async Task<T> WithTimeout<T>(this Task<T> task, TimeSpan timeout, Func<TimeSpan, Exception> exceptionFactory = null)
         {
+            if (task == null)
+            {
+                return default;
+            }
+
             if (await TimeoutTask(task, timeout).ConfigureAwait(false))
             {
                 throw (exceptionFactory ?? _defaultExceptionFactory)(timeout);

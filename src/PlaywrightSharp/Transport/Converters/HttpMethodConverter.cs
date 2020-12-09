@@ -5,14 +5,15 @@ using System.Text.Json.Serialization;
 
 namespace PlaywrightSharp.Transport.Channels
 {
-    internal class HttpMethodConverter : JsonConverter<HttpMethod>
+    /// <summary>
+    /// JSON converter for <see cref="HttpMethod"/>.
+    /// </summary>
+    public class HttpMethodConverter : JsonConverter<HttpMethod>
     {
-        public HttpMethodConverter()
-        {
-        }
+        /// <inheritdoc/>
+        public override bool CanConvert(Type typeToConvert) => typeof(HttpMethod) == typeToConvert;
 
-        public override bool CanConvert(Type type) => typeof(HttpMethod) == type;
-
+        /// <inheritdoc/>
         public override HttpMethod Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             return reader.GetString() switch
@@ -31,7 +32,8 @@ namespace PlaywrightSharp.Transport.Channels
             };
         }
 
+        /// <inheritdoc/>
         public override void Write(Utf8JsonWriter writer, HttpMethod value, JsonSerializerOptions options)
-            => writer.WriteStringValue(value.Method);
+            => writer?.WriteStringValue(value?.Method);
     }
 }

@@ -964,8 +964,8 @@ namespace PlaywrightSharp
         }
 
         private bool IsSafeCloseException(Exception e)
-            => e.Message.Contains(PlaywrightSharpException.BrowserClosedExceptionMessage) ||
-               e.Message.Contains(PlaywrightSharpException.BrowserOrContextClosedExceptionMessage);
+            => e.Message.Contains(DriverMessages.BrowserClosedExceptionMessage) ||
+               e.Message.Contains(DriverMessages.BrowserOrContextClosedExceptionMessage);
 
         private void Channel_Closed(object sender, EventArgs e)
         {
