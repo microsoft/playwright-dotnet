@@ -97,9 +97,7 @@ namespace PlaywrightSharp.Tests
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
             var page = await browser.NewPageAsync();
             await page.SetContentAsync($"<button>Hello</button><a target=_blank href=\"{TestConstants.EmptyPage}\">empty.html</a>");
-            await TaskUtils.WhenAll(
-                page.Context.WaitForEventAsync(ContextEvent.Page),
-                page.ClickAsync("a"));
+            await page.ClickAsync("a");
             await page.ClickAsync("button");
         }
 
