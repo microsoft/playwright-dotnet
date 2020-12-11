@@ -42,7 +42,7 @@
         <None Include="build\**" Pack="true" PackagePath="build" />
     </ItemGroup>
     <UsingTask TaskName="PlaywrightSharp.DriverDownloader" AssemblyFile="$(MSBuildThisFileDirectory)/../tools/PlaywrightSharp.DriverDownloader/$(OutDir)/PlaywrightSharp.DriverDownloader.dll" />
-    <Target Name="Download Drivers" BeforeTargets="Restore;CoreCompile">
+    <Target Name="Download Drivers" AfterTargets="ResolveAssemblyReferences">
         <ConvertToAbsolutePath Paths="$(ProjectDir)..\tools\DriverDownloader\">
             <Output TaskParameter="AbsolutePaths" PropertyName="DriverDownloaderPath" />
         </ConvertToAbsolutePath>
