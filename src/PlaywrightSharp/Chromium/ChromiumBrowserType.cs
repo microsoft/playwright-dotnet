@@ -61,7 +61,7 @@ namespace PlaywrightSharp.Chromium
 
         /// <inheritdoc/>
         public new async Task<IChromiumBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchOptions options)
-            => await LaunchPersistentContextAsync(userDataDir, options).ConfigureAwait(false) as IChromiumBrowserContext;
+            => await base.LaunchPersistentContextAsync(userDataDir, options).ConfigureAwait(false) as IChromiumBrowserContext;
 
         /// <inheritdoc/>
         public new async Task<IChromiumBrowserContext> LaunchPersistentContextAsync(
@@ -102,7 +102,7 @@ namespace PlaywrightSharp.Chromium
             bool? handleSIGHUP = null,
             RecordHarOptions recordHar = null,
             RecordVideoOptions recordVideo = null)
-            => await LaunchPersistentContextAsync(
+            => await base.LaunchPersistentContextAsync(
                 userDataDir,
                 viewport,
                 headless,
@@ -179,7 +179,7 @@ namespace PlaywrightSharp.Chromium
             bool? handleSIGHUP = null,
             RecordHarOptions recordHar = null,
             RecordVideoOptions recordVideo = null)
-            => await LaunchPersistentContextAsync(
+            => await base.LaunchPersistentContextAsync(
                 userDataDir,
                 headless,
                 args,
