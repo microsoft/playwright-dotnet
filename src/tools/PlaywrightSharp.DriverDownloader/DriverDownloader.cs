@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DriverDownloader.Linux;
 
-namespace DriverDownloader
+namespace PlaywrightSharp
 {
-    class Program
+    public class DriverDownloader : Microsoft.Build.Utilities.Task
     {
         private static readonly (string Platform, string Runtime)[] _platforms = new[]
         {
@@ -22,17 +21,19 @@ namespace DriverDownloader
             ("win32", "win-x86")
         };
 
-        static async Task Main(string[] args)
-        {
-            if (args.Length < 2)
-            {
-                Console.WriteLine("Missing destination path argument and driver version");
-                return;
-            }
+        public string BasePath { get; set; }
 
-            string basePath = args[0];
-            var destinationDirectory = new DirectoryInfo(Path.Combine(basePath, "src", "PlaywrightSharp", "runtimes"));
-            string driverVersion = args[1];
+        public string DriverVersion { get; set; }
+
+        public override bool Execute()
+        {
+            return ExecuteAsync().GetAwaiter().GetResult();
+        }
+
+        private async Task<bool> ExecuteAsync()
+        {
+            var destinationDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "PlaywrightSharp", "runtimes"));
+            string driverVersion = DriverVersion;
 
             if (!destinationDirectory.Exists)
             {
@@ -48,11 +49,13 @@ namespace DriverDownloader
                     file.Delete();
                 }
 
-                var tasks = new List<Task>();
-                tasks.Add(UpdateBrowserVersionsAsync(basePath, driverVersion));
-                foreach (var platform in _platforms)
+                var tasks = new List<Task>
                 {
-                    tasks.Add(DownloadDriverAsync(destinationDirectory, driverVersion, platform.Platform, platform.Runtime));
+                    UpdateBrowserVersionsAsync(BasePath, driverVersion)
+                };
+                foreach (var (platform, runtime) in _platforms)
+                {
+                    tasks.Add(DownloadDriverAsync(destinationDirectory, driverVersion, platform, runtime));
                 }
 
                 await Task.WhenAll(tasks);
@@ -62,13 +65,15 @@ namespace DriverDownloader
             {
                 Console.WriteLine("Drivers are up-to-date");
             }
+
+            return true;
         }
 
         private static async Task UpdateBrowserVersionsAsync(string basePath, string driverVersion)
         {
             string readmePath = Path.Combine(basePath, "README.md");
             string readmeInDocsPath = Path.Combine(basePath, "docfx_project", "documentation", "index.md");
-            string playwrightVersion = string.Join('.', driverVersion.Split('.')[1].ToCharArray());
+            string playwrightVersion = string.Join(".", driverVersion.Split('.')[1].ToCharArray());
             var regex = new Regex("<!-- GEN:(.*?) -->(.*?)<!-- GEN:stop -->", RegexOptions.Compiled);
 
             string readme = await GetUpstreamReadmeAsync(playwrightVersion);

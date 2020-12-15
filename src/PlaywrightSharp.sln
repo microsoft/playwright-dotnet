@@ -26,7 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5C6D57B1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharpTool", "tools\PlaywrightSharpTool\PlaywrightSharpTool.csproj", "{795BA2A6-D983-4D96-B817-6921A145AB56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriverDownloader", "tools\DriverDownloader\DriverDownloader.csproj", "{27C6BCBD-94DC-4D1F-8F61-85DD3258A8EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.DriverDownloader", "tools\PlaywrightSharp.DriverDownloader\PlaywrightSharp.DriverDownloader.csproj", "{27C6BCBD-94DC-4D1F-8F61-85DD3258A8EB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiChecker", "tools\ApiChecker\ApiChecker.csproj", "{307DF999-0B02-40C9-971F-7BA5203DBE61}"
 EndProject
