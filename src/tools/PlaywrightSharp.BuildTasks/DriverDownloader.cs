@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DriverDownloader.Linux;
 
-namespace PlaywrightSharp
+namespace PlaywrightSharp.BuildTasks
 {
     public class DriverDownloader : Microsoft.Build.Utilities.Task
     {
@@ -59,15 +60,74 @@ namespace PlaywrightSharp
                 }
 
                 await Task.WhenAll(tasks);
+                CheckApi(destinationDirectory.FullName);
                 versionFile.CreateText();
             }
             else
             {
-                Console.WriteLine("Drivers are up-to-date");
+                Log.LogMessage("Drivers are up-to-date");
             }
 
             return true;
         }
+
+        private void CheckApi(string driversDirectory)
+        {
+            GenerateApiFile(driversDirectory);
+            //TODO We are going to move the ApiChecker here
+        }
+
+        private void GenerateApiFile(string driversDirectory)
+        {
+            string executablePath = GetDriverPath(driversDirectory);
+            var process = GetProcess(executablePath);
+            process.Start();
+
+            using StreamWriter file = new StreamWriter(Path.Combine(driversDirectory, "api.json"));
+            process.StandardOutput.BaseStream.CopyTo(file.BaseStream);
+
+            process.WaitForExit();
+        }
+
+        private string GetDriverPath(string driversDirectory)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                if (RuntimeInformation.OSArchitecture == Architecture.X64)
+                {
+                    return Path.Combine(driversDirectory, "win-x64", "playwright-cli.exe");
+                }
+                else
+                {
+                    return Path.Combine(driversDirectory, "win-x86", "playwright-cli.exe");
+                }
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return Path.Combine(driversDirectory, "osx", "playwright-cli");
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return Path.Combine(driversDirectory, "unix", "playwright-cli");
+            }
+
+            throw new Exception("Unknown platform");
+        }
+
+        private static Process GetProcess(string driverExecutablePath)
+            => new Process
+            {
+                StartInfo =
+                {
+                    FileName = driverExecutablePath,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardInput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true,
+                    Arguments = "print-api-json"
+                },
+            };
 
         private static async Task UpdateBrowserVersionsAsync(string basePath, string driverVersion)
         {
@@ -100,16 +160,16 @@ namespace PlaywrightSharp
             return client.GetStringAsync(readmeUrl);
         }
 
-        private static async Task DownloadDriverAsync(DirectoryInfo destinationDirectory, string driverVersion, string platform, string runtime)
+        private async Task DownloadDriverAsync(DirectoryInfo destinationDirectory, string driverVersion, string platform, string runtime)
         {
-            Console.WriteLine("Downloading driver for " + platform);
+            Log.LogMessage("Downloading driver for " + platform);
             const string cdn = "https://playwright.azureedge.net/builds/cli";
             using var client = new HttpClient();
             var response = await client.GetAsync($"{cdn}/playwright-cli-{driverVersion}-{platform}.zip");
 
             if (!response.IsSuccessStatusCode)
             {
-                Console.WriteLine("Unable to download driver for " + driverVersion);
+                Log.LogMessage("Unable to download driver for " + driverVersion);
                 return;
             }
 
@@ -132,7 +192,7 @@ namespace PlaywrightSharp
                     }
                 }
             }
-            Console.WriteLine($"Driver for {platform} downloaded");
+            Log.LogMessage($"Driver for {platform} downloaded");
         }
     }
 }

@@ -41,7 +41,7 @@
         <None Include="runtimes\win-x86\**" Pack="true" PackagePath="runtimes\win-x86\native" />
         <None Include="build\**" Pack="true" PackagePath="build" />
     </ItemGroup>
-    <UsingTask TaskName="PlaywrightSharp.DriverDownloader" AssemblyFile="$(MSBuildThisFileDirectory)/../tools/PlaywrightSharp.DriverDownloader/$(OutDir)/PlaywrightSharp.DriverDownloader.dll" />
+    <UsingTask TaskName="PlaywrightSharp.BuildTasks.DriverDownloader" AssemblyFile="$(MSBuildThisFileDirectory)/../tools/PlaywrightSharp.BuildTasks/$(OutDir)/PlaywrightSharp.BuildTasks.dll" />
     <Target Name="Download Drivers" AfterTargets="ResolveAssemblyReferences">
         <ConvertToAbsolutePath Paths="$(ProjectDir)..\tools\DriverDownloader\">
             <Output TaskParameter="AbsolutePaths" PropertyName="DriverDownloaderPath" />
@@ -49,8 +49,7 @@
         <ConvertToAbsolutePath Paths="$(ProjectDir)\..\..\">
             <Output TaskParameter="AbsolutePaths" PropertyName="BasePath" />
         </ConvertToAbsolutePath>
-        <PlaywrightSharp.DriverDownloader BasePath="$(BasePath)" DriverVersion="$(DriverVersion)">
-        </PlaywrightSharp.DriverDownloader>
+        <PlaywrightSharp.BuildTasks.DriverDownloader BasePath="$(BasePath)" DriverVersion="$(DriverVersion)"/>
     </Target>
     <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
         <ContentWithTargetPath Include="runtimes\win-x64\*.*">
@@ -71,6 +70,6 @@
         </ContentWithTargetPath>
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\tools\PlaywrightSharp.DriverDownloader\PlaywrightSharp.DriverDownloader.csproj" />
+      <ProjectReference Include="..\tools\PlaywrightSharp.BuildTasks\PlaywrightSharp.BuildTasks.csproj" />
     </ItemGroup>
 </Project>
