@@ -4,14 +4,15 @@
 		<OutputType>Library</OutputType>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<LangVersion>8.0</LangVersion>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 	<ItemGroup>
-	  <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" />
-	  <PackageReference Include="System.Text.Json" Version="4.7.2" />
+		<PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="ApiCheckerModels\" />
-	  <Folder Include="Extensions\" />
+		<Folder Include="ApiCheckerModels\" />
+		<Folder Include="Extensions\" />
 	</ItemGroup>
 	<Import Project="../../Common/PackageInfo.props" />
+	<Import Project="../../Common/CoreDependencies.props" />
 </Project>

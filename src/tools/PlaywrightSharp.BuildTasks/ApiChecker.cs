@@ -57,6 +57,14 @@ namespace PlaywrightSharp.BuildTasks
 
         private void EvaluateEntity(string name, PlaywrightEntity entity, StringBuilder report)
         {
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, e) =>
+            {
+                string assemblySearchPath = Path.Combine(new FileInfo(typeof(ApiChecker).Assembly.Location).Directory.FullName, e.Name.Split(',')[0] + ".dll");
+                if (File.Exists(assemblySearchPath)) return Assembly.LoadFrom(assemblySearchPath);
+
+                return null;
+            };
+
             var assembly = Assembly.LoadFrom(Path.Combine(TargetDir, "PlaywrightSharp.dll"));
             var playwrightSharpEntity = assembly.GetType($"PlaywrightSharp.I{name}");
 

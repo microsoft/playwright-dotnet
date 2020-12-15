@@ -25,15 +25,8 @@
     <Import Project="../Common/Dependencies.props" />
     <Import Project="../Common/SignAssembly.props" />
     <Import Project="../Common/PackageInfo.props" />
+    <Import Project="../Common/CoreDependencies.props" />
     <Import Project="build/netstandard2.0/PlaywrightSharp.targets" />
-    <ItemGroup>
-        <PackageReference Include="Esprima" Version="1.0.1270" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
-        <PackageReference Include="System.Text.Json" Version="4.7.2" />
-        <PackageReference Include="Macross.Json.Extensions" Version="1.5.0" />
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
-    </ItemGroup>
     <ItemGroup>
         <None Include="runtimes\osx\**" Pack="true" PackagePath="runtimes\osx\native" />
         <None Include="runtimes\unix\**" Pack="true" PackagePath="runtimes\unix\native" />
