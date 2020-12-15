@@ -26,9 +26,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5C6D57B1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharpTool", "tools\PlaywrightSharpTool\PlaywrightSharpTool.csproj", "{795BA2A6-D983-4D96-B817-6921A145AB56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.DriverDownloader", "tools\PlaywrightSharp.DriverDownloader\PlaywrightSharp.DriverDownloader.csproj", "{27C6BCBD-94DC-4D1F-8F61-85DD3258A8EB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiChecker", "tools\ApiChecker\ApiChecker.csproj", "{307DF999-0B02-40C9-971F-7BA5203DBE61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp.BuildTasks", "tools\PlaywrightSharp.BuildTasks\PlaywrightSharp.BuildTasks.csproj", "{FC334EAC-0F19-423C-BC2B-14A2540B8FDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,13 +56,13 @@ Global
 		{795BA2A6-D983-4D96-B817-6921A145AB56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{795BA2A6-D983-4D96-B817-6921A145AB56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{795BA2A6-D983-4D96-B817-6921A145AB56}.Release|Any CPU.Build.0 = Release|Any CPU
-		{27C6BCBD-94DC-4D1F-8F61-85DD3258A8EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{27C6BCBD-94DC-4D1F-8F61-85DD3258A8EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{27C6BCBD-94DC-4D1F-8F61-85DD3258A8EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{307DF999-0B02-40C9-971F-7BA5203DBE61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{307DF999-0B02-40C9-971F-7BA5203DBE61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{307DF999-0B02-40C9-971F-7BA5203DBE61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{307DF999-0B02-40C9-971F-7BA5203DBE61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC334EAC-0F19-423C-BC2B-14A2540B8FDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC334EAC-0F19-423C-BC2B-14A2540B8FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC334EAC-0F19-423C-BC2B-14A2540B8FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,8 +70,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A907B324-4541-4FAF-8CAE-D0B512B4BC36} = {D250D790-5A30-4C38-8F60-50FA96DB4E67}
 		{795BA2A6-D983-4D96-B817-6921A145AB56} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
-		{27C6BCBD-94DC-4D1F-8F61-85DD3258A8EB} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
 		{307DF999-0B02-40C9-971F-7BA5203DBE61} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
+		{FC334EAC-0F19-423C-BC2B-14A2540B8FDA} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D6EDE73-B005-4ABC-BCF8-BB3C154497EC}
