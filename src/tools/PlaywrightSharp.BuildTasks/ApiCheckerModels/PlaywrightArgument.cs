@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace ApiChecker
+namespace PlaywrightSharp.BuildTasks.ApiCheckerModels
 {
     public class PlaywrightArgument
     {

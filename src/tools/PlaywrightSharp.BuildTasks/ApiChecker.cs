@@ -8,13 +8,12 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using CommandLine;
-using PlaywrightSharp;
+using PlaywrightSharp.BuildTasks.ApiCheckerModels;
+using PlaywrightSharp.BuildTasks.Extensions;
 
-namespace ApiChecker
+namespace PlaywrightSharp.BuildTasks
 {
-    internal static class Checker
+    public class ApiChecker : Microsoft.Build.Utilities.Task
     {
         private static readonly Dictionary<(string className, string memberName), string> _memberAnnotations = new Dictionary<(string className, string memberName), string>
         {
@@ -30,10 +29,14 @@ namespace ApiChecker
             [("IPage", "exposeBinding")] = "handle is inferred from the palywrightBinding. If it's a function with only one argument and it's IJSHandle we will send handle true",
         };
 
-        public static void Run()
+        public string BasePath { get; set; }
+
+        public string TargetDir { get; set; }
+
+        public override bool Execute()
         {
             var report = new StringBuilder("<html><body><ul>");
-            string json = File.ReadAllText(Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName, "api.json"));
+            string json = File.ReadAllText(Path.Combine(BasePath, "src", "PlaywrightSharp", "runtimes", "api.json"));
             var api = JsonSerializer.Deserialize<Dictionary<string, PlaywrightEntity>>(json, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
@@ -46,13 +49,15 @@ namespace ApiChecker
 
             report.Append("</ul></body></html>");
             File.WriteAllText(
-                Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName, "report.html"),
+                Path.Combine(BasePath, "src", "PlaywrightSharp", "runtimes", "report.html"),
                 report.ToString());
+
+            return true;
         }
 
-        private static void EvaluateEntity(string name, PlaywrightEntity entity, StringBuilder report)
+        private void EvaluateEntity(string name, PlaywrightEntity entity, StringBuilder report)
         {
-            var assembly = Assembly.GetAssembly(typeof(IBrowserType));
+            var assembly = Assembly.LoadFrom(Path.Combine(TargetDir, "PlaywrightSharp.dll"));
             var playwrightSharpEntity = assembly.GetType($"PlaywrightSharp.I{name}");
 
             if (playwrightSharpEntity == null)
@@ -110,10 +115,12 @@ namespace ApiChecker
                 report.AppendLine("<li style='color: red'>");
                 report.AppendLine($"{name} NOT FOUND");
                 report.AppendLine("</li>");
+
+                Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{name} entity not found");
             }
         }
 
-        private static void EvaluateMethod(
+        private void EvaluateMethod(
             string memberName,
             PlaywrightMember member,
             Type playwrightSharpEntity,
@@ -217,6 +224,7 @@ namespace ApiChecker
                 {
                     report.AppendLine("<li style='color: red'>");
                     report.AppendLine($"{memberName} NOT FOUND");
+                    Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{playwrightSharpEntity.Name}.{memberName} not found");
 
                     if (_memberAnnotations.ContainsKey((playwrightSharpEntity.Name, memberName)))
                     {
@@ -237,7 +245,7 @@ namespace ApiChecker
                 .Replace("$", "querySelector");
         }
 
-        private static void EvaluateArgument(
+        private void EvaluateArgument(
             string name,
             PlaywrightArgument arg,
             Type playwrightSharpEntity,
@@ -245,7 +253,7 @@ namespace ApiChecker
             StringBuilder report,
             List<object> membersQueue)
         {
-            foreach (string type in arg.Type.Name.Split("|").Where(t => t != "null"))
+            foreach (string type in arg.Type.Name.Split('|').Where(t => t != "null"))
             {
                 var playwrightSharpArgument = playwrightSharpMethod.GetParameters().FirstOrDefault(p => IsParameterNameMatch(p.Name, name));
 
@@ -313,6 +321,8 @@ namespace ApiChecker
                         report.AppendLine("<li style='color: red'>");
                         report.AppendLine($"{name} NOT FOUND");
                         report.AppendLine("</li>");
+
+                        Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{name} argument not found in {playwrightSharpEntity.Name}.{playwrightSharpMethod.Name}");
                     }
                 }
             }
@@ -366,8 +376,8 @@ namespace ApiChecker
                 "Object<string, string>" => parameterType == typeof(Dictionary<string, string>),
                 "RegExp" => parameterType == typeof(Regex),
                 "EvaluationArgument" => parameterType == typeof(object),
-                "ElementHandle" => parameterType == typeof(IElementHandle),
-                "Page" => parameterType == typeof(IPage),
+                "ElementHandle" => parameterType.Name == "IElementHandle)",
+                "Page" => parameterType.Name == "IPage",
                 "Buffer" => parameterType == typeof(string) || parameterType == typeof(byte[]),
                 "Object" => parameterType != typeof(string),
                 "Serializable" => true,
@@ -375,7 +385,7 @@ namespace ApiChecker
             };
         }
 
-        private static void EvaluateProperty(string memberName, PlaywrightArgument arg, Type playwrightSharpType, StringBuilder report)
+        private void EvaluateProperty(string memberName, PlaywrightArgument arg, Type playwrightSharpType, StringBuilder report)
         {
             var playwrightSharpProperty = playwrightSharpType.GetProperties().FirstOrDefault(p => p.Name.ToLower() == memberName.ToLower());
 
@@ -398,10 +408,12 @@ namespace ApiChecker
                 report.AppendLine("<li style='color: red'>");
                 report.AppendLine($"{memberName} NOT FOUND");
                 report.AppendLine("</li>");
+
+                Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{playwrightSharpType.Name}.{memberName} not found");
             }
         }
 
-        private static void EvaluateEvent(
+        private void EvaluateEvent(
             string memberName,
             Type playwrightSharpEntity,
             StringBuilder report,
@@ -422,9 +434,9 @@ namespace ApiChecker
                 report.AppendLine("<li style='color: red'>");
                 report.AppendLine($"{memberName} NOT FOUND");
                 report.AppendLine("</li>");
+
+                Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{playwrightSharpEntity.Name}.{memberName} not found");
             }
         }
-
-        private static string ToHtml(this string value) => WebUtility.HtmlEncode(value);
     }
 }

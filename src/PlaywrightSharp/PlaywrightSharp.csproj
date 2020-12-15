@@ -51,6 +51,13 @@
         </ConvertToAbsolutePath>
         <PlaywrightSharp.BuildTasks.DriverDownloader BasePath="$(BasePath)" DriverVersion="$(DriverVersion)"/>
     </Target>
+    <UsingTask TaskName="PlaywrightSharp.BuildTasks.ApiChecker" AssemblyFile="$(MSBuildThisFileDirectory)/../tools/PlaywrightSharp.BuildTasks/$(OutDir)/PlaywrightSharp.BuildTasks.dll" />
+    <Target Name="Check API" AfterTargets="CopyFilesToOutputDirectory">
+        <ConvertToAbsolutePath Paths="$(ProjectDir)\..\..\">
+            <Output TaskParameter="AbsolutePaths" PropertyName="BasePath" />
+        </ConvertToAbsolutePath>
+        <PlaywrightSharp.BuildTasks.ApiChecker BasePath="$(BasePath)" TargetDir="$(TargetDir)"/>
+    </Target>
     <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
         <ContentWithTargetPath Include="runtimes\win-x64\*.*">
             <TargetPath>%(Filename)%(Extension)</TargetPath>
