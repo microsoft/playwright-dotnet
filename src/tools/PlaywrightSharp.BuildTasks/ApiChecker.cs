@@ -60,7 +60,6 @@ namespace PlaywrightSharp.BuildTasks
             AppDomain.CurrentDomain.AssemblyResolve += (sender, e) =>
             {
                 string assemblySearchPath = Path.Combine(new FileInfo(typeof(ApiChecker).Assembly.Location).Directory.FullName, e.Name.Split(',')[0] + ".dll");
-                Log.LogWarning($"Resolving {e.Name} with {assemblySearchPath}");
                 if (File.Exists(assemblySearchPath))
                 {
                     return Assembly.LoadFrom(assemblySearchPath);
@@ -128,7 +127,8 @@ namespace PlaywrightSharp.BuildTasks
                 report.AppendLine($"{name} NOT FOUND");
                 report.AppendLine("</li>");
 
-                Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{name} entity not found");
+                // TODO Temporary remove till we evaluate ignores
+                // Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{name} entity not found");
             }
         }
 
@@ -236,7 +236,9 @@ namespace PlaywrightSharp.BuildTasks
                 {
                     report.AppendLine("<li style='color: red'>");
                     report.AppendLine($"{memberName} NOT FOUND");
-                    Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{playwrightSharpEntity.Name}.{memberName} not found");
+
+                    // TODO Temporary remove till we evaluate ignores
+                    // Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{playwrightSharpEntity.Name}.{memberName} not found");
 
                     if (_memberAnnotations.ContainsKey((playwrightSharpEntity.Name, memberName)))
                     {
@@ -334,7 +336,8 @@ namespace PlaywrightSharp.BuildTasks
                         report.AppendLine($"{name} NOT FOUND");
                         report.AppendLine("</li>");
 
-                        Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{name} argument not found in {playwrightSharpEntity.Name}.{playwrightSharpMethod.Name}");
+                        // TODO Temporary remove till we evaluate ignores
+                        / ("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{name} argument not found in {playwrightSharpEntity.Name}.{playwrightSharpMethod.Name}");
                     }
                 }
             }
@@ -421,7 +424,8 @@ namespace PlaywrightSharp.BuildTasks
                 report.AppendLine($"{memberName} NOT FOUND");
                 report.AppendLine("</li>");
 
-                Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{playwrightSharpType.Name}.{memberName} not found");
+                // TODO Temporary remove till we evaluate ignores
+                // Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{playwrightSharpType.Name}.{memberName} not found");
             }
         }
 
@@ -447,7 +451,8 @@ namespace PlaywrightSharp.BuildTasks
                 report.AppendLine($"{memberName} NOT FOUND");
                 report.AppendLine("</li>");
 
-                Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{playwrightSharpEntity.Name}.{memberName} not found");
+                // TODO Temporary remove till we evaluate ignores
+                // Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{playwrightSharpEntity.Name}.{memberName} not found");
             }
         }
     }
