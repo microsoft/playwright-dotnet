@@ -29,9 +29,14 @@ namespace PlaywrightSharp.Transport.Channels
                 "fulfill",
                 response);
 
-        public Task ContinueAsync(HttpMethod method, string postData, Dictionary<string, string> headers)
+        public Task ContinueAsync(string url, HttpMethod method, string postData, Dictionary<string, string> headers)
         {
             var args = new Dictionary<string, object>();
+
+            if (url != null)
+            {
+                args["url"] = url;
+            }
 
             if (method != null)
             {

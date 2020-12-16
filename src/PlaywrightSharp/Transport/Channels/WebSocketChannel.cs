@@ -44,7 +44,7 @@ namespace PlaywrightSharp.Transport.Channels
                             Payload = serverParams?.GetProperty("data").ToObject<string>(),
                         });
                     break;
-                case "error":
+                case "socketError":
                     SocketError?.Invoke(
                         this,
                         new WebSocketErrorEventArgs

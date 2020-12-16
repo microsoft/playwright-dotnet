@@ -75,9 +75,10 @@ namespace PlaywrightSharp
         /// <param name="method">HTTP method.</param>
         /// <param name="postData">Post data.</param>
         /// <param name="headers">HTTP headers.</param>
+        /// <param name="url">URL.</param>
         /// <returns>A <see cref="Task"/> that completes when the message was sent.</returns>
-        public Task ContinueAsync(HttpMethod method = null, string postData = null, Dictionary<string, string> headers = null)
-            => _channel.ContinueAsync(method, postData, headers);
+        public Task ContinueAsync(HttpMethod method = null, string postData = null, Dictionary<string, string> headers = null, string url = null)
+            => _channel.ContinueAsync(url, method, postData, headers);
 
         private NormalizedFulfillResponse NormalizeFulfillParameters(
             HttpStatusCode? status,

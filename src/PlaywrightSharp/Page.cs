@@ -649,12 +649,12 @@ namespace PlaywrightSharp
         public Task<IJSHandle> EvaluateHandleAsync(string pageFunction, object arg) => MainFrame.EvaluateHandleAsync(pageFunction, arg);
 
         /// <inheritdoc />
-        public Task<IElementHandle> AddScriptTagAsync(string url = null, string path = null, string content = null, string type = null)
-            => MainFrame.AddScriptTagAsync(true, url, path, content, type);
+        public Task<IElementHandle> AddScriptTagAsync(string url = null, string path = null, string script = null, string type = null)
+            => MainFrame.AddScriptTagAsync(true, url, path, script, type);
 
         /// <inheritdoc />
-        public Task<IElementHandle> AddStyleTagAsync(string url = null, string path = null, string content = null)
-            => MainFrame.AddStyleTagAsync(true, url, path, content);
+        public Task<IElementHandle> AddStyleTagAsync(string url = null, string path = null, string style = null)
+            => MainFrame.AddStyleTagAsync(true, url, path, style);
 
         /// <inheritdoc />
         public Task ClickAsync(

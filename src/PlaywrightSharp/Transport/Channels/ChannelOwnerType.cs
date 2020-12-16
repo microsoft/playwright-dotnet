@@ -66,5 +66,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         [EnumMember(Value = "WebSocket")]
         WebSocket,
+
+        [EnumMember(Value = "Android")]
+        Android,
     }
 }
