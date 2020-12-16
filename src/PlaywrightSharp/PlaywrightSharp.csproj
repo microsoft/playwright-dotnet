@@ -52,34 +52,10 @@
         <PlaywrightSharp.BuildTasks.DriverDownloader BasePath="$(BasePath)" DriverVersion="$(DriverVersion)"/>
     </Target>
     <UsingTask TaskName="PlaywrightSharp.BuildTasks.ApiChecker" AssemblyFile="$(MSBuildThisFileDirectory)/../tools/PlaywrightSharp.BuildTasks/$(OutDir)/PlaywrightSharp.BuildTasks.dll" />
-
-    <UsingTask TaskName="HandleAssemblyResolve" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildBinPath)\Microsoft.Build.Tasks.Core.dll">
-      <ParameterGroup>
-        <SearchPath ParameterType="System.String" Required="true" />
-      </ParameterGroup>
-      <Task>
-        <Using Namespace="System" />
-        <Using Namespace="System.IO" />
-        <Using Namespace="System.Reflection" />
-        <Code Type="Fragment" Language="cs">
-          <![CDATA[
-          AppDomain.CurrentDomain.AssemblyResolve += (sender, e) =>
-          {
-            var assemblySearchPath = Path.Combine(SearchPath, e.Name.Split(',')[0] + ".dll");
-            if (File.Exists(assemblySearchPath)) return Assembly.LoadFrom(assemblySearchPath);
-
-            return null;
-          };
-          ]]>
-        </Code>
-      </Task>
-    </UsingTask>
-
     <Target Name="Check API" AfterTargets="CopyFilesToOutputDirectory">
         <ConvertToAbsolutePath Paths="$(ProjectDir)\..\..\">
             <Output TaskParameter="AbsolutePaths" PropertyName="BasePath" />
         </ConvertToAbsolutePath>
-        <HandleAssemblyResolve SearchPath="$(MSBuildThisFileDirectory)/../tools/PlaywrightSharp.BuildTasks/$(OutDir)"/>
         <PlaywrightSharp.BuildTasks.ApiChecker BasePath="$(BasePath)" TargetDir="$(TargetDir)"/>
     </Target>
     <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
