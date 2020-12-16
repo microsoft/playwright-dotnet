@@ -60,7 +60,11 @@ namespace PlaywrightSharp.BuildTasks
             AppDomain.CurrentDomain.AssemblyResolve += (sender, e) =>
             {
                 string assemblySearchPath = Path.Combine(new FileInfo(typeof(ApiChecker).Assembly.Location).Directory.FullName, e.Name.Split(',')[0] + ".dll");
-                if (File.Exists(assemblySearchPath)) return Assembly.LoadFrom(assemblySearchPath);
+                Log.LogWarning($"Resolving {e.Name} with {assemblySearchPath}");
+                if (File.Exists(assemblySearchPath))
+                {
+                    return Assembly.LoadFrom(assemblySearchPath);
+                }
 
                 return null;
             };
