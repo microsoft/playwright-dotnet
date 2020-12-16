@@ -337,7 +337,7 @@ namespace PlaywrightSharp.BuildTasks
                         report.AppendLine("</li>");
 
                         // TODO Temporary remove till we evaluate ignores
-                        / ("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{name} argument not found in {playwrightSharpEntity.Name}.{playwrightSharpMethod.Name}");
+                        // Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{name} argument not found in {playwrightSharpEntity.Name}.{playwrightSharpMethod.Name}");
                     }
                 }
             }
