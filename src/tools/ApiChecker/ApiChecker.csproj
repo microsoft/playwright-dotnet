@@ -11,14 +11,6 @@
   <Import Project="../../Common/PackageInfo.props" />
   <Import Project="../../Common/Dependencies.props" />
   <ItemGroup>
-    <None Remove="api.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="api.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.0-preview1" />
     <PackageReference Include="System.CodeDom" Version="5.0.0" />
   </ItemGroup>

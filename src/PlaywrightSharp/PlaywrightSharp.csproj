@@ -25,15 +25,15 @@
     <Import Project="../Common/Dependencies.props" />
     <Import Project="../Common/SignAssembly.props" />
     <Import Project="../Common/PackageInfo.props" />
-    <Import Project="build/netstandard2.0/PlaywrightSharp.targets" />
     <ItemGroup>
-        <PackageReference Include="Esprima" Version="1.0.1270" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
-        <PackageReference Include="System.Text.Json" Version="4.7.2" />
-        <PackageReference Include="Macross.Json.Extensions" Version="1.5.0" />
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
+      <PackageReference Include="Esprima" Version="1.0.1270" />
+      <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
+      <PackageReference Include="System.Text.Json" Version="4.7.2" />
+      <PackageReference Include="Macross.Json.Extensions" Version="1.5.0" />
+      <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+      <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
     </ItemGroup>
+    <Import Project="build/netstandard2.0/PlaywrightSharp.targets" />
     <ItemGroup>
         <None Include="runtimes\osx\**" Pack="true" PackagePath="runtimes\osx\native" />
         <None Include="runtimes\unix\**" Pack="true" PackagePath="runtimes\unix\native" />
@@ -50,6 +50,13 @@
             <Output TaskParameter="AbsolutePaths" PropertyName="BasePath" />
         </ConvertToAbsolutePath>
         <PlaywrightSharp.BuildTasks.DriverDownloader BasePath="$(BasePath)" DriverVersion="$(DriverVersion)"/>
+    </Target>
+    <UsingTask TaskName="PlaywrightSharp.BuildTasks.ApiChecker" AssemblyFile="$(MSBuildThisFileDirectory)/../tools/PlaywrightSharp.BuildTasks/$(OutDir)/PlaywrightSharp.BuildTasks.dll" />
+    <Target Name="Check API" AfterTargets="CopyFilesToOutputDirectory">
+        <ConvertToAbsolutePath Paths="$(ProjectDir)\..\..\">
+            <Output TaskParameter="AbsolutePaths" PropertyName="BasePath" />
+        </ConvertToAbsolutePath>
+        <PlaywrightSharp.BuildTasks.ApiChecker BasePath="$(BasePath)" TargetDir="$(TargetDir)"/>
     </Target>
     <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
         <ContentWithTargetPath Include="runtimes\win-x64\*.*">

@@ -7,9 +7,8 @@ namespace ApiChecker
     {
         internal static void Main(string[] args)
         {
-            Parser.Default.ParseArguments<ScaffoldTestOptions, CheckerOptions>(args)
-                .WithParsed<ScaffoldTestOptions>(o => ScaffoldTest.Run(o))
-                .WithParsed<CheckerOptions>(_ => Checker.Run());
+            Parser.Default.ParseArguments<ScaffoldTestOptions>(args)
+                .WithParsed<ScaffoldTestOptions>(ScaffoldTest.Run);
         }
     }
 }
