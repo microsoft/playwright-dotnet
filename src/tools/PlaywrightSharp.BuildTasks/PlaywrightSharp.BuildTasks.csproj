@@ -15,9 +15,5 @@
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
 	</ItemGroup>
-	<ItemGroup>
-		<Folder Include="ApiCheckerModels\" />
-		<Folder Include="Extensions\" />
-	</ItemGroup>
 	<Import Project="../../Common/PackageInfo.props" />
 </Project>
