@@ -68,7 +68,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithAContentAndTypeModule()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.AddScriptTagAsync(content: "import num from '/es6/es6module.js'; window.__es6injected = num;", type: "module");
+            await Page.AddScriptTagAsync(script: "import num from '/es6/es6module.js'; window.__es6injected = num;", type: "module");
             await Page.WaitForFunctionAsync("window.__es6injected");
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => __es6injected"));
         }
@@ -114,7 +114,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithContent()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var scriptHandle = await Page.AddScriptTagAsync(content: "window.__injected = 35;");
+            var scriptHandle = await Page.AddScriptTagAsync(script: "window.__injected = 35;");
             Assert.NotNull(scriptHandle);
             Assert.Equal(35, await Page.EvaluateAsync<int>("() => __injected"));
         }
@@ -127,7 +127,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/csp.html");
             await Assert.ThrowsAsync<PlaywrightSharpException>(() =>
-                Page.AddScriptTagAsync(content: "window.__injected = 35;"));
+                Page.AddScriptTagAsync(script: "window.__injected = 35;"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>

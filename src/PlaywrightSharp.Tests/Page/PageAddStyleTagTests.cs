@@ -80,7 +80,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldWorkWithContent()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var styleHandle = await Page.AddStyleTagAsync(content: "body { background-color: green; }");
+            var styleHandle = await Page.AddStyleTagAsync(style: "body { background-color: green; }");
             Assert.NotNull(styleHandle);
             Assert.Equal("rgb(0, 128, 0)", await Page.EvaluateAsync<string>("window.getComputedStyle(document.querySelector('body')).getPropertyValue('background-color')"));
         }
@@ -93,7 +93,7 @@ namespace PlaywrightSharp.Tests.Page
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/csp.html");
             await Assert.ThrowsAsync<PlaywrightSharpException>(() =>
-                Page.AddStyleTagAsync(content: "body { background-color: green; }"));
+                Page.AddStyleTagAsync(style: "body { background-color: green; }"));
         }
 
         ///<playwright-file>page.spec.js</playwright-file>
