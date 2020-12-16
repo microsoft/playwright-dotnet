@@ -18,6 +18,7 @@
         <RootNamespace>PlaywrightSharp</RootNamespace>
         <ReleaseVersion>0.0.0</ReleaseVersion>
         <BuildFromSource>True</BuildFromSource>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <NoWarn>1701;1702;CS0067</NoWarn>
