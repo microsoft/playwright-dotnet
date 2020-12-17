@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using Xunit;
@@ -584,11 +585,12 @@ namespace PlaywrightSharp.Tests.RequestInterception
 
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>Page.route</playwright-describe>
-        ///<playwright-it>should create a redirect</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
-        public async Task ShouldCreateARedirect()
+        ///<playwright-it>should fulfill with redirect status</playwright-it>
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
+        public async Task ShouldFulfillWithRedirectStatus()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GoToAsync(TestConstants.ServerUrl + "/title.html");
+            Server.SetRoute("/final", context => context.Response.WriteAsync("foo"));
             await Page.RouteAsync("**/*", (route, request) =>
             {
                 if (request.Url != TestConstants.ServerUrl + "/redirect_this")
@@ -598,10 +600,10 @@ namespace PlaywrightSharp.Tests.RequestInterception
                 }
 
                 _ = route.FulfillAsync(
-                    status: HttpStatusCode.Redirect,
+                    status: HttpStatusCode.MovedPermanently,
                     headers: new Dictionary<string, string>
                     {
-                        ["location"] = "empty.html",
+                        ["location"] = "/final",
                     });
             });
 
@@ -610,7 +612,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
               return data.text();
             }", TestConstants.ServerUrl + "/redirect_this");
 
-            Assert.Empty(text);
+            Assert.Equal("foo", text);
         }
 
         ///<playwright-file>interception.spec.js</playwright-file>
