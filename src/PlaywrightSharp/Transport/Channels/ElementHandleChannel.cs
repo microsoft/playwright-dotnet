@@ -434,9 +434,6 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "textContent", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal async Task<string> CreateSelectorForTestAsync(string name)
-            => (await Connection.SendMessageToServerAsync(Guid, "createSelectorForTest", new { name }).ConfigureAwait(false))?.GetProperty("value").ToString();
-
         internal Task SelectTextAsync(int? timeout)
         {
             var args = new Dictionary<string, object>();

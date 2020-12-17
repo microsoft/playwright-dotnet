@@ -466,7 +466,7 @@ namespace PlaywrightSharp.Transport
                 return new TimeoutException(error.Message);
             }
 
-            if (error.Message.Contains("Target closed") || error.Message.Contains("The page has been closed."))
+            if (error.Message.Contains("Browser closed") || error.Message.Contains("Target closed") || error.Message.Contains("The page has been closed."))
             {
                 return new TargetClosedException(error.Message);
             }
@@ -494,7 +494,7 @@ namespace PlaywrightSharp.Transport
                 return new TimeoutException(message);
             }
 
-            if (message.Contains("Target closed") || message.Contains("The page has been closed."))
+            if (message.Contains("Browser closed") || message.Contains("Target closed") || message.Contains("The page has been closed."))
             {
                 return new TargetClosedException(message);
             }

@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldThrowOnUnsupportedInputs()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
-            foreach (string type in new[] { "color", "file" })
+            foreach (string type in new[] { "button", "checkbox", "file", "image", "radio", "range", "reset", "submit" })
             {
                 await Page.EvalOnSelectorAsync("input", "(input, type) => input.setAttribute('type', type)", type);
                 var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.FillAsync("input", string.Empty));

@@ -21,7 +21,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        // [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Skip = "Fix me #1058")]
         public async Task ShouldWork()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { IgnoreHTTPSErrors = true });
@@ -42,7 +43,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should isolate contexts</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        /// [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Skip = "Fix me #1058")]
         public async Task ShouldIsolateContexts()
         {
             await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { IgnoreHTTPSErrors = true }))
@@ -63,7 +65,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should work with mixed content</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        // [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Skip = "Fix me #1058")]
         public async Task ShouldWorkWithMixedContent()
         {
             HttpsServer.SetRoute("/mixedcontent.html", async (context) =>
@@ -81,7 +84,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should work with WebSocket</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        // [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Skip = "Fix me #1058")]
         public async Task ShouldWorkWithWebSocket()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { IgnoreHTTPSErrors = true });
@@ -101,7 +105,8 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should fail with WebSocket if not ignored</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        // [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Skip = "Fix me #1058")]
         public async Task ShouldFailWithWebSocketIfNotIgnored()
         {
             await using var context = await Browser.NewContextAsync();

@@ -50,10 +50,13 @@ namespace PlaywrightSharp.BuildTasks
                     file.Delete();
                 }
 
-                var tasks = new List<Task>
+                var tasks = new List<Task>();
+
+                if (!driverVersion.Contains("next"))
                 {
-                    UpdateBrowserVersionsAsync(BasePath, driverVersion)
-                };
+                    tasks.Add(UpdateBrowserVersionsAsync(BasePath, driverVersion));
+                }
+
                 foreach (var (platform, runtime) in _platforms)
                 {
                     tasks.Add(DownloadDriverAsync(destinationDirectory, driverVersion, platform, runtime));
@@ -163,36 +166,46 @@ namespace PlaywrightSharp.BuildTasks
         private async Task DownloadDriverAsync(DirectoryInfo destinationDirectory, string driverVersion, string platform, string runtime)
         {
             Log.LogMessage("Downloading driver for " + platform);
-            const string cdn = "https://playwright.azureedge.net/builds/cli";
+            string cdn = "https://playwright.azureedge.net/builds/cli";
+
+            if (driverVersion.Contains("next"))
+            {
+                cdn += "/next";
+            }
+
             using var client = new HttpClient();
-            var response = await client.GetAsync($"{cdn}/playwright-cli-{driverVersion}-{platform}.zip");
+            string url = $"{cdn}/playwright-cli-{driverVersion}-{platform}.zip";
 
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                Log.LogMessage("Unable to download driver for " + driverVersion);
-                return;
-            }
+                var response = await client.GetAsync(url);
 
-            var directory = new DirectoryInfo(Path.Combine(destinationDirectory.FullName, runtime));
+                var directory = new DirectoryInfo(Path.Combine(destinationDirectory.FullName, runtime));
 
-            if (directory.Exists)
-            {
-                directory.Delete(true);
-            }
-
-            new ZipArchive(await response.Content.ReadAsStreamAsync()).ExtractToDirectory(directory.FullName);
-
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                foreach (var executable in directory.GetFiles().Where(f => f.Name == "playwright-cli" || f.Name.Contains("ffmpeg")))
+                if (directory.Exists)
                 {
-                    if (LinuxSysCall.Chmod(executable.FullName, LinuxSysCall.ExecutableFilePermissions) != 0)
+                    directory.Delete(true);
+                }
+
+                new ZipArchive(await response.Content.ReadAsStreamAsync()).ExtractToDirectory(directory.FullName);
+
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    foreach (var executable in directory.GetFiles().Where(f => f.Name == "playwright-cli" || f.Name.Contains("ffmpeg")))
                     {
-                        throw new Exception($"Unable to chmod the driver ({Marshal.GetLastWin32Error()})");
+                        if (LinuxSysCall.Chmod(executable.FullName, LinuxSysCall.ExecutableFilePermissions) != 0)
+                        {
+                            throw new Exception($"Unable to chmod the driver ({Marshal.GetLastWin32Error()})");
+                        }
                     }
                 }
+                Log.LogMessage($"Driver for {platform} downloaded");
             }
-            Log.LogMessage($"Driver for {platform} downloaded");
+            catch (Exception ex)
+            {
+                Log.LogMessage($"Unable to download driver for {driverVersion} using url {url}");
+                throw new Exception($"Unable to download driver for {driverVersion} using url {url}", ex);
+            }
         }
     }
 }

@@ -100,7 +100,8 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
         ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work with clicking on links which do not commit navigation</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        // [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Skip = "Fix me #1058")]
         public async Task ShouldWorkWithClickingOnLinksWhichDoNotCommitNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

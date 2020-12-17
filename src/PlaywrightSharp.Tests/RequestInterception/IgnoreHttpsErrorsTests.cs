@@ -20,7 +20,8 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should work with request interception</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        // [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Skip = "Fix me #1058")]
         public async Task ShouldWorkWithRequestInterception()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());

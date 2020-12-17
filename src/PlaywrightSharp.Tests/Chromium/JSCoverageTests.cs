@@ -75,20 +75,6 @@ namespace PlaywrightSharp.Tests.Chromium
 
         ///<playwright-file>chromium/chromium.spec.js</playwright-file>
         ///<playwright-describe>JSCoverage</playwright-describe>
-        ///<playwright-it>should ignore playwright internal scripts if reportAnonymousScripts is true</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
-        public async Task ShouldIgnorePlaywrightInternalScriptsIfReportAnonymousScriptsIsTrue()
-        {
-            await Page.Coverage.StartJSCoverageAsync(reportAnonymousScripts: true);
-            await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.EvaluateAsync("console.log('foo')");
-            await Page.EvaluateAsync("() => console.log('bar')");
-            var coverage = await Page.Coverage.StopJSCoverageAsync();
-            Assert.Empty(coverage);
-        }
-
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>JSCoverage</playwright-describe>
         ///<playwright-it>should report multiple scripts</playwright-it>
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportMultipleScripts()
