@@ -136,7 +136,8 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>defaultbrowsercontext-2.spec.js</playwright-file>
         /// <playwright-it>should support ignoreHTTPSErrors option</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        // [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Skip = "Fix me #1058")]
         public async Task ShouldSupportIgnoreHTTPSErrorsOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions

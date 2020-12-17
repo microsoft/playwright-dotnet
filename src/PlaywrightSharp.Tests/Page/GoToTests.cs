@@ -266,7 +266,8 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should fail when navigating to bad SSL</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        // [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Skip = "Fix me #1058")]
         public async Task ShouldFailWhenNavigatingToBadSSL()
         {
             Page.Request += (sender, e) => Assert.NotNull(e.Request);
@@ -280,7 +281,8 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should fail when navigating to bad SSL after redirects</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        // [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Skip = "Fix me #1058")]
         public async Task ShouldFailWhenNavigatingToBadSSLAfterRedirects()
         {
             Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
@@ -292,7 +294,8 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should not crash when navigating to bad SSL after a cross origin navigation</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        // [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Skip = "Fix me #1058")]
         public async Task ShouldNotCrashWhenNavigatingToBadSSLAfterACrossOriginNavigation()
         {
             await Page.GoToAsync(TestConstants.CrossProcessHttpPrefix + "/empty.html");
@@ -582,7 +585,8 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>should fail when navigating and show the url at the error message</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        // [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Skip = "Fix me #1058")]
         public async Task ShouldFailWhenNavigatingAndShowTheUrlAtTheErrorMessage()
         {
             const string url = TestConstants.HttpsPrefix + "/redirect/1.html";

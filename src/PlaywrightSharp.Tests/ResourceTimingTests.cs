@@ -77,7 +77,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>resource-timing.spec.js</playwright-file>
         ///<playwright-it>should work for SSL</playwright-it>
-        [Fact]
+        [Fact(Skip = "Fix me #1058")]
         public async Task ShouldWorkForSSL()
         {
             var page = await Browser.NewPageAsync(ignoreHTTPSErrors: true);
