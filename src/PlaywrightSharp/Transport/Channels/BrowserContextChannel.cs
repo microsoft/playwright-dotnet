@@ -219,5 +219,8 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["page"] = page,
                 });
+
+        internal Task<StorageState> GetStorageStateAsync()
+            => Connection.SendMessageToServerAsync<StorageState>(Guid, "storageState", null);
     }
 }
