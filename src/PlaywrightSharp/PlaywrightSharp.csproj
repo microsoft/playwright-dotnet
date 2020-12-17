@@ -77,6 +77,6 @@
         </ContentWithTargetPath>
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\tools\PlaywrightSharp.BuildTasks\PlaywrightSharp.BuildTasks.csproj" />
+      <ProjectReference Include="..\tools\PlaywrightSharp.BuildTasks\PlaywrightSharp.BuildTasks.csproj" ReferenceOutputAssembly="false"/>
     </ItemGroup>
 </Project>
