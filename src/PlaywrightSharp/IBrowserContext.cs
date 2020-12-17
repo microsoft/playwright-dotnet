@@ -464,5 +464,13 @@ namespace PlaywrightSharp
         /// <param name="headers">Additional http headers to be sent with every request.</param>
         /// <returns>A <see cref="Task"/> that completes when the headers are set.</returns>
         Task SetExtraHttpHeadersAsync(Dictionary<string, string> headers);
+
+        /// <summary>
+        /// Returns storage state for this browser context, contains current cookies and local storage snapshot.
+        /// </summary>
+        /// <param name="path">The file path to save the storage state to. If path is a relative path, then it is resolved relative to current working directory.
+        /// If no path is provided, storage state is still returned, but won't be saved to the disk.</param>
+        /// <returns>The storage state model.</returns>
+        Task<StorageState> GetStorageStateAsync(string path = null);
     }
 }

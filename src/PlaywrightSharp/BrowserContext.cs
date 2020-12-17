@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -305,6 +306,21 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task SetExtraHttpHeadersAsync(Dictionary<string, string> headers) => Channel.SetExtraHttpHeadersAsync(headers);
+
+        /// <inheritdoc />
+        public async Task<StorageState> GetStorageStateAsync(string path = null)
+        {
+            var state = await Channel.GetStorageStateAsync().ConfigureAwait(false);
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                File.WriteAllText(
+                    path,
+                    JsonSerializer.Serialize(state, Channel.Connection.GetDefaultJsonSerializerOptions()));
+            }
+
+            return state;
+        }
 
         internal void OnRoute(Route route, Request request)
         {

@@ -66,6 +66,9 @@ namespace PlaywrightSharp
         /// You can use <see cref="Har.HarResult"/> to deserialize the generated JSON file.</param>
         /// <param name="recordVideo">Enables video recording for all pages into recordVideo.dir directory. If not specified videos are not recorded.
         /// Make sure to await <seealso cref="BrowserContext.CloseAsync"/> for videos to be saved.</param>
+        /// <param name="proxy">Network proxy settings to use with this context. Note that browser needs to be launched with the global proxy for this option to work. If all contexts override the proxy, global proxy will be never used and can be any string.</param>
+        /// <param name="storageStatePath">Path to the file with saved storage.</param>
+        /// <param name="storageState">Populates context with given storage state. This method can be used to initialize context with logged-in information obtained via <see cref="IBrowserContext.GetStorageStateAsync(string)"/>.</param>
         /// <example>.
         /// <code>
         /// <![CDATA[
@@ -96,7 +99,10 @@ namespace PlaywrightSharp
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
             RecordHarOptions recordHar = null,
-            RecordVideoOptions recordVideo = null);
+            RecordVideoOptions recordVideo = null,
+            ProxySettings proxy = null,
+            string storageStatePath = null,
+            StorageState storageState = null);
 
         /// <summary>
         /// Creates a new browser context. It won't share cookies/cache with other browser contexts.
@@ -122,6 +128,9 @@ namespace PlaywrightSharp
         /// You can use <see cref="Har.HarResult"/> to deserialize the generated JSON file.</param>
         /// <param name="recordVideo">Enables video recording for all pages into recordVideo.dir directory. If not specified videos are not recorded.
         /// Make sure to await <seealso cref="BrowserContext.CloseAsync"/> for videos to be saved.</param>
+        /// <param name="proxy">Network proxy settings to use with this context. Note that browser needs to be launched with the global proxy for this option to work. If all contexts override the proxy, global proxy will be never used and can be any string.</param>
+        /// <param name="storageStatePath">Path to the file with saved storage.</param>
+        /// <param name="storageState">Populates context with given storage state. This method can be used to initialize context with logged-in information obtained via <see cref="IBrowserContext.GetStorageStateAsync(string)"/>.</param>
         /// <example>.
         /// <code>
         /// <![CDATA[
@@ -151,7 +160,10 @@ namespace PlaywrightSharp
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
             RecordHarOptions recordHar = null,
-            RecordVideoOptions recordVideo = null);
+            RecordVideoOptions recordVideo = null,
+            ProxySettings proxy = null,
+            string storageStatePath = null,
+            StorageState storageState = null);
 
         /// <summary>
         /// Creates a new browser context. It won't share cookies/cache with other browser contexts.
@@ -195,6 +207,9 @@ namespace PlaywrightSharp
         /// You can use <see cref="Har.HarResult"/> to deserialize the generated JSON file.</param>
         /// <param name="recordVideo">Enables video recording for all pages into recordVideo.dir directory. If not specified videos are not recorded.
         /// Make sure to await <seealso cref="BrowserContext.CloseAsync"/> for videos to be saved.</param>
+        /// <param name="proxy">Network proxy settings to use with this context. Note that browser needs to be launched with the global proxy for this option to work. If all contexts override the proxy, global proxy will be never used and can be any string.</param>
+        /// <param name="storageStatePath">Path to the file with saved storage.</param>
+        /// <param name="storageState">Populates context with given storage state. This method can be used to initialize context with logged-in information obtained via <see cref="IBrowserContext.GetStorageStateAsync(string)"/>.</param>
         /// <example>.
         /// <code>
         /// <![CDATA[
@@ -225,7 +240,10 @@ namespace PlaywrightSharp
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
             RecordHarOptions recordHar = null,
-            RecordVideoOptions recordVideo = null);
+            RecordVideoOptions recordVideo = null,
+            ProxySettings proxy = null,
+            string storageStatePath = null,
+            StorageState storageState = null);
 
         /// <summary>
         /// Creates a new page in a new browser context. Closing this page will close the context as well.
@@ -251,6 +269,9 @@ namespace PlaywrightSharp
         /// You can use <see cref="Har.HarResult"/> to deserialize the generated JSON file.</param>
         /// <param name="recordVideo">Enables video recording for all pages into recordVideo.dir directory. If not specified videos are not recorded.
         /// Make sure to await <seealso cref="BrowserContext.CloseAsync"/> for videos to be saved.</param>
+        /// <param name="proxy">Network proxy settings to use with this context. Note that browser needs to be launched with the global proxy for this option to work. If all contexts override the proxy, global proxy will be never used and can be any string.</param>
+        /// <param name="storageStatePath">Path to the file with saved storage.</param>
+        /// <param name="storageState">Populates context with given storage state. This method can be used to initialize context with logged-in information obtained via <see cref="IBrowserContext.GetStorageStateAsync(string)"/>.</param>
         /// <example>.
         /// <code>
         /// <![CDATA[
@@ -280,7 +301,10 @@ namespace PlaywrightSharp
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
             RecordHarOptions recordHar = null,
-            RecordVideoOptions recordVideo = null);
+            RecordVideoOptions recordVideo = null,
+            ProxySettings proxy = null,
+            string storageStatePath = null,
+            StorageState storageState = null);
 
         /// <summary>
         /// Creates a new page in a new browser context. Closing this page will close the context as well.

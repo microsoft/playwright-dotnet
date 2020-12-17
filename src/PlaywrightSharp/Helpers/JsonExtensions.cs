@@ -12,7 +12,10 @@ namespace PlaywrightSharp.Helpers
     {
         static JsonExtensions() => DefaultJsonSerializerOptions = GetNewDefaultSerializerOptions();
 
-        internal static JsonSerializerOptions DefaultJsonSerializerOptions { get; }
+        /// <summary>
+        /// Base serialization options used by PlaywrightSharp.
+        /// </summary>
+        public static JsonSerializerOptions DefaultJsonSerializerOptions { get; }
 
         /// <summary>
         /// Convert a <see cref="JsonElement"/> to an object.

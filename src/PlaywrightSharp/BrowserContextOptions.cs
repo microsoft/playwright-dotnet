@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
+using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
@@ -122,6 +125,21 @@ namespace PlaywrightSharp
         public RecordVideoOptions RecordVideo { get; set; }
 
         /// <summary>
+        /// Network proxy settings to use with this context. Note that browser needs to be launched with the global proxy for this option to work. If all contexts override the proxy, global proxy will be never used and can be any string..
+        /// </summary>
+        public ProxySettings Proxy { get; set; }
+
+        /// <summary>
+        /// Path to the file with saved storage.
+        /// </summary>
+        public string StorageStatePath { get; set; }
+
+        /// <summary>
+        /// Populates context with given storage state. This method can be used to initialize context with logged-in information obtained via <see cref="IBrowserContext.GetStorageStateAsync(string)"/>.
+        /// </summary>
+        public StorageState StorageState { get; set; }
+
+        /// <summary>
         /// Clones the <see cref="BrowserContextOptions"/>.
         /// </summary>
         /// <returns>A copy of the current <see cref="BrowserContextOptions"/>.</returns>
@@ -234,6 +252,21 @@ namespace PlaywrightSharp
             if (RecordVideo != null)
             {
                 args["recordVideo"] = RecordVideo;
+            }
+
+            if (Proxy != null)
+            {
+                args["proxy"] = Proxy;
+            }
+
+            if (!string.IsNullOrEmpty(StorageStatePath))
+            {
+                StorageState = JsonSerializer.Deserialize<StorageState>(File.ReadAllText(StorageStatePath), JsonExtensions.DefaultJsonSerializerOptions);
+            }
+
+            if (StorageState != null)
+            {
+                args["storageState"] = StorageState;
             }
 
             return args;

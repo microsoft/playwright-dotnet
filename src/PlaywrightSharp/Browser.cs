@@ -77,7 +77,10 @@ namespace PlaywrightSharp
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
             RecordHarOptions recordHar = null,
-            RecordVideoOptions recordVideo = null)
+            RecordVideoOptions recordVideo = null,
+            ProxySettings proxy = null,
+            string storageStatePath = null,
+            StorageState storageState = null)
             => NewContextAsync(new BrowserContextOptions
             {
                 Viewport = viewport,
@@ -99,6 +102,9 @@ namespace PlaywrightSharp
                 ExtraHttpHeaders = extraHttpHeaders,
                 RecordHar = recordHar,
                 RecordVideo = recordVideo,
+                Proxy = proxy,
+                StorageStatePath = storageStatePath,
+                StorageState = storageState,
             });
 
         /// <inheritdoc/>
@@ -120,7 +126,10 @@ namespace PlaywrightSharp
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
             RecordHarOptions recordHar = null,
-            RecordVideoOptions recordVideo = null)
+            RecordVideoOptions recordVideo = null,
+            ProxySettings proxy = null,
+            string storageStatePath = null,
+            StorageState storageState = null)
             => NewContextAsync(new BrowserContextOptions
             {
                 UserAgent = userAgent,
@@ -141,6 +150,9 @@ namespace PlaywrightSharp
                 ExtraHttpHeaders = extraHttpHeaders,
                 RecordHar = recordHar,
                 RecordVideo = recordVideo,
+                Proxy = proxy,
+                StorageStatePath = storageStatePath,
+                StorageState = storageState,
             });
 
         /// <inheritdoc/>
@@ -172,7 +184,10 @@ namespace PlaywrightSharp
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
             RecordHarOptions recordHar = null,
-            RecordVideoOptions recordVideo = null)
+            RecordVideoOptions recordVideo = null,
+            ProxySettings proxy = null,
+            string storageStatePath = null,
+            StorageState storageState = null)
             => NewPageAsync(new BrowserContextOptions
             {
                 Viewport = viewport,
@@ -194,6 +209,9 @@ namespace PlaywrightSharp
                 ExtraHttpHeaders = extraHttpHeaders,
                 RecordHar = recordHar,
                 RecordVideo = recordVideo,
+                Proxy = proxy,
+                StorageStatePath = storageStatePath,
+                StorageState = storageState,
             });
 
         /// <inheritdoc/>
@@ -215,7 +233,10 @@ namespace PlaywrightSharp
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
             RecordHarOptions recordHar = null,
-            RecordVideoOptions recordVideo = null)
+            RecordVideoOptions recordVideo = null,
+            ProxySettings proxy = null,
+            string storageStatePath = null,
+            StorageState storageState = null)
             => NewPageAsync(new BrowserContextOptions
             {
                 UserAgent = userAgent,
@@ -236,6 +257,9 @@ namespace PlaywrightSharp
                 ExtraHttpHeaders = extraHttpHeaders,
                 RecordHar = recordHar,
                 RecordVideo = recordVideo,
+                Proxy = proxy,
+                StorageStatePath = storageStatePath,
+                StorageState = storageState,
             });
 
         /// <inheritdoc/>

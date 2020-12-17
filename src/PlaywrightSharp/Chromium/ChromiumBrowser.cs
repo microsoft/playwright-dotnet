@@ -52,7 +52,10 @@ namespace PlaywrightSharp.Chromium
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
             RecordHarOptions recordHar = null,
-            RecordVideoOptions recordVideo = null)
+            RecordVideoOptions recordVideo = null,
+            ProxySettings proxy = null,
+            string storageStatePath = null,
+            StorageState storageState = null)
             => await base.NewContextAsync(
                 viewport,
                 userAgent,
@@ -72,7 +75,10 @@ namespace PlaywrightSharp.Chromium
                 locale,
                 extraHttpHeaders,
                 recordHar,
-                recordVideo).ConfigureAwait(false) as IChromiumBrowserContext;
+                recordVideo,
+                proxy,
+                storageStatePath,
+                storageState).ConfigureAwait(false) as IChromiumBrowserContext;
 
         /// <inheritdoc/>
         public new async Task<IChromiumBrowserContext> NewContextAsync(
@@ -93,7 +99,10 @@ namespace PlaywrightSharp.Chromium
             string locale = null,
             Dictionary<string, string> extraHttpHeaders = null,
             RecordHarOptions recordHar = null,
-            RecordVideoOptions recordVideo = null)
+            RecordVideoOptions recordVideo = null,
+            ProxySettings proxy = null,
+            string storageStatePath = null,
+            StorageState storageState = null)
             => await base.NewContextAsync(
                 userAgent,
                 bypassCSP,
@@ -112,7 +121,10 @@ namespace PlaywrightSharp.Chromium
                 locale,
                 extraHttpHeaders,
                 recordHar,
-                recordVideo).ConfigureAwait(false) as IChromiumBrowserContext;
+                recordVideo,
+                proxy,
+                storageStatePath,
+                storageState).ConfigureAwait(false) as IChromiumBrowserContext;
 
         /// <inheritdoc/>
         public new async Task<IChromiumBrowserContext> NewContextAsync(BrowserContextOptions options)

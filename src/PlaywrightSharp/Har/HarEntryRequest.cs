@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Har
         /// <summary>
         /// HTTP Headers.
         /// </summary>
-        public IEnumerable<HarEntryHeader> Headers { get; set; }
+        public IEnumerable<NameValueEntry> Headers { get; set; }
 
         /// <summary>
         /// QueryString values.
