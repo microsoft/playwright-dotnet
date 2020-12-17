@@ -54,7 +54,7 @@ namespace PlaywrightSharp
         public IDictionary<string, string> Headers => _headers;
 
         /// <inheritdoc />
-        public bool Ok => Status == HttpStatusCode.OK;
+        public bool Ok => Status == 0 || ((int)Status >= 200 && (int)Status <= 299);
 
         /// <inheritdoc />
         public IRequest Request => _initializer.Request.Object;
