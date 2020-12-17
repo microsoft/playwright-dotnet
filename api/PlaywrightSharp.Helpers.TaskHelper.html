@@ -1,0 +1,728 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class TaskHelper
+   | Playwright Sharp </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class TaskHelper
+   | Playwright Sharp ">
+    <meta name="generator" content="docfx 2.45.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/home.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="PlaywrightSharp.Helpers.TaskHelper">
+  
+  
+  <h1 id="PlaywrightSharp_Helpers_TaskHelper" data-uid="PlaywrightSharp.Helpers.TaskHelper" class="text-break">Class TaskHelper
+  </h1>
+  <div class="markdown level0 summary"><p>Task helper.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">TaskHelper</span></div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="PlaywrightSharp.Helpers.html">PlaywrightSharp.Helpers</a></h6>
+  <h6><strong>Assembly</strong>: PlaywrightSharp.dll</h6>
+  <h5 id="PlaywrightSharp_Helpers_TaskHelper_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class TaskHelper : object</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20WithTimeout(Task, Func&lt;Task&gt;, Int32, CancellationToken)&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/%23L60">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/#L60">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_Helpers_TaskHelper_WithTimeout_" data-uid="PlaywrightSharp.Helpers.TaskHelper.WithTimeout*"></a>
+  <h4 id="PlaywrightSharp_Helpers_TaskHelper_WithTimeout_Task_Func_Task__System_Int32_CancellationToken_" data-uid="PlaywrightSharp.Helpers.TaskHelper.WithTimeout(Task,Func{Task},System.Int32,CancellationToken)">WithTimeout(Task, Func&lt;Task&gt;, Int32, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Cancels the <code data-dev-comment-type="paramref" class="paramref">task</code> after <code data-dev-comment-type="paramref" class="paramref">timeout</code> milliseconds.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task WithTimeout(this Task task, Func&lt;Task&gt; timeoutAction, int timeout = 1000, CancellationToken cancellationToken = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><span class="parametername">task</span></td>
+        <td><p>Task to wait for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;<span class="xref">Task</span>&gt;</td>
+        <td><span class="parametername">timeoutAction</span></td>
+        <td><p>Action to be executed on Timeout.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Milliseconds timeout.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td><p>Cancellation token.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>The task result.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20WithTimeout(Task, Func&lt;Task&gt;, TimeSpan, CancellationToken)&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/%23L75">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/#L75">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_Helpers_TaskHelper_WithTimeout_" data-uid="PlaywrightSharp.Helpers.TaskHelper.WithTimeout*"></a>
+  <h4 id="PlaywrightSharp_Helpers_TaskHelper_WithTimeout_Task_Func_Task__TimeSpan_CancellationToken_" data-uid="PlaywrightSharp.Helpers.TaskHelper.WithTimeout(Task,Func{Task},TimeSpan,CancellationToken)">WithTimeout(Task, Func&lt;Task&gt;, TimeSpan, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Cancels the <code data-dev-comment-type="paramref" class="paramref">task</code> after a given <code data-dev-comment-type="paramref" class="paramref">timeout</code> period.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task WithTimeout(this Task task, Func&lt;Task&gt; timeoutAction, TimeSpan timeout, CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><span class="parametername">task</span></td>
+        <td><p>Task to wait for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;<span class="xref">Task</span>&gt;</td>
+        <td><span class="parametername">timeoutAction</span></td>
+        <td><p>Action to be executed on Timeout.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TimeSpan</span></td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>The timeout period.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td><p>Cancellation token.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>The task result.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20WithTimeout(Task, Int32, Func&lt;TimeSpan, Exception&gt;, CancellationToken)&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/%23L27">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/#L27">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_Helpers_TaskHelper_WithTimeout_" data-uid="PlaywrightSharp.Helpers.TaskHelper.WithTimeout*"></a>
+  <h4 id="PlaywrightSharp_Helpers_TaskHelper_WithTimeout_Task_System_Int32_Func_TimeSpan_Exception__CancellationToken_" data-uid="PlaywrightSharp.Helpers.TaskHelper.WithTimeout(Task,System.Int32,Func{TimeSpan,Exception},CancellationToken)">WithTimeout(Task, Int32, Func&lt;TimeSpan, Exception&gt;, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Cancels the <code data-dev-comment-type="paramref" class="paramref">task</code> after <code data-dev-comment-type="paramref" class="paramref">milliseconds</code> milliseconds.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task WithTimeout(this Task task, int milliseconds = 1000, Func&lt;TimeSpan, Exception&gt; exceptionFactory = null, CancellationToken cancellationToken = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><span class="parametername">task</span></td>
+        <td><p>Task to wait for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">milliseconds</span></td>
+        <td><p>Milliseconds timeout.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;<span class="xref">TimeSpan</span>, <span class="xref">Exception</span>&gt;</td>
+        <td><span class="parametername">exceptionFactory</span></td>
+        <td><p>Optional timeout exception factory.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td><p>Cancellation token.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>The task result.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20WithTimeout(Task, TimeSpan, Func&lt;TimeSpan, Exception&gt;, CancellationToken)&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/%23L42">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/#L42">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_Helpers_TaskHelper_WithTimeout_" data-uid="PlaywrightSharp.Helpers.TaskHelper.WithTimeout*"></a>
+  <h4 id="PlaywrightSharp_Helpers_TaskHelper_WithTimeout_Task_TimeSpan_Func_TimeSpan_Exception__CancellationToken_" data-uid="PlaywrightSharp.Helpers.TaskHelper.WithTimeout(Task,TimeSpan,Func{TimeSpan,Exception},CancellationToken)">WithTimeout(Task, TimeSpan, Func&lt;TimeSpan, Exception&gt;, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Cancels the <code data-dev-comment-type="paramref" class="paramref">task</code> after a given <code data-dev-comment-type="paramref" class="paramref">timeout</code> period.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task WithTimeout(this Task task, TimeSpan timeout, Func&lt;TimeSpan, Exception&gt; exceptionFactory = null, CancellationToken cancellationToken = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><span class="parametername">task</span></td>
+        <td><p>Task to wait for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TimeSpan</span></td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>The timeout period.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;<span class="xref">TimeSpan</span>, <span class="xref">Exception</span>&gt;</td>
+        <td><span class="parametername">exceptionFactory</span></td>
+        <td><p>Optional timeout exception factory.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td><p>Cancellation token.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td><p>The task result.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20WithTimeout&lt;T&gt;(Task&lt;T&gt;, Action, Int32)&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/%23L98">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/#L98">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_Helpers_TaskHelper_WithTimeout_" data-uid="PlaywrightSharp.Helpers.TaskHelper.WithTimeout*"></a>
+  <h4 id="PlaywrightSharp_Helpers_TaskHelper_WithTimeout__1_Task___0__Action_System_Int32_" data-uid="PlaywrightSharp.Helpers.TaskHelper.WithTimeout``1(Task{``0},Action,System.Int32)">WithTimeout&lt;T&gt;(Task&lt;T&gt;, Action, Int32)</h4>
+  <div class="markdown level1 summary"><p>Cancels the <code data-dev-comment-type="paramref" class="paramref">task</code> after <code data-dev-comment-type="paramref" class="paramref">timeout</code> milliseconds.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;T&gt; WithTimeout&lt;T&gt;(this Task&lt;T&gt; task, Action timeoutAction, int timeout = 1000)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;T&gt;</td>
+        <td><span class="parametername">task</span></td>
+        <td><p>Task to wait for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Action</span></td>
+        <td><span class="parametername">timeoutAction</span></td>
+        <td><p>Action to be executed on Timeout.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>Milliseconds timeout.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;T&gt;</td>
+        <td><p>The task result.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Return type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20WithTimeout&lt;T&gt;(Task&lt;T&gt;, Action, TimeSpan)&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/%23L109">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/#L109">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_Helpers_TaskHelper_WithTimeout_" data-uid="PlaywrightSharp.Helpers.TaskHelper.WithTimeout*"></a>
+  <h4 id="PlaywrightSharp_Helpers_TaskHelper_WithTimeout__1_Task___0__Action_TimeSpan_" data-uid="PlaywrightSharp.Helpers.TaskHelper.WithTimeout``1(Task{``0},Action,TimeSpan)">WithTimeout&lt;T&gt;(Task&lt;T&gt;, Action, TimeSpan)</h4>
+  <div class="markdown level1 summary"><p>Cancels the <code data-dev-comment-type="paramref" class="paramref">task</code> after a given <code data-dev-comment-type="paramref" class="paramref">timeout</code> period.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;T&gt; WithTimeout&lt;T&gt;(this Task&lt;T&gt; task, Action timeoutAction, TimeSpan timeout)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;T&gt;</td>
+        <td><span class="parametername">task</span></td>
+        <td><p>Task to wait for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Action</span></td>
+        <td><span class="parametername">timeoutAction</span></td>
+        <td><p>Action to be executed on Timeout.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TimeSpan</span></td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>The timeout period.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;T&gt;</td>
+        <td><p>The task result.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Return type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20WithTimeout&lt;T&gt;(Task&lt;T&gt;, Int32, Func&lt;TimeSpan, Exception&gt;)&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/%23L133">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/#L133">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_Helpers_TaskHelper_WithTimeout_" data-uid="PlaywrightSharp.Helpers.TaskHelper.WithTimeout*"></a>
+  <h4 id="PlaywrightSharp_Helpers_TaskHelper_WithTimeout__1_Task___0__System_Int32_Func_TimeSpan_Exception__" data-uid="PlaywrightSharp.Helpers.TaskHelper.WithTimeout``1(Task{``0},System.Int32,Func{TimeSpan,Exception})">WithTimeout&lt;T&gt;(Task&lt;T&gt;, Int32, Func&lt;TimeSpan, Exception&gt;)</h4>
+  <div class="markdown level1 summary"><p>Cancels the <code data-dev-comment-type="paramref" class="paramref">task</code> after <code data-dev-comment-type="paramref" class="paramref">milliseconds</code> milliseconds.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;T&gt; WithTimeout&lt;T&gt;(this Task&lt;T&gt; task, int milliseconds = 1000, Func&lt;TimeSpan, Exception&gt; exceptionFactory = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;T&gt;</td>
+        <td><span class="parametername">task</span></td>
+        <td><p>Task to wait for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">milliseconds</span></td>
+        <td><p>Milliseconds timeout.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;<span class="xref">TimeSpan</span>, <span class="xref">Exception</span>&gt;</td>
+        <td><span class="parametername">exceptionFactory</span></td>
+        <td><p>Optional timeout exception factory.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;T&gt;</td>
+        <td><p>The task result.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Task return type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20WithTimeout&lt;T&gt;(Task&lt;T&gt;, TimeSpan, Func&lt;TimeSpan, Exception&gt;)&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/%23L144">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/#L144">View Source</a>
+  </span>
+  <a id="PlaywrightSharp_Helpers_TaskHelper_WithTimeout_" data-uid="PlaywrightSharp.Helpers.TaskHelper.WithTimeout*"></a>
+  <h4 id="PlaywrightSharp_Helpers_TaskHelper_WithTimeout__1_Task___0__TimeSpan_Func_TimeSpan_Exception__" data-uid="PlaywrightSharp.Helpers.TaskHelper.WithTimeout``1(Task{``0},TimeSpan,Func{TimeSpan,Exception})">WithTimeout&lt;T&gt;(Task&lt;T&gt;, TimeSpan, Func&lt;TimeSpan, Exception&gt;)</h4>
+  <div class="markdown level1 summary"><p>Cancels the <code data-dev-comment-type="paramref" class="paramref">task</code> after a given <code data-dev-comment-type="paramref" class="paramref">timeout</code> period.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;T&gt; WithTimeout&lt;T&gt;(this Task&lt;T&gt; task, TimeSpan timeout, Func&lt;TimeSpan, Exception&gt; exceptionFactory = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;T&gt;</td>
+        <td><span class="parametername">task</span></td>
+        <td><p>Task to wait for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TimeSpan</span></td>
+        <td><span class="parametername">timeout</span></td>
+        <td><p>The timeout period.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;<span class="xref">TimeSpan</span>, <span class="xref">Exception</span>&gt;</td>
+        <td><span class="parametername">exceptionFactory</span></td>
+        <td><p>Optional timeout exception factory.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;T&gt;</td>
+        <td><p>The task result.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Task return type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20TaskHelper&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/%23L11" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/microsoft/playwright-sharp/blob/d4b8f14ebb44e86cce768bcc4e991653b8f3d75e/src/PlaywrightSharp/Helpers/TaskHelper.cs/#L11" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
