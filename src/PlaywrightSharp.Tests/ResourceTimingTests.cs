@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Tests
                 Page.GoToAsync(TestConstants.EmptyPage));
 
             var timing = request.Request.Timing;
-            Assert.True(timing.DomainLookupStart >= 0);
+            Assert.True(timing.DomainLookupStart >= -1);
             Assert.True(timing.DomainLookupEnd >= timing.DomainLookupStart);
             Assert.True(timing.ConnectStart >= timing.DomainLookupEnd);
             Assert.Equal(-1, timing.SecureConnectionStart);
