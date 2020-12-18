@@ -38,14 +38,14 @@ jobs:
           dotnet dev-certs https --clean
           dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
       - name: Setup .NET Core 5 (On Mac if needed)
-        if: ${{ matrix.os == 'macos-latest' && matrix.framework[0] == 3.1.100 }}
+        if: ${{ matrix.os == 'macos-latest' && matrix.framework[0] == '3.1.100' }}
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ matrix.framework[0] }}
         env:
           DOTNET_INSTALL_DIR: /users/runner/alternate/dotnet
       - name: Setup .NET Core 5 (Not on mac if needed)
-        if: ${{ matrix.os != 'macos-latest' && matrix.framework[0] == 3.1.100 }}
+        if: ${{ matrix.os != 'macos-latest' && matrix.framework[0] == '3.1.100' }}
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ matrix.framework[0] }}
