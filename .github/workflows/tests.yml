@@ -21,6 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: microsoft/playwright-github-action@v1
+      - name: Cache drivers
+        uses: actions/cache@v2
+        with:
+          path: ./src/PlaywrightSharp/runtimes/
+          key: ${{ hashFiles('./src/Common/PackageInfo.props') }}
       - name: Setup .NET Core (On Mac)
         if: ${{ matrix.os == 'macos-latest' }}
         uses: actions/setup-dotnet@v1
