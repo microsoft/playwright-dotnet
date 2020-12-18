@@ -30,6 +30,11 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.100
+      - name: Cache drivers
+        uses: actions/cache@v2
+        with:
+          path: ./src/PlaywrightSharp/runtimes/
+          key: ${{ hashFiles('./src/Common/PackageInfo.props') }}
       - name: Build Project
         run: dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug
       - name: Delete browsers on Mac
