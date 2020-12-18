@@ -10,13 +10,14 @@ on:
 
 jobs:
   test:
-    name: ${{ matrix.product }} on ${{ matrix.os }}
+    name: ${{ matrix.product }} on ${{ matrix.os }} using .NET ${{ matrix.framework[1] }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         product: [CHROMIUM, FIREFOX, WEBKIT]
         os: [windows-latest, ubuntu-latest, macos-latest]
+        framework: [[3.1.100, 'netcoreapp3.1'], [5.0.100, 'net5.0']]
     steps:
       - uses: actions/checkout@v2
       - uses: microsoft/playwright-github-action@v1
@@ -24,14 +25,14 @@ jobs:
         if: ${{ matrix.os == 'macos-latest' }}
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100
+          dotnet-version: ${{ matrix.framework[0] }}
         env:
           DOTNET_INSTALL_DIR: /users/runner/alternate/dotnet
       - name: Setup .NET Core 5 (Not on mac)
         if: ${{ matrix.os != 'macos-latest' }}
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100
+          dotnet-version: ${{ matrix.framework[0] }}
       - name: Create Certificate
         run: |
           dotnet dev-certs https --clean
@@ -42,14 +43,14 @@ jobs:
           PRODUCT: ${{ matrix.product }}
         run: |
           dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug
-          dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f net5.0 --logger "trx;LogFileName=TestResults.xml"
+          dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f ${{ matrix.framework[1] }} --logger "trx;LogFileName=TestResults.xml"
       - name: Run tests (Linux)
         if: ${{ matrix.os == 'ubuntu-latest' }}
         env:
           PRODUCT: ${{ matrix.product }}
         run: |
           dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug
-          xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- bash -c "ulimit -c unlimited && dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f net5.0 --logger \"trx;LogFileName=TestResults.xml\""
+          xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- bash -c "ulimit -c unlimited && dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f ${{ matrix.framework[1] }} --logger \"trx;LogFileName=TestResults.xml\""
       - name: Test results
         uses: actions/upload-artifact@v2
         if: always()
