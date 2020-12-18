@@ -21,14 +21,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: microsoft/playwright-github-action@v1
-      - name: Setup .NET Core 5 (On Mac)
+      - name: Setup .NET Core (On Mac)
         if: ${{ matrix.os == 'macos-latest' }}
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ matrix.framework[0] }}
         env:
           DOTNET_INSTALL_DIR: /users/runner/alternate/dotnet
-      - name: Setup .NET Core 5 (Not on mac)
+      - name: Setup .NET Core (Not on mac)
         if: ${{ matrix.os != 'macos-latest' }}
         uses: actions/setup-dotnet@v1
         with:
@@ -37,6 +37,18 @@ jobs:
         run: |
           dotnet dev-certs https --clean
           dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
+      - name: Setup .NET Core 5 (On Mac if needed)
+        if: ${{ matrix.os == 'macos-latest' && matrix.framework[0] == 3.1.100 }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ matrix.framework[0] }}
+        env:
+          DOTNET_INSTALL_DIR: /users/runner/alternate/dotnet
+      - name: Setup .NET Core 5 (Not on mac if needed)
+        if: ${{ matrix.os != 'macos-latest' && matrix.framework[0] == 3.1.100 }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ matrix.framework[0] }}
       - name: Run tests (!Linux)
         if: ${{ matrix.os != 'ubuntu-latest' }}
         env:
