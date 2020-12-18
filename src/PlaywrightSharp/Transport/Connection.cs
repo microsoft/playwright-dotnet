@@ -171,6 +171,7 @@ namespace PlaywrightSharp.Transport
         internal JsonSerializerOptions GetDefaultJsonSerializerOptions(bool ignoreNullValues = false)
         {
             var options = JsonExtensions.GetNewDefaultSerializerOptions(ignoreNullValues);
+            options.Converters.Add(new ElementHandleToGuidConverter(this));
             options.Converters.Add(new ChannelOwnerToGuidConverter(this));
             options.Converters.Add(new ChannelToGuidConverter(this));
             options.Converters.Add(new HttpMethodConverter());

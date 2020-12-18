@@ -14,7 +14,8 @@ namespace PlaywrightSharp.Transport.Converters
             _connection = connection;
         }
 
-        public override bool CanConvert(Type type) => typeof(IChannelOwner).IsAssignableFrom(type);
+        public override bool CanConvert(Type type)
+            => typeof(IChannelOwner).IsAssignableFrom(type) && type != typeof(ElementHandle);
 
         public override IChannelOwner Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
