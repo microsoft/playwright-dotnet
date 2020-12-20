@@ -6,5 +6,5 @@
       href: Page.ScreenshotAsync.md
     - name: How to get internal logs
       href: Playwright.Logger.md
-    - name: How to download file
+    - name: How to download a file
       href: Page.Download.md
