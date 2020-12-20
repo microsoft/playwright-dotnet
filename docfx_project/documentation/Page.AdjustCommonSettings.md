@@ -45,12 +45,12 @@ The folder "ms-playwright" usually contain chromium/firefox/webkit together, you
 
 
 I usually build .netcore console program with command:
-```cs
+```
 dotnet publish -r win-x64 -c Release /p:PublishSingleFile=true /p:PublishTrimmed=true
 //After build, vs studio compiler will auto generate the playwright-cli.exe in publish folder, at least for version 0.170.1
 ```
 Or you can click your project to open yourproject.csproj file to set as below
-```cs
+```
  <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
@@ -61,7 +61,7 @@ Or you can click your project to open yourproject.csproj file to set as below
 ```
 
 The published folder structure would be like below:
-```cs
+```
 publish
     yourprogram.exe  //the published single exe file
     playwright-cli.exe  //the driver
@@ -103,6 +103,7 @@ The key sample codes as below:
                 _driverExecutablePath = _config.GetValue<string>("DriverExecutablePath");
                 //-----------------------------------------------------------------------------------------------------
                
+               var _version = "1.02"; //Manual assign a string to tell end uers the latest version
                 _log.LogInformation("Author: Scott_Huang , Version = {ver}", _version);//show the automation program version
 
                 if (_needInstallPlaywright)
