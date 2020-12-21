@@ -13,11 +13,11 @@ It is not easy or not convenient to let end user to:
 
 You want make your exe portable, and put the browsers & drivers as subfolder into your main exe folder and ship to end user directly
 
-You want to manual set BrowsersPath and DriverExecutablePath. 
+So, you want to manual set BrowsersPath and DriverExecutablePath. 
 
-You want several programs both portable and share same browser/drivers to save disk space 
+You want several programs both portable and share same customized browser/drivers to save disk space 
 
-You want add web credential, or set web proxy, or adjust timeout settings and so on
+You want add web credential to pass authentication silently, or set web proxy to fast internet access, or adjust timeout settings and so on
 
 You want published as single exe file format
 
@@ -37,14 +37,14 @@ _browsersPath = "ms-playwright";
 _driverExecutablePath = "./playwright-cli.exe"; 
 ```
 
-Note, take win-x64 as example, the browser ususaly default install in C:\Users\your_name\AppData\Local\ms-playwright
+Note, take win-x64 as example, the browser ususaly default installed in C:\Users\your_name\AppData\Local\ms-playwright
 
 You can copy that folder to your main published exe subfolder. 
 
 The folder "ms-playwright" usually contain chromium/firefox/webkit together, you can delete some browsers folders after copy in case you no need it to save disk space.
 
 
-I usually build .netcore console program with command:
+I usually publish .netcore console program with command:
 ```
 dotnet publish -r win-x64 -c Release /p:PublishSingleFile=true /p:PublishTrimmed=true
 //After build, vs studio compiler will auto generate the playwright-cli.exe in publish folder, at least for version 0.170.1
@@ -89,7 +89,7 @@ The key sample codes as below:
                 _needInstallPlaywright = _config.GetValue<bool>("NeedInstallPlaywright");
           
                 _proxyServer = _config.GetValue<string>("Proxy"); //such as proxy.us.yourcompany.com:80
-                if (_proxyServer.ToLower() == "false")
+                if (_proxyServer.ToLower() == "false") //To treat "false" as "" too, sine we base on string length to do decision later
                 {
                     _proxyServer = "";
                 }
@@ -103,7 +103,7 @@ The key sample codes as below:
                 _driverExecutablePath = _config.GetValue<string>("DriverExecutablePath");
                 //-----------------------------------------------------------------------------------------------------
                
-               var _version = "1.02"; //Manual assign a string to tell end uers the latest version
+                var _version = "1.02"; //Manual assign a string to tell end uers the latest version
                 _log.LogInformation("Author: Scott_Huang , Version = {ver}", _version);//show the automation program version
 
                 if (_needInstallPlaywright)
