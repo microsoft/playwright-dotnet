@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -154,6 +155,21 @@ namespace PlaywrightSharp.Tests
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
             await TaskUtils.WhenAll(browser.CloseAsync(), browser.CloseAsync());
             await browser.CloseAsync();
+        }
+
+        /// <summary>
+        /// PuppeteerSharp test. It's not in upstream
+        /// </summary>
+        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        public async Task ShouldWorkWithEnvironmentVariables()
+        {
+            var options = TestConstants.GetDefaultBrowserOptions();
+            options.Env = new Dictionary<string, string>
+            {
+                ["Foo"] = "Var"
+            };
+
+            await using var browser = await BrowserType.LaunchAsync(options);
         }
     }
 }

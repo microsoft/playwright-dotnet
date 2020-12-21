@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PlaywrightSharp
 {
@@ -195,7 +196,7 @@ namespace PlaywrightSharp
 
             if (Env != null)
             {
-                args["env"] = Env;
+                args["env"] = Env.Select(kv => new NameValueEntry(kv.Key, kv.Value));
             }
 
             if (FirefoxUserPrefs != null)
