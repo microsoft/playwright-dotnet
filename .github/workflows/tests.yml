@@ -26,11 +26,6 @@ jobs:
         with:
           path: ./src/PlaywrightSharp/runtimes/
           key: ${{ hashFiles('./src/Common/PackageInfo.props') }}
-      - name: Cache nuget
-        uses: actions/cache@v2
-        with:
-          path: ~/.nuget/packages
-          key: nuget-${{ hashFiles('**/*.csproj') }}-${{ hashFiles('**/*.props') }}
       - name: Setup .NET Core (On Mac)
         if: ${{ matrix.os == 'macos-latest' }}
         uses: actions/setup-dotnet@v1
@@ -59,6 +54,8 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.100
+      - name: Clean
+        run: dotnet clean ./src/PlaywrightSharp.sln --configuration Debug && dotnet nuget locals all --clear
       - name: Run tests (!Linux)
         if: ${{ matrix.os != 'ubuntu-latest' }}
         env:
