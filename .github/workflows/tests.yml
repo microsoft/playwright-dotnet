@@ -26,6 +26,11 @@ jobs:
         with:
           path: ./src/PlaywrightSharp/runtimes/
           key: ${{ hashFiles('./src/Common/PackageInfo.props') }}
+      - name: Cache nuget
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ hashFiles('**/*.csproj') }}-${{ hashFiles('**/*.props') }}
       - name: Setup .NET Core (On Mac)
         if: ${{ matrix.os == 'macos-latest' }}
         uses: actions/setup-dotnet@v1
