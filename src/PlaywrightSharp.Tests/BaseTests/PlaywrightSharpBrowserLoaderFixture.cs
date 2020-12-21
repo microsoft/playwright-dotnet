@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.BaseTests
         {
             try
             {
-                Playwright = await PlaywrightSharp.Playwright.CreateAsync(TestConstants.LoggerFactory);
+                Playwright = await PlaywrightSharp.Playwright.CreateAsync(TestConstants.LoggerFactory, debug: "pw*");
                 Browser = await Playwright[TestConstants.Product].LaunchAsync(TestConstants.GetDefaultBrowserOptions());
             }
             catch (Exception ex)
