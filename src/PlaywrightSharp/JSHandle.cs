@@ -20,6 +20,7 @@ namespace PlaywrightSharp
             _channel = new JSHandleChannel(guid, parent.Connection, this);
             _initializer = initializer;
             Preview = _initializer.Preview;
+            _channel.PreviewUpdated += (sender, e) => Preview = e.Preview;
         }
 
         /// <inheritdoc/>
