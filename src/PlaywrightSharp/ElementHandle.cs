@@ -45,6 +45,7 @@ namespace PlaywrightSharp
         internal ElementHandle(IChannelOwner parent, string guid, ElementHandleInitializer initializer) : base(parent, guid, initializer)
         {
             _channel = new ElementHandleChannel(guid, parent.Connection, this);
+            _channel.PreviewUpdated += (sender, e) => Preview = e.Preview;
         }
 
         /// <inheritdoc/>
