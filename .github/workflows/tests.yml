@@ -67,10 +67,4 @@ jobs:
         env:
           PRODUCT: ${{ matrix.product }}
         run: |
-          xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- bash -c "ulimit -c unlimited && dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f ${{ matrix.framework[1] }} --logger \"trx;LogFileName=TestResults.xml\""
-      - name: Test results
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: TestResult.xml
-          path: ./src/PlaywrightSharp.Tests/TestResults/TestResults.xml
+          xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- bash -c "ulimit -c unlimited && dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f ${{ matrix.framework[1] }} --logger \"trx\""
