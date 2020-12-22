@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using PlaywrightSharp;
 using PlaywrightSharp.Tests.Helpers;
 using PlaywrightSharp.TestServer;
@@ -38,8 +39,16 @@ namespace PlaywrightSharp.Tests.BaseTests
 
             _loggerProvider = new XunitLoggerProvider(output);
             TestConstants.LoggerFactory.AddProvider(_loggerProvider);
+            RegisterHttpEvents();
 
             output.WriteLine($"Running {GetDisplayName(output)}");
+        }
+
+        private void RegisterHttpEvents()
+        {
+            var httpLogger = TestConstants.LoggerFactory.CreateLogger<SimpleServer>();
+            Server.RequestReceived += (s, e) => httpLogger.LogInformation($"Incoming request: {e.Request.Path}");
+            HttpsServer.RequestReceived += (s, e) => httpLogger.LogInformation($"Incoming request: {e.Request.Path}");
         }
 
         private static string GetDisplayName(ITestOutputHelper output)

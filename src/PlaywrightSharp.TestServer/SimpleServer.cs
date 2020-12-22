@@ -27,7 +27,11 @@ namespace PlaywrightSharp.TestServer
         private readonly Dictionary<int, WebSocket> _clients = new Dictionary<int, WebSocket>();
 
         internal IList<string> GzipRoutes { get; }
+
+        public event EventHandler<RequestReceivedEventArgs> RequestReceived;
+
         public static SimpleServer Create(int port, string contentRoot) => new SimpleServer(port, contentRoot, isHttps: false);
+
         public static SimpleServer CreateHttps(int port, string contentRoot) => new SimpleServer(port, contentRoot, isHttps: true);
 
         public SimpleServer(int port, string contentRoot, bool isHttps)
@@ -50,6 +54,8 @@ namespace PlaywrightSharp.TestServer
 #endif
                     .Use(async (context, next) =>
                     {
+                        RequestReceived?.Invoke(this, new RequestReceivedEventArgs { Request = context.Request });
+
                         if (context.Request.Path == "/ws")
                         {
                             if (context.WebSockets.IsWebSocketRequest)
