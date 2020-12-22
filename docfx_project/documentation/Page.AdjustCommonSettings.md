@@ -4,16 +4,16 @@ _Contributors: [Scott Huang](https://github.com/ScottHuangZL)_
 ## Problem
 
 It is not easy or not convenient to let end user to: 
-
-    install nodejs firstly 
-    
-    and then run "playwright-cli install", 
-    
+```
+    Open command window , navigate to published app folder
+    try run "playwright-cli install" command 
     and then wait long time(if networking not good or have "great wall") to download browser before they can run program
+    and that command even may be failed to cause more churns
+```
 
 You want make your exe portable, and put the browsers & drivers as subfolder into your main exe folder and ship to end user directly.
 
-So, you want to manual set BrowsersPath and DriverExecutablePath. 
+So, you want to set BrowsersPath and DriverExecutablePath manually. 
 
 You want several programs both portable and share same customized browser/drivers to save disk space 
 
@@ -41,7 +41,7 @@ You can copy that folder to your main published exe subfolder.
 The folder "ms-playwright" usually contain chromium/firefox/webkit together, you can delete some browsers folders after copy in case you no need it to save disk space.
 
 
-I usually publish .netcore console program with command:
+You can publish a .netcore console program with command:
 ```
 dotnet publish -r win-x64 -c Release /p:PublishSingleFile=true /p:PublishTrimmed=true
 //After build, vs studio compiler will auto generate the playwright-cli.exe in publish folder, at least for version 0.170.1
@@ -75,93 +75,88 @@ publish
 The key sample codes as below:
 
 ```cs
-                //Note: all _ started variable is reading from appseetings.json, or you can replace it with your fixed string 
-                //I use serilog to show log info in console and write into log file together, use DI to inject to your class, it is another topic, not discuss here
+//Note: all _ started variable is reading from appseetings.json, or you can replace it with your fixed string 
+//I use serilog to show log info in console and write into log file together, use DI to inject to your class, it is another topic, not discuss here
                
-                //Start read parameters from setting files
-                //-----------------------------------------------------------------------------------------------------
-                _ntUser = _config.GetValue<string>("NTUSER");
-                _ntPass = _config.GetValue<string>("NTPASS");
-                _headless = _config.GetValue<bool>("Headless");
-                _needInstallPlaywright = _config.GetValue<bool>("NeedInstallPlaywright");
+//Start read parameters from setting files
+//-----------------------------------------------------------------------------------------------------
+_ntUser = _config.GetValue<string>("NTUSER");
+_ntPass = _config.GetValue<string>("NTPASS");
+_headless = _config.GetValue<bool>("Headless");
+_needInstallPlaywright = _config.GetValue<bool>("NeedInstallPlaywright");
           
-                _proxyServer = _config.GetValue<string>("Proxy"); //such as proxy.us.yourcompany.com:80
-                if (_proxyServer.ToLower() == "false") //To treat "false" as "" too, sine we base on string length to do decision later
-                {
-                    _proxyServer = "";
-                }
-                _proxySettings = new ProxySettings { Server = _proxyServer, Username = _ntUser, Password = _ntPass };
-                _credentials = new Credentials { Username = _ntUser, Password = _ntPass };
+_proxyServer = _config.GetValue<string>("Proxy"); //such as proxy.us.yourcompany.com:80
+if (_proxyServer.ToLower() == "false") //To treat "false" as "" too, sine we base on string length to do decision later
+{
+    _proxyServer = "";
+}
+_proxySettings = new ProxySettings { Server = _proxyServer, Username = _ntUser, Password = _ntPass };
+_credentials = new Credentials { Username = _ntUser, Password = _ntPass };
 
-                _defaultNavagationTimeout = _config.GetValue<int>("DefaultNavigationTimeout");
-                _defaultTimeout = _config.GetValue<int>("DefaultTimeout");
+_defaultNavagationTimeout = _config.GetValue<int>("DefaultNavigationTimeout");
+_defaultTimeout = _config.GetValue<int>("DefaultTimeout");
 
-                _browsersPath = _config.GetValue<string>("BrowsersPath");
-                _driverExecutablePath = _config.GetValue<string>("DriverExecutablePath");
-                //-----------------------------------------------------------------------------------------------------
+_browsersPath = _config.GetValue<string>("BrowsersPath");
+_driverExecutablePath = _config.GetValue<string>("DriverExecutablePath");
+//-----------------------------------------------------------------------------------------------------
                
-                var _version = "1.02"; //Manual assign a string to tell end uers the latest version
-                _log.LogInformation("Author: Scott_Huang , Version = {ver}", _version);//show the automation program version
+var _version = "1.02"; //Manual assign a string to tell end uers the latest version
+_log.LogInformation("Author: Scott_Huang , Version = {ver}", _version);//show the automation program version
 
-                if (_needInstallPlaywright)
-                {
-                    _log.LogInformation("Start download Playwright from internet ...");
-                    _log.LogInformation("It may take long time in case this computer never download it before, or else, would be quick.");
-                    await Playwright.InstallAsync();
-                    _log.LogInformation("After download Playwright");
-                }
-                else
-                {
-                    _log.LogInformation("No need download Playwright per setting this time");
-                }
+if (_needInstallPlaywright)
+{
+    _log.LogInformation("Start download Playwright from internet ...");
+    _log.LogInformation("It may take long time in case this computer never download it before, or else, would be quick.");
+    await Playwright.InstallAsync();
+    _log.LogInformation("After download Playwright");
+}
+else
+{
+    _log.LogInformation("No need download Playwright per setting this time");
+}
 
-                //create playwright
-                _log.LogInformation("Prepare create Playwright");
-                if (_browsersPath.Length > 0)
-                {
-                    _log.LogInformation("Use manual assigned browser driver path = {path}", _browsersPath);
-                }
-                if (_driverExecutablePath.Length > 0)
-                {
-                    _log.LogInformation("Use manual assigned playwright driver path = {path}", _driverExecutablePath);
-                }
+//create playwright
+_log.LogInformation("Prepare create Playwright");
+if (_browsersPath.Length > 0)
+{
+    _log.LogInformation("Use manual assigned browser driver path = {path}", _browsersPath);
+}
+if (_driverExecutablePath.Length > 0)
+{
+    _log.LogInformation("Use manual assigned playwright driver path = {path}", _driverExecutablePath);
+}
 
-                //setting the custom path
-                using var playwright = await Playwright.CreateAsync(
-                    browsersPath: _browsersPath.Length>0?_browsersPath:null, 
-                    driverExecutablePath: _driverExecutablePath.Length>0?_driverExecutablePath:null
-                    );
-                _log.LogInformation("Prepare launch browser");
-                _log.LogInformation("Will hide browser UI = {headless}", _headless);
-                
-                //launch browser
-                await using var browser = await playwright.Chromium.LaunchAsync(
-                    headless: _headless,
-                    slowMo: _config.GetValue<int>("Delay"),
-                    //setup proxy if setting have value
-                    proxy: (_proxyServer.Length > 0) ? _proxySettings : null
-                    );
+//setting the custom path
+using var playwright = await Playwright.CreateAsync(
+    browsersPath: _browsersPath.Length>0?_browsersPath:null, 
+    driverExecutablePath: _driverExecutablePath.Length>0?_driverExecutablePath:null
+    );
+_log.LogInformation("Prepare launch browser");
+_log.LogInformation("Will hide browser UI = {headless}", _headless);
 
-                _log.LogInformation("After launch, browser version:{version}", browser.Version);
+//launch browser
+await using var browser = await playwright.Chromium.LaunchAsync(
+    headless: _headless,
+    slowMo: _config.GetValue<int>("Delay"),
+    //setup proxy if setting have value
+    proxy: (_proxyServer.Length > 0) ? _proxySettings : null
+    );
+
+_log.LogInformation("After launch, browser version:{version}", browser.Version);
 
 
-                _log.LogInformation("New apage and set credentials");
-                var context = await browser.NewContextAsync(acceptDownloads: true);
-                //setting credentials if necessary, you can comment below line if no needed
-                await context.SetHttpCredentialsAsync(_credentials);
-                var page = await context.NewPageAsync();
+_log.LogInformation("New apage and set credentials");
+var context = await browser.NewContextAsync(acceptDownloads: true);
+//setting credentials if necessary, you can comment below line if no needed
+await context.SetHttpCredentialsAsync(_credentials);
+var page = await context.NewPageAsync();
              
 
-                //Try to adjust timeout value by yourselves
-                page.DefaultNavigationTimeout = (int)TimeSpan.FromSeconds(
-                    _defaultNavagationTimeout).TotalMilliseconds;
-                page.DefaultTimeout = (int)TimeSpan.FromSeconds(
-                    _defaultTimeout).TotalMilliseconds;
-                    
-                await page.GoToAsync("http://anyurl.for.testing");    
-
+//Try to adjust timeout value by yourselves
+page.DefaultNavigationTimeout = (int)TimeSpan.FromSeconds(
+    _defaultNavagationTimeout).TotalMilliseconds;
+page.DefaultTimeout = (int)TimeSpan.FromSeconds(
+    _defaultTimeout).TotalMilliseconds;
+    
+await page.GoToAsync("http://anyurl.for.testing");    
 ```
-
-
-
-
