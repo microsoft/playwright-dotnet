@@ -17,6 +17,7 @@ namespace PlaywrightSharp.Tests.BaseTests
     public class PlaywrightSharpBaseTest : IDisposable
     {
         private readonly XunitLoggerProvider _loggerProvider;
+        private readonly ILogger<SimpleServer> _httpLogger;
 
         internal IPlaywright Playwright => PlaywrightSharpBrowserLoaderFixture.Playwright;
         internal string BaseDirectory { get; set; }
@@ -38,17 +39,17 @@ namespace PlaywrightSharp.Tests.BaseTests
             Initialize();
 
             _loggerProvider = new XunitLoggerProvider(output);
+            _httpLogger = TestConstants.LoggerFactory.CreateLogger<SimpleServer>();
             TestConstants.LoggerFactory.AddProvider(_loggerProvider);
-            RegisterHttpEvents();
+            Server.RequestReceived += Server_RequestReceived;
+            HttpsServer.RequestReceived += Server_RequestReceived;
 
             output.WriteLine($"Running {GetDisplayName(output)}");
         }
 
-        private void RegisterHttpEvents()
+        private void Server_RequestReceived(object sender, RequestReceivedEventArgs e)
         {
-            var httpLogger = TestConstants.LoggerFactory.CreateLogger<SimpleServer>();
-            Server.RequestReceived += (s, e) => httpLogger.LogInformation($"Incoming request: {e.Request.Path}");
-            HttpsServer.RequestReceived += (s, e) => httpLogger.LogInformation($"Incoming request: {e.Request.Path}");
+            _httpLogger.LogInformation($"Incoming request: {e.Request.Path}");
         }
 
         private static string GetDisplayName(ITestOutputHelper output)
@@ -74,6 +75,8 @@ namespace PlaywrightSharp.Tests.BaseTests
         /// <inheritdoc/>
         public virtual void Dispose()
         {
+            Server.RequestReceived -= Server_RequestReceived;
+            HttpsServer.RequestReceived -= Server_RequestReceived;
             _loggerProvider.Dispose();
         }
     }
