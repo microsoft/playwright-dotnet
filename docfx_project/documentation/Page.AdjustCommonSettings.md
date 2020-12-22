@@ -23,9 +23,6 @@ You want published as single exe file format
 
 ## Solution
 
-Please go through this wiki, it should be help you easily catch up for how to meet above expectations.
-
-
 You can put the custom path parameter in your appseetings.json and read it when start program
 ```cs
 _browsersPath = _config.GetValue<string>("BrowsersPath");
@@ -164,7 +161,6 @@ The key sample codes as below:
                 await page.GoToAsync("http://anyurl.for.testing");    
 
 ```
-
 
 
 
