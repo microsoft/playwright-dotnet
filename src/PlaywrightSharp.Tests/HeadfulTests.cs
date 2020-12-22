@@ -33,7 +33,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>headful.spec.js</playwright-file>
         ///<playwright-it>headless should be able to read cookies written by headful</playwright-it>
-        [SkipBrowserAndPlatformFact(skipChromium: true, skipWindows: true)]
+        [Fact(Skip = "Flaky")]
         public async Task HeadlessShouldBeAbleToReadCookiesWrittenByHeadful()
         {
             using var userDataDir = new TempDirectory();
