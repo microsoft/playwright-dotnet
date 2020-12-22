@@ -11,7 +11,7 @@ It is not easy or not convenient to let end user to:
     
     and then wait long time(if networking not good or have "great wall") to download browser before they can run program
 
-You want make your exe portable, and put the browsers & drivers as subfolder into your main exe folder and ship to end user directly
+You want make your exe portable, and put the browsers & drivers as subfolder into your main exe folder and ship to end user directly.
 
 So, you want to manual set BrowsersPath and DriverExecutablePath. 
 
@@ -164,7 +164,6 @@ The key sample codes as below:
                 await page.GoToAsync("http://anyurl.for.testing");    
 
 ```
-
 
 
 
