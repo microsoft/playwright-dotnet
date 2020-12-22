@@ -55,6 +55,7 @@ namespace PlaywrightSharp
             Url = _initializer.Url;
             Name = _initializer.Name;
             ParentFrame = _initializer.ParentFrame;
+            _loadStates = initializer.LoadStates;
 
             _channel.LoadState += (sender, e) =>
             {

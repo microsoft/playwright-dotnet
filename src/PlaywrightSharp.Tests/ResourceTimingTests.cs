@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(timing.ConnectStart >= timing.DomainLookupEnd);
             Assert.Equal(-1, timing.SecureConnectionStart);
             Assert.True(timing.ConnectEnd > timing.SecureConnectionStart);
-            Assert.True(timing.RequestStart >= timing.ConnectEnd);
+            Assert.True(VerifyTimingValue(timing.RequestStart, timing.ConnectEnd));
             Assert.True(timing.ResponseStart > timing.RequestStart);
             Assert.True(timing.ResponseEnd >= timing.ResponseStart);
             Assert.True(timing.ResponseEnd < 10000);
@@ -142,5 +143,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(timing2.ResponseEnd >= timing2.ResponseStart);
             Assert.True(timing2.ResponseEnd < 10000);
         }
+
+        private bool VerifyTimingValue(decimal value, decimal previous) => value == -1 || value > 0 && value >= previous;
     }
 }
