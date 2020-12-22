@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace PlaywrightSharp.Transport.Protocol
 {
     internal class FrameInitializer
@@ -7,5 +9,7 @@ namespace PlaywrightSharp.Transport.Protocol
         public string Url { get; set; }
 
         public Frame ParentFrame { get; set; }
+
+        public List<LifecycleEvent> LoadStates { get; set; }
     }
 }
