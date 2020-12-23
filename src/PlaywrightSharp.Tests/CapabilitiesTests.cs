@@ -70,10 +70,10 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>capabilities.spec.js</playwright-file>
         ///<playwright-it>should play video</playwright-it>
-        [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true, skipOSX: true)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldPlayVideo()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/video.html");
+            await Page.GoToAsync(TestConstants.ServerUrl + (TestConstants.IsWebKit ? "/video_mp4.html" : "/video.html"));
             await Page.EvalOnSelectorAsync("video", "v => v.play()");
             await Page.EvalOnSelectorAsync("video", "v => v.pause()");
         }
