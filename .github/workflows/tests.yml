@@ -19,6 +19,10 @@ jobs:
         os: [windows-latest, ubuntu-latest, macos-latest]
         framework: [[3.1.100, 'netcoreapp3.1'], [5.0.100, 'net5.0']]
     steps:
+      - name: Install Media Pack
+        if: ${{ matrix.os == 'windows-latest' }}
+        shell: powershell
+        run: Install-WindowsFeature Server-Media-Foundation
       - uses: actions/checkout@v2
       - uses: microsoft/playwright-github-action@v1
       - name: Cache drivers
