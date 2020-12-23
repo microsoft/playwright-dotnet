@@ -71,7 +71,7 @@ namespace PlaywrightSharp
             return WaitForPromiseAsync(task, dispose);
         }
 
-        internal (Task<T> task, Action dispose) WaitForEvent<T>(object eventSource, string e, Func<T, bool> predicate)
+        internal (Task<T> Task, Action Dispose) WaitForEvent<T>(object eventSource, string e, Func<T, bool> predicate)
         {
             var info = eventSource.GetType().GetEvent(e) ?? eventSource.GetType().BaseType.GetEvent(e);
 

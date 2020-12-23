@@ -43,11 +43,11 @@ namespace PlaywrightSharp
     public class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     {
         private readonly PageChannel _channel;
-        private readonly List<Frame> _frames = new List<Frame>();
-        private readonly List<(IEvent pageEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(IEvent pageEvent, TaskCompletionSource<bool> waitTcs)>();
-        private readonly object _fileChooserEventLock = new object();
+        private readonly List<Frame> _frames = new();
+        private readonly List<(IEvent PageEvent, TaskCompletionSource<bool> WaitTcs)> _waitForCancellationTcs = new();
+        private readonly object _fileChooserEventLock = new();
 
-        private List<RouteSetting> _routes = new List<RouteSetting>();
+        private List<RouteSetting> _routes = new();
         private EventHandler<FileChooserEventArgs> _fileChooserEventHandler;
         private bool _fileChooserIntercepted;
         private IVideo _video;
@@ -1026,7 +1026,7 @@ namespace PlaywrightSharp
 
         private void RejectPendingOperations(bool isCrash)
         {
-            foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.pageEvent != (isCrash ? PageEvent.Crash : PageEvent.Close)))
+            foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.PageEvent != (isCrash ? PageEvent.Crash : PageEvent.Close)))
             {
                 waitTcs.TrySetException(new TargetClosedException(isCrash ? "Page crashed" : "Page closed"));
             }

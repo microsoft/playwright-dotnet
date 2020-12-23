@@ -16,12 +16,12 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IBrowserContext" />
     public class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>, IBrowserContext
     {
-        private readonly TaskCompletionSource<bool> _closeTcs = new TaskCompletionSource<bool>();
-        private readonly List<(IEvent contextEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(IEvent contextEvent, TaskCompletionSource<bool> waitTcs)>();
-        private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
-        private readonly Dictionary<string, Delegate> _bindings = new Dictionary<string, Delegate>();
+        private readonly TaskCompletionSource<bool> _closeTcs = new();
+        private readonly List<(IEvent ContextEvent, TaskCompletionSource<bool> WaitTcs)> _waitForCancellationTcs = new();
+        private readonly TimeoutSettings _timeoutSettings = new();
+        private readonly Dictionary<string, Delegate> _bindings = new();
         private readonly BrowserContextInitializer _initializer;
-        private List<RouteSetting> _routes = new List<RouteSetting>();
+        private List<RouteSetting> _routes = new();
 
         private bool _isClosedOrClosing;
 
@@ -402,7 +402,7 @@ namespace PlaywrightSharp
 
         private void RejectPendingOperations()
         {
-            foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.contextEvent != ContextEvent.Close))
+            foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.ContextEvent != ContextEvent.Close))
             {
                 waitTcs.TrySetException(new TargetClosedException("Context closed"));
             }
