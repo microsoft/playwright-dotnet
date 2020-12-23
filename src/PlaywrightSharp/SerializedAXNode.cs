@@ -17,17 +17,17 @@ namespace PlaywrightSharp
         /// <summary>
         /// The <see fref="https://www.w3.org/TR/wai-aria/#usage_intro">role</see>.
         /// </summary>
-        public string Role { get; set; } = string.Empty;
+        public string Role { get; set; }
 
         /// <summary>
         /// A human readable name for the node.
         /// </summary>
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; }
 
         /// <summary>
         /// The current value of the node.
         /// </summary>
-        public string ValueString { get; set; } = string.Empty;
+        public string ValueString { get; set; }
 
         /// <summary>
         /// The current value of the node.
@@ -37,24 +37,24 @@ namespace PlaywrightSharp
         /// <summary>
         /// An additional human readable description of the node.
         /// </summary>
-        public string Description { get; set; } = string.Empty;
+        public string Description { get; set; }
 
         /// <summary>
         /// Keyboard shortcuts associated with this node.
         /// </summary>
         [JsonPropertyName("keyshortcuts")]
-        public string KeyShortcuts { get; set; } = string.Empty;
+        public string KeyShortcuts { get; set; }
 
         /// <summary>
         /// A human readable alternative to the role.
         /// </summary>
         [JsonPropertyName("roledescription")]
-        public string RoleDescription { get; set; } = string.Empty;
+        public string RoleDescription { get; set; }
 
         /// <summary>
         /// A description of the current value.
         /// </summary>
-        public string ValueText { get; set; } = string.Empty;
+        public string ValueText { get; set; }
 
         /// <summary>
         /// Whether the node is disabled.
@@ -132,7 +132,7 @@ namespace PlaywrightSharp
         /// What kind of autocomplete is supported by a control.
         /// </summary>
         [JsonPropertyName("autocomplete")]
-        public string AutoComplete { get; set; } = string.Empty;
+        public string AutoComplete { get; set; }
 
         /// <summary>
         /// What kind of popup is currently being shown for a node.
@@ -148,7 +148,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Whether the node is oriented horizontally or vertically.
         /// </summary>
-        public string Orientation { get; set; } = string.Empty;
+        public string Orientation { get; set; }
 
         /// <summary>
         /// Child nodes of this node, if any.
@@ -191,16 +191,16 @@ namespace PlaywrightSharp
 
         /// <inheritdoc/>
         public override int GetHashCode()
-            => Role.GetHashCode() ^
-                Name.GetHashCode() ^
-                ValueString.GetHashCode() ^
-                Description.GetHashCode() ^
-                KeyShortcuts.GetHashCode() ^
-                RoleDescription.GetHashCode() ^
-                ValueText.GetHashCode() ^
-                AutoComplete.GetHashCode() ^
+            => (Role ?? string.Empty).GetHashCode() ^
+                (Name ?? string.Empty).GetHashCode() ^
+                (ValueString ?? string.Empty).GetHashCode() ^
+                (Description ?? string.Empty).GetHashCode() ^
+                (KeyShortcuts ?? string.Empty).GetHashCode() ^
+                (RoleDescription ?? string.Empty).GetHashCode() ^
+                (ValueText ?? string.Empty).GetHashCode() ^
+                (AutoComplete ?? string.Empty).GetHashCode() ^
                 HasPopup.GetHashCode() ^
-                Orientation.GetHashCode() ^
+                (Orientation ?? string.Empty).GetHashCode() ^
                 Disabled.GetHashCode() ^
                 Expanded.GetHashCode() ^
                 Focused.GetHashCode() ^
