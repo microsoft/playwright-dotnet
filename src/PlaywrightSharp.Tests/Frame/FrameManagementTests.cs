@@ -70,9 +70,9 @@ namespace PlaywrightSharp.Tests.Frame
             await Page.GoToAsync(TestConstants.EmptyPage);
 
             await TaskUtils.WhenAll(
-                Page.GoToAsync(TestConstants.EmptyPage + "#foo"),
-                Page.WaitForEventAsync(PageEvent.FrameNavigated)
-            );
+                Page.WaitForEventAsync(PageEvent.FrameNavigated),
+                Page.GoToAsync(TestConstants.EmptyPage + "#foo"));
+
             Assert.Equal(TestConstants.EmptyPage + "#foo", Page.Url);
         }
 

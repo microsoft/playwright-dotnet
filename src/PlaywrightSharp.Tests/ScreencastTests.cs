@@ -155,7 +155,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>screencast.spec.js</playwright-file>     
         ///<playwright-it>should capture static page in persistent context</playwright-it>
-        [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true)]
+        [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task ShouldCaptureStaticPageInPersistentContext()
         {
             using var userDirectory = new TempDirectory();
