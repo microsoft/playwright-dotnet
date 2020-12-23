@@ -33,7 +33,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(timing.DomainLookupEnd >= timing.DomainLookupStart);
             Assert.True(timing.ConnectStart >= timing.DomainLookupEnd);
             Assert.Equal(-1, timing.SecureConnectionStart);
-            Assert.True(timing.ConnectEnd > timing.SecureConnectionStart);
+            Assert.True(VerifyTimingValue(timing.ConnectEnd, timing.SecureConnectionStart));
             Assert.True(VerifyTimingValue(timing.RequestStart, timing.ConnectEnd));
             Assert.True(timing.ResponseStart > timing.RequestStart);
             Assert.True(timing.ResponseEnd >= timing.ResponseStart);
