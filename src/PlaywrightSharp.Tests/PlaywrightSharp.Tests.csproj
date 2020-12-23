@@ -25,6 +25,7 @@
         <PackageReference Include="NETStandard.Library" Version="2.0.3" />
         <PackageReference Include="System.Net.Http" Version="4.3.4" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+        <PackageReference Include="CompareNETObjects" Version="4.67.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />

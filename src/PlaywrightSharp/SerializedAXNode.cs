@@ -17,17 +17,17 @@ namespace PlaywrightSharp
         /// <summary>
         /// The <see fref="https://www.w3.org/TR/wai-aria/#usage_intro">role</see>.
         /// </summary>
-        public string Role { get; set; }
+        public string Role { get; set; } = string.Empty;
 
         /// <summary>
         /// A human readable name for the node.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// The current value of the node.
         /// </summary>
-        public string ValueString { get; set; }
+        public string ValueString { get; set; } = string.Empty;
 
         /// <summary>
         /// The current value of the node.
@@ -37,24 +37,24 @@ namespace PlaywrightSharp
         /// <summary>
         /// An additional human readable description of the node.
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// Keyboard shortcuts associated with this node.
         /// </summary>
         [JsonPropertyName("keyshortcuts")]
-        public string KeyShortcuts { get; set; }
+        public string KeyShortcuts { get; set; } = string.Empty;
 
         /// <summary>
         /// A human readable alternative to the role.
         /// </summary>
         [JsonPropertyName("roledescription")]
-        public string RoleDescription { get; set; }
+        public string RoleDescription { get; set; } = string.Empty;
 
         /// <summary>
         /// A description of the current value.
         /// </summary>
-        public string ValueText { get; set; }
+        public string ValueText { get; set; } = string.Empty;
 
         /// <summary>
         /// Whether the node is disabled.
@@ -132,7 +132,7 @@ namespace PlaywrightSharp
         /// What kind of autocomplete is supported by a control.
         /// </summary>
         [JsonPropertyName("autocomplete")]
-        public string AutoComplete { get; set; }
+        public string AutoComplete { get; set; } = string.Empty;
 
         /// <summary>
         /// What kind of popup is currently being shown for a node.
@@ -148,7 +148,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Whether the node is oriented horizontally or vertically.
         /// </summary>
-        public string Orientation { get; set; }
+        public string Orientation { get; set; } = string.Empty;
 
         /// <summary>
         /// Child nodes of this node, if any.
