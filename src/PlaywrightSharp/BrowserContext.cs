@@ -110,15 +110,23 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task CloseAsync()
+        public async Task CloseAsync()
         {
-            if (!_isClosedOrClosing)
+            try
             {
-                _isClosedOrClosing = true;
-                return Task.WhenAny(_closeTcs.Task, Channel.CloseAsync());
-            }
+                if (!_isClosedOrClosing)
+                {
+                    _isClosedOrClosing = true;
+                    await Channel.CloseAsync().ConfigureAwait(false);
+                    await _closeTcs.Task.ConfigureAwait(false);
+                }
 
-            return _closeTcs.Task;
+                await _closeTcs.Task.ConfigureAwait(false);
+            }
+            catch (Exception e) when (IsSafeCloseException(e))
+            {
+                // Swallow exception
+            }
         }
 
         /// <inheritdoc />
@@ -371,7 +379,6 @@ namespace PlaywrightSharp
 
         private void Channel_Closed(object sender, EventArgs e)
         {
-            _isClosedOrClosing = true;
             if (Browser != null)
             {
                 ((Browser)Browser).BrowserContextsList.Remove(this);
@@ -429,5 +436,9 @@ namespace PlaywrightSharp
 
             return Channel.ExposeBindingAsync(name, handle);
         }
+
+        private bool IsSafeCloseException(Exception e)
+            => e.Message.Contains(DriverMessages.BrowserClosedExceptionMessage) ||
+               e.Message.Contains(DriverMessages.BrowserOrContextClosedExceptionMessage);
     }
 }
