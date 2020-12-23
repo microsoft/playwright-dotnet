@@ -13,7 +13,7 @@ namespace PlaywrightSharp.Tests.Helpers
     {
         private Task _deleteTask;
 
-        public TempDirectory() : this(PathHelper.Combine(Directory.GetCurrentDirectory(), ".temp", PathHelper.GetRandomFileName()))
+        public TempDirectory() : this(PathHelper.Combine(Directory.GetCurrentDirectory(), ".temp", Guid.NewGuid().ToString()))
         {
         }
 
