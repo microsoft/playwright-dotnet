@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Tests.Attributes;
@@ -7,20 +8,18 @@ using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Page
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>navigation.spec.js</playwright-file>
-    ///<playwright-describe>Page.waitForLoadState</playwright-describe>
+    ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class WaitForLoadStateTests : PlaywrightSharpPageBaseTest
+    public class PageWaitForLoadStateTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public WaitForLoadStateTests(ITestOutputHelper output) : base(output)
+        public PageWaitForLoadStateTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForLoadState</playwright-describe>
+        ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
         ///<playwright-it>should pick up ongoing navigation</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldPickUpOngoingNavigation()
@@ -45,34 +44,18 @@ namespace PlaywrightSharp.Tests.Page
             await navigationTask;
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForLoadState</playwright-describe>
+        ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
         ///<playwright-it>should respect timeout</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldRespectTimeout()
         {
-            var responseTask = new TaskCompletionSource<bool>();
-            var waitForRequestTask = Server.WaitForRequest("/one-style.css");
-
-            Server.SetRoute("/one-style.css", async (ctx) =>
-            {
-                if (await responseTask.Task)
-                {
-                    ctx.Response.StatusCode = 404;
-                    await ctx.Response.WriteAsync("File not found");
-                }
-            });
-
-            var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", LifecycleEvent.DOMContentLoaded);
-            await waitForRequestTask;
-            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.WaitForLoadStateAsync(timeout: 1));
+            Server.SetRoute("/one-style.css", context => Task.Delay(Timeout.Infinite));
+            await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", LifecycleEvent.DOMContentLoaded);
+            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.WaitForLoadStateAsync(LifecycleEvent.Load, 1));
             Assert.Contains("Timeout 1ms exceeded", exception.Message);
-            responseTask.TrySetResult(true);
-            await navigationTask;
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForLoadState</playwright-describe>
+        ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
         ///<playwright-it>should resolve immediately if loaded</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldResolveImmediatelyIfLoaded()
@@ -81,8 +64,14 @@ namespace PlaywrightSharp.Tests.Page
             await Page.WaitForLoadStateAsync();
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForLoadState</playwright-describe>
+        ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
+        ///<playwright-it>should throw for bad state</playwright-it>
+        [Fact(Skip = "We don't need this test")]
+        public void ShouldTthrowForBadState()
+        {
+        }
+
+        ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
         ///<playwright-it>should resolve immediately if load state matches</playwright-it>
         [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
         public async Task ShouldResolveImmediatelyIfLoadStateMatches()
@@ -106,8 +95,7 @@ namespace PlaywrightSharp.Tests.Page
             await navigationTask;
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForLoadState</playwright-describe>
+        ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
         ///<playwright-it>should work with pages that have loaded before being connected to</playwright-it>
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWorkWithPagesThatHaveLoadedBeforeBeingConnectedTo()
