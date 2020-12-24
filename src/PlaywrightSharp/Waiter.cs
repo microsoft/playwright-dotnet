@@ -10,11 +10,11 @@ namespace PlaywrightSharp
 {
     internal class Waiter : IDisposable
     {
-        private readonly List<string> _logs = new List<string>();
-        private readonly List<Task> _faulures = new List<Task>();
-        private readonly List<Action> _dispose = new List<Action>();
-        private readonly CancellationTokenSource _cts = new CancellationTokenSource();
-        private bool _disposed = false;
+        private readonly List<string> _logs = new();
+        private readonly List<Task> _failures = new();
+        private readonly List<Action> _dispose = new();
+        private readonly CancellationTokenSource _cts = new();
+        private bool _disposed;
 
         public void Dispose()
         {
@@ -101,8 +101,7 @@ namespace PlaywrightSharp
         {
             try
             {
-                var firstTask = await Task.WhenAny(_faulures.Prepend(task)).ConfigureAwait(false);
-
+                var firstTask = await Task.WhenAny(_failures.Prepend(task)).ConfigureAwait(false);
                 dispose?.Invoke();
                 await firstTask.ConfigureAwait(false);
                 return await task.ConfigureAwait(false);
@@ -139,7 +138,7 @@ namespace PlaywrightSharp
 
         private void RejectOn(Task task, Action dispose)
         {
-            _faulures.Add(task);
+            _failures.Add(task);
             if (dispose != null)
             {
                 _dispose.Add(dispose);
