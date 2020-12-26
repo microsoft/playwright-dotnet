@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace PlaywrightSharp.Transport
 {
@@ -10,13 +11,17 @@ namespace PlaywrightSharp.Transport
     {
         private const int DefaultBufferSize = 1024;  // Byte buffer size
         private readonly Process _process;
-        private readonly CancellationTokenSource _readerCancellationSource = new CancellationTokenSource();
-        private readonly List<byte> _data = new List<byte>();
-        private int? _currentMessageSize = null;
+        private readonly ILoggerFactory _loggerFactory;
+        private readonly ILogger<StdIOTransport> _logger;
+        private readonly CancellationTokenSource _readerCancellationSource = new();
+        private readonly List<byte> _data = new();
+        private int? _currentMessageSize;
 
-        internal StdIOTransport(Process process, TransportTaskScheduler scheduler = null)
+        internal StdIOTransport(Process process, ILoggerFactory loggerFactory, TransportTaskScheduler scheduler = null)
         {
             _process = process;
+            _loggerFactory = loggerFactory;
+            _logger = _loggerFactory?.CreateLogger<StdIOTransport>();
             scheduler ??= ScheduleTransportTask;
             process.ErrorDataReceived += (s, e) => LogReceived?.Invoke(this, new LogReceivedEventArgs(e.Data));
             process.BeginErrorReadLine();
@@ -74,6 +79,7 @@ namespace PlaywrightSharp.Transport
             }
             catch (Exception ex)
             {
+                _logger?.LogError(ex, "Transport Error");
                 Close(ex.ToString());
             }
         }
@@ -116,6 +122,7 @@ namespace PlaywrightSharp.Transport
             }
             catch (Exception ex)
             {
+                _logger?.LogError(ex, "Transport Error");
                 Close(ex.ToString());
             }
         }

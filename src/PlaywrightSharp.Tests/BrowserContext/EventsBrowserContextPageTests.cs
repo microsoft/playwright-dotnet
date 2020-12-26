@@ -180,7 +180,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
             var (popupEvent, _) = await TaskUtils.WhenAll(
               context.WaitForEventAsync(ContextEvent.Page),
-              page.GoToAsync(TestConstants.ServerUrl + "/popup/window-open.html")).WithTimeout();
+              page.GoToAsync(TestConstants.ServerUrl + "/popup/window-open.html"));
 
             var popup = popupEvent.Page;
             Assert.Equal(TestConstants.ServerUrl + "/popup/popup.html", popup.Url);

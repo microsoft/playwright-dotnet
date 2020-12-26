@@ -191,16 +191,16 @@ namespace PlaywrightSharp
 
         /// <inheritdoc/>
         public override int GetHashCode()
-            => Role.GetHashCode() ^
-                Name.GetHashCode() ^
-                ValueString.GetHashCode() ^
-                Description.GetHashCode() ^
-                KeyShortcuts.GetHashCode() ^
-                RoleDescription.GetHashCode() ^
-                ValueText.GetHashCode() ^
-                AutoComplete.GetHashCode() ^
+            => (Role ?? string.Empty).GetHashCode() ^
+                (Name ?? string.Empty).GetHashCode() ^
+                (ValueString ?? string.Empty).GetHashCode() ^
+                (Description ?? string.Empty).GetHashCode() ^
+                (KeyShortcuts ?? string.Empty).GetHashCode() ^
+                (RoleDescription ?? string.Empty).GetHashCode() ^
+                (ValueText ?? string.Empty).GetHashCode() ^
+                (AutoComplete ?? string.Empty).GetHashCode() ^
                 HasPopup.GetHashCode() ^
-                Orientation.GetHashCode() ^
+                (Orientation ?? string.Empty).GetHashCode() ^
                 Disabled.GetHashCode() ^
                 Expanded.GetHashCode() ^
                 Focused.GetHashCode() ^

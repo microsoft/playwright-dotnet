@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using KellermanSoftware.CompareNetObjects;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
@@ -198,7 +199,10 @@ namespace PlaywrightSharp.Tests.Accessibility
             }
 
             var snapshot = await Page.Accessibility.SnapshotAsync();
-            Assert.Equal(nodeToCheck, snapshot);
+
+            CompareLogic compareLogic = new CompareLogic();
+            var result = compareLogic.Compare(nodeToCheck, snapshot);
+            Assert.True(result.AreEqual, result.DifferencesString);
         }
 
         ///<playwright-file>accessibility.spec.js</playwright-file>

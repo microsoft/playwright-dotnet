@@ -27,7 +27,6 @@ namespace PlaywrightSharp.Tests.Page
                 return Task.CompletedTask;
             });
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.GoToAsync(TestConstants.EmptyPage));
-            // TODO: is this right?
             Assert.Contains(nameof(AsyncStacksTests), exception.StackTrace);
         }
     }

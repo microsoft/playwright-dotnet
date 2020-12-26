@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
@@ -67,7 +68,8 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
             Assert.Equal("JSHandle@array", (await Page.EvaluateHandleAsync("[]")).ToString());
             Assert.Equal("JSHandle@null", (await Page.EvaluateHandleAsync("null")).ToString());
             Assert.Equal("JSHandle@regexp", (await Page.EvaluateHandleAsync("/foo/")).ToString());
-            Assert.Equal("JSHandle@node", (await Page.EvaluateHandleAsync("document.body")).ToString());
+            // We get the preview faster than in node.
+            Assert.Contains((await Page.EvaluateHandleAsync("document.body")).ToString(), new[] { "JSHandle@node", "JSHandle@<body></body>" });
             Assert.Equal("JSHandle@date", (await Page.EvaluateHandleAsync("new Date()")).ToString());
             Assert.Equal("JSHandle@weakmap", (await Page.EvaluateHandleAsync("new WeakMap()")).ToString());
             Assert.Equal("JSHandle@weakset", (await Page.EvaluateHandleAsync("new WeakSet()")).ToString());

@@ -8,19 +8,19 @@ namespace PlaywrightSharp
     public enum SameSite
     {
         /// <summary>
-        /// Strict
+        /// Strict.
         /// </summary>
         [EnumMember(Value = "Strict")]
         Strict,
 
         /// <summary>
-        /// Lax
+        /// Lax.
         /// </summary>
         [EnumMember(Value = "Lax")]
         Lax,
 
         /// <summary>
-        /// None
+        /// None.
         /// </summary>
         [EnumMember(Value = "None")]
         None,

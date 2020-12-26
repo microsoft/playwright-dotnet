@@ -5,8 +5,8 @@
         <PackageId>PlaywrightSharp</PackageId>
         <Summary>Playwright-Sharp .NET library to automate Chromium, Firefox and WebKit with a single API.</Summary>
         <Description>PlaywrightSharp is a .NET library to automate Chromium, Firefox and WebKit with a single API. Playwright is built to enable cross-browser web automation that is ever-green, capable, reliable and fast.</Description>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <LangVersion>8.0</LangVersion>
+        <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+        <LangVersion>9.0</LangVersion>
         <DebugType>embedded</DebugType>
         <DebugSymbols>true</DebugSymbols>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -77,6 +77,6 @@
         </ContentWithTargetPath>
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\tools\PlaywrightSharp.BuildTasks\PlaywrightSharp.BuildTasks.csproj" ReferenceOutputAssembly="false"/>
+      <ProjectReference Include="..\tools\PlaywrightSharp.BuildTasks\PlaywrightSharp.BuildTasks.csproj" ReferenceOutputAssembly="false" />
     </ItemGroup>
 </Project>

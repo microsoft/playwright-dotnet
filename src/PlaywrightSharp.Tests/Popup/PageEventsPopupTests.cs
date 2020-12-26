@@ -206,7 +206,6 @@ namespace PlaywrightSharp.Tests.Popup
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkWithFakeClickingTargetBlankAndRelNoopener()
         {
-            // TODO: FFOX sends events for "one-style.html" request to both pages.
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
             var popupTask = Page.WaitForEventAsync(PageEvent.Popup).ContinueWith(async task =>
@@ -221,8 +220,6 @@ namespace PlaywrightSharp.Tests.Popup
             );
             var popup = await popupTask.Result;
             Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
-            // TODO: At this point popup might still have about:blank as the current document.
-            // FFOX is slow enough to trigger this. We should do something about popups api.
             Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 

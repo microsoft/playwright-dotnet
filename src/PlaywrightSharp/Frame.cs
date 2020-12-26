@@ -55,18 +55,22 @@ namespace PlaywrightSharp
             Url = _initializer.Url;
             Name = _initializer.Name;
             ParentFrame = _initializer.ParentFrame;
+            _loadStates = initializer.LoadStates;
 
             _channel.LoadState += (sender, e) =>
             {
-                if (e.Add.HasValue)
+                lock (_loadStates)
                 {
-                    _loadStates.Add(e.Add.Value);
-                    LoadState?.Invoke(this, new LoadStateEventArgs { LifecycleEvent = e.Add.Value });
-                }
+                    if (e.Add.HasValue)
+                    {
+                        _loadStates.Add(e.Add.Value);
+                        LoadState?.Invoke(this, new LoadStateEventArgs { LifecycleEvent = e.Add.Value });
+                    }
 
-                if (e.Remove.HasValue)
-                {
-                    _loadStates.Remove(e.Remove.Value);
+                    if (e.Remove.HasValue)
+                    {
+                        _loadStates.Remove(e.Remove.Value);
+                    }
                 }
             };
 
@@ -368,17 +372,32 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public async Task WaitForLoadStateAsync(LifecycleEvent state = LifecycleEvent.Load, int? timeout = null)
         {
-            if (_loadStates.Contains(state))
-            {
-                return;
-            }
+            Task<LoadStateEventArgs> task;
+            Waiter waiter = null;
 
-            using var waiter = SetupNavigationWaiter(timeout);
-            await waiter.WaitForEventAsync<LoadStateEventArgs>(this, "LoadState", s =>
+            try
             {
-                waiter.Log($"  \"{s}\" event fired");
-                return s.LifecycleEvent == state;
-            }).ConfigureAwait(false);
+                lock (_loadStates)
+                {
+                    if (_loadStates.Contains(state))
+                    {
+                        return;
+                    }
+
+                    waiter = SetupNavigationWaiter(timeout);
+                    task = waiter.WaitForEventAsync<LoadStateEventArgs>(this, "LoadState", s =>
+                    {
+                        waiter.Log($"  \"{s}\" event fired");
+                        return s.LifecycleEvent == state;
+                    });
+                }
+
+                await task.ConfigureAwait(false);
+            }
+            finally
+            {
+                waiter?.Dispose();
+            }
         }
 
         /// <inheritdoc />

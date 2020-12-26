@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Transport
             _playwrightServerProcess.StartInfo.Arguments = "run-driver";
             _playwrightServerProcess.Start();
             _playwrightServerProcess.Exited += (sender, e) => Close("Process exited");
-            _transport = new StdIOTransport(_playwrightServerProcess, scheduler);
+            _transport = new StdIOTransport(_playwrightServerProcess, _loggerFactory, scheduler);
             _transport.MessageReceived += Transport_MessageReceived;
             _transport.LogReceived += (s, e) => debugLogger?.LogInformation(e.Message);
             _transport.TransportClosed += (sender, e) => Close(e.CloseReason);
@@ -171,6 +171,7 @@ namespace PlaywrightSharp.Transport
         internal JsonSerializerOptions GetDefaultJsonSerializerOptions(bool ignoreNullValues = false)
         {
             var options = JsonExtensions.GetNewDefaultSerializerOptions(ignoreNullValues);
+            options.Converters.Add(new ElementHandleToGuidConverter(this));
             options.Converters.Add(new ChannelOwnerToGuidConverter(this));
             options.Converters.Add(new ChannelToGuidConverter(this));
             options.Converters.Add(new HttpMethodConverter());
@@ -325,6 +326,7 @@ namespace PlaywrightSharp.Transport
             }
             catch (Exception ex)
             {
+                _logger?.LogError(ex, "Connection Error");
                 Close(ex.ToString());
             }
         }

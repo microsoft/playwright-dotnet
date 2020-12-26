@@ -20,7 +20,7 @@ namespace PlaywrightSharp
         Screen,
 
         /// <summary>
-        /// None
+        /// None.
         /// </summary>
         [EnumMember(Value = "null")]
         Null,

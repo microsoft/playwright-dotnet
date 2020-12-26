@@ -63,7 +63,7 @@ namespace PlaywrightSharp.BuildTasks
                 }
 
                 await Task.WhenAll(tasks);
-                CheckApi(destinationDirectory.FullName);
+                GenerateApiFile(destinationDirectory.FullName);
                 versionFile.CreateText();
             }
             else
@@ -72,12 +72,6 @@ namespace PlaywrightSharp.BuildTasks
             }
 
             return true;
-        }
-
-        private void CheckApi(string driversDirectory)
-        {
-            GenerateApiFile(driversDirectory);
-            //TODO We are going to move the ApiChecker here
         }
 
         private void GenerateApiFile(string driversDirectory)

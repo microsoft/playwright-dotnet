@@ -229,11 +229,11 @@ namespace PlaywrightSharp.Tests
                 });
 
             await TaskUtils.WhenAll(
+                Page.WaitForNavigationAsync(LifecycleEvent.Load),
                 Page.EvaluateAsync(@"async url => {
                     window['logme']({ foo: 42 });
                     window.location.href = url;
-                }", TestConstants.ServerUrl + "/one-style.html"),
-                Page.WaitForNavigationAsync(LifecycleEvent.Load));
+                }", TestConstants.ServerUrl + "/one-style.html"));
         }
 
         ///<playwright-file>browsercontext-expose-function.spec.ts</playwright-file>

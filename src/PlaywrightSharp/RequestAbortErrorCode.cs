@@ -8,12 +8,12 @@ namespace PlaywrightSharp
     public enum RequestAbortErrorCode
     {
         /// <summary>
-        /// An operation was aborted (due to user action)
+        /// An operation was aborted (due to user action).
         /// </summary>
         Aborted,
 
         /// <summary>
-        /// Permission to access a resource, other than the network, was denied
+        /// Permission to access a resource, other than the network, was denied.
         /// </summary>
         [EnumMember(Value = "accessdenied")]
         AccessDenied,
@@ -21,7 +21,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// The IP address is unreachable. This usually means that there is no route to the specified host or network.
         /// </summary>
-        [EnumMember(Value = "ddressunreachable")]
+        [EnumMember(Value = "addressunreachable")]
         AddressUnreachable,
 
         /// <summary>

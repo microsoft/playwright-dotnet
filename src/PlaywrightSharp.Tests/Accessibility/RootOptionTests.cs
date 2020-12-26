@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using KellermanSoftware.CompareNetObjects;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using Xunit;
@@ -68,12 +69,11 @@ namespace PlaywrightSharp.Tests.Accessibility
             ");
             var menu = await Page.QuerySelectorAsync("div[role=\"menu\"]");
 
-            Assert.Equal(
-                new SerializedAXNode
-                {
-                    Role = "menu",
-                    Name = "My Menu",
-                    Children = new SerializedAXNode[]
+            var nodeToCheck = new SerializedAXNode
+            {
+                Role = "menu",
+                Name = "My Menu",
+                Children = new SerializedAXNode[]
                     {
                         new SerializedAXNode
                         {
@@ -91,9 +91,12 @@ namespace PlaywrightSharp.Tests.Accessibility
                             Name = "Third Item"
                         }
                     },
-                    Orientation = TestConstants.IsWebKit ? "vertical" : null
-                },
-                await Page.Accessibility.SnapshotAsync(root: menu));
+                Orientation = TestConstants.IsWebKit ? "vertical" : null
+            };
+
+            CompareLogic compareLogic = new CompareLogic();
+            var result = compareLogic.Compare(nodeToCheck, await Page.Accessibility.SnapshotAsync(root: menu));
+            Assert.True(result.AreEqual, result.DifferencesString);
         }
 
         ///<playwright-file>accessibility.spec.js</playwright-file>

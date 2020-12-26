@@ -8,19 +8,19 @@ namespace PlaywrightSharp
     public enum ColorScheme
     {
         /// <summary>
-        /// Light
+        /// Light.
         /// </summary>
         [EnumMember(Value = "light")]
         Light,
 
         /// <summary>
-        /// Dark
+        /// Dark.
         /// </summary>
         [EnumMember(Value = "dark")]
         Dark,
 
         /// <summary>
-        /// No preference
+        /// No preference.
         /// </summary>
         [EnumMember(Value = "no-preference")]
         NoPreference,

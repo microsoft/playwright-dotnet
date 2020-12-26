@@ -16,12 +16,12 @@ namespace PlaywrightSharp
     /// <inheritdoc cref="IBrowserContext" />
     public class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>, IBrowserContext
     {
-        private readonly TaskCompletionSource<bool> _closeTcs = new TaskCompletionSource<bool>();
-        private readonly List<(IEvent contextEvent, TaskCompletionSource<bool> waitTcs)> _waitForCancellationTcs = new List<(IEvent contextEvent, TaskCompletionSource<bool> waitTcs)>();
-        private readonly TimeoutSettings _timeoutSettings = new TimeoutSettings();
-        private readonly Dictionary<string, Delegate> _bindings = new Dictionary<string, Delegate>();
+        private readonly TaskCompletionSource<bool> _closeTcs = new();
+        private readonly List<(IEvent ContextEvent, TaskCompletionSource<bool> WaitTcs)> _waitForCancellationTcs = new();
+        private readonly TimeoutSettings _timeoutSettings = new();
+        private readonly Dictionary<string, Delegate> _bindings = new();
         private readonly BrowserContextInitializer _initializer;
-        private List<RouteSetting> _routes = new List<RouteSetting>();
+        private List<RouteSetting> _routes = new();
 
         private bool _isClosedOrClosing;
 
@@ -110,15 +110,23 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task CloseAsync()
+        public async Task CloseAsync()
         {
-            if (!_isClosedOrClosing)
+            try
             {
-                _isClosedOrClosing = true;
-                return Task.WhenAny(_closeTcs.Task, Channel.CloseAsync());
-            }
+                if (!_isClosedOrClosing)
+                {
+                    _isClosedOrClosing = true;
+                    await Channel.CloseAsync().ConfigureAwait(false);
+                    await _closeTcs.Task.ConfigureAwait(false);
+                }
 
-            return _closeTcs.Task;
+                await _closeTcs.Task.ConfigureAwait(false);
+            }
+            catch (Exception e) when (IsSafeCloseException(e))
+            {
+                // Swallow exception
+            }
         }
 
         /// <inheritdoc />
@@ -371,7 +379,6 @@ namespace PlaywrightSharp
 
         private void Channel_Closed(object sender, EventArgs e)
         {
-            _isClosedOrClosing = true;
             if (Browser != null)
             {
                 ((Browser)Browser).BrowserContextsList.Remove(this);
@@ -402,7 +409,7 @@ namespace PlaywrightSharp
 
         private void RejectPendingOperations()
         {
-            foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.contextEvent != ContextEvent.Close))
+            foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.ContextEvent != ContextEvent.Close))
             {
                 waitTcs.TrySetException(new TargetClosedException("Context closed"));
             }
@@ -429,5 +436,9 @@ namespace PlaywrightSharp
 
             return Channel.ExposeBindingAsync(name, handle);
         }
+
+        private bool IsSafeCloseException(Exception e)
+            => e.Message.Contains(DriverMessages.BrowserClosedExceptionMessage) ||
+               e.Message.Contains(DriverMessages.BrowserOrContextClosedExceptionMessage);
     }
 }
