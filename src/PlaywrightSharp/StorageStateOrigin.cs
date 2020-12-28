@@ -17,7 +17,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Local storage.
         /// </summary>
-        public List<NameValueEntry> LocalStorage { get; set; } = new List<NameValueEntry>();
+        public ICollection<NameValueEntry> LocalStorage { get; set; } = new List<NameValueEntry>();
 
         /// <inheritdoc/>
         public bool Equals(StorageStateOrigin other)
@@ -29,7 +29,7 @@ namespace PlaywrightSharp
         public override int GetHashCode()
             => 412870874 +
                 EqualityComparer<string>.Default.GetHashCode(Origin) +
-                EqualityComparer<List<NameValueEntry>>.Default.GetHashCode(LocalStorage);
+                EqualityComparer<ICollection<NameValueEntry>>.Default.GetHashCode(LocalStorage);
 
         /// <inheritdoc/>
         public override bool Equals(object obj) => Equals(obj as StorageStateOrigin);

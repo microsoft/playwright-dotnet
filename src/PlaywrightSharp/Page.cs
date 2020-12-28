@@ -31,6 +31,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
 using PlaywrightSharp.Transport;
@@ -54,7 +55,7 @@ namespace PlaywrightSharp
 
         internal Page(IChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
         {
-            BrowserContext = parent as BrowserContext;
+            Context = parent as BrowserContext;
 
             _channel = new PageChannel(guid, parent.Connection, this);
 
@@ -64,7 +65,7 @@ namespace PlaywrightSharp
             ViewportSize = initializer.ViewportSize;
             IsClosed = initializer.IsClosed;
             Accessibility = new Accesibility(_channel);
-            Coverage = BrowserContext.BrowserName == BrowserType.Chromium ? new ChromiumCoverage(_channel) : null;
+            Coverage = Context.BrowserName == BrowserType.Chromium ? new ChromiumCoverage(_channel) : null;
             Keyboard = new Keyboard(_channel);
             Touchscreen = new Touchscreen(_channel);
             Mouse = new Mouse(_channel);
@@ -218,10 +219,10 @@ namespace PlaywrightSharp
         public Frame MainFrame { get; }
 
         /// <inheritdoc />
-        IBrowserContext IPage.Context => BrowserContext;
+        IBrowserContext IPage.Context => Context;
 
         /// <inheritdoc cref="IPage.Context" />
-        public BrowserContext BrowserContext { get; set; }
+        public BrowserContext Context { get; set; }
 
         /// <inheritdoc />
         public ViewportSize ViewportSize { get; private set; }
@@ -290,7 +291,7 @@ namespace PlaywrightSharp
                     return _video;
                 }
 
-                if (string.IsNullOrEmpty(BrowserContext.Options?.RecordVideo?.Dir))
+                if (string.IsNullOrEmpty(Context.Options?.RecordVideo?.Dir))
                 {
                     return null;
                 }
@@ -370,7 +371,7 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public async Task<IRequest> WaitForRequestAsync(string url, int? timeout = null)
         {
-            var result = await WaitForEventAsync(PageEvent.Request, e => e.Request.Url.Equals(url), timeout).ConfigureAwait(false);
+            var result = await WaitForEventAsync(PageEvent.Request, e => e.Request.Url.Equals(url, StringComparison.Ordinal), timeout).ConfigureAwait(false);
             return result.Request;
         }
 
@@ -756,7 +757,7 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public async Task<IResponse> WaitForResponseAsync(string url, int? timeout = null)
         {
-            var result = await WaitForEventAsync(PageEvent.Response, e => e.Response.Url.Equals(url), timeout).ConfigureAwait(false);
+            var result = await WaitForEventAsync(PageEvent.Response, e => e.Response.Url.Equals(url, StringComparison.Ordinal), timeout).ConfigureAwait(false);
             return result.Response;
         }
 
@@ -790,9 +791,9 @@ namespace PlaywrightSharp
             Margin margin = null,
             bool preferCSSPageSize = false)
         {
-            if (BrowserContext.BrowserName != BrowserType.Chromium)
+            if (Context.BrowserName != BrowserType.Chromium)
             {
-                throw new NotSupportedException($"{BrowserContext.BrowserName} doesn't support this action.");
+                throw new NotSupportedException($"{Context.BrowserName} doesn't support this action.");
             }
 
             byte[] result = Convert.FromBase64String(await _channel.GetPdfAsync(
@@ -970,7 +971,7 @@ namespace PlaywrightSharp
         private void Channel_Closed(object sender, EventArgs e)
         {
             IsClosed = true;
-            BrowserContext?.PagesList.Remove(this);
+            Context?.PagesList.Remove(this);
             RejectPendingOperations(false);
             Close?.Invoke(this, EventArgs.Empty);
         }
@@ -1003,7 +1004,7 @@ namespace PlaywrightSharp
                 }
             }
 
-            BrowserContext.OnRoute(e.Route, e.Request);
+            Context.OnRoute(e.Route, e.Request);
         }
 
         private void Channel_FrameDetached(object sender, FrameEventArgs e)

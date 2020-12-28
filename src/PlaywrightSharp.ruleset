@@ -10,6 +10,7 @@
     <Rule Id="SX1309" Action="Error" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
+    <Rule Id="CA1014" Action="None" /> <!-- Mark assemblies with CLSCompliant. We can't mark as CLSComplient because ILoggerFactory it's not marked.-->
     <Rule Id="CA1054" Action="None" /> <!-- Overloads to System.Uri-->
     <Rule Id="CA1056" Action="None" /> <!-- Change string to System.Uri-->
     <Rule Id="CA1040" Action="None" /> <!-- Avoid empty interfaces-->
@@ -23,6 +24,7 @@
     <Rule Id="CA1822" Action="None" /><!-- Method can be marked as static-->
     <Rule Id="CA1823" Action="Error" /><!-- avoid unused fields-->
     <Rule Id="CA1031" Action="None"/> <!-- Use specific exceptions-->
+    <Rule Id="CA1508" Action="None"/> <!-- Avoid dead conditional code. This is a good report but there are many false positives reported.-->
   </Rules>
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1303" Action="None" />

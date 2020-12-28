@@ -333,6 +333,7 @@ namespace PlaywrightSharp.Transport
 
         private void CreateRemoteObject(string parentGuid, ChannelOwnerType type, string guid, JsonElement? initializer)
         {
+#pragma warning disable CA2000 // Dispose objects before losing scope
             IChannelOwner result = null;
             var parent = string.IsNullOrEmpty(parentGuid) ? _rootObject : Objects[parentGuid];
 
@@ -342,9 +343,7 @@ namespace PlaywrightSharp.Transport
                     result = new BindingCall(parent, guid, initializer?.ToObject<BindingCallInitializer>(GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.Playwright:
-#pragma warning disable CA2000 // Dispose objects before losing scope
                     result = new Playwright(parent, guid, initializer?.ToObject<PlaywrightInitializer>(GetDefaultJsonSerializerOptions()), _loggerFactory);
-#pragma warning restore CA2000 // Dispose objects before losing scope
                     break;
                 case ChannelOwnerType.Browser:
                     var browserInitializer = initializer?.ToObject<BrowserInitializer>(GetDefaultJsonSerializerOptions());
@@ -434,6 +433,7 @@ namespace PlaywrightSharp.Transport
 
             Objects.TryAdd(guid, result);
             OnObjectCreated(guid, result);
+#pragma warning restore CA2000 // Dispose objects before losing scope
         }
 
         private void Close(string reason)

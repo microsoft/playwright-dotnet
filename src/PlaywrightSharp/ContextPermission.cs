@@ -3,7 +3,9 @@ namespace PlaywrightSharp
     /// <summary>
     /// Options for <see cref="IBrowserContext.GrantPermissionsAsync(ContextPermission[], string)"/>.
     /// </summary>
+#pragma warning disable CA1711 // CA1711 doesn't want us to use the Permission suffix.
     public enum ContextPermission
+#pragma warning restore CA1711
     {
         /// <summary>
         /// Geolocation.

@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json;
 
 namespace PlaywrightSharp.Chromium
@@ -5,7 +6,7 @@ namespace PlaywrightSharp.Chromium
     /// <summary>
     /// See <see cref="ICDPSession.MessageReceived"/>.
     /// </summary>
-    public class CDPEventArgs
+    public class CDPEventArgs : EventArgs
     {
         /// <summary>
         /// Method name.
