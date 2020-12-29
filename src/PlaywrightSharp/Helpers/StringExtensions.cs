@@ -633,7 +633,7 @@ namespace PlaywrightSharp.Helpers
 
             var result = new Dictionary<string, string>();
 
-            if (query.StartsWith("?"))
+            if (query.StartsWith("?", StringComparison.InvariantCultureIgnoreCase))
             {
                 query = query.Substring(1, query.Length - 1);
             }

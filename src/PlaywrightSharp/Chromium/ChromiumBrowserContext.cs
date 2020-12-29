@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Chromium
                 {
                     var page = ((PageChannel)pageChannel).Object;
                     _crBackgroundPages.Add(page);
-                    page.BrowserContext = this;
+                    page.Context = this;
                     BackgroundPage?.Invoke(this, new PageEventArgs { Page = page });
                 }
             }
@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Chromium
             Channel.BackgroundPage += (sender, e) =>
             {
                 var page = e.PageChannel.Object;
-                page.BrowserContext = this;
+                page.Context = this;
                 _crBackgroundPages.Add(page);
                 BackgroundPage?.Invoke(this, new PageEventArgs { Page = page });
             };

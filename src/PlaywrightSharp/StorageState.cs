@@ -12,12 +12,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// Cookie list.
         /// </summary>
-        public List<SetNetworkCookieParam> Cookies { get; set; } = new List<SetNetworkCookieParam>();
+        public ICollection<SetNetworkCookieParam> Cookies { get; set; } = new List<SetNetworkCookieParam>();
 
         /// <summary>
         /// List of local storage per origin.
         /// </summary>
-        public List<StorageStateOrigin> Origins { get; set; } = new List<StorageStateOrigin>();
+        public ICollection<StorageStateOrigin> Origins { get; set; } = new List<StorageStateOrigin>();
 
         /// <inheritdoc/>
         public bool Equals(StorageState other)
@@ -28,8 +28,8 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         public override int GetHashCode()
             => 412870874 +
-                EqualityComparer<List<SetNetworkCookieParam>>.Default.GetHashCode(Cookies) +
-                EqualityComparer<List<StorageStateOrigin>>.Default.GetHashCode(Origins);
+                EqualityComparer<ICollection<SetNetworkCookieParam>>.Default.GetHashCode(Cookies) +
+                EqualityComparer<ICollection<StorageStateOrigin>>.Default.GetHashCode(Origins);
 
         /// <inheritdoc/>
         public override bool Equals(object obj) => Equals(obj as StorageState);

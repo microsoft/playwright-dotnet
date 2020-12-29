@@ -1,9 +1,11 @@
+using System;
+
 namespace PlaywrightSharp
 {
     /// <summary>
     /// See <see cref="Frame.LoadState"/>.
     /// </summary>
-    public class LoadStateEventArgs
+    public class LoadStateEventArgs : EventArgs
     {
         /// <summary>
         /// Load state being added.

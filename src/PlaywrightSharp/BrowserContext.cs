@@ -41,7 +41,7 @@ namespace PlaywrightSharp
                 {
                     var page = ((PageChannel)pageChannel).Object;
                     PagesList.Add(page);
-                    page.BrowserContext = this;
+                    page.Context = this;
                 }
             }
         }
@@ -392,7 +392,7 @@ namespace PlaywrightSharp
         private void Channel_OnPage(object sender, BrowserContextPageEventArgs e)
         {
             var page = e.PageChannel.Object;
-            page.BrowserContext = this;
+            page.Context = this;
             PagesList.Add(page);
             Page?.Invoke(this, new PageEventArgs { Page = page });
         }

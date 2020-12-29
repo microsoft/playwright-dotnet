@@ -1,11 +1,5 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PlaywrightSharp.Chromium;
@@ -15,7 +9,7 @@ using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
-    /// <inheritdoc cref="PlaywrightSharp.IPlaywright" />
+    /// <inheritdoc cref="IPlaywright" />
     public sealed class Playwright : ChannelOwnerBase, IPlaywright, IChannelOwner<Playwright>
     {
         /// <summary>

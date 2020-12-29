@@ -475,7 +475,7 @@ namespace PlaywrightSharp
                     }).ConfigureAwait(false);
             }
 
-            var request = navigatedEvent.NewDocument != null ? navigatedEvent.NewDocument?.Request?.Object : null;
+            var request = navigatedEvent.NewDocument?.Request?.Object;
             var response = request != null
                 ? await waiter.WaitForPromiseAsync(request.FinalRequest.GetResponseAsync()).ConfigureAwait(false)
                 : null;
