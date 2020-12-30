@@ -188,10 +188,9 @@ namespace PlaywrightSharp
             {
                 args["ignoreDefaultArgs"] = IgnoreDefaultArgs;
             }
-
-            if (IgnoredDefaultArgs != null)
+            else if (IgnoredDefaultArgs != null)
             {
-                args["ignoredDefaultArgs"] = IgnoredDefaultArgs;
+                args["ignoreDefaultArgs"] = IgnoredDefaultArgs;
             }
 
             if (Env != null)
