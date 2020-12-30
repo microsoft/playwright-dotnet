@@ -35,28 +35,6 @@ namespace PlaywrightSharp.BuildTasks
 
         public override bool Execute()
         {
-            var report = new StringBuilder("<html><body><ul>");
-            string json = File.ReadAllText(Path.Combine(BasePath, "src", "PlaywrightSharp", "runtimes", "api.json"));
-            var api = JsonSerializer.Deserialize<Dictionary<string, PlaywrightEntity>>(json, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-            });
-
-            foreach (var kv in api)
-            {
-                EvaluateEntity(kv.Key, kv.Value, report);
-            }
-
-            report.Append("</ul></body></html>");
-            File.WriteAllText(
-                Path.Combine(BasePath, "src", "PlaywrightSharp", "runtimes", "report.html"),
-                report.ToString());
-
-            return true;
-        }
-
-        private void EvaluateEntity(string name, PlaywrightEntity entity, StringBuilder report)
-        {
             AppDomain.CurrentDomain.AssemblyResolve += (sender, e) =>
             {
                 string assemblySearchPath = Path.Combine(new FileInfo(typeof(ApiChecker).Assembly.Location).Directory.FullName, e.Name.Split(',')[0] + ".dll");
@@ -69,6 +47,29 @@ namespace PlaywrightSharp.BuildTasks
             };
 
             var assembly = Assembly.LoadFrom(Path.Combine(TargetDir, "PlaywrightSharp.dll"));
+
+            var report = new StringBuilder("<html><body><ul>");
+            string json = File.ReadAllText(Path.Combine(BasePath, "src", "PlaywrightSharp", "runtimes", "api.json"));
+            var api = JsonSerializer.Deserialize<Dictionary<string, PlaywrightEntity>>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+            });
+
+            foreach (var kv in api)
+            {
+                EvaluateEntity(assembly, kv.Key, kv.Value, report);
+            }
+
+            report.Append("</ul></body></html>");
+            File.WriteAllText(
+                Path.Combine(BasePath, "src", "PlaywrightSharp", "runtimes", "report.html"),
+                report.ToString());
+
+            return true;
+        }
+
+        private void EvaluateEntity(Assembly assembly, string name, PlaywrightEntity entity, StringBuilder report)
+        {
             var playwrightSharpEntity = assembly.GetType($"PlaywrightSharp.I{name}");
 
             if (playwrightSharpEntity == null)
@@ -127,8 +128,7 @@ namespace PlaywrightSharp.BuildTasks
                 report.AppendLine($"{name} NOT FOUND");
                 report.AppendLine("</li>");
 
-                // TODO Temporary remove till we evaluate ignores
-                // Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{name} entity not found");
+                Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{name} entity not found");
             }
         }
 
@@ -237,8 +237,7 @@ namespace PlaywrightSharp.BuildTasks
                     report.AppendLine("<li style='color: red'>");
                     report.AppendLine($"{memberName} NOT FOUND");
 
-                    // TODO Temporary remove till we evaluate ignores
-                    // Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{playwrightSharpEntity.Name}.{memberName} not found");
+                    Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{playwrightSharpEntity.Name}.{memberName} not found");
 
                     if (_memberAnnotations.ContainsKey((playwrightSharpEntity.Name, memberName)))
                     {
@@ -336,8 +335,7 @@ namespace PlaywrightSharp.BuildTasks
                         report.AppendLine($"{name} NOT FOUND");
                         report.AppendLine("</li>");
 
-                        // TODO Temporary remove till we evaluate ignores
-                        // Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{name} argument not found in {playwrightSharpEntity.Name}.{playwrightSharpMethod.Name}");
+                        Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{name} argument not found in {playwrightSharpEntity.Name}.{playwrightSharpMethod.Name}");
                     }
                 }
             }
@@ -424,8 +422,7 @@ namespace PlaywrightSharp.BuildTasks
                 report.AppendLine($"{memberName} NOT FOUND");
                 report.AppendLine("</li>");
 
-                // TODO Temporary remove till we evaluate ignores
-                // Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{playwrightSharpType.Name}.{memberName} not found");
+                Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{playwrightSharpType.Name}.{memberName} not found");
             }
         }
 
@@ -451,8 +448,7 @@ namespace PlaywrightSharp.BuildTasks
                 report.AppendLine($"{memberName} NOT FOUND");
                 report.AppendLine("</li>");
 
-                // TODO Temporary remove till we evaluate ignores
-                // Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{playwrightSharpEntity.Name}.{memberName} not found");
+                Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{playwrightSharpEntity.Name}.{memberName} not found");
             }
         }
     }

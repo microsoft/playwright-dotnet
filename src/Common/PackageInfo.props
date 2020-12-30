@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
-    <PropertyGroup>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <AssemblyVersion>0.170.2</AssemblyVersion>
-        <PackageVersion>$(AssemblyVersion)</PackageVersion>
-        <DriverVersion>0.170.0</DriverVersion>
-        <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
-        <FileVersion>$(AssemblyVersion)</FileVersion>
-        <Authors>Darío Kondratiuk</Authors>
-        <Owners>Darío Kondratiuk</Owners>
-        <PackageProjectUrl>https://github.com/microsoft/playwright-sharp</PackageProjectUrl>
-        <PackageTags>headless,chrome,firefox,webkit,playwright</PackageTags>
-        <RepositoryUrl>https://github.com/microsoft/playwright-sharp.git</RepositoryUrl>
-        <PackageReleaseNotes><![CDATA[
+	<PropertyGroup>
+		<AssemblyVersion>0.170.2</AssemblyVersion>
+		<PackageVersion>$(AssemblyVersion)</PackageVersion>
+		<DriverVersion>0.170.0</DriverVersion>
+		<ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
+		<FileVersion>$(AssemblyVersion)</FileVersion>
+		<Authors>Darío Kondratiuk</Authors>
+		<Owners>Darío Kondratiuk</Owners>
+		<PackageProjectUrl>https://github.com/microsoft/playwright-sharp</PackageProjectUrl>
+		<PackageTags>headless,chrome,firefox,webkit,playwright</PackageTags>
+		<RepositoryUrl>https://github.com/microsoft/playwright-sharp.git</RepositoryUrl>
+		<PackageReleaseNotes><![CDATA[
 ]]></PackageReleaseNotes>
-    </PropertyGroup>
+	</PropertyGroup>
 </Project>
