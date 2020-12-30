@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 using Xunit;
 
 namespace PlaywrightSharp.Tests.Attributes

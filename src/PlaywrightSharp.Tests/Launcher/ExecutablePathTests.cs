@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using Xunit;

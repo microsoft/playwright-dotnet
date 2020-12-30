@@ -1,4 +1,4 @@
-﻿using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
