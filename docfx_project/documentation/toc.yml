@@ -1,5 +1,9 @@
 - name: Documentation
   href: index.md
+- name: Configuration
+  items:
+    - name: Setting up custom locations
+      href: Playwright.UseCustomLocations.md
 - name: Basic Examples
   items:
     - name: How to take screenshots and save it as a file
