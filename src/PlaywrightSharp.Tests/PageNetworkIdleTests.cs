@@ -175,20 +175,20 @@ namespace PlaywrightSharp.Tests
             await waitForLoadTask;
             Assert.False(actionTask.IsCompleted);
 
-            await firstFetchResourceRequested.WithTimeout();
+            await firstFetchResourceRequested.WithTimeout(TestConstants.DefaultTaskTimeout);
             Assert.False(actionTask.IsCompleted);
 
-            await fetches["/fetch-request-a.js"].Task.WithTimeout();
+            await fetches["/fetch-request-a.js"].Task.WithTimeout(TestConstants.DefaultTaskTimeout);
             await frame.Page.EvaluateAsync("() => window['fetchSecond']()");
 
             // Finishing first response should leave 2 requests alive and trigger networkidle2.
             responses["/fetch-request-a.js"].TrySetResult(true);
 
             // Wait for the second round to be requested.
-            await secondFetchResourceRequested.WithTimeout();
+            await secondFetchResourceRequested.WithTimeout(TestConstants.DefaultTaskTimeout);
             Assert.False(actionTask.IsCompleted);
 
-            await fetches["/fetch-request-b.js"].Task.WithTimeout();
+            await fetches["/fetch-request-b.js"].Task.WithTimeout(TestConstants.DefaultTaskTimeout);
             responses["/fetch-request-b.js"].TrySetResult(true);
 
             IResponse navigationResponse = null;

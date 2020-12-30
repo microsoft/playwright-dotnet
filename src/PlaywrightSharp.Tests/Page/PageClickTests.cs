@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -247,7 +247,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("result"));
 
             await Page.EvalOnSelectorAsync("button", "b => b.style.display = 'block'");
-            await clickTask.WithTimeout();
+            await clickTask.WithTimeout(TestConstants.DefaultTaskTimeout);
 
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
@@ -268,7 +268,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("result"));
 
             await Page.EvalOnSelectorAsync("button", "b => b.style.visibility = 'visible'");
-            await clickTask.WithTimeout();
+            await clickTask.WithTimeout(TestConstants.DefaultTaskTimeout);
 
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
@@ -322,7 +322,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("result"));
 
             await Page.EvalOnSelectorAsync("button", "b => b.parentElement.style.display = 'block'");
-            await clickTask.WithTimeout();
+            await clickTask.WithTimeout(TestConstants.DefaultTaskTimeout);
 
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
@@ -732,7 +732,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.False(clickTask.IsCompleted);
 
             await Page.EvalOnSelectorAsync(".flyover", "flyOver => flyOver.style.left = '200px'");
-            await clickTask.WithTimeout();
+            await clickTask.WithTimeout(TestConstants.DefaultTaskTimeout);
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
         }
 
@@ -803,7 +803,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
             Assert.False(clickTask.IsCompleted);
             await Page.EvaluateAsync("() => document.querySelector('button').removeAttribute('disabled')");
-            await clickTask.WithTimeout();
+            await clickTask.WithTimeout(TestConstants.DefaultTaskTimeout);
             Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
@@ -835,7 +835,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
             Assert.False(clickTask.IsCompleted);
             await Page.EvaluateAsync("() => document.querySelector('input').removeAttribute('disabled')");
-            await clickTask.WithTimeout();
+            await clickTask.WithTimeout(TestConstants.DefaultTaskTimeout);
             Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
@@ -851,7 +851,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
             Assert.False(clickTask.IsCompleted);
             await Page.EvaluateAsync("() => document.querySelector('select').removeAttribute('disabled')");
-            await clickTask.WithTimeout();
+            await clickTask.WithTimeout(TestConstants.DefaultTaskTimeout);
             Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
@@ -900,7 +900,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
             Assert.False(clickTask.IsCompleted);
             await Page.EvaluateAsync("() => document.querySelector('button').style.removeProperty('pointer-events')");
-            await clickTask.WithTimeout();
+            await clickTask.WithTimeout(TestConstants.DefaultTaskTimeout);
             Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
@@ -920,7 +920,7 @@ namespace PlaywrightSharp.Tests.Page
 
             Assert.False(clickTask.IsCompleted);
             await Page.EvaluateAsync("() => document.querySelector('label').style.removeProperty('pointer-events')");
-            await clickTask.WithTimeout();
+            await clickTask.WithTimeout(TestConstants.DefaultTaskTimeout);
             Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 

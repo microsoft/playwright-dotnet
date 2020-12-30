@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -72,12 +72,12 @@ namespace PlaywrightSharp.Tests.Page
                 domContentLoadedTask,
                 Page.WaitForNavigationAsync(LifecycleEvent.Load)).ContinueWith(_ => bothFired = true);
 
-            await waitForRequestTask.WithTimeout();
-            await domContentLoadedTask.WithTimeout();
+            await waitForRequestTask.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await domContentLoadedTask.WithTimeout(TestConstants.DefaultTaskTimeout);
             Assert.False(bothFired);
             responseCompleted.SetResult(true);
-            await bothFiredTask.WithTimeout();
-            await navigationTask.WithTimeout();
+            await bothFiredTask.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await navigationTask.WithTimeout(TestConstants.DefaultTaskTimeout);
         }
 
         ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>

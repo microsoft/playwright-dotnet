@@ -26,7 +26,7 @@ namespace PlaywrightSharp.Helpers
         /// <param name="cancellationToken">Cancellation token.</param>
         public static Task WithTimeout(
             this Task task,
-            int milliseconds = 1_000,
+            int milliseconds,
             Func<TimeSpan, Exception> exceptionFactory = null,
             CancellationToken cancellationToken = default)
             => WithTimeout(task, TimeSpan.FromMilliseconds(milliseconds), exceptionFactory, cancellationToken);

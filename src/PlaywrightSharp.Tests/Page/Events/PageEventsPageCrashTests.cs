@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.Attributes;
@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             await Page.SetContentAsync("<div>This page should crash</div>");
             var crashTask = Page.WaitForEventAsync(PageEvent.Crash);
             await CrashAsync(Page);
-            await crashTask.WithTimeout();
+            await crashTask.WithTimeout(TestConstants.DefaultTaskTimeout);
         }
 
         // We skip all browser because crash uses internals.
@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             await Page.SetContentAsync("<div>This page should crash</div>");
             var crashTask = Page.WaitForEventAsync(PageEvent.Crash);
             await CrashAsync(Page);
-            await crashTask.WithTimeout();
+            await crashTask.WithTimeout(TestConstants.DefaultTaskTimeout);
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.EvaluateAsync("() => {}"));
             Assert.Contains("crash", exception.Message);
         }
@@ -56,7 +56,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             await Page.SetContentAsync("<div>This page should crash</div>");
             var responseTask = Page.WaitForEventAsync(PageEvent.Response);
             await CrashAsync(Page);
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => responseTask.WithTimeout());
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => responseTask.WithTimeout(TestConstants.DefaultTaskTimeout));
             Assert.Contains("Page crashed", exception.Message);
         }
 
@@ -87,7 +87,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             await Page.SetContentAsync("<div>This page should crash</div>");
             var crashTask = Page.WaitForEventAsync(PageEvent.Crash);
             await CrashAsync(Page);
-            await crashTask.WithTimeout();
+            await crashTask.WithTimeout(TestConstants.DefaultTaskTimeout);
             await Page.Context.CloseAsync();
         }
 

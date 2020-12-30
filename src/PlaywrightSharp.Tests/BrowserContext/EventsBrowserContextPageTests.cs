@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
@@ -114,7 +114,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             otherPage.Close += (sender, e) => closeEventReceived.TrySetResult(true);
 
             await otherPage.CloseAsync();
-            await closeEventReceived.Task.WithTimeout();
+            await closeEventReceived.Task.WithTimeout(TestConstants.DefaultTaskTimeout);
 
             allPages = context.Pages;
             Assert.Contains(page, allPages);
