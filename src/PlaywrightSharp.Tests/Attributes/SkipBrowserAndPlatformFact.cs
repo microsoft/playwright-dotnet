@@ -1,4 +1,4 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Xunit;
 
 namespace PlaywrightSharp.Tests.Attributes
@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests.Attributes
             bool skipWindows = false,
             bool skipLinux = false)
         {
-            Timeout = PlaywrightSharp.Playwright.DefaultTimeout;
+            Timeout = TestConstants.DefaultTestTimeout;
 
             if (SkipBrowser(skipFirefox, skipChromium, skipWebkit) && SkipPlatform(skipOSX, skipWindows, skipLinux))
             {

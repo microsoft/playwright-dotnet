@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Frame.goto</playwright-describe>
         ///<playwright-it>should navigate subframes</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateSubFrames()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
@@ -37,7 +37,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Frame.goto</playwright-describe>
         ///<playwright-it>should reject when frame detaches</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectWhenFrameDetaches()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
@@ -53,7 +53,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Frame.goto</playwright-describe>
         ///<playwright-it>should continue after client redirect</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldContinueAfterClientRedirect()
         {
             Server.SetRoute("/frames/script.js", context => Task.Delay(10000));
@@ -67,7 +67,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Frame.goto</playwright-describe>
         ///<playwright-it>should return matching responses</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnMatchingResponses()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Helpers;
@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
         ///<playwright-file>downloadspath.spec.js</playwright-file>
         ///<playwright-describe>browserType.launch({downloadsPath})</playwright-describe>
         ///<playwright-it>should keep downloadsPath folder</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldKeepDownloadsPathFolder()
         {
             var page = await _browser.NewPageAsync();
@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
         ///<playwright-file>downloadspath.spec.js</playwright-file>
         ///<playwright-describe>browserType.launch({downloadsPath})</playwright-describe>
         ///<playwright-it>should delete downloads when context closes</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeleteDownloadsWhenContextCloses()
         {
             var page = await _browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
@@ -71,7 +71,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
         ///<playwright-file>downloadspath.spec.js</playwright-file>
         ///<playwright-describe>browserType.launch({downloadsPath})</playwright-describe>
         ///<playwright-it>should report downloads in downloadsPath folder</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDownloadsInDownloadsPathFolder()
         {
             var page = await _browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });

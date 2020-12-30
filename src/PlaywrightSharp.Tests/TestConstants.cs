@@ -11,6 +11,8 @@ namespace PlaywrightSharp.Tests
         public const string ChromiumProduct = "CHROMIUM";
         public const string WebkitProduct = "WEBKIT";
         public const string FirefoxProduct = "FIREFOX";
+        public const int DefaultTestTimeout = 30_000;
+        public const int DefaultPuppeteerTimeout = 10_000;
 
         public static string Product => string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PRODUCT")) ?
             ChromiumProduct :

@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Helpers;
@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-it>should report downloads with acceptDownloads: false</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDownloadsWithAcceptDownloadsFalse()
         {
             await Page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/downloadWithFilename\">download</a>");
@@ -56,7 +56,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-it>should report downloads with acceptDownloads: true</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDownloadsWithAcceptDownloadsTrue()
         {
             var page = await Browser.NewPageAsync(acceptDownloads: true);
@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-it>should save to user-specified path</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSaveToUserSpecifiedPath()
         {
             var page = await Browser.NewPageAsync(acceptDownloads: true);
@@ -99,7 +99,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-it>should save to user-specified path without updating original path</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSaveToUserSpecifiedPathWithoutUpdatingOriginalPath()
         {
             var page = await Browser.NewPageAsync(acceptDownloads: true);
@@ -127,7 +127,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-it>should save to two different paths with multiple saveAs calls</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSaveToTwoDifferentPathsWithMultipleSaveAsCalls()
         {
             var page = await Browser.NewPageAsync(acceptDownloads: true);
@@ -155,7 +155,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-it>should save to overwritten filepath</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSaveToOverwrittenFilepath()
         {
             var page = await Browser.NewPageAsync(acceptDownloads: true);
@@ -179,7 +179,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-it>should create subdirectories when saving to non-existent user-specified path</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCreateSubdirectoriesWhenSavingToNonExistentUserSpecifiedPath()
         {
             var page = await Browser.NewPageAsync(acceptDownloads: true);
@@ -209,7 +209,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-it>should error when saving with downloads disabled</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldErrorWhenSavingWithDownloadsDisabled()
         {
             var page = await Browser.NewPageAsync(acceptDownloads: false);
@@ -230,7 +230,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-it>should error when saving after deletion</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldErrorWhenSavingAfterDeletion()
         {
             var page = await Browser.NewPageAsync(acceptDownloads: true);
@@ -258,7 +258,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-it>should report non-navigation downloads</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNonNavigationDownloads()
         {
             Server.SetRoute("/download", context =>
@@ -288,7 +288,7 @@ namespace PlaywrightSharp.Tests
         ///<playwright-file>download.spec.js</playwright-file>
 
         ///<playwright-it>should report download path within page.on('download', …) handler for Files</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDownloadPathWithinPageOnDownloadHandlerForFiles()
         {
             var downloadPathTcs = new TaskCompletionSource<string>();
@@ -308,7 +308,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-it>should report download path within page.on('download', …) handler for Blobs</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDownloadPathWithinPageOnDownloadHandlerForBlobs()
         {
             var downloadPathTcs = new TaskCompletionSource<string>();
@@ -354,7 +354,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-it>should report new window downloads</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNewWindowDownloads()
         {
             var page = await Browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
@@ -374,7 +374,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-it>should delete file</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeleteFile()
         {
             var page = await Browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
@@ -396,7 +396,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-it>should expose stream</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldExposeStream()
         {
             var page = await Browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
@@ -416,7 +416,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-it>should delete downloads on context destruction</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeleteDownloadsOnContextDestruction()
         {
             var page = await Browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
@@ -444,7 +444,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>download.spec.js</playwright-file>
         ///<playwright-it>should delete downloads on browser gone</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeleteDownloadsOnBrowserGone()
         {
             var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());

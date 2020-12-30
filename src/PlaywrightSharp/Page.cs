@@ -69,9 +69,11 @@ namespace PlaywrightSharp
             Keyboard = new Keyboard(_channel);
             Touchscreen = new Touchscreen(_channel);
             Mouse = new Mouse(_channel);
+            TimeoutSettings = new TimeoutSettings(Context.TimeoutSettings);
+
             _channel.Closed += Channel_Closed;
             _channel.Crashed += Channel_Crashed;
-            _channel.Popup += (sender, e) => Popup?.Invoke(this, new PopupEventArgs(e.Page));
+            _channel.Popup += (_, e) => Popup?.Invoke(this, new PopupEventArgs(e.Page));
             _channel.RequestFailed += (sender, e) =>
             {
                 e.Request.Object.Failure = e.FailureText;
@@ -109,10 +111,7 @@ namespace PlaywrightSharp
                 }
             };
 
-            _channel.FileChooser += (sender, e) =>
-            {
-                _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(this, e.Element.Object, e.IsMultiple));
-            };
+            _channel.FileChooser += (sender, e) => _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(this, e.Element.Object, e.IsMultiple));
             _channel.Worker += (sender, e) =>
             {
                 WorkersList.Add(e.WorkerChannel.Object);
@@ -307,7 +306,7 @@ namespace PlaywrightSharp
 
         internal List<Worker> WorkersList { get; } = new List<Worker>();
 
-        internal TimeoutSettings TimeoutSettings { get; set; } = new TimeoutSettings();
+        internal TimeoutSettings TimeoutSettings { get; set; }
 
         /// <inheritdoc />
         public IFrame GetFrame(string name = null, string url = null)

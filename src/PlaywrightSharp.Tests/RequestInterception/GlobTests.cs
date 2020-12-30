@@ -1,4 +1,4 @@
-using PlaywrightSharp.Helpers;
+﻿using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         ///<playwright-file>interception.spec.js</playwright-file>
         ///<playwright-describe>glob</playwright-describe>
         ///<playwright-it>should work with glob</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public void ShouldWorkWithGlob()
         {
             Assert.Matches(StringExtensions.GlobToRegex("**/*.js"), "https://localhost:8080/foo.js");

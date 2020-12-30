@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>har.spec.ts</playwright-file>
         /// <playwright-it>should have version and creator</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveVersionAndCreator()
         {
             await _page.GoToAsync(TestConstants.EmptyPage);
@@ -75,7 +75,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>har.spec.ts</playwright-file>
         /// <playwright-it>should have browser</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveBrowser()
         {
             await _page.GoToAsync(TestConstants.EmptyPage);
@@ -86,7 +86,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>har.spec.ts</playwright-file>
         /// <playwright-it>should have pages</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHavePages()
         {
             await _page.GoToAsync("data:text/html,<title>Hello</title>");
@@ -103,7 +103,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>har.spec.ts</playwright-file>
         /// <playwright-it>should have pages in persistent context</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHavePagesInPersistentContext()
         {
             using var harPath = new TempDirectory();
@@ -129,7 +129,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>har.spec.ts</playwright-file>
         /// <playwright-it>should include request</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeRequest()
         {
             await _page.GoToAsync(TestConstants.EmptyPage);
@@ -146,7 +146,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>har.spec.ts</playwright-file>
         /// <playwright-it>should include response</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeResponse()
         {
             await _page.GoToAsync(TestConstants.EmptyPage);
@@ -162,7 +162,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>har.spec.ts</playwright-file>
         /// <playwright-it>should include redirectURL</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeRedirecturl()
         {
             Server.SetRedirect("/foo.html", "/empty.html");
@@ -176,7 +176,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>har.spec.ts</playwright-file>
         /// <playwright-it>should include query params</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeQueryParams()
         {
             await _page.GoToAsync(TestConstants.ServerUrl + "/har.html?name=value");
@@ -188,7 +188,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>har.spec.ts</playwright-file>
         /// <playwright-it>should include postData</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludePostdata()
         {
             await _page.GoToAsync(TestConstants.EmptyPage);
@@ -205,7 +205,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>har.spec.ts</playwright-file>
         /// <playwright-it>should include binary postData</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeBinaryPostdata()
         {
             await _page.GoToAsync(TestConstants.EmptyPage);
@@ -222,7 +222,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>har.spec.ts</playwright-file>
         /// <playwright-it>should include form params</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeFormParams()
         {
             await _page.GoToAsync(TestConstants.EmptyPage);
@@ -253,7 +253,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>har.spec.ts</playwright-file>
         /// <playwright-it>should include cookies</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeCookies()
         {
             await _context.AddCookiesAsync(
@@ -301,7 +301,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>har.spec.ts</playwright-file>
         /// <playwright-it>should include set-cookies with comma</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeSetCookiesWithComma()
         {
             Server.SetRoute("/empty.html", ctx =>
@@ -317,7 +317,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>har.spec.ts</playwright-file>
         /// <playwright-it>should include secure set-cookies</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeSecureSetCookies()
         {
             Server.SetRoute("/empty.html", ctx =>
@@ -333,7 +333,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>har.spec.ts</playwright-file>
         /// <playwright-it>should include content</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeContent()
         {
             await _page.GoToAsync(TestConstants.ServerUrl + "/har.html");
@@ -354,7 +354,7 @@ namespace PlaywrightSharp.Tests
         /// <summary>
         /// We test that the har class we have, contains all the properties in the JSON file
         /// </summary>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRepresentTheHarFile()
         {
             await _page.GoToAsync(TestConstants.ServerUrl + "/har.html");

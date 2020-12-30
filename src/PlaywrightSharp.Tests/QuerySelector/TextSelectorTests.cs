@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using Xunit;
@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>text selector</playwright-describe>
         ///<playwright-it>query</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task Query()
         {
             await Page.SetContentAsync("<div>yo</div><div>ya</div><div>\nye  </div>");
@@ -113,7 +113,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>text selector</playwright-describe>
         ///<playwright-it>should be case sensitive if quotes are specified</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeCaseSensitiveIfQuotesAreSpecified()
         {
             await Page.SetContentAsync("<div>yo</div><div>ya</div><div>\nye  </div>");
@@ -124,7 +124,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>text selector</playwright-describe>
         ///<playwright-it>should search for a substring without quotes</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSearchForASubstringWithoutQuotes()
         {
             await Page.SetContentAsync("<div>textwithsubstring</div>");
@@ -135,7 +135,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>text selector</playwright-describe>
         ///<playwright-it>should skip head, script and style</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSkipHeadScriptAndStyle()
         {
             await Page.SetContentAsync(@"
@@ -171,7 +171,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>text selector</playwright-describe>
         ///<playwright-it>should match input[type=button|submit]</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldMatchInputTypeButtonSubmit()
         {
             await Page.SetContentAsync("<input type=\"submit\" value=\"hello\"><input type=\"button\" value=\"world\">");
@@ -182,7 +182,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>text selector</playwright-describe>
         ///<playwright-it>should work for open shadow roots</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForOpenShadowRoots()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/deep-shadow.html");
@@ -200,7 +200,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>text selector</playwright-describe>
         ///<playwright-it>should prioritize light dom over shadow dom in the same parent</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldPrioritizeLightDomOverShadowDomInTheSameParent()
         {
             await Page.EvaluateAsync(@"
@@ -223,7 +223,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>text selector</playwright-describe>
         ///<playwright-it>should waitForSelector with distributed elements</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForSelectorWithDistributedElements()
         {
             var task = Page.WaitForSelectorAsync("div >> text=Hello");

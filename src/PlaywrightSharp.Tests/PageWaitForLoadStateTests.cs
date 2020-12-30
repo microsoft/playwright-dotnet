@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
         ///<playwright-it>should pick up ongoing navigation</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldPickUpOngoingNavigation()
         {
             var responseTask = new TaskCompletionSource<bool>();
@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
         ///<playwright-it>should respect timeout</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
             Server.SetRoute("/one-style.css", context => Task.Delay(Timeout.Infinite));
@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
         ///<playwright-it>should resolve immediately if loaded</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldResolveImmediatelyIfLoaded()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
@@ -73,7 +73,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
         ///<playwright-it>should resolve immediately if load state matches</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldResolveImmediatelyIfLoadStateMatches()
         {
             var responseTask = new TaskCompletionSource<bool>();

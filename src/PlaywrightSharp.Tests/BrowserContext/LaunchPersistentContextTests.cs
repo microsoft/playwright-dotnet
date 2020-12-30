@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>context.cookies() should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ContextCookiesShouldWork()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>context.addCookies() should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ContextAddCookiesShouldWork()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -87,7 +87,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>context.clearCookies() should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ContextClearCookiesShouldWork()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -121,7 +121,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should(not) block third party cookies</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotBlockThirdPartyCookies()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -167,7 +167,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support viewport option</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportViewportOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -190,7 +190,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support deviceScaleFactor option</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportDeviceScaleFactorOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -207,7 +207,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support userAgent option</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportUserAgentOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -230,7 +230,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support bypassCSP option</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportBypassCSPOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -249,7 +249,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support javascriptEnabled option</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportJavascriptEnabledOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -276,7 +276,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support httpCredentials option</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRupportHttpCredentialsOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -299,7 +299,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
         /// <playwright-describe>launchPersistentContext()</playwright-describe>
         /// <playwright-it>should support offline option</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportOfflineOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions

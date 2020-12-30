@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>defaultbrowsercontext-2.spec.js</playwright-file>
         /// <playwright-it>should support hasTouch option</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportHasTouchOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -61,7 +61,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>defaultbrowsercontext-2.spec.js</playwright-file>
         /// <playwright-it>should support colorScheme option</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportColorSchemeOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>defaultbrowsercontext-2.spec.js</playwright-file>
         /// <playwright-it>should support timezoneId option</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportTimezoneIdOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -94,7 +94,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>defaultbrowsercontext-2.spec.js</playwright-file>
         /// <playwright-it>should support locale option</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportLocaleOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -110,7 +110,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>defaultbrowsercontext-2.spec.js</playwright-file>
         /// <playwright-it>should support geolocation and permissions options</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportGeolocationAndPermissionsOptions()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -136,7 +136,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>defaultbrowsercontext-2.spec.js</playwright-file>
         /// <playwright-it>should support ignoreHTTPSErrors option</playwright-it>
-        // [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        // [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldSupportIgnoreHTTPSErrorsOption()
         {
@@ -154,7 +154,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>defaultbrowsercontext-2.spec.js</playwright-file>
         /// <playwright-it>should support extraHTTPHeaders option</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportExtraHTTPHeadersOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
@@ -179,7 +179,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>defaultbrowsercontext-2.spec.js</playwright-file>
         /// <playwright-it>should accept userDataDir</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptUserDataDir()
         {
             var (tmp, context, _) = await LaunchAsync();
@@ -192,7 +192,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>defaultbrowsercontext-2.spec.js</playwright-file>
         /// <playwright-it>should restore state from userDataDir</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRestoreStateFromUserDataDir()
         {
             using var userDataDir = new TempDirectory();
@@ -263,7 +263,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>defaultbrowsercontext-2.spec.js</playwright-file>
         /// <playwright-it>should have default URL when launching browser</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveDefaultURLWhenLaunchingBrowser()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -312,7 +312,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>defaultbrowsercontext-2.spec.js</playwright-file>
         /// <playwright-it>should fire close event for a persistent context</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireCloseEventForAPersistentContext()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -357,7 +357,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>defaultbrowsercontext-2.spec.js</playwright-file>
         ///<playwright-it>should respect selectors</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectSelectors()
         {
             var (tmp, context, page) = await LaunchAsync();

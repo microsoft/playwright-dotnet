@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.BrowserType
         ///<playwright-file>proxy.spec.js</playwright-file>
         ///<playwright-describe>HTTP Proxy</playwright-describe>
         ///<playwright-it>should return all of the pages</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnAllOfThePages()
         {
             Server.SetRoute("/target.html", ctx => ctx.Response.WriteAsync("<html><title>Served by the proxy</title></html>"));
@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests.BrowserType
         ///<playwright-file>proxy.spec.js</playwright-file>
         ///<playwright-describe>HTTP Proxy</playwright-describe>
         ///<playwright-it>should authenticate</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAuthenticate()
         {
             Server.SetRoute("/target.html", ctx =>
@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests.BrowserType
         ///<playwright-file>proxy.spec.js</playwright-file>
         ///<playwright-describe>HTTP Proxy</playwright-describe>
         ///<playwright-it>should exclude patterns</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldExcludePatterns()
         {
             Server.SetRoute("/target.html", ctx => ctx.Response.WriteAsync("<html><title>Served by the proxy</title></html>"));

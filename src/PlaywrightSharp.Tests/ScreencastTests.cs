@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Helpers;
@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>screencast.spec.js</playwright-file>     
         ///<playwright-it>should expose video path</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldExposeVideoPath()
         {
             using var tempDirectory = new TempDirectory();
@@ -85,7 +85,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>screencast.spec.js</playwright-file>     
         ///<playwright-it>should expose video path blank page</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldExposeVideoPathBlankPage()
         {
             using var tempDirectory = new TempDirectory();

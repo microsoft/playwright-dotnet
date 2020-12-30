@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>wait-for-selector-1.spec.js</playwright-file>
         ///<playwright-it>should immediately resolve promise if node exists</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldImmediatelyResolveTaskIfNodeExists()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>wait-for-selector-1.spec.js</playwright-file>
         ///<playwright-it>elementHandle.waitForSelector should immediately resolve if node exists</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ElementHandleWaitForSelectorShouldImmediatelyResolveIfNodeExists()
         {
             await Page.SetContentAsync("<span>extra</span><div><span>target</span></div>");
@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>wait-for-selector-1.spec.js</playwright-file>
         ///<playwright-it>elementHandle.waitForSelector should wait</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ElementHandleWaitForSelectorShouldWait()
         {
             await Page.SetContentAsync("<div></div>");
@@ -71,7 +71,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>wait-for-selector-1.spec.js</playwright-file>
         ///<playwright-it>elementHandle.waitForSelector should timeout</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ElementHandleWaitForSelectorShouldTimeout()
         {
             await Page.SetContentAsync("<div></div>");
@@ -82,7 +82,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>wait-for-selector-1.spec.js</playwright-file>
         ///<playwright-it>elementHandle.waitForSelector should throw on navigation</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ElementHandleWaitForSelectorShouldThrowOnNavigation()
         {
             await Page.SetContentAsync("<div></div>");
@@ -101,7 +101,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>wait-for-selector-1.spec.js</playwright-file>
         ///<playwright-it>should work with removed MutationObserver</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithRemovedMutationObserver()
         {
             await Page.EvaluateAsync("delete window.MutationObserver");
@@ -116,7 +116,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>wait-for-selector-1.spec.js</playwright-file>
         ///<playwright-it>should resolve promise when node is added</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldResolveTaskWhenNodeIsAdded()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -132,7 +132,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>wait-for-selector-1.spec.js</playwright-file>
         ///<playwright-it>should report logs while waiting for visible</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportLogsWhileWaitingForVisible()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -173,7 +173,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>wait-for-selector-1.spec.js</playwright-file>
         ///<playwright-it>should report logs while waiting for hidden</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportLogsWhileWaitingForHidden()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -209,7 +209,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>wait-for-selector-1.spec.js</playwright-file>
         ///<playwright-it>should resolve promise when node is added in shadow dom</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldResolvePromiseWhenNodeIsAddedInShadowDom()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -236,7 +236,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>wait-for-selector-1.spec.js</playwright-file>
         ///<playwright-it>should work when node is added through innerHTML</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenNodeIsAddedThroughInnerHTML()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -248,7 +248,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>wait-for-selector-1.spec.js</playwright-file>
         ///<playwright-it>Page.$ waitFor is shortcut for main frame</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PageWaitForSelectorAsyncIsShortcutForMainFrame()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -263,7 +263,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>wait-for-selector-1.spec.js</playwright-file>
         ///<playwright-it>should run in specified frame</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRunInSpecifiedFrame()
         {
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
@@ -279,7 +279,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>wait-for-selector-1.spec.js</playwright-file>
         ///<playwright-it>should throw when frame is detached</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenFrameIsDetached()
         {
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);

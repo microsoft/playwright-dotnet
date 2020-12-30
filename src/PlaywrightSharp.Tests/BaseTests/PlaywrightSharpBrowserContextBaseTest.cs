@@ -28,6 +28,7 @@ namespace PlaywrightSharp.Tests.BaseTests
         public virtual async Task InitializeAsync()
         {
             Context = await Browser.NewContextAsync();
+            Context.DefaultTimeout = TestConstants.DefaultPuppeteerTimeout;
         }
     }
 }

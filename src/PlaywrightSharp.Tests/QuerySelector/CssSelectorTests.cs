@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>css selector</playwright-describe>
         ///<playwright-it>should work for open shadow roots</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForOpenShadowRoots()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/deep-shadow.html");
@@ -53,7 +53,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>css selector</playwright-describe>
         ///<playwright-it>should work with > combinator and spaces</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCombinatorAndSpaces()
         {
             await Page.SetContentAsync("<div foo=\"bar\" bar=\"baz\"><span></span></div>");
@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>css selector</playwright-describe>
         ///<playwright-it>should work with comma separated list</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCommaSeparatedList()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/deep-shadow.html");
@@ -94,7 +94,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>css selector</playwright-describe>
         ///<playwright-it>should keep dom order with comma separated list</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldKeepDomOrderWithCommaSeparatedList()
         {
             await Page.SetContentAsync("<section><span><div><x></x><y></y></div></span></section>");
@@ -110,7 +110,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>css selector</playwright-describe>
         ///<playwright-it>should work with comma inside text</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCommaInsideText()
         {
             await Page.SetContentAsync("<span></span><div attr=\"hello,world!\"></div>");
@@ -124,7 +124,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         ///<playwright-file>queryselector.spec.js</playwright-file>
         ///<playwright-describe>css selector</playwright-describe>
         ///<playwright-it>should work with attribute selectors</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAttributeSelectors()
         {
             await Page.SetContentAsync("<div attr=\"hello world\" attr2=\"hello-''>>foo=bar[]\" attr3=\"] span\"><span></span></div>");

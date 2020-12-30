@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>headful.spec.js</playwright-file>
         ///<playwright-it>should have default url when launching browser</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveDefaultUrlWhenLaunchingBrowser()
         {
             using var tempDir = new TempDirectory();
@@ -59,7 +59,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>headful.spec.js</playwright-file>
         ///<playwright-it>should close browser with beforeunload page</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCloseBrowserWithBeforeunloadPage()
         {
             using var userDataDir = new TempDirectory();
@@ -73,7 +73,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>headful.spec.js</playwright-file>
         ///<playwright-it>should not crash when creating second context</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotCrashWhenCreatingSecondContext()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
@@ -91,7 +91,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>headful.spec.js</playwright-file>
         ///<playwright-it>should click background tab</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickBackgroundTab()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
@@ -103,7 +103,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>headful.spec.js</playwright-file>
         ///<playwright-it>should close browser after context menu was triggered</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCloseBrowserAfterContextMenuWasTriggered()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
@@ -114,7 +114,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>headful.spec.js</playwright-file>
         ///<playwright-it>should(not) block third party cookies</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotBlockThirdPartyCookies()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
@@ -185,7 +185,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>headful.spec.js</playwright-file>
         ///<playwright-it>Page.bringToFront should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PageBringToFrontShouldWork()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());

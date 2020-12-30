@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>focus</playwright-describe>
         ///<playwright-it>should think that it is focused by default</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThinkThatItIsFocusedByDefault()
         {
             Assert.True(await Page.EvaluateAsync<bool>("document.hasFocus()"));
@@ -29,7 +29,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>focus</playwright-describe>
         ///<playwright-it>should think that all pages are focused</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThinkThatAllPagesAreFocused()
         {
             var page2 = await Page.Context.NewPageAsync();
@@ -40,7 +40,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>focus</playwright-describe>
         ///<playwright-it>should focus popups by default</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFocusPopupsByDefault()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -59,7 +59,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>focus</playwright-describe>
         ///<playwright-it>should provide target for keyboard events</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldProvideTargetForKeyboardEvents()
         {
             var page2 = await Page.Context.NewPageAsync();
@@ -90,7 +90,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>focus</playwright-describe>
         ///<playwright-it>should not affect mouse event target page</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAffectMouseEventTargetPage()
         {
             var page2 = await Page.Context.NewPageAsync();
@@ -119,7 +119,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>focus</playwright-describe>
         ///<playwright-it>should change document.activeElement</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldChangeDocumentActiveElement()
         {
             var page2 = await Page.Context.NewPageAsync();
@@ -151,7 +151,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>focus</playwright-describe>
         ///<playwright-it>should change focused iframe</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldChangeFocusedIframe()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
