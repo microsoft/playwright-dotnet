@@ -15,5 +15,5 @@ using var playwright = await Playwright.CreateAsync(
     driverExecutablePath: "customDriversPath");
 ```
 
-You could also alter the default location of these two artifacts using environment variables without changing your code.
+You can also alter the default location of these two artifacts using environment variables without changing your code.
 You can use the environment variable `PLAYWRIGHT_BROWSERS_PATH` to set the default browsers path and `PLAYWRIGHT_DRIVER_PATH`  to set the driver location.
