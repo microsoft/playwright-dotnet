@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Transport
             _playwrightServerProcess.StartInfo.Arguments = "run-driver";
             _playwrightServerProcess.Start();
             _playwrightServerProcess.Exited += (sender, e) => Close("Process exited");
-            _transport = new StdIOTransport(_playwrightServerProcess, _loggerFactory, scheduler);
+            _transport = new StdIOTransport(_playwrightServerProcess, loggerFactory, scheduler);
             _transport.MessageReceived += Transport_MessageReceived;
             _transport.LogReceived += (s, e) => debugLogger?.LogInformation(e.Message);
             _transport.TransportClosed += (sender, e) => Close(e.CloseReason);

@@ -124,7 +124,7 @@ namespace PlaywrightSharp.Transport
 #else
                     int read = await stream.BaseStream.ReadAsync(new Memory<byte>(buffer, 0, DefaultBufferSize), token).ConfigureAwait(false);
 #endif
-                    _logger.LogInformation("RAW: " + System.Text.Encoding.UTF8.GetString(buffer));
+                    _logger?.LogInformation("RAW: " + System.Text.Encoding.UTF8.GetString(buffer));
 
                     if (!token.IsCancellationRequested)
                     {
