@@ -17,7 +17,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browser.spec.js</playwright-file>
         ///<playwright-it>should create new page</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCreateNewPage()
         {
             var page1 = await Browser.NewPageAsync();
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browser.spec.js</playwright-file>
         ///<playwright-it>should throw upon second create new page</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowUponSecondCreateNewPage()
         {
             var page = await Browser.NewPageAsync();
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browser.spec.js</playwright-file>
         ///<playwright-it>version should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public void VersionShouldWork()
         {
             string version = Browser.Version;

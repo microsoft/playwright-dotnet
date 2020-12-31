@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
         ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -40,7 +40,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
         ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should respect timeout</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
             var waitForNavigationResult = Page.WaitForNavigationAsync("**/frame.html", timeout: 5000);
@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
         ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work with both domcontentloaded and load</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBothDomcontentloadedAndLoad()
         {
             var responseCompleted = new TaskCompletionSource<bool>();
@@ -72,18 +72,18 @@ namespace PlaywrightSharp.Tests.Page
                 domContentLoadedTask,
                 Page.WaitForNavigationAsync(LifecycleEvent.Load)).ContinueWith(_ => bothFired = true);
 
-            await waitForRequestTask.WithTimeout();
-            await domContentLoadedTask.WithTimeout();
+            await waitForRequestTask.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await domContentLoadedTask.WithTimeout(TestConstants.DefaultTaskTimeout);
             Assert.False(bothFired);
             responseCompleted.SetResult(true);
-            await bothFiredTask.WithTimeout();
-            await navigationTask.WithTimeout();
+            await bothFiredTask.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await navigationTask.WithTimeout(TestConstants.DefaultTaskTimeout);
         }
 
         ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
         ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work with clicking on anchor links</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithClickingOnAnchorLinks()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -100,7 +100,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
         ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work with clicking on links which do not commit navigation</playwright-it>
-        // [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        // [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldWorkWithClickingOnLinksWhichDoNotCommitNavigation()
         {
@@ -117,7 +117,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
         ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work with history.pushState()</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithHistoryPushState()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -139,7 +139,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
         ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work with history.replaceState()</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithHistoryReplaceState()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -161,7 +161,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
         ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work with DOM history.back()/history.forward()</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDOMHistoryBackAndHistoryForward()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -195,7 +195,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
         ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work when subframe issues window.stop()</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenSubframeIssuesWindowStop()
         {
             //This test is slightly different from the one in PW because of .NET Threads (or thanks to .NET Threads)
@@ -243,7 +243,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
         ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work with url match</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithUrlMatch()
         {
             IResponse response1 = null;
@@ -289,7 +289,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
         ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work with url match for same document navigations</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithUrlMatchForSameDocumentNavigations()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -312,7 +312,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
         ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work for cross-process navigations</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForCrossProcessNavigations()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -330,7 +330,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
         ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should work on frame</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkOnFrame()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
@@ -348,7 +348,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>page-wait-for-navigation.spec.js</playwright-file>
         ///<playwright-describe>page-wait-for-navigation.spec.js</playwright-describe>
         ///<playwright-it>should fail when frame detaches</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenFrameDetaches()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");

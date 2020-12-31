@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Popup
         ///<playwright-file>popup.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Popup</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Tests.Popup
         ///<playwright-file>popup.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Popup</playwright-describe>
         ///<playwright-it>should work with window features</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithWindowFeatures()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -53,7 +53,7 @@ namespace PlaywrightSharp.Tests.Popup
         ///<playwright-file>popup.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Popup</playwright-describe>
         ///<playwright-it>should emit for immediately closed popups</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitForImmediatelyClosedPopups()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -71,7 +71,7 @@ namespace PlaywrightSharp.Tests.Popup
         ///<playwright-file>popup.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Popup</playwright-describe>
         ///<playwright-it>should emit for immediately closed popups</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitForImmediatelyClosedPopupsWithLocation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests.Popup
         ///<playwright-file>popup.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Popup</playwright-describe>
         ///<playwright-it>should be able to capture alert</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToCaptureAlert()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -110,7 +110,7 @@ namespace PlaywrightSharp.Tests.Popup
         ///<playwright-file>popup.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Popup</playwright-describe>
         ///<playwright-it>should work with empty url</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithEmptyUrl()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -127,7 +127,7 @@ namespace PlaywrightSharp.Tests.Popup
         ///<playwright-file>popup.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Popup</playwright-describe>
         ///<playwright-it>should work with noopener and no url</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoopenerAndNoUrl()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -145,7 +145,7 @@ namespace PlaywrightSharp.Tests.Popup
         ///<playwright-file>popup.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Popup</playwright-describe>
         ///<playwright-it>should work with noopener and about:blank</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoopenerAndAboutBlank()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -162,7 +162,7 @@ namespace PlaywrightSharp.Tests.Popup
         ///<playwright-file>popup.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Popup</playwright-describe>
         ///<playwright-it>should work with noopener and url</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoopenerAndUrl()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

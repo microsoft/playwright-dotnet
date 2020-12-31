@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>Events.BrowserContext.Page</playwright-describe>
         ///<playwright-it>should have url</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveUrl()
         {
             await using var context = await Browser.NewContextAsync();
@@ -39,7 +39,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>Events.BrowserContext.Page</playwright-describe>
         ///<playwright-it>should have url after domcontentloaded</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveUrlAfterDomcontentloaded()
         {
             await using var context = await Browser.NewContextAsync();
@@ -56,7 +56,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>Events.BrowserContext.Page</playwright-describe>
         ///<playwright-it>should have about:blank url with domcontentloaded</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveAboutBlankUrlWithDomcontentloaded()
         {
             await using var context = await Browser.NewContextAsync();
@@ -73,7 +73,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>Events.BrowserContext.Page</playwright-describe>
         ///<playwright-it>should have about:blank for empty url with domcontentloaded</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveAboutBlankUrlForEmptyUrlWithDomcontentloaded()
         {
             await using var context = await Browser.NewContextAsync();
@@ -90,7 +90,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>Events.BrowserContext.Page</playwright-describe>
         ///<playwright-it>should report when a new page is created and closed</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportWhenANewPageIsCreatedAndClosed()
         {
             await using var context = await Browser.NewContextAsync();
@@ -114,7 +114,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             otherPage.Close += (sender, e) => closeEventReceived.TrySetResult(true);
 
             await otherPage.CloseAsync();
-            await closeEventReceived.Task.WithTimeout();
+            await closeEventReceived.Task.WithTimeout(TestConstants.DefaultTaskTimeout);
 
             allPages = context.Pages;
             Assert.Contains(page, allPages);
@@ -124,7 +124,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>Events.BrowserContext.Page</playwright-describe>
         ///<playwright-it>should report initialized pages</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportInitializedPages()
         {
             await using var context = await Browser.NewContextAsync();
@@ -143,7 +143,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>Events.BrowserContext.Page</playwright-describe>
         ///<playwright-it>should not crash while redirecting of original request was missed</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotCrashWhileRedirectingOfOriginalRequestWasMissed()
         {
             await using var context = await Browser.NewContextAsync();
@@ -171,7 +171,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>Events.BrowserContext.Page</playwright-describe>
         ///<playwright-it>should have an opener</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveAnOpener()
         {
             await using var context = await Browser.NewContextAsync();
@@ -191,7 +191,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>browsercontext.spec.js</playwright-file>
         ///<playwright-describe>Events.BrowserContext.Page</playwright-describe>
         ///<playwright-it>should fire page lifecycle events</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFirePageLifecycleEvents()
         {
             await using var context = await Browser.NewContextAsync();

@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.waitForLoadState</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");

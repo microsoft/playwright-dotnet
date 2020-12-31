@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>page-network-idle.spec.ts</playwright-file>
         /// <playwright-it>should navigate to empty page with networkidle</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateToEmptyPageWithNetworkIdle()
         {
             var response = await Page.GoToAsync(TestConstants.EmptyPage, LifecycleEvent.Networkidle);
@@ -32,13 +32,13 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>page-network-idle.spec.ts</playwright-file>
         /// <playwright-it>should wait for networkidle to succeed navigation</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public Task ShouldWaitForNetworkidleToSucceedNavigation()
             => NetworkIdleTestAsync(Page.MainFrame, () => Page.GoToAsync(TestConstants.ServerUrl + "/networkidle.html", LifecycleEvent.Networkidle));
 
         /// <playwright-file>page-network-idle.spec.ts</playwright-file>
         /// <playwright-it>should wait for networkidle to succeed navigation with request from previous navigation</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForToSucceedNavigationWithRequestFromPreviousNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>page-network-idle.spec.ts</playwright-file>
         /// <playwright-it>should wait for networkidle in waitForNavigation</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public Task ShouldWaitForInWaitForNavigation()
             => NetworkIdleTestAsync(
                 Page.MainFrame,
@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>page-network-idle.spec.ts</playwright-file>
         /// <playwright-it>should wait for networkidle in setContent</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForInSetContent()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -74,7 +74,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>page-network-idle.spec.ts</playwright-file>
         /// <playwright-it>should wait for networkidle in setContent with request from previous navigation</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForNetworkidleInSetContentWithRequestFromPreviousNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -88,7 +88,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>page-network-idle.spec.ts</playwright-file>
         /// <playwright-it>should wait for networkidle when navigating iframe</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForNetworkidleWhenNavigatingIframe()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
@@ -100,7 +100,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>page-network-idle.spec.ts</playwright-file>
         /// <playwright-it>should wait for networkidle in setContent from the child frame</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForInSetContentFromTheChildFrame()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -112,7 +112,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>page-network-idle.spec.ts</playwright-file>
         /// <playwright-it>should wait for networkidle from the child frame</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public Task ShouldWaitForFromTheChildFrame()
             => NetworkIdleTestAsync(
                 Page.MainFrame,
@@ -120,7 +120,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>page-network-idle.spec.ts</playwright-file>
         /// <playwright-it>should wait for networkidle from the popup</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForNetworkidleFromThePopup()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -175,20 +175,20 @@ namespace PlaywrightSharp.Tests
             await waitForLoadTask;
             Assert.False(actionTask.IsCompleted);
 
-            await firstFetchResourceRequested.WithTimeout();
+            await firstFetchResourceRequested.WithTimeout(TestConstants.DefaultTaskTimeout);
             Assert.False(actionTask.IsCompleted);
 
-            await fetches["/fetch-request-a.js"].Task.WithTimeout();
+            await fetches["/fetch-request-a.js"].Task.WithTimeout(TestConstants.DefaultTaskTimeout);
             await frame.Page.EvaluateAsync("() => window['fetchSecond']()");
 
             // Finishing first response should leave 2 requests alive and trigger networkidle2.
             responses["/fetch-request-a.js"].TrySetResult(true);
 
             // Wait for the second round to be requested.
-            await secondFetchResourceRequested.WithTimeout();
+            await secondFetchResourceRequested.WithTimeout(TestConstants.DefaultTaskTimeout);
             Assert.False(actionTask.IsCompleted);
 
-            await fetches["/fetch-request-b.js"].Task.WithTimeout();
+            await fetches["/fetch-request-b.js"].Task.WithTimeout(TestConstants.DefaultTaskTimeout);
             responses["/fetch-request-b.js"].TrySetResult(true);
 
             IResponse navigationResponse = null;

@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        // [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        // [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldWork()
         {
@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should isolate contexts</playwright-it>
-        /// [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        /// [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldIsolateContexts()
         {
@@ -65,7 +65,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should work with mixed content</playwright-it>
-        // [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        // [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldWorkWithMixedContent()
         {
@@ -84,7 +84,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should work with WebSocket</playwright-it>
-        // [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        // [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldWorkWithWebSocket()
         {
@@ -105,7 +105,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
         ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
         ///<playwright-it>should fail with WebSocket if not ignored</playwright-it>
-        // [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        // [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldFailWithWebSocketIfNotIgnored()
         {

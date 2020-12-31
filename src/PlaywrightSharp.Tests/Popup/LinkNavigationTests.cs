@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Popup
         ///<playwright-file>popup.spec.js</playwright-file>
         ///<playwright-describe>Link navigation</playwright-describe>
         ///<playwright-it>should inherit user agent from browser context</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldInheritUserAgentFromBrowserContext()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { UserAgent = "hey" });
@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests.Popup
         ///<playwright-file>popup.spec.js</playwright-file>
         ///<playwright-describe>Link navigation</playwright-describe>
         ///<playwright-it>should respect routes from browser context</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectRoutesFromBrowserContext()
         {
             await using var context = await Browser.NewContextAsync();

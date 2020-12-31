@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Click navigation</playwright-describe>
         ///<playwright-it>should work with _blank target</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBblankTarget()
         {
             Server.SetRoute("/empty.html", ctx =>
@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Click navigation</playwright-describe>
         ///<playwright-it>should work with cross-process _blank target</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCrossProcessBlankTarget()
         {
             Server.SetRoute("/empty.html", ctx =>

@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.SetViewportSizeAsync(new ViewportSize
@@ -40,7 +40,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>should take into account padding and border</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTakeIntoAccountPaddingAndBorder()
         {
             await Page.SetViewportSizeAsync(new ViewportSize
@@ -65,7 +65,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>should capture full element when larger than viewport in parallel</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCaptureFullElementWhenLargerThanViewportInParallel()
         {
             await Page.SetViewportSizeAsync(new ViewportSize
@@ -99,7 +99,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>should capture full element when larger than viewport</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCaptureFullElementWhenLargerThanViewport()
         {
             await Page.SetViewportSizeAsync(new ViewportSize
@@ -132,7 +132,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>should scroll element into view</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldScrollElementIntoView()
         {
             await Page.SetViewportSizeAsync(new ViewportSize
@@ -163,7 +163,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>should scroll 15000px into view</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldScroll15000pxIntoView()
         {
             await Page.SetViewportSizeAsync(500, 500);
@@ -190,7 +190,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>should work with a rotated element</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithARotatedElement()
         {
             await Page.SetViewportSizeAsync(new ViewportSize
@@ -214,7 +214,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>should fail to screenshot a detached element</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailToScreenshotADetachedElement()
         {
             await Page.SetContentAsync("<h1>remove this</h1>");
@@ -227,7 +227,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>should timeout waiting for visible</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForVisible()
         {
             await Page.SetContentAsync(@"<div style='width: 50px; height: 0'></div>");
@@ -239,7 +239,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>should wait for visible</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisible()
         {
             await Page.SetViewportSizeAsync(500, 500);
@@ -262,7 +262,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>should work for an element with fractional dimensions</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForAnElementWithFractionalDimensions()
         {
             await Page.SetContentAsync("<div style=\"width:48.51px;height:19.8px;border:1px solid black;\"></div>");
@@ -319,7 +319,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>should work for an element with an offset</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForAnElementWithAnOffset()
         {
             await Page.SetContentAsync("<div style=\"position:absolute; top: 10.3px; left: 20.4px;width:50.3px;height:20.2px;border:1px solid black;\"></div>");
@@ -330,7 +330,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>should take screenshots when default viewport is null</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTakeScreenshotsWhenDefaultViewportIsNull()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -355,7 +355,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>should take fullPage screenshots when default viewport is null</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTakeFullPageScreenshotsWhenDefaultViewportIsNull()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -376,7 +376,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>should restore default viewport after fullPage screenshot</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRestoreDefaultViewportAfterFullPageScreenshot()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -410,7 +410,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>should take element screenshot when default viewport is null and restore back</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTakeElementScreenshotWhenDefaultViewportIsNullAndRestoreBack()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -455,7 +455,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>should take screenshot of disabled button</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTakeScreenshotOfDisabledButton()
         {
             await Page.SetViewportSizeAsync(500, 500);
@@ -468,7 +468,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
         ///<playwright-it>path option should create subdirectories</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PathOptionShouldCreateSubdirectories()
         {
             await Page.SetViewportSizeAsync(500, 500);

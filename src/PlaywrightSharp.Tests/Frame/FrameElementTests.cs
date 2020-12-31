@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>frame.spec.js</playwright-file>
         ///<playwright-describe>Frame.frameElement</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>frame.spec.js</playwright-file>
         ///<playwright-describe>Frame.frameElement</playwright-describe>
         ///<playwright-it>should work with contentFrame</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithContentFrame()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests.Frame
         ///<playwright-file>frame.spec.js</playwright-file>
         ///<playwright-describe>Frame.frameElement</playwright-describe>
         ///<playwright-it>should throw when detached</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenDetached()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

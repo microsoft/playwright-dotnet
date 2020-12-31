@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>capabilities.spec.js</playwright-file>
         ///<playwright-it>should respect CSP</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectCSP()
         {
             Server.SetRoute("/empty.html", context =>

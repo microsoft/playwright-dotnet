@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.emulateMedia colorScheme</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.EmulateMediaAsync(ColorScheme.Light);
@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.emulateMedia colorScheme</playwright-describe>
         ///<playwright-it>should default to light</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDefaultToLight()
         {
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.emulateMedia colorScheme</playwright-describe>
         ///<playwright-it>should work in popup</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkInPopup()
         {
             await using (var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -123,7 +123,7 @@ namespace PlaywrightSharp.Tests.Emulation
         ///<playwright-file>emulation.spec.js</playwright-file>
         ///<playwright-describe>Page.emulateMedia colorScheme</playwright-describe>
         ///<playwright-it>should work in cross-process iframe</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkInCrossProcessIframe()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions

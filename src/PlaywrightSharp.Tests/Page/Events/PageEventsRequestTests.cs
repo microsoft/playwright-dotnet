@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Request</playwright-describe>
         ///<playwright-it>should fire for navigation requests</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireForNavigationRequests()
         {
             var requests = new List<IRequest>();
@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Request</playwright-describe>
         ///<playwright-it>should fire for iframes</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireForIframes()
         {
             var requests = new List<IRequest>();
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Request</playwright-describe>
         ///<playwright-it>should fire for fetches</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireForFetches()
         {
             var requests = new List<IRequest>();
@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Request</playwright-describe>
         ///<playwright-it>should report requests and responses handled by service worker</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportRequestsAndResponsesHandledByServiceWorker()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/serviceworkers/fetchdummy/sw.html");

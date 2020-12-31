@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.PageError</playwright-describe>
         ///<playwright-it>should fire</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFire()
         {
             var (error, _) = await TaskUtils.WhenAll(
@@ -56,7 +56,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.PageError</playwright-describe>
         ///<playwright-it>should handle odd values</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHandleOddValues()
         {
             object[][] cases = new object[][]

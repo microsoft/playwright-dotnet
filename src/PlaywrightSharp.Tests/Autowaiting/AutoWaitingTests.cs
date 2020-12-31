@@ -142,7 +142,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should await navigation when assigning location twice</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAwaitNavigationWhenAssigningLocationTwice()
         {
             var messages = new List<string>();
@@ -218,7 +218,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should work with noWaitAfter: true</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoWaitAfterTrue()
         {
             var messages = new List<string>();
@@ -260,7 +260,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         ///<playwright-file>autowaiting.spec.js</playwright-file>
         ///<playwright-describe>Auto waiting</playwright-describe>
         ///<playwright-it>should work with goto following click</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithGotoFollowingClick()
         {
             var messages = new List<string>();

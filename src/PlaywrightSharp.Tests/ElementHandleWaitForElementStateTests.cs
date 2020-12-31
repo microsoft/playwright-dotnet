@@ -18,7 +18,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
         ///<playwright-it>should wait for visible</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisible()
         {
             await Page.SetContentAsync("<div style='display:none'>content</div>");
@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
         ///<playwright-it>should wait for already visible</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForAlreadyVisible()
         {
             await Page.SetContentAsync("<div>content</div>");
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
         ///<playwright-it>should timeout waiting for visible</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForVisible()
         {
             await Page.SetContentAsync("<div style='display:none'>content</div>");
@@ -53,7 +53,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
         ///<playwright-it>should throw waiting for visible when detached</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWaitingForVisibleWhenDetached()
         {
             await Page.SetContentAsync("<div style='display:none'>content</div>");
@@ -66,7 +66,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
         ///<playwright-it>should wait for hidden</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForHidden()
         {
             await Page.SetContentAsync("<div>content</div>");
@@ -80,7 +80,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
         ///<playwright-it>should wait for already hidden</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForAlreadyHidden()
         {
             await Page.SetContentAsync("<div></div>");
@@ -90,7 +90,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
         ///<playwright-it>should throw waiting for hidden when detached</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWaitingForHiddenWhenDetached()
         {
             await Page.SetContentAsync("<div>content</div>");
@@ -104,7 +104,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
         ///<playwright-it>should wait for enabled button</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForEnabledButton()
         {
             await Page.SetContentAsync("<button disabled><span>Target</span></button>");
@@ -118,7 +118,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
         ///<playwright-it>should throw waiting for enabled when detached</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWaitingForEnabledWhenDetached()
         {
             await Page.SetContentAsync("<button disabled>Target</button>");
@@ -131,7 +131,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
         ///<playwright-it>should wait for disabled button</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForDisabledButton()
         {
             await Page.SetContentAsync("<button><span>Target</span></button>");
@@ -145,7 +145,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
         ///<playwright-it>should wait for stable position</playwright-it>
-        [SkipBrowserAndPlatformFact(skipFirefox: true, skipLinux: true)]
+        [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWaitForStablePosition()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
