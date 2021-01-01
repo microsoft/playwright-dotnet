@@ -158,10 +158,12 @@ namespace PlaywrightSharp.Transport
 
                 if (_data.Count < _currentMessageSize)
                 {
+                    _logger?.LogInformation("RAW: WAITING FOR MORE " + (_currentMessageSize - _data.Count));
                     break;
                 }
 
                 string result = System.Text.Encoding.UTF8.GetString(_data.GetRange(0, _currentMessageSize.Value).ToArray());
+                _logger?.LogInformation("RAW: message completed " + result);
                 _data.RemoveRange(0, _currentMessageSize.Value);
                 _currentMessageSize = null;
                 MessageReceived?.Invoke(this, new MessageReceivedEventArgs(result));
