@@ -97,7 +97,6 @@ namespace PlaywrightSharp
         /// Dangerous option; use with care. Defaults to false.</param>
         /// <param name="ignoredDefaultArgs">if <paramref name="ignoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter default arguments.</param>
         /// <param name="env">Specify environment variables that will be visible to browser. Defaults to Environment variables.</param>
-        /// <param name="firefoxUserPrefs">Firefox user preferences. Learn more about the Firefox user preferences at about:config.</param>
         /// <param name="proxy">Network proxy settings.</param>
         /// <param name="userAgent">Specific user agent to use in this context.</param>
         /// <param name="bypassCSP">Toggles bypassing page's Content-Security-Policy.</param>
@@ -139,7 +138,6 @@ namespace PlaywrightSharp
             bool? ignoreDefaultArgs = null,
             string[] ignoredDefaultArgs = null,
             Dictionary<string, string> env = null,
-            Dictionary<string, object> firefoxUserPrefs = null,
             ProxySettings proxy = null,
             string userAgent = null,
             bool? bypassCSP = null,
@@ -180,7 +178,6 @@ namespace PlaywrightSharp
         /// Dangerous option; use with care. Defaults to false.</param>
         /// <param name="ignoredDefaultArgs">if <paramref name="ignoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter default arguments.</param>
         /// <param name="env">Specify environment variables that will be visible to browser. Defaults to Environment variables.</param>
-        /// <param name="firefoxUserPrefs">Firefox user preferences. Learn more about the Firefox user preferences at about:config.</param>
         /// <param name="proxy">Network proxy settings.</param>
         /// <param name="userAgent">Specific user agent to use in this context.</param>
         /// <param name="bypassCSP">Toggles bypassing page's Content-Security-Policy.</param>
@@ -221,7 +218,6 @@ namespace PlaywrightSharp
             bool? ignoreDefaultArgs = null,
             string[] ignoredDefaultArgs = null,
             Dictionary<string, string> env = null,
-            Dictionary<string, object> firefoxUserPrefs = null,
             ProxySettings proxy = null,
             string userAgent = null,
             bool? bypassCSP = null,

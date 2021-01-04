@@ -8,7 +8,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// Options for <seealso cref="IBrowserType.LaunchPersistentContextAsync(string, LaunchPersistentOptions)"/>.
     /// </summary>
-    public class LaunchPersistentOptions : LaunchOptions
+    public class LaunchPersistentOptions : LaunchOptionsBase
     {
         /// <summary>
         /// Sets a consistent viewport for each page. Defaults to an 800x600 viewport. null disables the default viewport.
