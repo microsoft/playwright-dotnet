@@ -262,7 +262,14 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchOptions options)
-            => LaunchPersistentContextAsync(userDataDir, options?.ToPersistentOptions() ?? new LaunchPersistentOptions());
+        {
+            if (options?.FirefoxUserPrefs != null)
+            {
+                throw new ArgumentException($"{nameof(LaunchOptions.FirefoxUserPrefs)} option is not supported in LaunchPersistentContextAsync.");
+            }
+
+            return LaunchPersistentContextAsync(userDataDir, options?.ToPersistentOptions() ?? new LaunchPersistentOptions());
+        }
 
         /// <inheritdoc />
         public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options)
