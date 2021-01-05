@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace PlaywrightSharp.BuildTasks.ApiCheckerModels
+namespace PlaywrightSharp.BuildTasks.Models.Api
 {
     internal class PlaywrightEntity
     {
