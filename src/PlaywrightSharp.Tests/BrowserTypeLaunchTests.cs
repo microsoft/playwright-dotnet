@@ -171,5 +171,20 @@ namespace PlaywrightSharp.Tests
 
             await using var browser = await BrowserType.LaunchAsync(options);
         }
+
+        /// <summary>
+        /// PuppeteerSharp test. It's not in upstream
+        /// </summary>
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldValidateFirefoxUserPrefs()
+        {
+            var options = TestConstants.GetDefaultBrowserOptions();
+            options.FirefoxUserPrefs = new Dictionary<string, object>
+            {
+                ["Foo"] = "Var"
+            };
+
+            await Assert.ThrowsAsync<ArgumentException>(() => BrowserType.LaunchPersistentContextAsync("foo", options));
+        }
     }
 }

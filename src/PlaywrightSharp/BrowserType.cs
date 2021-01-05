@@ -118,7 +118,6 @@ namespace PlaywrightSharp
             bool? ignoreDefaultArgs = null,
             string[] ignoredDefaultArgs = null,
             Dictionary<string, string> env = null,
-            Dictionary<string, object> firefoxUserPrefs = null,
             ProxySettings proxy = null,
             string userAgent = null,
             bool? bypassCSP = null,
@@ -158,7 +157,6 @@ namespace PlaywrightSharp
                     IgnoreDefaultArgs = ignoreDefaultArgs,
                     IgnoredDefaultArgs = ignoredDefaultArgs,
                     Env = env,
-                    FirefoxUserPrefs = firefoxUserPrefs,
                     Proxy = proxy,
                     Viewport = viewport,
                     UserAgent = userAgent,
@@ -199,7 +197,6 @@ namespace PlaywrightSharp
             bool? ignoreDefaultArgs = null,
             string[] ignoredDefaultArgs = null,
             Dictionary<string, string> env = null,
-            Dictionary<string, object> firefoxUserPrefs = null,
             ProxySettings proxy = null,
             string userAgent = null,
             bool? bypassCSP = null,
@@ -239,7 +236,6 @@ namespace PlaywrightSharp
                     IgnoreDefaultArgs = ignoreDefaultArgs,
                     IgnoredDefaultArgs = ignoredDefaultArgs,
                     Env = env,
-                    FirefoxUserPrefs = firefoxUserPrefs,
                     Proxy = proxy,
                     UserAgent = userAgent,
                     BypassCSP = bypassCSP,
@@ -266,7 +262,14 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchOptions options)
-            => LaunchPersistentContextAsync(userDataDir, options?.ToPersistentOptions() ?? new LaunchPersistentOptions());
+        {
+            if (options?.FirefoxUserPrefs != null)
+            {
+                throw new ArgumentException($"{nameof(LaunchOptions.FirefoxUserPrefs)} option is not supported in LaunchPersistentContextAsync.");
+            }
+
+            return LaunchPersistentContextAsync(userDataDir, options?.ToPersistentOptions() ?? new LaunchPersistentOptions());
+        }
 
         /// <inheritdoc />
         public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options)
