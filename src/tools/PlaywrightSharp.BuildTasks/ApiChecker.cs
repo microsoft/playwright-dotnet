@@ -18,7 +18,9 @@ namespace PlaywrightSharp.BuildTasks
     {
         public string BasePath { get; set; }
 
-        public string TargetDir { get; set; }
+        public string AssemblyPath { get; set; }
+
+        public bool IsBuildTask { get; set; } = true;
 
         public override bool Execute()
         {
@@ -33,7 +35,7 @@ namespace PlaywrightSharp.BuildTasks
                 return null;
             };
 
-            var assembly = Assembly.LoadFrom(Path.Combine(TargetDir, "PlaywrightSharp.dll"));
+            var assembly = Assembly.LoadFrom(Path.Combine(AssemblyPath, "PlaywrightSharp.dll"));
 
             var report = new StringBuilder("<html><body><ul>");
             string json = File.ReadAllText(Path.Combine(BasePath, "src", "PlaywrightSharp", "runtimes", "api.json"));
@@ -131,16 +133,28 @@ namespace PlaywrightSharp.BuildTasks
 
                 if (mismatch == null)
                 {
-                    Log.LogWarning("ApiChecker", "PW006", null, null, 0, 0, 0, 0, $"{name} entity not found");
+                    LogWarning("PW006", $"{name} entity not found");
 
                     report.AppendLine("<li style='color: red'>");
-                    report.AppendLine($"{name} NOT FOUND");
+                    report.AppendLine($"{name} NOT FOUND (PW006)");
                     report.AppendLine("</li>");
                 }
                 else
                 {
                     report.AppendLine($"<li style='color: coral'>{name} NOT FOUND ==> {mismatch.Justification}</li>");
                 }
+            }
+        }
+
+        private void LogWarning(string warningCode, string message)
+        {
+            if (IsBuildTask)
+            {
+                Log.LogWarning("ApiChecker", warningCode, null, null, 0, 0, 0, 0, message);
+            }
+            else
+            {
+                Console.WriteLine($"{warningCode}: {message}");
             }
         }
 
@@ -207,7 +221,7 @@ namespace PlaywrightSharp.BuildTasks
                     foreach (var kv in member.Args)
                     {
                         // we flatten options
-                        if (kv.Key == "options")
+                        if (kv.Value.Type.Properties?.Any() == true && !playwrightSharpMethod.GetParameters().Any(p => IsParameterNameMatch(p.Name, kv.Key)))
                         {
                             foreach (var arg in kv.Value.Type.Properties)
                             {
@@ -248,9 +262,9 @@ namespace PlaywrightSharp.BuildTasks
 
                     if (mismatch == null)
                     {
-                        Log.LogWarning("ApiChecker", "PW007", null, null, 0, 0, 0, 0, $"{playwrightSharpType.Name}.{memberName} not found");
+                        LogWarning("PW007", $"{playwrightSharpType.Name}.{memberName} not found");
                         report.AppendLine("<li style='color: red'>");
-                        report.AppendLine($"{memberName} NOT FOUND");
+                        report.AppendLine($"{memberName} NOT FOUND (PW007)");
                         report.AppendLine("</li>");
                     }
                     else
@@ -307,11 +321,11 @@ namespace PlaywrightSharp.BuildTasks
                         else
                         {
                             report.AppendLine("<li style='color: coral'>");
-                            report.AppendLine($"{playwrightSharpType.Name}.{name} ({type.ToHtml()}): found as {playwrightSharpArgument.Name} but with type {playwrightSharpArgument.ParameterType}");
+                            report.AppendLine($"{playwrightSharpType.Name}.{name} ({type.ToHtml()}): found as {playwrightSharpArgument.Name} but with type {playwrightSharpArgument.ParameterType} (PW001)");
 
                             if (mismatch == null)
                             {
-                                Log.LogWarning("ApiChecker", "PW001", null, null, 0, 0, 0, 0, $"{playwrightSharpType.Name}.{name} ({type.ToHtml()}): found as {playwrightSharpArgument.Name} but with type {playwrightSharpArgument.ParameterType}");
+                                LogWarning("PW001", $"{playwrightSharpType.Name}.{playwrightSharpMethod.Name} => {name} ({type.ToHtml()}): found as {playwrightSharpArgument.Name} but with type {playwrightSharpArgument.ParameterType}");
                             }
                         }
                     }
@@ -329,7 +343,28 @@ namespace PlaywrightSharp.BuildTasks
                         {
                             foreach (var kv in arg.Type.Properties)
                             {
-                                EvaluateProperty(kv.Key, kv.Value, GetBaseType(playwrightSharpArgument.ParameterType), report, mismatches);
+                                //Look for a matching override
+                                var overrideMethod = playwrightSharpType.GetMethods().FirstOrDefault(m =>
+                                    m.Name == playwrightSharpMethod.Name &&
+                                    m.GetParameters().Any(p => IsParameterNameMatch(p.Name, name.ToLower()) && IsSameType(p.ParameterType, type)));
+
+                                if (overrideMethod != null)
+                                {
+                                    playwrightSharpArgument = overrideMethod.GetParameters().FirstOrDefault(p => IsParameterNameMatch(p.Name, name));
+                                }
+
+                                if ((
+                                        playwrightSharpArgument.ParameterType.IsInterface ||
+                                        playwrightSharpArgument.ParameterType.IsClass
+                                    ) &&
+                                    playwrightSharpArgument.ParameterType != typeof(string))
+                                {
+                                    EvaluateProperty(kv.Key, kv.Value, GetBaseType(playwrightSharpArgument.ParameterType), report, mismatches);
+                                }
+                                else
+                                {
+                                    EvaluateArgument(kv.Key, kv.Value, playwrightSharpType, playwrightSharpMethod, report, membersQueue, mismatches);
+                                }
                             }
                         }
 
@@ -354,15 +389,11 @@ namespace PlaywrightSharp.BuildTasks
                     }
                     else
                     {
-                        report.AppendLine("<li style='color: red'>");
-                        report.AppendLine($"{name} NOT FOUND");
-                        report.AppendLine("</li>");
-
                         if (mismatch == null)
                         {
-                            Log.LogWarning("ApiChecker", "PW002", null, null, 0, 0, 0, 0, $"{name} argument not found in {playwrightSharpType.Name}.{playwrightSharpMethod.Name}");
+                            LogWarning("PW002", $"{playwrightSharpType.Name}.{playwrightSharpMethod.Name} => {name} argument not found.");
                             report.AppendLine("<li style='color: red'>");
-                            report.AppendLine($"{name} NOT FOUND");
+                            report.AppendLine($"{name} NOT FOUND (PW002)");
                             report.AppendLine("</li>");
                         }
                         else
@@ -442,7 +473,7 @@ namespace PlaywrightSharp.BuildTasks
         {
             var playwrightSharpProperty = playwrightSharpType.GetProperties().FirstOrDefault(p => p.Name.ToLower() == memberName.ToLower());
             var mismatch = mismatches.Entities.FirstOrDefault(e => e.ClassName == playwrightSharpType.Name)?
-                .Members.FirstOrDefault(m => m.MemberName == memberName);
+                .Members.FirstOrDefault(m => m.UpstreamMemberName == memberName);
 
             if (playwrightSharpProperty != null)
             {
@@ -450,7 +481,7 @@ namespace PlaywrightSharp.BuildTasks
                 {
                     report.AppendLine("<li style='color: coral'>");
 
-                    Log.LogWarning("ApiChecker", "PW003", null, null, 0, 0, 0, 0, $"{playwrightSharpType.Name}.{memberName} ({arg.Type.Name.ToHtml()}): found as as Property {playwrightSharpProperty.Name} with type ({playwrightSharpProperty.PropertyType})");
+                    LogWarning("PW003", $"{playwrightSharpType.Name}.{memberName} ({arg.Type.Name.ToHtml()}): found as as Property {playwrightSharpProperty.Name} with type ({playwrightSharpProperty.PropertyType})");
                 }
                 else
                 {
@@ -462,20 +493,16 @@ namespace PlaywrightSharp.BuildTasks
             }
             else
             {
-                report.AppendLine("<li style='color: red'>");
-                report.AppendLine($"{memberName} NOT FOUND");
-                report.AppendLine("</li>");
-
                 if (mismatch == null)
                 {
-                    Log.LogWarning("ApiChecker", "PW004", null, null, 0, 0, 0, 0, $"{playwrightSharpType.Name}.{memberName} not found");
+                    LogWarning("PW004", $"{playwrightSharpType.Name}.{memberName} not found");
                     report.AppendLine("<li style='color: red'>");
-                    report.AppendLine($"{memberName} NOT FOUND");
+                    report.AppendLine($"{memberName} NOT FOUND (PW004)");
                     report.AppendLine("</li>");
                 }
                 else
                 {
-                    report.AppendLine("<li style='color: red'>");
+                    report.AppendLine("<li style='color: coral'>");
                     report.AppendLine($"{memberName} NOT FOUND ==> {mismatch.Justification}");
                     report.AppendLine("</li>");
                 }
@@ -503,13 +530,13 @@ namespace PlaywrightSharp.BuildTasks
             {
 
                 var mismatch = mismatches.Entities.FirstOrDefault(e => e.ClassName == playwrightSharpType.Name)?
-                            .Members.FirstOrDefault(m => m.UpstreamMemberName == memberName);
+                    .Members.FirstOrDefault(m => m.UpstreamMemberName == memberName);
 
                 if (mismatch == null)
                 {
-                    Log.LogWarning("ApiChecker", "PW005", null, null, 0, 0, 0, 0, $"{playwrightSharpType.Name}.{memberName} not found");
+                    LogWarning("PW005", $"{playwrightSharpType.Name}.{memberName} not found");
                     report.AppendLine("<li style='color: red'>");
-                    report.AppendLine($"{memberName} NOT FOUND");
+                    report.AppendLine($"{memberName} NOT FOUND (PW005)");
                     report.AppendLine("</li>");
                 }
                 else

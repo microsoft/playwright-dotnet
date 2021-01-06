@@ -239,7 +239,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             });
 
             await page.GoToAsync(TestConstants.ServerUrl + "/csp.html");
-            await page.AddScriptTagAsync(script: "window.__injected = 42;");
+            await page.AddScriptTagAsync(content: "window.__injected = 42;");
             Assert.Equal(42, await page.EvaluateAsync<int>("window.__injected"));
 
             tmp.Dispose();

@@ -57,7 +57,7 @@
         <ConvertToAbsolutePath Paths="$(ProjectDir)\..\..\">
             <Output TaskParameter="AbsolutePaths" PropertyName="BasePath" />
         </ConvertToAbsolutePath>
-        <PlaywrightSharp.BuildTasks.ApiChecker BasePath="$(BasePath)" TargetDir="$(TargetDir)" />
+        <PlaywrightSharp.BuildTasks.ApiChecker BasePath="$(BasePath)" AssemblyPath="$(TargetDir)" />
     </Target>
     <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
         <ContentWithTargetPath Include="runtimes\win-x64\*.*">

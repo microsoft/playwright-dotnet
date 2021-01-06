@@ -144,7 +144,7 @@ namespace PlaywrightSharp.Tests.Chromium
         public async Task ShouldIgnoreInjectedStylesheets()
         {
             await Page.Coverage.StartCSSCoverageAsync();
-            await Page.AddStyleTagAsync(style: "body { margin: 10px;}");
+            await Page.AddStyleTagAsync(content: "body { margin: 10px;}");
             // trigger style recalc
             string margin = await Page.EvaluateAsync<string>("window.getComputedStyle(document.body).margin");
             Assert.Equal("10px", margin);
