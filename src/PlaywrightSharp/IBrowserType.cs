@@ -39,9 +39,9 @@ namespace PlaywrightSharp
         /// <param name="timeout">Maximum time in milliseconds to wait for the browser instance to start.</param>
         /// <param name="dumpIO">Whether to pipe browser process stdout and stderr into process.stdout and process.stderr. Defaults to false.</param>
         /// <param name="slowMo">Slows down PlaywrightSharp operations by the specified amount of milliseconds. Useful so that you can see what is going on.</param>
-        /// <param name="ignoreDefaultArgs">If true, Playwright does not pass its own configurations args and only uses the ones from args.
+        /// <param name="ignoreAllDefaultArgs">If true, Playwright does not pass its own configurations args and only uses the ones from args.
         /// Dangerous option; use with care. Defaults to false.</param>
-        /// <param name="ignoredDefaultArgs">if <paramref name="ignoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter default arguments.</param>
+        /// <param name="ignoreDefaultArgs">if <paramref name="ignoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter default arguments.</param>
         /// <param name="env">Specify environment variables that will be visible to browser. Defaults to Environment variables.</param>
         /// <param name="firefoxUserPrefs">Firefox user preferences. Learn more about the Firefox user preferences at about:config.</param>
         /// <param name="proxy">Network proxy settings.</param>
@@ -61,8 +61,8 @@ namespace PlaywrightSharp
             int? timeout = null,
             bool? dumpIO = null,
             int? slowMo = null,
-            bool? ignoreDefaultArgs = null,
-            string[] ignoredDefaultArgs = null,
+            bool? ignoreAllDefaultArgs = null,
+            string[] ignoreDefaultArgs = null,
             Dictionary<string, string> env = null,
             Dictionary<string, object> firefoxUserPrefs = null,
             ProxySettings proxy = null,
@@ -93,9 +93,9 @@ namespace PlaywrightSharp
         /// <param name="timeout">Maximum time in milliseconds to wait for the browser instance to start.</param>
         /// <param name="dumpIO">Whether to pipe browser process stdout and stderr into process.stdout and process.stderr. Defaults to false.</param>
         /// <param name="slowMo">Slows down PlaywrightSharp operations by the specified amount of milliseconds. Useful so that you can see what is going on.</param>
-        /// <param name="ignoreDefaultArgs">If true, Playwright does not pass its own configurations args and only uses the ones from args.
+        /// <param name="ignoreAllDefaultArgs">If true, Playwright does not pass its own configurations args and only uses the ones from args.
         /// Dangerous option; use with care. Defaults to false.</param>
-        /// <param name="ignoredDefaultArgs">if <paramref name="ignoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter default arguments.</param>
+        /// <param name="ignoreDefaultArgs">if <paramref name="ignoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter default arguments.</param>
         /// <param name="env">Specify environment variables that will be visible to browser. Defaults to Environment variables.</param>
         /// <param name="proxy">Network proxy settings.</param>
         /// <param name="userAgent">Specific user agent to use in this context.</param>
@@ -135,8 +135,8 @@ namespace PlaywrightSharp
             int? timeout = null,
             bool? dumpIO = null,
             int? slowMo = null,
-            bool? ignoreDefaultArgs = null,
-            string[] ignoredDefaultArgs = null,
+            bool? ignoreAllDefaultArgs = null,
+            string[] ignoreDefaultArgs = null,
             Dictionary<string, string> env = null,
             ProxySettings proxy = null,
             string userAgent = null,
@@ -174,9 +174,9 @@ namespace PlaywrightSharp
         /// <param name="timeout">Maximum time in milliseconds to wait for the browser instance to start.</param>
         /// <param name="dumpIO">Whether to pipe browser process stdout and stderr into process.stdout and process.stderr. Defaults to false.</param>
         /// <param name="slowMo">Slows down PlaywrightSharp operations by the specified amount of milliseconds. Useful so that you can see what is going on.</param>
-        /// <param name="ignoreDefaultArgs">If true, Playwright does not pass its own configurations args and only uses the ones from args.
+        /// <param name="ignoreAllDefaultArgs">If true, Playwright does not pass its own configurations args and only uses the ones from args.
         /// Dangerous option; use with care. Defaults to false.</param>
-        /// <param name="ignoredDefaultArgs">if <paramref name="ignoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter default arguments.</param>
+        /// <param name="ignoreDefaultArgs">if <paramref name="ignoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter default arguments.</param>
         /// <param name="env">Specify environment variables that will be visible to browser. Defaults to Environment variables.</param>
         /// <param name="proxy">Network proxy settings.</param>
         /// <param name="userAgent">Specific user agent to use in this context.</param>
@@ -215,8 +215,8 @@ namespace PlaywrightSharp
             int? timeout = null,
             bool? dumpIO = null,
             int? slowMo = null,
-            bool? ignoreDefaultArgs = null,
-            string[] ignoredDefaultArgs = null,
+            bool? ignoreAllDefaultArgs = null,
+            string[] ignoreDefaultArgs = null,
             Dictionary<string, string> env = null,
             ProxySettings proxy = null,
             string userAgent = null,
