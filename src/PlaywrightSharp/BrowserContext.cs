@@ -18,7 +18,6 @@ namespace PlaywrightSharp
     {
         private readonly TaskCompletionSource<bool> _closeTcs = new();
         private readonly List<(IEvent ContextEvent, TaskCompletionSource<bool> WaitTcs)> _waitForCancellationTcs = new();
-        private readonly TimeoutSettings _timeoutSettings = new();
         private readonly Dictionary<string, Delegate> _bindings = new();
         private readonly BrowserContextInitializer _initializer;
         private List<RouteSetting> _routes = new();
@@ -67,10 +66,10 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public int DefaultTimeout
         {
-            get => _timeoutSettings.Timeout;
+            get => TimeoutSettings.Timeout;
             set
             {
-                _timeoutSettings.SetDefaultTimeout(value);
+                TimeoutSettings.SetDefaultTimeout(value);
                 _ = Channel.SetDefaultTimeoutNoReplyAsync(value);
             }
         }
@@ -78,10 +77,10 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public int DefaultNavigationTimeout
         {
-            get => _timeoutSettings.NavigationTimeout;
+            get => TimeoutSettings.NavigationTimeout;
             set
             {
-                _timeoutSettings.SetDefaultNavigationTimeout(value);
+                TimeoutSettings.SetDefaultNavigationTimeout(value);
                 _ = Channel.SetDefaultNavigationTimeoutNoReplyAsync(value);
             }
         }
@@ -97,6 +96,8 @@ namespace PlaywrightSharp
         internal string BrowserName => _initializer.BrowserName;
 
         internal BrowserContextOptions Options { get; set; }
+
+        internal TimeoutSettings TimeoutSettings { get; } = new();
 
         /// <inheritdoc />
         public async Task<IPage> NewPageAsync(string url = null)
@@ -229,7 +230,7 @@ namespace PlaywrightSharp
                 throw new ArgumentException("Page event is required", nameof(e));
             }
 
-            timeout ??= _timeoutSettings.Timeout;
+            timeout ??= TimeoutSettings.Timeout;
             using var waiter = new Waiter();
             waiter.RejectOnTimeout(timeout, $"Timeout while waiting for event \"{typeof(T)}\"");
 

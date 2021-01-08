@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>network-request.spec.js</playwright-file>
         ///<playwright-it>should work for main frame navigation request</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForMainFrameNavigationRequests()
         {
             var requests = new List<IRequest>();
@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>network-request.spec.js</playwright-file>
         ///<playwright-it>should work for subframe navigation request</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForSubframeNavigationRequest()
         {
             var requests = new List<IRequest>();
@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>network-request.spec.js</playwright-file>
         ///<playwright-it>should work for fetch requests</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForFetchRequests()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -59,7 +59,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>network-request.spec.js</playwright-file>
         ///<playwright-it>should return headers</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnHeaders()
         {
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
@@ -84,7 +84,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>network-request.spec.js</playwright-file>
         ///<playwright-it>should return postData</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnPostData()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -98,7 +98,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>network-request.spec.js</playwright-file>
         ///<playwright-it>should work with binary post data</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBinaryPostData()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -118,7 +118,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>network-request.spec.js</playwright-file>
         ///<playwright-it>should work with binary post data and interception</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBinaryPostDataAndInterception()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -139,7 +139,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>network-request.spec.js</playwright-file>
         ///<playwright-it>should be |undefined| when there is no post data</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeUndefinedWhenThereIsNoPostData()
         {
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
@@ -149,7 +149,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>network-request.spec.js</playwright-file>
         ///<playwright-it>should parse the json post data</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldParseTheJsonPostData()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -163,7 +163,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>network-request.spec.js</playwright-file>
         ///<playwright-it>should parse the data if content-type is application/x-www-form-urlencoded</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldParseTheDataIfContentTypeIsApplicationXWwwFormUrlencoded()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -181,7 +181,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>network-request.spec.js</playwright-file>
         ///<playwright-it>should be |undefined| when there is no post data</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeUndefinedWhenThereIsNoPostData2()
         {
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
@@ -190,7 +190,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>network-request.spec.js</playwright-file>
         ///<playwright-it>should return event source</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEventSource()
         {
             const string sseMessage = "{\"foo\": \"bar\"}";
@@ -222,7 +222,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-it>should return navigation bit</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNavigationBit()
         {
             var requests = new Dictionary<string, IRequest>();
@@ -239,7 +239,7 @@ namespace PlaywrightSharp.Tests
         ///<playwright-file>network.spec.js</playwright-file>
         ///<playwright-describe>Request.isNavigationRequest</playwright-describe>
         ///<playwright-it>should return navigation bit when navigating to image</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNavigationBitWhenNavigatingToImage()
         {
             var requests = new List<IRequest>();

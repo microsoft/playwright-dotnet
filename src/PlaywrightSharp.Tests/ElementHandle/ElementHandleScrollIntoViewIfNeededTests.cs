@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.scrollIntoViewIfNeeded</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/offscreenbuttons.html");
@@ -44,7 +44,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.scrollIntoViewIfNeeded</playwright-describe>
         ///<playwright-it>should throw for detached element</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForDetachedElement()
         {
             await Page.SetContentAsync("<div>Hello</div>");
@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.scrollIntoViewIfNeeded</playwright-describe>
         ///<playwright-it>should wait for display:none to become visible</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForDisplayNoneToBecomeVisible()
         {
             await Page.SetContentAsync("<div style=\"display: none\">Hello</div>");
@@ -67,7 +67,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.scrollIntoViewIfNeeded</playwright-describe>
         ///<playwright-it>should wait for display:contents to become visible</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForDisplayContentsToBecomeVisible()
         {
             await Page.SetContentAsync("<div style=\"display: contents\">Hello</div>");
@@ -77,7 +77,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.scrollIntoViewIfNeeded</playwright-describe>
         ///<playwright-it>should wait for visibility:hidden to become visible</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisibilityHiddenToBecomeVisible()
         {
             await Page.SetContentAsync("<div style=\"visibility:hidden\">Hello</div>");
@@ -87,7 +87,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.scrollIntoViewIfNeeded</playwright-describe>
         ///<playwright-it>should wait for zero-sized element to become visible</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForZeroSiedElementToBecomeVisible()
         {
             await Page.SetContentAsync("<div style=\"height:0\">Hello</div>");
@@ -97,7 +97,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.scrollIntoViewIfNeeded</playwright-describe>
         ///<playwright-it>should wait for nested display:none to become visible</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForNestedDisplayNoneToBecomeVisible()
         {
             await Page.SetContentAsync("<span style=\"display: none\"><div>Hello</div></span>");
@@ -107,7 +107,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>elementhandle.spec.js</playwright-file>
         ///<playwright-describe>ElementHandle.scrollIntoViewIfNeeded</playwright-describe>
         ///<playwright-it>should timeout waiting for visible</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForVisible()
         {
             await Page.SetContentAsync("<div style=\"display: none\">Hello</div>");

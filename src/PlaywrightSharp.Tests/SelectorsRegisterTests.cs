@@ -17,7 +17,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>selectors-register.spec.js</playwright-file>
         ///<playwright-it>should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             const string createTagSelector = @"({
@@ -44,7 +44,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>selectors-register.spec.js</playwright-file>
         ///<playwright-it>should work with path</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithPath()
         {
             await TestUtils.RegisterEngineWithPathAsync(Playwright, "foo", TestUtils.GetWebServerFile("sectionselectorengine.js"));
@@ -54,7 +54,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>selectors-register.spec.js</playwright-file>
         ///<playwright-it>should work in main and isolated world</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkInMainAndIsolatedWorld()
         {
             const string createTagSelector = @"({
@@ -90,7 +90,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>selectors-register.spec.js</playwright-file>
         ///<playwright-it>should handle errors</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHandleErrors()
         {
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.QuerySelectorAsync("neverregister=ignored"));

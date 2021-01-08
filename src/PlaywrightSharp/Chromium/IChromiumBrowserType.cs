@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Chromium
         /// <inheritdoc cref="IBrowserType.LaunchPersistentContextAsync(string, LaunchOptions)"/>
         new Task<IChromiumBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchOptions options);
 
-        /// <inheritdoc cref="IBrowserType.LaunchPersistentContextAsync(string, ViewportSize, bool?, string[], bool?, string, string, bool?, int?, bool?, int?, bool?, string[], Dictionary{string, string}, Dictionary{string, object}, ProxySettings, string, bool?, bool?, string, Geolocation, ContextPermission[], bool?, bool?, decimal?, Credentials, bool?, bool?, ColorScheme?, string, Dictionary{string, string}, bool?, bool?, bool?, bool?, RecordHarOptions, RecordVideoOptions)"/>
+        /// <inheritdoc cref="IBrowserType.LaunchPersistentContextAsync(string, ViewportSize, bool?, string[], bool?, string, string, bool?, int?, bool?, int?, bool?, string[], Dictionary{string, string}, ProxySettings, string, bool?, bool?, string, Geolocation, ContextPermission[], bool?, bool?, decimal?, Credentials, bool?, bool?, ColorScheme?, string, Dictionary{string, string}, bool?, bool?, bool?, bool?, RecordHarOptions, RecordVideoOptions)"/>
         new Task<IChromiumBrowserContext> LaunchPersistentContextAsync(
             string userDataDir,
             ViewportSize viewport,
@@ -51,7 +51,6 @@ namespace PlaywrightSharp.Chromium
             bool? ignoreDefaultArgs = null,
             string[] ignoredDefaultArgs = null,
             Dictionary<string, string> env = null,
-            Dictionary<string, object> firefoxUserPrefs = null,
             ProxySettings proxy = null,
             string userAgent = null,
             bool? bypassCSP = null,
@@ -75,7 +74,7 @@ namespace PlaywrightSharp.Chromium
             RecordHarOptions recordHar = null,
             RecordVideoOptions recordVideo = null);
 
-        /// <inheritdoc cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, string[], bool?, string, string, bool?, int?, bool?, int?, bool?, string[], Dictionary{string, string}, Dictionary{string, object}, ProxySettings, string, bool?, bool?, string, Geolocation, ContextPermission[], bool?, bool?, decimal?, Credentials, bool?, bool?, ColorScheme?, string, Dictionary{string, string}, bool?, bool?, bool?, bool?, RecordHarOptions, RecordVideoOptions)"/>
+        /// <inheritdoc cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, string[], bool?, string, string, bool?, int?, bool?, int?, bool?, string[], Dictionary{string, string}, ProxySettings, string, bool?, bool?, string, Geolocation, ContextPermission[], bool?, bool?, decimal?, Credentials, bool?, bool?, ColorScheme?, string, Dictionary{string, string}, bool?, bool?, bool?, bool?, RecordHarOptions, RecordVideoOptions)"/>
         new Task<IChromiumBrowserContext> LaunchPersistentContextAsync(
             string userDataDir,
             bool? headless = null,
@@ -90,7 +89,6 @@ namespace PlaywrightSharp.Chromium
             bool? ignoreDefaultArgs = null,
             string[] ignoredDefaultArgs = null,
             Dictionary<string, string> env = null,
-            Dictionary<string, object> firefoxUserPrefs = null,
             ProxySettings proxy = null,
             string userAgent = null,
             bool? bypassCSP = null,

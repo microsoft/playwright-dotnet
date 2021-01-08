@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>Page.Workers</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PageWorkers()
         {
             await TaskUtils.WhenAll(
@@ -37,7 +37,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should emit created and destroyed events</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitCreatedAndDestroyedEvents()
         {
             var workerCreatedTcs = new TaskCompletionSource<IWorker>();
@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should report console logs</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportConsoleLogs()
         {
             var (message, _) = await TaskUtils.WhenAll(
@@ -71,7 +71,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should have JSHandles for console logs</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveJSHandlesForConsoleLogs()
         {
             var consoleTcs = new TaskCompletionSource<ConsoleMessage>();
@@ -88,7 +88,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should evaluate</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEvaluate()
         {
             var workerCreatedTask = Page.WaitForEventAsync(PageEvent.Worker);
@@ -101,7 +101,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should report errors</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportErrors()
         {
             var errorTcs = new TaskCompletionSource<string>();
@@ -121,7 +121,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should clear upon navigation</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearUponNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -141,7 +141,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should clear upon cross-process navigation</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearUponCrossProcessNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -161,7 +161,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should report network activity</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNetworkActivity()
         {
             var (worker, _) = await TaskUtils.WhenAll(
@@ -185,7 +185,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should report network activity on worker creation</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNetworkActivityOnWorkerCreation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -208,7 +208,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-file>worker.spec.js</playwright-file>
         ///<playwright-describe>Workers</playwright-describe>
         ///<playwright-it>should format number using context locale</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatNumberUsingContextLocale()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { Locale = "ru-RU" });

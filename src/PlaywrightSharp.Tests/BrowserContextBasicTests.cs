@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
         ///<playwright-it>should create new context</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCreateNewContext()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
         ///<playwright-it>window.open should use parent tab context</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task WindowOpenShouldUseParentTabContext()
         {
             await using var context = await Browser.NewContextAsync();
@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
         ///<playwright-it>should isolate localStorage and cookies</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateLocalStorageAndCookies()
         {
             // Create two incognito contexts.
@@ -105,7 +105,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
         ///<playwright-it>should propagate default viewport to the page</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldPropagateDefaultViewportToThePage()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -123,7 +123,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
         ///<playwright-it>should make a copy of default viewport</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldMakeACopyOfDefaultViewport()
         {
             var viewport = new ViewportSize
@@ -143,7 +143,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
         ///<playwright-it>should respect deviceScaleFactor</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectDeviceScaleFactor()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
@@ -157,7 +157,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
         ///<playwright-it>should not allow deviceScaleFactor with null viewport</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowDeviceScaleFactorWithNullViewport()
         {
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Browser.NewContextAsync(new BrowserContextOptions
@@ -170,7 +170,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
         ///<playwright-it>should not allow isMobile with null viewport</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowIsMobileWithNullViewport()
         {
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Browser.NewContextAsync(new BrowserContextOptions
@@ -183,7 +183,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
         ///<playwright-it>close() should work for empty context</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task CloseShouldWorkForEmptyContext()
         {
             var context = await Browser.NewContextAsync();
@@ -192,7 +192,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
         ///<playwright-it>close() should abort waitForEvent</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task CloseShouldAbortWaitForEvent()
         {
             var context = await Browser.NewContextAsync();
@@ -204,7 +204,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
         ///<playwright-it>should not report frameless pages on error</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotReportFramelessPagesOnError()
         {
             var context = await Browser.NewContextAsync();
@@ -230,7 +230,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
         ///<playwright-it>close() should be callable twice</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task CloseShouldBeCallableTwice()
         {
             var context = await Browser.NewContextAsync();
@@ -240,7 +240,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
         ///<playwright-it>should return all of the pages</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnAllOfThePages()
         {
             await using var context = await Browser.NewContextAsync();
@@ -255,7 +255,7 @@ namespace PlaywrightSharp.Tests
         ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
         ///<playwright-describe>BrowserContext.pages()</playwright-describe>
         ///<playwright-it>should close all belonging pages once closing context</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCloseAllBelongingPagesOnceClosingContext()
         {
             await using var context = await Browser.NewContextAsync();
@@ -270,7 +270,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
         ///<playwright-it>should disable javascript</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDisableJavascript()
         {
             await using (var context = await Browser.NewContextAsync(javaScriptEnabled: false))
@@ -295,7 +295,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
         ///<playwright-it>should be able to navigate after disabling javascript</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToNavigateAfterDisablingJavascript()
         {
             await using var context = await Browser.NewContextAsync(javaScriptEnabled: false);
@@ -305,7 +305,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
         ///<playwright-it>should work with offline option</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithOfflineOption()
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { Offline = true });

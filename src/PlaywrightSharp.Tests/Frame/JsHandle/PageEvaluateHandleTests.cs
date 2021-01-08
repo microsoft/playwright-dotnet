@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             var windowHandle = await Page.EvaluateHandleAsync("() => window");
@@ -33,7 +33,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should accept object handle as an argument</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptObjectHandleAsAnArgument()
         {
             var navigatorHandle = await Page.EvaluateHandleAsync("() => navigator");
@@ -44,7 +44,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should accept object handle to primitive types</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptObjectHandleToPrimitiveTypes()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => 5");
@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should accept nested handle</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptNestedHandle()
         {
             var foo = await Page.EvaluateHandleAsync("() => ({x: 1, y: 'foo'})");
@@ -68,7 +68,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should accept nested window handle</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptNestedWindowHandle()
         {
             var foo = await Page.EvaluateHandleAsync("() => window");
@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should accept multiple nested handles</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptMultipleNestedHandles()
         {
             var foo = await Page.EvaluateHandleAsync("() => ({ x: 1, y: 'foo' })");
@@ -108,7 +108,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should throw for circular objects</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForCircularObjects()
         {
             dynamic a = new ExpandoObject();
@@ -122,7 +122,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should accept same nested object multiple times</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptSameNestedObjectMultipleTimes()
         {
             dynamic foo = new { x = 1 };
@@ -145,7 +145,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should accept object handle to unserializable value</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptObjectHandleToUnserializableValue()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => Infinity");
@@ -155,7 +155,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should pass configurable args</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldPassConfigurableArgs()
         {
             JsonElement result = await Page.EvaluateAsync<JsonElement>(
@@ -178,7 +178,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         ///<playwright-file>jshandle.spec.js</playwright-file>
         ///<playwright-describe>Page.evaluateHandle</playwright-describe>
         ///<playwright-it>should work with primitives</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithPrimitives()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => {

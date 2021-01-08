@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>tap.specs.ts</playwright-file>
         /// <playwright-it>should send all of the correct events</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendAllOfTheCorrectEvents()
         {
             await Page.SetContentAsync(
@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>tap.specs.ts</playwright-file>
         /// <playwright-it>should not send mouse events touchstart is canceled</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotSendMouseEventsTouchStartIsCanceled()
         {
             await Page.SetContentAsync(@"<div id=""a"" style=""background: lightblue; width: 50px; height: 50px"">a</div>");
@@ -101,7 +101,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>tap.specs.ts</playwright-file>
         /// <playwright-it>should not send mouse events when touchend is canceled</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotSendMouseEventsWhenTouchEndIsCanceled()
         {
             await Page.SetContentAsync(@"<div id=""a"" style=""background: lightblue; width: 50px; height: 50px"">a</div>");
@@ -126,7 +126,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>tap.specs.ts</playwright-file>
         /// <playwright-it>should wait for a navigation caused by a tap</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForANavigationCausedByATap()
         {
             var requestResponse = new TaskCompletionSource<bool>();
@@ -157,7 +157,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>tap.specs.ts</playwright-file>
         /// <playwright-it>should work with modifiers</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithModifiers()
         {
             await Page.SetContentAsync("hello world");
@@ -176,7 +176,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>tap.specs.ts</playwright-file>
         /// <playwright-it>should send well formed touch points</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendWellFormedTouchPoints()
         {
             var touchStartTask = Page.EvaluateAsync<dynamic>(@"() =>
@@ -233,7 +233,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>tap.specs.ts</playwright-file>
         /// <playwright-it>should wait until an element is visible to tap it</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitUntilAnElementIsVisibleToTapIt()
         {
             var div = await Page.EvaluateHandleAsync(@"() => {

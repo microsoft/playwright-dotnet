@@ -18,7 +18,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Close</playwright-describe>
         ///<playwright-it>should work with window.close</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithWindowClose()
         {
             var newPageTask = Page.WaitForEventAsync(PageEvent.Popup);
@@ -33,7 +33,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         ///<playwright-file>page.spec.js</playwright-file>
         ///<playwright-describe>Page.Events.Close</playwright-describe>
         ///<playwright-it>should work with page.close</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithPageClose()
         {
             var newPage = await Context.NewPageAsync();

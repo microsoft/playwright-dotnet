@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>browsercontext-storage-state.spec.ts</playwright-file>
         /// <playwright-it>should capture local storage</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCaptureLocalStorage()
         {
             var page1 = await Context.NewPageAsync();
@@ -67,7 +67,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>browsercontext-storage-state.spec.ts</playwright-file>
         /// <playwright-it>should set local storage</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetLocalStorage()
         {
             await using var context = await Browser.NewContextAsync(storageState: new StorageState
@@ -96,7 +96,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>browsercontext-storage-state.spec.ts</playwright-file>
         /// <playwright-it>should round-trip through the file</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRoundTripThroughTheFile()
         {
             var page1 = await Context.NewPageAsync();

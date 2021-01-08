@@ -18,7 +18,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-expose-function.spec.ts</playwright-file>
         ///<playwright-it>expose binding should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ExposeBindingShouldWork()
         {
             BindingSource bindingSource = null;
@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-expose-function.spec.ts</playwright-file>
         ///<playwright-it>should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Context.ExposeFunctionAsync("add", (int a, int b) => a + b);
@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-expose-function.spec.ts</playwright-file>
         ///<playwright-it>should throw for duplicate registrations</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForDuplicateRegistrations()
         {
             await Context.ExposeFunctionAsync("foo", () => { });
@@ -82,7 +82,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-expose-function.spec.ts</playwright-file>
         ///<playwright-it>should be callable from-inside addInitScript</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeCallableFromInsideAddInitScript()
         {
             var args = new List<object>();
@@ -100,7 +100,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsercontext-expose-function.spec.ts</playwright-file>
         ///<playwright-it>exposeBindingHandle should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ExposeBindingHandleShouldWork()
         {
             IJSHandle target = null;

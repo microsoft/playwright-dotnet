@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsertype-launch.spec.ts</playwright-file>
         ///<playwright-it>should reject all promises when browser is closed</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectAllPromisesWhenBrowserIsClosed()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
@@ -37,7 +37,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsertype-launch.spec.ts</playwright-file>
         ///<playwright-it>should throw if userDataDir option is passed</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowIfUserDataDirOptionIsPassed()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
@@ -84,7 +84,7 @@ namespace PlaywrightSharp.Tests
         /// Should curante the message coming from Playwright
         /// </summary>
         /// <returns></returns>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCurateTheLaunchError()
         {
             // Set an invalid location
@@ -100,7 +100,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>browsertype-launch.spec.ts</playwright-file>
         ///<playwright-it>should reject if executable path is invalid</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectIfExecutablePathIsInvalid()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
@@ -135,7 +135,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-it>should fire close event for all contexts</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireCloseEventForAllContexts()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
@@ -149,7 +149,7 @@ namespace PlaywrightSharp.Tests
 
         ///<playwright-file>launcher.spec.js</playwright-file>
         ///<playwright-it>should be callable twice</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeCallableTwice()
         {
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
@@ -160,7 +160,7 @@ namespace PlaywrightSharp.Tests
         /// <summary>
         /// PuppeteerSharp test. It's not in upstream
         /// </summary>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithEnvironmentVariables()
         {
             var options = TestConstants.GetDefaultBrowserOptions();
@@ -170,6 +170,21 @@ namespace PlaywrightSharp.Tests
             };
 
             await using var browser = await BrowserType.LaunchAsync(options);
+        }
+
+        /// <summary>
+        /// PuppeteerSharp test. It's not in upstream
+        /// </summary>
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldValidateFirefoxUserPrefs()
+        {
+            var options = TestConstants.GetDefaultBrowserOptions();
+            options.FirefoxUserPrefs = new Dictionary<string, object>
+            {
+                ["Foo"] = "Var"
+            };
+
+            await Assert.ThrowsAsync<ArgumentException>(() => BrowserType.LaunchPersistentContextAsync("foo", options));
         }
     }
 }

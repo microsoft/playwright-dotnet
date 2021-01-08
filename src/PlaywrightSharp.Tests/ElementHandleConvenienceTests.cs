@@ -17,7 +17,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
 
         ///<playwright-file>elementhandle-convenience.spec.js</playwright-file>
         ///<playwright-it>should have a nice preview</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveANicePreview()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
 
         ///<playwright-file>elementhandle-convenience.spec.js</playwright-file>
         ///<playwright-it>getAttribute should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task GetAttributeShouldWork()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
 
         ///<playwright-file>elementhandle-convenience.spec.js</playwright-file>
         ///<playwright-it>innerHTML should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task InnerHTMLShouldWork()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
 
         ///<playwright-file>elementhandle-convenience.spec.js</playwright-file>
         ///<playwright-it>innerText should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task InnerTextShouldWork()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
@@ -70,7 +70,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
 
         ///<playwright-file>elementhandle-convenience.spec.js</playwright-file>
         ///<playwright-it>'innerText should throw</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task InnerTextShouldThrow()
         {
             await Page.SetContentAsync("<svg>text</svg>");
@@ -84,7 +84,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
 
         ///<playwright-file>elementhandle-convenience.spec.js</playwright-file>
         ///<playwright-it>textContent should work</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task TextContentShouldWork()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
@@ -97,7 +97,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
         ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>textContent should be atomic</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task TextContentShouldBeAtomic()
         {
             const string createDummySelector = @"({
@@ -126,7 +126,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
         ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>innerText should be atomic</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task InnerTextShouldBeAtomic()
         {
             const string createDummySelector = @"({
@@ -155,7 +155,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
         ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>innerHTML should be atomic</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task InnerHtmlShouldBeAtomic()
         {
             const string createDummySelector = @"({
@@ -184,7 +184,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
         ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>getAttribute should be atomic</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task GetAttributeShouldBeAtomic()
         {
             const string createDummySelector = @"({
