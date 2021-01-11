@@ -62,7 +62,7 @@ namespace PlaywrightSharp
         /// If true, Playwright does not pass its own configurations args and only uses the ones from args.
         /// Dangerous option; use with care. Defaults to false.
         /// </summary>
-        public bool? IgnoreDefaultArgs { get; set; }
+        public bool? IgnoreAllDefaultArgs { get; set; }
 
         /// <summary>
         /// Close the browser process on Ctrl-C. Defaults to true.
@@ -84,10 +84,10 @@ namespace PlaywrightSharp
         /// </summary>
         public bool? ChromiumSandbox { get; set; }
 
-        /// <summary>
-        /// if <see cref="IgnoreDefaultArgs"/> is set to <c>false</c> this list will be used to filter default arguments.
+        /// <summary>ß
+        /// if <see cref="IgnoreAllDefaultArgs"/> is set to <c>false</c> this list will be used to filter default arguments.
         /// </summary>
-        public string[] IgnoredDefaultArgs { get; set; }
+        public string[] IgnoreDefaultArgs { get; set; }
 
         /// <summary>
         /// Specify environment variables that will be visible to browser. Defaults to Environment variables.
@@ -153,13 +153,14 @@ namespace PlaywrightSharp
                 args["slowMo"] = SlowMo;
             }
 
+            if (IgnoreAllDefaultArgs != null && IgnoreDefaultArgs == null)
+            {
+                args["ignoreAllDefaultArgs"] = IgnoreAllDefaultArgs;
+            }
+
             if (IgnoreDefaultArgs != null)
             {
                 args["ignoreDefaultArgs"] = IgnoreDefaultArgs;
-            }
-            else if (IgnoredDefaultArgs != null)
-            {
-                args["ignoreDefaultArgs"] = IgnoredDefaultArgs;
             }
 
             if (Env != null)

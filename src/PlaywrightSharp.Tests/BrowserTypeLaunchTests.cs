@@ -186,5 +186,25 @@ namespace PlaywrightSharp.Tests
 
             await Assert.ThrowsAsync<ArgumentException>(() => BrowserType.LaunchPersistentContextAsync("foo", options));
         }
+
+        /// <summary>
+        /// PuppeteerSharp test. It's not in upstream
+        /// </summary>
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
+        public async Task ShouldWorkWithIgnoreDefaultArgs()
+        {
+            var options = TestConstants.GetDefaultBrowserOptions();
+            options.IgnoreAllDefaultArgs = true;
+            options.Args = new[]
+            {
+                "--remote-debugging-pipe",
+                "--headless",
+                "--hide-scrollbars",
+                "--mute-audio",
+                "--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4"
+            };
+
+            await using var browser = await BrowserType.LaunchAsync(options);
+        }
     }
 }
