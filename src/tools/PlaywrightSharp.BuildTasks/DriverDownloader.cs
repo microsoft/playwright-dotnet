@@ -45,7 +45,7 @@ namespace PlaywrightSharp.BuildTasks
 
             if (!versionFile.Exists)
             {
-                foreach (var file in destinationDirectory.GetFiles())
+                foreach (var file in destinationDirectory.GetFiles().Where(f => f.Name != "expected_api_mismatch.json"))
                 {
                     file.Delete();
                 }
