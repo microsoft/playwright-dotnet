@@ -97,7 +97,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
                 // Make sure CSP prohibits addScriptTag in an iframe.
                 var frame = await FrameUtils.AttachFrameAsync(page, "frame1", TestConstants.ServerUrl + "/csp.html");
-                await frame.AddScriptTagAsync(script: "window.__injected = 42;").ContinueWith(_ => Task.CompletedTask);
+                await frame.AddScriptTagAsync(content: "window.__injected = 42;").ContinueWith(_ => Task.CompletedTask);
                 Assert.Null(await frame.EvaluateAsync<int?>("() => window.__injected"));
             }
 
@@ -109,7 +109,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
 
                 // Make sure CSP prohibits addScriptTag in an iframe.
                 var frame = await FrameUtils.AttachFrameAsync(page, "frame1", TestConstants.ServerUrl + "/csp.html");
-                await frame.AddScriptTagAsync(script: "window.__injected = 42;").ContinueWith(_ => Task.CompletedTask);
+                await frame.AddScriptTagAsync(content: "window.__injected = 42;").ContinueWith(_ => Task.CompletedTask);
                 Assert.Equal(42, await frame.EvaluateAsync<int?>("() => window.__injected"));
 
             }

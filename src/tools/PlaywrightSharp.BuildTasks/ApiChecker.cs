@@ -8,8 +8,8 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using PlaywrightSharp.BuildTasks.Models.Api;
 using PlaywrightSharp.BuildTasks.Extensions;
+using PlaywrightSharp.BuildTasks.Models.Api;
 using PlaywrightSharp.BuildTasks.Models.Mismatch;
 
 namespace PlaywrightSharp.BuildTasks
@@ -220,8 +220,10 @@ namespace PlaywrightSharp.BuildTasks
                 {
                     foreach (var kv in member.Args)
                     {
+                        var matchingMethod = GetBestMethodOverload(playwrightSharpType, playwrightSharpMethod.Name, kv.Key);
+
                         // we flatten options
-                        if (kv.Value.Type.Properties?.Any() == true && !playwrightSharpMethod.GetParameters().Any(p => IsParameterNameMatch(p.Name, kv.Key)))
+                        if (kv.Value.Type.Properties?.Any() == true && (kv.Key == "options" || matchingMethod == null))
                         {
                             foreach (var arg in kv.Value.Type.Properties)
                             {
@@ -230,7 +232,7 @@ namespace PlaywrightSharp.BuildTasks
                         }
                         else
                         {
-                            EvaluateArgument(kv.Key, kv.Value, typeToCheck, playwrightSharpMethod, report, membersQueue, mismatches);
+                            EvaluateArgument(kv.Key, kv.Value, typeToCheck, matchingMethod ?? playwrightSharpMethod, report, membersQueue, mismatches);
                         }
                     }
                 }
@@ -277,14 +279,22 @@ namespace PlaywrightSharp.BuildTasks
             }
         }
 
+        private MethodInfo GetBestMethodOverload(Type playwrightSharpType, string methodName, string paramName)
+            => playwrightSharpType.GetMethods().FirstOrDefault(m =>
+                m.Name == methodName &&
+                m.GetParameters().Any(p => IsParameterNameMatch(p.Name, paramName)));
+
+        private MethodInfo GetBestMethodOverload(Type playwrightSharpType, string methodName, string paramName, string type)
+            => playwrightSharpType.GetMethods().FirstOrDefault(m =>
+                m.Name == methodName &
+                m.GetParameters().Any(p => IsParameterNameMatch(p.Name, paramName) && IsSameType(p.ParameterType, type)));
+
         private static string TranslateMethodName(string memberName)
-        {
-            return memberName
+            => memberName
                 .Replace("$$eval", "evalOnSelectorAll")
                 .Replace("$eval", "evalOnSelector")
                 .Replace("$$", "querySelectorAll")
                 .Replace("$", "querySelector");
-        }
 
         private void EvaluateArgument(
             string name,
@@ -295,7 +305,7 @@ namespace PlaywrightSharp.BuildTasks
             List<object> membersQueue,
             Mismatch mismatches)
         {
-            foreach (string type in arg.Type.Name.Split('|').Where(t => t != "null"))
+            foreach (string type in CurateType(arg.Type.Name).Split('|').Where(t => t != "null"))
             {
                 var playwrightSharpArgument = playwrightSharpMethod.GetParameters().FirstOrDefault(p => IsParameterNameMatch(p.Name, name));
                 var mismatch = mismatches.Entities.FirstOrDefault(e => e.ClassName == playwrightSharpType.Name)?
@@ -306,15 +316,13 @@ namespace PlaywrightSharp.BuildTasks
                 {
                     if (!IsSameType(playwrightSharpArgument.ParameterType, type))
                     {
-                        //Look for a matching override
-                        var overrideMethod = playwrightSharpType.GetMethods().FirstOrDefault(m =>
-                            m.Name == playwrightSharpMethod.Name &&
-                            m.GetParameters().Any(p => IsParameterNameMatch(p.Name, name) && IsSameType(p.ParameterType, type)));
+                        //Look for a matching overload
+                        var overloadMethod = GetBestMethodOverload(playwrightSharpType, playwrightSharpMethod.Name, name, type);
 
-                        if (overrideMethod != null)
+                        if (overloadMethod != null)
                         {
-                            membersQueue.Remove(overrideMethod);
-                            playwrightSharpArgument = overrideMethod.GetParameters().FirstOrDefault(p => IsParameterNameMatch(p.Name, name));
+                            membersQueue.Remove(overloadMethod);
+                            playwrightSharpArgument = overloadMethod.GetParameters().FirstOrDefault(p => IsParameterNameMatch(p.Name, name));
                             report.AppendLine("<li>");
                             report.AppendLine($"{name} ({type.ToHtml()}): found as {playwrightSharpArgument.Name} ({playwrightSharpArgument.ParameterType})");
                         }
@@ -323,7 +331,7 @@ namespace PlaywrightSharp.BuildTasks
                             report.AppendLine("<li style='color: coral'>");
                             report.AppendLine($"{playwrightSharpType.Name}.{name} ({type.ToHtml()}): found as {playwrightSharpArgument.Name} but with type {playwrightSharpArgument.ParameterType} (PW001)");
 
-                            if (mismatch == null)
+                            if (mismatch == null && !type.Contains("Object"))
                             {
                                 LogWarning("PW001", $"{playwrightSharpType.Name}.{playwrightSharpMethod.Name} => {name} ({type.ToHtml()}): found as {playwrightSharpArgument.Name} but with type {playwrightSharpArgument.ParameterType}");
                             }
@@ -343,10 +351,8 @@ namespace PlaywrightSharp.BuildTasks
                         {
                             foreach (var kv in arg.Type.Properties)
                             {
-                                //Look for a matching override
-                                var overrideMethod = playwrightSharpType.GetMethods().FirstOrDefault(m =>
-                                    m.Name == playwrightSharpMethod.Name &&
-                                    m.GetParameters().Any(p => IsParameterNameMatch(p.Name, name.ToLower()) && IsSameType(p.ParameterType, type)));
+                                //Look for a matching overload
+                                var overrideMethod = GetBestMethodOverload(playwrightSharpType, playwrightSharpMethod.Name, name.ToLower(), type);
 
                                 if (overrideMethod != null)
                                 {
@@ -427,41 +433,58 @@ namespace PlaywrightSharp.BuildTasks
             return Nullable.GetUnderlyingType(parameterType) ?? parameterType;
         }
 
-        private static bool IsSameType(Type parameterType, string playwrightType)
-        {
-            if (playwrightType.Contains("Array<"))
+        private string CurateType(string type)
+            => type switch
             {
-                playwrightType = playwrightType.Replace("Array<", "").Replace(">", "");
-            }
-            parameterType = GetBaseType(parameterType);
-
-            if (playwrightType.StartsWith("\""))
-            {
-                return parameterType.IsEnum || (parameterType.GenericTypeArguments.Length > 0 && parameterType.GenericTypeArguments[0].IsEnum);
-            }
-
-            if (playwrightType.ToLower().StartsWith("function"))
-            {
-                return typeof(MulticastDelegate).IsAssignableFrom(parameterType);
-            }
-
-            return playwrightType switch
-            {
-                "string" => parameterType == typeof(string) || parameterType.IsEnum,
-                "number" => parameterType == typeof(int) || parameterType == typeof(decimal) || parameterType == typeof(int?) || parameterType == typeof(decimal?),
-                "Array<string>" => parameterType == typeof(Array) && parameterType.GenericTypeArguments[0] == typeof(string),
-                "boolean" => parameterType == typeof(bool) || parameterType == typeof(bool?),
-                "Object<string, string" => parameterType == typeof(Dictionary<string, string>) || parameterType == typeof(Dictionary<string, object>),
-                "Object<string, string>" => parameterType == typeof(Dictionary<string, string>),
-                "RegExp" => parameterType == typeof(Regex),
-                "EvaluationArgument" => parameterType == typeof(object),
-                "ElementHandle" => parameterType.Name == "IElementHandle)",
-                "Page" => parameterType.Name == "IPage",
-                "Buffer" => parameterType == typeof(string) || parameterType == typeof(byte[]),
-                "Object" => parameterType != typeof(string),
-                "Serializable" => true,
-                _ => false,
+                "Object<string, string|number|boolean>" => "Dictionary",
+                _ => type,
             };
+
+        private static bool IsSameType(Type parameterType, string playwrightParameterType)
+        {
+            foreach (string item in playwrightParameterType.Split('|').Where(t => t != "null"))
+            {
+                string playwrightType = item;
+                if (playwrightType.Contains("Array<"))
+                {
+                    playwrightType = playwrightType.Replace("Array<", "").Replace(">", "");
+                }
+                parameterType = GetBaseType(parameterType);
+
+                if (playwrightType.StartsWith("\""))
+                {
+                    return parameterType.IsEnum || (parameterType.GenericTypeArguments.Length > 0 && parameterType.GenericTypeArguments[0].IsEnum);
+                }
+
+                if (playwrightType.ToLower().StartsWith("function"))
+                {
+                    return typeof(MulticastDelegate).IsAssignableFrom(parameterType);
+                }
+
+                if (playwrightType switch
+                {
+                    "string" => parameterType == typeof(string) || parameterType.IsEnum,
+                    "number" => parameterType == typeof(int) || parameterType == typeof(decimal) || parameterType == typeof(int?) || parameterType == typeof(decimal?),
+                    "Array<string>" => parameterType == typeof(Array) && parameterType.GenericTypeArguments[0] == typeof(string),
+                    "boolean" => parameterType == typeof(bool) || parameterType == typeof(bool?),
+                    "Object<string, string" => parameterType == typeof(Dictionary<string, string>) || parameterType == typeof(Dictionary<string, object>),
+                    "Dictionary" => parameterType == typeof(Dictionary<string, string>) || parameterType == typeof(Dictionary<string, object>),
+                    "Object<string, string>" => parameterType == typeof(Dictionary<string, string>),
+                    "RegExp" => parameterType == typeof(Regex),
+                    "EvaluationArgument" => parameterType == typeof(object),
+                    "ElementHandle" => parameterType.Name == "IElementHandle",
+                    "Page" => parameterType.Name == "IPage",
+                    "Buffer" => parameterType == typeof(string) || parameterType == typeof(byte[]),
+                    "Object" => parameterType != typeof(string),
+                    "Serializable" => true,
+                    _ => false,
+                })
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void EvaluateProperty(

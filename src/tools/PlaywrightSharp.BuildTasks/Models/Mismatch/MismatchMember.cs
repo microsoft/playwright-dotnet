@@ -1,4 +1,4 @@
-﻿namespace PlaywrightSharp.BuildTasks.Models.Mismatch
+namespace PlaywrightSharp.BuildTasks.Models.Mismatch
 {
     public class MismatchMember
     {

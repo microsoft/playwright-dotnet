@@ -94,6 +94,54 @@
       "upstreamClassName": "browserType",
       "className": "IBrowserType",
       "members": [
+        {
+          "upstreamMemberName": "connect",
+          "justification": "We don't support this feature yet"
+        },
+        {
+          "upstreamMemberName": "launchServer",
+          "justification": "We don't support this feature yet"
+        },
+        {
+          "upstreamMemberName": "launch",
+          "memberName": "LaunchAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "logger",
+              "justification": "We inject the logger differently."
+            },
+            {
+              "upstreamArgumentName": "ignoreDefaultArgs",
+              "justification": "ignoreDefaultArgs as boolean is called ignoreAllDefaultArgs"
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "launchPersistentContext",
+          "memberName": "LaunchPersistentContextAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "videosPath",
+              "justification": "This property is in upstream for backwards compatibility."
+            },
+            {
+              "upstreamArgumentName": "videoSize",
+              "justification": "This property is in upstream for backwards compatibility."
+            },
+            {
+              "upstreamArgumentName": "logger",
+              "justification": "We inject the logger differently."
+            },
+            {
+              "upstreamArgumentName": "ignoreDefaultArgs",
+              "justification": "ignoreDefaultArgs as boolean is called ignoreAllDefaultArgs"
+            },
+            {
+              "upstreamArgumentName": "firefoxUserPrefs",
+              "justification": "firefoxUserPrefs is a Dictionary not an object."
+            }
+          ]
+        }
       ]
     },
     {
@@ -130,10 +178,19 @@
             }
           ]
         },
-
         {
-          "upstreamMemberName": "evaluate",
+          "upstreamMemberName": "evaluateHandle",
           "memberName": "EvaluateHandleAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "pageFunction",
+              "justification": "We don't support pageFunction as a function"
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "waitForFunction",
+          "memberName": "WaitForFunctionAsync",
           "arguments": [
             {
               "upstreamArgumentName": "pageFunction",
@@ -190,6 +247,252 @@
           ]
         },
         {
+          "upstreamMemberName": "tap",
+          "memberName": "TapAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "x",
+              "justification": "We use a Position object instead of an X/Y pair."
+            },
+            {
+              "upstreamArgumentName": "y",
+              "justification": "We use a Position object instead of an X/Y pair."
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "click",
+          "memberName": "ClickAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "x",
+              "justification": "We use a Position object instead of an X/Y pair."
+            },
+            {
+              "upstreamArgumentName": "y",
+              "justification": "We use a Position object instead of an X/Y pair."
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "dblClick",
+          "memberName": "DblClickAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "x",
+              "justification": "We use a Position object instead of an X/Y pair."
+            },
+            {
+              "upstreamArgumentName": "y",
+              "justification": "We use a Position object instead of an X/Y pair."
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "waitForEvent",
+          "memberName": "WaitForEventAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "event",
+              "justification": "event is a reserved word. We call it e"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "upstreamClassName": "frame",
+      "className": "IFrame",
+      "members": [
+        {
+          "upstreamMemberName": "evalOnSelector",
+          "memberName": "EvalOnSelectorAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "pageFunction",
+              "justification": "We don't support pageFunction as a function"
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "evalOnSelectorAll",
+          "memberName": "EvalOnSelectorAllAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "pageFunction",
+              "justification": "We don't support pageFunction as a function"
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "evaluate",
+          "memberName": "EvaluateAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "pageFunction",
+              "justification": "We don't support pageFunction as a function"
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "waitForFunction",
+          "memberName": "WaitForFunctionAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "pageFunction",
+              "justification": "We don't support pageFunction as a function"
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "evaluateHandle",
+          "memberName": "EvaluateHandleAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "pageFunction",
+              "justification": "We don't support pageFunction as a function"
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "addInitScript",
+          "memberName": "AddInitScriptAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "script",
+              "justification": "We have script as a function, which we don't support, and we have script as an object which we expose as arguments."
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "hover",
+          "memberName": "HoverAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "x",
+              "justification": "We use a Position object instead of an X/Y pair."
+            },
+            {
+              "upstreamArgumentName": "y",
+              "justification": "We use a Position object instead of an X/Y pair."
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "tap",
+          "memberName": "TapAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "x",
+              "justification": "We use a Position object instead of an X/Y pair."
+            },
+            {
+              "upstreamArgumentName": "y",
+              "justification": "We use a Position object instead of an X/Y pair."
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "click",
+          "memberName": "ClickAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "x",
+              "justification": "We use a Position object instead of an X/Y pair."
+            },
+            {
+              "upstreamArgumentName": "y",
+              "justification": "We use a Position object instead of an X/Y pair."
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "dblClick",
+          "memberName": "DblClickAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "x",
+              "justification": "We use a Position object instead of an X/Y pair."
+            },
+            {
+              "upstreamArgumentName": "y",
+              "justification": "We use a Position object instead of an X/Y pair."
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "waitForEvent",
+          "memberName": "WaitForEventAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "event",
+              "justification": "event is a reserved word. We call it e"
+            },
+            {
+              "upstreamArgumentName": "optionsOrPredicate",
+              "justification": "We have options and predicate"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "upstreamClassName": "elementHandle",
+      "className": "IElementHandle",
+      "members": [
+        {
+          "upstreamMemberName": "asElement",
+          "justification": "Implicit from C# type casting"
+        },
+        {
+          "upstreamMemberName": "evalOnSelector",
+          "memberName": "EvalOnSelectorAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "pageFunction",
+              "justification": "We don't support pageFunction as a function"
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "evalOnSelectorAll",
+          "memberName": "EvalOnSelectorAllAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "pageFunction",
+              "justification": "We don't support pageFunction as a function"
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "hover",
+          "memberName": "HoverAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "x",
+              "justification": "We use a Position object instead of an X/Y pair."
+            },
+            {
+              "upstreamArgumentName": "y",
+              "justification": "We use a Position object instead of an X/Y pair."
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "tap",
+          "memberName": "TapAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "x",
+              "justification": "We use a Position object instead of an X/Y pair."
+            },
+            {
+              "upstreamArgumentName": "y",
+              "justification": "We use a Position object instead of an X/Y pair."
+            }
+          ]
+        },
+        {
           "upstreamMemberName": "click",
           "memberName": "ClickAsync",
           "arguments": [
@@ -220,22 +523,98 @@
       ]
     },
     {
-      "upstreamClassName": "elementHandle",
-      "className": "IElementHandle",
+      "upstreamClassName": "touchscreen",
+      "className": "ITouchscreen",
       "members": [
         {
-          "upstreamMemberName": "asElement",
-          "justification": "Implicit from C# type casting"
+          "upstreamMemberName": "tap",
+          "memberName": "TapAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "x",
+              "justification": "We use a Position object instead of an X/Y pair."
+            },
+            {
+              "upstreamArgumentName": "y",
+              "justification": "We use a Position object instead of an X/Y pair."
+            }
+          ]
         }
       ]
     },
     {
       "upstreamClassName": "jsHandle",
-      "className": "IJSHAndle",
+      "className": "IJSHandle",
       "members": [
         {
           "upstreamMemberName": "asElement",
           "justification": "Implicit from C# type casting"
+        },
+        {
+          "upstreamMemberName": "evaluate",
+          "memberName": "EvaluateAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "pageFunction",
+              "justification": "We don't support pageFunction as a function"
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "evaluateHandle",
+          "memberName": "EvaluateHandleAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "pageFunction",
+              "justification": "We don't support pageFunction as a function"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "upstreamClassName": "worker",
+      "className": "IWorker",
+      "members": [
+        {
+          "upstreamMemberName": "evaluate",
+          "memberName": "EvaluateAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "pageFunction",
+              "justification": "We don't support pageFunction as a function"
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "evaluateHandle",
+          "memberName": "EvaluateHandleAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "pageFunction",
+              "justification": "We don't support pageFunction as a function"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "upstreamClassName": "websocket",
+      "className": "IWebSocket",
+      "members": [
+        {
+          "upstreamMemberName": "waitForEvent",
+          "memberName": "WaitForEventAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "event",
+              "justification": "event is a reserved word. We call it e"
+            },
+            {
+              "upstreamArgumentName": "optionsOrPredicate",
+              "justification": "We have options and predicate"
+            }
+          ]
         }
       ]
     },
@@ -245,7 +624,39 @@
       "members": [
         {
           "upstreamMemberName": "register",
-          "justification": "C# signature: RegisterAsync(string name, string script = null, string path = null, string content = null, bool? contentScript = null)"
+          "memberName": "RegisterAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "script",
+              "justification": "We don't support script as a function"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "upstreamClassName": "route",
+      "className": "Route",
+      "members": [
+        {
+          "upstreamMemberName": "continue",
+          "memberName": "ContinueAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "method",
+              "justification": "We use the HttpMethod enum instead of a string"
+            }
+          ]
+        },
+        {
+          "upstreamMemberName": "fulfill",
+          "memberName": "FulfillAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "status",
+              "justification": "We use the HttpStatusCode enum instead of a number"
+            }
+          ]
         }
       ]
     },
@@ -268,6 +679,64 @@
         {
           "upstreamMemberName": "left",
           "justification": "In upstream is string or number. We covered this using only a string"
+        }
+      ]
+    },
+    {
+      "upstreamClassName": "TimeoutError",
+      "justification": "We don't need this class"
+    },
+    {
+      "upstreamClassName": "Logger",
+      "justification": "We don't need this class"
+    },
+    {
+      "upstreamClassName": "FirefoxBrowser",
+      "justification": "We don't need this class"
+    },
+    {
+      "upstreamClassName": "WebKitBrowser",
+      "justification": "We don't need this class"
+    },
+    {
+      "upstreamClassName": "BrowserServer",
+      "justification": "We don't support this yet"
+    },
+    {
+      "upstreamClassName": "browserContextOptions",
+      "className": "BrowserContextOptions",
+      "members": [
+        {
+          "upstreamMemberName": "logger",
+          "justification": "We inject the logger differently."
+        },
+        {
+          "upstreamMemberName": "videosPath",
+          "justification": "This property is in upstream for backwards compatibility."
+        },
+        {
+          "upstreamMemberName": "videoSize",
+          "justification": "This property is in upstream for backwards compatibility."
+        },
+        {
+          "upstreamMemberName": "storageState",
+          "justification": "storageState has two types upstream: storageState and string. We call the string option storageStatePath."
+        }
+      ]
+    },
+    {
+      "upstreamClassName": "cdpsession",
+      "className": "CDPSession",
+      "members": [
+        {
+          "upstreamMemberName": "send",
+          "memberName": "SendAsync",
+          "arguments": [
+            {
+              "upstreamArgumentName": "params",
+              "justification": "params is a reserved keyword, we call it args"
+            }
+          ]
         }
       ]
     }

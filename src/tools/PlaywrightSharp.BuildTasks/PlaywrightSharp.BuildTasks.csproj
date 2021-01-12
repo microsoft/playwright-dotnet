@@ -16,10 +16,5 @@
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Models\" />
-	  <Folder Include="Models\Api\" />
-	  <Folder Include="Models\Mismatch\" />
-	</ItemGroup>
 	<Import Project="../../Common/PackageInfo.props" />
 </Project>
