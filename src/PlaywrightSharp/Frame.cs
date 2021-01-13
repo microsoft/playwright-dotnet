@@ -144,8 +144,8 @@ namespace PlaywrightSharp
         public Task<string> GetContentAsync() => GetContentAsync(false);
 
         /// <inheritdoc />
-        public Task<IElementHandle> AddScriptTagAsync(string url = null, string path = null, string script = null, string type = null)
-            => AddScriptTagAsync(false, url, path, script, type);
+        public Task<IElementHandle> AddScriptTagAsync(string url = null, string path = null, string content = null, string type = null)
+            => AddScriptTagAsync(false, url, path, content, type);
 
         /// <inheritdoc />
         public Task<T> EvaluateAsync<T>(string pageFunction) => EvaluateAsync<T>(false, pageFunction);
@@ -311,8 +311,8 @@ namespace PlaywrightSharp
             => TypeAsync(false, selector, text, delay, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task<IElementHandle> AddStyleTagAsync(string url = null, string path = null, string style = null)
-            => AddStyleTagAsync(false, url, path, style);
+        public Task<IElementHandle> AddStyleTagAsync(string url = null, string path = null, string content = null)
+            => AddStyleTagAsync(false, url, path, content);
 
         /// <inheritdoc />
         public Task PressAsync(string selector, string key, int delay = 0, int? timeout = null, bool? noWaitAfter = null)

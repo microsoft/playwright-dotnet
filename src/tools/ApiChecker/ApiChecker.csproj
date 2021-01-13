@@ -16,5 +16,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\PlaywrightSharp\PlaywrightSharp.csproj" />
+    <ProjectReference Include="..\PlaywrightSharp.BuildTasks\PlaywrightSharp.BuildTasks.csproj" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-namespace PlaywrightSharp.BuildTasks.ApiCheckerModels
+namespace PlaywrightSharp.BuildTasks.Models.Api
 {
     public class PlaywrightArgument
     {
