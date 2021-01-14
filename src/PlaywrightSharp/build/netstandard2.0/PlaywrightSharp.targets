@@ -15,7 +15,7 @@
 	</Target>
 	<Target Name="CopyPlaywrightDriversToMonoBundle" AfterTargets="CopyFilesToOutputDirectory" Condition="$(TargetFrameworkIdentifier) == 'Xamarin.Mac'">
 		<Message Text="Copy drivers to MonoBundle" />
-		<CreateItem Include="$(MSBuildThisFileDirectory)\..\..\runtimes\osx\native\*.*">
+		<CreateItem Include="$(MSBuildThisFileDirectory)\..\..\runtimes\osx\native\**">
 			<Output TaskParameter="Include" ItemName="PlaywrightDriverFiles" />
 		</CreateItem>
 		<Message Text="$(AppBundleDir)" />
