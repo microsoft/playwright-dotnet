@@ -4,8 +4,8 @@ namespace PlaywrightSharp.BuildTasks.Models.Api
 {
     internal class PlaywrightEntity
     {
-        public Dictionary<string, PlaywrightMember> Methods { get; set; }
+        public string Name { get; set; }
 
-        public Dictionary<string, PlaywrightMember> Events { get; set; }
+        public PlaywrightMember[] Members { get; set; }
     }
 }

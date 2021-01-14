@@ -80,7 +80,7 @@ namespace PlaywrightSharp.BuildTasks
             var process = GetProcess(executablePath);
             process.Start();
 
-            using StreamWriter file = new StreamWriter(Path.Combine(driversDirectory, "api.json"));
+            using StreamWriter file = new(Path.Combine(driversDirectory, "api.json"));
             process.StandardOutput.BaseStream.CopyTo(file.BaseStream);
 
             process.WaitForExit();
@@ -92,29 +92,29 @@ namespace PlaywrightSharp.BuildTasks
             {
                 if (RuntimeInformation.OSArchitecture == Architecture.X64)
                 {
-                    return Path.Combine(driversDirectory, "win-x64", "playwright-cli.exe");
+                    return Path.Combine(driversDirectory, "win-x64", "playwright.cmd");
                 }
                 else
                 {
-                    return Path.Combine(driversDirectory, "win-x86", "playwright-cli.exe");
+                    return Path.Combine(driversDirectory, "win-x86", "playwright.cmd");
                 }
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return Path.Combine(driversDirectory, "osx", "playwright-cli");
+                return Path.Combine(driversDirectory, "osx", "playwright.sh");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return Path.Combine(driversDirectory, "unix", "playwright-cli");
+                return Path.Combine(driversDirectory, "unix", "playwright.sh");
             }
 
             throw new Exception("Unknown platform");
         }
 
         private static Process GetProcess(string driverExecutablePath)
-            => new Process
-            {
-                StartInfo =
+            => new()
+        {
+            StartInfo =
                 {
                     FileName = driverExecutablePath,
                     UseShellExecute = false,
@@ -124,7 +124,7 @@ namespace PlaywrightSharp.BuildTasks
                     CreateNoWindow = true,
                     Arguments = "print-api-json"
                 },
-            };
+        };
 
         private static async Task UpdateBrowserVersionsAsync(string basePath, string driverVersion)
         {
@@ -160,7 +160,7 @@ namespace PlaywrightSharp.BuildTasks
         private async Task DownloadDriverAsync(DirectoryInfo destinationDirectory, string driverVersion, string platform, string runtime)
         {
             Log.LogMessage("Downloading driver for " + platform);
-            string cdn = "https://playwright.azureedge.net/builds/cli";
+            string cdn = "https://playwright.azureedge.net/builds/driver";
 
             if (driverVersion.Contains("next"))
             {
@@ -168,7 +168,7 @@ namespace PlaywrightSharp.BuildTasks
             }
 
             using var client = new HttpClient();
-            string url = $"{cdn}/playwright-cli-{driverVersion}-{platform}.zip";
+            string url = $"{cdn}/playwright-{driverVersion}-{platform}.zip";
 
             try
             {
@@ -185,11 +185,14 @@ namespace PlaywrightSharp.BuildTasks
 
                 if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    foreach (var executable in directory.GetFiles().Where(f => f.Name == "playwright-cli" || f.Name.Contains("ffmpeg")))
+                    var executables = new[] { "playwright.sh", "node", "package/third_party/ffmpeg/ffmpeg-linux", "package/third_party/ffmpeg/ffmpeg-mac" }
+                        .Select(f => Path.Combine(directory.FullName, f));
+
+                    foreach (string executable in executables)
                     {
-                        if (LinuxSysCall.Chmod(executable.FullName, LinuxSysCall.ExecutableFilePermissions) != 0)
+                        if (new FileInfo(executable).Exists && LinuxSysCall.Chmod(executable, LinuxSysCall.ExecutableFilePermissions) != 0)
                         {
-                            throw new Exception($"Unable to chmod the driver ({Marshal.GetLastWin32Error()})");
+                            throw new Exception($"Unable to chmod {executable} ({Marshal.GetLastWin32Error()})");
                         }
                     }
                 }

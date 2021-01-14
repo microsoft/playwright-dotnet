@@ -195,7 +195,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldShowCustomHTTPHeaders()
         {
-            await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string>
+            await Page.SetextraHTTPHeadersAsync(new Dictionary<string, string>
             {
                 ["foo"] = "bar"
             });
@@ -232,7 +232,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCustomRefererHeaders()
         {
-            await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string> { ["referer"] = TestConstants.EmptyPage });
+            await Page.SetextraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = TestConstants.EmptyPage });
             await Page.RouteAsync("**/*", (route, request) =>
             {
                 Assert.Equal(TestConstants.EmptyPage, request.Headers["referer"]);
@@ -293,7 +293,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendReferer()
         {
-            await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string> { ["referer"] = "http://google.com/" });
+            await Page.SetextraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = "http://google.com/" });
             await Page.RouteAsync("**/*", (route, request) => route.ContinueAsync());
             var requestTask = Server.WaitForRequest("/grid.html", request => request.Headers["referer"]);
             await TaskUtils.WhenAll(

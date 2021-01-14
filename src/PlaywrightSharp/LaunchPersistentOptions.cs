@@ -88,7 +88,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// An object containing additional HTTP headers to be sent with every request.
         /// </summary>
-        public Dictionary<string, string> ExtraHttpHeaders { get; set; }
+        public Dictionary<string, string> ExtraHTTPHeaders { get; set; }
 
         /// <summary>
         /// Enables HAR recording for all pages into recordHar.path file. If not specified, the HAR is not recorded.
@@ -132,7 +132,7 @@ namespace PlaywrightSharp
             left.AcceptDownloads = right.AcceptDownloads ?? left.AcceptDownloads;
             left.ColorScheme = right.ColorScheme ?? left.ColorScheme;
             left.Locale = right.Locale ?? left.Locale;
-            left.ExtraHttpHeaders = right.ExtraHttpHeaders ?? left.ExtraHttpHeaders;
+            left.ExtraHTTPHeaders = right.ExtraHTTPHeaders ?? left.ExtraHTTPHeaders;
             left.RecordHar = right.RecordHar ?? left.RecordHar;
             left.RecordVideo = right.RecordVideo ?? left.RecordVideo;
 
@@ -247,9 +247,9 @@ namespace PlaywrightSharp
                 args["locale"] = Locale;
             }
 
-            if (ExtraHttpHeaders != null)
+            if (ExtraHTTPHeaders != null)
             {
-                args["extraHTTPHeaders"] = ExtraHttpHeaders.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray();
+                args["extraHTTPHeaders"] = ExtraHTTPHeaders.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray();
             }
 
             if (RecordHar != null)

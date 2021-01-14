@@ -155,11 +155,11 @@ namespace PlaywrightSharp.Tests
         /// <playwright-file>defaultbrowsercontext-2.spec.js</playwright-file>
         /// <playwright-it>should support extraHTTPHeaders option</playwright-it>
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldSupportExtraHTTPHeadersOption()
+        public async Task ShouldSupportextraHTTPHeadersOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
             {
-                ExtraHttpHeaders = new Dictionary<string, string>
+                ExtraHTTPHeaders = new Dictionary<string, string>
                 {
                     ["foo"] = "bar",
                 },
