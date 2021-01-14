@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using Xunit;
@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.SetextraHTTPHeadersAsync(new Dictionary<string, string>
+            await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
             {
                 ["Foo"] = "Bar"
             });
@@ -40,7 +40,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         public async Task ShouldWorkWithRedirects()
         {
             Server.SetRedirect("/foo.html", "/empty.html");
-            await Page.SetextraHTTPHeadersAsync(new Dictionary<string, string>
+            await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
             {
                 ["Foo"] = "Bar"
             });
@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         public async Task ShouldWorkWithExtraHeadersFromBrowserContext()
         {
             await using var context = await Browser.NewContextAsync();
-            await context.SetextraHTTPHeadersAsync(new Dictionary<string, string>
+            await context.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
             {
                 ["Foo"] = "Bar"
             });
@@ -77,14 +77,14 @@ namespace PlaywrightSharp.Tests.Page.Network
         public async Task ShouldOverrideExtraHeadersFromBrowserContext()
         {
             await using var context = await Browser.NewContextAsync();
-            await context.SetextraHTTPHeadersAsync(new Dictionary<string, string>
+            await context.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
             {
                 ["fOo"] = "bAr",
                 ["baR"] = "foO",
             });
             var page = await context.NewPageAsync();
 
-            await page.SetextraHTTPHeadersAsync(new Dictionary<string, string>
+            await page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
             {
                 ["Foo"] = "Bar"
             });

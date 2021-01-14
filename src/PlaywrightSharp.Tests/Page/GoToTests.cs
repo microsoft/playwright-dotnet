@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -632,7 +632,7 @@ namespace PlaywrightSharp.Tests.Page
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectRefererOptionWhenSetextraHTTPHeadersProvidesReferer()
         {
-            await Page.SetextraHTTPHeadersAsync(new Dictionary<string, string>
+            await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
             {
                 ["referer"] = "http://microsoft.com/"
             });

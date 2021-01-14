@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -463,7 +463,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="headers">Additional http headers to be sent with every request.</param>
         /// <returns>A <see cref="Task"/> that completes when the headers are set.</returns>
-        Task SetextraHTTPHeadersAsync(Dictionary<string, string> headers);
+        Task SetExtraHTTPHeadersAsync(Dictionary<string, string> headers);
 
         /// <summary>
         /// Returns storage state for this browser context, contains current cookies and local storage snapshot.

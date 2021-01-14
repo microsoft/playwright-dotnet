@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -314,7 +314,7 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task SetextraHTTPHeadersAsync(Dictionary<string, string> headers) => Channel.SetextraHTTPHeadersAsync(headers);
+        public Task SetExtraHTTPHeadersAsync(Dictionary<string, string> headers) => Channel.SetExtraHTTPHeadersAsync(headers);
 
         /// <inheritdoc />
         public async Task<StorageState> GetStorageStateAsync(string path = null)

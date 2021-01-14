@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -202,7 +202,7 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task ClearCookiesAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "clearCookies", null);
 
-        internal Task SetextraHTTPHeadersAsync(IDictionary<string, string> headers)
+        internal Task SetExtraHTTPHeadersAsync(IDictionary<string, string> headers)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "setextraHTTPHeaders",

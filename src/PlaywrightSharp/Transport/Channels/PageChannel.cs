@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -423,7 +423,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["y"] = point.Y,
                 });
 
-        internal Task SetextraHTTPHeadersAsync(IDictionary<string, string> headers)
+        internal Task SetExtraHTTPHeadersAsync(IDictionary<string, string> headers)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "setextraHTTPHeaders",

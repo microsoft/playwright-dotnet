@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -634,7 +634,7 @@ namespace PlaywrightSharp
         public Task<string> GetContentAsync() => MainFrame.GetContentAsync(true);
 
         /// <inheritdoc />
-        public Task SetextraHTTPHeadersAsync(Dictionary<string, string> headers) => _channel.SetextraHTTPHeadersAsync(headers);
+        public Task SetExtraHTTPHeadersAsync(Dictionary<string, string> headers) => _channel.SetExtraHTTPHeadersAsync(headers);
 
         /// <inheritdoc />
         public Task<IElementHandle> QuerySelectorAsync(string selector) => MainFrame.QuerySelectorAsync(true, selector);
