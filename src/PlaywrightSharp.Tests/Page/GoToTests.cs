@@ -628,9 +628,9 @@ namespace PlaywrightSharp.Tests.Page
 
         ///<playwright-file>navigation.spec.js</playwright-file>
         ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should reject referer option when setextraHTTPHeaders provides referer</playwright-it>
+        ///<playwright-it>should reject referer option when setExtraHTTPHeaders provides referer</playwright-it>
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldRejectRefererOptionWhenSetextraHTTPHeadersProvidesReferer()
+        public async Task ShouldRejectRefererOptionWhenSetExtraHTTPHeadersProvidesReferer()
         {
             await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
             {
@@ -690,7 +690,7 @@ namespace PlaywrightSharp.Tests.Page
         ///<playwright-describe>Page.goto</playwright-describe>
         ///<playwright-it>extraHTTPHeaders should be pushed to provisional page</playwright-it>
         [Fact(Skip = "Skipped in Playwright")]
-        public void extraHTTPHeadersShouldBePushedToProvisionalPage()
+        public void ExtraHTTPHeadersShouldBePushedToProvisionalPage()
         {
         }
     }

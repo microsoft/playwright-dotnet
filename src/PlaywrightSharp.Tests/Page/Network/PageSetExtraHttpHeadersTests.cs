@@ -7,17 +7,17 @@ using Xunit.Abstractions;
 namespace PlaywrightSharp.Tests.Page.Network
 {
     ///<playwright-file>network.spec.js</playwright-file>
-    ///<playwright-describe>Page.setextraHTTPHeaders</playwright-describe>
+    ///<playwright-describe>Page.setExtraHTTPHeaders</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageSetextraHTTPHeadersTests : PlaywrightSharpPageBaseTest
+    public class PageSetExtraHTTPHeadersTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public PageSetextraHTTPHeadersTests(ITestOutputHelper output) : base(output)
+        public PageSetExtraHTTPHeadersTests(ITestOutputHelper output) : base(output)
         {
         }
 
         ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Page.setextraHTTPHeaders</playwright-describe>
+        ///<playwright-describe>Page.setExtraHTTPHeaders</playwright-describe>
         ///<playwright-it>should work</playwright-it>
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         }
 
         ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Page.setextraHTTPHeaders</playwright-describe>
+        ///<playwright-describe>Page.setExtraHTTPHeaders</playwright-describe>
         ///<playwright-it>should work with redirects</playwright-it>
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithRedirects()
@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         }
 
         ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Page.setextraHTTPHeaders</playwright-describe>
+        ///<playwright-describe>Page.setExtraHTTPHeaders</playwright-describe>
         ///<playwright-it>should work with extra headers from browser context</playwright-it>
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithExtraHeadersFromBrowserContext()
@@ -71,7 +71,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         }
 
         ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Page.setextraHTTPHeaders</playwright-describe>
+        ///<playwright-describe>Page.setExtraHTTPHeaders</playwright-describe>
         ///<playwright-it>should override extra headers from browser context</playwright-it>
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldOverrideExtraHeadersFromBrowserContext()
@@ -97,7 +97,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         }
 
         ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Page.setextraHTTPHeaders</playwright-describe>
+        ///<playwright-describe>Page.setExtraHTTPHeaders</playwright-describe>
         ///<playwright-it>should throw for non-string header values</playwright-it>
         [Fact(Skip = "We don't need this test")]
         public void ShouldThrowForNonStringHeaderValues() { }

@@ -205,7 +205,7 @@ namespace PlaywrightSharp.Transport.Channels
         internal Task SetExtraHTTPHeadersAsync(IDictionary<string, string> headers)
             => Connection.SendMessageToServerAsync(
                 Guid,
-                "setextraHTTPHeaders",
+                "setExtraHTTPHeaders",
                 new Dictionary<string, object>
                 {
                     ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }),
