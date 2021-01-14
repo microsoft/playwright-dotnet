@@ -162,64 +162,64 @@ namespace PlaywrightSharp
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
 
         /// <inheritdoc/>
-        public Task ExposeBindingAsync(string name, Action<BindingSource> playwrightBinding)
-            => ExposeBindingAsync(name, (Delegate)playwrightBinding);
+        public Task ExposeBindingAsync(string name, Action<BindingSource> callback)
+            => ExposeBindingAsync(name, (Delegate)callback);
 
         /// <inheritdoc/>
-        public Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> playwrightBinding)
-            => ExposeBindingAsync(name, (Delegate)playwrightBinding);
+        public Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback)
+            => ExposeBindingAsync(name, (Delegate)callback);
 
         /// <inheritdoc/>
-        public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> playwrightBinding)
-            => ExposeBindingAsync(name, (Delegate)playwrightBinding);
+        public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback)
+            => ExposeBindingAsync(name, (Delegate)callback);
 
         /// <inheritdoc/>
-        public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> playwrightBinding)
-            => ExposeBindingAsync(name, (Delegate)playwrightBinding, true);
+        public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback)
+            => ExposeBindingAsync(name, (Delegate)callback, true);
 
         /// <inheritdoc/>
-        public Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> playwrightBinding)
-            => ExposeBindingAsync(name, (Delegate)playwrightBinding);
+        public Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback)
+            => ExposeBindingAsync(name, (Delegate)callback);
 
         /// <inheritdoc/>
-        public Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> playwrightBinding)
-            => ExposeBindingAsync(name, (Delegate)playwrightBinding);
+        public Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback)
+            => ExposeBindingAsync(name, (Delegate)callback);
 
         /// <inheritdoc/>
-        public Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> playwrightBinding)
-            => ExposeBindingAsync(name, (Delegate)playwrightBinding);
+        public Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback)
+            => ExposeBindingAsync(name, (Delegate)callback);
 
         /// <inheritdoc/>
-        public Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> playwrightBinding)
-            => ExposeBindingAsync(name, (Delegate)playwrightBinding);
+        public Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback)
+            => ExposeBindingAsync(name, (Delegate)callback);
 
         /// <inheritdoc/>
-        public Task ExposeFunctionAsync(string name, Action playwrightFunction)
-            => ExposeBindingAsync(name, (BindingSource _) => playwrightFunction());
+        public Task ExposeFunctionAsync(string name, Action callback)
+            => ExposeBindingAsync(name, (BindingSource _) => callback());
 
         /// <inheritdoc/>
-        public Task ExposeFunctionAsync<T>(string name, Action<T> playwrightFunction)
-            => ExposeBindingAsync(name, (BindingSource _, T t) => playwrightFunction(t));
+        public Task ExposeFunctionAsync<T>(string name, Action<T> callback)
+            => ExposeBindingAsync(name, (BindingSource _, T t) => callback(t));
 
         /// <inheritdoc/>
-        public Task ExposeFunctionAsync<TResult>(string name, Func<TResult> playwrightFunction)
-            => ExposeBindingAsync(name, (BindingSource _) => playwrightFunction());
+        public Task ExposeFunctionAsync<TResult>(string name, Func<TResult> callback)
+            => ExposeBindingAsync(name, (BindingSource _) => callback());
 
         /// <inheritdoc/>
-        public Task ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> playwrightFunction)
-            => ExposeBindingAsync(name, (BindingSource _, T t) => playwrightFunction(t));
+        public Task ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> callback)
+            => ExposeBindingAsync(name, (BindingSource _, T t) => callback(t));
 
         /// <inheritdoc/>
-        public Task ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> playwrightFunction)
-            => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2) => playwrightFunction(t1, t2));
+        public Task ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> callback)
+            => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2) => callback(t1, t2));
 
         /// <inheritdoc/>
-        public Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> playwrightFunction)
-            => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3) => playwrightFunction(t1, t2, t3));
+        public Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> callback)
+            => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3) => callback(t1, t2, t3));
 
         /// <inheritdoc/>
-        public Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> playwrightFunction)
-            => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => playwrightFunction(t1, t2, t3, t4));
+        public Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback)
+            => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => callback(t1, t2, t3, t4));
 
         /// <inheritdoc/>
         public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> e, Func<T, bool> predicate = null, int? timeout = null)
@@ -314,7 +314,7 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task SetExtraHttpHeadersAsync(Dictionary<string, string> headers) => Channel.SetExtraHttpHeadersAsync(headers);
+        public Task SetextraHTTPHeadersAsync(Dictionary<string, string> headers) => Channel.SetextraHTTPHeadersAsync(headers);
 
         /// <inheritdoc />
         public async Task<StorageState> GetStorageStateAsync(string path = null)
@@ -418,7 +418,7 @@ namespace PlaywrightSharp
             _waitForCancellationTcs.Clear();
         }
 
-        private Task ExposeBindingAsync(string name, Delegate playwrightFunction, bool handle = false)
+        private Task ExposeBindingAsync(string name, Delegate callback, bool handle = false)
         {
             foreach (var page in PagesList)
             {
@@ -433,7 +433,7 @@ namespace PlaywrightSharp
                 throw new PlaywrightSharpException($"Function \"{name}\" has been already registered");
             }
 
-            _bindings.Add(name, playwrightFunction);
+            _bindings.Add(name, callback);
 
             return Channel.ExposeBindingAsync(name, handle);
         }

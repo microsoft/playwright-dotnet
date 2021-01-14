@@ -112,7 +112,7 @@ namespace PlaywrightSharp
         /// <param name="acceptDownloads">Whether to automatically download all the attachments. Defaults to false where all the downloads are canceled.</param>
         /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
-        /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
+        /// <param name="extraHTTPHeaders">An object containing additional HTTP headers to be sent with every request.</param>
         /// <param name="chromiumSandbox">Enable Chromium sandboxing. Defaults to true.</param>
         /// <param name="handleSIGINT">Close the browser process on Ctrl-C. Defaults to true.</param>
         /// <param name="handleSIGTERM">Close the browser process on SIGTERM. Defaults to true.</param>
@@ -153,7 +153,7 @@ namespace PlaywrightSharp
             bool? acceptDownloads = null,
             ColorScheme? colorScheme = null,
             string locale = null,
-            Dictionary<string, string> extraHttpHeaders = null,
+            Dictionary<string, string> extraHTTPHeaders = null,
             bool? chromiumSandbox = null,
             bool? handleSIGINT = null,
             bool? handleSIGTERM = null,
@@ -193,7 +193,7 @@ namespace PlaywrightSharp
         /// <param name="acceptDownloads">Whether to automatically download all the attachments. Defaults to false where all the downloads are canceled.</param>
         /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
-        /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
+        /// <param name="extraHTTPHeaders">An object containing additional HTTP headers to be sent with every request.</param>
         /// <param name="chromiumSandbox">Enable Chromium sandboxing. Defaults to true.</param>
         /// <param name="handleSIGINT">Close the browser process on Ctrl-C. Defaults to true.</param>
         /// <param name="handleSIGTERM">Close the browser process on SIGTERM. Defaults to true.</param>
@@ -233,7 +233,7 @@ namespace PlaywrightSharp
             bool? acceptDownloads = null,
             ColorScheme? colorScheme = null,
             string locale = null,
-            Dictionary<string, string> extraHttpHeaders = null,
+            Dictionary<string, string> extraHTTPHeaders = null,
             bool? chromiumSandbox = null,
             bool? handleSIGINT = null,
             bool? handleSIGTERM = null,

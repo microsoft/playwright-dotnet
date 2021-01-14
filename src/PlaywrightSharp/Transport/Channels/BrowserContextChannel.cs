@@ -202,10 +202,10 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task ClearCookiesAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "clearCookies", null);
 
-        internal Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
+        internal Task SetextraHTTPHeadersAsync(IDictionary<string, string> headers)
             => Connection.SendMessageToServerAsync(
                 Guid,
-                "setExtraHTTPHeaders",
+                "setextraHTTPHeaders",
                 new Dictionary<string, object>
                 {
                     ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }),

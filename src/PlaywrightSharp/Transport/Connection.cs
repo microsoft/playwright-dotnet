@@ -18,14 +18,14 @@ namespace PlaywrightSharp.Transport
 {
     internal class Connection : IDisposable
     {
-        private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>>();
-        private readonly ConcurrentDictionary<int, ConnectionCallback> _callbacks = new ConcurrentDictionary<int, ConnectionCallback>();
+        private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new();
+        private readonly ConcurrentDictionary<int, ConnectionCallback> _callbacks = new();
         private readonly ChannelOwnerBase _rootObject;
         private readonly Process _playwrightServerProcess;
         private readonly IConnectionTransport _transport;
         private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger<Connection> _logger;
-        private readonly TaskQueue _queue = new TaskQueue();
+        private readonly TaskQueue _queue = new();
         private int _lastId;
         private string _reason = string.Empty;
 
@@ -207,9 +207,9 @@ namespace PlaywrightSharp.Transport
         }
 
         private static Process GetProcess(string driverExecutablePath = null)
-            => new Process
-            {
-                StartInfo =
+            => new()
+        {
+            StartInfo =
                 {
                     FileName = string.IsNullOrEmpty(driverExecutablePath) ? GetExecutablePath() : driverExecutablePath,
                     UseShellExecute = false,
@@ -218,7 +218,7 @@ namespace PlaywrightSharp.Transport
                     RedirectStandardError = true,
                     CreateNoWindow = true,
                 },
-            };
+        };
 
         private static string GetExecutablePath()
         {
@@ -249,21 +249,21 @@ namespace PlaywrightSharp.Transport
                 {
                     if (RuntimeInformation.OSArchitecture == Architecture.X64)
                     {
-                        executableFile = Path.Combine(driversPath, "runtimes", "win-x64", "native", "playwright-cli.exe");
+                        executableFile = Path.Combine(driversPath, "runtimes", "win-x64", "native", "playwright.cmd");
                     }
                     else
                     {
-                        executableFile = Path.Combine(driversPath, "runtimes", "win-x86", "native", "playwright-cli.exe");
+                        executableFile = Path.Combine(driversPath, "runtimes", "win-x86", "native", "playwright.cms");
                     }
                 }
 
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
-                    executableFile = Path.Combine(driversPath, "runtimes", "osx", "native", "playwright-cli");
+                    executableFile = Path.Combine(driversPath, "runtimes", "osx", "native", "playwright.sh");
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
-                    executableFile = Path.Combine(driversPath, "runtimes", "unix", "native", "playwright-cli");
+                    executableFile = Path.Combine(driversPath, "runtimes", "unix", "native", "playwright.sh");
                 }
 
                 if (!new FileInfo(executableFile).Exists)
