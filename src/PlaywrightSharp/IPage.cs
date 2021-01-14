@@ -591,7 +591,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="url">URL to navigate page to. The url should include scheme, e.g. https://.</param>
         /// <param name="waitUntil">When to consider navigation succeeded, defaults to <see cref="LifecycleEvent.Load"/>.</param>
-        /// <param name="referer">Referer header value. If provided it will take prefrence over the referer header value set by <see cref="IPage.SetextraHTTPHeadersAsync(System.Collections.Generic.Dictionary{string, string})"/>.</param>
+        /// <param name="referer">Referer header value. If provided it will take prefrence over the referer header value set by <see cref="IPage.SetExtraHTTPHeadersAsync(System.Collections.Generic.Dictionary{string, string})"/>.</param>
         /// <param name="timeout">Maximum navigation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.</param>
         /// <returns>A <see cref="Task{IResponse}"/> that completes with resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
@@ -1128,7 +1128,7 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="headers">Additional http headers to be sent with every request.</param>
         /// <returns>A <see cref="Task"/> that completes when the headers are set.</returns>
-        Task SetextraHTTPHeadersAsync(Dictionary<string, string> headers);
+        Task SetExtraHTTPHeadersAsync(Dictionary<string, string> headers);
 
         /// <summary>
         /// In the case of multiple pages in a single browser, each page can have its own viewport size.
