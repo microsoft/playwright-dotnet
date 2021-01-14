@@ -208,8 +208,8 @@ namespace PlaywrightSharp.Transport
 
         private static Process GetProcess(string driverExecutablePath = null)
             => new()
-        {
-            StartInfo =
+            {
+                StartInfo =
                 {
                     FileName = string.IsNullOrEmpty(driverExecutablePath) ? GetExecutablePath() : driverExecutablePath,
                     UseShellExecute = false,
@@ -218,7 +218,7 @@ namespace PlaywrightSharp.Transport
                     RedirectStandardError = true,
                     CreateNoWindow = true,
                 },
-        };
+            };
 
         private static string GetExecutablePath()
         {
@@ -234,11 +234,11 @@ namespace PlaywrightSharp.Transport
                 driversPath = new FileInfo(assembly.Location).Directory.FullName;
             }
 
-            string executableFile = Path.Combine(driversPath, "playwright-cli.exe");
+            string executableFile = Path.Combine(driversPath, "playwright.cmd");
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                executableFile = Path.Combine(driversPath, "playwright-cli");
+                executableFile = Path.Combine(driversPath, "playwright.sh");
             }
 
             if (!new FileInfo(executableFile).Exists)
@@ -253,7 +253,7 @@ namespace PlaywrightSharp.Transport
                     }
                     else
                     {
-                        executableFile = Path.Combine(driversPath, "runtimes", "win-x86", "native", "playwright.cms");
+                        executableFile = Path.Combine(driversPath, "runtimes", "win-x86", "native", "playwright.cmd");
                     }
                 }
 
