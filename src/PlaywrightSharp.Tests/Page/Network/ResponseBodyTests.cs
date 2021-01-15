@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         {
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Response.body</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("network.spec.js", "Response.body", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -28,9 +26,7 @@ namespace PlaywrightSharp.Tests.Page.Network
             Assert.Equal(imageBuffer, await response.GetBodyAsync());
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Response.body</playwright-describe>
-        ///<playwright-it>should work with compression</playwright-it>
+        [PlaywrightTest("network.spec.js", "Response.body", "should work with compression")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCompression()
         {

@@ -18,9 +18,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         {
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>Accessibility</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "Accessibility", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -205,9 +203,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.True(result.AreEqual, result.DifferencesString);
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>Accessibility</playwright-describe>
-        ///<playwright-it>should work with regular text</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "Accessibility", "should work with regular text")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithRegularRext()
         {
@@ -220,9 +216,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             }, snapshot.Children[0]);
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>Accessibility</playwright-describe>
-        ///<playwright-it>roledescription</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "Accessibility", "roledescription")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task RoleDescription()
         {
@@ -231,9 +225,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.Equal("foo", snapshot.Children[0].RoleDescription);
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>Accessibility</playwright-describe>
-        ///<playwright-it>orientation</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "Accessibility", "orientation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task Orientation()
         {
@@ -242,9 +234,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.Equal("vertical", snapshot.Children[0].Orientation);
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>Accessibility</playwright-describe>
-        ///<playwright-it>autocomplete</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "Accessibility", "autocomplete")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task Autocomplete()
         {
@@ -253,9 +243,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.Equal("list", snapshot.Children[0].AutoComplete);
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>Accessibility</playwright-describe>
-        ///<playwright-it>multiselectable</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "Accessibility", "multiselectable")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task Multiselectable()
         {
@@ -264,9 +252,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.True(snapshot.Children[0].Multiselectable);
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>Accessibility</playwright-describe>
-        ///<playwright-it>keyshortcuts</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "Accessibility", "keyshortcuts")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task KeyShortcuts()
         {
@@ -275,9 +261,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.Equal("foo", snapshot.Children[0].KeyShortcuts);
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>Accessibility</playwright-describe>
-        ///<playwright-it>filtering children of leaf nodes</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "Accessibility", "filtering children of leaf nodes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task FilteringChildrenOfLeafNodes()
         {
@@ -311,9 +295,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 snapshot);
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>Accessibility</playwright-describe>
-        ///<playwright-it>rich text editable fields should have children</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "Accessibility", "rich text editable fields should have children")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task RichTextEditableFieldsShouldHaveChildren()
         {
@@ -372,9 +354,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.Equal(node, snapshot.Children[0]);
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>Accessibility</playwright-describe>
-        ///<playwright-it>rich text editable fields with role should have children</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "Accessibility", "rich text editable fields with role should have children")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task RichTextEditableFieldsWithRoleShouldHaveChildren()
         {

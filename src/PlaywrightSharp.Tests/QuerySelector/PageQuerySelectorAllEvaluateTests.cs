@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         {
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$$eval</playwright-describe>
-        ///<playwright-it>should work with css selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$$eval", "should work with css selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCssSelector()
         {
@@ -27,9 +25,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal(3, divsCount);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$$eval</playwright-describe>
-        ///<playwright-it>should work with text selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$$eval", "should work with text selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithTextSelector()
         {
@@ -38,9 +34,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal(2, divsCount);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$$eval</playwright-describe>
-        ///<playwright-it>should work with xpath selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$$eval", "should work with xpath selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithXpathSelector()
         {
@@ -49,9 +43,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal(3, divsCount);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$$eval</playwright-describe>
-        ///<playwright-it>should auto-detect css selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$$eval", "should auto-detect css selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAutoDetectCssSelector()
         {
@@ -60,9 +52,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal(3, divsCount);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$$eval</playwright-describe>
-        ///<playwright-it>should support >> syntax</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$$eval", "should support >> syntax")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportDoubleGreaterThanSyntax()
         {
@@ -71,9 +61,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal(3, spansCount);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$$eval</playwright-describe>
-        ///<playwright-it>should should support * capture</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$$eval", "should should support * capture")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportStarCapture()
         {
@@ -91,9 +79,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal(1, await Page.EvalOnSelectorAllAsync<int>("section >> *css=div >> \"a\"", "divs => divs.length"));
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$$eval</playwright-describe>
-        ///<playwright-it>should support * capture when multiple paths match</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$$eval", "should support * capture when multiple paths match")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportStarCaptureWhenMultiplePathsMatch()
         {

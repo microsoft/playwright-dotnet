@@ -14,9 +14,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.browserContext</playwright-describe>
-        ///<playwright-it>should return the correct browser instance</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.browserContext", "should return the correct browser instance")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public void ShouldReturnTheCorrectBrowserInstance() => Assert.Equal(Context, Page.Context);
     }

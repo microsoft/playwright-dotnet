@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         {
         }
 
-        ///<playwright-file>jshandle.spec.js</playwright-file>
-        ///<playwright-describe>JSHandle.getProperty</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("jshandle.spec.js", "JSHandle.getProperty", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -31,9 +29,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
             Assert.Equal(2, await twoHandle.GetJsonValueAsync<int>());
         }
 
-        ///<playwright-file>jshandle.spec.js</playwright-file>
-        ///<playwright-describe>JSHandle.getProperty</playwright-describe>
-        ///<playwright-it>should work with undefined, null, and empty</playwright-it>
+        [PlaywrightTest("jshandle.spec.js", "JSHandle.getProperty", "should work with undefined, null, and empty")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithUndefinedNullAndEmpty()
         {
@@ -49,9 +45,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
             Assert.Null(await emptyHandle.GetJsonValueAsync<string>());
         }
 
-        ///<playwright-file>jshandle.spec.js</playwright-file>
-        ///<playwright-describe>JSHandle.getProperty</playwright-describe>
-        ///<playwright-it>should work with unserializable values</playwright-it>
+        [PlaywrightTest("jshandle.spec.js", "JSHandle.getProperty", "should work with unserializable values")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithUnserializableValues()
         {

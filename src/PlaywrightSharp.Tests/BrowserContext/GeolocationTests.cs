@@ -19,9 +19,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
         }
 
-        ///<playwright-file>geolocation.spec.js</playwright-file>
-        ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -43,9 +41,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             }, geolocation);
         }
 
-        ///<playwright-file>geolocation.spec.js</playwright-file>
-        ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
-        ///<playwright-it>should throw when invalid longitude</playwright-it>
+        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "should throw when invalid longitude")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenInvalidLongitude()
         {
@@ -59,9 +55,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Contains("failed", exception.Message);
         }
 
-        ///<playwright-file>geolocation.spec.js</playwright-file>
-        ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
-        ///<playwright-it>should isolate contexts</playwright-it>
+        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "should isolate contexts")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateContexts()
         {
@@ -104,15 +98,11 @@ namespace PlaywrightSharp.Tests.BrowserContext
             }, geolocation2);
         }
 
-        ///<playwright-file>geolocation.spec.js</playwright-file>
-        ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
-        ///<playwright-it>should throw with missing latitude</playwright-it>
+        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "should throw with missing latitude")]
         [Fact(Skip = "We don't this test")]
         public void ShouldThrowWithMissingLatitude() { }
 
-        ///<playwright-file>geolocation.spec.js</playwright-file>
-        ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
-        ///<playwright-it>should not modify passed default options object</playwright-it>
+        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "should not modify passed default options object")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldNotModifyPassedDefaultOptionsObject()
         {
@@ -128,15 +118,11 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(options.Geolocation, geolocation);
         }
 
-        ///<playwright-file>geolocation.spec.js</playwright-file>
-        ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
-        ///<playwright-it>should throw with missing longitude in default options</playwright-it>
+        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "should throw with missing longitude in default options")]
         [Fact(Skip = "We don't this test")]
         public void ShouldThrowWithMissingLongitudeInDefaultOptions() { }
 
-        ///<playwright-file>geolocation.spec.js</playwright-file>
-        ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
-        ///<playwright-it>should use context options</playwright-it>
+        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "should use context options")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldUseContextOptions()
         {
@@ -160,9 +146,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(options.Geolocation, geolocation);
         }
 
-        ///<playwright-file>geolocation.spec.js</playwright-file>
-        ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
-        ///<playwright-it>watchPosition should be notified</playwright-it>
+        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "watchPosition should be notified")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task WatchPositionShouldBeNotified()
         {
@@ -203,9 +187,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Contains("lat=40 lng=50", allMessages);
         }
 
-        ///<playwright-file>geolocation.spec.js</playwright-file>
-        ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
-        ///<playwright-it>should use context options for popup</playwright-it>
+        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "should use context options for popup")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldUseContextOptionsForPopup()
         {

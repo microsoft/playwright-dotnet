@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         {
         }
 
-        ///<playwright-file>elementhandle.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.hover</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.hover", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -28,9 +26,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal("button-6", await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"));
         }
 
-        ///<playwright-file>elementhandle.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.hover</playwright-describe>
-        ///<playwright-it>should work when Node is removed</playwright-it>
+        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.hover", "should work when Node is removed")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenNodeIsRemoved()
         {

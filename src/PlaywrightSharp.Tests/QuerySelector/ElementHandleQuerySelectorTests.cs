@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         {
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.$</playwright-describe>
-        ///<playwright-it>should query existing element</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "ElementHandle.$", "should query existing element")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldQueryExistingElement()
         {
@@ -31,9 +29,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("A", content);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.$</playwright-describe>
-        ///<playwright-it>should return null for non-existing element</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "ElementHandle.$", "should return null for non-existing element")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullForNonExistingElement()
         {
@@ -43,9 +39,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Null(second);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.$</playwright-describe>
-        ///<playwright-it>should work for adopted elements</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "ElementHandle.$", "should work for adopted elements")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForAdoptedElements()
         {

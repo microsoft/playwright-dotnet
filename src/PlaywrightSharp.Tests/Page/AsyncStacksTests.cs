@@ -15,9 +15,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Async stacks</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("page.spec.js", "Async stacks", "should work")]
         [Fact(Skip = "We don't need to test this in .NET")]
         public async Task ShouldWork()
         {

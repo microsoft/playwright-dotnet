@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         {
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$$ xpath</playwright-describe>
-        ///<playwright-it>should query existing element</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$$ xpath", "should query existing element")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldQueryExistingElement()
         {
@@ -29,9 +27,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Single(elements);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$$ xpath</playwright-describe>
-        ///<playwright-it>should return empty array for non-existing element</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$$ xpath", "should return empty array for non-existing element")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEmptyArrayForNonExistingElement()
         {
@@ -39,9 +35,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Empty(elements);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$$ xpath</playwright-describe>
-        ///<playwright-it>should return multiple elements</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$$ xpath", "should return multiple elements")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnMultipleElements()
         {

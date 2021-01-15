@@ -22,45 +22,31 @@ namespace PlaywrightSharp.Tests.Fixtures
         {
         }
 
-        ///<playwright-file>fixtures.spec.js</playwright-file>
-        ///<playwright-describe>Fixtures</playwright-describe>
-        ///<playwright-it>should report browser close signal</playwright-it>
+        [PlaywrightTest("fixtures.spec.js", "Fixtures", "should report browser close signal")]
         [Fact(Skip = "We don't need to test signals")]
         public void ShouldReportBrowserCloseSignal() { }
 
-        ///<playwright-file>fixtures.spec.js</playwright-file>
-        ///<playwright-describe>Fixtures</playwright-describe>
-        ///<playwright-it>should report browser close signal 2</playwright-it>
+        [PlaywrightTest("fixtures.spec.js", "Fixtures", "should report browser close signal 2")]
         [Fact(Skip = "We don't need to test signals")]
         public void ShouldReportBrowserCloseSignal2() { }
 
-        ///<playwright-file>fixtures.spec.js</playwright-file>
-        ///<playwright-describe>Fixtures</playwright-describe>
-        ///<playwright-it>should close the browser on SIGINT</playwright-it>
+        [PlaywrightTest("fixtures.spec.js", "Fixtures", "should close the browser on SIGINT")]
         [Fact(Skip = "We don't need to test signals")]
         public void ShouldCloseTheBrowserOnSIGINT() { }
 
-        ///<playwright-file>fixtures.spec.js</playwright-file>
-        ///<playwright-describe>Fixtures</playwright-describe>
-        ///<playwright-it>should close the browser on SIGTERM</playwright-it>
+        [PlaywrightTest("fixtures.spec.js", "Fixtures", "should close the browser on SIGTERM")]
         [Fact(Skip = "We don't need to test signals")]
         public void ShouldCloseTheBrowserOnSIGTERM() { }
 
-        ///<playwright-file>fixtures.spec.js</playwright-file>
-        ///<playwright-describe>Fixtures</playwright-describe>
-        ///<playwright-it>should close the browser on SIGHUP</playwright-it>
+        [PlaywrightTest("fixtures.spec.js", "Fixtures", "should close the browser on SIGHUP")]
         [Fact(Skip = "We don't need to test signals")]
         public void ShouldCloseTheBrowserOnSIGHUP() { }
 
-        ///<playwright-file>fixtures.spec.js</playwright-file>
-        ///<playwright-describe>Fixtures</playwright-describe>
-        ///<playwright-it>should close the browser on double SIGINT</playwright-it>
+        [PlaywrightTest("fixtures.spec.js", "Fixtures", "should close the browser on double SIGINT")]
         [Fact(Skip = "We don't need to test signals")]
         public void ShouldCloseTheBrowserOnDoubleSIGINT() { }
 
-        ///<playwright-file>fixtures.spec.js</playwright-file>
-        ///<playwright-describe>Fixtures</playwright-describe>
-        ///<playwright-it>should close the browser on SIGINT + SIGERM</playwright-it>
+        [PlaywrightTest("fixtures.spec.js", "Fixtures", "should close the browser on SIGINT + SIGERM")]
         [Fact(Skip = "We don't need to test signals")]
         public void ShouldCloseTheBrowserOnSIGINTAndSIGTERM() { }
     }

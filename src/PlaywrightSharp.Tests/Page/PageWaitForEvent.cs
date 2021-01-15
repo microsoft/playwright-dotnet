@@ -18,9 +18,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForEvent</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.waitForEvent", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWithErrorUponDisconnect()
         {

@@ -15,9 +15,7 @@ namespace PlaywrightSharp.Tests.Launcher
         {
         }
 
-        ///<playwright-file>launcher.spec.js</playwright-file>
-        ///<playwright-describe>browserType.name</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("launcher.spec.js", "browserType.name", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public void ShouldRejectAllPromisesWhenBrowserIsClosed()
             => Assert.Equal(

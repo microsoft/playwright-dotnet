@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         {
         }
 
-        ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>service worker</playwright-describe>
-        ///<playwright-it>should intercept after a service worker</playwright-it>
+        [PlaywrightTest("interception.spec.js", "service worker", "should intercept after a service worker")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldInterceptAfterAServiceWorker()
         {

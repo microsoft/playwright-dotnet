@@ -19,9 +19,7 @@ namespace PlaywrightSharp.Tests.Mouse
         {
         }
 
-        ///<playwright-file>mouse.spec.js</playwright-file>
-        ///<playwright-describe>Drag and Drop</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("mouse.spec.js", "Drag and Drop", "should work")]
         [Fact(Skip = "Skipped in Playwright")]
         public async Task ShouldWork()
         {

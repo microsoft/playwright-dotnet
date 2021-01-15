@@ -18,9 +18,7 @@ namespace PlaywrightSharp.Tests.Frame
         {
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame Management</playwright-describe>
-        ///<playwright-it>should handle nested frames</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame Management", "should handle nested frames")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHandleNestedFrames()
         {
@@ -28,9 +26,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.Equal(TestConstants.NestedFramesDumpResult, FrameUtils.DumpFrames(Page.MainFrame));
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame Management</playwright-describe>
-        ///<playwright-it>should send events when frames are manipulated dynamically</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame Management", "should send events when frames are manipulated dynamically")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendEventsWhenFramesAreManipulatedDynamically()
         {
@@ -61,9 +57,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.True(detachedFrames[0].IsDetached);
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame Management</playwright-describe>
-        ///<playwright-it>should send "framenavigated" when navigating on anchor URLs</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame Management", @"should send ""framenavigated"" when navigating on anchor URLs")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendFrameNavigatedWhenNavigatingOnAnchorURLs()
         {
@@ -76,9 +70,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.Equal(TestConstants.EmptyPage + "#foo", Page.Url);
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame Management</playwright-describe>
-        ///<playwright-it>should persist mainFrame on cross-process navigation</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame Management", "should persist mainFrame on cross-process navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldPersistMainFrameOnCrossProcessNavigation()
         {
@@ -88,9 +80,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.Same(mainFrame, Page.MainFrame);
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame Management</playwright-describe>
-        ///<playwright-it>should not send attach/detach events for main frame</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame Management", "should not send attach/detach events for main frame")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotSendAttachDetachEventsForMainFrame()
         {
@@ -101,9 +91,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.False(hasEvents);
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame Management</playwright-describe>
-        ///<playwright-it>should detach child frames on navigation</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame Management", "should detach child frames on navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDetachChildFramesOnNavigation()
         {
@@ -127,9 +115,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.Single(navigatedFrames);
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame Management</playwright-describe>
-        ///<playwright-it>should support framesets</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame Management", "should support framesets")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportFramesets()
         {
@@ -153,9 +139,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.Single(navigatedFrames);
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame Management</playwright-describe>
-        ///<playwright-it>should report frame from-inside shadow DOM</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame Management", "should report frame from-inside shadow DOM")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportFrameFromInsideShadowDOM()
         {
@@ -170,9 +154,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.Equal(TestConstants.EmptyPage, Page.Frames[1].Url);
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame Management</playwright-describe>
-        ///<playwright-it>should report frame.name()</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame Management", "should report frame.name()")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportFrameName()
         {
@@ -189,9 +171,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.Equal("theFrameName", Page.Frames[2].Name);
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame Management</playwright-describe>
-        ///<playwright-it>should report frame.parent()</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame Management", "should report frame.parent()")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportFrameParent()
         {
@@ -202,9 +182,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.Same(Page.MainFrame, Page.Frames[2].ParentFrame);
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame Management</playwright-describe>
-        ///<playwright-it>should report different frame instance when frame re-attaches</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame Management", "should report different frame instance when frame re-attaches")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDifferentFrameInstanceWhenFrameReAttaches()
         {

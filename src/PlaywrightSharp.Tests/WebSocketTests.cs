@@ -18,8 +18,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        ///<playwright-file>web-socket.spec.js</playwright-file>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("web-socket.spec.js", "should work")]
         [Fact]
         public async Task ShouldWork()
         {
@@ -33,8 +32,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("incoming", value);
         }
 
-        ///<playwright-file>web-socket.spec.js</playwright-file>
-        ///<playwright-it>should emit close events</playwright-it>
+        [PlaywrightTest("web-socket.spec.js", "should emit close events")]
         [Fact]
         public async Task ShouldEmitCloseEvents()
         {
@@ -63,8 +61,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(webSocket.IsClosed);
         }
 
-        ///<playwright-file>web-socket.spec.js</playwright-file>
-        ///<playwright-it>should emit frame events</playwright-it>
+        [PlaywrightTest("web-socket.spec.js", "should emit frame events")]
         [Fact]
         public async Task ShouldEmitFrameEvents()
         {
@@ -98,8 +95,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("close:open:received<incoming>:sent<outgoing>", string.Join(":", log));
         }
 
-        ///<playwright-file>web-socket.spec.js</playwright-file>
-        ///<playwright-it>should emit binary frame events</playwright-it>
+        [PlaywrightTest("web-socket.spec.js", "should emit binary frame events")]
         [Fact]
         public async Task ShouldEmitBinaryFrameEvents()
         {
@@ -134,8 +130,7 @@ namespace PlaywrightSharp.Tests
             }
         }
 
-        ///<playwright-file>web-socket.spec.js</playwright-file>
-        ///<playwright-it>should emit error</playwright-it>
+        [PlaywrightTest("web-socket.spec.js", "should emit error")]
         [Fact]
         public async Task ShouldEmitError()
         {
@@ -164,8 +159,7 @@ namespace PlaywrightSharp.Tests
             }
         }
 
-        ///<playwright-file>web-socket.spec.js</playwright-file>
-        ///<playwright-it>should not have stray error events</playwright-it>
+        [PlaywrightTest("web-socket.spec.js", "should not have stray error events")]
         [Fact]
         public async Task ShouldNotHaveStrayErrorEvents()
         {
@@ -190,8 +184,7 @@ namespace PlaywrightSharp.Tests
             Assert.Null(socketError);
         }
 
-        ///<playwright-file>web-socket.spec.js</playwright-file>
-        ///<playwright-it>should reject waitForEvent on socket close</playwright-it>
+        [PlaywrightTest("web-socket.spec.js", "should reject waitForEvent on socket close")]
         [Fact]
         public async Task ShouldRejectWaitForEventOnSocketClose()
         {
@@ -217,8 +210,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("Socket closed", exception.Message);
         }
 
-        ///<playwright-file>web-socket.spec.js</playwright-file>
-        ///<playwright-it>should reject waitForEvent on page close</playwright-it>
+        [PlaywrightTest("web-socket.spec.js", "should reject waitForEvent on page close")]
         [Fact]
         public async Task ShouldRejectWaitForEventOnPageClose()
         {

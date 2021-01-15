@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
         }
 
-        ///<playwright-file>browsercontext.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("browsercontext.spec.js", "BrowserContext({setUserAgent})", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -40,9 +38,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             }
         }
 
-        ///<playwright-file>browsercontext.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
-        ///<playwright-it>should work for subframes</playwright-it>
+        [PlaywrightTest("browsercontext.spec.js", "BrowserContext({setUserAgent})", "should work for subframes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForSubframes()
         {
@@ -64,9 +60,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             }
         }
 
-        ///<playwright-file>browsercontext.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
-        ///<playwright-it>should emulate device user-agent</playwright-it>
+        [PlaywrightTest("browsercontext.spec.js", "BrowserContext({setUserAgent})", "should emulate device user-agent")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmulateDeviceUserAgent()
         {
@@ -85,9 +79,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             }
         }
 
-        ///<playwright-file>browsercontext.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext({setUserAgent})</playwright-describe>
-        ///<playwright-it>should make a copy of default options</playwright-it>
+        [PlaywrightTest("browsercontext.spec.js", "BrowserContext({setUserAgent})", "should make a copy of default options")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldMakeACopyOfDefaultOptions()
         {

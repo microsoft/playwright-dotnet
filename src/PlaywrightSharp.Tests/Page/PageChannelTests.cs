@@ -14,9 +14,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page channel</playwright-describe>
-        ///<playwright-it>page should be client stub</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page channel", "page should be client stub")]
         [Fact(Skip = "Skip CHANNEL")]
         public void PageShouldBeClientStub()
         {

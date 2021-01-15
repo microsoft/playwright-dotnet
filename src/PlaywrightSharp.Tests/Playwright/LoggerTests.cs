@@ -18,17 +18,13 @@ namespace PlaywrightSharp.Tests.Launcher
         {
         }
 
-        ///<playwright-file>logger.spec.js</playwright-file>
-        ///<playwright-describe>Logger</playwright-describe>
-        ///<playwright-it>should log</playwright-it>
+        [PlaywrightTest("logger.spec.js", "Logger", "should log")]
         [Fact(Skip = "We don't test CHANNEL")]
         public void ShouldLog()
         {
         }
 
-        ///<playwright-file>logger.spec.js</playwright-file>
-        ///<playwright-describe>Logger</playwright-describe>
-        ///<playwright-it>should log context-level</playwright-it>
+        [PlaywrightTest("logger.spec.js", "Logger", "should log context-level")]
         [Fact(Skip = "We don't test CHANNEL")]
         public void ShouldLogContextLevel()
         {

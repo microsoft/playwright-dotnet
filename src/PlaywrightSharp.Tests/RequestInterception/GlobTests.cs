@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         {
         }
 
-        ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>glob</playwright-describe>
-        ///<playwright-it>should work with glob</playwright-it>
+        [PlaywrightTest("interception.spec.js", "glob", "should work with glob")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public void ShouldWorkWithGlob()
         {

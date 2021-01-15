@@ -19,9 +19,7 @@ namespace PlaywrightSharp.Tests.Frame
         {
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForLoadState</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.waitForLoadState", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {

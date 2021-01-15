@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.Chromium
         {
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>Chromium-Specific Page Tests</playwright-describe>
-        ///<playwright-it>Page.route should work with intervention headers</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "Chromium-Specific Page Tests", "Page.route should work with intervention headers")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task PageRouteShouldWorkWithInterventionHeaders()
         {

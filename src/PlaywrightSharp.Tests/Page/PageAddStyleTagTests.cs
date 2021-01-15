@@ -17,17 +17,13 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.addStyleTag</playwright-describe>
-        ///<playwright-it>should throw an error if no options are provided</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.addStyleTag", "should throw an error if no options are provided")]
         [Fact(Skip = "Not relevant for C#, js specific")]
         public void ShouldThrowAnErrorIfNoOptionsAreProvided()
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.addStyleTag</playwright-describe>
-        ///<playwright-it>should work with a url</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.addStyleTag", "should work with a url")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAUrl()
         {
@@ -37,9 +33,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("rgb(255, 0, 0)", await Page.EvaluateAsync<string>("window.getComputedStyle(document.querySelector('body')).getPropertyValue('background-color')"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.addStyleTag</playwright-describe>
-        ///<playwright-it>should throw an error if loading from url fail</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.addStyleTag", "should throw an error if loading from url fail")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowAnErrorIfLoadingFromUrlFail()
         {
@@ -48,9 +42,7 @@ namespace PlaywrightSharp.Tests.Page
                 Page.AddStyleTagAsync(url: "/nonexistfile.js"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.addStyleTag</playwright-describe>
-        ///<playwright-it>should work with a path</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.addStyleTag", "should work with a path")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAPath()
         {
@@ -60,9 +52,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("rgb(255, 0, 0)", await Page.EvaluateAsync<string>("window.getComputedStyle(document.querySelector('body')).getPropertyValue('background-color')"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.addStyleTag</playwright-describe>
-        ///<playwright-it>should include sourceURL when path is provided</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.addStyleTag", "should include sourceURL when path is provided")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeSourceURLWhenPathIsProvided()
         {
@@ -73,9 +63,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains(TestUtils.GetWebServerFile("injectedstyle.css"), styleContent);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.addStyleTag</playwright-describe>
-        ///<playwright-it>should work with content</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.addStyleTag", "should work with content")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithContent()
         {
@@ -85,9 +73,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("rgb(0, 128, 0)", await Page.EvaluateAsync<string>("window.getComputedStyle(document.querySelector('body')).getPropertyValue('background-color')"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.addStyleTag</playwright-describe>
-        ///<playwright-it>should throw when added with content to the CSP page</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.addStyleTag", "should throw when added with content to the CSP page")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenAddedWithContentToTheCSPPage()
         {
@@ -96,9 +82,7 @@ namespace PlaywrightSharp.Tests.Page
                 Page.AddStyleTagAsync(content: "body { background-color: green; }"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.addStyleTag</playwright-describe>
-        ///<playwright-it>should throw when added with URL to the CSP page</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.addStyleTag", "should throw when added with URL to the CSP page")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenAddedWithURLToTheCSPPage()
         {

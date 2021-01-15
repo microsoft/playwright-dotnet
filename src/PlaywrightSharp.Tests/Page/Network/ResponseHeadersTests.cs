@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         {
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Response.headers</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("network.spec.js", "Response.headers", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {

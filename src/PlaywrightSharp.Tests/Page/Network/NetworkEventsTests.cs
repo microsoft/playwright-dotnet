@@ -19,9 +19,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         {
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Network Events</playwright-describe>
-        ///<playwright-it>Page.Events.Request</playwright-it>
+        [PlaywrightTest("network.spec.js", "Network Events", "Page.Events.Request")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PageEventsRequest()
         {
@@ -37,9 +35,7 @@ namespace PlaywrightSharp.Tests.Page.Network
             Assert.Equal(TestConstants.EmptyPage, requests[0].Frame.Url);
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Network Events</playwright-describe>
-        ///<playwright-it>Page.Events.Response</playwright-it>
+        [PlaywrightTest("network.spec.js", "Network Events", "Page.Events.Response")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PageEventsResponse()
         {
@@ -53,9 +49,7 @@ namespace PlaywrightSharp.Tests.Page.Network
             Assert.NotNull(responses[0].Request);
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Network Events</playwright-describe>
-        ///<playwright-it>Page.Events.RequestFailed</playwright-it>
+        [PlaywrightTest("network.spec.js", "Network Events", "Page.Events.RequestFailed")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PageEventsRequestFailed()
         {
@@ -85,9 +79,7 @@ namespace PlaywrightSharp.Tests.Page.Network
             Assert.NotNull(failedRequests[0].Frame);
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Network Events</playwright-describe>
-        ///<playwright-it>Page.Events.RequestFinished</playwright-it>
+        [PlaywrightTest("network.spec.js", "Network Events", "Page.Events.RequestFinished")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PageEventsRequestFinished()
         {
@@ -103,9 +95,7 @@ namespace PlaywrightSharp.Tests.Page.Network
             Assert.Equal(TestConstants.EmptyPage, request.Frame.Url);
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Network Events</playwright-describe>
-        ///<playwright-it>should fire events in proper order</playwright-it>
+        [PlaywrightTest("network.spec.js", "Network Events", "should fire events in proper order")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireEventsInProperOrder()
         {
@@ -118,9 +108,7 @@ namespace PlaywrightSharp.Tests.Page.Network
             Assert.Equal(new[] { "request", "response", "requestfinished" }, events);
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Network Events</playwright-describe>
-        ///<playwright-it>should support redirects</playwright-it>
+        [PlaywrightTest("network.spec.js", "Network Events", "should support redirects")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportRedirects()
         {

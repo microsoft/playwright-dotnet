@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page api coverage</playwright-describe>
-        ///<playwright-it>Page.press should work</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page api coverage", "Page.press should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PagePressShouldWork()
         {
@@ -28,9 +26,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("a", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page api coverage</playwright-describe>
-        ///<playwright-it>Frame.press should work</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page api coverage", "Frame.press should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task FramePressShouldWork()
         {

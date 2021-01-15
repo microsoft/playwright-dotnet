@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Click navigation</playwright-describe>
-        ///<playwright-it>should work with _blank target</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Click navigation", "should work with _blank target")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBblankTarget()
         {
@@ -29,9 +27,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.ClickAsync("\"Click me\"");
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Click navigation</playwright-describe>
-        ///<playwright-it>should work with cross-process _blank target</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Click navigation", "should work with cross-process _blank target")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCrossProcessBlankTarget()
         {

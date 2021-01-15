@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.Frame
         {
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame.evaluateHandle</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame.evaluateHandle", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {

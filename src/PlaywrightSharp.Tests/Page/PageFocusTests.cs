@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>focus.spec.js</playwright-file>
-        ///<playwright-describe>Page.focus</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("focus.spec.js", "Page.focus", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -29,9 +27,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("d1", await Page.EvaluateAsync<string>("() => document.activeElement.id"));
         }
 
-        ///<playwright-file>focus.spec.js</playwright-file>
-        ///<playwright-describe>Page.focus</playwright-describe>
-        ///<playwright-it>should emit focus event</playwright-it>
+        [PlaywrightTest("focus.spec.js", "Page.focus", "should emit focus event")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitFocusEvent()
         {
@@ -43,9 +39,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(focused);
         }
 
-        ///<playwright-file>focus.spec.js</playwright-file>
-        ///<playwright-describe>Page.focus</playwright-describe>
-        ///<playwright-it>should emit blur event</playwright-it>
+        [PlaywrightTest("focus.spec.js", "Page.focus", "should emit blur event")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitBlurEvent()
         {
@@ -62,9 +56,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(blurred);
         }
 
-        ///<playwright-file>focus.spec.js</playwright-file>
-        ///<playwright-describe>Page.focus</playwright-describe>
-        ///<playwright-it>should traverse focus</playwright-it>
+        [PlaywrightTest("focus.spec.js", "Page.focus", "should traverse focus")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true, skipOSX: true)]
         public async Task ShouldTraverseFocus()
         {

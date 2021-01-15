@@ -17,8 +17,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        ///<playwright-file>pdf.spec.js</playwright-file>
-        ///<playwright-it>should be able to save file</playwright-it>
+        [PlaywrightTest("pdf.spec.js", "should be able to save file")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldBeAbleToSaveFile()
         {
@@ -37,8 +36,7 @@ namespace PlaywrightSharp.Tests
             }
         }
 
-        ///<playwright-file>pdf.spec.js</playwright-file>
-        ///<playwright-it>should only have pdf in chromium</playwright-it>
+        [PlaywrightTest("pdf.spec.js", "should only have pdf in chromium")]
         [SkipBrowserAndPlatformFact(skipChromium: true)]
         public Task ShouldOnlyHavePdfInChromium()
             => Assert.ThrowsAsync<NotSupportedException>(() => Page.GetPdfAsync());

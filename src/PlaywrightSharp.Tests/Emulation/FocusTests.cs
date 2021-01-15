@@ -17,18 +17,14 @@ namespace PlaywrightSharp.Tests.Emulation
         {
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>focus</playwright-describe>
-        ///<playwright-it>should think that it is focused by default</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "focus", "should think that it is focused by default")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThinkThatItIsFocusedByDefault()
         {
             Assert.True(await Page.EvaluateAsync<bool>("document.hasFocus()"));
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>focus</playwright-describe>
-        ///<playwright-it>should think that all pages are focused</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "focus", "should think that all pages are focused")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThinkThatAllPagesAreFocused()
         {
@@ -37,9 +33,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.True(await page2.EvaluateAsync<bool>("document.hasFocus()"));
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>focus</playwright-describe>
-        ///<playwright-it>should focus popups by default</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "focus", "should focus popups by default")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFocusPopupsByDefault()
         {
@@ -56,9 +50,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.True(await popup.EvaluateAsync<bool>("document.hasFocus()"));
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>focus</playwright-describe>
-        ///<playwright-it>should provide target for keyboard events</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "focus", "should provide target for keyboard events")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldProvideTargetForKeyboardEvents()
         {
@@ -87,9 +79,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Equal(text2, results.Item2);
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>focus</playwright-describe>
-        ///<playwright-it>should not affect mouse event target page</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "focus", "should not affect mouse event target page")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAffectMouseEventTargetPage()
         {
@@ -116,9 +106,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Equal(1, counters.Item2);
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>focus</playwright-describe>
-        ///<playwright-it>should change document.activeElement</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "focus", "should change document.activeElement")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldChangeDocumentActiveElement()
         {
@@ -140,17 +128,13 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Equal("TEXTAREA", results.Item2);
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>focus</playwright-describe>
-        ///<playwright-it>should not affect screenshots</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "focus", "should not affect screenshots")]
         [Fact(Skip = "We need screenshot features first")]
         public void ShouldNotAffectScreenshots()
         {
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>focus</playwright-describe>
-        ///<playwright-it>should change focused iframe</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "focus", "should change focused iframe")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldChangeFocusedIframe()
         {

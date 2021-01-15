@@ -19,9 +19,7 @@ namespace PlaywrightSharp.Tests.Chromium
         {
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>resetOnNavigation</playwright-describe>
-        ///<playwright-it>should report stylesheets across navigations</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "resetOnNavigation", "should report stylesheets across navigations")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportStylesheetsAcrossNavigations()
         {
@@ -32,9 +30,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal(2, coverage.Length);
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>resetOnNavigation</playwright-describe>
-        ///<playwright-it>should NOT report stylesheets across navigations</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "resetOnNavigation", "should NOT report stylesheets across navigations")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldNotReportScriptsAcrossNavigations()
         {
@@ -45,9 +41,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Empty(coverage);
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>resetOnNavigation</playwright-describe>
-        ///<playwright-it>should work with a recently loaded stylesheet</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "resetOnNavigation", "should work with a recently loaded stylesheet")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWorkWithArRecentlyLoadedStylesheet()
         {

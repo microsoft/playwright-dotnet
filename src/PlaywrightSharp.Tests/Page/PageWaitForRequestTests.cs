@@ -18,9 +18,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForRequest</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.waitForRequest", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -37,9 +35,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.ServerUrl + "/digits/2.png", request.Url);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForRequest</playwright-describe>
-        ///<playwright-it>should work with predicate</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.waitForRequest", "should work with predicate")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithPredicate()
         {
@@ -56,9 +52,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.ServerUrl + "/digits/2.png", requestEvent.Request.Url);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForRequest</playwright-describe>
-        ///<playwright-it>should respect timeout</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.waitForRequest", "should respect timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
@@ -66,9 +60,7 @@ namespace PlaywrightSharp.Tests.Page
                 () => Page.WaitForEventAsync<RequestEventArgs>(PageEvent.Request, _ => false, 1));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForRequest</playwright-describe>
-        ///<playwright-it>should respect default timeout</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.waitForRequest", "should respect default timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectDefaultTimeout()
         {
@@ -77,9 +69,7 @@ namespace PlaywrightSharp.Tests.Page
                 () => Page.WaitForEventAsync<RequestEventArgs>(PageEvent.Request, _ => false));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForRequest</playwright-describe>
-        ///<playwright-it>should work with no timeout</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.waitForRequest", "should work with no timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoTimeout()
         {
@@ -96,9 +86,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.ServerUrl + "/digits/2.png", request.Url);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForRequest</playwright-describe>
-        ///<playwright-it>should work with url match</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.waitForRequest", "should work with url match")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithUrlMatch()
         {
@@ -113,9 +101,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.ServerUrl + "/digits/1.png", request.Url);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForRequest</playwright-describe>
-        ///<playwright-it>should work with url match regular expression from a different context</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.waitForRequest", "should work with url match regular expression from a different context")]
         [Fact(Skip = "We dont't need to test this")]
         public void ShouldWorkWithUrlMatchRegularExpressionFromADifferentContext()
         {

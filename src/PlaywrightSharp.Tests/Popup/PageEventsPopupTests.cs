@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.Popup
         {
         }
 
-        ///<playwright-file>popup.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Popup</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("popup.spec.js", "Page.Events.Popup", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -33,9 +31,7 @@ namespace PlaywrightSharp.Tests.Popup
             Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
-        ///<playwright-file>popup.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Popup</playwright-describe>
-        ///<playwright-it>should work with window features</playwright-it>
+        [PlaywrightTest("popup.spec.js", "Page.Events.Popup", "should work with window features")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithWindowFeatures()
         {
@@ -50,9 +46,7 @@ namespace PlaywrightSharp.Tests.Popup
             Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
-        ///<playwright-file>popup.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Popup</playwright-describe>
-        ///<playwright-it>should emit for immediately closed popups</playwright-it>
+        [PlaywrightTest("popup.spec.js", "Page.Events.Popup", "should emit for immediately closed popups")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitForImmediatelyClosedPopups()
         {
@@ -68,9 +62,7 @@ namespace PlaywrightSharp.Tests.Popup
             Assert.NotNull(popupTask.Result.Page);
         }
 
-        ///<playwright-file>popup.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Popup</playwright-describe>
-        ///<playwright-it>should emit for immediately closed popups</playwright-it>
+        [PlaywrightTest("popup.spec.js", "Page.Events.Popup", "should emit for immediately closed popups")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitForImmediatelyClosedPopupsWithLocation()
         {
@@ -86,9 +78,7 @@ namespace PlaywrightSharp.Tests.Popup
             Assert.NotNull(popupTask.Result.Page);
         }
 
-        ///<playwright-file>popup.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Popup</playwright-describe>
-        ///<playwright-it>should be able to capture alert</playwright-it>
+        [PlaywrightTest("popup.spec.js", "Page.Events.Popup", "should be able to capture alert")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToCaptureAlert()
         {
@@ -107,9 +97,7 @@ namespace PlaywrightSharp.Tests.Popup
             await evaluateTask;
         }
 
-        ///<playwright-file>popup.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Popup</playwright-describe>
-        ///<playwright-it>should work with empty url</playwright-it>
+        [PlaywrightTest("popup.spec.js", "Page.Events.Popup", "should work with empty url")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithEmptyUrl()
         {
@@ -124,9 +112,7 @@ namespace PlaywrightSharp.Tests.Popup
             Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
-        ///<playwright-file>popup.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Popup</playwright-describe>
-        ///<playwright-it>should work with noopener and no url</playwright-it>
+        [PlaywrightTest("popup.spec.js", "Page.Events.Popup", "should work with noopener and no url")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoopenerAndNoUrl()
         {
@@ -142,9 +128,7 @@ namespace PlaywrightSharp.Tests.Popup
             Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
-        ///<playwright-file>popup.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Popup</playwright-describe>
-        ///<playwright-it>should work with noopener and about:blank</playwright-it>
+        [PlaywrightTest("popup.spec.js", "Page.Events.Popup", "should work with noopener and about:blank")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoopenerAndAboutBlank()
         {
@@ -159,9 +143,7 @@ namespace PlaywrightSharp.Tests.Popup
             Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
-        ///<playwright-file>popup.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Popup</playwright-describe>
-        ///<playwright-it>should work with noopener and url</playwright-it>
+        [PlaywrightTest("popup.spec.js", "Page.Events.Popup", "should work with noopener and url")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoopenerAndUrl()
         {
@@ -176,9 +158,7 @@ namespace PlaywrightSharp.Tests.Popup
             Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
-        ///<playwright-file>popup.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Popup</playwright-describe>
-        ///<playwright-it>should work with clicking target=_blank</playwright-it>
+        [PlaywrightTest("popup.spec.js", "Page.Events.Popup", "should work with clicking target=_blank")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkWithClickingTargetBlank()
         {
@@ -200,9 +180,7 @@ namespace PlaywrightSharp.Tests.Popup
             Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
-        ///<playwright-file>popup.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Popup</playwright-describe>
-        ///<playwright-it>should work with fake-clicking target=_blank and rel=noopener</playwright-it>
+        [PlaywrightTest("popup.spec.js", "Page.Events.Popup", "should work with fake-clicking target=_blank and rel=noopener")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkWithFakeClickingTargetBlankAndRelNoopener()
         {
@@ -223,9 +201,7 @@ namespace PlaywrightSharp.Tests.Popup
             Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
-        ///<playwright-file>popup.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Popup</playwright-describe>
-        ///<playwright-it>should work with clicking target=_blank and rel=noopener</playwright-it>
+        [PlaywrightTest("popup.spec.js", "Page.Events.Popup", "should work with clicking target=_blank and rel=noopener")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkWithClickingTargetBlankAndRelNoopener()
         {
@@ -246,9 +222,7 @@ namespace PlaywrightSharp.Tests.Popup
             Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
-        ///<playwright-file>popup.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Popup</playwright-describe>
-        ///<playwright-it>should not treat navigations as new popups</playwright-it>
+        [PlaywrightTest("popup.spec.js", "Page.Events.Popup", "should not treat navigations as new popups")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldNotTreatNavigationsAsNewPopups()
         {

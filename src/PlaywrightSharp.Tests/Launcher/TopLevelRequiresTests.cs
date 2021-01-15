@@ -14,15 +14,11 @@ namespace PlaywrightSharp.Tests.Launcher
         {
         }
 
-        ///<playwright-file>launcher.spec.js</playwright-file>
-        ///<playwright-describe>Top-level requires</playwright-describe>
-        ///<playwright-it>should require top-level Errors</playwright-it>
+        [PlaywrightTest("launcher.spec.js", "Top-level requires", "should require top-level Errors")]
         [Fact(Skip = "We don't need this test. Leaving for tracking purposes")]
         public void ShouldRequireTopLevelErrors() { }
 
-        ///<playwright-file>launcher.spec.js</playwright-file>
-        ///<playwright-describe>Top-level requires</playwright-describe>
-        ///<playwright-it>should require top-level DeviceDescriptors</playwright-it>
+        [PlaywrightTest("launcher.spec.js", "Top-level requires", "should require top-level DeviceDescriptors")]
         [Fact(Skip = "We don't need this test. Leaving for tracking purposes")]
         public void ShouldRequireTopLevelDeviceDescriptors() { }
     }

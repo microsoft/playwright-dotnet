@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         {
         }
 
-        ///<playwright-file>elementhandle.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.selectOption</playwright-describe>
-        ///<playwright-it>should select single option</playwright-it>
+        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.selectOption", "should select single option")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOption()
         {

@@ -20,9 +20,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
         {
         }
 
-        ///<playwright-file>autowaiting.spec.js</playwright-file>
-        ///<playwright-describe>Auto waiting</playwright-describe>
-        ///<playwright-it>should await navigation when clicking anchor</playwright-it>
+        [PlaywrightTest("autowaiting.spec.js", "Auto waiting", "should await navigation when clicking anchor")]
         [Fact(Skip = "Flacky")]
         public async Task ShouldAwaitNavigationWhenClickingAnchor()
         {
@@ -42,9 +40,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             Assert.Equal("route|navigated|click", string.Join("|", messages));
         }
 
-        ///<playwright-file>autowaiting.spec.js</playwright-file>
-        ///<playwright-describe>Auto waiting</playwright-describe>
-        ///<playwright-it>should await cross-process navigation when clicking anchor</playwright-it>
+        [PlaywrightTest("autowaiting.spec.js", "Auto waiting", "should await cross-process navigation when clicking anchor")]
         [Fact(Skip = "Flacky")]
         public async Task ShouldAwaitCrossProcessNavigationWhenClickingAnchor()
         {
@@ -64,9 +60,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             Assert.Equal("route|navigated|click", string.Join("|", messages));
         }
 
-        ///<playwright-file>autowaiting.spec.js</playwright-file>
-        ///<playwright-describe>Auto waiting</playwright-describe>
-        ///<playwright-it>should await form-get on click</playwright-it>
+        [PlaywrightTest("autowaiting.spec.js", "Auto waiting", "should await form-get on click")]
         [Fact(Skip = "Flacky")]
         public async Task ShouldAwaitFormGetOnClick()
         {
@@ -91,9 +85,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             Assert.Equal("route|navigated|click", string.Join("|", messages));
         }
 
-        ///<playwright-file>autowaiting.spec.js</playwright-file>
-        ///<playwright-describe>Auto waiting</playwright-describe>
-        ///<playwright-it>should await form-post on click</playwright-it>
+        [PlaywrightTest("autowaiting.spec.js", "Auto waiting", "should await form-post on click")]
         [Fact(Skip = "Flacky")]
         public async Task ShouldAwaitFormPostOnClick()
         {
@@ -118,9 +110,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             Assert.Equal("route|navigated|click", string.Join("|", messages));
         }
 
-        ///<playwright-file>autowaiting.spec.js</playwright-file>
-        ///<playwright-describe>Auto waiting</playwright-describe>
-        ///<playwright-it>should await navigation when assigning location</playwright-it>
+        [PlaywrightTest("autowaiting.spec.js", "Auto waiting", "should await navigation when assigning location")]
         [Fact(Skip = "Flacky")]
         public async Task ShouldAwaitNavigationWhenAssigningLocation()
         {
@@ -139,9 +129,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             Assert.Equal("route|navigated|evaluate", string.Join("|", messages));
         }
 
-        ///<playwright-file>autowaiting.spec.js</playwright-file>
-        ///<playwright-describe>Auto waiting</playwright-describe>
-        ///<playwright-it>should await navigation when assigning location twice</playwright-it>
+        [PlaywrightTest("autowaiting.spec.js", "Auto waiting", "should await navigation when assigning location twice")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAwaitNavigationWhenAssigningLocationTwice()
         {
@@ -165,9 +153,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             Assert.Equal("routeoverride|evaluate", string.Join("|", messages));
         }
 
-        ///<playwright-file>autowaiting.spec.js</playwright-file>
-        ///<playwright-describe>Auto waiting</playwright-describe>
-        ///<playwright-it>should await navigation when evaluating reload</playwright-it>
+        [PlaywrightTest("autowaiting.spec.js", "Auto waiting", "should await navigation when evaluating reload")]
         [Fact(Skip = "Flacky")]
         public async Task ShouldAwaitNavigationWhenEvaluatingReload()
         {
@@ -187,9 +173,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             Assert.Equal("route|navigated|evaluate", string.Join("|", messages));
         }
 
-        ///<playwright-file>autowaiting.spec.js</playwright-file>
-        ///<playwright-describe>Auto waiting</playwright-describe>
-        ///<playwright-it>should await navigating specified target</playwright-it>
+        [PlaywrightTest("autowaiting.spec.js", "Auto waiting", "should await navigating specified target")]
         [Fact(Skip = "Flacky")]
         public async Task ShouldAwaitNavigatingSpecifiedTarget()
         {
@@ -215,9 +199,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             Assert.Equal("route|navigated|click", string.Join("|", messages));
         }
 
-        ///<playwright-file>autowaiting.spec.js</playwright-file>
-        ///<playwright-describe>Auto waiting</playwright-describe>
-        ///<playwright-it>should work with noWaitAfter: true</playwright-it>
+        [PlaywrightTest("autowaiting.spec.js", "Auto waiting", "should work with noWaitAfter: true")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoWaitAfterTrue()
         {
@@ -228,9 +210,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             await Page.ClickAsync("a", noWaitAfter: true);
         }
 
-        ///<playwright-file>autowaiting.spec.js</playwright-file>
-        ///<playwright-describe>Auto waiting</playwright-describe>
-        ///<playwright-it>should work with waitForLoadState(load)</playwright-it>
+        [PlaywrightTest("autowaiting.spec.js", "Auto waiting", "should work with waitForLoadState(load)")]
         [Fact(Skip = "Flacky")]
         public async Task ShouldWorkWithWaitForLoadStateLoad()
         {
@@ -257,9 +237,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             Assert.Equal("route|domcontentloaded|clickload", string.Join("|", messages));
         }
 
-        ///<playwright-file>autowaiting.spec.js</playwright-file>
-        ///<playwright-describe>Auto waiting</playwright-describe>
-        ///<playwright-it>should work with goto following click</playwright-it>
+        [PlaywrightTest("autowaiting.spec.js", "Auto waiting", "should work with goto following click")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithGotoFollowingClick()
         {
@@ -282,9 +260,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             await Page.GoToAsync(TestConstants.EmptyPage);
         }
 
-        ///<playwright-file>autowaiting.spec.js</playwright-file>
-        ///<playwright-describe>Auto waiting</playwright-describe>
-        ///<playwright-it>should report navigation in the log when clicking anchor</playwright-it>
+        [PlaywrightTest("autowaiting.spec.js", "Auto waiting", "should report navigation in the log when clicking anchor")]
         [Fact(Skip = "We ignore USES_HOOKS")]
         public void ShouldReportNavigationInTheLogWhenClickingAnchor() { }
     }

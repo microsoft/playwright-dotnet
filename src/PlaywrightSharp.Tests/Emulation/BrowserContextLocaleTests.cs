@@ -19,9 +19,7 @@ namespace PlaywrightSharp.Tests.Emulation
         {
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext({locale})</playwright-describe>
-        ///<playwright-it>should affect accept-language header</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "BrowserContext({locale})", "should affect accept-language header")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAffectAcceptLanguageHeader()
         {
@@ -37,9 +35,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.StartsWith("fr-CH", acceptLanguage);
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext({locale})</playwright-describe>
-        ///<playwright-it>should affect navigator.language</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "BrowserContext({locale})", "should affect navigator.language")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAffectNavigatorLanguage()
         {
@@ -51,9 +47,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Equal("fr-CH", await page.EvaluateAsync<string>("navigator.language"));
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext({locale})</playwright-describe>
-        ///<playwright-it>should format number</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "BrowserContext({locale})", "should format number")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatNumber()
         {
@@ -79,9 +73,7 @@ namespace PlaywrightSharp.Tests.Emulation
             }
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext({locale})</playwright-describe>
-        ///<playwright-it>should format date</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "BrowserContext({locale})", "should format date")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatDate()
         {
@@ -112,9 +104,7 @@ namespace PlaywrightSharp.Tests.Emulation
             }
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext({locale})</playwright-describe>
-        ///<playwright-it>should format number in popups</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "BrowserContext({locale})", "should format number in popups")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatNumberInPopups()
         {
@@ -136,9 +126,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Equal("1 000 000,5", await popup.EvaluateAsync<string>("() => window.result"));
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext({locale})</playwright-describe>
-        ///<playwright-it>should affect navigator.language in popups</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "BrowserContext({locale})", "should affect navigator.language in popups")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAffectNavigatorLanguageInPopups()
         {
@@ -160,9 +148,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Equal("fr-CH", await popup.EvaluateAsync<string>("() => window.initialNavigatorLanguage"));
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext({timezoneId})</playwright-describe>
-        ///<playwright-it>should work for multiple pages sharing same process</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "BrowserContext({timezoneId})", "should work for multiple pages sharing same process")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForMultiplePagesSharingSameProcess()
         {
@@ -180,9 +166,7 @@ namespace PlaywrightSharp.Tests.Emulation
                 page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext({timezoneId})</playwright-describe>
-        ///<playwright-it>should be isolated between contexts</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "BrowserContext({timezoneId})", "should be isolated between contexts")]
         [Fact(Skip = "Flacky")]
         public async Task ShouldBeIsolatedBetweenContexts()
         {

@@ -22,9 +22,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click the button</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click the button")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButton()
         {
@@ -33,9 +31,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click svg</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click svg")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickSvg()
         {
@@ -48,9 +44,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => window.__CLICKED"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click svg</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click svg")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonIfWindowNodeIsRemoved()
         {
@@ -60,9 +54,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click on a span with an inline element inside</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click on a span with an inline element inside")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickOnASpanWithAnInlineElementInside()
         {
@@ -78,25 +70,19 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => window.CLICKED"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should avoid side effects after timeout</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should avoid side effects after timeout")]
         [Fact(Skip = "Ignore USES_HOOKS")]
         public void ShouldAvoidSideEffectsAfterTimeout()
         {
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should not throw UnhandledPromiseRejection when page closes</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should not throw UnhandledPromiseRejection when page closes")]
         [Fact(Skip = "We don't need to test this race condition")]
         public void ShouldGracefullyFailWhenPageCloses()
         {
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click the button after navigation </playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click the button after navigation ")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonAfterNavigation()
         {
@@ -107,9 +93,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click the button after a cross origin navigation </playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click the button after a cross origin navigation ")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonAfterACrossOriginNavigation()
         {
@@ -120,9 +104,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click with disabled javascript</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click with disabled javascript")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickWithDisabledJavascript()
         {
@@ -136,9 +118,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.ServerUrl + "/wrappedlink.html#clicked", page.Url);
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click when one of inline box children is outside of viewport</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click when one of inline box children is outside of viewport")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickWhenOneOfInlineBoxChildrenIsOutsideOfViewport()
         {
@@ -156,9 +136,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => window.CLICKED"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should select the text by triple clicking</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should select the text by triple clicking")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectTheTextByTripleClicking()
         {
@@ -172,9 +150,7 @@ namespace PlaywrightSharp.Tests.Page
             }"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click offscreen buttons</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click offscreen buttons")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickOffscreenButtons()
         {
@@ -204,9 +180,7 @@ namespace PlaywrightSharp.Tests.Page
             }, messages);
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should waitFor visible when already visible</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should waitFor visible when already visible")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisibleWhenAlreadyVisible()
         {
@@ -215,9 +189,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should not wait with force</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should not wait with force")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotWaitWithForce()
         {
@@ -231,9 +203,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should waitFor display:none to be gone</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should waitFor display:none to be gone")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForDisplayNoneToBeGone()
         {
@@ -252,9 +222,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should waitFor visibility:hidden to be gone</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should waitFor visibility:hidden to be gone")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisibilityhiddenToBeGone()
         {
@@ -273,9 +241,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should timeout waiting for display:none to be gone</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should timeout waiting for display:none to be gone")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForDisplayNoneToBeGone()
         {
@@ -289,9 +255,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("element is not visible - waiting", exception.Message);
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should timeout waiting for visbility:hidden to be gone</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should timeout waiting for visbility:hidden to be gone")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForVisbilityHiddenToBeGone()
         {
@@ -306,9 +270,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("element is not visible - waiting", exception.Message);
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should waitFor visible when parent is hidden</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should waitFor visible when parent is hidden")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisibleWhenParentIsHidden()
         {
@@ -327,9 +289,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click wrapped links</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click wrapped links")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickWrappedLinks()
         {
@@ -338,9 +298,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool>("window.__clicked"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click on checkbox input and toggle</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click on checkbox input and toggle")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickOnCheckboxInputAndToggle()
         {
@@ -362,9 +320,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.False(await Page.EvaluateAsync<bool>("result.check"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click on checkbox label and toggle</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click on checkbox label and toggle")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickOnCheckboxLabelAndToggle()
         {
@@ -381,9 +337,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.False(await Page.EvaluateAsync<bool>("result.check"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should not hang with touch-enabled viewports</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should not hang with touch-enabled viewports")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotHangWithTouchEnabledViewports()
         {
@@ -399,9 +353,7 @@ namespace PlaywrightSharp.Tests.Page
             await page.Mouse.UpAsync();
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should scroll and click the button</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should scroll and click the button")]
         [Fact(Skip = "Flacky")]
         public async Task ShouldScrollAndClickTheButton()
         {
@@ -412,9 +364,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("clicked", await Page.EvaluateAsync<string>("document.querySelector(\"#button-80\").textContent"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should double click the button</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should double click the button")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDoubleClickTheButton()
         {
@@ -432,9 +382,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click a partially obscured button</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click a partially obscured button")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickAPartiallyObscuredButton()
         {
@@ -450,9 +398,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click a rotated button</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click a rotated button")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickARotatedButton()
         {
@@ -461,9 +407,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should fire contextmenu event on right click</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should fire contextmenu event on right click")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireContextmenuEventOnRightClick()
         {
@@ -472,9 +416,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("context menu", await Page.EvaluateAsync<string>("document.querySelector('#button-8').textContent"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click links which cause navigation</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click links which cause navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickLinksWhichCauseNavigation()
         {
@@ -483,9 +425,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.ClickAsync("a");
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click the button inside an iframe</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click the button inside an iframe")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonInsideAnIframe()
         {
@@ -498,9 +438,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await frame.EvaluateAsync<string>("window.result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click the button with fixed position inside an iframe</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click the button with fixed position inside an iframe")]
         [SkipBrowserAndPlatformFact(skipChromium: true, skipWebkit: true)]
         public async Task ShouldClickTheButtonWithFixedPositionInsideAnIframe()
         {
@@ -518,9 +456,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await frame.EvaluateAsync<string>("window.result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click the button with deviceScaleFactor set</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click the button with deviceScaleFactor set")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonWithDeviceScaleFactorSet()
         {
@@ -544,9 +480,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await frame.EvaluateAsync<string>("window.result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click the button with px border with relative point</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click the button with px border with relative point")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonWithPxBorderWithRelativePoint()
         {
@@ -559,9 +493,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.IsWebKit ? 10 + 8 : 10, await Page.EvaluateAsync<int>("offsetY"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click the button with em border with offset</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click the button with em border with offset")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonWithEmBorderWithOffset()
         {
@@ -575,9 +507,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.IsWebKit ? 12 * 2 + 10 : 10, await Page.EvaluateAsync<int>("offsetY"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click a very large button with offset</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click a very large button with offset")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickAVeryLargeButtonWithOffset()
         {
@@ -591,9 +521,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.IsWebKit ? 1910 + 8 : 1910, await Page.EvaluateAsync<int>("offsetY"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click a button in scrolling container with offset</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click a button in scrolling container with offset")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickAButtonInScrollingContainerWithOffset()
         {
@@ -617,9 +545,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.IsWebKit ? 1910 + 8 : 1910, await Page.EvaluateAsync<int>("offsetY"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click the button with offset with page scale</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click the button with offset with page scale")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldClickTheButtonWithOffsetWithPageScale()
         {
@@ -655,9 +581,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(point.Y, Convert.ToInt32(await page.EvaluateAsync<decimal>("pageY")));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should wait for stable position</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should wait for stable position")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForStablePosition()
         {
@@ -680,9 +604,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(10, await Page.EvaluateAsync<int>("pageY"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should timeout waiting for stable position</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should timeout waiting for stable position")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForStablePosition()
         {
@@ -700,9 +622,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("element is moving - waiting", exception.Message);
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should wait for becoming hit target</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should wait for becoming hit target")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForBecomingHitTarget()
         {
@@ -736,9 +656,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should timeout waiting for hit target</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should timeout waiting for hit target")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForHitTarget()
         {
@@ -768,9 +686,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("Timeout 5000ms exceeded.", exception.Message);
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should fail when obscured and not waiting for hit target</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should fail when obscured and not waiting for hit target")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenObscuredAndNotWaitingForHitTarget()
         {
@@ -791,9 +707,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("window.result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should wait for button to be enabled</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should wait for button to be enabled")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForButtonToBeEnabled()
         {
@@ -807,9 +721,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should timeout waiting for button to be enabled</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should timeout waiting for button to be enabled")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForButtonToBeEnabled()
         {
@@ -823,9 +735,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("element is disabled - waiting", exception.Message);
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should wait for input to be enabled</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should wait for input to be enabled")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForInputToBeEnabled()
         {
@@ -839,9 +749,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should wait for select to be enabled</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should wait for select to be enabled")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForSelectToBeEnabled()
         {
@@ -855,9 +763,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click disabled div</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click disabled div")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickDisabledDiv()
         {
@@ -866,9 +772,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should climb dom for inner label with pointer-events:none</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should climb dom for inner label with pointer-events:none")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClimbDomForInnerLabelWithPointerEventsNone()
         {
@@ -877,9 +781,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should climb up to [role=button]</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should climb up to [role=button]")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClimbUpToRoleButton()
         {
@@ -888,9 +790,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should wait for BUTTON to be clickable when it has pointer-events:none</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should wait for BUTTON to be clickable when it has pointer-events:none")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForButtonToBeClickableWhenItHasPointerEventsNone()
         {
@@ -904,9 +804,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should wait for LABEL to be clickable when it has pointer-events:none</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should wait for LABEL to be clickable when it has pointer-events:none")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForLabelToBeClickableWhenItHasPointerEventsNone()
         {
@@ -924,9 +822,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should update modifiers correctly</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should update modifiers correctly")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldUpdateModifiersCorrectly()
         {
@@ -950,9 +846,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.False(await Page.EvaluateAsync<bool>("shiftKey"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click an offscreen element when scroll-behavior is smooth</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click an offscreen element when scroll-behavior is smooth")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickAnOffscreenElementWhenScrollBehaviorIsSmooth()
         {
@@ -965,9 +859,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool>("window.clicked"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should report nice error when element is detached and force-clicked</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should report nice error when element is detached and force-clicked")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNiceErrorWhenElementIsDetachedAndForceClicked()
         {
@@ -981,9 +873,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("Element is not attached to the DOM", exception.Message);
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should fail when element detaches after animation</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should fail when element detaches after animation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenElementDetachesAfterAnimation()
         {
@@ -997,9 +887,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("Element is not attached to the DOM", exception.Message);
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should retry when element detaches after animation</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should retry when element detaches after animation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetryWhenElementDetachesAfterAnimation()
         {
@@ -1021,9 +909,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool?>("window.clicked"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should retry when element is animating from outside the viewport</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should retry when element is animating from outside the viewport")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetryWhenElementIsAnimatingFromOutsideTheViewport()
         {
@@ -1055,9 +941,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool?>("window.clicked"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should retry when element is animating from outside the viewport with force</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should retry when element is animating from outside the viewport with force")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetryWhenElementIsAnimatingFromOutsideTheViewportWithForce()
         {
@@ -1090,17 +974,13 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("Element is outside of the viewport", exception.Message);
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should fail when element jumps during hit testing</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should fail when element jumps during hit testing")]
         [Fact(Skip = " Skip USES_HOOKS")]
         public void ShouldFailWhenElementJumpsDuringHitTesting()
         {
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should dispatch microtasks in order</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should dispatch microtasks in order")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDispatchMicrotasksInOrder()
         {
@@ -1126,41 +1006,31 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(1, await Page.EvaluateAsync<int>("window.result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should retarget when element is recycled during hit testing</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should retarget when element is recycled during hit testing")]
         [Fact(Skip = " Skip USES_HOOKS")]
         public void ShouldRetargetWhenElementIsRecycledDuringHitTesting()
         {
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should report that selector does not match anymore</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should report that selector does not match anymore")]
         [Fact(Skip = " Skip USES_HOOKS")]
         public void ShouldReportThatSelectorDoesNotMatchAnymore()
         {
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should retarget when element is recycled before enabled check</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should retarget when element is recycled before enabled check")]
         [Fact(Skip = " Skip USES_HOOKS")]
         public void ShouldRetargetWhenElementIsRecycledBeforeEnabledCheck()
         {
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should not retarget the handle when element is recycled</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should not retarget the handle when element is recycled")]
         [Fact(Skip = " Skip USES_HOOKS")]
         public void ShouldNotRetargetTheHandleWhenElementIsRecycled()
         {
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should not retarget when element changes on hover</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should not retarget when element changes on hover")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotRetargetWhenElementChangesOnHover()
         {
@@ -1174,9 +1044,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Null(await Page.EvaluateAsync<bool?>("window.button2"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should not retarget when element is recycled on hover</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should not retarget when element is recycled on hover")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotRetargetWhenElementIsRecycledOnHover()
         {
@@ -1193,9 +1061,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool?>("window.button2"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should click the button when window.innerWidth is corrupted</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should click the button when window.innerWidth is corrupted")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonWhenWindowInnerWidthIsCorrupted()
         {
@@ -1206,9 +1072,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.click</playwright-describe>
-        ///<playwright-it>should timeout when click opens alert</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.click", "should timeout when click opens alert")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWhenClickOpensAlert()
         {

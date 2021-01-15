@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.Frame
         {
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame.frameElement</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame.frameElement", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -40,9 +38,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.NotNull(windowHandle);
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame.frameElement</playwright-describe>
-        ///<playwright-it>should work with contentFrame</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame.frameElement", "should work with contentFrame")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithContentFrame()
         {
@@ -54,9 +50,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.Same(contentFrame, frame);
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame.frameElement</playwright-describe>
-        ///<playwright-it>should throw when detached</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame.frameElement", "should throw when detached")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenDetached()
         {

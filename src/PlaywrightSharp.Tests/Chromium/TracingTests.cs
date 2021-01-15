@@ -55,9 +55,7 @@ namespace PlaywrightSharp.Tests.Chromium
             }
         }
 
-        ///<playwright-file>chromium/tracing.spec.js</playwright-file>
-        ///<playwright-describe>Chromium.startTracing</playwright-describe>
-        ///<playwright-it>should output a trace</playwright-it>
+        [PlaywrightTest("chromium/tracing.spec.js", "Chromium.startTracing", "should output a trace")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldOutputATrace()
         {
@@ -68,9 +66,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.True(File.Exists(_file));
         }
 
-        ///<playwright-file>chromium/tracing.spec.js</playwright-file>
-        ///<playwright-describe>Chromium.startTracing</playwright-describe>
-        ///<playwright-it>should run with custom categories if provided</playwright-it>
+        [PlaywrightTest("chromium/tracing.spec.js", "Chromium.startTracing", "should run with custom categories if provided")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldRunWithCustomCategoriesProvided()
         {
@@ -83,9 +79,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Contains("disabled-by-default-v8.cpu_profiler.hires", traceJson.RootElement.GetProperty("metadata").GetProperty("trace-config").ToString());
         }
 
-        ///<playwright-file>chromium/tracing.spec.js</playwright-file>
-        ///<playwright-describe>Chromium.startTracing</playwright-describe>
-        ///<playwright-it>should throw if tracing on two pages</playwright-it>
+        [PlaywrightTest("chromium/tracing.spec.js", "Chromium.startTracing", "should throw if tracing on two pages")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldThrowIfTracingOnTwoPages()
         {
@@ -100,9 +94,7 @@ namespace PlaywrightSharp.Tests.Chromium
             await ((IChromiumBrowser)Browser).StopTracingAsync();
         }
 
-        ///<playwright-file>chromium/tracing.spec.js</playwright-file>
-        ///<playwright-describe>Chromium.startTracing</playwright-describe>
-        ///<playwright-it>should return a buffer</playwright-it>
+        [PlaywrightTest("chromium/tracing.spec.js", "Chromium.startTracing", "should return a buffer")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReturnABuffer()
         {
@@ -113,9 +105,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal(trace, buf);
         }
 
-        ///<playwright-file>chromium/tracing.spec.js</playwright-file>
-        ///<playwright-describe>Chromium.startTracing</playwright-describe>
-        ///<playwright-it>should work without options</playwright-it>
+        [PlaywrightTest("chromium/tracing.spec.js", "Chromium.startTracing", "should work without options")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWorkWithoutOptions()
         {
@@ -125,9 +115,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.NotNull(trace);
         }
 
-        ///<playwright-file>chromium/tracing.spec.js</playwright-file>
-        ///<playwright-describe>Chromium.startTracing</playwright-describe>
-        ///<playwright-it>should support a buffer without a path</playwright-it>
+        [PlaywrightTest("chromium/tracing.spec.js", "Chromium.startTracing", "should support a buffer without a path")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldSupportABufferWithoutAPath()
         {

@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should fill textarea</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should fill textarea")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillTextarea()
         {
@@ -28,9 +26,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("some value", await Page.EvaluateAsync<string>("() => result"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should fill input</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should fill input")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillInput()
         {
@@ -39,9 +35,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("some value", await Page.EvaluateAsync<string>("() => result"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should throw on unsupported inputs</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should throw on unsupported inputs")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowOnUnsupportedInputs()
         {
@@ -54,9 +48,7 @@ namespace PlaywrightSharp.Tests.Page
             }
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should fill different input types</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should fill different input types")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillDifferentInputTypes()
         {
@@ -69,9 +61,7 @@ namespace PlaywrightSharp.Tests.Page
             }
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should fill date input after clicking</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should fill date input after clicking")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillDateInputAfterClicking()
         {
@@ -81,9 +71,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("2020-03-02", await Page.EvalOnSelectorAsync<string>("input", "input => input.value"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should throw on incorrect date</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should throw on incorrect date")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldThrowOnIncorrectDate()
         {
@@ -93,9 +81,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("Malformed value", exception.Message);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should fill time input after clicking</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should fill time input after clicking")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillTimeInputAfterClicking()
         {
@@ -105,9 +91,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("13:15", await Page.EvalOnSelectorAsync<string>("input", "input => input.value"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should throw on incorrect time</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should throw on incorrect time")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldThrowOnIncorrectTime()
         {
@@ -117,9 +101,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("Malformed value", exception.Message);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should fill datetime-local input</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should fill datetime-local input")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillDatetimeLocalInput()
         {
@@ -129,9 +111,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("2020-03-02T05:15", await Page.EvalOnSelectorAsync<string>("input", "input => input.value"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should throw on incorrect datetime-local</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should throw on incorrect datetime-local")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldThrowOnIncorrectDateTimeLocal()
         {
@@ -141,9 +121,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("Malformed value", exception.Message);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should fill contenteditable</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should fill contenteditable")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillContenteditable()
         {
@@ -152,9 +130,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("some value", await Page.EvalOnSelectorAsync<string>("div[contenteditable]", "div => div.textContent"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should fill elements with existing value and selection</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should fill elements with existing value and selection")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillElementsWithExistingValueAndSelection()
         {
@@ -183,9 +159,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("replace with this", await Page.EvalOnSelectorAsync<string>("div[contenteditable]", "div => div.textContent"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should throw when element is not an &lt;input&gt;, &lt;textarea&gt; or [contenteditable]</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should throw when element is not an &lt;input&gt;, &lt;textarea&gt; or [contenteditable]")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenElementIsNotAnInputOrTextareaOrContenteditable()
         {
@@ -194,17 +168,13 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("Element is not an <input>", exception.Message);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should throw if passed a non-string value</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should throw if passed a non-string value")]
         [Fact(Skip = "Not relevant for C#, js specific")]
         public void ShouldThrowIfPassedANonStringValue()
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should retry on disabled element</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should retry on disabled element")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetryOnDisabledElement()
         {
@@ -221,9 +191,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("some value", await Page.EvaluateAsync<string>("() => result"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should retry on readonly element</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should retry on readonly element")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetryOnReadonlyElement()
         {
@@ -239,9 +207,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("some value", await Page.EvaluateAsync<string>("() => result"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should retry on invisible element</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should retry on invisible element")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetryOnInvisibleElement()
         {
@@ -258,9 +224,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("some value", await Page.EvaluateAsync<string>("() => result"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should be able to fill the body</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should be able to fill the body")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToFillTheBody()
         {
@@ -269,9 +233,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("some value", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should fill fixed position input</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should fill fixed position input")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillFixedPositionInput()
         {
@@ -280,9 +242,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("some value", await Page.EvalOnSelectorAsync<string>("input", "i => i.value"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should be able to fill when focus is in the wrong frame</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should be able to fill when focus is in the wrong frame")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToFillWhenFocusIsInTheWrongFrame()
         {
@@ -292,9 +252,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("some value", await Page.EvalOnSelectorAsync<string>("div", "d => d.textContent"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should be able to fill the input[type=number]</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should be able to fill the input[type=number]")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToFillTheInputTypeNumber()
         {
@@ -303,9 +261,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("42", await Page.EvaluateAsync<string>("() => input.value"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should be able to fill exponent into the input[type=number]</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should be able to fill exponent into the input[type=number]")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToFillTheInputExponentIntoTypeNumber()
         {
@@ -314,9 +270,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("-10e5", await Page.EvaluateAsync<string>("() => input.value"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should be able to fill the input[type=number] with empty string</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should be able to fill the input[type=number] with empty string")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToFillTheInputTypeNumberWithEmptyString()
         {
@@ -325,9 +279,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Empty(await Page.EvaluateAsync<string>("() => input.value"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should not be able to fill text into the input[type=number]</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should not be able to fill text into the input[type=number]")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotBeAbleToFillTextIntoTheInputTypeNumber()
         {
@@ -336,9 +288,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("Cannot type text into input[type=number]", exception.Message);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.fill</playwright-describe>
-        ///<playwright-it>should be able to clear</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.fill", "should be able to clear")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToClear()
         {

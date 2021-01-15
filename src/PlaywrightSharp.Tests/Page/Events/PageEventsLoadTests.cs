@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Load</playwright-describe>
-        ///<playwright-it>should fire when expected</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.Load", "should fire when expected")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireWhenExpected()
         {
