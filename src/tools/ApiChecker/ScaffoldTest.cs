@@ -105,8 +105,9 @@ namespace ApiChecker
 
         private static void AddTest(CodeCompileUnit @class, string testDescribe, string testOrigin)
         {
-            // make name out of the describe
-            string name = _textInfo.ToTitleCase(testDescribe).Replace(" ", string.Empty);
+            // make name out of the describe, and we should ignore any whitespaces, hyphens, etc.
+            string name = new string(Array.FindAll(_textInfo.ToTitleCase(testDescribe).ToCharArray(), c => char.IsLetterOrDigit(c)));
+
             Console.WriteLine($"Adding {name}");
 
             CodeMemberMethod method = new CodeMemberMethod()
