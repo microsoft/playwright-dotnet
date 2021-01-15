@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <CodeAnalysisRuleSet>../../PlaywrightSharp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
@@ -15,7 +15,6 @@
     <PackageReference Include="System.CodeDom" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PlaywrightSharp\PlaywrightSharp.csproj" />
     <ProjectReference Include="..\PlaywrightSharp.BuildTasks\PlaywrightSharp.BuildTasks.csproj" />
   </ItemGroup>
 </Project>

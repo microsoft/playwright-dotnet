@@ -60,7 +60,7 @@ namespace PlaywrightSharp
         /// <param name="ignoreHTTPSErrors"> Whether to ignore HTTPS errors during navigation. Defaults to false.</param>
         /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
-        /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
+        /// <param name="extraHTTPHeaders">An object containing additional HTTP headers to be sent with every request.</param>
         /// <param name="recordHar">Enables HAR recording for all pages into recordHar.path file. If not specified, the HAR is not recorded.
         /// Make sure to await <see cref="IPage.CloseAsync(bool)"/> for the HAR to be saved.
         /// You can use <see cref="Har.HarResult"/> to deserialize the generated JSON file.</param>
@@ -97,7 +97,7 @@ namespace PlaywrightSharp
             bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
-            Dictionary<string, string> extraHttpHeaders = null,
+            Dictionary<string, string> extraHTTPHeaders = null,
             RecordHarOptions recordHar = null,
             RecordVideoOptions recordVideo = null,
             ProxySettings proxy = null,
@@ -122,7 +122,7 @@ namespace PlaywrightSharp
         /// <param name="ignoreHTTPSErrors"> Whether to ignore HTTPS errors during navigation. Defaults to false.</param>
         /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
-        /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
+        /// <param name="extraHTTPHeaders">An object containing additional HTTP headers to be sent with every request.</param>
         /// <param name="recordHar">Enables HAR recording for all pages into recordHar.path file. If not specified, the HAR is not recorded.
         /// Make sure to await <see cref="IPage.CloseAsync(bool)"/> for the HAR to be saved.
         /// You can use <see cref="Har.HarResult"/> to deserialize the generated JSON file.</param>
@@ -158,7 +158,7 @@ namespace PlaywrightSharp
             bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
-            Dictionary<string, string> extraHttpHeaders = null,
+            Dictionary<string, string> extraHTTPHeaders = null,
             RecordHarOptions recordHar = null,
             RecordVideoOptions recordVideo = null,
             ProxySettings proxy = null,
@@ -201,7 +201,7 @@ namespace PlaywrightSharp
         /// <param name="ignoreHTTPSErrors"> Whether to ignore HTTPS errors during navigation. Defaults to false.</param>
         /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
-        /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
+        /// <param name="extraHTTPHeaders">An object containing additional HTTP headers to be sent with every request.</param>
         /// <param name="recordHar">Enables HAR recording for all pages into recordHar.path file. If not specified, the HAR is not recorded.
         /// Make sure to await <see cref="IPage.CloseAsync(bool)"/> for the HAR to be saved.
         /// You can use <see cref="Har.HarResult"/> to deserialize the generated JSON file.</param>
@@ -238,7 +238,7 @@ namespace PlaywrightSharp
             bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
-            Dictionary<string, string> extraHttpHeaders = null,
+            Dictionary<string, string> extraHTTPHeaders = null,
             RecordHarOptions recordHar = null,
             RecordVideoOptions recordVideo = null,
             ProxySettings proxy = null,
@@ -263,7 +263,7 @@ namespace PlaywrightSharp
         /// <param name="ignoreHTTPSErrors"> Whether to ignore HTTPS errors during navigation. Defaults to false.</param>
         /// <param name="colorScheme">Emulates 'prefers-colors-scheme' media feature.</param>
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
-        /// <param name="extraHttpHeaders">An object containing additional HTTP headers to be sent with every request.</param>
+        /// <param name="extraHTTPHeaders">An object containing additional HTTP headers to be sent with every request.</param>
         /// <param name="recordHar">Enables HAR recording for all pages into recordHar.path file. If not specified, the HAR is not recorded.
         /// Make sure to await <see cref="IPage.CloseAsync(bool)"/> for the HAR to be saved.
         /// You can use <see cref="Har.HarResult"/> to deserialize the generated JSON file.</param>
@@ -299,7 +299,7 @@ namespace PlaywrightSharp
             bool? ignoreHTTPSErrors = null,
             ColorScheme? colorScheme = null,
             string locale = null,
-            Dictionary<string, string> extraHttpHeaders = null,
+            Dictionary<string, string> extraHTTPHeaders = null,
             RecordHarOptions recordHar = null,
             RecordVideoOptions recordVideo = null,
             ProxySettings proxy = null,

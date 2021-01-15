@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <PropertyGroup>
-        <NativeFolder Condition="'$(BuildFromSource)' == 'True'">
-        </NativeFolder>
-        <NativeFolder Condition="'$(BuildFromSource)' != 'True'">\native</NativeFolder>
-    </PropertyGroup>
-    <Target Name="InstallBrowsers" AfterTargets="CopyFilesToOutputDirectory">
-        <Message Text="Playwright is checking browser dependencies">
-        </Message>
-        <Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" WorkingDirectory="$(MSBuildThisFileDirectory)..\..\runtimes\unix$(NativeFolder)" Command="./playwright-cli install" />
-        <Exec Condition="$([MSBuild]::IsOSPlatform('OSX'))" WorkingDirectory="$(MSBuildThisFileDirectory)..\..\runtimes\osx$(NativeFolder)" Command="./playwright-cli install" />
-        <Exec Condition="'$(PlatformTarget)' != 'x86' AND $([MSBuild]::IsOSPlatform('Windows'))" WorkingDirectory="$(MSBuildThisFileDirectory)\..\..\runtimes\win-x64$(NativeFolder)" Command="playwright-cli.exe install" />
-        <Exec Condition="'$(PlatformTarget)' == 'x86' AND $([MSBuild]::IsOSPlatform('Windows'))" WorkingDirectory="$(MSBuildThisFileDirectory)\..\..\runtimes\win-x89$(NativeFolder)" Command="playwright-cli.exe install" />
-    </Target>
-    <Target Name="CopyPlaywrightDriversToMonoBundle" AfterTargets="CopyFilesToOutputDirectory" Condition="$(TargetFrameworkIdentifier) == 'Xamarin.Mac'">
-        <Message Text="Copy drivers to MonoBundle" />
-        <CreateItem Include="$(MSBuildThisFileDirectory)\..\..\runtimes\osx\native\*.*">
-            <Output TaskParameter="Include" ItemName="PlaywrightDriverFiles" />
-        </CreateItem>
-        <Message Text="$(AppBundleDir)" />
-        <Message Text="@(PlaywrightDriverFiles)" />
-        <Copy SourceFiles="@(PlaywrightDriverFiles)" DestinationFolder="$(AppBundleDir)/Contents/MonoBundle/" />
-    </Target>
-    <Target Name="ChmodOnLinuxExecutables" AfterTargets="CopyFilesToOutputDirectory" Condition="!$([MSBuild]::IsOSPlatform('Windows')) AND (Exists('packages.config') OR Exists('$(MSBuildProjectName).packages.config') OR Exists('packages.$(MSBuildProjectName).config'))">
-        <Message Text="chmod on Linux executables" />
-        <Exec Command="chmod u+x $(OutputPath)/runtimes/unix/native/ffmpeg-linux" />
-        <Exec Command="chmod u+x $(OutputPath)/runtimes/unix/native/ffmpeg.COPYING.GPLv3" />
-        <Exec Command="chmod u+x $(OutputPath)/runtimes/unix/native/playwright-cli" />
-    </Target>
+	<PropertyGroup>
+		<NativeFolder Condition="'$(BuildFromSource)' == 'True'">
+		</NativeFolder>
+		<NativeFolder Condition="'$(BuildFromSource)' != 'True'">\native</NativeFolder>
+	</PropertyGroup>
+	<Target Name="InstallBrowsers" AfterTargets="CopyFilesToOutputDirectory">
+		<Message Text="Playwright is checking browser dependencies">
+		</Message>
+		<Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" WorkingDirectory="$(MSBuildThisFileDirectory)..\..\runtimes\unix$(NativeFolder)" Command="./playwright.sh install" />
+		<Exec Condition="$([MSBuild]::IsOSPlatform('OSX'))" WorkingDirectory="$(MSBuildThisFileDirectory)..\..\runtimes\osx$(NativeFolder)" Command="./playwright.sh install" />
+		<Exec Condition="'$(PlatformTarget)' != 'x86' AND $([MSBuild]::IsOSPlatform('Windows'))" WorkingDirectory="$(MSBuildThisFileDirectory)\..\..\runtimes\win-x64$(NativeFolder)" Command="playwright.cmd install" />
+		<Exec Condition="'$(PlatformTarget)' == 'x86' AND $([MSBuild]::IsOSPlatform('Windows'))" WorkingDirectory="$(MSBuildThisFileDirectory)\..\..\runtimes\win-x89$(NativeFolder)" Command="playwright.cmd install" />
+	</Target>
+	<Target Name="CopyPlaywrightDriversToMonoBundle" AfterTargets="CopyFilesToOutputDirectory" Condition="$(TargetFrameworkIdentifier) == 'Xamarin.Mac'">
+		<Message Text="Copy drivers to MonoBundle" />
+		<CreateItem Include="$(MSBuildThisFileDirectory)\..\..\runtimes\osx\native\**">
+			<Output TaskParameter="Include" ItemName="PlaywrightDriverFiles" />
+		</CreateItem>
+		<Message Text="$(AppBundleDir)" />
+		<Message Text="@(PlaywrightDriverFiles)" />
+		<Copy SourceFiles="@(PlaywrightDriverFiles)" DestinationFolder="$(AppBundleDir)/Contents/MonoBundle/" />
+	</Target>
+	<Target Name="ChmodOnLinuxExecutables" AfterTargets="CopyFilesToOutputDirectory" Condition="!$([MSBuild]::IsOSPlatform('Windows')) AND (Exists('packages.config') OR Exists('$(MSBuildProjectName).packages.config') OR Exists('packages.$(MSBuildProjectName).config'))">
+		<Message Text="chmod on Linux executables" />
+		<Exec Command="chmod u+x $(OutputPath)/runtimes/unix/native/playwright.sh" />
+		<Exec Command="chmod u+x $(OutputPath)/runtimes/unix/native/node" />
+		<Exec Command="chmod u+x $(OutputPath)/runtimes/unix/native/package/third_party/ffmpeg/ffmpeg-linux" />
+	</Target>
 </Project>

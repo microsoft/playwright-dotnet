@@ -423,7 +423,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["y"] = point.Y,
                 });
 
-        internal Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
+        internal Task SetExtraHTTPHeadersAsync(IDictionary<string, string> headers)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "setExtraHTTPHeaders",

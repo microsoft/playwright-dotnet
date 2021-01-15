@@ -159,7 +159,7 @@ namespace PlaywrightSharp.Tests
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
             {
-                ExtraHttpHeaders = new Dictionary<string, string>
+                ExtraHTTPHeaders = new Dictionary<string, string>
                 {
                     ["foo"] = "bar",
                 },

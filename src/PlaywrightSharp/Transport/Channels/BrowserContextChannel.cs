@@ -202,7 +202,7 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task ClearCookiesAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "clearCookies", null);
 
-        internal Task SetExtraHttpHeadersAsync(IDictionary<string, string> headers)
+        internal Task SetExtraHTTPHeadersAsync(IDictionary<string, string> headers)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "setExtraHTTPHeaders",
