@@ -49,6 +49,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>tap.specs.ts</playwright-file>
         /// <playwright-it>should send all of the correct events</playwright-it>
+        [PlaywrightTest("tap.specs.ts", "should send all of the correct events")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendAllOfTheCorrectEvents()
         {
