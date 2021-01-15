@@ -208,8 +208,8 @@ namespace PlaywrightSharp.Transport
 
         private static Process GetProcess(string driverExecutablePath = null)
             => new()
-            {
-                StartInfo =
+        {
+            StartInfo =
                 {
                     FileName = string.IsNullOrEmpty(driverExecutablePath) ? GetExecutablePath() : driverExecutablePath,
                     UseShellExecute = false,
@@ -218,7 +218,7 @@ namespace PlaywrightSharp.Transport
                     RedirectStandardError = true,
                     CreateNoWindow = true,
                 },
-            };
+        };
 
         private static string GetExecutablePath()
         {
