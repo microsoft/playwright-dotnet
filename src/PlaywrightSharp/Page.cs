@@ -930,6 +930,24 @@ namespace PlaywrightSharp
         public Task TapAsync(string selector, Modifier[] modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)
             => MainFrame.TapAsync(true, selector, modifiers, position, timeout, force, noWaitAfter);
 
+        /// <inheritdoc />
+        public Task<bool> IsCheckedAsync(string selector, int? timeout = null) => MainFrame.IsCheckedAsync(true, selector, timeout);
+
+        /// <inheritdoc />
+        public Task<bool> IsDisabledAsync(string selector, int? timeout = null) => MainFrame.IsDisabledAsync(true, selector, timeout);
+
+        /// <inheritdoc />
+        public Task<bool> IsEditableAsync(string selector, int? timeout = null) => MainFrame.IsEditableAsync(true, selector, timeout);
+
+        /// <inheritdoc />
+        public Task<bool> IsEnabledAsync(string selector, int? timeout = null) => MainFrame.IsEnabledAsync(true, selector, timeout);
+
+        /// <inheritdoc />
+        public Task<bool> IsHiddenAsync(string selector, int? timeout = null) => MainFrame.IsHiddenAsync(true, selector, timeout);
+
+        /// <inheritdoc />
+        public Task<bool> IsVisibleAsync(string selector, int? timeout = null) => MainFrame.IsVisibleAsync(true, selector, timeout);
+
         internal void OnFrameNavigated(Frame frame)
             => FrameNavigated?.Invoke(this, new FrameEventArgs(frame));
 

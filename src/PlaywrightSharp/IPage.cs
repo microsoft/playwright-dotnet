@@ -1749,5 +1749,59 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="IFrame.TapAsync(string, Modifier[], Point?, int?, bool, bool?)"/>
         Task TapAsync(string selector, Modifier[] modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null);
+
+        /// <summary>
+        /// Returns whether the element is checked. Throws if the element is not a checkbox or radio input.
+        /// </summary>
+        /// <param name="selector">A selector to search for an element. If there are multiple elements satisfying the selector, the first will be picked.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
+        Task<bool> IsCheckedAsync(string selector, int? timeout = null);
+
+        /// <summary>
+        /// Returns whether the element is disabled, the opposite of <see cref="IsEnabledAsync"/>.
+        /// </summary>
+        /// <param name="selector">A selector to search for an element. If there are multiple elements satisfying the selector, the first will be picked.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
+        Task<bool> IsDisabledAsync(string selector, int? timeout = null);
+
+        /// <summary>
+        /// Returns whether the element is editable.
+        /// </summary>
+        /// <param name="selector">A selector to search for an element. If there are multiple elements satisfying the selector, the first will be picked.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
+        Task<bool> IsEditableAsync(string selector, int? timeout = null);
+
+        /// <summary>
+        /// Returns whether the element is enabled.
+        /// </summary>
+        /// <param name="selector">A selector to search for an element. If there are multiple elements satisfying the selector, the first will be picked.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
+        Task<bool> IsEnabledAsync(string selector, int? timeout = null);
+
+        /// <summary>
+        /// Returns whether the element is hidden, the opposite of <see cref="IsVisibleAsync"/>.
+        /// </summary>
+        /// <param name="selector">A selector to search for an element. If there are multiple elements satisfying the selector, the first will be picked.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
+        Task<bool> IsHiddenAsync(string selector, int? timeout = null);
+
+        /// <summary>
+        /// Returns whether the element is visible.
+        /// </summary>
+        /// <param name="selector">A selector to search for an element. If there are multiple elements satisfying the selector, the first will be picked.</param>
+        /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
+        /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
+        Task<bool> IsVisibleAsync(string selector, int? timeout = null);
     }
 }
