@@ -42,14 +42,14 @@ namespace ApiChecker
         /// <summary>
         /// Describes the options for scaffolding the tests.
         /// </summary>
-        [Verb("scaffold-test", HelpText = "Takes a spec.ts file and scaffolds the C# test.")]
+        [Verb("testtests", HelpText = "Checks if there are missing tests in the C# variant, compared to the specs.")]
         internal class IdentifyMissingTestsOptions
         {
             [Option(Required = true, HelpText = "Location of spec files.")]
             public string SpecFileLocations { get; set; }
 
-            [Option(Required = true, HelpText = "The path to the DLL containing the PlaywrightSharp tests.", Default = "PlaywrightSharp.Tests.dll")]
-            public string TestDLLPath { get; set; }
+            [Option(Required = false, HelpText = "The asembly containing the PlaywrightSharp tests.", Default = "PlaywrightSharp.Tests")]
+            public string TestDLLName { get; set; }
 
             [Option(Required = false, HelpText = "The search pattern to use for spec files.", Default = "*.spec.ts")]
             public string Pattern { get; set; }
@@ -71,24 +71,38 @@ namespace ApiChecker
                 throw new ArgumentException($"The location ({directoryInfo.FullName}) specified does not exist.");
             }
 
-            if (!File.Exists(options.TestDLLPath))
-            {
-                throw new ArgumentException($"The DLL ({options.TestDLLPath}) containing the Playwright Sharp tests, does not exist.");
-            }
-
             // let's map the test cases from the spec files
             MapTestsCases(directoryInfo, options);
 
-
             // now, let's load the DLL and use some reflection-fu
-            var assembly = Assembly.Load(options.TestDLLPath);
-            foreach(var testType in assembly.GetTypes())
+            var assembly = Assembly.Load(options.TestDLLName);
+            string attributeTypeName = typeof(PlaywrightSharp.Tests.PlaywrightTestAttribute).Name;
+
+            var attributes = assembly.DefinedTypes.SelectMany(
+                type => type.GetMethods().SelectMany(
+                    method => method.GetCustomAttributes<PlaywrightSharp.Tests.PlaywrightTestAttribute>()));
+
+            var comparableList = attributes.Select(x => (x.FileName, x.TestName)).OrderBy(x => x.FileName).ToArray();
+
+            int matchingTests = 0;
+            int missingTests = 0;
+            foreach (var atx in attributes)
             {
-                // check to see if it's actually a test type
+                if (!_testPairs.Contains((atx.TrimmedName, atx.TestName)))
+                {
+                    Console.WriteLine($"Missing: {atx.FileName}: {atx.TestName}");
+                    missingTests++;
+                }
+                else
+                {
+                    matchingTests++;
+                }
             }
+
+            Console.WriteLine($"There are {matchingTests} matching tests, but we're missing {missingTests}. We have {_testPairs.Count} tests.");
         }
 
-        private static readonly List<(string FileName, string TestName)> _testPairs = new List<(string, string)>();
+        private static readonly List<(string FileName, string TestName)> _testPairs = new();
 
         private static void MapTestsCases(DirectoryInfo directoryInfo, IdentifyMissingTestsOptions options)
         {
@@ -105,7 +119,7 @@ namespace ApiChecker
             {
                 ScaffoldTest.FindTestsInFile(fileInfo.FullName, (testName) =>
                 {
-                    _testPairs.Add(new(fileInfo.FullName, testName));
+                    _testPairs.Add(new(fileInfo.Name.Substring(0, fileInfo.Name.IndexOf('.')), testName));
                 });
             }
         }
