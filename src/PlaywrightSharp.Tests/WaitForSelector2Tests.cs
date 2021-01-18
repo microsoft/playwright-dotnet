@@ -79,11 +79,8 @@ namespace PlaywrightSharp.Tests
             Assert.True(divVisible);
         }
 
-        ///<playwright-file>wait-for-selector-2.spec.js</playwright-file>
-        ///<playwright-its>
-        /// <playwright-it>hidden should wait for hidden</playwright-it>
-        /// <playwright-it>hidden should wait for display: none</playwright-it>
-        ///</playwright-its>
+        [PlaywrightTest("wait-for-selector-2.spec.js", "hidden should wait for hidden")]
+        [PlaywrightTest("wait-for-selector-2.spec.js", "hidden should wait for display: none")]
         [Theory]
         [InlineData("visibility", "hidden")]
         [InlineData("display", "none")]

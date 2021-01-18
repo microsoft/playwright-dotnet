@@ -58,8 +58,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        /// <playwright-file>defaultbrowsercontext-2.spec.js</playwright-file>
-        /// <playwright-it>should throw if page argument is passed</playwright-it>
+        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should throw if page argument is passed")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldThrowIfPageArgumentIsPassed()
         {

@@ -273,9 +273,7 @@ namespace PlaywrightSharp.Tests
             await page.CloseAsync();
         }
 
-        ///<playwright-file>download.spec.js</playwright-file>
-
-        ///<playwright-it>should report download path within page.on('download', …) handler for Files</playwright-it>
+        [PlaywrightTest("download.spec.js", "should report download path within page.on('download', …) handler for Files")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDownloadPathWithinPageOnDownloadHandlerForFiles()
         {

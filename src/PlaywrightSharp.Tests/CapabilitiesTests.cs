@@ -16,8 +16,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        ///<playwright-file>capabilities.spec.js</playwright-file>     
-        ///<playwright-it>Web Assembly should work</playwright-it>
+        [PlaywrightTest("capabilities.spec.js", "Web Assembly should work")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true)]
         public async Task WebAssemblyShouldWork()
         {

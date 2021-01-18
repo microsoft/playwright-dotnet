@@ -47,8 +47,6 @@ namespace PlaywrightSharp.Tests
             Page = await Browser.NewPageAsync(hasTouch: true);
         }
 
-        /// <playwright-file>tap.specs.ts</playwright-file>
-        /// <playwright-it>should send all of the correct events</playwright-it>
         [PlaywrightTest("tap.specs.ts", "should send all of the correct events")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendAllOfTheCorrectEvents()
@@ -75,8 +73,7 @@ namespace PlaywrightSharp.Tests
             });
         }
 
-        /// <playwright-file>tap.specs.ts</playwright-file>
-        /// <playwright-it>should not send mouse events touchstart is canceled</playwright-it>
+        [PlaywrightTest("tap.specs.ts", "should not send mouse events touchstart is canceled")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotSendMouseEventsTouchStartIsCanceled()
         {
@@ -100,8 +97,7 @@ namespace PlaywrightSharp.Tests
             });
         }
 
-        /// <playwright-file>tap.specs.ts</playwright-file>
-        /// <playwright-it>should not send mouse events when touchend is canceled</playwright-it>
+        [PlaywrightTest("tap.specs.ts", "should not send mouse events when touchend is canceled")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotSendMouseEventsWhenTouchEndIsCanceled()
         {
@@ -125,8 +121,7 @@ namespace PlaywrightSharp.Tests
             });
         }
 
-        /// <playwright-file>tap.specs.ts</playwright-file>
-        /// <playwright-it>should wait for a navigation caused by a tap</playwright-it>
+        [PlaywrightTest("tap.specs.ts", "should wait for a navigation caused by a tap")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForANavigationCausedByATap()
         {
@@ -156,8 +151,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(loaded);
         }
 
-        /// <playwright-file>tap.specs.ts</playwright-file>
-        /// <playwright-it>should work with modifiers</playwright-it>
+        [PlaywrightTest("tap.specs.ts", "should work with modifiers")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithModifiers()
         {
@@ -175,8 +169,7 @@ namespace PlaywrightSharp.Tests
             Assert.True((await altKeyTask));
         }
 
-        /// <playwright-file>tap.specs.ts</playwright-file>
-        /// <playwright-it>should send well formed touch points</playwright-it>
+        [PlaywrightTest("tap.specs.ts", "should send well formed touch points")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendWellFormedTouchPoints()
         {
@@ -232,8 +225,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(0, touchStartResult.rotationAngle);
         }
 
-        /// <playwright-file>tap.specs.ts</playwright-file>
-        /// <playwright-it>should wait until an element is visible to tap it</playwright-it>
+        [PlaywrightTest("tap.specs.ts", "should wait until an element is visible to tap it")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitUntilAnElementIsVisibleToTapIt()
         {

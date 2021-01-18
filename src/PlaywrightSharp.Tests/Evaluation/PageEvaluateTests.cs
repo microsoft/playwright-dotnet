@@ -386,9 +386,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Null(result.a);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should properly serialize null arguments</playwright-it>x
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should properly serialize null arguments")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldProperlySerializeNullArguments()
                 => Assert.Null(await Page.EvaluateAsync<JsonDocument>("x => x", null));

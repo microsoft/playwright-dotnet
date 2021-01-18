@@ -55,15 +55,13 @@ namespace PlaywrightSharp.Tests
         /// <inheritdoc cref="IDisposable.Dispose"/>
         public override void Dispose() => _tempDir.Dispose();
 
-        /// <playwright-file>har.spec.ts</playwright-file>
-        /// <playwright-it>should throw without path</playwright-it>
+        [PlaywrightTest("har.spec.ts", "should throw without path")]
         [Fact(Skip = "We don't need this test.")]
         public void ShouldThrowWithoutPath()
         {
         }
 
-        /// <playwright-file>har.spec.ts</playwright-file>
-        /// <playwright-it>should have version and creator</playwright-it>
+        [PlaywrightTest("har.spec.ts", "should have version and creator")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveVersionAndCreator()
         {
@@ -73,8 +71,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("Playwright", log.Creator.Name);
         }
 
-        /// <playwright-file>har.spec.ts</playwright-file>
-        /// <playwright-it>should have browser</playwright-it>
+        [PlaywrightTest("har.spec.ts", "should have browser")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveBrowser()
         {
@@ -84,8 +81,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(Browser.Version, log.Browser.Version);
         }
 
-        /// <playwright-file>har.spec.ts</playwright-file>
-        /// <playwright-it>should have pages</playwright-it>
+        [PlaywrightTest("har.spec.ts", "should have pages")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHavePages()
         {
@@ -101,8 +97,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(pageEntry.PageTimings.OnLoad > 0);
         }
 
-        /// <playwright-file>har.spec.ts</playwright-file>
-        /// <playwright-it>should have pages in persistent context</playwright-it>
+        [PlaywrightTest("har.spec.ts", "should have pages in persistent context")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHavePagesInPersistentContext()
         {
@@ -127,8 +122,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("Hello", pageEntry.Title);
         }
 
-        /// <playwright-file>har.spec.ts</playwright-file>
-        /// <playwright-it>should include request</playwright-it>
+        [PlaywrightTest("har.spec.ts", "should include request")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeRequest()
         {
@@ -144,8 +138,7 @@ namespace PlaywrightSharp.Tests
             Assert.NotNull(entry.Request.Headers.Where(h => h.Name.ToLower() == "user-agent"));
         }
 
-        /// <playwright-file>har.spec.ts</playwright-file>
-        /// <playwright-it>should include response</playwright-it>
+        [PlaywrightTest("har.spec.ts", "should include response")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeResponse()
         {
@@ -160,8 +153,7 @@ namespace PlaywrightSharp.Tests
             Assert.NotNull(entry.Response.Headers.Where(h => h.Name.ToLower() == "user-agent"));
         }
 
-        /// <playwright-file>har.spec.ts</playwright-file>
-        /// <playwright-it>should include redirectURL</playwright-it>
+        [PlaywrightTest("har.spec.ts", "should include redirectURL")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeRedirecturl()
         {
@@ -174,8 +166,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(TestConstants.EmptyPage, entry.Response.RedirectURL);
         }
 
-        /// <playwright-file>har.spec.ts</playwright-file>
-        /// <playwright-it>should include query params</playwright-it>
+        [PlaywrightTest("har.spec.ts", "should include query params")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeQueryParams()
         {
@@ -186,8 +177,7 @@ namespace PlaywrightSharp.Tests
                 log.Entries.First().Request.QueryString.ToJson());
         }
 
-        /// <playwright-file>har.spec.ts</playwright-file>
-        /// <playwright-it>should include postData</playwright-it>
+        [PlaywrightTest("har.spec.ts", "should include postData")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludePostdata()
         {
@@ -203,8 +193,7 @@ namespace PlaywrightSharp.Tests
                 log.Entries.ElementAt(1).Request.PostData.ToJson());
         }
 
-        /// <playwright-file>har.spec.ts</playwright-file>
-        /// <playwright-it>should include binary postData</playwright-it>
+        [PlaywrightTest("har.spec.ts", "should include binary postData")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeBinaryPostdata()
         {
@@ -220,8 +209,7 @@ namespace PlaywrightSharp.Tests
                 log.Entries.ElementAt(1).Request.PostData.ToJson());
         }
 
-        /// <playwright-file>har.spec.ts</playwright-file>
-        /// <playwright-it>should include form params</playwright-it>
+        [PlaywrightTest("har.spec.ts", "should include form params")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeFormParams()
         {
@@ -251,8 +239,7 @@ namespace PlaywrightSharp.Tests
                 log.Entries.ElementAt(1).Request.PostData.ToJson());
         }
 
-        /// <playwright-file>har.spec.ts</playwright-file>
-        /// <playwright-it>should include cookies</playwright-it>
+        [PlaywrightTest("har.spec.ts", "should include cookies")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeCookies()
         {
@@ -274,8 +261,7 @@ namespace PlaywrightSharp.Tests
             log.Entries.First().Request.Cookies.ToJson());
         }
 
-        /// <playwright-file>har.spec.ts</playwright-file>
-        /// <playwright-it>should include set-cookies</playwright-it>
+        [PlaywrightTest("har.spec.ts", "should include set-cookies")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipOSX: true)]
         public async Task ShouldIncludeSetCookies()
         {
@@ -299,8 +285,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(cookies.ElementAt(2).Expires > DateTimeOffset.Now);
         }
 
-        /// <playwright-file>har.spec.ts</playwright-file>
-        /// <playwright-it>should include set-cookies with comma</playwright-it>
+        [PlaywrightTest("har.spec.ts", "should include set-cookies with comma")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeSetCookiesWithComma()
         {
@@ -315,8 +300,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(new HarCookie { Name = "name1", Value = "val,ue1" }.ToJson(), cookies.First().ToJson());
         }
 
-        /// <playwright-file>har.spec.ts</playwright-file>
-        /// <playwright-it>should include secure set-cookies</playwright-it>
+        [PlaywrightTest("har.spec.ts", "should include secure set-cookies")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeSecureSetCookies()
         {
@@ -331,8 +315,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(new HarCookie { Name = "name1", Value = "value1", Secure = true }.ToJson(), cookies.First().ToJson());
         }
 
-        /// <playwright-file>har.spec.ts</playwright-file>
-        /// <playwright-it>should include content</playwright-it>
+        [PlaywrightTest("har.spec.ts", "should include content")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeContent()
         {

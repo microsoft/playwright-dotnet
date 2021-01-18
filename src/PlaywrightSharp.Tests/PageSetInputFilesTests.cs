@@ -203,9 +203,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("file-to-upload.txt", await Page.EvalOnSelectorAsync<string>("input", "input => input.files[0].name"));
         }
 
-        ///<playwright-file>page-set-input-files.spec.js</playwright-file>
-
-        ///<playwright-it>should detect mime type</playwright-it>
+        [PlaywrightTest("page-set-input-files.spec.js", "should detect mime type")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDetectMimeType()
         {

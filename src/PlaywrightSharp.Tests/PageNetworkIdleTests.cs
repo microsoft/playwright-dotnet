@@ -21,8 +21,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        /// <playwright-file>page-network-idle.spec.ts</playwright-file>
-        /// <playwright-it>should navigate to empty page with networkidle</playwright-it>
+        [PlaywrightTest("page-network-idle.spec.ts", "should navigate to empty page with networkidle")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateToEmptyPageWithNetworkIdle()
         {
@@ -30,14 +29,12 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(HttpStatusCode.OK, response.Status);
         }
 
-        /// <playwright-file>page-network-idle.spec.ts</playwright-file>
-        /// <playwright-it>should wait for networkidle to succeed navigation</playwright-it>
+        [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle to succeed navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public Task ShouldWaitForNetworkidleToSucceedNavigation()
             => NetworkIdleTestAsync(Page.MainFrame, () => Page.GoToAsync(TestConstants.ServerUrl + "/networkidle.html", LifecycleEvent.Networkidle));
 
-        /// <playwright-file>page-network-idle.spec.ts</playwright-file>
-        /// <playwright-it>should wait for networkidle to succeed navigation with request from previous navigation</playwright-it>
+        [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle to succeed navigation with request from previous navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForToSucceedNavigationWithRequestFromPreviousNavigation()
         {
@@ -47,8 +44,7 @@ namespace PlaywrightSharp.Tests
             await NetworkIdleTestAsync(Page.MainFrame, () => Page.GoToAsync(TestConstants.ServerUrl + "/networkidle.html", LifecycleEvent.Networkidle));
         }
 
-        /// <playwright-file>page-network-idle.spec.ts</playwright-file>
-        /// <playwright-it>should wait for networkidle in waitForNavigation</playwright-it>
+        [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle in waitForNavigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public Task ShouldWaitForInWaitForNavigation()
             => NetworkIdleTestAsync(
@@ -60,8 +56,7 @@ namespace PlaywrightSharp.Tests
                     return task;
                 });
 
-        /// <playwright-file>page-network-idle.spec.ts</playwright-file>
-        /// <playwright-it>should wait for networkidle in setContent</playwright-it>
+        [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle in setContent")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForInSetContent()
         {
@@ -72,8 +67,7 @@ namespace PlaywrightSharp.Tests
                 true);
         }
 
-        /// <playwright-file>page-network-idle.spec.ts</playwright-file>
-        /// <playwright-it>should wait for networkidle in setContent with request from previous navigation</playwright-it>
+        [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle in setContent with request from previous navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForNetworkidleInSetContentWithRequestFromPreviousNavigation()
         {
@@ -86,8 +80,7 @@ namespace PlaywrightSharp.Tests
                 true);
         }
 
-        /// <playwright-file>page-network-idle.spec.ts</playwright-file>
-        /// <playwright-it>should wait for networkidle when navigating iframe</playwright-it>
+        [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle when navigating iframe")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForNetworkidleWhenNavigatingIframe()
         {
@@ -98,8 +91,7 @@ namespace PlaywrightSharp.Tests
                 () => frame.GoToAsync(TestConstants.ServerUrl + "/networkidle.html", LifecycleEvent.Networkidle));
         }
 
-        /// <playwright-file>page-network-idle.spec.ts</playwright-file>
-        /// <playwright-it>should wait for networkidle in setContent from the child frame</playwright-it>
+        [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle in setContent from the child frame")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForInSetContentFromTheChildFrame()
         {
@@ -110,16 +102,14 @@ namespace PlaywrightSharp.Tests
                 true);
         }
 
-        /// <playwright-file>page-network-idle.spec.ts</playwright-file>
-        /// <playwright-it>should wait for networkidle from the child frame</playwright-it>
+        [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle from the child frame")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public Task ShouldWaitForFromTheChildFrame()
             => NetworkIdleTestAsync(
                 Page.MainFrame,
                 () => Page.GoToAsync(TestConstants.ServerUrl + "/networkidle-frame.html", LifecycleEvent.Networkidle));
 
-        /// <playwright-file>page-network-idle.spec.ts</playwright-file>
-        /// <playwright-it>should wait for networkidle from the popup</playwright-it>
+        [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle from the popup")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForNetworkidleFromThePopup()
         {

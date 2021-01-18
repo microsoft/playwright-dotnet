@@ -375,9 +375,7 @@ namespace PlaywrightSharp.Tests
             await TestUtils.VerifyViewportAsync(page, 456, 789);
         }
 
-        ///<playwright-file>elementhandle-screenshot.spec.js</playwright-file>
-
-        ///<playwright-it>should restore viewport after page screenshot and exception</playwright-it>
+        [PlaywrightTest("elementhandle-screenshot.spec.js", "should restore viewport after page screenshot and exception")]
         [Fact(Skip = "Skip USES_HOOKS")]
         public void ShouldRestoreViewportAfterPageScreenshotAndException()
         {
