@@ -38,6 +38,11 @@ namespace PlaywrightSharp.Tests
         public string FileName { get; }
 
         /// <summary>
+        /// Returns the trimmed file name.
+        /// </summary>
+        public string TrimmedName => FileName.Substring(0, FileName.IndexOf('.'));
+
+        /// <summary>
         /// The name of the test, the decorated code is based on.
         /// </summary>
         public string TestName { get; }
