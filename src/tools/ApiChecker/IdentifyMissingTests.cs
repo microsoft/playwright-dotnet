@@ -31,30 +31,12 @@ using CommandLine;
 
 namespace ApiChecker
 {
-#pragma warning disable SA1201 // Elements should appear in the correct order
     /// <summary>
     /// This will identify missing tests from upstream.
     /// </summary>
     internal static class IdentifyMissingTests
     {
-        /// <summary>
-        /// Describes the options for scaffolding the tests.
-        /// </summary>
-        [Verb("testtests", HelpText = "Checks if there are missing tests in the C# variant, compared to the specs.")]
-        internal class IdentifyMissingTestsOptions
-        {
-            [Option(Required = true, HelpText = "Location of spec files.")]
-            public string SpecFileLocations { get; set; }
-
-            [Option(Required = false, HelpText = "The asembly containing the PlaywrightSharp tests.", Default = "PlaywrightSharp.Tests")]
-            public string TestDLLName { get; set; }
-
-            [Option(Required = false, HelpText = "The search pattern to use for spec files.", Default = "*.spec.ts")]
-            public string Pattern { get; set; }
-
-            [Option(Required = false, Default = true, HelpText = "When True, looks inside subdirectories of specified location as well.")]
-            public bool Recursive { get; set; }
-        }
+        private static readonly List<(string FileName, string TestName)> _testPairs = new();
 
         /// <summary>
         /// Runs the scenario.
@@ -140,8 +122,6 @@ namespace ApiChecker
             Console.WriteLine($"Found/Mismatched/Missing: {fullMatches}/{potentialMatches}/{noMatches} out of {totalTests}");
         }
 
-        private static readonly List<(string FileName, string TestName)> _testPairs = new();
-
         private static void MapTestsCases(DirectoryInfo directoryInfo, IdentifyMissingTestsOptions options)
         {
             // get the sub-directories
@@ -161,6 +141,24 @@ namespace ApiChecker
                 });
             }
         }
+
+        /// <summary>
+        /// Describes the options for scaffolding the tests.
+        /// </summary>
+        [Verb("testtests", HelpText = "Checks if there are missing tests in the C# variant, compared to the specs.")]
+        internal class IdentifyMissingTestsOptions
+        {
+            [Option(Required = true, HelpText = "Location of spec files.")]
+            public string SpecFileLocations { get; set; }
+
+            [Option(Required = false, HelpText = "The asembly containing the PlaywrightSharp tests.", Default = "PlaywrightSharp.Tests")]
+            public string TestDLLName { get; set; }
+
+            [Option(Required = false, HelpText = "The search pattern to use for spec files.", Default = "*.spec.ts")]
+            public string Pattern { get; set; }
+
+            [Option(Required = false, Default = true, HelpText = "When True, looks inside subdirectories of specified location as well.")]
+            public bool Recursive { get; set; }
+        }
     }
-#pragma warning restore SA1201 // Elements should appear in the correct order
 }
