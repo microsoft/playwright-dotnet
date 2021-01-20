@@ -95,7 +95,6 @@ namespace PlaywrightSharp.Tests.ElementHandle
         }
 
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
-        ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>textContent should be atomic</playwright-it>
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task TextContentShouldBeAtomic()
@@ -124,7 +123,6 @@ namespace PlaywrightSharp.Tests.ElementHandle
         }
 
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
-        ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>innerText should be atomic</playwright-it>
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task InnerTextShouldBeAtomic()
@@ -153,7 +151,6 @@ namespace PlaywrightSharp.Tests.ElementHandle
         }
 
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
-        ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>innerHTML should be atomic</playwright-it>
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task InnerHtmlShouldBeAtomic()
@@ -182,7 +179,6 @@ namespace PlaywrightSharp.Tests.ElementHandle
         }
 
         ///<playwright-file>dispatchevent.spec.js</playwright-file>
-        ///<playwright-describe>Page.dispatchEvent(click)</playwright-describe>
         ///<playwright-it>getAttribute should be atomic</playwright-it>
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task GetAttributeShouldBeAtomic()
@@ -208,6 +204,84 @@ namespace PlaywrightSharp.Tests.ElementHandle
             string tc = await Page.GetAttributeAsync("getAttribute=div", "foo");
             Assert.Equal("Hello", tc);
             Assert.Equal("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').getAttribute('foo')"));
+        }
+
+        ///<playwright-file>dispatchevent.spec.js</playwright-file>
+        ///<playwright-it>isVisible and isHidden should work</playwright-it>
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task IsVisibleAndIsHiddenShouldWork()
+        {
+            await Page.SetContentAsync("<div>Hi</div><span></span>");
+            var div = await Page.QuerySelectorAsync("div");
+            Assert.True(await div.IsVisibleAsync());
+            Assert.False(await div.IsHiddenAsync());
+            Assert.True(await Page.IsVisibleAsync("div"));
+            Assert.False(await Page.IsHiddenAsync("div"));
+            var span = await Page.QuerySelectorAsync("span");
+            Assert.False(await span.IsVisibleAsync());
+            Assert.True(await span.IsHiddenAsync());
+            Assert.False(await Page.IsVisibleAsync("span"));
+            Assert.True(await Page.IsHiddenAsync("span"));
+        }
+
+        ///<playwright-file>dispatchevent.spec.js</playwright-file>
+        ///<playwright-it>isEnabled and isDisabled should work</playwright-it>
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task IsEnabledAndIsDisabledShouldWork()
+        {
+            await Page.SetContentAsync(@"
+                <button disabled>button1</button>
+                <button>button2</button>
+                <div>div</div>");
+            var div = await Page.QuerySelectorAsync("div");
+            Assert.True(await div.IsEnabledAsync());
+            Assert.False(await div.IsDisabledAsync());
+            Assert.True(await Page.IsEnabledAsync("div"));
+            Assert.False(await Page.IsDisabledAsync("div"));
+            var button1 = await Page.QuerySelectorAsync(":text('button1')");
+            Assert.False(await button1.IsEnabledAsync());
+            Assert.True(await button1.IsDisabledAsync());
+            Assert.False(await Page.IsEnabledAsync(":text('button1')"));
+            Assert.True(await Page.IsDisabledAsync(":text('button1')"));
+            var button2 = await Page.QuerySelectorAsync(":text('button2')");
+            Assert.True(await button2.IsEnabledAsync());
+            Assert.False(await button2.IsDisabledAsync());
+            Assert.True(await Page.IsEnabledAsync(":text('button2')"));
+            Assert.False(await Page.IsDisabledAsync(":text('button2')"));
+        }
+
+        ///<playwright-file>dispatchevent.spec.js</playwright-file>
+        ///<playwright-it>isEditable should work</playwright-it>
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task IsEditableShouldWork()
+        {
+            await Page.SetContentAsync(@"<input id=input1 disabled><textarea></textarea><input id=input2>");
+            await Page.EvalOnSelectorAsync("textarea", "t => t.readOnly = true");
+            var input1 = await Page.QuerySelectorAsync("#input1");
+            Assert.False(await input1.IsEditableAsync());
+            Assert.False(await Page.IsEditableAsync("#input1"));
+            var input2 = await Page.QuerySelectorAsync("#input2");
+            Assert.True(await input2.IsEditableAsync());
+            Assert.True(await Page.IsEditableAsync("#input2"));
+            var textarea = await Page.QuerySelectorAsync("textarea");
+            Assert.False(await textarea.IsEditableAsync());
+            Assert.False(await Page.IsEditableAsync("textarea"));
+        }
+
+        ///<playwright-file>dispatchevent.spec.js</playwright-file>
+        ///<playwright-it>isChecked should work</playwright-it>
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task IsCheckedShouldWork()
+        {
+            await Page.SetContentAsync(@"<input type='checkbox' checked><div>Not a checkbox</div>");
+            var handle = await Page.QuerySelectorAsync("input");
+            Assert.True(await handle.IsCheckedAsync());
+            Assert.True(await Page.IsCheckedAsync("input"));
+            await handle.EvaluateAsync("input => input.checked = false");
+            Assert.False(await handle.IsCheckedAsync());
+            Assert.False(await Page.IsCheckedAsync("input"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.IsCheckedAsync("div"));
+            Assert.Contains("Not a checkbox or radio button", exception.Message);
         }
     }
 }

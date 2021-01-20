@@ -630,5 +630,41 @@ namespace PlaywrightSharp
         /// Defaults to false.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
         Task TapAsync(Point? position = null, Modifier[] modifiers = null, int? timeout = null, bool force = false, bool? noWaitAfter = null);
+
+        /// <summary>
+        /// Returns whether the element is checked. Throws if the element is not a checkbox or radio input.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
+        Task<bool> IsCheckedAsync();
+
+        /// <summary>
+        /// Returns whether the element is disabled, the opposite of <see cref="IsEnabledAsync"/>.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
+        Task<bool> IsDisabledAsync();
+
+        /// <summary>
+        /// Returns whether the element is editable.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
+        Task<bool> IsEditableAsync();
+
+        /// <summary>
+        /// Returns whether the element is enabled.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
+        Task<bool> IsEnabledAsync();
+
+        /// <summary>
+        /// Returns whether the element is hidden, the opposite of <see cref="IsVisibleAsync"/>.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
+        Task<bool> IsHiddenAsync();
+
+        /// <summary>
+        /// Returns whether the element is visible.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
+        Task<bool> IsVisibleAsync();
     }
 }

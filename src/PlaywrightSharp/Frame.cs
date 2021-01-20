@@ -424,6 +424,24 @@ namespace PlaywrightSharp
         public Task TapAsync(string selector, Modifier[] modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)
             => TapAsync(false, selector, modifiers, position, timeout, force, noWaitAfter);
 
+        /// <inheritdoc />
+        public Task<bool> IsCheckedAsync(string selector, int? timeout = null) => IsCheckedAsync(false, selector, timeout);
+
+        /// <inheritdoc />
+        public Task<bool> IsDisabledAsync(string selector, int? timeout = null) => IsDisabledAsync(false, selector, timeout);
+
+        /// <inheritdoc />
+        public Task<bool> IsEditableAsync(string selector, int? timeout = null) => IsEditableAsync(false, selector, timeout);
+
+        /// <inheritdoc />
+        public Task<bool> IsEnabledAsync(string selector, int? timeout = null) => IsEnabledAsync(false, selector, timeout);
+
+        /// <inheritdoc />
+        public Task<bool> IsHiddenAsync(string selector, int? timeout = null) => IsHiddenAsync(false, selector, timeout);
+
+        /// <inheritdoc />
+        public Task<bool> IsVisibleAsync(string selector, int? timeout = null) => IsVisibleAsync(false, selector, timeout);
+
         internal Task TapAsync(bool isPageCall, string selector, Modifier[] modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)
             => _channel.TapAsync(selector, modifiers, position, timeout, force, noWaitAfter, isPageCall);
 
@@ -741,6 +759,24 @@ namespace PlaywrightSharp
 
         internal async Task<IResponse> GoToAsync(bool isPage, string url, LifecycleEvent? waitUntil, string referer, int? timeout)
             => (await _channel.GoToAsync(url, timeout, waitUntil, referer, isPage).ConfigureAwait(false))?.Object;
+
+        internal Task<bool> IsCheckedAsync(bool isPageCall, string selector, int? timeout = null)
+            => _channel.IsCheckedAsync(selector, timeout, isPageCall);
+
+        internal Task<bool> IsDisabledAsync(bool isPageCall, string selector, int? timeout = null)
+            => _channel.IsDisabledAsync(selector, timeout, isPageCall);
+
+        internal Task<bool> IsEditableAsync(bool isPageCall, string selector, int? timeout = null)
+            => _channel.IsEditableAsync(selector, timeout, isPageCall);
+
+        internal Task<bool> IsEnabledAsync(bool isPageCall, string selector, int? timeout = null)
+            => _channel.IsEnabledAsync(selector, timeout, isPageCall);
+
+        internal Task<bool> IsHiddenAsync(bool isPageCall, string selector, int? timeout = null)
+            => _channel.IsHiddenAsync(selector, timeout, isPageCall);
+
+        internal Task<bool> IsVisibleAsync(bool isPageCall, string selector, int? timeout = null)
+            => _channel.IsVisibleAsync(selector, timeout, isPageCall);
 
         private Waiter SetupNavigationWaiter(int? timeout)
         {

@@ -304,6 +304,24 @@ namespace PlaywrightSharp
         public Task TapAsync(Point? position = null, Modifier[] modifiers = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)
             => _channel.TapAsync(position, modifiers, timeout, force, noWaitAfter);
 
+        /// <inheritdoc />
+        public Task<bool> IsCheckedAsync() => _channel.IsCheckedAsync();
+
+        /// <inheritdoc />
+        public Task<bool> IsDisabledAsync() => _channel.IsDisabledAsync();
+
+        /// <inheritdoc />
+        public Task<bool> IsEditableAsync() => _channel.IsEditableAsync();
+
+        /// <inheritdoc />
+        public Task<bool> IsEnabledAsync() => _channel.IsEnabledAsync();
+
+        /// <inheritdoc />
+        public Task<bool> IsHiddenAsync() => _channel.IsHiddenAsync();
+
+        /// <inheritdoc />
+        public Task<bool> IsVisibleAsync() => _channel.IsVisibleAsync();
+
         internal static ScreenshotFormat? DetermineScreenshotType(string path)
         {
             string mimeType = path.MimeType();

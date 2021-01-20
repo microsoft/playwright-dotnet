@@ -873,5 +873,101 @@ namespace PlaywrightSharp.Transport.Channels
 
             return Connection.SendMessageToServerAsync(Guid, "tap", args);
         }
+
+        internal async Task<bool> IsCheckedAsync(string selector, int? timeout, bool isPage)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["selector"] = selector,
+                ["isPage"] = isPage,
+            };
+
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
+
+            return (await Connection.SendMessageToServerAsync(Guid, "isChecked", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        }
+
+        internal async Task<bool> IsDisabledAsync(string selector, int? timeout, bool isPage)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["selector"] = selector,
+                ["isPage"] = isPage,
+            };
+
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
+
+            return (await Connection.SendMessageToServerAsync(Guid, "isDisabled", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        }
+
+        internal async Task<bool> IsEditableAsync(string selector, int? timeout, bool isPage)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["selector"] = selector,
+                ["isPage"] = isPage,
+            };
+
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
+
+            return (await Connection.SendMessageToServerAsync(Guid, "isEditable", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        }
+
+        internal async Task<bool> IsEnabledAsync(string selector, int? timeout, bool isPage)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["selector"] = selector,
+                ["isPage"] = isPage,
+            };
+
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
+
+            return (await Connection.SendMessageToServerAsync(Guid, "isEnabled", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        }
+
+        internal async Task<bool> IsHiddenAsync(string selector, int? timeout, bool isPage)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["selector"] = selector,
+                ["isPage"] = isPage,
+            };
+
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
+
+            return (await Connection.SendMessageToServerAsync(Guid, "isHidden", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        }
+
+        internal async Task<bool> IsVisibleAsync(string selector, int? timeout, bool isPage)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["selector"] = selector,
+                ["isPage"] = isPage,
+            };
+
+            if (timeout != null)
+            {
+                args["timeout"] = timeout;
+            }
+
+            return (await Connection.SendMessageToServerAsync(Guid, "isVisible", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        }
     }
 }

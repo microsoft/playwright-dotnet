@@ -475,6 +475,24 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();
         }
 
+        internal async Task<bool> IsVisibleAsync()
+            => (await Connection.SendMessageToServerAsync(Guid, "isVisible", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+
+        internal async Task<bool> IsHiddenAsync()
+            => (await Connection.SendMessageToServerAsync(Guid, "isHidden", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+
+        internal async Task<bool> IsEnabledAsync()
+            => (await Connection.SendMessageToServerAsync(Guid, "isEnabled", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+
+        internal async Task<bool> IsEditableAsync()
+            => (await Connection.SendMessageToServerAsync(Guid, "isEditable", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+
+        internal async Task<bool> IsDisabledAsync()
+            => (await Connection.SendMessageToServerAsync(Guid, "isDisabled", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+
+        internal async Task<bool> IsCheckedAsync()
+            => (await Connection.SendMessageToServerAsync(Guid, "isChecked", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+
         internal Task CheckAsync(int? timeout, bool force, bool? noWaitAfter)
         {
             var args = new Dictionary<string, object>
