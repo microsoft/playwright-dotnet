@@ -10,7 +10,7 @@
     <Import Project="../Common/SignAssembly.props" />
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-        <DocumentationFile>bin\Debug\netcoreapp3.1\PlaywrightSharp.Tests.xml</DocumentationFile>
+        <DocumentationFile></DocumentationFile>
         <NoWarn>1701;1702</NoWarn>
     </PropertyGroup>
     <ItemGroup>
