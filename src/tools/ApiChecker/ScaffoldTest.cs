@@ -41,7 +41,7 @@ namespace ApiChecker
 
         public static void FindTestsInFile(string path, Action<string> callback)
         {
-            Regex rx = new Regex(@"it\(\'(.*)\',");
+            var rx = new Regex(@"it\(\'(.*)\',");
             foreach (string line in File.ReadAllLines(path))
             {
                 var m = rx.Match(line);
@@ -61,8 +61,8 @@ namespace ApiChecker
         /// </summary>
         /// <param name="testDescribe">The original test name.</param>
         /// <returns>Returns a "clean" string, suitable for C# method names.</returns>
-        public static string CleanName(string testDescribe) =>
-            new string(Array.FindAll(_textInfo.ToTitleCase(testDescribe).ToCharArray(), c => char.IsLetterOrDigit(c)));
+        public static string CleanName(string testDescribe)
+            => new string(Array.FindAll(_textInfo.ToTitleCase(testDescribe).ToCharArray(), c => char.IsLetterOrDigit(c)));
 
         public static void Run(ScaffoldTestOptions options)
         {
