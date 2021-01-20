@@ -19,9 +19,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -29,9 +27,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.EmptyPage, Page.Url);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goBack</playwright-describe>
-        ///<playwright-it>should work with file URL</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goBack", "should work with file URL")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithFileURL()
         {
@@ -41,9 +37,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(3, Page.Frames.Length);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goBack</playwright-describe>
-        ///<playwright-it>should use http for no protocol</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goBack", "should use http for no protocol")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldUseHttpForNoProtocol()
         {
@@ -51,9 +45,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.EmptyPage, Page.Url);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should work cross-process</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should work cross-process")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkCrossProcess()
         {
@@ -77,9 +69,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(url, response.Url);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should capture iframe navigation request</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should capture iframe navigation request")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCaptureIframeNavigationRequest()
         {
@@ -104,9 +94,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Same(Page.FirstChildFrame(), requestFrame);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should capture cross-process iframe navigation request</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should capture cross-process iframe navigation request")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCaptureCrossProcessIframeNavigationRequest()
         {
@@ -131,9 +119,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Same(Page.FirstChildFrame(), requestFrame);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should work with anchor navigation</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should work with anchor navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAnchorNavigation()
         {
@@ -145,9 +131,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal($"{TestConstants.EmptyPage}#bar", Page.Url);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should work with redirects</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should work with redirects")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithRedirects()
         {
@@ -159,9 +143,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.EmptyPage);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should navigate to about:blank</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should navigate to about:blank")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateToAboutBlank()
         {
@@ -169,9 +151,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Null(response);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should return response when page changes its URL after load</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should return response when page changes its URL after load")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnResponseWhenPageChangesItsURLAfterLoad()
         {
@@ -179,9 +159,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(HttpStatusCode.OK, response.Status);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should work with subframes return 204</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should work with subframes return 204")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithSubframesReturn204()
         {
@@ -193,9 +171,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should work with subframes return 204</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should work with subframes return 204")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenServerReturns204()
         {
@@ -221,9 +197,7 @@ namespace PlaywrightSharp.Tests.Page
             }
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should navigate to empty page with domcontentloaded</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should navigate to empty page with domcontentloaded")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateToEmptyPageWithDOMContentLoaded()
         {
@@ -231,9 +205,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(HttpStatusCode.OK, response.Status);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should work when page calls history API in beforeunload</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should work when page calls history API in beforeunload")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenPageCallsHistoryAPIInBeforeunload()
         {
@@ -246,9 +218,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(HttpStatusCode.OK, response.Status);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should fail when navigating to bad url</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should fail when navigating to bad url")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenNavigatingToBadUrl()
         {
@@ -263,9 +233,7 @@ namespace PlaywrightSharp.Tests.Page
             }
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should fail when navigating to bad SSL</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should fail when navigating to bad SSL")]
         // [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldFailWhenNavigatingToBadSSL()
@@ -278,9 +246,7 @@ namespace PlaywrightSharp.Tests.Page
             TestUtils.AssertSSLError(exception.Message);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should fail when navigating to bad SSL after redirects</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should fail when navigating to bad SSL after redirects")]
         // [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldFailWhenNavigatingToBadSSLAfterRedirects()
@@ -291,9 +257,7 @@ namespace PlaywrightSharp.Tests.Page
             TestUtils.AssertSSLError(exception.Message);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should not crash when navigating to bad SSL after a cross origin navigation</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should not crash when navigating to bad SSL after a cross origin navigation")]
         // [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldNotCrashWhenNavigatingToBadSSLAfterACrossOriginNavigation()
@@ -302,23 +266,17 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html").ContinueWith(_ => { });
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should throw if networkidle0 is passed as an option</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should throw if networkidle0 is passed as an option")]
         [Fact(Skip = "We don't need this test")]
         public void ShouldThrowIfNetworkidle0IsPassedAsAnOption()
         { }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should throw if networkidle2 is passed as an option</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should throw if networkidle2 is passed as an option")]
         [Fact(Skip = "We don't need this test")]
         public void ShouldThrowIfNetworkidle2IsPassedAsAnOption()
         { }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should throw if networkidle is passed as an option</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should throw if networkidle is passed as an option")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenMainResourcesFailedToLoad()
         {
@@ -342,9 +300,7 @@ namespace PlaywrightSharp.Tests.Page
             }
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should fail when exceeding maximum navigation timeout</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should fail when exceeding maximum navigation timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingMaximumNavigationTimeout()
         {
@@ -355,9 +311,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should fail when exceeding maximum navigation timeout</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should fail when exceeding maximum navigation timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingDefaultMaximumNavigationTimeout()
         {
@@ -369,9 +323,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should fail when exceeding browser context navigation timeout</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should fail when exceeding browser context navigation timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingBrowserContextNavigationTimeout()
         {
@@ -382,9 +334,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should fail when exceeding default maximum timeout</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should fail when exceeding default maximum timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingDefaultMaximumTimeout()
         {
@@ -396,9 +346,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should fail when exceeding browser context timeout</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should fail when exceeding browser context timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingBrowserContextTimeout()
         {
@@ -409,9 +357,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should prioritize default navigation timeout over default timeout</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should prioritize default navigation timeout over default timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldPrioritizeDefaultNavigationTimeoutOverDefaultTimeout()
         {
@@ -424,9 +370,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should disable timeout when its set to 0</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should disable timeout when its set to 0")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDisableTimeoutWhenItsSetTo0()
         {
@@ -442,9 +386,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(loaded);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should fail when replaced by another navigation</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should fail when replaced by another navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenReplacedByAnotherNavigation()
         {
@@ -474,9 +416,7 @@ namespace PlaywrightSharp.Tests.Page
             }
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should work when navigating to valid url</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should work when navigating to valid url")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenNavigatingToValidUrl()
         {
@@ -484,9 +424,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(HttpStatusCode.OK, response.Status);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should work when navigating to data url</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should work when navigating to data url")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenNavigatingToDataUrl()
         {
@@ -494,9 +432,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Null(response);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should work when navigating to 404</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should work when navigating to 404")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenNavigatingTo404()
         {
@@ -504,9 +440,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(HttpStatusCode.NotFound, response.Status);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should return last response in redirect chain</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should return last response in redirect chain")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnLastResponseInRedirectChain()
         {
@@ -519,30 +453,22 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.EmptyPage, response.Url);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should not leak listeners during navigation</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should not leak listeners during navigation")]
         [Fact(Skip = "We don't need this test")]
         public void ShouldNotLeakListenersDuringNavigation()
         { }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should not leak listeners during bad navigation</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should not leak listeners during bad navigation")]
         [Fact(Skip = "We don't need this test")]
         public void ShouldNotLeakListenersDuringBadNavigation()
         { }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should not leak listeners during navigation of 11 pages</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should not leak listeners during navigation of 11 pages")]
         [Fact(Skip = "We don't need this test")]
         public void ShouldNotLeakListenersDuringNavigationOf11Pages()
         { }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should navigate to dataURL and not fire dataURL requests</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should navigate to dataURL and not fire dataURL requests")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateToDataURLAndNotFireDataURLRequests()
         {
@@ -555,9 +481,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Empty(requests);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should navigate to URL with hash and fire requests without hash</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should navigate to URL with hash and fire requests without hash")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateToURLWithHashAndFireRequestsWithoutHash()
         {
@@ -571,9 +495,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.EmptyPage, requests[0].Url);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should work with self requesting page</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should work with self requesting page")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithSelfRequestingPage()
         {
@@ -582,9 +504,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("self-request.html", response.Url);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should fail when navigating and show the url at the error message</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should fail when navigating and show the url at the error message")]
         // [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldFailWhenNavigatingAndShowTheUrlAtTheErrorMessage()
@@ -594,9 +514,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains(url, exception.Message);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should be able to navigate to a page controlled by service worker</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should be able to navigate to a page controlled by service worker")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToNavigateToAPageControlledByServiceWorker()
         {
@@ -605,9 +523,7 @@ namespace PlaywrightSharp.Tests.Page
             await Page.GoToAsync(TestConstants.ServerUrl + "/serviceworkers/fetch/sw.html");
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should send referer</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should send referer")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendReferer()
         {
@@ -626,9 +542,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.ServerUrl + "/grid.html", Page.Url);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should reject referer option when setExtraHTTPHeaders provides referer</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should reject referer option when setExtraHTTPHeaders provides referer")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectRefererOptionWhenSetExtraHTTPHeadersProvidesReferer()
         {
@@ -644,9 +558,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains(TestConstants.ServerUrl + "/grid.html", exception.Message);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should override referrer-policy</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should override referrer-policy")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldOverrideReferrerPolicy()
         {
@@ -671,9 +583,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.ServerUrl + "/grid.html", Page.Url);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>should fail when canceled by another navigation</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "should fail when canceled by another navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenCanceledByAnotherNavigation()
         {
@@ -686,9 +596,7 @@ namespace PlaywrightSharp.Tests.Page
             await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await failed);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goto</playwright-describe>
-        ///<playwright-it>extraHTTPHeaders should be pushed to provisional page</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goto", "extraHTTPHeaders should be pushed to provisional page")]
         [Fact(Skip = "Skipped in Playwright")]
         public void ExtraHTTPHeadersShouldBePushedToProvisionalPage()
         {

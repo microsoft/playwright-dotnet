@@ -20,9 +20,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
         }
 
-        ///<playwright-file>browsercontext.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext.route</playwright-describe>
-        ///<playwright-it>should intercept</playwright-it>
+        [PlaywrightTest("browsercontext.spec.js", "BrowserContext.route", "should intercept")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIntercept()
         {
@@ -53,9 +51,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.True(intercepted);
         }
 
-        ///<playwright-file>browsercontext.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext.route</playwright-describe>
-        ///<playwright-it>should unroute</playwright-it>
+        [PlaywrightTest("browsercontext.spec.js", "BrowserContext.route", "should unroute")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldUnroute()
         {
@@ -102,9 +98,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(new List<int>() { 4 }, intercepted);
         }
 
-        ///<playwright-file>browsercontext.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext.route</playwright-describe>
-        ///<playwright-it>should yield to page.route</playwright-it>
+        [PlaywrightTest("browsercontext.spec.js", "BrowserContext.route", "should yield to page.route")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldYieldToPageRoute()
         {
@@ -124,9 +118,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal("page", await response.GetTextAsync());
         }
 
-        ///<playwright-file>browsercontext.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext.route</playwright-describe>
-        ///<playwright-it>should fall back to context.route</playwright-it>
+        [PlaywrightTest("browsercontext.spec.js", "BrowserContext.route", "should fall back to context.route")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFallBackToContextRoute()
         {

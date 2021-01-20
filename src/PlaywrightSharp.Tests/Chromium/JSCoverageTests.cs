@@ -21,9 +21,7 @@ namespace PlaywrightSharp.Tests.Chromium
         {
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>JSCoverage</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "JSCoverage", "should work")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWork()
         {
@@ -35,9 +33,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal(1, coverage[0].Functions.FirstOrDefault(f => f.FunctionName == "foo").Ranges[0].Count);
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>JSCoverage</playwright-describe>
-        ///<playwright-it>should report sourceURLs</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "JSCoverage", "should report sourceURLs")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportSourceUrls()
         {
@@ -48,9 +44,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal("nicename.js", coverage[0].Url);
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>JSCoverage</playwright-describe>
-        ///<playwright-it>should ignore eval() scripts by default</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "JSCoverage", "should ignore eval() scripts by default")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldIgnoreEvalScriptsByDefault()
         {
@@ -60,9 +54,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Single(coverage);
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>JSCoverage</playwright-describe>
-        ///<playwright-it>shouldn't ignore eval() scripts if reportAnonymousScripts is true</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "JSCoverage", "shouldn't ignore eval() scripts if reportAnonymousScripts is true")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldNotIgnoreEvalScriptsIfReportAnonymousScriptsIsTrue()
         {
@@ -73,9 +65,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal(2, coverage.Length);
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>JSCoverage</playwright-describe>
-        ///<playwright-it>should report multiple scripts</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "JSCoverage", "should report multiple scripts")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportMultipleScripts()
         {

@@ -22,9 +22,7 @@ namespace PlaywrightSharp.Tests.Fixtures
         {
         }
 
-        ///<playwright-file>fixtures.spec.js</playwright-file>
-        ///<playwright-describe>Fixtures</playwright-describe>
-        ///<playwright-it>should close the browser when the node process closes</playwright-it>
+        [PlaywrightTest("fixtures.spec.js", "Fixtures", "should close the browser when the node process closes")]
         [Fact(Skip = "We don't need to test process handling")]
         public void ShouldCloseTheBrowserWhenTheNodeProcessCloses() { }
     }

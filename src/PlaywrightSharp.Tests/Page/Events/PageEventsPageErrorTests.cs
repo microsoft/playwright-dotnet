@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.PageError</playwright-describe>
-        ///<playwright-it>should fire</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.PageError", "should fire")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFire()
         {
@@ -40,9 +38,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             Assert.Equal(stack, error.Stack);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.PageError</playwright-describe>
-        ///<playwright-it>should contain sourceURL</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.PageError", "should contain sourceURL")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldContainSourceURL()
         {
@@ -53,9 +49,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             Assert.Contains("myscript.js", error.Stack);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.PageError</playwright-describe>
-        ///<playwright-it>should handle odd values</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.PageError", "should handle odd values")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHandleOddValues()
         {
@@ -77,9 +71,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             }
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.PageError</playwright-describe>
-        ///<playwright-it>should handle object</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.PageError", "should handle object")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldHandleObject()
         {
@@ -90,9 +82,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             Assert.Contains(TestConstants.IsChromium ? "Object" : "[object Object]", error.Message);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.PageError</playwright-describe>
-        ///<playwright-it>should handle window</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.PageError", "should handle window")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldHandleWindow()
         {

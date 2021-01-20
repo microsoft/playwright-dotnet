@@ -16,8 +16,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        ///<playwright-file>capabilities.spec.js</playwright-file>     
-        ///<playwright-it>Web Assembly should work</playwright-it>
+        [PlaywrightTest("capabilities.spec.js", "Web Assembly should work")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true)]
         public async Task WebAssemblyShouldWork()
         {
@@ -26,8 +25,7 @@ namespace PlaywrightSharp.Tests
         }
 
 #if NETCOREAPP
-        ///<playwright-file>capabilities.spec.js</playwright-file>
-        ///<playwright-it>WebSocket should work</playwright-it>
+        [PlaywrightTest("capabilities.spec.js", "WebSocket should work")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true)]
         public async Task WebSocketShouldWork()
         {
@@ -45,8 +43,7 @@ namespace PlaywrightSharp.Tests
         }
 #endif
 
-        ///<playwright-file>capabilities.spec.js</playwright-file>
-        ///<playwright-it>should respect CSP</playwright-it>
+        [PlaywrightTest("capabilities.spec.js", "should respect CSP")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectCSP()
         {
@@ -68,8 +65,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("SUCCESS", await Page.EvaluateAsync<string>("() => window.testStatus"));
         }
 
-        ///<playwright-file>capabilities.spec.js</playwright-file>
-        ///<playwright-it>should play video</playwright-it>
+        [PlaywrightTest("capabilities.spec.js", "should play video")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldPlayVideo()
         {

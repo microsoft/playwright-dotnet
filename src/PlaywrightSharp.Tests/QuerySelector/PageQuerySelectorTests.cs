@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         {
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$</playwright-describe>
-        ///<playwright-it>should query existing element with css selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$", "should query existing element with css selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldQueryExistingElementWithCssSelector()
         {
@@ -27,9 +25,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.NotNull(element);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$</playwright-describe>
-        ///<playwright-it>should query existing element with text selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$", "should query existing element with text selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldQueryExistingElementWithTextSelector()
         {
@@ -38,9 +34,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.NotNull(element);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$</playwright-describe>
-        ///<playwright-it>should query existing element with xpath selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$", "should query existing element with xpath selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldQueryExistingElementWithXpathSelector()
         {
@@ -49,9 +43,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.NotNull(element);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$</playwright-describe>
-        ///<playwright-it>should return null for non-existing element</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$", "should return null for non-existing element")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullForNonExistingElement()
         {
@@ -59,9 +51,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Null(element);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$</playwright-describe>
-        ///<playwright-it>should auto-detect xpath selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$", "should auto-detect xpath selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAutoDetectXpathSelector()
         {
@@ -70,9 +60,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.NotNull(element);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$</playwright-describe>
-        ///<playwright-it>should auto-detect xpath selector with starting parenthesis</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$", "should auto-detect xpath selector with starting parenthesis")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAutoDetectXpathSelectorWithStartingParenthesis()
         {
@@ -81,9 +69,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.NotNull(element);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$</playwright-describe>
-        ///<playwright-it>should auto-detect text selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$", "should auto-detect text selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAutoDetectTextSelector()
         {
@@ -92,9 +78,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.NotNull(element);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$</playwright-describe>
-        ///<playwright-it>should auto-detect css selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$", "should auto-detect css selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAutoDetectCssSelector()
         {
@@ -103,9 +87,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.NotNull(element);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$</playwright-describe>
-        ///<playwright-it>should support >> syntax</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$", "should support >> syntax")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportDoubleGreaterThanSyntax()
         {

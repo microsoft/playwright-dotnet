@@ -19,9 +19,7 @@ namespace PlaywrightSharp.Tests.Chromium
         {
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>resetOnNavigation</playwright-describe>
-        ///<playwright-it>should report scripts across navigations when disabled</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "resetOnNavigation", "should report scripts across navigations when disabled")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportScriptsAcrossNavigationsWhenDisabled()
         {
@@ -32,9 +30,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal(2, coverage.Length);
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>resetOnNavigation</playwright-describe>
-        ///<playwright-it>should NOT report scripts across navigations when enabled</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "resetOnNavigation", "should NOT report scripts across navigations when enabled")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldNotReportScriptsAcrossNavigationsWhenEnabled()
         {
@@ -45,9 +41,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Empty(coverage);
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>resetOnNavigation</playwright-describe>
-        ///<playwright-it>should not hang when there is a debugger statement</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "resetOnNavigation", "should not hang when there is a debugger statement")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldNotHangWhenThereIsADebuggerStatement()
         {

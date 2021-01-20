@@ -18,9 +18,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Console</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.Console", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -42,9 +40,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             Assert.Equal("bar", (await message.Args.ElementAt(2).GetJsonValueAsync<JsonElement>()).GetProperty("foo").GetString());
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Console</playwright-describe>
-        ///<playwright-it>should emit same log twice</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.Console", "should emit same log twice")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitSameLogTwice()
         {
@@ -56,9 +52,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             Assert.Equal(new[] { "hello", "hello" }, messages.ToArray());
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Console</playwright-describe>
-        ///<playwright-it>should work for different console API calls</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.Console", "should work for different console API calls")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForDifferentConsoleAPICalls()
         {
@@ -87,9 +81,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             }, messages.Skip(1).Select(msg => msg.Text));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Console</playwright-describe>
-        ///<playwright-it>should not fail for window object</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.Console", "should not fail for window object")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotFailForWindowObject()
         {
@@ -107,9 +99,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             Assert.Equal("JSHandle@object", message.Text);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Console</playwright-describe>
-        ///<playwright-it>should trigger correct Log</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.Console", "should trigger correct Log")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTriggerCorrectLog()
         {
@@ -122,9 +112,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             Assert.Equal("error", messageEvent.Message.Type);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Console</playwright-describe>
-        ///<playwright-it>should have location for console API calls</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.Console", "should have location for console API calls")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveLocationForConsoleAPICalls()
         {
@@ -145,9 +133,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             }, location);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Console</playwright-describe>
-        ///<playwright-it>should not throw when there are console messages in detached iframes</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.Console", "should not throw when there are console messages in detached iframes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotThrowWhenThereAreConsoleMessagesInDetachedIframes()
         {

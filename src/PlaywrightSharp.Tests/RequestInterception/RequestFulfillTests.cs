@@ -21,9 +21,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         {
         }
 
-        ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>request.fulfill</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("interception.spec.js", "request.fulfill", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -49,9 +47,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         /// I found that status 422 is not available in all .NET runtime versions (see https://github.com/dotnet/core/blob/4c4642d548074b3fbfd425541a968aadd75fea99/release-notes/2.1/Preview/api-diff/preview2/2.1-preview2_System.Net.md)
         /// As the goal here is testing HTTP codes that are not in Chromium (see https://cs.chromium.org/chromium/src/net/http/http_status_code_list.h?sq=package:chromium) we will use code 426: Upgrade Required
         /// </summary>
-        ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>request.fulfill</playwright-describe>
-        ///<playwright-it>should work with status code 422</playwright-it>
+        [PlaywrightTest("interception.spec.js", "request.fulfill", "should work with status code 422")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithStatusCode422()
         {
@@ -65,9 +61,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }
 
-        ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>request.fulfill</playwright-describe>
-        ///<playwright-it>should allow mocking binary responses</playwright-it>
+        [PlaywrightTest("interception.spec.js", "request.fulfill", "should allow mocking binary responses")]
         [Fact(Skip = "We need screenshots for this")]
         public async Task ShouldAllowMockingBinaryResponses()
         {
@@ -88,17 +82,13 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.True(ScreenshotHelper.PixelMatch("mock-binary-response.png", await img.ScreenshotAsync()));
         }
 
-        ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>request.fulfill</playwright-describe>
-        ///<playwright-it>should allow mocking svg with charset</playwright-it>
+        [PlaywrightTest("interception.spec.js", "request.fulfill", "should allow mocking svg with charset")]
         [Fact(Skip = "We need screenshots for this")]
         public void ShouldAllowMockingSvgWithCharset()
         {
         }
 
-        ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>request.fulfill</playwright-describe>
-        ///<playwright-it>should work with file path</playwright-it>
+        [PlaywrightTest("interception.spec.js", "request.fulfill", "should work with file path")]
         [Fact(Skip = "We need screenshots for this")]
         public async Task ShouldWorkWithFilePath()
         {
@@ -119,9 +109,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.True(ScreenshotHelper.PixelMatch("mock-binary-response.png", await img.ScreenshotAsync()));
         }
 
-        ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>request.fulfill</playwright-describe>
-        ///<playwright-it>should stringify intercepted request response headers</playwright-it>
+        [PlaywrightTest("interception.spec.js", "request.fulfill", "should stringify intercepted request response headers")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldStringifyInterceptedRequestResponseHeaders()
         {
@@ -142,9 +130,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }
 
-        ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>request.fulfill</playwright-describe>
-        ///<playwright-it>should not modify the headers sent to the server</playwright-it>
+        [PlaywrightTest("interception.spec.js", "request.fulfill", "should not modify the headers sent to the server")]
         [Fact(Skip = "Flacky with the ASP.NET server")]
         public async Task ShouldNotModifyTheHeadersSentToTheServer()
         {
@@ -186,9 +172,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.Equal(interceptedRequests[1].OrderBy(kv => kv.Key), interceptedRequests[0].OrderBy(kv => kv.Key));
         }
 
-        ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>request.fulfill</playwright-describe>
-        ///<playwright-it>should include the origin header</playwright-it>
+        [PlaywrightTest("interception.spec.js", "request.fulfill", "should include the origin header")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeTheOriginHeader()
         {

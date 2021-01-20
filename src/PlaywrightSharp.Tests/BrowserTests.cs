@@ -15,8 +15,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        ///<playwright-file>browser.spec.js</playwright-file>
-        ///<playwright-it>should create new page</playwright-it>
+        [PlaywrightTest("browser.spec.js", "should create new page")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCreateNewPage()
         {
@@ -32,8 +31,7 @@ namespace PlaywrightSharp.Tests
             await page2.CloseAsync();
         }
 
-        ///<playwright-file>browser.spec.js</playwright-file>
-        ///<playwright-it>should throw upon second create new page</playwright-it>
+        [PlaywrightTest("browser.spec.js", "should throw upon second create new page")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowUponSecondCreateNewPage()
         {
@@ -43,8 +41,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("Please use Browser.NewContextAsync()", ex.Message);
         }
 
-        ///<playwright-file>browser.spec.js</playwright-file>
-        ///<playwright-it>version should work</playwright-it>
+        [PlaywrightTest("browser.spec.js", "version should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public void VersionShouldWork()
         {

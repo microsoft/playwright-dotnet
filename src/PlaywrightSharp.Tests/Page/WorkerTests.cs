@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>worker.spec.js</playwright-file>
-        ///<playwright-describe>Workers</playwright-describe>
-        ///<playwright-it>Page.Workers</playwright-it>
+        [PlaywrightTest("worker.spec.js", "Workers", "Page.Workers")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PageWorkers()
         {
@@ -34,9 +32,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Empty(Page.Workers);
         }
 
-        ///<playwright-file>worker.spec.js</playwright-file>
-        ///<playwright-describe>Workers</playwright-describe>
-        ///<playwright-it>should emit created and destroyed events</playwright-it>
+        [PlaywrightTest("worker.spec.js", "Workers", "should emit created and destroyed events")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitCreatedAndDestroyedEvents()
         {
@@ -54,9 +50,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("Most likely the worker has been closed.", exception.Message);
         }
 
-        ///<playwright-file>worker.spec.js</playwright-file>
-        ///<playwright-describe>Workers</playwright-describe>
-        ///<playwright-it>should report console logs</playwright-it>
+        [PlaywrightTest("worker.spec.js", "Workers", "should report console logs")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportConsoleLogs()
         {
@@ -68,9 +62,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("1", message.Message.Text);
         }
 
-        ///<playwright-file>worker.spec.js</playwright-file>
-        ///<playwright-describe>Workers</playwright-describe>
-        ///<playwright-it>should have JSHandles for console logs</playwright-it>
+        [PlaywrightTest("worker.spec.js", "Workers", "should have JSHandles for console logs")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveJSHandlesForConsoleLogs()
         {
@@ -85,9 +77,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("null", json);
         }
 
-        ///<playwright-file>worker.spec.js</playwright-file>
-        ///<playwright-describe>Workers</playwright-describe>
-        ///<playwright-it>should evaluate</playwright-it>
+        [PlaywrightTest("worker.spec.js", "Workers", "should evaluate")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEvaluate()
         {
@@ -98,9 +88,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(2, await workerCreatedTask.Result.Worker.EvaluateAsync<int>("1+1"));
         }
 
-        ///<playwright-file>worker.spec.js</playwright-file>
-        ///<playwright-describe>Workers</playwright-describe>
-        ///<playwright-it>should report errors</playwright-it>
+        [PlaywrightTest("worker.spec.js", "Workers", "should report errors")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportErrors()
         {
@@ -118,9 +106,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("this is my error", errorLog);
         }
 
-        ///<playwright-file>worker.spec.js</playwright-file>
-        ///<playwright-describe>Workers</playwright-describe>
-        ///<playwright-it>should clear upon navigation</playwright-it>
+        [PlaywrightTest("worker.spec.js", "Workers", "should clear upon navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearUponNavigation()
         {
@@ -138,9 +124,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Empty(Page.Workers);
         }
 
-        ///<playwright-file>worker.spec.js</playwright-file>
-        ///<playwright-describe>Workers</playwright-describe>
-        ///<playwright-it>should clear upon cross-process navigation</playwright-it>
+        [PlaywrightTest("worker.spec.js", "Workers", "should clear upon cross-process navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearUponCrossProcessNavigation()
         {
@@ -158,9 +142,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Empty(Page.Workers);
         }
 
-        ///<playwright-file>worker.spec.js</playwright-file>
-        ///<playwright-describe>Workers</playwright-describe>
-        ///<playwright-it>should report network activity</playwright-it>
+        [PlaywrightTest("worker.spec.js", "Workers", "should report network activity")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNetworkActivity()
         {
@@ -182,9 +164,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(responseTask.Result.Ok);
         }
 
-        ///<playwright-file>worker.spec.js</playwright-file>
-        ///<playwright-describe>Workers</playwright-describe>
-        ///<playwright-it>should report network activity on worker creation</playwright-it>
+        [PlaywrightTest("worker.spec.js", "Workers", "should report network activity on worker creation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNetworkActivityOnWorkerCreation()
         {
@@ -205,9 +185,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(responseTask.Result.Ok);
         }
 
-        ///<playwright-file>worker.spec.js</playwright-file>
-        ///<playwright-describe>Workers</playwright-describe>
-        ///<playwright-it>should format number using context locale</playwright-it>
+        [PlaywrightTest("worker.spec.js", "Workers", "should format number using context locale")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatNumberUsingContextLocale()
         {

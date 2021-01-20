@@ -19,9 +19,7 @@ namespace PlaywrightSharp.Tests.Mouse
         {
         }
 
-        ///<playwright-file>mouse.spec.js</playwright-file>
-        ///<playwright-describe>Mouse</playwright-describe>
-        ///<playwright-it>should click the document</playwright-it>
+        [PlaywrightTest("mouse.spec.js", "Mouse", "should click the document")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWindows: true)]
         public async Task ShouldClickTheDocument()
         {
@@ -49,9 +47,7 @@ namespace PlaywrightSharp.Tests.Mouse
             Assert.Equal(0, clickEvent.GetProperty("button").GetInt32());
         }
 
-        ///<playwright-file>mouse.spec.js</playwright-file>
-        ///<playwright-describe>Mouse</playwright-describe>
-        ///<playwright-it>should select the text with mouse</playwright-it>
+        [PlaywrightTest("mouse.spec.js", "Mouse", "should select the text with mouse")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectTheTextWithMouse()
         {
@@ -83,9 +79,7 @@ namespace PlaywrightSharp.Tests.Mouse
             }"));
         }
 
-        ///<playwright-file>mouse.spec.js</playwright-file>
-        ///<playwright-describe>Mouse</playwright-describe>
-        ///<playwright-it>should trigger hover state</playwright-it>
+        [PlaywrightTest("mouse.spec.js", "Mouse", "should trigger hover state")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTriggerHoverState()
         {
@@ -98,9 +92,7 @@ namespace PlaywrightSharp.Tests.Mouse
             Assert.Equal("button-91", await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"));
         }
 
-        ///<playwright-file>mouse.spec.js</playwright-file>
-        ///<playwright-describe>Mouse</playwright-describe>
-        ///<playwright-it>should trigger hover state with removed window.Node</playwright-it>
+        [PlaywrightTest("mouse.spec.js", "Mouse", "should trigger hover state with removed window.Node")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTriggerHoverStateWithRemovedWindowNode()
         {
@@ -110,9 +102,7 @@ namespace PlaywrightSharp.Tests.Mouse
             Assert.Equal("button-6", await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"));
         }
 
-        ///<playwright-file>mouse.spec.js</playwright-file>
-        ///<playwright-describe>Mouse</playwright-describe>
-        ///<playwright-it>should set modifier keys on click</playwright-it>
+        [PlaywrightTest("mouse.spec.js", "Mouse", "should set modifier keys on click")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetModifierKeysOnClick()
         {
@@ -140,9 +130,7 @@ namespace PlaywrightSharp.Tests.Mouse
             }
         }
 
-        ///<playwright-file>mouse.spec.js</playwright-file>
-        ///<playwright-describe>Mouse</playwright-describe>
-        ///<playwright-it>should tween mouse movement</playwright-it>
+        [PlaywrightTest("mouse.spec.js", "Mouse", "should tween mouse movement")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTweenMouseMovement()
         {
@@ -171,9 +159,7 @@ namespace PlaywrightSharp.Tests.Mouse
                 await Page.EvaluateAsync<int[][]>("result"));
         }
 
-        ///<playwright-file>mouse.spec.js</playwright-file>
-        ///<playwright-describe>Mouse</playwright-describe>
-        ///<playwright-it>should work with mobile viewports and cross process navigations</playwright-it>
+        [PlaywrightTest("mouse.spec.js", "Mouse", "should work with mobile viewports and cross process navigations")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkWithMobileViewportsAndCrossProcessNavigations()
         {

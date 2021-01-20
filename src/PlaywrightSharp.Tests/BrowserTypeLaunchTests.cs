@@ -21,8 +21,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        ///<playwright-file>browsertype-launch.spec.ts</playwright-file>
-        ///<playwright-it>should reject all promises when browser is closed</playwright-it>
+        [PlaywrightTest("browsertype-launch.spec.ts", "should reject all promises when browser is closed")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectAllPromisesWhenBrowserIsClosed()
         {
@@ -35,8 +34,7 @@ namespace PlaywrightSharp.Tests
 
         }
 
-        ///<playwright-file>browsertype-launch.spec.ts</playwright-file>
-        ///<playwright-it>should throw if userDataDir option is passed</playwright-it>
+        [PlaywrightTest("browsertype-launch.spec.ts", "should throw if userDataDir option is passed")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowIfUserDataDirOptionIsPassed()
         {
@@ -48,22 +46,19 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("LaunchPersistentContextAsync", exception.Message);
         }
 
-        ///<playwright-file>browsertype-launch.spec.ts</playwright-file>
-        ///<playwright-it>should throw if port option is passed</playwright-it>
+        [PlaywrightTest("browsertype-launch.spec.ts", "should throw if port option is passed")]
         [Fact(Skip = "We don't need this test")]
         public void ShouldThrowIfPortOptionIsPassed()
         {
         }
 
-        ///<playwright-file>browsertype-launch.spec.ts</playwright-file>
-        ///<playwright-it>should throw if port option is passed for persistent context</playwright-it>
+        [PlaywrightTest("browsertype-launch.spec.ts", "should throw if port option is passed for persistent context")]
         [Fact(Skip = "We don't need this test")]
         public void ShouldThrowIfPortOptionIsPassedForPersistenContext()
         {
         }
 
-        /// <playwright-file>defaultbrowsercontext-2.spec.js</playwright-file>
-        /// <playwright-it>should throw if page argument is passed</playwright-it>
+        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should throw if page argument is passed")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldThrowIfPageArgumentIsPassed()
         {
@@ -73,8 +68,7 @@ namespace PlaywrightSharp.Tests
             await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => BrowserType.LaunchAsync(options));
         }
 
-        ///<playwright-file>browsertype-launch.spec.ts</playwright-file>
-        ///<playwright-it>should reject if launched browser fails immediately</playwright-it>
+        [PlaywrightTest("browsertype-launch.spec.ts", "should reject if launched browser fails immediately")]
         [Fact(Skip = "Skipped in playwright")]
         public void ShouldRejectIfLaunchedBrowserFailsImmediately()
         {
@@ -98,8 +92,7 @@ namespace PlaywrightSharp.Tests
             Environment.SetEnvironmentVariable(EnvironmentVariables.BrowsersPathEnvironmentVariable, null);
         }
 
-        ///<playwright-file>browsertype-launch.spec.ts</playwright-file>
-        ///<playwright-it>should reject if executable path is invalid</playwright-it>
+        [PlaywrightTest("browsertype-launch.spec.ts", "should reject if executable path is invalid")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectIfExecutablePathIsInvalid()
         {
@@ -112,29 +105,25 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("pass `debug: \"pw:api\"` to LaunchAsync", exception.Message);
         }
 
-        ///<playwright-file>browsertype-launch.spec.ts</playwright-file>
-        ///<playwright-it>should handle timeout</playwright-it>
+        [PlaywrightTest("browsertype-launch.spec.ts", "should handle timeout")]
         [Fact(Skip = "We ignore hook tests")]
         public void ShouldHandleTimeout()
         {
         }
 
-        ///<playwright-file>browsertype-launch.spec.ts</playwright-file>
-        ///<playwright-it>should report launch log</playwright-it>
+        [PlaywrightTest("browsertype-launch.spec.ts", "should report launch log")]
         [Fact(Skip = "We ignore hook tests")]
         public void ShouldReportLaunchLog()
         {
         }
 
-        ///<playwright-file>browsertype-launch.spec.ts</playwright-file>
-        ///<playwright-it>should accept objects as options</playwright-it>
+        [PlaywrightTest("browsertype-launch.spec.ts", "should accept objects as options")]
         [Fact(Skip = "We don't need to test this")]
         public void ShouldAcceptObjectsAsOptions()
         {
         }
 
-        ///<playwright-file>launcher.spec.js</playwright-file>
-        ///<playwright-it>should fire close event for all contexts</playwright-it>
+        [PlaywrightTest("launcher.spec.js", "should fire close event for all contexts")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireCloseEventForAllContexts()
         {
@@ -147,8 +136,7 @@ namespace PlaywrightSharp.Tests
             await TaskUtils.WhenAll(browser.CloseAsync(), closeTask.Task);
         }
 
-        ///<playwright-file>launcher.spec.js</playwright-file>
-        ///<playwright-it>should be callable twice</playwright-it>
+        [PlaywrightTest("launcher.spec.js", "should be callable twice")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeCallableTwice()
         {

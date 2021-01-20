@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.frame</playwright-describe>
-        ///<playwright-it>should respect name</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.frame", "should respect name")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnTheCorrectBrowserInstance()
         {
@@ -28,9 +26,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Same(Page.MainFrame.ChildFrames[0], frame);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.frame</playwright-describe>
-        ///<playwright-it>should respect url</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.frame", "should respect url")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectUrl()
         {

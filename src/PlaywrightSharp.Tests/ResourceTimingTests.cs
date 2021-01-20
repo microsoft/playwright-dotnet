@@ -19,8 +19,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        ///<playwright-file>resource-timing.spec.js</playwright-file>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("resource-timing.spec.js", "should work")]
         [Fact]
         public async Task ShouldWork()
         {
@@ -40,8 +39,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(timing.ResponseEnd < 10000);
         }
 
-        ///<playwright-file>resource-timing.spec.js</playwright-file>
-        ///<playwright-it>should work for subresource</playwright-it>
+        [PlaywrightTest("resource-timing.spec.js", "should work for subresource")]
         [Fact]
         public async Task ShouldWorkForSubresource()
         {
@@ -76,8 +74,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(timing.ResponseEnd < 10000);
         }
 
-        ///<playwright-file>resource-timing.spec.js</playwright-file>
-        ///<playwright-it>should work for SSL</playwright-it>
+        [PlaywrightTest("resource-timing.spec.js", "should work for SSL")]
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldWorkForSSL()
         {
@@ -103,8 +100,7 @@ namespace PlaywrightSharp.Tests
             await page.CloseAsync();
         }
 
-        ///<playwright-file>resource-timing.spec.js</playwright-file>
-        ///<playwright-it>should work for redirect</playwright-it>
+        [PlaywrightTest("resource-timing.spec.js", "should work for redirect")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldWorkForRedirect()
         {

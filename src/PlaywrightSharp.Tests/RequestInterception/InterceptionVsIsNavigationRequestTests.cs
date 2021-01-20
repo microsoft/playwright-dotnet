@@ -18,9 +18,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         {
         }
 
-        ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>Interception vs isNavigationRequest</playwright-describe>
-        ///<playwright-it>should work with request interception</playwright-it>
+        [PlaywrightTest("interception.spec.js", "Interception vs isNavigationRequest", "should work with request interception")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithRequestInterception()
         {

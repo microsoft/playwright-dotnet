@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         {
         }
 
-        ///<playwright-file>dialog.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Dialog</playwright-describe>
-        ///<playwright-it>should fire</playwright-it>
+        [PlaywrightTest("dialog.spec.js", "Page.Events.Dialog", "should fire")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFire()
         {
@@ -35,9 +33,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             await Page.EvaluateAsync("alert('yo');");
         }
 
-        ///<playwright-file>dialog.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Dialog</playwright-describe>
-        ///<playwright-it>should allow accepting prompts</playwright-it>
+        [PlaywrightTest("dialog.spec.js", "Page.Events.Dialog", "should allow accepting prompts")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAllowAcceptingPrompts()
         {
@@ -54,9 +50,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             Assert.Equal("answer!", result);
         }
 
-        ///<playwright-file>dialog.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Dialog</playwright-describe>
-        ///<playwright-it>should dismiss the prompt</playwright-it>
+        [PlaywrightTest("dialog.spec.js", "Page.Events.Dialog", "should dismiss the prompt")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDismissThePrompt()
         {
@@ -69,9 +63,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             Assert.Null(result);
         }
 
-        ///<playwright-file>dialog.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Dialog</playwright-describe>
-        ///<playwright-it>should accept the confirm prompt</playwright-it>
+        [PlaywrightTest("dialog.spec.js", "Page.Events.Dialog", "should accept the confirm prompt")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptTheConfirmPrompts()
         {
@@ -84,9 +76,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             Assert.True(result);
         }
 
-        ///<playwright-file>dialog.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Dialog</playwright-describe>
-        ///<playwright-it>should dismiss the confirm prompt</playwright-it>
+        [PlaywrightTest("dialog.spec.js", "Page.Events.Dialog", "should dismiss the confirm prompt")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDismissTheConfirmPrompt()
         {
@@ -99,9 +89,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             Assert.False(result);
         }
 
-        ///<playwright-file>dialog.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Dialog</playwright-describe>
-        ///<playwright-it>should log prompt actions</playwright-it>
+        [PlaywrightTest("dialog.spec.js", "Page.Events.Dialog", "should log prompt actions")]
         [Fact(Skip = "FAIL CHANNEL")]
         public async Task ShouldLogPromptActions()
         {
@@ -114,9 +102,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             Assert.False(result);
         }
 
-        ///<playwright-file>dialog.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Dialog</playwright-describe>
-        ///<playwright-it>should be able to close context with open alert</playwright-it>
+        [PlaywrightTest("dialog.spec.js", "Page.Events.Dialog", "should be able to close context with open alert")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldBeAbleToCloseContextWithOpenAlert()
         {

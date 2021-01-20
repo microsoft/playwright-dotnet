@@ -19,9 +19,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         {
         }
 
-        ///<playwright-file>elementhandle.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.boundingBox", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -32,9 +30,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal(new Rect(x: 100, y: 50, width: 50, height: 50), box);
         }
 
-        ///<playwright-file>elementhandle.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
-        ///<playwright-it>should handle nested frames</playwright-it>
+        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.boundingBox", "should handle nested frames")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHandleNestedFrames()
         {
@@ -46,9 +42,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal(new Rect(x: 24, y: 224, width: 268, height: 18), box);
         }
 
-        ///<playwright-file>elementhandle.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
-        ///<playwright-it>should return null for invisible elements</playwright-it>
+        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.boundingBox", "should return null for invisible elements")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullForInvisibleElements()
         {
@@ -57,9 +51,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Null(await element.GetBoundingBoxAsync());
         }
 
-        ///<playwright-file>elementhandle.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
-        ///<playwright-it>should force a layout</playwright-it>
+        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.boundingBox", "should force a layout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldForceALayout()
         {
@@ -71,9 +63,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal(new Rect(x: 8, y: 8, width: 100, height: 200), box);
         }
 
-        ///<playwright-file>elementhandle.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
-        ///<playwright-it>should work with SVG nodes</playwright-it>
+        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.boundingBox", "should work with SVG nodes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithSVGNodes()
         {
@@ -90,9 +80,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal(webBoundingBox, pwBoundingBox);
         }
 
-        ///<playwright-file>elementhandle.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
-        ///<playwright-it>should work with page scale</playwright-it>
+        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.boundingBox", "should work with page scale")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkWithPageScale()
         {
@@ -125,9 +113,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal(20 * 100, Math.Round(box.Height * 100));
         }
 
-        ///<playwright-file>elementhandle.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.boundingBox</playwright-describe>
-        ///<playwright-it>should work when inline box child is outside of viewport</playwright-it>
+        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.boundingBox", "should work when inline box child is outside of viewport")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenInlineBoxChildIsOutsideOfViewport()
         {

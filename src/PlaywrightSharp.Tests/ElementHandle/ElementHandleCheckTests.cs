@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         {
         }
 
-        ///<playwright-file>elementhandle.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.check</playwright-describe>
-        ///<playwright-it>should check the box</playwright-it>
+        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.check", "should check the box")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCheckTheBox()
         {
@@ -28,9 +26,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.True(await Page.EvaluateAsync<bool>("() => checkbox.checked"));
         }
 
-        ///<playwright-file>elementhandle.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.check</playwright-describe>
-        ///<playwright-it>should uncheck the box</playwright-it>
+        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.check", "should uncheck the box")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldUncheckTheBox()
         {

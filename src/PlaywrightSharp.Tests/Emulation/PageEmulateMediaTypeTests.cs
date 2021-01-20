@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.Emulation
         {
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>Page.emulateMedia type</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "Page.emulateMedia type", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -35,9 +33,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>Page.emulateMedia type</playwright-describe>
-        ///<playwright-it>should throw in case of bad type argument</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "Page.emulateMedia type", "should throw in case of bad type argument")]
         [Fact(Skip = "We don't need this test. Leaving for tracking purposes")]
         public void ShouldThrowInCaseOfBadTypeArgument() { }
     }

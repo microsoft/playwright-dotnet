@@ -20,9 +20,7 @@ namespace PlaywrightSharp.Tests.Emulation
             _iPhone = Playwright.Devices["iPhone 6"];
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>Page.emulate</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "Page.emulate", "should work")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWork()
         {
@@ -34,9 +32,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Contains("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>Page.emulate</playwright-describe>
-        ///<playwright-it>should support clicking</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "Page.emulate", "should support clicking")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldSupportClicking()
         {
@@ -50,9 +46,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Equal("Clicked", await page.EvaluateAsync<string>("() => result"));
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>Page.emulate</playwright-describe>
-        ///<playwright-it>should scroll to click</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "Page.emulate", "should scroll to click")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldScrollToClick()
         {

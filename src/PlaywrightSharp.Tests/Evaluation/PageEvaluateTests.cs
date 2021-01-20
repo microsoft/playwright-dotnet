@@ -24,9 +24,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         {
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -34,9 +32,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(21, result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should transfer NaN</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should transfer NaN")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTransferNaN()
         {
@@ -44,9 +40,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(double.NaN, result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should transfer -0</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should transfer -0")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTransferNegative0()
         {
@@ -54,9 +48,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.True(result.IsNegativeZero());
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should transfer Infinity</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should transfer Infinity")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTransferInfinity()
         {
@@ -64,9 +56,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(double.PositiveInfinity, result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should transfer -Infinity</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should transfer -Infinity")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTransferNegativeInfinity()
         {
@@ -74,9 +64,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(double.NegativeInfinity, result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should roundtrip unserializable values</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should roundtrip unserializable values")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRoundtripUnserializableValues()
         {
@@ -95,9 +83,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(value.nan, result.nan);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should roundtrip promise to value</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should roundtrip promise to value")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRoundtripPromiseToValue()
         {
@@ -114,9 +100,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(-0, nzero);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should roundtrip promise to unserializable values</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should roundtrip promise to unserializable values")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRoundtripPromiseToUnserializableValues()
         {
@@ -135,9 +119,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(value.nan, result.nan);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should transfer arrays</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should transfer arrays")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTransferArrays()
         {
@@ -145,9 +127,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(new[] { 1, 2, 3 }, result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should transfer arrays as arrays, not objects</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should transfer arrays as arrays, not objects")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTransferArraysAsArraysNotObjects()
         {
@@ -155,9 +135,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.True(result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should transfer maps as empty objects</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should transfer maps as empty objects")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTransferMapsAsEmptyObjects()
         {
@@ -165,9 +143,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Empty(TypeDescriptor.GetProperties(result));
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should modify global environment</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should modify global environment")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldModifyGlobalEnvironment()
         {
@@ -175,9 +151,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(123, await Page.EvaluateAsync<int>("globalVar"));
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should evaluate in the page context</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should evaluate in the page context")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEvaluateInThePageContext()
         {
@@ -185,9 +159,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(123, await Page.EvaluateAsync<int>("globalVar"));
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should return undefined for objects with symbols</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should return undefined for objects with symbols")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnUndefinedForObjectsWithSymbols()
         {
@@ -204,17 +176,13 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Null(element.foo[0].a);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should work with function shorthands</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should work with function shorthands")]
         [Fact(Skip = "Not relevant for C#, js specific")]
         public void ShouldWorkWithFunctionShorthands()
         {
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should work with unicode chars</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should work with unicode chars")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithUnicodeChars()
         {
@@ -222,9 +190,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(42, result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should throw when evaluation triggers reload</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should throw when evaluation triggers reload")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenEvaluationTriggersReload()
         {
@@ -235,9 +201,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Contains("navigation", exception.Message);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should await promise</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should await promise")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAwaitPromise()
         {
@@ -245,9 +209,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(56, result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should work right after framenavigated</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should work right after framenavigated")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkRightAfterFrameNavigated()
         {
@@ -260,9 +222,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(42, await frameEvaluation);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should work right after a cross-origin navigation</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should work right after a cross-origin navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkRightAfterACrossOriginNavigation()
         {
@@ -276,9 +236,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(42, await frameEvaluation);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should work from-inside an exposed function</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should work from-inside an exposed function")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkFromInsideAnExposedFunction()
         {
@@ -290,9 +248,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(27, result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should reject promise with exception</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should reject promise with exception")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectPromiseWithException()
         {
@@ -300,9 +256,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Contains("not_existing_object", exception.Message);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should support thrown strings as error messages</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should support thrown strings as error messages")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportThrownStringsAsErrorMessages()
         {
@@ -310,9 +264,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Contains("qwerty", exception.Message);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should support thrown numbers as error messages</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should support thrown numbers as error messages")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportThrownNumbersAsErrorMessages()
         {
@@ -320,9 +272,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Contains("100500", exception.Message);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should return complex objects</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should return complex objects")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnComplexObjects()
         {
@@ -331,9 +281,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal("bar!", result.GetProperty("foo").GetString());
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should return NaN</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should return NaN")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNaN()
         {
@@ -341,16 +289,12 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(double.NaN, result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should return -0</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should return -0")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNegative0()
             => Assert.True((await Page.EvaluateAsync<double>("() => -0")).IsNegativeZero());
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should return Infinity</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should return Infinity")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnInfinity()
         {
@@ -358,9 +302,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(double.PositiveInfinity, result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should return -Infinity</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should return -Infinity")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNegativeInfinity()
         {
@@ -368,9 +310,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(double.NegativeInfinity, result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should work with overwritten Promise</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should work with overwritten Promise")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithOverwrittenPromise()
         {
@@ -413,17 +353,13 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => Promise.resolve(42)"));
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should throw when passed more than one parameter</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should throw when passed more than one parameter")]
         [Fact(Skip = "Not relevant for C#, js specific")]
         public void ShouldThrowWhenPassedMoreThanOneParameter()
         {
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should accept "undefined" as one of multiple parameters</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", @"should accept ""undefined"" as one of multiple parameters")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptUndefinedAsOneOfMultipleParameters()
         {
@@ -436,17 +372,13 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.True(result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should properly serialize undefined arguments</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should properly serialize undefined arguments")]
         [Fact(Skip = "Not relevant for C#, js specific")]
         public void ShouldProperlySerializeUndefinedArguments()
         {
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should properly serialize undefined fields</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should properly serialize undefined fields")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldProperlySerializeUndefinedFields()
         {
@@ -454,16 +386,12 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Null(result.a);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should properly serialize null arguments</playwright-it>x
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should properly serialize null arguments")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldProperlySerializeNullArguments()
                 => Assert.Null(await Page.EvaluateAsync<JsonDocument>("x => x", null));
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should properly serialize null fields</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should properly serialize null fields")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldProperlySerializeNullFields()
         {
@@ -471,16 +399,12 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Null(result.a);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should return undefined for non-serializable objects</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should return undefined for non-serializable objects")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnUndefinedForNonSerializableObjects()
             => Assert.Null(await Page.EvaluateAsync<object>("() => window"));
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should fail for circular object</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should fail for circular object")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailForCircularObject()
         {
@@ -493,9 +417,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Null(result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should be able to throw a tricky error</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should be able to throw a tricky error")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToThrowATrickyError()
         {
@@ -507,25 +429,19 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Contains(exceptionText.Message, error.Message);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should accept a string</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should accept a string")]
         [Fact(Skip = "Not relevant for C#, js specific")]
         public void ShouldAcceptAString()
         {
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should accept a string with semi colons</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should accept a string with semi colons")]
         [Fact(Skip = "Not relevant for C#, js specific")]
         public void ShouldAcceptAStringWithSemiColons()
         {
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should accept a string with comments</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should accept a string with comments")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptAStringWithComments()
         {
@@ -533,9 +449,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(7, result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should accept element handle as an argument</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should accept element handle as an argument")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptElementHandleAsAnArgument()
         {
@@ -545,9 +459,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal("42", text);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should throw if underlying element was disposed</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should throw if underlying element was disposed")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowIfUnderlyingElementWasDisposed()
         {
@@ -560,9 +472,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Contains("JSHandle is disposed", exception.Message);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should simulate a user gesture</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should simulate a user gesture")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSimulateAUserGesture()
         {
@@ -574,9 +484,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.True(result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should throw a nice error after a navigation</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should throw a nice error after a navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowANiceErrorAfterANavigation()
         {
@@ -592,9 +500,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Contains("navigation", exception.Message);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should not throw an error when evaluation does a navigation</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should not throw an error when evaluation does a navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotThrowAnErrorWhenEvaluationDoesANavigation()
         {
@@ -606,9 +512,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(new[] { 42 }, result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should not throw an error when evaluation does a synchronous navigation and returns an object</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should not throw an error when evaluation does a synchronous navigation and returns an object")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldNotThrowAnErrorWhenEvaluationDoesASynchronousNavigationAndReturnsAnObject()
         {
@@ -619,9 +523,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(42, result.GetProperty("a").GetInt32());
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should not throw an error when evaluation does a synchronous navigation and returns an undefined</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should not throw an error when evaluation does a synchronous navigation and returns an undefined")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldNotThrowAnErrorWhenEvaluationDoesASynchronousNavigationAndReturnsUndefined()
         {
@@ -632,9 +534,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Null(result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should transfer 100Mb of data from page to node.js</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should transfer 100Mb of data from page to node.js")]
         [Fact(Skip = "SKIP WIRE")]
         public async Task ShouldTransfer100MbOfDataFromPageToNodeJs()
         {
@@ -642,9 +542,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(100 * 1024 * 1024, a.Length);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should throw error with detailed information on exception inside promise </playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should throw error with detailed information on exception inside promise ")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowErrorWithDetailedInformationOnExceptionInsidePromise()
         {
@@ -654,9 +552,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Contains("Error in promise", exception.Message);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should work even when JSON is set to null</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should work even when JSON is set to null")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkEvenWhenJSONIsSetToNull()
         {
@@ -665,9 +561,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(123, result.GetProperty("abc").GetInt32());
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should await promise from popup</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should await promise from popup")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldAwaitPromiseFromPopup()
         {
@@ -680,9 +574,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(42, result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should work with new Function() and CSP</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should work with new Function() and CSP")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNewFunctionAndCSP()
         {
@@ -692,9 +584,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.True(await Page.EvaluateAsync<bool>("() => new Function('return true')()"));
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should work with non-strict expressions</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should work with non-strict expressions")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNonStrictExpressions()
         {
@@ -704,9 +594,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             }"));
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should respect use strict expression</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should respect use strict expression")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectUseStrictExpression()
         {
@@ -718,18 +606,14 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Contains("variableY", exception.Message);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should not leak utility script</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should not leak utility script")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotLeakUtilityScript()
         {
             Assert.True(await Page.EvaluateAsync<bool>(@"() => this === window"));
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should not leak handles</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should not leak handles")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotLeakHandles()
         {
@@ -737,9 +621,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Contains("handles", exception.Message);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should work with CSP</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should work with CSP")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCSP()
         {
@@ -749,9 +631,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(4, await Page.EvaluateAsync<int>("() => 2 + 2"));
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should evaluate exception</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should evaluate exception")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEvaluateException()
         {
@@ -764,9 +644,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Contains("functionOnStack", exception);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should evaluate exception</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should evaluate exception")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEvaluateException2()
         {
@@ -774,9 +652,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Contains("Error: error message", exception);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should evaluate date</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should evaluate date")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEvaluateDate()
         {
@@ -784,9 +660,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(new DateTime(2020, 05, 27, 1, 31, 38, 506), result.date);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should roundtrip date</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should roundtrip date")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRoundtripDate()
         {
@@ -795,17 +669,13 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(date, result);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should roundtrip regex</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should roundtrip regex")]
         [Fact(Skip = "Regex is not native as in javascript")]
         public void ShouldRoundtripRegex()
         {
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should jsonValue() date</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should jsonValue() date")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldJsonValueDate()
         {
@@ -814,17 +684,13 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(new DateTime(2020, 05, 27, 1, 31, 38, 506), result.date);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should not use toJSON when evaluating</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should not use toJSON when evaluating")]
         [Fact(Skip = "Skip for now")]
         public void ShouldNotUseToJSONWhenEvaluating()
         {
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Page.evaluate</playwright-describe>
-        ///<playwright-it>should not use toJSON in jsonValue</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Page.evaluate", "should not use toJSON in jsonValue")]
         [Fact(Skip = "Skip for now")]
         public void ShouldNotUseToJSONInJsonValue()
         {

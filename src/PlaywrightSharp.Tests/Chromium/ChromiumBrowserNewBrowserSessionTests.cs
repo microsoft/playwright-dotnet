@@ -21,9 +21,7 @@ namespace PlaywrightSharp.Tests.Chromium
         {
         }
 
-        ///<playwright-file>chromium/session.spec.js</playwright-file>
-        ///<playwright-describe>ChromiumBrowser.newBrowserCDPSession</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("chromium/session.spec.js", "ChromiumBrowser.newBrowserCDPSession", "should work")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWork()
         {

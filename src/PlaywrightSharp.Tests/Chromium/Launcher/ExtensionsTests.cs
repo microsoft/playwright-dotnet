@@ -20,9 +20,7 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
         {
         }
 
-        ///<playwright-file>chromium/launcher.spec.js</playwright-file>
-        ///<playwright-describe>extensions</playwright-describe>
-        ///<playwright-it>should return background pages</playwright-it>
+        [PlaywrightTest("chromium/launcher.spec.js", "extensions", "should return background pages")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReturnBackgroundPages()
         {

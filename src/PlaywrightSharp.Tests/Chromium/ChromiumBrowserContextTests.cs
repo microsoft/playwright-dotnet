@@ -19,9 +19,7 @@ namespace PlaywrightSharp.Tests.Chromium
         {
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>Chromium.startTracing</playwright-describe>
-        ///<playwright-it>should create a worker from a service worker</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "Chromium.startTracing", "should create a worker from a service worker")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldCreateAWorkerFromAServiceWorker()
         {
@@ -32,9 +30,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal("[object ServiceWorkerGlobalScope]", await worker.EvaluateAsync<string>("() => self.toString()"));
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>Chromium.startTracing</playwright-describe>
-        ///<playwright-it>serviceWorkers() should return current workers</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "Chromium.startTracing", "serviceWorkers() should return current workers")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ServiceWorkersShouldReturnCurrentWorkers()
         {
@@ -53,9 +49,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Contains(worker2.Worker, ((IChromiumBrowserContext)Context).ServiceWorkers);
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>Chromium.startTracing</playwright-describe>
-        ///<playwright-it>should not create a worker from a shared worker</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "Chromium.startTracing", "should not create a worker from a shared worker")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldNotCreateAWorkerFromASharedWorker()
         {
@@ -70,9 +64,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.False(serviceWorkerCreated);
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>Chromium.startTracing</playwright-describe>
-        ///<playwright-it>should close service worker together with the context</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "Chromium.startTracing", "should close service worker together with the context")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldCloseServiceWorkerTogetherWithTheContext()
         {

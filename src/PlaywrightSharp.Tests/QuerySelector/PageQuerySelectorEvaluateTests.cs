@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         {
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should work with css selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should work with css selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCssSelector()
         {
@@ -27,9 +25,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("testAttribute", idAttribute);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should work with id selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should work with id selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithIdSelector()
         {
@@ -38,9 +34,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("testAttribute", idAttribute);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should work with data-test selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should work with data-test selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDataTestSelector()
         {
@@ -49,9 +43,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("testAttribute", idAttribute);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should work with data-testid selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should work with data-testid selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDataTestidSelector()
         {
@@ -60,9 +52,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("testAttribute", idAttribute);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should work with data-test-id selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should work with data-test-id selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDataTestIdSelector()
         {
@@ -71,9 +61,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("testAttribute", idAttribute);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should work with text selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should work with text selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithTextSelector()
         {
@@ -82,9 +70,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("testAttribute", idAttribute);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should work with xpath selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should work with xpath selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithXpathSelector()
         {
@@ -93,9 +79,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("testAttribute", idAttribute);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should work with text selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should work with text selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithTextSelector2()
         {
@@ -104,9 +88,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("testAttribute", idAttribute);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should auto-detect css selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should auto-detect css selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAutoDetectCssSelector()
         {
@@ -115,9 +97,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("testAttribute", idAttribute);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should auto-detect nested selectors</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should auto-detect nested selectors")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAutoDetectNestedSelectors()
         {
@@ -126,9 +106,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("target", idAttribute);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should auto-detect css selector with attributes</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should auto-detect css selector with attributes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAutoDetectCssSelectorWithAttributes()
         {
@@ -137,9 +115,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("testAttribute", idAttribute);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should accept arguments</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should accept arguments")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptArguments()
         {
@@ -148,9 +124,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("hello world!", text);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should accept ElementHandles as arguments</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should accept ElementHandles as arguments")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptElementHandlesAsArguments()
         {
@@ -160,9 +134,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("hello world", text);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should throw error if no element is found</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should throw error if no element is found")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowErrorIfNoElementIsFound()
         {
@@ -171,9 +143,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Contains("failed to find element matching selector \"section\"", exception.Message);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should support >> syntax</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should support >> syntax")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportDoubleGreaterThanSyntax()
         {
@@ -182,9 +152,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("hello world!", text);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should support >> syntax with different engines</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should support >> syntax with different engines")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportDoubleGreaterThanSyntaxWithDifferentEngines()
         {
@@ -193,9 +161,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("hello world!", text);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should support spaces with >> syntax</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should support spaces with >> syntax")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportSpacesWithDoubleGreaterThanSyntax()
         {
@@ -204,9 +170,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("Hello from root2", text);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should not stop at first failure with >> syntax</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should not stop at first failure with >> syntax")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotStopAtFirstFailureWithDoubleGraterThanSyntax()
         {
@@ -215,9 +179,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("<button>Next</button>", text);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should support * capture</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should support * capture")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportStarCapture()
         {
@@ -228,9 +190,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.NotNull(await Page.QuerySelectorAsync("*"));
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should throw on multiple * captures</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should throw on multiple * captures")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowOnMultipleStarCaptures()
         {
@@ -238,9 +198,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("Only one of the selectors can capture using * modifier", exception.Message);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should throw on malformed * capture</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should throw on malformed * capture")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowOnMalformedStarCapture()
         {
@@ -248,9 +206,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("Unknown engine \"\" while parsing selector *=div", exception.Message);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should work with spaces in css attributes</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should work with spaces in css attributes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithSpacesInCssAttributes()
         {
@@ -275,9 +231,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("<input placeholder=\"Select date\">", await Page.EvalOnSelectorAsync<string>("div >> [placeholder = 'Select date']", "e => e.outerHTML"));
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should work with quotes in css attributes</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should work with quotes in css attributes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWihQuotesInCssAttributes()
         {
@@ -298,9 +252,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = 'Select \\' date']"));
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$eval</playwright-describe>
-        ///<playwright-it>should work with quotes in css attributes when missing</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$eval", "should work with quotes in css attributes when missing")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWihQuotesInCssAttributesWhenMissing()
         {

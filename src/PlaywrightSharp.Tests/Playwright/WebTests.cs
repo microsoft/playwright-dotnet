@@ -25,25 +25,19 @@ namespace PlaywrightSharp.Tests.Playwright
         {
         }
 
-        ///<playwright-file>web.spec.js</playwright-file>
-        ///<playwright-describe>Web SDK</playwright-describe>
-        ///<playwright-it>should navigate</playwright-it>
+        [PlaywrightTest("web.spec.js", "Web SDK", "should navigate")]
         [Fact(Skip = "It's node.js only")]
         public void ShouldNavigate()
         {
         }
 
-        ///<playwright-file>web.spec.js</playwright-file>
-        ///<playwright-describe>Web SDK</playwright-describe>
-        ///<playwright-it>should receive events</playwright-it>
+        [PlaywrightTest("web.spec.js", "Web SDK", "should receive events")]
         [Fact(Skip = "It's node.js only")]
         public void ShouldReceiveEvents()
         {
         }
 
-        ///<playwright-file>web.spec.js</playwright-file>
-        ///<playwright-describe>Web SDK</playwright-describe>
-        ///<playwright-it>should take screenshot</playwright-it>
+        [PlaywrightTest("web.spec.js", "Web SDK", "should take screenshot")]
         [Fact(Skip = "It's node.js only")]
         public void ShouldTakeScreenshot()
         {

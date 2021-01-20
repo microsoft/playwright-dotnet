@@ -20,9 +20,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.setContent</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.setContent", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -31,9 +29,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(_expectedOutput, result);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.setContent</playwright-describe>
-        ///<playwright-it>should work with domcontentloaded</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.setContent", "should work with domcontentloaded")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDomcontentloaded()
         {
@@ -42,9 +38,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(_expectedOutput, result);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.setContent</playwright-describe>
-        ///<playwright-it>should work with doctype</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.setContent", "should work with doctype")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDoctype()
         {
@@ -54,9 +48,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal($"{doctype}{_expectedOutput}", result);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.setContent</playwright-describe>
-        ///<playwright-it>should work with HTML 4 doctype</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.setContent", "should work with HTML 4 doctype")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithHTML4Doctype()
         {
@@ -66,9 +58,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal($"{doctype}{_expectedOutput}", result);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.setContent</playwright-describe>
-        ///<playwright-it>should respect timeout</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.setContent", "should respect timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
@@ -80,9 +70,7 @@ namespace PlaywrightSharp.Tests.Page
             );
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.setContent</playwright-describe>
-        ///<playwright-it>should respect default navigation timeout</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.setContent", "should respect default navigation timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectDefaultNavigationTimeout()
         {
@@ -97,9 +85,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("Timeout 1ms exceeded", exception.Message);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.setContent</playwright-describe>
-        ///<playwright-it>should await resources to load</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.setContent", "should await resources to load")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAwaitResourcesToLoad()
         {
@@ -114,9 +100,7 @@ namespace PlaywrightSharp.Tests.Page
             await contentTask;
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.setContent</playwright-describe>
-        ///<playwright-it>should work fast enough</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.setContent", "should work fast enough")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkFastEnough()
         {
@@ -126,9 +110,7 @@ namespace PlaywrightSharp.Tests.Page
             }
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.setContent</playwright-describe>
-        ///<playwright-it>should work with tricky content</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.setContent", "should work with tricky content")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithTrickyContent()
         {
@@ -136,9 +118,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("hello world", await Page.EvalOnSelectorAsync<string>("div", "div => div.textContent"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.setContent</playwright-describe>
-        ///<playwright-it>should work with accents</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.setContent", "should work with accents")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAccents()
         {
@@ -146,9 +126,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("aberración", await Page.EvalOnSelectorAsync<string>("div", "div => div.textContent"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.setContent</playwright-describe>
-        ///<playwright-it>should work with emojis</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.setContent", "should work with emojis")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithEmojis()
         {
@@ -156,9 +134,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal("🐥", await Page.EvalOnSelectorAsync<string>("div", "div => div.textContent"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.setContent</playwright-describe>
-        ///<playwright-it>should work with newline</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.setContent", "should work with newline")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNewline()
         {

@@ -20,8 +20,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        /// <playwright-file>browsercontext-storage-state.spec.ts</playwright-file>
-        /// <playwright-it>should capture local storage</playwright-it>
+        [PlaywrightTest("browsercontext-storage-state.spec.ts", "should capture local storage")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCaptureLocalStorage()
         {
@@ -65,8 +64,7 @@ namespace PlaywrightSharp.Tests
                 storage.Origins);
         }
 
-        /// <playwright-file>browsercontext-storage-state.spec.ts</playwright-file>
-        /// <playwright-it>should set local storage</playwright-it>
+        [PlaywrightTest("browsercontext-storage-state.spec.ts", "should set local storage")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetLocalStorage()
         {
@@ -94,8 +92,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("value1", await page1.EvaluateAsync<string>(@"localStorage['name1']"));
         }
 
-        /// <playwright-file>browsercontext-storage-state.spec.ts</playwright-file>
-        /// <playwright-it>should round-trip through the file</playwright-it>
+        [PlaywrightTest("browsercontext-storage-state.spec.ts", "should round-trip through the file")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRoundTripThroughTheFile()
         {

@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.title</playwright-describe>
-        ///<playwright-it>should return the page title</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.title", "should return the page title")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnThePageTitle()
         {

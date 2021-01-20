@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         {
         }
 
-        ///<playwright-file>jshandle.spec.js</playwright-file>
-        ///<playwright-describe>JSHandle.asElement</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("jshandle.spec.js", "JSHandle.asElement", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -27,9 +25,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
             Assert.NotNull(element);
         }
 
-        ///<playwright-file>jshandle.spec.js</playwright-file>
-        ///<playwright-describe>JSHandle.asElement</playwright-describe>
-        ///<playwright-it>should return null for non-elements</playwright-it>
+        [PlaywrightTest("jshandle.spec.js", "JSHandle.asElement", "should return null for non-elements")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullForNonElements()
         {
@@ -38,9 +34,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
             Assert.Null(element);
         }
 
-        ///<playwright-file>jshandle.spec.js</playwright-file>
-        ///<playwright-describe>JSHandle.asElement</playwright-describe>
-        ///<playwright-it>should return ElementHandle for TextNodes</playwright-it>
+        [PlaywrightTest("jshandle.spec.js", "JSHandle.asElement", "should return ElementHandle for TextNodes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnElementHandleForTextNodes()
         {
@@ -51,9 +45,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
             Assert.True(await Page.EvaluateAsync<bool>("e => e.nodeType === HTMLElement.TEXT_NODE", element));
         }
 
-        ///<playwright-file>jshandle.spec.js</playwright-file>
-        ///<playwright-describe>JSHandle.asElement</playwright-describe>
-        ///<playwright-it>should work with nullified Node</playwright-it>
+        [PlaywrightTest("jshandle.spec.js", "JSHandle.asElement", "should work with nullified Node")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNullifiedNode()
         {

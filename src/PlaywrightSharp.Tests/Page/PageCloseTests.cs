@@ -15,9 +15,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.close</playwright-describe>
-        ///<playwright-it>should reject all promises when page is closed</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.close", "should reject all promises when page is closed")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectAllPromisesWhenPageIsClosed()
         {
@@ -29,9 +27,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("Protocol error", Assert.IsType<TargetClosedException>(exception).Message);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.close</playwright-describe>
-        ///<playwright-it>should not be visible in context.pages</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.close", "should not be visible in context.pages")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotBeVisibleInContextPages()
         {
@@ -41,9 +37,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.DoesNotContain(newPage, Context.Pages);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.close</playwright-describe>
-        ///<playwright-it>should run beforeunload if asked for</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.close", "should run beforeunload if asked for")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRunBeforeunloadIfAskedFor()
         {
@@ -73,9 +67,7 @@ namespace PlaywrightSharp.Tests.Page
             await pageClosingTask;
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.close</playwright-describe>
-        ///<playwright-it>should *not* run beforeunload by default</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.close", "should *not* run beforeunload by default")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotRunBeforeunloadByDefault()
         {
@@ -87,9 +79,7 @@ namespace PlaywrightSharp.Tests.Page
             await newPage.CloseAsync();
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.close</playwright-describe>
-        ///<playwright-it>should set the page close state</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.close", "should set the page close state")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetThePageCloseState()
         {
@@ -99,9 +89,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(newPage.IsClosed);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.close</playwright-describe>
-        ///<playwright-it>should terminate network waiters</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.close", "should terminate network waiters")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTerminateNetworkWaiters()
         {
@@ -119,9 +107,7 @@ namespace PlaywrightSharp.Tests.Page
             }
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.close</playwright-describe>
-        ///<playwright-it>should be callable twice</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.close", "should be callable twice")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeCallableTwice()
         {

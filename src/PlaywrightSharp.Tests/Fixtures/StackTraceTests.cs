@@ -22,9 +22,7 @@ namespace PlaywrightSharp.Tests.Fixtures
         {
         }
 
-        ///<playwright-file>fixtures.spec.js</playwright-file>
-        ///<playwright-describe>StackTrace</playwright-describe>
-        ///<playwright-it>should report browser close signal</playwright-it>
+        [PlaywrightTest("fixtures.spec.js", "StackTrace", "should report browser close signal")]
         [Fact(Skip = "We don't need to test stacktrace")]
         public void CallerFilePath() { }
     }

@@ -21,9 +21,7 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
         {
         }
 
-        ///<playwright-file>chromium/launcher.spec.js</playwright-file>
-        ///<playwright-describe>BrowserContext</playwright-describe>
-        ///<playwright-it>should not create pages automatically</playwright-it>
+        [PlaywrightTest("chromium/launcher.spec.js", "BrowserContext", "should not create pages automatically")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldNotCreatePagesAutomatically()
         {

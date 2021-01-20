@@ -15,9 +15,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Close</playwright-describe>
-        ///<playwright-it>should work with window.close</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.Close", "should work with window.close")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithWindowClose()
         {
@@ -30,9 +28,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             await closedTsc.Task;
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Close</playwright-describe>
-        ///<playwright-it>should work with page.close</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.Close", "should work with page.close")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithPageClose()
         {

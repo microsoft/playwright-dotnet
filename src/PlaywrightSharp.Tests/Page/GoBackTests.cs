@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goBack</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goBack", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -37,9 +35,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Null(response);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goBack</playwright-describe>
-        ///<playwright-it>should work with HistoryAPI</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goBack", "should work with HistoryAPI")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithHistoryAPI()
         {
@@ -58,9 +54,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(TestConstants.ServerUrl + "/first.html", Page.Url);
         }
 
-        ///<playwright-file>navigation.spec.js</playwright-file>
-        ///<playwright-describe>Page.goBack</playwright-describe>
-        ///<playwright-it>should work for file urls</playwright-it>
+        [PlaywrightTest("navigation.spec.js", "Page.goBack", "should work for file urls")]
         [Fact(Skip = "We need screenshots for this")]
         public void ShouldWorkForFileUrls()
         {

@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.Frame
         {
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame.evaluate</playwright-describe>
-        ///<playwright-it>should throw for detached frames</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame.evaluate", "should throw for detached frames")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForDetachedFrames()
         {
@@ -29,9 +27,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.Contains("Execution Context is not available in detached frame", exception.Message);
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame.evaluate</playwright-describe>
-        ///<playwright-it>should be isolated between frames</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame.evaluate", "should be isolated between frames")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeIsolatedBetweenFrames()
         {
@@ -54,9 +50,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.Equal(2, result2);
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame.evaluate</playwright-describe>
-        ///<playwright-it>should work in iframes that failed initial navigation</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame.evaluate", "should work in iframes that failed initial navigation")]
         [SkipBrowserAndPlatformFact(skipChromium: true, skipFirefox: true)]
         public async Task ShouldWorkIniframesThatFailedInitialNavigation()
         {
@@ -76,9 +70,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.NotNull(await Page.Frames[1].QuerySelectorAsync("DIV"));
         }
 
-        ///<playwright-file>frame.spec.js</playwright-file>
-        ///<playwright-describe>Frame.evaluate</playwright-describe>
-        ///<playwright-it>should work in iframes that failed initial navigation</playwright-it>
+        [PlaywrightTest("frame.spec.js", "Frame.evaluate", "should work in iframes that failed initial navigation")]
         [SkipBrowserAndPlatformFact(skipChromium: true, skipFirefox: true)]
         public async Task ShouldWorkInIframesThatInterruptedInitialJavascriptUrlNavigation()
         {

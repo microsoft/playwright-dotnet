@@ -20,8 +20,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-it>should create new context</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "should create new context")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCreateNewContext()
         {
@@ -36,8 +35,7 @@ namespace PlaywrightSharp.Tests
             Assert.Same(browser, context.Browser);
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-it>window.open should use parent tab context</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "window.open should use parent tab context")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task WindowOpenShouldUseParentTabContext()
         {
@@ -56,8 +54,7 @@ namespace PlaywrightSharp.Tests
             await context.CloseAsync();
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-it>should isolate localStorage and cookies</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "should isolate localStorage and cookies")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateLocalStorageAndCookies()
         {
@@ -103,8 +100,7 @@ namespace PlaywrightSharp.Tests
             Assert.Empty(browser.Contexts);
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-it>should propagate default viewport to the page</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "should propagate default viewport to the page")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldPropagateDefaultViewportToThePage()
         {
@@ -121,8 +117,7 @@ namespace PlaywrightSharp.Tests
             await TestUtils.VerifyViewportAsync(page, 456, 789);
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-it>should make a copy of default viewport</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "should make a copy of default viewport")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldMakeACopyOfDefaultViewport()
         {
@@ -141,8 +136,7 @@ namespace PlaywrightSharp.Tests
             await TestUtils.VerifyViewportAsync(page, 456, 789);
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-it>should respect deviceScaleFactor</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "should respect deviceScaleFactor")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectDeviceScaleFactor()
         {
@@ -155,8 +149,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(3, await page.EvaluateAsync<int>("window.devicePixelRatio"));
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-it>should not allow deviceScaleFactor with null viewport</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "should not allow deviceScaleFactor with null viewport")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowDeviceScaleFactorWithNullViewport()
         {
@@ -168,8 +161,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("\"deviceScaleFactor\" option is not supported with null \"viewport\"", exception.Message);
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-it>should not allow isMobile with null viewport</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "should not allow isMobile with null viewport")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowIsMobileWithNullViewport()
         {
@@ -181,8 +173,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("\"isMobile\" option is not supported with null \"viewport\"", exception.Message);
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-it>close() should work for empty context</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "close() should work for empty context")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task CloseShouldWorkForEmptyContext()
         {
@@ -190,8 +181,7 @@ namespace PlaywrightSharp.Tests
             await context.CloseAsync();
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-it>close() should abort waitForEvent</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "close() should abort waitForEvent")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task CloseShouldAbortWaitForEvent()
         {
@@ -202,8 +192,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("Context closed", exception.Message);
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-it>should not report frameless pages on error</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "should not report frameless pages on error")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotReportFramelessPagesOnError()
         {
@@ -228,8 +217,7 @@ namespace PlaywrightSharp.Tests
             }
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-it>close() should be callable twice</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "close() should be callable twice")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task CloseShouldBeCallableTwice()
         {
@@ -238,8 +226,7 @@ namespace PlaywrightSharp.Tests
             await context.CloseAsync();
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-it>should return all of the pages</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "should return all of the pages")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnAllOfThePages()
         {
@@ -252,9 +239,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains(second, context.Pages);
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-describe>BrowserContext.pages()</playwright-describe>
-        ///<playwright-it>should close all belonging pages once closing context</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "BrowserContext.pages()", "should close all belonging pages once closing context")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCloseAllBelongingPagesOnceClosingContext()
         {
@@ -268,8 +253,7 @@ namespace PlaywrightSharp.Tests
             Assert.Empty(context.Pages);
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-it>should disable javascript</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "should disable javascript")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDisableJavascript()
         {
@@ -293,8 +277,7 @@ namespace PlaywrightSharp.Tests
             }
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-it>should be able to navigate after disabling javascript</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "should be able to navigate after disabling javascript")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToNavigateAfterDisablingJavascript()
         {
@@ -303,8 +286,7 @@ namespace PlaywrightSharp.Tests
             await page.GoToAsync(TestConstants.EmptyPage);
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-it>should work with offline option</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "should work with offline option")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithOfflineOption()
         {
@@ -316,8 +298,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(HttpStatusCode.OK, response.Status);
         }
 
-        ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
-        ///<playwright-it>should emulate navigator.onLine</playwright-it>
+        [PlaywrightTest("browsercontext-basic.spec.ts", "should emulate navigator.onLine")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldEmulateNavigatorOnLine()
         {

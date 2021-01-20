@@ -19,9 +19,7 @@ namespace PlaywrightSharp.Tests.Page
             DefaultOptions = TestConstants.GetHeadfulOptions();
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should select single option</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should select single option")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOption()
         {
@@ -31,9 +29,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should select single option by value</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should select single option by value")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOptionByValue()
         {
@@ -43,9 +39,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should select single option by label</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should select single option by label")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOptionByLabel()
         {
@@ -55,9 +49,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(new[] { "indigo" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should select single option by handle</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should select single option by handle")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOptionByHandle()
         {
@@ -67,9 +59,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(new[] { "white" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should select single option by index</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should select single option by index")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOptionByIndex()
         {
@@ -79,9 +69,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(new[] { "brown" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should select single option by multiple attributes</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should select single option by multiple attributes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOptionByMultipleAttributes()
         {
@@ -91,9 +79,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(new[] { "green" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should not select single option when some attributes do not match</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should not select single option when some attributes do not match")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotSelectSingleOptionWhenSomeAttributesDoNotMatch()
         {
@@ -102,9 +88,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Empty(await Page.EvaluateAsync<string>("() => document.querySelector('select').value"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should select only first option</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should select only first option")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectOnlyFirstOption()
         {
@@ -114,9 +98,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should not throw when select causes navigation</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should not throw when select causes navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotThrowWhenSelectCausesNavigation()
         {
@@ -129,9 +111,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("empty.html", Page.Url);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should select multiple options</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should select multiple options")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectMultipleOptions()
         {
@@ -142,9 +122,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(new[] { "blue", "green", "red" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should select multiple options with attributes</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should select multiple options with attributes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectMultipleOptionsWithAttributes()
         {
@@ -155,9 +133,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(new[] { "blue", "gray", "green" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should respect event bubbling</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should respect event bubbling")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectEventBubbling()
         {
@@ -167,9 +143,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onBubblingChange"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should throw when element is not a &lt;select&gt;</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should throw when element is not a &lt;select&gt;")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenElementIsNotASelect()
         {
@@ -178,9 +152,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("Element is not a <select> element.", exception.Message);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should return [] on no matched values</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should return [] on no matched values")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEmptyArrayOnNoMatchedValues()
         {
@@ -189,9 +161,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Empty(result);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should return an array of matched values</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should return an array of matched values")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnAnArrayOfMatchedValues()
         {
@@ -201,9 +171,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(new[] { "blue", "black", "magenta" }.OrderBy(v => v), result.OrderBy(v => v));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should return an array of one element when multiple is not set</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should return an array of one element when multiple is not set")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnAnArrayOfOneElementWhenMultipleIsNotSet()
         {
@@ -212,9 +180,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Single(result);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should return [] on no values</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should return [] on no values")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEmptyArrayOnNoValues()
         {
@@ -223,9 +189,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Empty(result);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should not allow null items</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should not allow null items")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowNullItems()
         {
@@ -236,9 +200,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Contains("got null", exception.Message);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should unselect with null</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should unselect with null")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldUnselectWithNull()
         {
@@ -250,9 +212,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvalOnSelectorAsync<bool?>("select", "select => Array.from(select.options).every(option => !option.selected)"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should deselect all options when passed no values for a multiple select</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should deselect all options when passed no values for a multiple select")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeselectAllOptionsWhenPassedNoValuesForAMultipleSelect()
         {
@@ -263,9 +223,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvalOnSelectorAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected)"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should deselect all options when passed no values for a select without multiple</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should deselect all options when passed no values for a select without multiple")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeselectAllOptionsWhenPassedNoValuesForASelectWithoutMultiple()
         {
@@ -275,17 +233,13 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvalOnSelectorAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected)"));
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should throw if passed wrong types</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should throw if passed wrong types")]
         [Fact(Skip = "Not relevant for C#, js specific")]
         public void ShouldThrowIfPassedWrongTypes()
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.selectOption</playwright-describe>
-        ///<playwright-it>should work when re-defining top-level Event class</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.selectOption", "should work when re-defining top-level Event class")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenReDefiningTopLevelEventClass()
         {

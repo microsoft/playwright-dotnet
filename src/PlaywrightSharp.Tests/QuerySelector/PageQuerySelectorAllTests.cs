@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         {
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$$</playwright-describe>
-        ///<playwright-it>should query existing elements</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$$", "should query existing elements")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldQueryExistingElements()
         {
@@ -30,9 +28,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal(new[] { "A", "B" }, await TaskUtils.WhenAll(tasks));
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>Page.$$</playwright-describe>
-        ///<playwright-it>should return empty array if nothing is found</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "Page.$$", "should return empty array if nothing is found")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEmptyArrayIfNothingIsFound()
         {

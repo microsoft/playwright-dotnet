@@ -15,8 +15,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        ///<playwright-file>selectors-register.spec.js</playwright-file>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("selectors-register.spec.js", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -42,8 +41,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("Unknown engine \"tAG\" while parsing selector tAG=DIV", exception.Message);
         }
 
-        ///<playwright-file>selectors-register.spec.js</playwright-file>
-        ///<playwright-it>should work with path</playwright-it>
+        [PlaywrightTest("selectors-register.spec.js", "should work with path")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithPath()
         {
@@ -52,8 +50,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("SECTION", await Page.EvalOnSelectorAsync<string>("foo=whatever", "e => e.nodeName"));
         }
 
-        ///<playwright-file>selectors-register.spec.js</playwright-file>
-        ///<playwright-it>should work in main and isolated world</playwright-it>
+        [PlaywrightTest("selectors-register.spec.js", "should work in main and isolated world")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkInMainAndIsolatedWorld()
         {
@@ -88,8 +85,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("SECTION", await Page.EvalOnSelectorAsync<string>("main=ignored >> css=section", "e => e.nodeName"));
         }
 
-        ///<playwright-file>selectors-register.spec.js</playwright-file>
-        ///<playwright-it>should handle errors</playwright-it>
+        [PlaywrightTest("selectors-register.spec.js", "should handle errors")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHandleErrors()
         {

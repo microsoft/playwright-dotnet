@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         {
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>plaintext contenteditable</playwright-describe>
-        ///<playwright-it>plain text field with role should not have children</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "plaintext contenteditable", "plain text field with role should not have children")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task PlainTextFieldWithRoleShouldNotHaveChildren()
         {
@@ -33,9 +31,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 (await Page.Accessibility.SnapshotAsync()).Children[0]);
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>plaintext contenteditable</playwright-describe>
-        ///<playwright-it>plain text field without role should not have content</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "plaintext contenteditable", "plain text field without role should not have content")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task PlainTextFieldWithoutRoleShouldNotHaveContent()
         {
@@ -46,9 +42,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.Equal(string.Empty, snapshot.Children[0].Name);
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>plaintext contenteditable</playwright-describe>
-        ///<playwright-it>plain text field with tabindex and without role should not have content</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "plaintext contenteditable", "plain text field with tabindex and without role should not have content")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task PlainTextFieldWithTabindexAndWithoutRoleShouldNotHaveContent()
         {
@@ -58,9 +52,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.Empty(node.Name);
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>plaintext contenteditable</playwright-describe>
-        ///<playwright-it>non editable textbox with role and tabIndex and label should not have children</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "plaintext contenteditable", "non editable textbox with role and tabIndex and label should not have children")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task NonEditableTextboxWithRoleAndTabIndexAndLabelShouldNotHaveChildren()
         {
@@ -102,9 +94,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.Equal(node, (await Page.Accessibility.SnapshotAsync()).Children[0]);
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>plaintext contenteditable</playwright-describe>
-        ///<playwright-it>checkbox with and tabIndex and label should not have children</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "plaintext contenteditable", "checkbox with and tabIndex and label should not have children")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task CheckboxWithAndTabIndexAndLabelShouldNotHaveChildren()
         {
@@ -123,9 +113,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 (await Page.Accessibility.SnapshotAsync()).Children[0]);
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>plaintext contenteditable</playwright-describe>
-        ///<playwright-it>checkbox without label should not have children</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "plaintext contenteditable", "checkbox without label should not have children")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task CheckboxWithoutLabelShouldNotHaveChildren()
         {

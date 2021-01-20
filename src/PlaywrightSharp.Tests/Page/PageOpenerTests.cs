@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.opener</playwright-describe>
-        ///<playwright-it>should provide access to the opener page</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.opener", "should provide access to the opener page")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldProvideAccessToTheOpenerPage()
         {
@@ -30,9 +28,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.Equal(Page, opener);
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.opener</playwright-describe>
-        ///<playwright-it>should return null if parent page has been closed</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.opener", "should return null if parent page has been closed")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullIfParentPageHasBeenClosed()
         {

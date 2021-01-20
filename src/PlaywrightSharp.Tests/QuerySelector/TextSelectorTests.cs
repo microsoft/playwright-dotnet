@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         {
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>text selector</playwright-describe>
-        ///<playwright-it>query</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "text selector", "query")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task Query()
         {
@@ -102,17 +100,13 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("<div>helloworld</div><span>helloworld</span>", await Page.EvalOnSelectorAllAsync<string>("text=lowo", "els => els.map(e => e.outerHTML).join('')"));
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>text selector</playwright-describe>
-        ///<playwright-it>create</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "text selector", "create")]
         [Fact(Skip = "Skip Hooks")]
         public void Create()
         {
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>text selector</playwright-describe>
-        ///<playwright-it>should be case sensitive if quotes are specified</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "text selector", "should be case sensitive if quotes are specified")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeCaseSensitiveIfQuotesAreSpecified()
         {
@@ -121,9 +115,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Null(await Page.QuerySelectorAsync("text=\"yA\""));
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>text selector</playwright-describe>
-        ///<playwright-it>should search for a substring without quotes</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "text selector", "should search for a substring without quotes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSearchForASubstringWithoutQuotes()
         {
@@ -132,9 +124,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Null(await Page.QuerySelectorAsync("text=\"with\""));
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>text selector</playwright-describe>
-        ///<playwright-it>should skip head, script and style</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "text selector", "should skip head, script and style")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSkipHeadScriptAndStyle()
         {
@@ -168,9 +158,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             }
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>text selector</playwright-describe>
-        ///<playwright-it>should match input[type=button|submit]</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "text selector", "should match input[type=button|submit]")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldMatchInputTypeButtonSubmit()
         {
@@ -179,9 +167,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("<input type=\"button\" value=\"world\">", await Page.EvalOnSelectorAsync<string>("text=world", "e => e.outerHTML"));
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>text selector</playwright-describe>
-        ///<playwright-it>should work for open shadow roots</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "text selector", "should work for open shadow roots")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForOpenShadowRoots()
         {
@@ -197,9 +183,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Null(await Page.QuerySelectorAsync("text:light=root3"));
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>text selector</playwright-describe>
-        ///<playwright-it>should prioritize light dom over shadow dom in the same parent</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "text selector", "should prioritize light dom over shadow dom in the same parent")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldPrioritizeLightDomOverShadowDomInTheSameParent()
         {
@@ -220,9 +204,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("Hello from light", await Page.EvalOnSelectorAsync<string>("div >> text=Hello", "e => e.textContent"));
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>text selector</playwright-describe>
-        ///<playwright-it>should waitForSelector with distributed elements</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "text selector", "should waitForSelector with distributed elements")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForSelectorWithDistributedElements()
         {

@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         {
         }
 
-        ///<playwright-file>elementhandle.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.fill</playwright-describe>
-        ///<playwright-it>should fill input</playwright-it>
+        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.fill", "should fill input")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillInput()
         {
@@ -28,9 +26,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal("some value", await Page.EvaluateAsync<string>("() => result"));
         }
 
-        ///<playwright-file>elementhandle.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.fill</playwright-describe>
-        ///<playwright-it>should fill input when Node is removed</playwright-it>
+        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.fill", "should fill input when Node is removed")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillInputWhenNodeIsRemoved()
         {

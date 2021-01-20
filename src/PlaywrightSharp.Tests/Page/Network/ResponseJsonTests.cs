@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         {
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Response.json</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("network.spec.js", "Response.json", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -27,9 +25,7 @@ namespace PlaywrightSharp.Tests.Page.Network
             Assert.Equal("{\"foo\": \"bar\"}", (await response.GetJsonAsync()).RootElement.GetRawText());
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Response.json</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("network.spec.js", "Response.json", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithGenerics()
         {

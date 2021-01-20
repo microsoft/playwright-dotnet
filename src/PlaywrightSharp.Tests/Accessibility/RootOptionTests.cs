@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.Accessibility
         {
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>root option</playwright-describe>
-        ///<playwright-it>should work a button</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "root option", "should work a button")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkAButton()
         {
@@ -35,9 +33,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 await Page.Accessibility.SnapshotAsync(root: button));
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>root option</playwright-describe>
-        ///<playwright-it>should work an input</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "root option", "should work an input")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkAnInput()
         {
@@ -54,9 +50,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 await Page.Accessibility.SnapshotAsync(root: input));
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>root option</playwright-describe>
-        ///<playwright-it>should work on a menu</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "root option", "should work on a menu")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkOnAMenu()
         {
@@ -99,9 +93,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.True(result.AreEqual, result.DifferencesString);
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>root option</playwright-describe>
-        ///<playwright-it>should return null when the element is no longer in DOM</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "root option", "should return null when the element is no longer in DOM")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullWhenTheElementIsNoLongerInDOM()
         {
@@ -112,9 +104,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.Null(await Page.Accessibility.SnapshotAsync(root: button));
         }
 
-        ///<playwright-file>accessibility.spec.js</playwright-file>
-        ///<playwright-describe>root option</playwright-describe>
-        ///<playwright-it>should show uninteresting nodes</playwright-it>
+        [PlaywrightTest("accessibility.spec.js", "root option", "should show uninteresting nodes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportUninterestingNodes()
         {

@@ -18,9 +18,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         {
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Frame.evaluate</playwright-describe>
-        ///<playwright-it>should have different execution contexts</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Frame.evaluate", "should have different execution contexts")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveDifferentExecutionContexts()
         {
@@ -33,9 +31,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal("bar", await Page.Frames[1].EvaluateAsync<string>("() => window.FOO"));
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Frame.evaluate</playwright-describe>
-        ///<playwright-it>should have correct execution contexts</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Frame.evaluate", "should have correct execution contexts")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveCorrectExecutionContexts()
         {
@@ -45,25 +41,19 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal("Hi, I'm frame", await Page.Frames[1].EvaluateAsync<string>("() => document.body.textContent.trim()"));
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Frame.evaluate</playwright-describe>
-        ///<playwright-it>should dispose context on navigation</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Frame.evaluate", "should dispose context on navigation")]
         [Fact(Skip = "Ignore USES_HOOKS")]
         public void ShouldDisposeContextOnNavigation()
         {
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Frame.evaluate</playwright-describe>
-        ///<playwright-it>should dispose context on cross-origin navigation</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Frame.evaluate", "should dispose context on cross-origin navigation")]
         [Fact(Skip = "Ignore USES_HOOKS")]
         public void ShouldDisposeContextOnCrossOriginNavigation()
         {
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Frame.evaluate</playwright-describe>
-        ///<playwright-it>should execute after cross-site navigation</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Frame.evaluate", "should execute after cross-site navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldExecuteAfterCrossSiteNavigation()
         {
@@ -74,9 +64,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Contains("127", await mainFrame.EvaluateAsync<string>("() => window.location.href"));
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Frame.evaluate</playwright-describe>
-        ///<playwright-it>should allow cross-frame js handles</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Frame.evaluate", "should allow cross-frame js handles")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAllowCrossFrameJsHandles()
         {
@@ -94,9 +82,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal("JSHandles can be evaluated only in the context they were created!", exception.Message);
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Frame.evaluate</playwright-describe>
-        ///<playwright-it>should allow cross-frame element handles</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Frame.evaluate", "should allow cross-frame element handles")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAllowCrossFrameElementHandles()
         {
@@ -106,9 +92,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal("<div>Hi, I\'m frame</div>", result.Trim());
         }
 
-        ///<playwright-file>evaluation.spec.js</playwright-file>
-        ///<playwright-describe>Frame.evaluate</playwright-describe>
-        ///<playwright-it>should not allow cross-frame element handles when frames do not script each other</playwright-it>
+        [PlaywrightTest("evaluation.spec.js", "Frame.evaluate", "should not allow cross-frame element handles when frames do not script each other")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowCrossFrameElementHandlesWhenFramesDoNotScriptEachOther()
         {

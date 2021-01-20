@@ -19,16 +19,12 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
         }
 
-        /// <playwright-file>cookies.spec.js</playwright-file>
-        /// <playwright-describe>BrowserContext.cookies</playwright-describe>
-        /// <playwright-it>should return no cookies in pristine browser context</playwright-it>
+        [PlaywrightTest("cookies.spec.js", "BrowserContext.cookies", "should return no cookies in pristine browser context")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNoCookiesInPristineBrowserContext()
             => Assert.Empty(await Context.GetCookiesAsync());
 
-        /// <playwright-file>cookies.spec.js</playwright-file>
-        /// <playwright-describe>BrowserContext.cookies</playwright-describe>
-        /// <playwright-it>should get a cookie</playwright-it>
+        [PlaywrightTest("cookies.spec.js", "BrowserContext.cookies", "should get a cookie")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldGetACookie()
         {
@@ -49,9 +45,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(SameSite.None, cookie.SameSite);
         }
 
-        /// <playwright-file>cookies.spec.js</playwright-file>
-        /// <playwright-describe>BrowserContext.cookies</playwright-describe>
-        /// <playwright-it>should get a non-session cookie</playwright-it>
+        [PlaywrightTest("cookies.spec.js", "BrowserContext.cookies", "should get a non-session cookie")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldGetANonSessionCookie()
         {
@@ -74,9 +68,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(SameSite.None, cookie.SameSite);
         }
 
-        /// <playwright-file>cookies.spec.js</playwright-file>
-        /// <playwright-describe>BrowserContext.cookies</playwright-describe>
-        /// <playwright-it>should properly report httpOnly cookie</playwright-it>
+        [PlaywrightTest("cookies.spec.js", "BrowserContext.cookies", "should properly report httpOnly cookie")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldProperlyReportHttpOnlyCookie()
         {
@@ -91,9 +83,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.True(cookies.ElementAt(0).HttpOnly);
         }
 
-        /// <playwright-file>cookies.spec.js</playwright-file>
-        /// <playwright-describe>BrowserContext.cookies</playwright-describe>
-        /// <playwright-it>should properly report "Strict" sameSite cookie</playwright-it>
+        [PlaywrightTest("cookies.spec.js", "BrowserContext.cookies", @"should properly report ""Strict"" sameSite cookie")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true)]
         public async Task ShouldProperlyReportStrictSameSiteCookie()
         {
@@ -108,9 +98,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(SameSite.Strict, cookies.ElementAt(0).SameSite);
         }
 
-        /// <playwright-file>cookies.spec.js</playwright-file>
-        /// <playwright-describe>BrowserContext.cookies</playwright-describe>
-        /// <playwright-it>should properly report "Lax" sameSite cookie</playwright-it>
+        [PlaywrightTest("cookies.spec.js", "BrowserContext.cookies", @"should properly report ""Lax"" sameSite cookie")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true)]
         public async Task ShouldProperlyReportLaxSameSiteCookie()
         {
@@ -125,9 +113,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(SameSite.Lax, cookies.ElementAt(0).SameSite);
         }
 
-        /// <playwright-file>cookies.spec.js</playwright-file>
-        /// <playwright-describe>BrowserContext.cookies</playwright-describe>
-        /// <playwright-it>should get multiple cookies</playwright-it>
+        [PlaywrightTest("cookies.spec.js", "BrowserContext.cookies", "should get multiple cookies")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldGetMultipleCookies()
         {
@@ -163,9 +149,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(SameSite.None, cookie.SameSite);
         }
 
-        /// <playwright-file>cookies.spec.js</playwright-file>
-        /// <playwright-describe>BrowserContext.cookies</playwright-describe>
-        /// <playwright-it>should get cookies from multiple urls</playwright-it>
+        [PlaywrightTest("cookies.spec.js", "BrowserContext.cookies", "should get cookies from multiple urls")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldGetCookiesFromMultipleUrls()
         {

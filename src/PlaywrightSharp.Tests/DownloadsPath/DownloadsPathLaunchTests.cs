@@ -22,9 +22,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
         {
         }
 
-        ///<playwright-file>downloadspath.spec.js</playwright-file>
-        ///<playwright-describe>browserType.launch({downloadsPath})</playwright-describe>
-        ///<playwright-it>should keep downloadsPath folder</playwright-it>
+        [PlaywrightTest("downloadspath.spec.js", "browserType.launch({downloadsPath})", "should keep downloadsPath folder")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldKeepDownloadsPathFolder()
         {
@@ -47,9 +45,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
             Assert.True(new DirectoryInfo(_tmp.Path).Exists);
         }
 
-        ///<playwright-file>downloadspath.spec.js</playwright-file>
-        ///<playwright-describe>browserType.launch({downloadsPath})</playwright-describe>
-        ///<playwright-it>should delete downloads when context closes</playwright-it>
+        [PlaywrightTest("downloadspath.spec.js", "browserType.launch({downloadsPath})", "should delete downloads when context closes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeleteDownloadsWhenContextCloses()
         {
@@ -68,9 +64,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
             Assert.False(new FileInfo(path).Exists);
         }
 
-        ///<playwright-file>downloadspath.spec.js</playwright-file>
-        ///<playwright-describe>browserType.launch({downloadsPath})</playwright-describe>
-        ///<playwright-it>should report downloads in downloadsPath folder</playwright-it>
+        [PlaywrightTest("downloadspath.spec.js", "browserType.launch({downloadsPath})", "should report downloads in downloadsPath folder")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDownloadsInDownloadsPathFolder()
         {

@@ -21,9 +21,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.check</playwright-describe>
-        ///<playwright-it>should check the box</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.check", "should check the box")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCheckTheBox()
         {
@@ -32,9 +30,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool?>("checkbox.checked"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.check</playwright-describe>
-        ///<playwright-it>should not check the checked box</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.check", "should not check the checked box")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotCheckTheCheckedBox()
         {
@@ -43,9 +39,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool?>("checkbox.checked"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.check</playwright-describe>
-        ///<playwright-it>should uncheck the box</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.check", "should uncheck the box")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldUncheckTheBox()
         {
@@ -54,9 +48,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.False(await Page.EvaluateAsync<bool?>("checkbox.checked"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.check</playwright-describe>
-        ///<playwright-it>should check the box by label</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.check", "should check the box by label")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCheckTheBoxByLabel()
         {
@@ -65,9 +57,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool?>("checkbox.checked"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.check</playwright-describe>
-        ///<playwright-it>should check the box outside label</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.check", "should check the box outside label")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCheckTheBoxOutsideLabel()
         {
@@ -76,9 +66,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool?>("checkbox.checked"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.check</playwright-describe>
-        ///<playwright-it>should check the box inside label w/o id</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.check", "should check the box inside label w/o id")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCheckTheBoxInsideLabelWoId()
         {
@@ -87,9 +75,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool?>("checkbox.checked"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.check</playwright-describe>
-        ///<playwright-it>should check radio</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.check", "should check radio")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCheckRadio()
         {
@@ -101,9 +87,7 @@ namespace PlaywrightSharp.Tests.Page
             Assert.True(await Page.EvaluateAsync<bool?>("two.checked"));
         }
 
-        ///<playwright-file>click.spec.js</playwright-file>
-        ///<playwright-describe>Page.check</playwright-describe>
-        ///<playwright-it>should check the box by aria role</playwright-it>
+        [PlaywrightTest("click.spec.js", "Page.check", "should check the box by aria role")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCheckTheBoxByAriaRole()
         {

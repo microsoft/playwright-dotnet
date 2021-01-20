@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>waittask.spec.js</playwright-file>
-        ///<playwright-describe>Page.waitForTimeout</playwright-describe>
-        ///<playwright-it>should timeout</playwright-it>
+        [PlaywrightTest("waittask.spec.js", "Page.waitForTimeout", "should timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeout()
         {

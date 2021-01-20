@@ -19,9 +19,7 @@ namespace PlaywrightSharp.Tests.Chromium
         {
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>CSSCoverage</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "CSSCoverage", "should work")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWork()
         {
@@ -42,9 +40,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal("div { color: green; }", coverage[0].Text.Substring(range.Start, range.End - range.Start));
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>CSSCoverage</playwright-describe>
-        ///<playwright-it>should report sourceURLs</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "CSSCoverage", "should report sourceURLs")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportSourceUrls()
         {
@@ -55,9 +51,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal("nicename.css", coverage[0].Url);
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>CSSCoverage</playwright-describe>
-        ///<playwright-it>should report multiple stylesheets</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "CSSCoverage", "should report multiple stylesheets")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportMultipleStylesheets()
         {
@@ -70,9 +64,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Contains("/csscoverage/stylesheet2.css", orderedList[1].Url);
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>CSSCoverage</playwright-describe>
-        ///<playwright-it>should report stylesheets that have no coverage</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "CSSCoverage", "should report stylesheets that have no coverage")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportStylesheetsThatHaveNoCoverage()
         {
@@ -85,9 +77,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Empty(entry.Ranges);
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>CSSCoverage</playwright-describe>
-        ///<playwright-it>should work with media queries</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "CSSCoverage", "should work with media queries")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWorkWithMediaQueries()
         {
@@ -107,9 +97,7 @@ namespace PlaywrightSharp.Tests.Chromium
             }, coverage[0].Ranges);
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>CSSCoverage</playwright-describe>
-        ///<playwright-it>should work with complicated usecases</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "CSSCoverage", "should work with complicated usecases")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWorkWithComplicatedUseCases()
         {
@@ -137,9 +125,7 @@ namespace PlaywrightSharp.Tests.Chromium
                 Regex.Replace(TestUtils.CompressText(JsonConvert.SerializeObject(coverage)), @":\d{4}\/", ":<PORT>/"));
         }
 
-        ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-        ///<playwright-describe>CSSCoverage</playwright-describe>
-        ///<playwright-it>should ignore injected stylesheets</playwright-it>
+        [PlaywrightTest("chromium/chromium.spec.js", "CSSCoverage", "should ignore injected stylesheets")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldIgnoreInjectedStylesheets()
         {

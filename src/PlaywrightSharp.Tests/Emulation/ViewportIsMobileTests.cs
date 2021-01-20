@@ -22,9 +22,7 @@ namespace PlaywrightSharp.Tests.Emulation
             _iPhoneLandscape = Playwright.Devices["iPhone 6 landscape"];
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>viewport.isMobile</playwright-describe>
-        ///<playwright-it>should support mobile emulation</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "viewport.isMobile", "should support mobile emulation")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldSupportMobileEmulation()
         {
@@ -37,9 +35,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Equal(400, await page.EvaluateAsync<int>("window.innerWidth"));
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>viewport.isMobile</playwright-describe>
-        ///<playwright-it>should support touch emulation</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "viewport.isMobile", "should support touch emulation")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldSupportTouchEmulation()
         {
@@ -64,9 +60,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Equal("Received touch", await page.EvaluateAsync<string>(dispatchTouch));
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>viewport.isMobile</playwright-describe>
-        ///<playwright-it>should be detectable by Modernizr</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "viewport.isMobile", "should be detectable by Modernizr")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldBeDetectableByModernizr()
         {
@@ -76,9 +70,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Equal("YES", await page.EvaluateAsync<string>("document.body.textContent.trim()"));
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>viewport.isMobile</playwright-describe>
-        ///<playwright-it>should detect touch when applying viewport with touches</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "viewport.isMobile", "should detect touch when applying viewport with touches")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldDetectTouchWhenApplyingViewportWithTouches()
         {
@@ -98,9 +90,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.True(await page.EvaluateAsync<bool>("() => Modernizr.touchevents"));
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>viewport.isMobile</playwright-describe>
-        ///<playwright-it>should support landscape emulation</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "viewport.isMobile", "should support landscape emulation")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldSupportLandscapeEmulation()
         {
@@ -115,9 +105,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.True(await page2.EvaluateAsync<bool>("() => matchMedia('(orientation: landscape)').matches"));
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>viewport.isMobile</playwright-describe>
-        ///<playwright-it>should support window.orientation emulation</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "viewport.isMobile", "should support window.orientation emulation")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldSupportWindowOrientationEmulation()
         {
@@ -138,9 +126,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Equal(90, await page.EvaluateAsync<int?>("() => window.orientation"));
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>viewport.isMobile</playwright-describe>
-        ///<playwright-it>should fire orientationchange event</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "viewport.isMobile", "should fire orientationchange event")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldFireOrientationChangeEvent()
         {
@@ -179,9 +165,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Equal("2", event2.Message.Text);
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>viewport.isMobile</playwright-describe>
-        ///<playwright-it>default mobile viewports to 980 width</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "viewport.isMobile", "default mobile viewports to 980 width")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task DefaultMobileViewportsTo980Width()
         {
@@ -200,9 +184,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Equal(980, await page.EvaluateAsync<int>("() => window.innerWidth"));
         }
 
-        ///<playwright-file>emulation.spec.js</playwright-file>
-        ///<playwright-describe>viewport.isMobile</playwright-describe>
-        ///<playwright-it>respect meta viewport tag</playwright-it>
+        [PlaywrightTest("emulation.spec.js", "viewport.isMobile", "respect meta viewport tag")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task RespectMetaViewportTag()
         {

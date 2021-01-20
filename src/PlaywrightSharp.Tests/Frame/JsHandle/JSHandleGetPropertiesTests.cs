@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         {
         }
 
-        ///<playwright-file>jshandle.spec.js</playwright-file>
-        ///<playwright-describe>JSHandle.getProperties</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("jshandle.spec.js", "JSHandle.getProperties", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -30,9 +28,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
             Assert.Equal("bar", await foo.GetJsonValueAsync<string>());
         }
 
-        ///<playwright-file>jshandle.spec.js</playwright-file>
-        ///<playwright-describe>JSHandle.getProperties</playwright-describe>
-        ///<playwright-it>should return empty map for non-objects</playwright-it>
+        [PlaywrightTest("jshandle.spec.js", "JSHandle.getProperties", "should return empty map for non-objects")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEmptyMapForNonObjects()
         {
@@ -41,9 +37,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
             Assert.Empty(properties);
         }
 
-        ///<playwright-file>jshandle.spec.js</playwright-file>
-        ///<playwright-describe>JSHandle.getProperties</playwright-describe>
-        ///<playwright-it>should return even non-own properties</playwright-it>
+        [PlaywrightTest("jshandle.spec.js", "JSHandle.getProperties", "should return even non-own properties")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEvenNonOwnProperties()
         {

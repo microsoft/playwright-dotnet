@@ -20,9 +20,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
         {
         }
 
-        ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>Request.continue</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("interception.spec.js", "Request.continue", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -30,9 +28,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.GoToAsync(TestConstants.EmptyPage);
         }
 
-        ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>Request.continue</playwright-describe>
-        ///<playwright-it>should amend HTTP headers</playwright-it>
+        [PlaywrightTest("interception.spec.js", "Request.continue", "should amend HTTP headers")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAmendHTTPHeaders()
         {
@@ -50,9 +46,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.Equal("bar", requestTask.Result);
         }
 
-        ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>Request.continue</playwright-describe>
-        ///<playwright-it>should amend method on main request</playwright-it>
+        [PlaywrightTest("interception.spec.js", "Request.continue", "should amend method on main request")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAmendMethodOnMainRequest()
         {
@@ -62,9 +56,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.Equal("POST", await methodTask);
         }
 
-        ///<playwright-file>interception.spec.js</playwright-file>
-        ///<playwright-describe>Request.continue</playwright-describe>
-        ///<playwright-it>should amend post data</playwright-it>
+        [PlaywrightTest("interception.spec.js", "Request.continue", "should amend post data")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAmendPostData()
         {

@@ -16,8 +16,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
-        ///<playwright-it>should wait for visible</playwright-it>
+        [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for visible")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisible()
         {
@@ -30,8 +29,7 @@ namespace PlaywrightSharp.Tests
             await task;
         }
 
-        ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
-        ///<playwright-it>should wait for already visible</playwright-it>
+        [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for already visible")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForAlreadyVisible()
         {
@@ -40,8 +38,7 @@ namespace PlaywrightSharp.Tests
             await div.WaitForElementStateAsync(ElementState.Visible);
         }
 
-        ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
-        ///<playwright-it>should timeout waiting for visible</playwright-it>
+        [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should timeout waiting for visible")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForVisible()
         {
@@ -51,8 +48,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("Timeout 1000ms exceeded", exception.Message);
         }
 
-        ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
-        ///<playwright-it>should throw waiting for visible when detached</playwright-it>
+        [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should throw waiting for visible when detached")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWaitingForVisibleWhenDetached()
         {
@@ -64,8 +60,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("Element is not attached to the DOM", exception.Message);
         }
 
-        ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
-        ///<playwright-it>should wait for hidden</playwright-it>
+        [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for hidden")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForHidden()
         {
@@ -78,8 +73,7 @@ namespace PlaywrightSharp.Tests
             await task;
         }
 
-        ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
-        ///<playwright-it>should wait for already hidden</playwright-it>
+        [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for already hidden")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForAlreadyHidden()
         {
@@ -88,8 +82,7 @@ namespace PlaywrightSharp.Tests
             await div.WaitForElementStateAsync(ElementState.Hidden);
         }
 
-        ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
-        ///<playwright-it>should throw waiting for hidden when detached</playwright-it>
+        [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should throw waiting for hidden when detached")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWaitingForHiddenWhenDetached()
         {
@@ -102,8 +95,7 @@ namespace PlaywrightSharp.Tests
             await task;
         }
 
-        ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
-        ///<playwright-it>should wait for enabled button</playwright-it>
+        [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for enabled button")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForEnabledButton()
         {
@@ -116,8 +108,7 @@ namespace PlaywrightSharp.Tests
             await task;
         }
 
-        ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
-        ///<playwright-it>should throw waiting for enabled when detached</playwright-it>
+        [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should throw waiting for enabled when detached")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWaitingForEnabledWhenDetached()
         {
@@ -129,8 +120,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("Element is not attached to the DOM", exception.Message);
         }
 
-        ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
-        ///<playwright-it>should wait for disabled button</playwright-it>
+        [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for disabled button")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForDisabledButton()
         {
@@ -143,8 +133,7 @@ namespace PlaywrightSharp.Tests
             await task;
         }
 
-        ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
-        ///<playwright-it>should wait for stable position</playwright-it>
+        [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for stable position")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWaitForStablePosition()
         {

@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         {
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Request</playwright-describe>
-        ///<playwright-it>should fire for navigation requests</playwright-it>
+        [PlaywrightTest("network.spec.js", "Page.Events.Request", "should fire for navigation requests")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireForNavigationRequests()
         {
@@ -29,9 +27,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             Assert.Single(requests);
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Request</playwright-describe>
-        ///<playwright-it>should fire for iframes</playwright-it>
+        [PlaywrightTest("network.spec.js", "Page.Events.Request", "should fire for iframes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireForIframes()
         {
@@ -42,9 +38,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             Assert.Equal(2, requests.Count);
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Request</playwright-describe>
-        ///<playwright-it>should fire for fetches</playwright-it>
+        [PlaywrightTest("network.spec.js", "Page.Events.Request", "should fire for fetches")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireForFetches()
         {
@@ -55,9 +49,7 @@ namespace PlaywrightSharp.Tests.Page.Events
             Assert.Equal(2, requests.Count);
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Request</playwright-describe>
-        ///<playwright-it>should report requests and responses handled by service worker</playwright-it>
+        [PlaywrightTest("network.spec.js", "Page.Events.Request", "should report requests and responses handled by service worker")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportRequestsAndResponsesHandledByServiceWorker()
         {

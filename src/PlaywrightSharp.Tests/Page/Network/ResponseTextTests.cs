@@ -18,9 +18,7 @@ namespace PlaywrightSharp.Tests.Page.Network
         {
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Response.text</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("network.spec.js", "Response.text", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -28,9 +26,7 @@ namespace PlaywrightSharp.Tests.Page.Network
             Assert.Equal("{\"foo\": \"bar\"}", (await response.GetTextAsync()).Trim());
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Response.text</playwright-describe>
-        ///<playwright-it>should return uncompressed text</playwright-it>
+        [PlaywrightTest("network.spec.js", "Response.text", "should return uncompressed text")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnUncompressedText()
         {
@@ -40,9 +36,7 @@ namespace PlaywrightSharp.Tests.Page.Network
             Assert.Equal("{\"foo\": \"bar\"}", (await response.GetTextAsync()).Trim());
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Response.text</playwright-describe>
-        ///<playwright-it>should throw when requesting body of redirected response</playwright-it>
+        [PlaywrightTest("network.spec.js", "Response.text", "should throw when requesting body of redirected response")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenRequestingBodyOfRedirectedResponse()
         {
@@ -57,9 +51,7 @@ namespace PlaywrightSharp.Tests.Page.Network
             Assert.Contains("Response body is unavailable for redirect responses", exception.Message);
         }
 
-        ///<playwright-file>network.spec.js</playwright-file>
-        ///<playwright-describe>Response.text</playwright-describe>
-        ///<playwright-it>should wait until response completes</playwright-it>
+        [PlaywrightTest("network.spec.js", "Response.text", "should wait until response completes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitUntilResponseCompletes()
         {

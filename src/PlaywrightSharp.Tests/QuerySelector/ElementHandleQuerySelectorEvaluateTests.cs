@@ -16,9 +16,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         {
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.$eval</playwright-describe>
-        ///<playwright-it>should work</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "ElementHandle.$eval", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -28,9 +26,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("100", content);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.$eval</playwright-describe>
-        ///<playwright-it>should retrieve content from subtree</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "ElementHandle.$eval", "should retrieve content from subtree")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetrieveContentFromSubtree()
         {
@@ -41,9 +37,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("a-child-div", content);
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>ElementHandle.$eval</playwright-describe>
-        ///<playwright-it>should throw in case of missing selector</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "ElementHandle.$eval", "should throw in case of missing selector")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowInCaseOfMissingSelector()
         {

@@ -19,8 +19,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
-        ///<playwright-it>should pick up ongoing navigation</playwright-it>
+        [PlaywrightTest("page-wait-for-load-state.ts", "should pick up ongoing navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldPickUpOngoingNavigation()
         {
@@ -44,8 +43,7 @@ namespace PlaywrightSharp.Tests
             await navigationTask;
         }
 
-        ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
-        ///<playwright-it>should respect timeout</playwright-it>
+        [PlaywrightTest("page-wait-for-load-state.ts", "should respect timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
@@ -55,8 +53,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("Timeout 1ms exceeded", exception.Message);
         }
 
-        ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
-        ///<playwright-it>should resolve immediately if loaded</playwright-it>
+        [PlaywrightTest("page-wait-for-load-state.ts", "should resolve immediately if loaded")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldResolveImmediatelyIfLoaded()
         {
@@ -64,15 +61,13 @@ namespace PlaywrightSharp.Tests
             await Page.WaitForLoadStateAsync();
         }
 
-        ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
-        ///<playwright-it>should throw for bad state</playwright-it>
+        [PlaywrightTest("page-wait-for-load-state.ts", "should throw for bad state")]
         [Fact(Skip = "We don't need this test")]
         public void ShouldTthrowForBadState()
         {
         }
 
-        ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
-        ///<playwright-it>should resolve immediately if load state matches</playwright-it>
+        [PlaywrightTest("page-wait-for-load-state.ts", "should resolve immediately if load state matches")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldResolveImmediatelyIfLoadStateMatches()
         {
@@ -95,8 +90,7 @@ namespace PlaywrightSharp.Tests
             await navigationTask;
         }
 
-        ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
-        ///<playwright-it>should work with pages that have loaded before being connected to</playwright-it>
+        [PlaywrightTest("page-wait-for-load-state.ts", "should work with pages that have loaded before being connected to")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWorkWithPagesThatHaveLoadedBeforeBeingConnectedTo()
         {

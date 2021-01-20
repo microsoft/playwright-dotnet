@@ -19,9 +19,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         }
 
         // We skip all browser because crash uses internals.
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Crash</playwright-describe>
-        ///<playwright-it>should emit crash event when page crashes</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.Crash", "should emit crash event when page crashes")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldEmitCrashEventWhenPageCrashes()
         {
@@ -32,9 +30,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         }
 
         // We skip all browser because crash uses internals.
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Crash</playwright-describe>
-        ///<playwright-it>should throw on any action after page crashes</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.Crash", "should throw on any action after page crashes")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldThrowOnAnyActionAfterPageCrashes()
         {
@@ -47,9 +43,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         }
 
         // We skip all browser because crash uses internals.
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Crash</playwright-describe>
-        ///<playwright-it>should cancel waitForEvent when page crashes</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.Crash", "should cancel waitForEvent when page crashes")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldCancelWaitForEventWhenPageCrashes()
         {
@@ -61,9 +55,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         }
 
         // We skip all browser because crash uses internals.
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Crash</playwright-describe>
-        ///<playwright-it>should cancel navigation when page crashes</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.Crash", "should cancel navigation when page crashes")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldCancelNavigationWhenPageCrashes()
         {
@@ -78,9 +70,7 @@ namespace PlaywrightSharp.Tests.Page.Events
         }
 
         // We skip all browser because crash uses internals.
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>Page.Events.Crash</playwright-describe>
-        ///<playwright-it>should be able to close context when page crashes</playwright-it>
+        [PlaywrightTest("page.spec.js", "Page.Events.Crash", "should be able to close context when page crashes")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldBeAbleToCloseContextWhenPageCrashes()
         {

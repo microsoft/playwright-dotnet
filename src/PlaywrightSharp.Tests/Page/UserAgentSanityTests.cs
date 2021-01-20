@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.Page
         {
         }
 
-        ///<playwright-file>page.spec.js</playwright-file>
-        ///<playwright-describe>user-agent sanity</playwright-describe>
-        ///<playwright-it>should be a sane user agent</playwright-it>
+        [PlaywrightTest("page.spec.js", "user-agent sanity", "should be a sane user agent")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeASaneUserAgent()
         {

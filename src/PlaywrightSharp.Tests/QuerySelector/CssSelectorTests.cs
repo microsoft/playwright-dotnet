@@ -17,9 +17,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
         {
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>css selector</playwright-describe>
-        ///<playwright-it>should work for open shadow roots</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "css selector", "should work for open shadow roots")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForOpenShadowRoots()
         {
@@ -50,9 +48,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Null(await root3.QuerySelectorAsync("css:light=[attr*=\"value\"]"));
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>css selector</playwright-describe>
-        ///<playwright-it>should work with > combinator and spaces</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "css selector", "should work with > combinator and spaces")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCombinatorAndSpaces()
         {
@@ -73,9 +69,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("<span></span>", await Page.EvalOnSelectorAsync<string>("div[foo=\"bar\"][bar=\"baz\"] > span", "e => e.outerHTML"));
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>css selector</playwright-describe>
-        ///<playwright-it>should work with comma separated list</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "css selector", "should work with comma separated list")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCommaSeparatedList()
         {
@@ -91,9 +85,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal(4, await Page.EvalOnSelectorAllAsync<int>("css=#target,[data-testid=\"foo\"],[attr=\"value\\ space\"],span", "els => els.length"));
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>css selector</playwright-describe>
-        ///<playwright-it>should keep dom order with comma separated list</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "css selector", "should keep dom order with comma separated list")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldKeepDomOrderWithCommaSeparatedList()
         {
@@ -107,9 +99,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("SPAN,DIV", await Page.EvalOnSelectorAllAsync<string>("css=section >> *css = div, span >> css = y", "els => els.map(e => e.nodeName).join(',')"));
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>css selector</playwright-describe>
-        ///<playwright-it>should work with comma inside text</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "css selector", "should work with comma inside text")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCommaInsideText()
         {
@@ -121,9 +111,7 @@ namespace PlaywrightSharp.Tests.QuerySelector
             Assert.Equal("<span></span>", await Page.EvalOnSelectorAsync<string>("css=div[attr=\"hello,world!\"], span", "e => e.outerHTML"));
         }
 
-        ///<playwright-file>queryselector.spec.js</playwright-file>
-        ///<playwright-describe>css selector</playwright-describe>
-        ///<playwright-it>should work with attribute selectors</playwright-it>
+        [PlaywrightTest("queryselector.spec.js", "css selector", "should work with attribute selectors")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAttributeSelectors()
         {
