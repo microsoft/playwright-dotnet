@@ -55,8 +55,7 @@ namespace ApiChecker
             MapTestsCases(directoryInfo, options);
 
             // now, let's load the DLL and use some reflection-fu
-            var assembly = Assembly.Load(options.TestDLLName);
-            string attributeTypeName = typeof(PlaywrightSharp.Tests.PlaywrightTestAttribute).Name;
+            var assembly = Assembly.GetAssembly(typeof(PlaywrightSharp.Tests.PlaywrightTestAttribute));
 
             var attributes = assembly.DefinedTypes.SelectMany(
                 type => type.GetMethods().SelectMany(
@@ -67,8 +66,8 @@ namespace ApiChecker
             int noMatches = 0;
             int totalTests = 0;
 
-            List<(string, string)> missingTests = new();
-            List<KeyValuePair<(string FileName, string TestName), List<(string, string)>>> invalidMaps = new();
+            List<(string FileName, string TestName)> missingTests = new();
+            List<KeyValuePair<(string FileName, string TestName), List<(string FileName, string TestName)>>> invalidMaps = new();
             foreach (var atx in attributes)
             {
                 totalTests++;
@@ -87,8 +86,7 @@ namespace ApiChecker
                 }
                 else
                 {
-
-                    invalidMaps.Add(new KeyValuePair<(string FileName, string TestName), List<(string, string)>>((atx.TrimmedName, atx.TestName), potentialMatch.ToList()));
+                    invalidMaps.Add(new KeyValuePair<(string, string), List<(string, string)>>((atx.TrimmedName, atx.TestName), potentialMatch.ToList()));
                     potentialMatches++;
                 }
             }
@@ -104,9 +102,9 @@ namespace ApiChecker
             foreach (var invalidTest in invalidMaps)
             {
                 Console.WriteLine($"{invalidTest.Key.FileName}: {invalidTest.Key.TestName}");
-                foreach (var items in invalidTest.Value)
+                foreach (var (fileName, testName) in invalidTest.Value)
                 {
-                    Console.WriteLine($"\t{items.Item1}: {items.Item2}");
+                    Console.WriteLine($"\t{fileName}: {testName}");
                 }
             }
 
@@ -116,7 +114,7 @@ namespace ApiChecker
 
             foreach (var invalidTest in missingTests)
             {
-                Console.WriteLine($"{invalidTest.Item1}: {invalidTest.Item2}");
+                Console.WriteLine($"{invalidTest.FileName}: {invalidTest.TestName}");
             }
 
             Console.WriteLine($"Found/Mismatched/Missing: {fullMatches}/{potentialMatches}/{noMatches} out of {totalTests}");
@@ -150,9 +148,6 @@ namespace ApiChecker
         {
             [Option(Required = true, HelpText = "Location of spec files.")]
             public string SpecFileLocations { get; set; }
-
-            [Option(Required = false, HelpText = "The asembly containing the PlaywrightSharp tests.", Default = "PlaywrightSharp.Tests")]
-            public string TestDLLName { get; set; }
 
             [Option(Required = false, HelpText = "The search pattern to use for spec files.", Default = "*.spec.ts")]
             public string Pattern { get; set; }
