@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
 	<PropertyGroup>
-		<AssemblyVersion>0.170.2</AssemblyVersion>
+		<AssemblyVersion>0.180.0</AssemblyVersion>
 		<PackageVersion>$(AssemblyVersion)</PackageVersion>
-		<DriverVersion>1.8.0-next-1610341252000</DriverVersion>
+		<DriverVersion>1.8.0-next-1611093761000</DriverVersion>
 		<ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<Authors>Darío Kondratiuk</Authors>
