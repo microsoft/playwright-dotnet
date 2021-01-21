@@ -84,7 +84,8 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldNotSelectSingleOptionWhenSomeAttributesDoNotMatch()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
-            await Page.SelectOptionAsync("select", new SelectOption { Value = "green", Label = "Brown" });
+            await Page.EvalOnSelectorAsync("select", "s => s.value = undefined");
+            await Assert.ThrowsAsync<TimeoutException>(() => Page.SelectOptionAsync("select", new SelectOption { Value = "green", Label = "Brown" }));
             Assert.Empty(await Page.EvaluateAsync<string>("() => document.querySelector('select').value"));
         }
 
@@ -157,7 +158,7 @@ namespace PlaywrightSharp.Tests.Page
         public async Task ShouldReturnEmptyArrayOnNoMatchedValues()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
-            string[] result = await Page.SelectOptionAsync("select", "42", "abc");
+            string[] result = await Page.SelectOptionAsync("select", Array.Empty<string>());
             Assert.Empty(result);
         }
 
