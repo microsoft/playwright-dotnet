@@ -13,6 +13,6 @@ namespace PlaywrightSharp.Transport.Protocol
 
         public IEnumerable<ChannelBase> CrServiceWorkers { get; set; }
 
-        public string BrowserName { get; set; }
+        public bool IsChromium { get; set; }
     }
 }

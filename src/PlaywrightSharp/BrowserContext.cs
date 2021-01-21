@@ -93,7 +93,7 @@ namespace PlaywrightSharp
 
         internal List<Worker> ServiceWorkersList { get; } = new List<Worker>();
 
-        internal string BrowserName => _initializer.BrowserName;
+        internal bool IsChromium => _initializer.IsChromium;
 
         internal BrowserContextOptions Options { get; set; }
 
