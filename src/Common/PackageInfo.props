@@ -6,6 +6,7 @@
 		<DriverVersion>1.8.0</DriverVersion>
 		<ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
+		<NoDefaultExcludes>true</NoDefaultExcludes>
 		<Authors>Darío Kondratiuk</Authors>
 		<Owners>Darío Kondratiuk</Owners>
 		<PackageProjectUrl>https://github.com/microsoft/playwright-sharp</PackageProjectUrl>
