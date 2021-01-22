@@ -113,8 +113,8 @@ namespace PlaywrightSharp.BuildTasks
 
         private static Process GetProcess(string driverExecutablePath)
             => new()
-            {
-                StartInfo =
+        {
+            StartInfo =
                 {
                     FileName = driverExecutablePath,
                     UseShellExecute = false,
@@ -124,7 +124,7 @@ namespace PlaywrightSharp.BuildTasks
                     CreateNoWindow = true,
                     Arguments = "print-api-json"
                 },
-            };
+        };
 
         private static async Task UpdateBrowserVersionsAsync(string basePath, string driverVersion)
         {
