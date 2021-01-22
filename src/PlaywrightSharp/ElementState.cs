@@ -39,5 +39,10 @@ namespace PlaywrightSharp
         /// Element not <see cref="Enabled"/>.
         /// </summary>
         Disabled,
+
+        /// <summary>
+        /// Wait until the element is editable.
+        /// </summary>
+        Editable,
     }
 }

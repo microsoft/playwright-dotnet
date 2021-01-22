@@ -52,6 +52,7 @@ jobs:
         env:
           PRODUCT: ${{ matrix.product }}
         run: |
+          dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug -f net5.0
           dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f net5.0 --logger "trx;LogFileName=TestResults.xml"
       - name: Run tests (Linux)
         if: ${{ matrix.os == 'ubuntu-latest' }}
@@ -111,6 +112,7 @@ jobs:
         env:
           PRODUCT: CHROMIUM
         run: |
+          dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug -f netcoreapp3.1
           dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f netcoreapp3.1 --logger "trx;LogFileName=TestResults.xml"
       - name: Run tests (Linux)
         if: ${{ matrix.os == 'ubuntu-latest' }}

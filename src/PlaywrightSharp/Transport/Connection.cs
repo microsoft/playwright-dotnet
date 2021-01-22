@@ -374,7 +374,7 @@ namespace PlaywrightSharp.Transport
                 case ChannelOwnerType.BrowserContext:
                     var browserContextInitializer = initializer?.ToObject<BrowserContextInitializer>(GetDefaultJsonSerializerOptions());
 
-                    if (browserContextInitializer.BrowserName == BrowserType.Chromium)
+                    if (browserContextInitializer.IsChromium)
                     {
                         result = new ChromiumBrowserContext(parent, guid, browserContextInitializer);
                     }

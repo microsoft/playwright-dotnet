@@ -128,7 +128,7 @@ namespace PlaywrightSharp.Tests
                     Page.WaitForEventAsync(PageEvent.Popup),
                     Page.ClickAsync("#box" + i));
 
-                await popup.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+                await popup.Page.WaitForLoadStateAsync(LifecycleEvent.Networkidle);
             }
         }
 

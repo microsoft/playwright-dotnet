@@ -130,7 +130,7 @@ namespace PlaywrightSharp.BuildTasks
         {
             string readmePath = Path.Combine(basePath, "README.md");
             string readmeInDocsPath = Path.Combine(basePath, "docfx_project", "documentation", "index.md");
-            string playwrightVersion = string.Join(".", driverVersion.Split('.')[1].ToCharArray());
+            string playwrightVersion = driverVersion;
             var regex = new Regex("<!-- GEN:(.*?) -->(.*?)<!-- GEN:stop -->", RegexOptions.Compiled);
 
             string readme = await GetUpstreamReadmeAsync(playwrightVersion);
