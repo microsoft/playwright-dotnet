@@ -113,8 +113,8 @@ namespace PlaywrightSharp.BuildTasks
 
         private static Process GetProcess(string driverExecutablePath)
             => new()
-        {
-            StartInfo =
+            {
+                StartInfo =
                 {
                     FileName = driverExecutablePath,
                     UseShellExecute = false,
@@ -124,13 +124,13 @@ namespace PlaywrightSharp.BuildTasks
                     CreateNoWindow = true,
                     Arguments = "print-api-json"
                 },
-        };
+            };
 
         private static async Task UpdateBrowserVersionsAsync(string basePath, string driverVersion)
         {
             string readmePath = Path.Combine(basePath, "README.md");
             string readmeInDocsPath = Path.Combine(basePath, "docfx_project", "documentation", "index.md");
-            string playwrightVersion = string.Join(".", driverVersion.Split('.')[1].ToCharArray());
+            string playwrightVersion = driverVersion;
             var regex = new Regex("<!-- GEN:(.*?) -->(.*?)<!-- GEN:stop -->", RegexOptions.Compiled);
 
             string readme = await GetUpstreamReadmeAsync(playwrightVersion);
