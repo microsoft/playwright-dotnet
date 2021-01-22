@@ -5,12 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Namespace PlaywrightSharp
-   | Playwright Sharp </title>
+    <title> | Playwright Sharp </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Namespace PlaywrightSharp
-   | Playwright Sharp ">
-    <meta name="generator" content="docfx 2.45.1.0">
+    <meta name="title" content=" | Playwright Sharp ">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -62,11 +60,11 @@
       <div class="container body-content">
         
         <div id="search-results">
-          <div class="search-list"></div>
+          <div class="search-list">Search Results for <span></span></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination"></ul>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
@@ -81,8 +79,7 @@
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="PlaywrightSharp">
   
-  <h1 id="PlaywrightSharp" data-uid="PlaywrightSharp" class="text-break">Namespace PlaywrightSharp
-  </h1>
+  <h1 id="PlaywrightSharp" data-uid="PlaywrightSharp" class="text-break"></h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="markdown level0 remarks"></div>
@@ -92,14 +89,19 @@
       <section><p><see cref="!:IBrowserContext.ExposeBindingAsync(string, System.Action&lt;BindingSource>)"></see> caller information.</p>
 </section>
       <h4><a class="xref" href="PlaywrightSharp.Browser.html">Browser</a></h4>
-      <section></section>
+      <section><p>A Browser is created when Playwright connects to a browser instance.</p>
+</section>
       <h4><a class="xref" href="PlaywrightSharp.BrowserContext.html">BrowserContext</a></h4>
-      <section></section>
+      <section><p>BrowserContexts provide a way to operate multiple independent browser sessions.
+If a <a class="xref" href="PlaywrightSharp.IPage.html">IPage</a> opens another page, e.g.with a window.open call, the popup will belong to the parent page's browser context.
+PlaywrightSharp allows creation of &quot;incognito&quot; browser contexts with <a class="xref" href="PlaywrightSharp.IBrowser.html#PlaywrightSharp_IBrowser_NewContextAsync_PlaywrightSharp_BrowserContextOptions_">NewContextAsync(BrowserContextOptions)</a> method. &quot;Incognito&quot; browser contexts don't write any browsing data to disk.</p>
+</section>
       <h4><a class="xref" href="PlaywrightSharp.BrowserContextOptions.html">BrowserContextOptions</a></h4>
       <section><p><a class="xref" href="PlaywrightSharp.IBrowser.html#PlaywrightSharp_IBrowser_NewContextAsync_PlaywrightSharp_BrowserContextOptions_">NewContextAsync(BrowserContextOptions)</a>.</p>
 </section>
       <h4><a class="xref" href="PlaywrightSharp.BrowserType.html">BrowserType</a></h4>
-      <section></section>
+      <section><p>BrowserType provides methods to launch a specific browser instance or connect to an existing one.</p>
+</section>
       <h4><a class="xref" href="PlaywrightSharp.ChromiumCoverage.html">ChromiumCoverage</a></h4>
       <section><p>Coverage gathers information about parts of JavaScript and CSS that were used by the page..</p>
 </section>
@@ -145,7 +147,8 @@ Download event is emitted once the download starts.</p>
       <section><p>Messages coming from the Playwright Driver.</p>
 </section>
       <h4><a class="xref" href="PlaywrightSharp.ElementHandle.html">ElementHandle</a></h4>
-      <section></section>
+      <section><p>It represents an in-page DOM element.</p>
+</section>
       <h4><a class="xref" href="PlaywrightSharp.EnvironmentVariables.html">EnvironmentVariables</a></h4>
       <section><p>Environment variables used by the Playwright.</p>
 </section>
@@ -156,7 +159,8 @@ Download event is emitted once the download starts.</p>
       <section><p>Payload for <a class="xref" href="PlaywrightSharp.IElementHandle.html#PlaywrightSharp_IElementHandle_SetInputFilesAsync_PlaywrightSharp_FilePayload_System_Nullable_System_Int32__System_Nullable_System_Boolean__">SetInputFilesAsync(FilePayload, Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</a>, <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_SetInputFilesAsync_System_String_PlaywrightSharp_FilePayload_System_Nullable_System_Int32__System_Nullable_System_Boolean__">SetInputFilesAsync(String, FilePayload, Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</a> and <a class="xref" href="PlaywrightSharp.IFrame.html#PlaywrightSharp_IFrame_SetInputFilesAsync_System_String_PlaywrightSharp_FilePayload_System_Nullable_System_Int32__System_Nullable_System_Boolean__">SetInputFilesAsync(String, FilePayload, Nullable&lt;Int32&gt;, Nullable&lt;Boolean&gt;)</a>.</p>
 </section>
       <h4><a class="xref" href="PlaywrightSharp.Frame.html">Frame</a></h4>
-      <section></section>
+      <section><p>At every point of time, page exposes its current frame tree via the <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_MainFrame">MainFrame</a> and <a class="xref" href="PlaywrightSharp.IFrame.html#PlaywrightSharp_IFrame_ChildFrames">ChildFrames</a> methods.</p>
+</section>
       <h4><a class="xref" href="PlaywrightSharp.FrameEventArgs.html">FrameEventArgs</a></h4>
       <section><p><a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_FrameAttached">FrameAttached</a>, <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_FrameDetached">FrameDetached</a> and <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_FrameNavigated">FrameNavigated</a> arguments.</p>
 </section>
@@ -176,7 +180,8 @@ Download event is emitted once the download starts.</p>
       <section><p>JS Coverage function info. See <a class="xref" href="PlaywrightSharp.JSCoverageEntry.html#PlaywrightSharp_JSCoverageEntry_Functions">Functions</a>.</p>
 </section>
       <h4><a class="xref" href="PlaywrightSharp.JSHandle.html">JSHandle</a></h4>
-      <section></section>
+      <section><p>JSHandle represents an in-page JavaScript object. JSHandles can be created with the <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_EvaluateHandleAsync_System_String_System_Object_">EvaluateHandleAsync(String, Object)</a> method.</p>
+</section>
       <h4><a class="xref" href="PlaywrightSharp.KeyDefinition.html">KeyDefinition</a></h4>
       <section><p>Represents a definition of a keyboard key.</p>
 </section>
@@ -185,6 +190,9 @@ Download event is emitted once the download starts.</p>
 </section>
       <h4><a class="xref" href="PlaywrightSharp.LaunchOptions.html">LaunchOptions</a></h4>
       <section><p>Options for <a class="xref" href="PlaywrightSharp.IBrowserType.html#PlaywrightSharp_IBrowserType_LaunchAsync_PlaywrightSharp_LaunchOptions_">LaunchAsync(LaunchOptions)</a>.</p>
+</section>
+      <h4><a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html">LaunchOptionsBase</a></h4>
+      <section><p>Base class for <a class="xref" href="PlaywrightSharp.LaunchOptions.html">LaunchOptions</a> and <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html">LaunchOptionsBase</a>.</p>
 </section>
       <h4><a class="xref" href="PlaywrightSharp.LaunchPersistentOptions.html">LaunchPersistentOptions</a></h4>
       <section><p>Options for <a class="xref" href="PlaywrightSharp.IBrowserType.html#PlaywrightSharp_IBrowserType_LaunchPersistentContextAsync_System_String_PlaywrightSharp_LaunchPersistentOptions_">LaunchPersistentContextAsync(String, LaunchPersistentOptions)</a>.</p>
@@ -205,7 +213,8 @@ Download event is emitted once the download starts.</p>
       <section><p>Cookie data.</p>
 </section>
       <h4><a class="xref" href="PlaywrightSharp.Page.html">Page</a></h4>
-      <section></section>
+      <section><p>Page provides methods to interact with a single tab or extension background page in Chromium. One Browser instance might have multiple Page instances.</p>
+</section>
       <h4><a class="xref" href="PlaywrightSharp.PageErrorEventArgs.html">PageErrorEventArgs</a></h4>
       <section><p>Page error event arguments.</p>
 </section>
@@ -219,7 +228,8 @@ Download event is emitted once the download starts.</p>
       <section><p>Payload information.</p>
 </section>
       <h4><a class="xref" href="PlaywrightSharp.Playwright.html">Playwright</a></h4>
-      <section></section>
+      <section><p>IPlaywright provides methods to interact with the playwright server.</p>
+</section>
       <h4><a class="xref" href="PlaywrightSharp.PlaywrightEvent-1.html">PlaywrightEvent&lt;T&gt;</a></h4>
       <section><p>Events for <a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_WaitForEventAsync__1_PlaywrightSharp_PlaywrightEvent___0__Func___0_System_Boolean__System_Nullable_System_Int32__">WaitForEventAsync&lt;T&gt;(PlaywrightEvent&lt;T&gt;, Func&lt;T, Boolean&gt;, Nullable&lt;Int32&gt;)</a> and <a class="xref" href="PlaywrightSharp.IBrowserContext.html#PlaywrightSharp_IBrowserContext_WaitForEventAsync__1_PlaywrightSharp_PlaywrightEvent___0__Func___0_System_Boolean__System_Nullable_System_Int32__">WaitForEventAsync&lt;T&gt;(PlaywrightEvent&lt;T&gt;, Func&lt;T, Boolean&gt;, Nullable&lt;Int32&gt;)</a>.</p>
 </section>
@@ -242,7 +252,9 @@ Download event is emitted once the download starts.</p>
       <section><p>Bounding box data returned by <a class="xref" href="PlaywrightSharp.IElementHandle.html#PlaywrightSharp_IElementHandle_GetBoundingBoxAsync">GetBoundingBoxAsync()</a>.</p>
 </section>
       <h4><a class="xref" href="PlaywrightSharp.Request.html">Request</a></h4>
-      <section></section>
+      <section><p>Whenever the page sends a request, the following events are emitted by an <a class="xref" href="PlaywrightSharp.IPage.html">IPage</a>.
+<a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_Request">Request</a> emitted when the request is issued by the page.</p>
+</section>
       <h4><a class="xref" href="PlaywrightSharp.RequestEventArgs.html">RequestEventArgs</a></h4>
       <section><p>Arguments used by <a class="xref" href="PlaywrightSharp.IPage.html">IPage</a> events.</p>
 </section>
@@ -253,7 +265,8 @@ Download event is emitted once the download starts.</p>
       <section><p>See <a class="xref" href="PlaywrightSharp.IRequest.html#PlaywrightSharp_IRequest_Timing">Timing</a>.</p>
 </section>
       <h4><a class="xref" href="PlaywrightSharp.Response.html">Response</a></h4>
-      <section></section>
+      <section><p>Represents responses which are received by page.</p>
+</section>
       <h4><a class="xref" href="PlaywrightSharp.ResponseEventArgs.html">ResponseEventArgs</a></h4>
       <section><p><a class="xref" href="PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_Response">Response</a> arguments.</p>
 </section>
@@ -285,7 +298,8 @@ Download event is emitted once the download starts.</p>
       <section><p>View port data.</p>
 </section>
       <h4><a class="xref" href="PlaywrightSharp.WebSocket.html">WebSocket</a></h4>
-      <section></section>
+      <section><p>Represents websocket connections in the page.</p>
+</section>
       <h4><a class="xref" href="PlaywrightSharp.WebSocketErrorEventArgs.html">WebSocketErrorEventArgs</a></h4>
       <section><p>See <a class="xref" href="PlaywrightSharp.IWebSocket.html#PlaywrightSharp_IWebSocket_SocketError">SocketError</a>.</p>
 </section>
@@ -439,7 +453,8 @@ Methods on the touchscreen can only be used in browser contexts that have been i
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+                <h5>In This Article</h5>
+                <div></div>
               </nav>
             </div>
           </div>

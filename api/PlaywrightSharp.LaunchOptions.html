@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class LaunchOptions
    | Playwright Sharp ">
-    <meta name="generator" content="docfx 2.45.1.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -62,11 +62,11 @@
       <div class="container body-content">
         
         <div id="search-results">
-          <div class="search-list"></div>
+          <div class="search-list">Search Results for <span></span></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination"></ul>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
@@ -90,240 +90,80 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">LaunchOptions</span></div>
-      <div class="level2"><a class="xref" href="PlaywrightSharp.LaunchPersistentOptions.html">LaunchPersistentOptions</a></div>
+    <div class="level1"><a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html">LaunchOptionsBase</a></div>
+    <div class="level2"><span class="xref">LaunchOptions</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_Headless">LaunchOptionsBase.Headless</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_Args">LaunchOptionsBase.Args</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_UserDataDir">LaunchOptionsBase.UserDataDir</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_Devtools">LaunchOptionsBase.Devtools</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_ExecutablePath">LaunchOptionsBase.ExecutablePath</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_DownloadsPath">LaunchOptionsBase.DownloadsPath</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_IgnoreHTTPSErrors">LaunchOptionsBase.IgnoreHTTPSErrors</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_Timeout">LaunchOptionsBase.Timeout</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_DumpIO">LaunchOptionsBase.DumpIO</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_SlowMo">LaunchOptionsBase.SlowMo</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_IgnoreAllDefaultArgs">LaunchOptionsBase.IgnoreAllDefaultArgs</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_HandleSIGINT">LaunchOptionsBase.HandleSIGINT</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_HandleSIGTERM">LaunchOptionsBase.HandleSIGTERM</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_HandleSIGHUP">LaunchOptionsBase.HandleSIGHUP</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_ChromiumSandbox">LaunchOptionsBase.ChromiumSandbox</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_IgnoreDefaultArgs">LaunchOptionsBase.IgnoreDefaultArgs</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_Env">LaunchOptionsBase.Env</a>
+    </div>
+    <div>
+      <a class="xref" href="PlaywrightSharp.LaunchOptionsBase.html#PlaywrightSharp_LaunchOptionsBase_Proxy">LaunchOptionsBase.Proxy</a>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PlaywrightSharp.html">PlaywrightSharp</a></h6>
   <h6><strong>Assembly</strong>: PlaywrightSharp.dll</h6>
   <h5 id="PlaywrightSharp_LaunchOptions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class LaunchOptions : object</code></pre>
+    <pre><code class="lang-csharp hljs">public class LaunchOptions : LaunchOptionsBase</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20Args&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L20">Improve this Doc</a>
+    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20FirefoxUserPrefs&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/5d0d2ab80302e1cad30ca6a2d662551af61a6ecc/src/PlaywrightSharp/LaunchOptions.cs/%23L15">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L20">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_Args_" data-uid="PlaywrightSharp.LaunchOptions.Args*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_Args" data-uid="PlaywrightSharp.LaunchOptions.Args">Args</h4>
-  <div class="markdown level1 summary"><p>Additional arguments to pass to the browser instance.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string[] Args { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span>[]</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20ChromiumSandbox&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L86">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L86">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_ChromiumSandbox_" data-uid="PlaywrightSharp.LaunchOptions.ChromiumSandbox*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_ChromiumSandbox" data-uid="PlaywrightSharp.LaunchOptions.ChromiumSandbox">ChromiumSandbox</h4>
-  <div class="markdown level1 summary"><p>Enable Chromium sandboxing. Defaults to true.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool? ChromiumSandbox { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20Devtools&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L30">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L30">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_Devtools_" data-uid="PlaywrightSharp.LaunchOptions.Devtools*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_Devtools" data-uid="PlaywrightSharp.LaunchOptions.Devtools">Devtools</h4>
-  <div class="markdown level1 summary"><p>Whether to auto-open DevTools panel for each tab. If this option is true, the headless option will be set false.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool? Devtools { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20DownloadsPath&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L40">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L40">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_DownloadsPath_" data-uid="PlaywrightSharp.LaunchOptions.DownloadsPath*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_DownloadsPath" data-uid="PlaywrightSharp.LaunchOptions.DownloadsPath">DownloadsPath</h4>
-  <div class="markdown level1 summary"><p>If specified, accepted downloads are downloaded into this folder. Otherwise, temporary folder is created and is deleted when browser is closed.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string DownloadsPath { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20DumpIO&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L55">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L55">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_DumpIO_" data-uid="PlaywrightSharp.LaunchOptions.DumpIO*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_DumpIO" data-uid="PlaywrightSharp.LaunchOptions.DumpIO">DumpIO</h4>
-  <div class="markdown level1 summary"><p>Whether to pipe browser process stdout and stderr into process.stdout and process.stderr. Defaults to false.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool? DumpIO { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20Env&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L96">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L96">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_Env_" data-uid="PlaywrightSharp.LaunchOptions.Env*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_Env" data-uid="PlaywrightSharp.LaunchOptions.Env">Env</h4>
-  <div class="markdown level1 summary"><p>Specify environment variables that will be visible to browser. Defaults to Environment variables.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Dictionary&lt;string, string&gt; Env { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Dictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.String</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20ExecutablePath&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L35">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L35">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_ExecutablePath_" data-uid="PlaywrightSharp.LaunchOptions.ExecutablePath*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_ExecutablePath" data-uid="PlaywrightSharp.LaunchOptions.ExecutablePath">ExecutablePath</h4>
-  <div class="markdown level1 summary"><p>Path to a browser executable to run instead of the bundled one.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string ExecutablePath { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20FirefoxUserPrefs&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L101">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L101">View Source</a>
+    <a href="https://github.com/microsoft/playwright-sharp/blob/5d0d2ab80302e1cad30ca6a2d662551af61a6ecc/src/PlaywrightSharp/LaunchOptions.cs/#L15">View Source</a>
   </span>
   <a id="PlaywrightSharp_LaunchOptions_FirefoxUserPrefs_" data-uid="PlaywrightSharp.LaunchOptions.FirefoxUserPrefs*"></a>
   <h4 id="PlaywrightSharp_LaunchOptions_FirefoxUserPrefs" data-uid="PlaywrightSharp.LaunchOptions.FirefoxUserPrefs">FirefoxUserPrefs</h4>
@@ -349,356 +189,14 @@
       </tr>
     </tbody>
   </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20HandleSIGHUP&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L81">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L81">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_HandleSIGHUP_" data-uid="PlaywrightSharp.LaunchOptions.HandleSIGHUP*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_HandleSIGHUP" data-uid="PlaywrightSharp.LaunchOptions.HandleSIGHUP">HandleSIGHUP</h4>
-  <div class="markdown level1 summary"><p>Close the browser process on SIGHUP. Defaults to true.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool? HandleSIGHUP { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20HandleSIGINT&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L71">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L71">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_HandleSIGINT_" data-uid="PlaywrightSharp.LaunchOptions.HandleSIGINT*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_HandleSIGINT" data-uid="PlaywrightSharp.LaunchOptions.HandleSIGINT">HandleSIGINT</h4>
-  <div class="markdown level1 summary"><p>Close the browser process on Ctrl-C. Defaults to true.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool? HandleSIGINT { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20HandleSIGTERM&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L76">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L76">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_HandleSIGTERM_" data-uid="PlaywrightSharp.LaunchOptions.HandleSIGTERM*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_HandleSIGTERM" data-uid="PlaywrightSharp.LaunchOptions.HandleSIGTERM">HandleSIGTERM</h4>
-  <div class="markdown level1 summary"><p>Close the browser process on SIGTERM. Defaults to true.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool? HandleSIGTERM { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20Headless&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L15">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L15">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_Headless_" data-uid="PlaywrightSharp.LaunchOptions.Headless*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_Headless" data-uid="PlaywrightSharp.LaunchOptions.Headless">Headless</h4>
-  <div class="markdown level1 summary"><p>Whether to run browser in headless mode. Defaults to true unless the devtools option is true.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool? Headless { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20IgnoredDefaultArgs&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L91">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L91">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_IgnoredDefaultArgs_" data-uid="PlaywrightSharp.LaunchOptions.IgnoredDefaultArgs*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_IgnoredDefaultArgs" data-uid="PlaywrightSharp.LaunchOptions.IgnoredDefaultArgs">IgnoredDefaultArgs</h4>
-  <div class="markdown level1 summary"><p>if <a class="xref" href="PlaywrightSharp.LaunchOptions.html#PlaywrightSharp_LaunchOptions_IgnoreDefaultArgs">IgnoreDefaultArgs</a> is set to <code>false</code> this list will be used to filter default arguments.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string[] IgnoredDefaultArgs { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span>[]</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20IgnoreDefaultArgs&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L66">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L66">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_IgnoreDefaultArgs_" data-uid="PlaywrightSharp.LaunchOptions.IgnoreDefaultArgs*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_IgnoreDefaultArgs" data-uid="PlaywrightSharp.LaunchOptions.IgnoreDefaultArgs">IgnoreDefaultArgs</h4>
-  <div class="markdown level1 summary"><p>If true, Playwright does not pass its own configurations args and only uses the ones from args.
-Dangerous option; use with care. Defaults to false.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool? IgnoreDefaultArgs { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20IgnoreHTTPSErrors&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L45">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L45">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_IgnoreHTTPSErrors_" data-uid="PlaywrightSharp.LaunchOptions.IgnoreHTTPSErrors*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_IgnoreHTTPSErrors" data-uid="PlaywrightSharp.LaunchOptions.IgnoreHTTPSErrors">IgnoreHTTPSErrors</h4>
-  <div class="markdown level1 summary"><p>Whether to ignore HTTPS errors during navigation. Defaults to false.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool? IgnoreHTTPSErrors { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20Proxy&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L106">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L106">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_Proxy_" data-uid="PlaywrightSharp.LaunchOptions.Proxy*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_Proxy" data-uid="PlaywrightSharp.LaunchOptions.Proxy">Proxy</h4>
-  <div class="markdown level1 summary"><p>Network proxy settings.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ProxySettings Proxy { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="PlaywrightSharp.ProxySettings.html">ProxySettings</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20SlowMo&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L60">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L60">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_SlowMo_" data-uid="PlaywrightSharp.LaunchOptions.SlowMo*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_SlowMo" data-uid="PlaywrightSharp.LaunchOptions.SlowMo">SlowMo</h4>
-  <div class="markdown level1 summary"><p>Slows down PlaywrightSharp operations by the specified amount of milliseconds. Useful so that you can see what is going on.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int? SlowMo { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20Timeout&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L50">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L50">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_Timeout_" data-uid="PlaywrightSharp.LaunchOptions.Timeout*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_Timeout" data-uid="PlaywrightSharp.LaunchOptions.Timeout">Timeout</h4>
-  <div class="markdown level1 summary"><p>Maximum time in milliseconds to wait for the browser instance to start.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int? Timeout { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20UserDataDir&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L25">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L25">View Source</a>
-  </span>
-  <a id="PlaywrightSharp_LaunchOptions_UserDataDir_" data-uid="PlaywrightSharp.LaunchOptions.UserDataDir*"></a>
-  <h4 id="PlaywrightSharp_LaunchOptions_UserDataDir" data-uid="PlaywrightSharp.LaunchOptions.UserDataDir">UserDataDir</h4>
-  <div class="markdown level1 summary"><p>Path to a User Data Directory.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string UserDataDir { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20ToPersistentOptions()&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L112">Improve this Doc</a>
+    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20ToPersistentOptions()&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/5d0d2ab80302e1cad30ca6a2d662551af61a6ecc/src/PlaywrightSharp/LaunchOptions.cs/%23L21">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L112">View Source</a>
+    <a href="https://github.com/microsoft/playwright-sharp/blob/5d0d2ab80302e1cad30ca6a2d662551af61a6ecc/src/PlaywrightSharp/LaunchOptions.cs/#L21">View Source</a>
   </span>
   <a id="PlaywrightSharp_LaunchOptions_ToPersistentOptions_" data-uid="PlaywrightSharp.LaunchOptions.ToPersistentOptions*"></a>
   <h4 id="PlaywrightSharp_LaunchOptions_ToPersistentOptions" data-uid="PlaywrightSharp.LaunchOptions.ToPersistentOptions">ToPersistentOptions()</h4>
@@ -737,15 +235,16 @@ Dangerous option; use with care. Defaults to false.</p>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20LaunchOptions&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/%23L10" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/microsoft/playwright-sharp/issues/new?title=Improve%20LaunchOptions&amp;body=Explain%20how%20would%20you%20like%20this%20document%20to%20be%20improved.%0ASource URL: https://github.com/microsoft/playwright-sharp/blob/5d0d2ab80302e1cad30ca6a2d662551af61a6ecc/src/PlaywrightSharp/LaunchOptions.cs/%23L10" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/microsoft/playwright-sharp/blob/88a62f3853eed2f1cf1e35d501c5c5c23707ab08/src/PlaywrightSharp/LaunchOptions.cs/#L10" class="contribution-link">View Source</a>
+                    <a href="https://github.com/microsoft/playwright-sharp/blob/5d0d2ab80302e1cad30ca6a2d662551af61a6ecc/src/PlaywrightSharp/LaunchOptions.cs/#L10" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+                <h5>In This Article</h5>
+                <div></div>
               </nav>
             </div>
           </div>
