@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<AssemblyVersion>0.180.0</AssemblyVersion>
 		<PackageVersion>$(AssemblyVersion)</PackageVersion>
-		<DriverVersion>1.8.0-next-1611093761000</DriverVersion>
+		<DriverVersion>1.8.0</DriverVersion>
 		<ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<Authors>Darío Kondratiuk</Authors>
