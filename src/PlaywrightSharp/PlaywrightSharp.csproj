@@ -52,6 +52,28 @@
 		</ConvertToAbsolutePath>
 		<PlaywrightSharp.BuildTasks.DriverDownloader BasePath="$(BasePath)" DriverVersion="$(DriverVersion)" />
 	</Target>
+  <Target Name="Include Drivers" AfterTargets="Download Drivers">
+    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+      <DriverFiles Include="runtimes\win-x64\**">
+        <InProject>false</InProject>
+      </DriverFiles>
+    </ItemGroup>
+    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+      <DriverFiles Include="runtimes\osx\**">
+        <InProject>false</InProject>
+      </DriverFiles>
+    </ItemGroup>
+    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+      <DriverFiles Include="runtimes\unix\**">
+        <InProject>false</InProject>
+      </DriverFiles>
+    </ItemGroup>
+    <ItemGroup>
+      <ContentWithTargetPath Include="@(DriverFiles)" TargetPath="%(RecursiveDir)%(Filename)%(Extension)">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </ContentWithTargetPath>
+    </ItemGroup>
+	</Target>
 	<UsingTask TaskName="PlaywrightSharp.BuildTasks.ApiChecker" AssemblyFile="$(MSBuildThisFileDirectory)/../tools/PlaywrightSharp.BuildTasks/$(OutDir)/PlaywrightSharp.BuildTasks.dll" />
 	<Target Name="Check API" AfterTargets="CopyFilesToOutputDirectory">
 		<ConvertToAbsolutePath Paths="$(ProjectDir)\..\..\">
@@ -59,24 +81,6 @@
 		</ConvertToAbsolutePath>
 		<PlaywrightSharp.BuildTasks.ApiChecker BasePath="$(BasePath)" AssemblyPath="$(TargetDir)" />
 	</Target>
-	<ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-		<ContentWithTargetPath Include="runtimes\win-x64\**">
-			<TargetPath>%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</ContentWithTargetPath>
-	</ItemGroup>
-	<ItemGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
-		<ContentWithTargetPath Include="runtimes\osx\**">
-			<TargetPath>%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</ContentWithTargetPath>
-	</ItemGroup>
-	<ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-		<ContentWithTargetPath Include="runtimes\unix\**">
-			<TargetPath>%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</ContentWithTargetPath>
-	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\tools\PlaywrightSharp.BuildTasks\PlaywrightSharp.BuildTasks.csproj" ReferenceOutputAssembly="false" />
 	</ItemGroup>
