@@ -68,7 +68,16 @@ contextOptions.Permissions = new[] { ContextPermission.Geolocation };
 var context = await browser.NewContextAsync(contextOptions);
 var page = await context.NewPageAsync();
 await page.GoToAsync("https://maps.google.com");
-page.ClickAsync("text='Your location'"); //
+await page.ClickAsync("text='Your location'");
+await page.WaitForLoadStateAsync(LifecycleEvent.Networkidle);
+
+try {
+    await page.ClickAsync("text=STAY ON WEB");
+    await page.WaitForTimeoutAsync(500); // Modal takes some time to fade out.
+} catch {
+    // In case modal is not displayed
+}
+
 await page.ScreenshotAsync("colosseum-iphone.png");
 ```
 
