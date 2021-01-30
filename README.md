@@ -67,19 +67,18 @@ contextOptions.Permissions = new[] { ContextPermission.Geolocation };
 
 var context = await browser.NewContextAsync(contextOptions);
 var page = await context.NewPageAsync();
-await page.GoToAsync("https://maps.google.com");
-await page.ClickAsync("text='Your location'");
+await page.GoToAsync("https://www.google.com/maps");
+
+const string MY_LOCATION_BTN_SELECTOR = ".ml-button-my-location-fab";
+await page.ClickAsync(MY_LOCATION_BTN_SELECTOR);
+
 await page.WaitForLoadStateAsync(LifecycleEvent.Networkidle);
 
-if ((await page.QuerySelectorAsync("text=STAY ON WEB")) != null)
+const string STAY_ON_WEB_BTN_SELECTOR = ".ml-promotion-no-thanks";
+if ((await page.QuerySelectorAsync(STAY_ON_WEB_BTN_SELECTOR)) != null)
 {
-    await page.ClickAsync("text=STAY ON WEB");
-    await page.WaitForTimeoutAsync(500); // Modal takes some time to fade out.
-}
-else if ((await page.QuerySelectorAsync("text=NOT RIGHT NOW")) != null)
-{
-    await page.ClickAsync("text=NOT RIGHT NOW");
-    await page.WaitForTimeoutAsync(500); // Modal takes some time to fade out.
+    await page.ClickAsync(STAY_ON_WEB_BTN_SELECTOR);
+    await page.WaitForTimeoutAsync(500);
 }
 
 await page.ScreenshotAsync("colosseum-iphone.png");
