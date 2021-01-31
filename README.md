@@ -69,16 +69,12 @@ var context = await browser.NewContextAsync(contextOptions);
 var page = await context.NewPageAsync();
 await page.GoToAsync("https://www.google.com/maps");
 
-const string MY_LOCATION_BTN_SELECTOR = ".ml-button-my-location-fab";
-await page.ClickAsync(MY_LOCATION_BTN_SELECTOR);
-
+await page.ClickAsync(".ml-button-my-location-fab");
 await page.WaitForLoadStateAsync(LifecycleEvent.Networkidle);
 
-const string STAY_ON_WEB_BTN_SELECTOR = ".ml-promotion-no-thanks";
-if ((await page.QuerySelectorAsync(STAY_ON_WEB_BTN_SELECTOR)) != null)
+if ((await page.QuerySelectorAsync(".ml-promotion-no-thanks")) != null)
 {
-    await page.ClickAsync(STAY_ON_WEB_BTN_SELECTOR);
-    await page.WaitForTimeoutAsync(500);
+    await page.ClickAsync(".ml-promotion-no-thanks");
 }
 
 await page.ScreenshotAsync("colosseum-iphone.png");
