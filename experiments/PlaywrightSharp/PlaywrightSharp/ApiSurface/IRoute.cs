@@ -62,7 +62,7 @@ namespace PlaywrightSharp
 		/// An example of fulfilling all requests with 404 responses:
 		/// An example of serving static file:
 		/// </summary>
-		Task FulfillAsync(byte[] body, string contentType, IEnumerable<KeyValuePair<string, string>> headers, path path, int status);
+		Task FulfillAsync(byte[] body, string contentType, IEnumerable<KeyValuePair<string, string>> headers, string path, int status);
 		/// <summary>
 		/// A request to be routed.
 		/// </summary>

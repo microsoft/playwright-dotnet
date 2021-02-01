@@ -172,7 +172,7 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// Returns storage state for this browser context, contains current cookies and local storage snapshot.
 		/// </summary>
-		Task<ChromiumBrowserContextStorageStateResult> StorageStateAsync(path path);
+		Task<ChromiumBrowserContextStorageStateResult> StorageStateAsync(string path);
 		/// <summary>
 		/// Removes a route created with <see cref="IBrowserContext.RouteAsync"/>. When {PARAM} is not specified, removes all routes
 		/// for the {PARAM}.

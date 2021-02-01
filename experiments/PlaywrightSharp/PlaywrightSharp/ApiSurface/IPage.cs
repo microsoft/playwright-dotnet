@@ -121,12 +121,12 @@ namespace PlaywrightSharp
 		/// Adds a `<script>` tag into the page with the desired url or content. Returns the added tag when the script's onload fires or when the script content was injected into frame.
 		/// Shortcut for main frame's <see cref="IFrame.AddScriptTagAsync"/>.
 		/// </summary>
-		Task<IElementHandle> AddScriptTagAsync(string content, path path, string type, string url);
+		Task<IElementHandle> AddScriptTagAsync(string content, string path, string type, string url);
 		/// <summary>
 		/// Adds a `<link rel="stylesheet">` tag into the page with the desired url or a `<style type="text/css">` tag with the content. Returns the added tag when the stylesheet's onload fires or when the CSS content was injected into frame.
 		/// Shortcut for main frame's <see cref="IFrame.AddStyleTagAsync"/>.
 		/// </summary>
-		Task<IElementHandle> AddStyleTagAsync(string content, path path, string url);
+		Task<IElementHandle> AddStyleTagAsync(string content, string path, string url);
 		/// <summary>
 		/// Brings page to front (activates tab).
 		/// </summary>
@@ -424,7 +424,7 @@ namespace PlaywrightSharp
 		/// <item><description>`A5`: 5.83in x 8.27in</description></item>
 		/// <item><description>`A6`: 4.13in x 5.83in</description></item>
 		/// </summary>
-		Task<byte[]> PdfAsync(bool displayHeaderFooter, string footerTemplate, string format, string headerTemplate, string height, bool landscape, PageMargin margin, string pageRanges, path path, bool preferCSSPageSize, bool printBackground, float scale, string width);
+		Task<byte[]> PdfAsync(bool displayHeaderFooter, string footerTemplate, string format, string headerTemplate, string height, bool landscape, PageMargin margin, string pageRanges, string path, bool preferCSSPageSize, bool printBackground, float scale, string width);
 		/// <summary>
 		/// Focuses the element, and then uses <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.
 		/// {PARAM} can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a> value
@@ -456,7 +456,7 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// Returns the buffer with the captured screenshot.
 		/// </summary>
-		Task<byte[]> ScreenshotAsync(PageClip clip, bool fullPage, bool omitBackground, path path, int quality, float timeout, Type type);
+		Task<byte[]> ScreenshotAsync(PageClip clip, bool fullPage, bool omitBackground, string path, int quality, float timeout, Type type);
 		/// <summary>
 		/// Returns the array of option values that have been successfully selected.
 		/// Triggers a `change` and `input` event once all the provided options have been selected. If there's no `
@@ -490,7 +490,7 @@ namespace PlaywrightSharp
 		/// Sets the value of the file input to these file paths or files. If some of the `filePaths` are relative paths, then they are
 		/// resolved relative to the the current working directory. For empty array, clears the selected files.
 		/// </summary>
-		Task SetInputFilesAsync(string selector, path[] files, bool noWaitAfter, float timeout);
+		Task SetInputFilesAsync(string selector, string[] files, bool noWaitAfter, float timeout);
 		/// <summary>
 		/// In the case of multiple pages in a single browser, each page can have its own viewport size. However, 
 		/// <see cref="IBrowser.NewContextAsync"/> allows to set viewport size (and more) for all pages in the context at once.

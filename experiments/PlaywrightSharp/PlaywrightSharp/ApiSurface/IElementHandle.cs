@@ -252,7 +252,7 @@ namespace PlaywrightSharp
 		/// This method waits for the <a href="./actionability.md">actionability</a> checks, then scrolls element into view before taking
 		/// a screenshot. If the element is detached from DOM, the method throws an error.
 		/// </summary>
-		Task<byte[]> ScreenshotAsync(bool omitBackground, path path, int quality, float timeout, Type type);
+		Task<byte[]> ScreenshotAsync(bool omitBackground, string path, int quality, float timeout, Type type);
 		/// <summary>
 		/// This method waits for <a href="./actionability.md">actionability</a> checks, then tries to scroll element into view, unless
 		/// it is completely visible as defined by <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">IntersectionObserver</a>'s
@@ -278,7 +278,7 @@ namespace PlaywrightSharp
 		/// Sets the value of the file input to these file paths or files. If some of the `filePaths` are relative paths, then they are
 		/// resolved relative to the the current working directory. For empty array, clears the selected files.
 		/// </summary>
-		Task SetInputFilesAsync(path[] files, bool noWaitAfter, float timeout);
+		Task SetInputFilesAsync(string[] files, bool noWaitAfter, float timeout);
 		/// <summary>
 		/// This method taps the element by performing the following steps:
 		/// <list>

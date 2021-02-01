@@ -92,12 +92,12 @@ namespace PlaywrightSharp
 		/// Returns the added tag when the script's onload fires or when the script content was injected into frame.
 		/// Adds a `<script>` tag into the page with the desired url or content.
 		/// </summary>
-		Task<IElementHandle> AddScriptTagAsync(string content, path path, string type, string url);
+		Task<IElementHandle> AddScriptTagAsync(string content, string path, string type, string url);
 		/// <summary>
 		/// Returns the added tag when the stylesheet's onload fires or when the CSS content was injected into frame.
 		/// Adds a `<link rel="stylesheet">` tag into the page with the desired url or a `<style type="text/css">` tag with the content.
 		/// </summary>
-		Task<IElementHandle> AddStyleTagAsync(string content, path path, string url);
+		Task<IElementHandle> AddStyleTagAsync(string content, string path, string url);
 		/// <summary>
 		/// This method checks an element matching {PARAM} by performing the following steps:
 		/// <list>
@@ -337,7 +337,7 @@ namespace PlaywrightSharp
 		/// Sets the value of the file input to these file paths or files. If some of the `filePaths` are relative paths, then they are
 		/// resolved relative to the the current working directory. For empty array, clears the selected files.
 		/// </summary>
-		Task SetInputFilesAsync(string selector, path[] files, bool noWaitAfter, float timeout);
+		Task SetInputFilesAsync(string selector, string[] files, bool noWaitAfter, float timeout);
 		/// <summary>
 		/// This method taps an element matching {PARAM} by performing the following steps:
 		/// <list>

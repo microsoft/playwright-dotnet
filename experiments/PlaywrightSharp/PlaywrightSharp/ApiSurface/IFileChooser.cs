@@ -64,6 +64,6 @@ namespace PlaywrightSharp
 		/// Sets the value of the file input this chooser is associated with. If some of the `filePaths` are relative paths, then they
 		/// are resolved relative to the the current working directory. For empty array, clears the selected files.
 		/// </summary>
-		Task SetFilesAsync(path[] files, bool noWaitAfter, float timeout);
+		Task SetFilesAsync(string[] files, bool noWaitAfter, float timeout);
 	}
 }

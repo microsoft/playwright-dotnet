@@ -62,11 +62,11 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// Returns path to the downloaded file in case of successful download.
 		/// </summary>
-		Task<path> GetPathAsync();
+		Task<string> GetPathAsync();
 		/// <summary>
 		/// Saves the download to a user-specified path.
 		/// </summary>
-		Task SaveAsAsync(path path);
+		Task SaveAsAsync(string path);
 		/// <summary>
 		/// Returns suggested filename for this download. It is typically computed by the browser from the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition">`Content-Disposition`</a> response
 		/// header or the `download` attribute. See the spec on <a href="https://html.spec.whatwg.org/#downloading-resources">whatwg</a>.
