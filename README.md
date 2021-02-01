@@ -58,7 +58,7 @@ This snippet emulates Mobile Safari on a device at a given geolocation, navigate
 
 ```cs 
 using var playwright = await Playwright.CreateAsync();
-await using var browser = await playwright.Webkit.LaunchAsync(false);
+await using var browser = await playwright.Webkit.LaunchAsync(headless: false);
 
 var contextOptions = playwright.Devices["iPhone 11 Pro"].ToBrowserContextOptions();
 contextOptions.Locale = "en-US";
@@ -67,8 +67,16 @@ contextOptions.Permissions = new[] { ContextPermission.Geolocation };
 
 var context = await browser.NewContextAsync(contextOptions);
 var page = await context.NewPageAsync();
-await page.GoToAsync("https://maps.google.com");
-page.ClickAsync("text='Your location'"); //
+await page.GoToAsync("https://www.google.com/maps");
+
+await page.ClickAsync(".ml-button-my-location-fab");
+await page.WaitForLoadStateAsync(LifecycleEvent.Networkidle);
+
+if ((await page.QuerySelectorAsync(".ml-promotion-no-thanks")) != null)
+{
+    await page.ClickAsync(".ml-promotion-no-thanks");
+}
+
 await page.ScreenshotAsync("colosseum-iphone.png");
 ```
 
