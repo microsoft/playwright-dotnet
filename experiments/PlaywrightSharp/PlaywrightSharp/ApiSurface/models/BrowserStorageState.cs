@@ -45,7 +45,7 @@ namespace PlaywrightSharp
 {
     public class BrowserStorageState
 	{
-		Object[] Cookies { get; set; }
-		Object[] Origins { get; set; }
+		BrowserStorageStateCookies[] Cookies { get; set; }
+		BrowserStorageStateOrigins[] Origins { get; set; }
 	}
 }

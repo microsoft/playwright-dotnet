@@ -43,55 +43,33 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-    /// <summary>
-	/// <see cref="IResponse"/> class represents responses which are received by page.
-	/// </summary>
-	public interface IResponse
+    public class AccessibilitySnapshotResult
 	{
-		/// <summary>
-		/// Returns the buffer with response body.
-		/// </summary>
-		Task<byte[]> GetBodyAsync();
-		/// <summary>
-		/// Waits for this response to finish, returns failure error if request failed.
-		/// </summary>
-		Task FinishedAsync();
-		/// <summary>
-		/// Returns the <see cref="IFrame"/> that initiated this response.
-		/// </summary>
-		IFrame GetFrame();
-		/// <summary>
-		/// Returns the object with HTTP headers associated with the response. All header names are lower-case.
-		/// </summary>
-		IEnumerable<KeyValuePair<string, string>> GetHeaders();
-		/// <summary>
-		/// Returns the JSON representation of response body.
-		/// This method will throw if the response body is not parsable via `JSON.parse`.
-		/// </summary>
-		Task<T> GetJsonAsync<T>();
-		/// <summary>
-		/// Contains a boolean stating whether the response was successful (status in the range 200-299) or not.
-		/// </summary>
-		bool GetOk();
-		/// <summary>
-		/// Returns the matching <see cref="IRequest"/> object.
-		/// </summary>
-		IRequest GetRequest();
-		/// <summary>
-		/// Contains the status code of the response (e.g., 200 for a success).
-		/// </summary>
-		int GetStatus();
-		/// <summary>
-		/// Contains the status text of the response (e.g. usually an "OK" for a success).
-		/// </summary>
-		string GetStatusText();
-		/// <summary>
-		/// Returns the text representation of response body.
-		/// </summary>
-		Task<string> GetTextAsync();
-		/// <summary>
-		/// Contains the URL of the response.
-		/// </summary>
-		string GetUrl();
+		string Role { get; set; }
+		string Name { get; set; }
+		string Value { get; set; }
+		string Description { get; set; }
+		string Keyshortcuts { get; set; }
+		string Roledescription { get; set; }
+		string Valuetext { get; set; }
+		bool Disabled { get; set; }
+		bool Expanded { get; set; }
+		bool Focused { get; set; }
+		bool Modal { get; set; }
+		bool Multiline { get; set; }
+		bool Multiselectable { get; set; }
+		bool Readonly { get; set; }
+		bool Required { get; set; }
+		bool Selected { get; set; }
+		Union Checked { get; set; }
+		Union Pressed { get; set; }
+		int Level { get; set; }
+		float Valuemin { get; set; }
+		float Valuemax { get; set; }
+		string Autocomplete { get; set; }
+		string Haspopup { get; set; }
+		string Invalid { get; set; }
+		string Orientation { get; set; }
+		object[] Children { get; set; }
 	}
 }

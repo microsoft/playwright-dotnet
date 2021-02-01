@@ -70,14 +70,14 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// Creates a new browser context. It won't share cookies/cache with other browser contexts.
 		/// </summary>
-		Task<IBrowserContext> NewContextAsync(bool acceptDownloads, bool bypassCSP, ColorScheme colorScheme, float deviceScaleFactor, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders, object geolocation, bool hasTouch, object httpCredentials, bool ignoreHTTPSErrors, bool isMobile, bool javaScriptEnabled, string locale, bool offline, string[] permissions, object proxy, BrowserStorageState storageState, string timezoneId, string userAgent);
+		Task<IBrowserContext> NewContextAsync(bool acceptDownloads, bool bypassCSP, ColorScheme colorScheme, float deviceScaleFactor, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders, BrowserGeolocation geolocation, bool hasTouch, BrowserHttpCredentials httpCredentials, bool ignoreHTTPSErrors, bool isMobile, bool javaScriptEnabled, string locale, bool offline, string[] permissions, BrowserProxy proxy, BrowserStorageState storageState, string timezoneId, string userAgent);
 		/// <summary>
 		/// Creates a new page in a new browser context. Closing this page will close the context as well.
 		/// This is a convenience API that should only be used for the single-page scenarios and short snippets. Production code and
 		/// testing frameworks should explicitly create <see cref="IBrowser.NewContextAsync"/> followed by the <see cref="IBrowserContext.NewPageAsync"/> to
 		/// control their exact life times.
 		/// </summary>
-		Task<IPage> NewPageAsync(bool acceptDownloads, bool bypassCSP, ColorScheme colorScheme, float deviceScaleFactor, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders, object geolocation, bool hasTouch, object httpCredentials, bool ignoreHTTPSErrors, bool isMobile, bool javaScriptEnabled, string locale, bool offline, string[] permissions, object proxy, BrowserStorageState storageState, string timezoneId, string userAgent);
+		Task<IPage> NewPageAsync(bool acceptDownloads, bool bypassCSP, ColorScheme colorScheme, float deviceScaleFactor, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders, BrowserGeolocation geolocation, bool hasTouch, BrowserHttpCredentials httpCredentials, bool ignoreHTTPSErrors, bool isMobile, bool javaScriptEnabled, string locale, bool offline, string[] permissions, BrowserProxy proxy, BrowserStorageState storageState, string timezoneId, string userAgent);
 		/// <summary>
 		/// Returns the browser version.
 		/// </summary>

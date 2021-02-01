@@ -48,11 +48,11 @@ namespace PlaywrightSharp
 	/// <see cref="IFrame.ChildFrames"/> methods.
 	/// <see cref="IFrame"/> object's lifecycle is controlled by three events, dispatched on the page object:
 	/// <list>
-	/// <item><description><see cref="IPage.OnFrameattached"/> - fired when the frame gets attached to the page. A Frame can be attached
+	/// <item><description><see cref="IPage.FrameAttached"/> - fired when the frame gets attached to the page. A Frame can be attached
 	/// to the page only once.</description></item>
-	/// <item><description><see cref="IPage.OnFramenavigated"/> - fired when the frame commits navigation to a different URL.
+	/// <item><description><see cref="IPage.FrameNavigated"/> - fired when the frame commits navigation to a different URL.
 	/// </description></item>
-	/// <item><description><see cref="IPage.OnFramedetached"/> - fired when the frame gets detached from the page.  A Frame can be
+	/// <item><description><see cref="IPage.FrameDetached"/> - fired when the frame gets detached from the page.  A Frame can be
 	/// detached from the page only once.</description></item>
 	/// </list>
 	/// An example of dumping frame tree:
@@ -136,7 +136,7 @@ namespace PlaywrightSharp
 		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
 		/// Passing zero timeout disables this.
 		/// </summary>
-		Task ClickAsync(string selector, Button button, int clickCount, float delay, bool force, Modifiers[] modifiers, bool noWaitAfter, object position, float timeout);
+		Task ClickAsync(string selector, Button button, int clickCount, float delay, bool force, Modifiers[] modifiers, bool noWaitAfter, FramePosition position, float timeout);
 		/// <summary>
 		/// Gets the full HTML contents of the frame, including the doctype.
 		/// </summary>
@@ -158,7 +158,7 @@ namespace PlaywrightSharp
 		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
 		/// Passing zero timeout disables this.
 		/// </summary>
-		Task DblclickAsync(string selector, Button button, float delay, bool force, Modifiers[] modifiers, bool noWaitAfter, object position, float timeout);
+		Task DblclickAsync(string selector, Button button, float delay, bool force, Modifiers[] modifiers, bool noWaitAfter, FramePosition position, float timeout);
 		/// <summary>
 		/// The snippet below dispatches the `click` event on the element. Regardless of the visibility state of the elment, `click`
 		/// is dispatched. This is equivalend to calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click">element.click()</a>.
@@ -261,7 +261,7 @@ namespace PlaywrightSharp
 		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
 		/// Passing zero timeout disables this.
 		/// </summary>
-		Task HoverAsync(string selector, bool force, Modifiers[] modifiers, object position, float timeout);
+		Task HoverAsync(string selector, bool force, Modifiers[] modifiers, FramePosition position, float timeout);
 		/// <summary>
 		/// Returns `element.innerHTML`.
 		/// </summary>
@@ -355,7 +355,7 @@ namespace PlaywrightSharp
 		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
 		/// Passing zero timeout disables this.
 		/// </summary>
-		Task TapAsync(string selector, bool force, Modifiers[] modifiers, bool noWaitAfter, object position, float timeout);
+		Task TapAsync(string selector, bool force, Modifiers[] modifiers, bool noWaitAfter, FramePosition position, float timeout);
 		/// <summary>
 		/// Returns `element.textContent`.
 		/// </summary>

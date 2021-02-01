@@ -50,7 +50,7 @@ namespace PlaywrightSharp
 	public interface IPlaywright
 	{
 		IBrowserType Chromium { get; set; }
-		Object Devices { get; set; }
+		object Devices { get; set; }
 		IBrowserType Firefox { get; set; }
 		ISelectors Selectors { get; set; }
 		IBrowserType Webkit { get; set; }

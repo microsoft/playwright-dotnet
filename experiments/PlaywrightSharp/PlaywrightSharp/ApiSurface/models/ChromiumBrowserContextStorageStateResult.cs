@@ -45,7 +45,7 @@ namespace PlaywrightSharp
 {
     public class ChromiumBrowserContextStorageStateResult
 	{
-		Object[] Cookies { get; set; }
-		Object[] Origins { get; set; }
+		ChromiumBrowserContextStorageStateResultCookies[] Cookies { get; set; }
+		ChromiumBrowserContextStorageStateResultOrigins[] Origins { get; set; }
 	}
 }

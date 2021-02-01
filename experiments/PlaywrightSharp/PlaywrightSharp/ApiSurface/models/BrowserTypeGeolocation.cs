@@ -43,55 +43,10 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-    /// <summary>
-	/// <see cref="IResponse"/> class represents responses which are received by page.
-	/// </summary>
-	public interface IResponse
+    public class BrowserTypeGeolocation
 	{
-		/// <summary>
-		/// Returns the buffer with response body.
-		/// </summary>
-		Task<byte[]> GetBodyAsync();
-		/// <summary>
-		/// Waits for this response to finish, returns failure error if request failed.
-		/// </summary>
-		Task FinishedAsync();
-		/// <summary>
-		/// Returns the <see cref="IFrame"/> that initiated this response.
-		/// </summary>
-		IFrame GetFrame();
-		/// <summary>
-		/// Returns the object with HTTP headers associated with the response. All header names are lower-case.
-		/// </summary>
-		IEnumerable<KeyValuePair<string, string>> GetHeaders();
-		/// <summary>
-		/// Returns the JSON representation of response body.
-		/// This method will throw if the response body is not parsable via `JSON.parse`.
-		/// </summary>
-		Task<T> GetJsonAsync<T>();
-		/// <summary>
-		/// Contains a boolean stating whether the response was successful (status in the range 200-299) or not.
-		/// </summary>
-		bool GetOk();
-		/// <summary>
-		/// Returns the matching <see cref="IRequest"/> object.
-		/// </summary>
-		IRequest GetRequest();
-		/// <summary>
-		/// Contains the status code of the response (e.g., 200 for a success).
-		/// </summary>
-		int GetStatus();
-		/// <summary>
-		/// Contains the status text of the response (e.g. usually an "OK" for a success).
-		/// </summary>
-		string GetStatusText();
-		/// <summary>
-		/// Returns the text representation of response body.
-		/// </summary>
-		Task<string> GetTextAsync();
-		/// <summary>
-		/// Contains the URL of the response.
-		/// </summary>
-		string GetUrl();
+		float Latitude { get; set; }
+		float Longitude { get; set; }
+		float Accuracy { get; set; }
 	}
 }

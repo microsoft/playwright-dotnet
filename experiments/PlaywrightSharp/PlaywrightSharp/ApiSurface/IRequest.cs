@@ -65,7 +65,7 @@ namespace PlaywrightSharp
 		/// The method returns `null` unless this request has failed, as reported by `requestfailed` event.
 		/// Example of logging of all the failed requests:
 		/// </summary>
-		Object GetFailure();
+		RequestFailureResult GetFailure();
 		/// <summary>
 		/// Returns the <see cref="IFrame"/> that initiated this request.
 		/// </summary>

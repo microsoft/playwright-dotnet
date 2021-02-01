@@ -60,15 +60,15 @@ namespace PlaywrightSharp
 		event EventHandler<IConsoleMessage> OnConsole;
 		event EventHandler<IPage> OnCrash;
 		event EventHandler<IDialog> OnDialog;
-		event EventHandler<IPage> OnDomcontentloaded;
+		event EventHandler<IPage> DOMContentLoaded;
 		event EventHandler<IDownload> OnDownload;
-		event EventHandler<IFileChooser> OnFilechooser;
-		event EventHandler<IFrame> OnFrameattached;
-		event EventHandler<IFrame> OnFramedetached;
-		event EventHandler<IFrame> OnFramenavigated;
+		event EventHandler<IFileChooser> FileChooser;
+		event EventHandler<IFrame> FrameAttached;
+		event EventHandler<IFrame> FrameDetached;
+		event EventHandler<IFrame> FrameNavigated;
 		event EventHandler<IPage> OnLoad;
-		event EventHandler<Error> OnPageerror;
-		event EventHandler<IPage> OnPopup;
+		event EventHandler<Error> PageError;
+		event EventHandler<IPage> PopUp;
 		event EventHandler<IRequest> OnRequest;
 		event EventHandler<IRequest> OnRequestfailed;
 		event EventHandler<IRequest> OnRequestfinished;
@@ -170,7 +170,7 @@ namespace PlaywrightSharp
 		/// Passing zero timeout disables this.
 		/// Shortcut for main frame's <see cref="IFrame.ClickAsync"/>.
 		/// </summary>
-		Task ClickAsync(string selector, Button button, int clickCount, float delay, bool force, Modifiers[] modifiers, bool noWaitAfter, object position, float timeout);
+		Task ClickAsync(string selector, Button button, int clickCount, float delay, bool force, Modifiers[] modifiers, bool noWaitAfter, PagePosition position, float timeout);
 		/// <summary>
 		/// If {OPTION} is `false`, does not run any unload handlers and waits for the page to be closed. If {OPTION} is `true` the method
 		/// will run unload handlers, but will **not** wait for the page to close.
@@ -203,7 +203,7 @@ namespace PlaywrightSharp
 		/// Passing zero timeout disables this.
 		/// Shortcut for main frame's <see cref="IFrame.DblclickAsync"/>.
 		/// </summary>
-		Task DblclickAsync(string selector, Button button, float delay, bool force, Modifiers[] modifiers, bool noWaitAfter, object position, float timeout);
+		Task DblclickAsync(string selector, Button button, float delay, bool force, Modifiers[] modifiers, bool noWaitAfter, PagePosition position, float timeout);
 		/// <summary>
 		/// The snippet below dispatches the `click` event on the element. Regardless of the visibility state of the elment, `click`
 		/// is dispatched. This is equivalend to calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click">element.click()</a>.
@@ -344,7 +344,7 @@ namespace PlaywrightSharp
 		/// Passing zero timeout disables this.
 		/// Shortcut for main frame's <see cref="IFrame.HoverAsync"/>.
 		/// </summary>
-		Task HoverAsync(string selector, bool force, Modifiers[] modifiers, object position, float timeout);
+		Task HoverAsync(string selector, bool force, Modifiers[] modifiers, PagePosition position, float timeout);
 		/// <summary>
 		/// Returns `element.innerHTML`.
 		/// </summary>
@@ -424,7 +424,7 @@ namespace PlaywrightSharp
 		/// <item><description>`A5`: 5.83in x 8.27in</description></item>
 		/// <item><description>`A6`: 4.13in x 5.83in</description></item>
 		/// </summary>
-		Task<byte[]> PdfAsync(bool displayHeaderFooter, string footerTemplate, string format, string headerTemplate, string height, bool landscape, object margin, string pageRanges, path path, bool preferCSSPageSize, bool printBackground, float scale, string width);
+		Task<byte[]> PdfAsync(bool displayHeaderFooter, string footerTemplate, string format, string headerTemplate, string height, bool landscape, PageMargin margin, string pageRanges, path path, bool preferCSSPageSize, bool printBackground, float scale, string width);
 		/// <summary>
 		/// Focuses the element, and then uses <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.
 		/// {PARAM} can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a> value
@@ -456,7 +456,7 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// Returns the buffer with the captured screenshot.
 		/// </summary>
-		Task<byte[]> ScreenshotAsync(object clip, bool fullPage, bool omitBackground, path path, int quality, float timeout, Type type);
+		Task<byte[]> ScreenshotAsync(PageClip clip, bool fullPage, bool omitBackground, path path, int quality, float timeout, Type type);
 		/// <summary>
 		/// Returns the array of option values that have been successfully selected.
 		/// Triggers a `change` and `input` event once all the provided options have been selected. If there's no `
@@ -497,7 +497,7 @@ namespace PlaywrightSharp
 		/// `page.setViewportSize` will resize the page. A lot of websites don't expect phones to change size, so you should set the
 		/// viewport size before navigating to the page.
 		/// </summary>
-		Task SetViewportSizeAsync(object viewportSize);
+		Task SetViewportSizeAsync(PageViewportSize viewportSize);
 		/// <summary>
 		/// This method taps an element matching {PARAM} by performing the following steps:
 		/// <list>
@@ -516,7 +516,7 @@ namespace PlaywrightSharp
 		/// Passing zero timeout disables this.
 		/// Shortcut for main frame's <see cref="IFrame.TapAsync"/>.
 		/// </summary>
-		Task TapAsync(string selector, bool force, Modifiers[] modifiers, bool noWaitAfter, object position, float timeout);
+		Task TapAsync(string selector, bool force, Modifiers[] modifiers, bool noWaitAfter, PagePosition position, float timeout);
 		/// <summary>
 		/// Returns `element.textContent`.
 		/// </summary>
@@ -567,7 +567,7 @@ namespace PlaywrightSharp
 		/// Video object associated with this page.
 		/// </summary>
 		IVideo GetVideo();
-		Object GetViewportSize();
+		PageViewportSizeResult GetViewportSize();
 		/// <summary>
 		/// Waits for event to fire and passes its value into the predicate function. Returns when the predicate returns truthy value.
 		/// Will throw an error if the page is closed before the event is fired. Returns the event data value.

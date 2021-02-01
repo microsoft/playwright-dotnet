@@ -44,7 +44,7 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// <see cref="IFileChooser"/> objects are dispatched by the page in the <see cref="IPage.OnFilechooser"/> event.
+	/// <see cref="IFileChooser"/> objects are dispatched by the page in the <see cref="IPage.FileChooser"/> event.
 	/// </summary>
 	public interface IFileChooser
 	{

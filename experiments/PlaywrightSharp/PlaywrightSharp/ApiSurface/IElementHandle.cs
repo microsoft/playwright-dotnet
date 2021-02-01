@@ -88,7 +88,7 @@ namespace PlaywrightSharp
 		/// Assuming the page is static, it is safe to use bounding box coordinates to perform input. For example, the following snippet
 		/// should click the center of the element.
 		/// </summary>
-		Task<Object> GetBoundingBoxAsync();
+		Task<ElementHandleBoundingBoxResult> GetBoundingBoxAsync();
 		/// <summary>
 		/// This method checks the element by performing the following steps:
 		/// <list>
@@ -122,7 +122,7 @@ namespace PlaywrightSharp
 		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
 		/// Passing zero timeout disables this.
 		/// </summary>
-		Task ClickAsync(Button button, int clickCount, float delay, bool force, Modifiers[] modifiers, bool noWaitAfter, object position, float timeout);
+		Task ClickAsync(Button button, int clickCount, float delay, bool force, Modifiers[] modifiers, bool noWaitAfter, ElementHandlePosition position, float timeout);
 		/// <summary>
 		/// Returns the content frame for element handles referencing iframe nodes, or `null` otherwise
 		/// </summary>
@@ -142,7 +142,7 @@ namespace PlaywrightSharp
 		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
 		/// Passing zero timeout disables this.
 		/// </summary>
-		Task DblclickAsync(Button button, float delay, bool force, Modifiers[] modifiers, bool noWaitAfter, object position, float timeout);
+		Task DblclickAsync(Button button, float delay, bool force, Modifiers[] modifiers, bool noWaitAfter, ElementHandlePosition position, float timeout);
 		/// <summary>
 		/// The snippet below dispatches the `click` event on the element. Regardless of the visibility state of the elment, `click`
 		/// is dispatched. This is equivalend to calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click">element.click()</a>.
@@ -196,7 +196,7 @@ namespace PlaywrightSharp
 		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
 		/// Passing zero timeout disables this.
 		/// </summary>
-		Task HoverAsync(bool force, Modifiers[] modifiers, object position, float timeout);
+		Task HoverAsync(bool force, Modifiers[] modifiers, ElementHandlePosition position, float timeout);
 		/// <summary>
 		/// Returns the `element.innerHTML`.
 		/// </summary>
@@ -294,7 +294,7 @@ namespace PlaywrightSharp
 		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
 		/// Passing zero timeout disables this.
 		/// </summary>
-		Task TapAsync(bool force, Modifiers[] modifiers, bool noWaitAfter, object position, float timeout);
+		Task TapAsync(bool force, Modifiers[] modifiers, bool noWaitAfter, ElementHandlePosition position, float timeout);
 		/// <summary>
 		/// Returns the `node.textContent`.
 		/// </summary>

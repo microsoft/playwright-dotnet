@@ -49,9 +49,9 @@ namespace PlaywrightSharp
 	public interface IWebSocket
 	{
 		event EventHandler<IWebSocket> OnClose;
-		event EventHandler<Object> OnFramereceived;
-		event EventHandler<Object> OnFramesent;
-		event EventHandler<String> OnSocketerror;
+		event EventHandler<FrameReceivedPayload> FrameReceived;
+		event EventHandler<FrameSentPayload> FrameSent;
+		event EventHandler<String> SocketError;
 		/// <summary>
 		/// Indicates that the web socket has been closed.
 		/// </summary>

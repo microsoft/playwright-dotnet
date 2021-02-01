@@ -49,8 +49,8 @@ namespace PlaywrightSharp
 	/// </summary>
 	public interface IChromiumBrowserContext
 	{
-		event EventHandler<IPage> OnBackgroundpage;
-		event EventHandler<IWorker> OnServiceworker;
+		event EventHandler<IPage> BackgroundPage;
+		event EventHandler<IWorker> ServiceWorker;
 		/// <summary>
 		/// All existing background pages in the context.
 		/// </summary>

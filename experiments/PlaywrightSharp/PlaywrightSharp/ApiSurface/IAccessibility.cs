@@ -62,6 +62,6 @@ namespace PlaywrightSharp
 		/// An example of dumping the entire accessibility tree:
 		/// An example of logging the focused node's name:
 		/// </summary>
-		Task<Object> SnapshotAsync(bool interestingOnly, IElementHandle root);
+		Task<AccessibilitySnapshotResult> SnapshotAsync(bool interestingOnly, IElementHandle root);
 	}
 }
