@@ -48,7 +48,7 @@ namespace PlaywrightSharp
 	/// TimeoutError is emitted whenever certain operations are terminated due to timeout, e.g. <see cref="IPage.WaitForSelectorAsync"/> or
 	/// <see cref="IBrowserType.LaunchAsync"/>.
 	/// </summary>
-	public interface ITimeoutError
+	public interface ITimeoutError : Exception
 	{
 	}
 }

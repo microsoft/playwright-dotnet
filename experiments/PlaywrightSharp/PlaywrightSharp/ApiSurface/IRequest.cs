@@ -95,7 +95,7 @@ namespace PlaywrightSharp
 		/// When the response is `application/x-www-form-urlencoded` then a key/value object of the values will be returned. Otherwise
 		/// it will be parsed as JSON.
 		/// </summary>
-		any GetPostDataJSON();
+		T GetPostDataJSON<T>();
 		/// <summary>
 		/// Request that was redirected by the server to this one, if any.
 		/// When the server responds with a redirect, Playwright creates a new <see cref="IRequest"/> object. The two requests are connected

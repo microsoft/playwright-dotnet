@@ -80,7 +80,7 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// The method returns a map with **own property names** as keys and JSHandle instances for the property values.
 		/// </summary>
-		Task<Map> GetGetPropertiesAsync();
+		Task<Dictionary<string, IJSHandle>> GetPropertiesAsync();
 		/// <summary>
 		/// Fetches a single property from the referenced object.
 		/// </summary>

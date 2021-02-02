@@ -67,7 +67,7 @@ namespace PlaywrightSharp
 		event EventHandler<IFrame> FrameDetached;
 		event EventHandler<IFrame> FrameNavigated;
 		event EventHandler<IPage> OnLoad;
-		event EventHandler<Error> PageError;
+		event EventHandler<Exception> PageError;
 		event EventHandler<IPage> PopUp;
 		event EventHandler<IRequest> OnRequest;
 		event EventHandler<IRequest> OnRequestfailed;
@@ -572,7 +572,7 @@ namespace PlaywrightSharp
 		/// Waits for event to fire and passes its value into the predicate function. Returns when the predicate returns truthy value.
 		/// Will throw an error if the page is closed before the event is fired. Returns the event data value.
 		/// </summary>
-		Task<any> WaitForEventAsync(string @event);
+		Task<T> WaitForEventAsync<T>(string @event);
 		/// <summary>
 		/// Returns when the {PARAM} returns a truthy value. It resolves to a JSHandle of the truthy value.
 		/// The <see cref="IPage.WaitForFunctionAsync"/> can be used to observe viewport size change:

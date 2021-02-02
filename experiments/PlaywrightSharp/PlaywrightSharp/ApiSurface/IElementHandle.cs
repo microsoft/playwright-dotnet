@@ -50,7 +50,7 @@ namespace PlaywrightSharp
 	/// ElementHandles are auto-disposed when their origin frame gets navigated.
 	/// ElementHandle instances can be used as an argument in <see cref="IPage.EvalOnSelectorAsync"/> and <see cref="IPage.EvaluateAsync"/> methods.
 	/// </summary>
-	public interface IElementHandle
+	public interface IElementHandle : IJSHandle
 	{
 		/// <summary>
 		/// The method finds an element matching the specified selector in the `ElementHandle`'s subtree. See <a href="./selectors.md">Working with selectors</a> for
@@ -353,41 +353,5 @@ namespace PlaywrightSharp
 		/// If the selector doesn't satisfy the condition for the {OPTION} milliseconds, the function will throw.
 		/// </summary>
 		Task<IElementHandle> WaitForSelectorAsync(string selector, State state, float timeout);
-		/// <summary>
-		/// Returns either `null` or the object handle itself, if the object handle is an instance of <see cref="IElementHandle"/>.
-		/// </summary>
-		IElementHandle GetAsElement();
-		/// <summary>
-		/// The `jsHandle.dispose` method stops referencing the element handle.
-		/// </summary>
-		Task DisposeAsync();
-		/// <summary>
-		/// Returns the return value of {PARAM}
-		/// This method passes this handle as the first argument to {PARAM}.
-		/// If {PARAM} returns a [Promise], then `handle.evaluate` would wait for the promise to resolve and return its value.
-		/// Examples:
-		/// </summary>
-		Task<T> EvaluateAsync<T>(EvaluationArgument arg);
-		/// <summary>
-		/// Returns the return value of {PARAM} as in-page object (JSHandle).
-		/// This method passes this handle as the first argument to {PARAM}.
-		/// The only difference between `jsHandle.evaluate` and `jsHandle.evaluateHandle` is that `jsHandle.evaluateHandle` returns in-page
-		/// object (JSHandle).
-		/// If the function passed to the `jsHandle.evaluateHandle` returns a [Promise], then `jsHandle.evaluateHandle` would wait for the promise to resolve and return its value.
-		/// See <see cref="IPage.EvaluateHandleAsync"/> for more details.
-		/// </summary>
-		Task<IJSHandle> EvaluateHandleAsync(EvaluationArgument arg);
-		/// <summary>
-		/// The method returns a map with **own property names** as keys and JSHandle instances for the property values.
-		/// </summary>
-		Task<Map> GetGetPropertiesAsync();
-		/// <summary>
-		/// Fetches a single property from the referenced object.
-		/// </summary>
-		Task<IJSHandle> GetPropertyAsync(string propertyName);
-		/// <summary>
-		/// Returns a JSON representation of the object. If the object has a `toJSON` function, it **will not be called**.
-		/// </summary>
-		Task<T> GetJsonValueAsync<T>();
 	}
 }

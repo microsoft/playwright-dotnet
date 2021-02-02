@@ -171,6 +171,6 @@ namespace PlaywrightSharp
 		/// Waits for event to fire and passes its value into the predicate function. Returns when the predicate returns truthy value.
 		/// Will throw an error if the context closes before the event is fired. Returns the event data value.
 		/// </summary>
-		Task<any> WaitForEventAsync(string @event);
+		Task<T> WaitForEventAsync<T>(string @event);
 	}
 }
