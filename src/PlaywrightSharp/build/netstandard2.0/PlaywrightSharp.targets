@@ -11,7 +11,7 @@
 		<Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" WorkingDirectory="$(MSBuildThisFileDirectory)..\..\runtimes\unix$(NativeFolder)" Command="./playwright.sh install" />
 		<Exec Condition="$([MSBuild]::IsOSPlatform('OSX'))" WorkingDirectory="$(MSBuildThisFileDirectory)..\..\runtimes\osx$(NativeFolder)" Command="./playwright.sh install" />
 		<Exec Condition="'$(PlatformTarget)' != 'x86' AND $([MSBuild]::IsOSPlatform('Windows'))" WorkingDirectory="$(MSBuildThisFileDirectory)\..\..\runtimes\win-x64$(NativeFolder)" Command="playwright.cmd install" />
-		<Exec Condition="'$(PlatformTarget)' == 'x86' AND $([MSBuild]::IsOSPlatform('Windows'))" WorkingDirectory="$(MSBuildThisFileDirectory)\..\..\runtimes\win-x89$(NativeFolder)" Command="playwright.cmd install" />
+		<Exec Condition="'$(PlatformTarget)' == 'x86' AND $([MSBuild]::IsOSPlatform('Windows'))" WorkingDirectory="$(MSBuildThisFileDirectory)\..\..\runtimes\win-x86$(NativeFolder)" Command="playwright.cmd install" />
 	</Target>
 	<Target Name="CopyPlaywrightDriversToMonoBundle" AfterTargets="CopyFilesToOutputDirectory" Condition="$(TargetFrameworkIdentifier) == 'Xamarin.Mac'">
 		<Message Text="Copy drivers to MonoBundle" />
