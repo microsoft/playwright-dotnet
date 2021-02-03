@@ -54,6 +54,15 @@ and the result should be formatted code according to our style guide.
 
 Don’t worry about commit messages or about how many commits your PR has. [Your PR will be squashed](https://help.github.com/articles/about-pull-request-merges/#squash-and-merge-your-pull-request-commits), so the commit message will be set at that time.
 
+
+## Prerequisites
+
+Before building the solution for the first time, you will need to download the drivers by running the following command in your terminal:
+
+```
+dotnet run -p ./src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj -- download-drivers --basepath .
+```
+
 ## Writing Tests
 
 * Every feature should be accompanied by a test.

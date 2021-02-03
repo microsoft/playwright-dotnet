@@ -22,31 +22,27 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Threading.Tasks;
 using CommandLine;
 
-namespace ApiChecker
+namespace PlaywrightSharp.Tooling
 {
-    internal static class Program
+    /// <summary>
+    /// Describes the options for scaffolding the tests.
+    /// </summary>
+    [Verb("missing-tests", HelpText = "Checks if there are missing tests in the C# variant, compared to the specs.")]
+    internal class IdentifyMissingTestsOptions
     {
-        internal static void Main(string[] args)
-        {
-            Parser.Default.ParseArguments<ScaffoldTest.ScaffoldTestOptions, CheckerOptions, IdentifyMissingTests.IdentifyMissingTestsOptions>(args)
-                .WithParsed<ScaffoldTest.ScaffoldTestOptions>(o => ScaffoldTest.Run(o))
-                .WithParsed<IdentifyMissingTests.IdentifyMissingTestsOptions>(o => IdentifyMissingTests.Run(o))
-                .WithParsed<CheckerOptions>(o => RunApiChecker(o));
-        }
+        [Option(Required = true, HelpText = "Location of the PlaywrightShar.Tests assembly.")]
+        public string TestsAssemblyPath { get; set; }
 
-        private static void RunApiChecker(CheckerOptions o)
-        {
-            var checker = new PlaywrightSharp.BuildTasks.ApiChecker
-            {
-                BasePath = o.BasePath,
-                AssemblyPath = o.AssemblyPath,
-                IsBuildTask = false,
-            };
-            checker.Execute();
-        }
+        [Option(Required = true, HelpText = "Location of spec files.")]
+        public string SpecFileLocations { get; set; }
+
+        [Option(Required = false, HelpText = "The search pattern to use for spec files.", Default = "*.spec.ts")]
+        public string Pattern { get; set; }
+
+        [Option(Required = false, Default = true, HelpText = "When True, looks inside subdirectories of specified location as well.")]
+        public bool Recursive { get; set; }
+
     }
 }

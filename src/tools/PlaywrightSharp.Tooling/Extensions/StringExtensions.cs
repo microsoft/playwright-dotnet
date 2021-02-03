@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace PlaywrightSharp.BuildTasks.Extensions
+namespace PlaywrightSharp.Tooling.Extensions
 {
     internal static class StringExtensions
     {

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
+using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 

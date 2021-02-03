@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 

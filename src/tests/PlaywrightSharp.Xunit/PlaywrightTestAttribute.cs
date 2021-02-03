@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace PlaywrightSharp.Tests
+namespace PlaywrightSharp.Xunit
 {
     /// <summary>
-    /// Enables decorating test facts with information about their origin.
+    /// Enables decorating test facts with information about the corresponding test in the upstream repository.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class PlaywrightTestAttribute : Attribute

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using KellermanSoftware.CompareNetObjects;
 using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
+using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 

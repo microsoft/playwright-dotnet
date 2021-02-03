@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 

@@ -17,6 +17,7 @@ using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
+using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
