@@ -1,5 +1,5 @@
 using System;
-namespace PlaywrightSharp.BuildTasks.Models.Mismatch
+namespace PlaywrightSharp.Tooling.Models.Mismatch
 {
     public class MismatchEntity
     {

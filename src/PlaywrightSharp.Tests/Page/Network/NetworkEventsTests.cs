@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.TestServer;
+using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 

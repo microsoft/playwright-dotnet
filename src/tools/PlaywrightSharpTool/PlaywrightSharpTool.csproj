@@ -8,6 +8,7 @@
 		<PackageId>playwright-sharp-tool</PackageId>
 		<PackageOutputPath>./nupkg</PackageOutputPath>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<ReleaseVersion>0.0.0</ReleaseVersion>
 	</PropertyGroup>
 	<Import Project="../../Common/PackageInfo.props" />
 	<ItemGroup>

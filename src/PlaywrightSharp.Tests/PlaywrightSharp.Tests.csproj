@@ -30,6 +30,7 @@
     <ItemGroup>
         <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />
         <ProjectReference Include="..\PlaywrightSharp.TestServer\PlaywrightSharp.TestServer.csproj" />
+        <ProjectReference Include="..\tests\PlaywrightSharp.Xunit\PlaywrightSharp.Xunit.csproj" />
     </ItemGroup>
     <ItemGroup>
       <None Remove="xunit.runner.json" />

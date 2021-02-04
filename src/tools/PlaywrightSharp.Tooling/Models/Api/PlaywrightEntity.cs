@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace PlaywrightSharp.BuildTasks.Models.Api
+namespace PlaywrightSharp.Tooling.Models.Api
 {
     internal class PlaywrightEntity
     {

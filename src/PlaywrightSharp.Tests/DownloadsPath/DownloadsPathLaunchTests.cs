@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
+using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 

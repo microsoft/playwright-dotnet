@@ -27,9 +27,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using CommandLine;
+using PlaywrightSharp.Xunit;
 
-namespace ApiChecker
+namespace PlaywrightSharp.Tooling
 {
     /// <summary>
     /// This will identify missing tests from upstream.
@@ -55,11 +55,10 @@ namespace ApiChecker
             MapTestsCases(directoryInfo, options);
 
             // now, let's load the DLL and use some reflection-fu
-            var assembly = Assembly.GetAssembly(typeof(PlaywrightSharp.Tests.PlaywrightTestAttribute));
+            var assembly = Assembly.LoadFrom(options.TestsAssemblyPath);
 
             var attributes = assembly.DefinedTypes.SelectMany(
-                type => type.GetMethods().SelectMany(
-                    method => method.GetCustomAttributes<PlaywrightSharp.Tests.PlaywrightTestAttribute>()));
+                type => type.GetMethods().SelectMany(method => method.GetCustomAttributes<PlaywrightTestAttribute>()));
 
             int potentialMatches = 0;
             int fullMatches = 0;
@@ -138,22 +137,6 @@ namespace ApiChecker
                     _testPairs.Add(new(fileInfo.Name.Substring(0, fileInfo.Name.IndexOf('.')), testName));
                 });
             }
-        }
-
-        /// <summary>
-        /// Describes the options for scaffolding the tests.
-        /// </summary>
-        [Verb("testtests", HelpText = "Checks if there are missing tests in the C# variant, compared to the specs.")]
-        internal class IdentifyMissingTestsOptions
-        {
-            [Option(Required = true, HelpText = "Location of spec files.")]
-            public string SpecFileLocations { get; set; }
-
-            [Option(Required = false, HelpText = "The search pattern to use for spec files.", Default = "*.spec.ts")]
-            public string Pattern { get; set; }
-
-            [Option(Required = false, Default = true, HelpText = "When True, looks inside subdirectories of specified location as well.")]
-            public bool Recursive { get; set; }
         }
     }
 }

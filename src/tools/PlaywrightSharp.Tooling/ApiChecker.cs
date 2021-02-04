@@ -3,40 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
-using PlaywrightSharp.BuildTasks.Extensions;
-using PlaywrightSharp.BuildTasks.Models.Api;
-using PlaywrightSharp.BuildTasks.Models.Mismatch;
+using PlaywrightSharp.Tooling.Extensions;
+using PlaywrightSharp.Tooling.Models.Api;
+using PlaywrightSharp.Tooling.Models.Mismatch;
+using PlaywrightSharp.Tooling.Options;
 
-namespace PlaywrightSharp.BuildTasks
+namespace PlaywrightSharp.Tooling
 {
-    public class ApiChecker : Microsoft.Build.Utilities.Task
+    internal class ApiChecker
     {
         public string BasePath { get; set; }
 
         public string AssemblyPath { get; set; }
 
-        public bool IsBuildTask { get; set; } = true;
-
-        public override bool Execute()
+        public bool Execute()
         {
-            AppDomain.CurrentDomain.AssemblyResolve += (sender, e) =>
-            {
-                string assemblySearchPath = Path.Combine(new FileInfo(typeof(ApiChecker).Assembly.Location).Directory.FullName, e.Name.Split(',')[0] + ".dll");
-                if (File.Exists(assemblySearchPath))
-                {
-                    return Assembly.LoadFrom(assemblySearchPath);
-                }
-
-                return null;
-            };
-
-            var assembly = Assembly.LoadFrom(Path.Combine(AssemblyPath, "PlaywrightSharp.dll"));
+            var assembly = Assembly.LoadFrom(AssemblyPath);
 
             var report = new StringBuilder("<html><body><ul>");
             string json = File.ReadAllText(Path.Combine(BasePath, "src", "PlaywrightSharp", "runtimes", "api.json"));
@@ -45,7 +32,7 @@ namespace PlaywrightSharp.BuildTasks
                 PropertyNameCaseInsensitive = true,
                 Converters =
                 {
-                    new JsonStringEnumMemberConverter(JsonNamingPolicy.CamelCase)
+                    new JsonStringEnumMemberConverter(JsonNamingPolicy.CamelCase),
                 },
             });
 
@@ -76,6 +63,39 @@ namespace PlaywrightSharp.BuildTasks
                 report.ToString());
 
             return true;
+        }
+
+        internal static void Run(ApiCheckerOptions o)
+            => new ApiChecker
+            {
+                BasePath = o.BasePath,
+                AssemblyPath = Path.Combine(o.BasePath, "src", "PlaywrightSharp", "bin", "Debug", "net5.0", "PlaywrightSharp.dll"),
+            }.Execute();
+
+        private static string TranslateMethodName(string memberName)
+            => memberName
+                .Replace("$$eval", "evalOnSelectorAll")
+                .Replace("$eval", "evalOnSelector")
+                .Replace("$$", "querySelectorAll")
+                .Replace("$", "querySelector");
+
+        private static bool IsParameterNameMatch(string argumentName, string playwrightName)
+            => string.Equals(argumentName, playwrightName, StringComparison.OrdinalIgnoreCase) ||
+                (playwrightName == "urlOrPredicate" && (argumentName == "url" || argumentName == "predicate"));
+
+        private static Type GetBaseType(Type parameterType)
+        {
+            if (parameterType.IsArray)
+            {
+                return parameterType.GetElementType();
+            }
+
+            if (typeof(IEnumerable).IsAssignableFrom(parameterType) && parameterType.GenericTypeArguments.Length == 1)
+            {
+                return parameterType.GenericTypeArguments[0];
+            }
+
+            return Nullable.GetUnderlyingType(parameterType) ?? parameterType;
         }
 
         private void EvaluateEntity(Assembly assembly, string name, PlaywrightEntity entity, StringBuilder report, Mismatch mismatches)
@@ -136,7 +156,6 @@ namespace PlaywrightSharp.BuildTasks
 
                 report.AppendLine("</ul>");
                 report.AppendLine("</li>");
-
             }
             else
             {
@@ -157,25 +176,14 @@ namespace PlaywrightSharp.BuildTasks
             }
         }
 
-        private void LogWarning(string warningCode, string message)
-        {
-            if (IsBuildTask)
-            {
-                Log.LogWarning("ApiChecker", warningCode, null, null, 0, 0, 0, 0, message);
-            }
-            else
-            {
-                Console.WriteLine($"{warningCode}: {message}");
-            }
-        }
+        private void LogWarning(string warningCode, string message) => Console.WriteLine($"{warningCode}: {message}");
 
         private void EvaluateMethod(
             PlaywrightMember member,
             Type playwrightSharpType,
             StringBuilder report,
             List<object> membersQueue,
-            Mismatch mismatches
-            )
+            Mismatch mismatches)
         {
             string memberName = TranslateMethodName(member.Name);
             var typeToCheck = playwrightSharpType;
@@ -192,7 +200,7 @@ namespace PlaywrightSharp.BuildTasks
 
             while (typeToCheck != null)
             {
-                playwrightSharpMethod = typeToCheck.GetMethods().FirstOrDefault(m => m.Name.ToLower() == memberName.ToLower());
+                playwrightSharpMethod = typeToCheck.GetMethods().FirstOrDefault(m => string.Equals(m.Name, memberName, StringComparison.OrdinalIgnoreCase));
 
                 if (playwrightSharpMethod == null)
                 {
@@ -253,11 +261,11 @@ namespace PlaywrightSharp.BuildTasks
             }
             else
             {
-                var playwrightSharpProperty = playwrightSharpType.GetProperties().FirstOrDefault(p => p.Name.ToLower() == memberName.ToLower());
+                var playwrightSharpProperty = playwrightSharpType.GetProperties().FirstOrDefault(p => string.Equals(p.Name, memberName, StringComparison.OrdinalIgnoreCase));
 
                 if (playwrightSharpProperty == null && memberName.StartsWith("set"))
                 {
-                    playwrightSharpProperty = playwrightSharpType.GetProperties().FirstOrDefault(p => p.Name.ToLower() == memberName.Substring(3, memberName.Length - 3).ToLower());
+                    playwrightSharpProperty = playwrightSharpType.GetProperties().FirstOrDefault(p => string.Equals(p.Name, memberName.Substring(3, memberName.Length - 3), StringComparison.OrdinalIgnoreCase));
                 }
 
                 if (playwrightSharpProperty != null)
@@ -299,13 +307,6 @@ namespace PlaywrightSharp.BuildTasks
                 m.Name == methodName &
                 m.GetParameters().Any(p => IsParameterNameMatch(p.Name, paramName) && IsSameType(p.ParameterType, type)));
 
-        private static string TranslateMethodName(string memberName)
-            => memberName
-                .Replace("$$eval", "evalOnSelectorAll")
-                .Replace("$eval", "evalOnSelector")
-                .Replace("$$", "querySelectorAll")
-                .Replace("$", "querySelector");
-
         private void EvaluateArgument(
             PlaywrightMember arg,
             Type playwrightSharpType,
@@ -327,7 +328,7 @@ namespace PlaywrightSharp.BuildTasks
                 {
                     if (!IsSameType(playwrightSharpArgument.ParameterType, type))
                     {
-                        //Look for a matching overload
+                        // Look for a matching overload.
                         var overloadMethod = GetBestMethodOverload(playwrightSharpType, playwrightSharpMethod.Name, arg.Name, type);
 
                         if (overloadMethod != null)
@@ -362,7 +363,7 @@ namespace PlaywrightSharp.BuildTasks
                         {
                             foreach (var prop in arg.Type.Properties.Where(p => !p.Langs.Only.Any()))
                             {
-                                //Look for a matching overload
+                                // Look for a matching overload.
                                 var overrideMethod = GetBestMethodOverload(playwrightSharpType, playwrightSharpMethod.Name, arg.Name.ToLower(), type);
 
                                 if (overrideMethod != null)
@@ -392,7 +393,7 @@ namespace PlaywrightSharp.BuildTasks
                 }
                 else
                 {
-                    //Look for a matching override
+                    // Look for a matching override.
                     var overrideMethod = playwrightSharpType.GetMethods().FirstOrDefault(m =>
                         m.Name == playwrightSharpMethod.Name &&
                         m.GetParameters().Any(p => IsParameterNameMatch(p.Name, arg.Name.ToLower()) && IsSameType(p.ParameterType, type)));
@@ -424,27 +425,7 @@ namespace PlaywrightSharp.BuildTasks
             }
         }
 
-        private static bool IsParameterNameMatch(string argumentName, string playwrightName)
-            => argumentName.ToLower() == playwrightName.ToLower() ||
-                (playwrightName == "urlOrPredicate" && (argumentName == "url" || argumentName == "predicate"));
-
-
-        private static Type GetBaseType(Type parameterType)
-        {
-            if (parameterType.IsArray)
-            {
-                return parameterType.GetElementType();
-            }
-
-            if ((typeof(IEnumerable).IsAssignableFrom(parameterType) && parameterType.GenericTypeArguments.Length == 1))
-            {
-                return parameterType.GenericTypeArguments[0];
-            }
-
-            return Nullable.GetUnderlyingType(parameterType) ?? parameterType;
-        }
-
-        private static bool IsSameType(Type parameterType, PlaywrightType playwrightParameterType)
+        private bool IsSameType(Type parameterType, PlaywrightType playwrightParameterType)
         {
             var types = playwrightParameterType.Union.Any() ? playwrightParameterType.Union : new[] { playwrightParameterType };
             foreach (var type in types.Where(t => t.Name != "null"))
@@ -462,7 +443,7 @@ namespace PlaywrightSharp.BuildTasks
                     return baseParameterType.IsEnum || (baseParameterType.GenericTypeArguments.Length > 0 && baseParameterType.GenericTypeArguments[0].IsEnum);
                 }
 
-                if (paramName.ToLower().StartsWith("function"))
+                if (paramName.StartsWith("function", StringComparison.OrdinalIgnoreCase))
                 {
                     return typeof(MulticastDelegate).IsAssignableFrom(baseParameterType);
                 }
@@ -504,7 +485,7 @@ namespace PlaywrightSharp.BuildTasks
             StringBuilder report,
             Mismatch mismatches)
         {
-            var playwrightSharpProperty = playwrightSharpType.GetProperties().FirstOrDefault(p => p.Name.ToLower() == property.Name.ToLower());
+            var playwrightSharpProperty = playwrightSharpType.GetProperties().FirstOrDefault(p => string.Equals(p.Name, property.Name, StringComparison.OrdinalIgnoreCase));
             var mismatch = mismatches.Entities.FirstOrDefault(e => e.ClassName == playwrightSharpType.Name)?
                 .Members.FirstOrDefault(m => m.UpstreamMemberName == property.Name);
 
@@ -549,7 +530,7 @@ namespace PlaywrightSharp.BuildTasks
             List<object> membersQueue,
             Mismatch mismatches)
         {
-            var playwrightSharpEvent = playwrightSharpType.GetEvents().FirstOrDefault(e => e.Name.ToLower() == e.Name.ToLower());
+            var playwrightSharpEvent = playwrightSharpType.GetEvents().FirstOrDefault(e => string.Equals(e.Name, e.Name, StringComparison.OrdinalIgnoreCase));
 
             if (playwrightSharpEvent != null)
             {

@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -18,6 +19,7 @@ namespace PlaywrightSharp.Tests.Keyboard
         public KeyboardTests(ITestOutputHelper output) : base(output)
         {
         }
+
         [PlaywrightTest("keyboard.spec.js", "Keyboard", "should type into a textarea")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTypeIntoATextarea()

@@ -3,6 +3,7 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <ReleaseVersion>0.0.0</ReleaseVersion>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\PlaywrightSharp\PlaywrightSharp.csproj" />

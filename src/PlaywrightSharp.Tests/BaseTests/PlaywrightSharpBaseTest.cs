@@ -7,6 +7,7 @@ using PlaywrightSharp;
 using PlaywrightSharp.Tests.Helpers;
 using PlaywrightSharp.TestServer;
 using PlaywrightSharp.Transport.Channels;
+using PlaywrightSharp.Xunit;
 using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.BaseTests

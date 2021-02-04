@@ -25,6 +25,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Input;
 using PlaywrightSharp.Tests.BaseTests;
+using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
