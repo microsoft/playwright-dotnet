@@ -38,6 +38,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -61,11 +62,11 @@ namespace PlaywrightSharp
 		bool Readonly { get; set; }
 		bool Required { get; set; }
 		bool Selected { get; set; }
-		Union Checked { get; set; }
-		Union Pressed { get; set; }
+		MixedState Checked { get; set; }
+		MixedState Pressed { get; set; }
 		int Level { get; set; }
-		float Valuemin { get; set; }
-		float Valuemax { get; set; }
+		decimal Valuemin { get; set; }
+		decimal Valuemax { get; set; }
 		string Autocomplete { get; set; }
 		string Haspopup { get; set; }
 		string Invalid { get; set; }

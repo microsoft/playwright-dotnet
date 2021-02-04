@@ -38,6 +38,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -56,14 +57,14 @@ namespace PlaywrightSharp
 		/// If the function passed to the `worker.evaluate` returns a [Promise], then `worker.evaluate` would wait for the promise to resolve and return its value.
 		/// If the function passed to the `worker.evaluate` returns a non-[Serializable] value, then `worker.evaluate` returns `undefined`. DevTools Protocol also supports transferring some additional values that are not serializable by `JSON`: `-0`, `NaN`, `Infinity`, `-Infinity`, and bigint literals.
 		/// </summary>
-		Task<T> EvaluateAsync<T>(EvaluationArgument arg);
+		Task<T> EvaluateAsync<T>(object arg);
 		/// <summary>
 		/// Returns the return value of {PARAM} as in-page object (JSHandle).
 		/// The only difference between `worker.evaluate` and `worker.evaluateHandle` is that `worker.evaluateHandle` returns in-page
 		/// object (JSHandle).
 		/// If the function passed to the `worker.evaluateHandle` returns a [Promise], then `worker.evaluateHandle` would wait for the promise to resolve and return its value.
 		/// </summary>
-		Task<IJSHandle> EvaluateHandleAsync(EvaluationArgument arg);
+		Task<IJSHandle> EvaluateHandleAsync(object arg);
 		string GetUrl();
 	}
 }

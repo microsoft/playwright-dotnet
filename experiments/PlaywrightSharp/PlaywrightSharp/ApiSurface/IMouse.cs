@@ -38,6 +38,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -52,12 +53,12 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// Shortcut for <see cref="IMouse.MoveAsync"/>, <see cref="IMouse.DownAsync"/>, <see cref="IMouse.UpAsync"/>.
 		/// </summary>
-		Task ClickAsync(float x, float y, Button button, int clickCount, float delay);
+		Task ClickAsync(decimal x, decimal y, Button button, int clickCount, decimal delay);
 		/// <summary>
 		/// Shortcut for <see cref="IMouse.MoveAsync"/>, <see cref="IMouse.DownAsync"/>, <see cref="IMouse.UpAsync"/>, 
 		/// <see cref="IMouse.DownAsync"/> and <see cref="IMouse.UpAsync"/>.
 		/// </summary>
-		Task DblclickAsync(float x, float y, Button button, float delay);
+		Task DblclickAsync(decimal x, decimal y, Button button, decimal delay);
 		/// <summary>
 		/// Dispatches a `mousedown` event.
 		/// </summary>
@@ -65,7 +66,7 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// Dispatches a `mousemove` event.
 		/// </summary>
-		Task MoveAsync(float x, float y, int steps);
+		Task MoveAsync(decimal x, decimal y, int steps);
 		/// <summary>
 		/// Dispatches a `mouseup` event.
 		/// </summary>

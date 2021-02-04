@@ -38,6 +38,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -45,7 +46,7 @@ namespace PlaywrightSharp
 {
     public class ElementHandlePosition
 	{
-		float X { get; set; }
-		float Y { get; set; }
+		decimal X { get; set; }
+		decimal Y { get; set; }
 	}
 }

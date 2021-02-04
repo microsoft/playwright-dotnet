@@ -38,6 +38,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -67,7 +68,7 @@ namespace PlaywrightSharp
 		/// If {PARAM} returns a [Promise], then `handle.evaluate` would wait for the promise to resolve and return its value.
 		/// Examples:
 		/// </summary>
-		Task<T> EvaluateAsync<T>(EvaluationArgument arg);
+		Task<T> EvaluateAsync<T>(object arg);
 		/// <summary>
 		/// Returns the return value of {PARAM} as in-page object (JSHandle).
 		/// This method passes this handle as the first argument to {PARAM}.
@@ -76,7 +77,7 @@ namespace PlaywrightSharp
 		/// If the function passed to the `jsHandle.evaluateHandle` returns a [Promise], then `jsHandle.evaluateHandle` would wait for the promise to resolve and return its value.
 		/// See <see cref="IPage.EvaluateHandleAsync"/> for more details.
 		/// </summary>
-		Task<IJSHandle> EvaluateHandleAsync(EvaluationArgument arg);
+		Task<IJSHandle> EvaluateHandleAsync(object arg);
 		/// <summary>
 		/// The method returns a map with **own property names** as keys and JSHandle instances for the property values.
 		/// </summary>

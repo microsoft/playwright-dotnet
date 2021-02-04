@@ -38,6 +38,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -64,6 +65,6 @@ namespace PlaywrightSharp
 		/// Sets the value of the file input this chooser is associated with. If some of the `filePaths` are relative paths, then they
 		/// are resolved relative to the the current working directory. For empty array, clears the selected files.
 		/// </summary>
-		Task SetFilesAsync(string[] files, bool noWaitAfter, float timeout);
+		Task SetFilesAsync(string[] files, bool noWaitAfter, int timeout);
 	}
 }

@@ -38,6 +38,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -70,7 +71,7 @@ namespace PlaywrightSharp
 		/// If {PARAM} returns a [Promise], then `frame.evalOnSelector` would wait for the promise to resolve and return its value.
 		/// Examples:
 		/// </summary>
-		Task<T> EvalOnSelectorAsync<T>(string selector, EvaluationArgument arg);
+		Task<T> EvalOnSelectorAsync<T>(string selector, object arg);
 		/// <summary>
 		/// Returns the return value of {PARAM}
 		/// The method finds all elements matching the specified selector in the `ElementHandle`'s subtree and passes an array of matched
@@ -78,7 +79,7 @@ namespace PlaywrightSharp
 		/// If {PARAM} returns a [Promise], then `frame.evalOnSelectorAll` would wait for the promise to resolve and return its value.
 		/// Examples:
 		/// </summary>
-		Task<T> EvalOnSelectorAllAsync<T>(string selector, EvaluationArgument arg);
+		Task<T> EvalOnSelectorAllAsync<T>(string selector, object arg);
 		/// <summary>
 		/// This method returns the bounding box of the element, or `null` if the element is not visible. The bounding box is calculated
 		/// relative to the main frame viewport - which is usually the same as the browser window.
@@ -106,7 +107,7 @@ namespace PlaywrightSharp
 		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
 		/// Passing zero timeout disables this.
 		/// </summary>
-		Task CheckAsync(bool force, bool noWaitAfter, float timeout);
+		Task CheckAsync(bool force, bool noWaitAfter, int timeout);
 		/// <summary>
 		/// This method clicks the element by performing the following steps:
 		/// <list>
@@ -122,7 +123,7 @@ namespace PlaywrightSharp
 		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
 		/// Passing zero timeout disables this.
 		/// </summary>
-		Task ClickAsync(Button button, int clickCount, float delay, bool force, Modifiers[] modifiers, bool noWaitAfter, ElementHandlePosition position, float timeout);
+		Task ClickAsync(Button button, int clickCount, decimal delay, bool force, Modifiers[] modifiers, bool noWaitAfter, ElementHandlePosition position, int timeout);
 		/// <summary>
 		/// Returns the content frame for element handles referencing iframe nodes, or `null` otherwise
 		/// </summary>
@@ -142,7 +143,7 @@ namespace PlaywrightSharp
 		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
 		/// Passing zero timeout disables this.
 		/// </summary>
-		Task DblclickAsync(Button button, float delay, bool force, Modifiers[] modifiers, bool noWaitAfter, ElementHandlePosition position, float timeout);
+		Task DblclickAsync(Button button, decimal delay, bool force, Modifiers[] modifiers, bool noWaitAfter, ElementHandlePosition position, int timeout);
 		/// <summary>
 		/// The snippet below dispatches the `click` event on the element. Regardless of the visibility state of the elment, `click`
 		/// is dispatched. This is equivalend to calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click">element.click()</a>.
@@ -167,12 +168,12 @@ namespace PlaywrightSharp
 		/// </list>
 		/// You can also specify `JSHandle` as the property value if you want live objects to be passed into the event:
 		/// </summary>
-		Task DispatchEventAsync(string type, EvaluationArgument eventInit);
+		Task DispatchEventAsync(string type, object eventInit);
 		/// <summary>
 		/// This method waits for <a href="./actionability.md">actionability</a> checks, focuses the element, fills it and triggers an
 		/// `input` event after filling. If the element is not an `<input>`, `<textarea>` or `[contenteditable]` element, this method throws an error. Note that you can pass an empty string to clear the input field.
 		/// </summary>
-		Task FillAsync(string value, bool noWaitAfter, float timeout);
+		Task FillAsync(string value, bool noWaitAfter, int timeout);
 		/// <summary>
 		/// Calls <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus">focus</a> on the element.
 		/// </summary>
@@ -196,7 +197,7 @@ namespace PlaywrightSharp
 		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
 		/// Passing zero timeout disables this.
 		/// </summary>
-		Task HoverAsync(bool force, Modifiers[] modifiers, ElementHandlePosition position, float timeout);
+		Task HoverAsync(bool force, Modifiers[] modifiers, ElementHandlePosition position, int timeout);
 		/// <summary>
 		/// Returns the `element.innerHTML`.
 		/// </summary>
@@ -246,13 +247,13 @@ namespace PlaywrightSharp
 		/// Shortcuts such as `key: "Control+o"` or `key: "Control+Shift+T"` are supported as well. When speficied with the modifier,
 		/// modifier is pressed and being held while the subsequent key is being pressed.
 		/// </summary>
-		Task PressAsync(string key, float delay, bool noWaitAfter, float timeout);
+		Task PressAsync(string key, decimal delay, bool noWaitAfter, int timeout);
 		/// <summary>
 		/// Returns the buffer with the captured screenshot.
 		/// This method waits for the <a href="./actionability.md">actionability</a> checks, then scrolls element into view before taking
 		/// a screenshot. If the element is detached from DOM, the method throws an error.
 		/// </summary>
-		Task<byte[]> ScreenshotAsync(bool omitBackground, string path, int quality, float timeout, Type type);
+		Task<byte[]> ScreenshotAsync(bool omitBackground, string path, int quality, int timeout, Type type);
 		/// <summary>
 		/// This method waits for <a href="./actionability.md">actionability</a> checks, then tries to scroll element into view, unless
 		/// it is completely visible as defined by <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">IntersectionObserver</a>'s
@@ -260,25 +261,25 @@ namespace PlaywrightSharp
 		/// Throws when `elementHandle` does not point to an element <a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/isConnected">connected</a> to
 		/// a Document or a ShadowRoot.
 		/// </summary>
-		Task ScrollIntoViewIfNeededAsync(float timeout);
+		Task ScrollIntoViewIfNeededAsync(int timeout);
 		/// <summary>
 		/// Returns the array of option values that have been successfully selected.
 		/// Triggers a `change` and `input` event once all the provided options have been selected. If element is not a `
 		/// <select>` element, the method throws an error.
 		/// Will wait until all specified options are present in the `<select>` element.
 		/// </summary>
-		Task<dynamic> SelectOptionAsync(bool noWaitAfter, float timeout);
+		Task<dynamic> SelectOptionAsync(bool noWaitAfter, int timeout);
 		/// <summary>
 		/// This method waits for <a href="./actionability.md">actionability</a> checks, then focuses the element and selects all its
 		/// text content.
 		/// </summary>
-		Task SelectTextAsync(float timeout);
+		Task SelectTextAsync(int timeout);
 		/// <summary>
 		/// This method expects `elementHandle` to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input element</a>.
 		/// Sets the value of the file input to these file paths or files. If some of the `filePaths` are relative paths, then they are
 		/// resolved relative to the the current working directory. For empty array, clears the selected files.
 		/// </summary>
-		Task SetInputFilesAsync(string[] files, bool noWaitAfter, float timeout);
+		Task SetInputFilesAsync(string[] files, bool noWaitAfter, int timeout);
 		/// <summary>
 		/// This method taps the element by performing the following steps:
 		/// <list>
@@ -294,7 +295,7 @@ namespace PlaywrightSharp
 		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
 		/// Passing zero timeout disables this.
 		/// </summary>
-		Task TapAsync(bool force, Modifiers[] modifiers, bool noWaitAfter, ElementHandlePosition position, float timeout);
+		Task TapAsync(bool force, Modifiers[] modifiers, bool noWaitAfter, ElementHandlePosition position, int timeout);
 		/// <summary>
 		/// Returns the `node.textContent`.
 		/// </summary>
@@ -304,7 +305,7 @@ namespace PlaywrightSharp
 		/// To press a special key, like `Control` or `ArrowDown`, use <see cref="IElementHandle.PressAsync"/>.
 		/// An example of typing into a text field and then submitting the form:
 		/// </summary>
-		Task TypeAsync(string text, float delay, bool noWaitAfter, float timeout);
+		Task TypeAsync(string text, decimal delay, bool noWaitAfter, int timeout);
 		/// <summary>
 		/// This method checks the element by performing the following steps:
 		/// <list>
@@ -323,7 +324,7 @@ namespace PlaywrightSharp
 		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
 		/// Passing zero timeout disables this.
 		/// </summary>
-		Task UncheckAsync(bool force, bool noWaitAfter, float timeout);
+		Task UncheckAsync(bool force, bool noWaitAfter, int timeout);
 		/// <summary>
 		/// Returns when the element satisfies the {PARAM}.
 		/// Depending on the {PARAM} parameter, this method waits for one of the <a href="./actionability.md">actionability</a> checks
@@ -345,13 +346,13 @@ namespace PlaywrightSharp
 		/// </list>
 		/// If the element does not satisfy the condition for the {OPTION} milliseconds, this method will throw.
 		/// </summary>
-		Task WaitForElementStateAsync(State state, float timeout);
+		Task WaitForElementStateAsync(State state, int timeout);
 		/// <summary>
 		/// Returns element specified by selector when it satisfies {OPTION} option. Returns `null` if waiting for `hidden` or `detached`.
 		/// Wait for the {PARAM} relative to the element handle to satisfy {OPTION} option (either appear/disappear from dom, or become
 		/// visible/hidden). If at the moment of calling the method {PARAM} already satisfies the condition, the method will return immediately.
 		/// If the selector doesn't satisfy the condition for the {OPTION} milliseconds, the function will throw.
 		/// </summary>
-		Task<IElementHandle> WaitForSelectorAsync(string selector, State state, float timeout);
+		Task<IElementHandle> WaitForSelectorAsync(string selector, State state, int timeout);
 	}
 }

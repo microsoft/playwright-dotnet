@@ -38,6 +38,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -49,7 +50,7 @@ namespace PlaywrightSharp
 		string Value { get; set; }
 		string Domain { get; set; }
 		string Path { get; set; }
-		float Expires { get; set; }
+		decimal Expires { get; set; }
 		bool HttpOnly { get; set; }
 		bool Secure { get; set; }
 		SameSite SameSite { get; set; }

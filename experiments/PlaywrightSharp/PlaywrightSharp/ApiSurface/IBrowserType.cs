@@ -38,6 +38,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -68,13 +69,13 @@ namespace PlaywrightSharp
 		/// a description of the differences between Chromium and Chrome. <a href="https://chromium.googlesource.com/chromium/src/+/lkgr/docs/chromium_browser_vs_google_chrome.md">`This article`</a> describes
 		/// some differences for Linux users.
 		/// </summary>
-		Task<IBrowser> LaunchAsync(string[] args, bool chromiumSandbox, bool devtools, string downloadsPath, IEnumerable<KeyValuePair<string, string>> env, string executablePath, IEnumerable<KeyValuePair<string, string>> firefoxUserPrefs, bool handleSIGHUP, bool handleSIGINT, bool handleSIGTERM, bool headless, bool ignoreDefaultArgs, string[] ignoreDefaultArgsValues, BrowserTypeProxy proxy, float slowMo, float timeout);
+		Task<IBrowser> LaunchAsync(string[] args, bool chromiumSandbox, bool devtools, string downloadsPath, IEnumerable<KeyValuePair<string, string>> env, string executablePath, IEnumerable<KeyValuePair<string, string>> firefoxUserPrefs, bool handleSIGHUP, bool handleSIGINT, bool handleSIGTERM, bool headless, bool ignoreDefaultArgs, string[] ignoreDefaultArgsValues, BrowserTypeProxy proxy, decimal slowMo, int timeout);
 		/// <summary>
 		/// Returns the persistent browser context instance.
 		/// Launches browser that uses persistent storage located at {PARAM} and returns the only context. Closing this context will
 		/// automatically close the browser.
 		/// </summary>
-		Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, bool acceptDownloads, string[] args, bool bypassCSP, bool chromiumSandbox, ColorScheme colorScheme, float deviceScaleFactor, bool devtools, string downloadsPath, IEnumerable<KeyValuePair<string, string>> env, string executablePath, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders, BrowserTypeGeolocation geolocation, bool handleSIGHUP, bool handleSIGINT, bool handleSIGTERM, bool hasTouch, bool headless, BrowserTypeHttpCredentials httpCredentials, bool ignoreDefaultArgs, string[] ignoreDefaultArgsValues, bool ignoreHTTPSErrors, bool isMobile, bool javaScriptEnabled, string locale, bool offline, string[] permissions, BrowserTypeProxy proxy, float slowMo, float timeout, string timezoneId, string userAgent);
+		Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, bool acceptDownloads, string[] args, bool bypassCSP, bool chromiumSandbox, ColorScheme colorScheme, decimal deviceScaleFactor, bool devtools, string downloadsPath, IEnumerable<KeyValuePair<string, string>> env, string executablePath, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders, BrowserTypeGeolocation geolocation, bool handleSIGHUP, bool handleSIGINT, bool handleSIGTERM, bool hasTouch, bool headless, BrowserTypeHttpCredentials httpCredentials, bool ignoreDefaultArgs, string[] ignoreDefaultArgsValues, bool ignoreHTTPSErrors, bool isMobile, bool javaScriptEnabled, string locale, bool offline, string[] permissions, BrowserTypeProxy proxy, decimal slowMo, int timeout, string timezoneId, string userAgent);
 		/// <summary>
 		/// Returns browser name. For example: `'chromium'`, `'webkit'` or `'firefox'`.
 		/// </summary>

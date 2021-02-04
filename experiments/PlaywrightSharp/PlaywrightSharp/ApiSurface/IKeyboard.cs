@@ -38,6 +38,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -87,12 +88,12 @@ namespace PlaywrightSharp
 		/// modifier is pressed and being held while the subsequent key is being pressed.
 		/// Shortcut for <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.
 		/// </summary>
-		Task PressAsync(string key, float delay);
+		Task PressAsync(string key, decimal delay);
 		/// <summary>
 		/// Sends a `keydown`, `keypress`/`input`, and `keyup` event for each character in the text.
 		/// To press a special key, like `Control` or `ArrowDown`, use <see cref="IKeyboard.PressAsync"/>.
 		/// </summary>
-		Task TypeAsync(string text, float delay);
+		Task TypeAsync(string text, decimal delay);
 		/// <summary>
 		/// Dispatches a `keyup` event.
 		/// </summary>

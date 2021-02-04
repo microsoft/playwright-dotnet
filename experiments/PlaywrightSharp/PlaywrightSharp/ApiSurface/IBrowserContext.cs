@@ -38,6 +38,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -131,7 +132,7 @@ namespace PlaywrightSharp
 		/// Page routes (set up with <see cref="IPage.RouteAsync"/>) take precedence over browser context routes when request matches
 		/// both handlers.
 		/// </summary>
-		Task RouteAsync(Union url, Action handler);
+		Task RouteAsync(string sUrl, Regex rUrl, Func<Uri, bool> fUrl, Action<IRoute, IRequest> handler);
 		/// <summary>
 		/// This setting will change the default maximum navigation time for the following methods and related shortcuts:
 		/// <list>
@@ -142,11 +143,11 @@ namespace PlaywrightSharp
 		/// <item><description><see cref="IPage.SetContentAsync"/></description></item>
 		/// <item><description><see cref="IPage.WaitForNavigationAsync"/></description></item>
 		/// </summary>
-		void SetDefaultNavigationTimeout(float timeout);
+		void SetDefaultNavigationTimeout(int timeout);
 		/// <summary>
 		/// This setting will change the default maximum time for all the methods accepting {PARAM} option.
 		/// </summary>
-		void SetDefaultTimeout(float timeout);
+		void SetDefaultTimeout(int timeout);
 		/// <summary>
 		/// The extra HTTP headers will be sent with every request initiated by any page in the context. These headers are merged with
 		/// page-specific extra HTTP headers set with <see cref="IPage.SetExtraHTTPHeadersAsync"/>. If page overrides a particular header,
@@ -166,7 +167,7 @@ namespace PlaywrightSharp
 		/// Removes a route created with <see cref="IBrowserContext.RouteAsync"/>. When {PARAM} is not specified, removes all routes
 		/// for the {PARAM}.
 		/// </summary>
-		Task UnrouteAsync(Union url, Action handler);
+		Task UnrouteAsync(string sUrl, Regex rUrl, Func<Uri, bool> fUrl, Action<IRoute, IRequest> handler);
 		/// <summary>
 		/// Waits for event to fire and passes its value into the predicate function. Returns when the predicate returns truthy value.
 		/// Will throw an error if the context closes before the event is fired. Returns the event data value.

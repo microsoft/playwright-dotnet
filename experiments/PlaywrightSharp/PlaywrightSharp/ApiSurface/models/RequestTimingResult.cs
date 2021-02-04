@@ -38,6 +38,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -45,14 +46,14 @@ namespace PlaywrightSharp
 {
     public class RequestTimingResult
 	{
-		float StartTime { get; set; }
-		float DomainLookupStart { get; set; }
-		float DomainLookupEnd { get; set; }
-		float ConnectStart { get; set; }
-		float SecureConnectionStart { get; set; }
-		float ConnectEnd { get; set; }
-		float RequestStart { get; set; }
-		float ResponseStart { get; set; }
-		float ResponseEnd { get; set; }
+		decimal StartTime { get; set; }
+		decimal DomainLookupStart { get; set; }
+		decimal DomainLookupEnd { get; set; }
+		decimal ConnectStart { get; set; }
+		decimal SecureConnectionStart { get; set; }
+		decimal ConnectEnd { get; set; }
+		decimal RequestStart { get; set; }
+		decimal ResponseStart { get; set; }
+		decimal ResponseEnd { get; set; }
 	}
 }

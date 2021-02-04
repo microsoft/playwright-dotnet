@@ -38,6 +38,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -45,9 +46,9 @@ namespace PlaywrightSharp
 {
     public class PageClip
 	{
-		float X { get; set; }
-		float Y { get; set; }
-		float Width { get; set; }
-		float Height { get; set; }
+		decimal X { get; set; }
+		decimal Y { get; set; }
+		decimal Width { get; set; }
+		decimal Height { get; set; }
 	}
 }

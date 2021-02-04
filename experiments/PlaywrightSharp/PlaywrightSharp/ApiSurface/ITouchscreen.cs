@@ -38,6 +38,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -52,6 +53,6 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// Dispatches a `touchstart` and `touchend` event with a single touch at the position ({PARAM},{PARAM}).
 		/// </summary>
-		Task TapAsync(float x, float y);
+		Task TapAsync(decimal x, decimal y);
 	}
 }

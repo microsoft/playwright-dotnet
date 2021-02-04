@@ -38,6 +38,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -95,7 +96,7 @@ namespace PlaywrightSharp
 		/// Examples:
 		/// Shortcut for main frame's <see cref="IFrame.EvalOnSelectorAsync"/>.
 		/// </summary>
-		Task<T> EvalOnSelectorAsync<T>(string selector, EvaluationArgument arg);
+		Task<T> EvalOnSelectorAsync<T>(string selector, object arg);
 		/// <summary>
 		/// The method finds all elements matching the specified selector within the page and passes an array of matched elements as
 		/// a first argument to {PARAM}. Returns the result of {PARAM} invocation.
@@ -103,7 +104,7 @@ namespace PlaywrightSharp
 		/// return its value.
 		/// Examples:
 		/// </summary>
-		Task<T> EvalOnSelectorAllAsync<T>(string selector, EvaluationArgument arg);
+		Task<T> EvalOnSelectorAllAsync<T>(string selector, object arg);
 		IAccessibility Accessibility { get; set; }
 		/// <summary>
 		/// Adds a script which would be evaluated in one of the following scenarios:
@@ -151,7 +152,7 @@ namespace PlaywrightSharp
 		/// Passing zero timeout disables this.
 		/// Shortcut for main frame's <see cref="IFrame.CheckAsync"/>.
 		/// </summary>
-		Task CheckAsync(string selector, bool force, bool noWaitAfter, float timeout);
+		Task CheckAsync(string selector, bool force, bool noWaitAfter, int timeout);
 		/// <summary>
 		/// This method clicks an element matching {PARAM} by performing the following steps:
 		/// <list>
@@ -170,7 +171,7 @@ namespace PlaywrightSharp
 		/// Passing zero timeout disables this.
 		/// Shortcut for main frame's <see cref="IFrame.ClickAsync"/>.
 		/// </summary>
-		Task ClickAsync(string selector, Button button, int clickCount, float delay, bool force, Modifiers[] modifiers, bool noWaitAfter, PagePosition position, float timeout);
+		Task ClickAsync(string selector, Button button, int clickCount, decimal delay, bool force, Modifiers[] modifiers, bool noWaitAfter, PagePosition position, int timeout);
 		/// <summary>
 		/// If {OPTION} is `false`, does not run any unload handlers and waits for the page to be closed. If {OPTION} is `true` the method
 		/// will run unload handlers, but will **not** wait for the page to close.
@@ -203,7 +204,7 @@ namespace PlaywrightSharp
 		/// Passing zero timeout disables this.
 		/// Shortcut for main frame's <see cref="IFrame.DblclickAsync"/>.
 		/// </summary>
-		Task DblclickAsync(string selector, Button button, float delay, bool force, Modifiers[] modifiers, bool noWaitAfter, PagePosition position, float timeout);
+		Task DblclickAsync(string selector, Button button, decimal delay, bool force, Modifiers[] modifiers, bool noWaitAfter, PagePosition position, int timeout);
 		/// <summary>
 		/// The snippet below dispatches the `click` event on the element. Regardless of the visibility state of the elment, `click`
 		/// is dispatched. This is equivalend to calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click">element.click()</a>.
@@ -228,7 +229,7 @@ namespace PlaywrightSharp
 		/// </list>
 		/// You can also specify `JSHandle` as the property value if you want live objects to be passed into the event:
 		/// </summary>
-		Task DispatchEventAsync(string selector, string type, EvaluationArgument eventInit, float timeout);
+		Task DispatchEventAsync(string selector, string type, object eventInit, int timeout);
 		Task EmulateMediaAsync();
 		/// <summary>
 		/// Returns the value of the {PARAM} invocation.
@@ -242,7 +243,7 @@ namespace PlaywrightSharp
 		/// <see cref="IElementHandle"/> instances can be passed as an argument to the <see cref="IPage.EvaluateAsync"/>:
 		/// Shortcut for main frame's <see cref="IFrame.EvaluateAsync"/>.
 		/// </summary>
-		Task<T> EvaluateAsync<T>(EvaluationArgument arg);
+		Task<T> EvaluateAsync<T>(object arg);
 		/// <summary>
 		/// Returns the value of the {PARAM} invocation as in-page object (JSHandle).
 		/// The only difference between <see cref="IPage.EvaluateAsync"/> and <see cref="IPage.EvaluateHandleAsync"/> is that 
@@ -252,7 +253,7 @@ namespace PlaywrightSharp
 		/// A string can also be passed in instead of a function:
 		/// <see cref="IJSHandle"/> instances can be passed as an argument to the <see cref="IPage.EvaluateHandleAsync"/>:
 		/// </summary>
-		Task<IJSHandle> EvaluateHandleAsync(EvaluationArgument arg);
+		Task<IJSHandle> EvaluateHandleAsync(object arg);
 		/// <summary>
 		/// The method adds a function called {PARAM} on the `window` object of every frame in this page. When called, the function executes
 		/// {PARAM} and returns a [Promise] which resolves to the return value of {PARAM}. If the {PARAM} returns a [Promise], it will be awaited.
@@ -278,13 +279,13 @@ namespace PlaywrightSharp
 		/// To send fine-grained keyboard events, use <see cref="IPage.TypeAsync"/>.
 		/// Shortcut for main frame's <see cref="IFrame.FillAsync"/>
 		/// </summary>
-		Task FillAsync(string selector, string value, bool noWaitAfter, float timeout);
+		Task FillAsync(string selector, string value, bool noWaitAfter, int timeout);
 		/// <summary>
 		/// This method fetches an element with {PARAM} and focuses it. If there's no element matching {PARAM}, the method waits until
 		/// a matching element appears in the DOM.
 		/// Shortcut for main frame's <see cref="IFrame.FocusAsync"/>.
 		/// </summary>
-		Task FocusAsync(string selector, float timeout);
+		Task FocusAsync(string selector, int timeout);
 		/// <summary>
 		/// Returns frame matching the specified criteria. Either `name` or `url` must be specified.
 		/// </summary>
@@ -296,19 +297,19 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// Returns element attribute value.
 		/// </summary>
-		Task<string> GetAttributeAsync(string selector, string name, float timeout);
+		Task<string> GetAttributeAsync(string selector, string name, int timeout);
 		/// <summary>
 		/// Returns the main resource response. In case of multiple redirects, the navigation will resolve with the response of the last
 		/// redirect. If can not go back, returns `null`.
 		/// Navigate to the previous page in history.
 		/// </summary>
-		Task<IResponse> GoBackAsync(float timeout, WaitUntil waitUntil);
+		Task<IResponse> GoBackAsync(int timeout, WaitUntil waitUntil);
 		/// <summary>
 		/// Returns the main resource response. In case of multiple redirects, the navigation will resolve with the response of the last
 		/// redirect. If can not go forward, returns `null`.
 		/// Navigate to the next page in history.
 		/// </summary>
-		Task<IResponse> GoForwardAsync(float timeout, WaitUntil waitUntil);
+		Task<IResponse> GoForwardAsync(int timeout, WaitUntil waitUntil);
 		/// <summary>
 		/// Returns the main resource response. In case of multiple redirects, the navigation will resolve with the response of the last
 		/// redirect.
@@ -325,7 +326,7 @@ namespace PlaywrightSharp
 		/// <see cref="IResponse.Status"/>.
 		/// Shortcut for main frame's <see cref="IFrame.GotoAsync"/>
 		/// </summary>
-		Task<IResponse> GotoAsync(string url, string referer, float timeout, WaitUntil waitUntil);
+		Task<IResponse> GotoAsync(string url, string referer, int timeout, WaitUntil waitUntil);
 		/// <summary>
 		/// This method hovers over an element matching {PARAM} by performing the following steps:
 		/// <list>
@@ -344,19 +345,19 @@ namespace PlaywrightSharp
 		/// Passing zero timeout disables this.
 		/// Shortcut for main frame's <see cref="IFrame.HoverAsync"/>.
 		/// </summary>
-		Task HoverAsync(string selector, bool force, Modifiers[] modifiers, PagePosition position, float timeout);
+		Task HoverAsync(string selector, bool force, Modifiers[] modifiers, PagePosition position, int timeout);
 		/// <summary>
 		/// Returns `element.innerHTML`.
 		/// </summary>
-		Task<string> InnerHTMLAsync(string selector, float timeout);
+		Task<string> InnerHTMLAsync(string selector, int timeout);
 		/// <summary>
 		/// Returns `element.innerText`.
 		/// </summary>
-		Task<string> InnerTextAsync(string selector, float timeout);
+		Task<string> InnerTextAsync(string selector, int timeout);
 		/// <summary>
 		/// Returns whether the element is checked. Throws if the element is not a checkbox or radio input.
 		/// </summary>
-		Task<bool> IsCheckedAsync(string selector, float timeout);
+		Task<bool> IsCheckedAsync(string selector, int timeout);
 		/// <summary>
 		/// Indicates that the page has been closed.
 		/// </summary>
@@ -364,23 +365,23 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// Returns whether the element is disabled, the opposite of <a href="./actionability.md#enabled">enabled</a>.
 		/// </summary>
-		Task<bool> IsDisabledAsync(string selector, float timeout);
+		Task<bool> IsDisabledAsync(string selector, int timeout);
 		/// <summary>
 		/// Returns whether the element is <a href="./actionability.md#editable">editable</a>.
 		/// </summary>
-		Task<bool> IsEditableAsync(string selector, float timeout);
+		Task<bool> IsEditableAsync(string selector, int timeout);
 		/// <summary>
 		/// Returns whether the element is <a href="./actionability.md#enabled">enabled</a>.
 		/// </summary>
-		Task<bool> IsEnabledAsync(string selector, float timeout);
+		Task<bool> IsEnabledAsync(string selector, int timeout);
 		/// <summary>
 		/// Returns whether the element is hidden, the opposite of <a href="./actionability.md#visible">visible</a>.
 		/// </summary>
-		Task<bool> IsHiddenAsync(string selector, float timeout);
+		Task<bool> IsHiddenAsync(string selector, int timeout);
 		/// <summary>
 		/// Returns whether the element is <a href="./actionability.md#visible">visible</a>.
 		/// </summary>
-		Task<bool> IsVisibleAsync(string selector, float timeout);
+		Task<bool> IsVisibleAsync(string selector, int timeout);
 		IKeyboard Keyboard { get; set; }
 		/// <summary>
 		/// The page's main frame. Page is guaranteed to have a main frame which persists during navigations.
@@ -424,7 +425,7 @@ namespace PlaywrightSharp
 		/// <item><description>`A5`: 5.83in x 8.27in</description></item>
 		/// <item><description>`A6`: 4.13in x 5.83in</description></item>
 		/// </summary>
-		Task<byte[]> PdfAsync(bool displayHeaderFooter, string footerTemplate, string format, string headerTemplate, string height, bool landscape, PageMargin margin, string pageRanges, string path, bool preferCSSPageSize, bool printBackground, float scale, string width);
+		Task<byte[]> PdfAsync(bool displayHeaderFooter, string footerTemplate, string format, string headerTemplate, string height, bool landscape, PageMargin margin, string pageRanges, string path, bool preferCSSPageSize, bool printBackground, decimal scale, string width);
 		/// <summary>
 		/// Focuses the element, and then uses <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.
 		/// {PARAM} can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a> value
@@ -438,12 +439,12 @@ namespace PlaywrightSharp
 		/// Shortcuts such as `key: "Control+o"` or `key: "Control+Shift+T"` are supported as well. When speficied with the modifier,
 		/// modifier is pressed and being held while the subsequent key is being pressed.
 		/// </summary>
-		Task PressAsync(string selector, string key, float delay, bool noWaitAfter, float timeout);
+		Task PressAsync(string selector, string key, decimal delay, bool noWaitAfter, int timeout);
 		/// <summary>
 		/// Returns the main resource response. In case of multiple redirects, the navigation will resolve with the response of the last
 		/// redirect.
 		/// </summary>
-		Task<IResponse> ReloadAsync(float timeout, WaitUntil waitUntil);
+		Task<IResponse> ReloadAsync(int timeout, WaitUntil waitUntil);
 		/// <summary>
 		/// Routing provides the capability to modify network requests that are made by a page.
 		/// Once routing is enabled, every request matching the url pattern will stall unless it's continued, fulfilled or aborted.
@@ -452,11 +453,11 @@ namespace PlaywrightSharp
 		/// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync"/>) when request
 		/// matches both handlers.
 		/// </summary>
-		Task RouteAsync(Union url, Action handler);
+		Task RouteAsync(string sUrl, Regex rUrl, Func<Uri, bool> fUrl, Action<IRoute, IRequest> handler);
 		/// <summary>
 		/// Returns the buffer with the captured screenshot.
 		/// </summary>
-		Task<byte[]> ScreenshotAsync(PageClip clip, bool fullPage, bool omitBackground, string path, int quality, float timeout, Type type);
+		Task<byte[]> ScreenshotAsync(PageClip clip, bool fullPage, bool omitBackground, string path, int quality, int timeout, Type type);
 		/// <summary>
 		/// Returns the array of option values that have been successfully selected.
 		/// Triggers a `change` and `input` event once all the provided options have been selected. If there's no `
@@ -464,8 +465,8 @@ namespace PlaywrightSharp
 		/// Will wait until all specified options are present in the `<select>` element.
 		/// Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>
 		/// </summary>
-		Task<dynamic> SelectOptionAsync(string selector, bool noWaitAfter, float timeout);
-		Task SetContentAsync(string html, float timeout, WaitUntil waitUntil);
+		Task<dynamic> SelectOptionAsync(string selector, bool noWaitAfter, int timeout);
+		Task SetContentAsync(string html, int timeout, WaitUntil waitUntil);
 		/// <summary>
 		/// This setting will change the default maximum navigation time for the following methods and related shortcuts:
 		/// <list>
@@ -476,11 +477,11 @@ namespace PlaywrightSharp
 		/// <item><description><see cref="IPage.SetContentAsync"/></description></item>
 		/// <item><description><see cref="IPage.WaitForNavigationAsync"/></description></item>
 		/// </summary>
-		void SetDefaultNavigationTimeout(float timeout);
+		void SetDefaultNavigationTimeout(int timeout);
 		/// <summary>
 		/// This setting will change the default maximum time for all the methods accepting {PARAM} option.
 		/// </summary>
-		void SetDefaultTimeout(float timeout);
+		void SetDefaultTimeout(int timeout);
 		/// <summary>
 		/// The extra HTTP headers will be sent with every request the page initiates.
 		/// </summary>
@@ -490,7 +491,7 @@ namespace PlaywrightSharp
 		/// Sets the value of the file input to these file paths or files. If some of the `filePaths` are relative paths, then they are
 		/// resolved relative to the the current working directory. For empty array, clears the selected files.
 		/// </summary>
-		Task SetInputFilesAsync(string selector, string[] files, bool noWaitAfter, float timeout);
+		Task SetInputFilesAsync(string selector, string[] files, bool noWaitAfter, int timeout);
 		/// <summary>
 		/// In the case of multiple pages in a single browser, each page can have its own viewport size. However, 
 		/// <see cref="IBrowser.NewContextAsync"/> allows to set viewport size (and more) for all pages in the context at once.
@@ -516,11 +517,11 @@ namespace PlaywrightSharp
 		/// Passing zero timeout disables this.
 		/// Shortcut for main frame's <see cref="IFrame.TapAsync"/>.
 		/// </summary>
-		Task TapAsync(string selector, bool force, Modifiers[] modifiers, bool noWaitAfter, PagePosition position, float timeout);
+		Task TapAsync(string selector, bool force, Modifiers[] modifiers, bool noWaitAfter, PagePosition position, int timeout);
 		/// <summary>
 		/// Returns `element.textContent`.
 		/// </summary>
-		Task<string> TextContentAsync(string selector, float timeout);
+		Task<string> TextContentAsync(string selector, int timeout);
 		/// <summary>
 		/// Returns the page's title. Shortcut for main frame's <see cref="IFrame.TitleAsync"/>.
 		/// </summary>
@@ -532,7 +533,7 @@ namespace PlaywrightSharp
 		/// To press a special key, like `Control` or `ArrowDown`, use <see cref="IKeyboard.PressAsync"/>.
 		/// Shortcut for main frame's <see cref="IFrame.TypeAsync"/>.
 		/// </summary>
-		Task TypeAsync(string selector, string text, float delay, bool noWaitAfter, float timeout);
+		Task TypeAsync(string selector, string text, decimal delay, bool noWaitAfter, int timeout);
 		/// <summary>
 		/// This method unchecks an element matching {PARAM} by performing the following steps:
 		/// <list>
@@ -554,11 +555,11 @@ namespace PlaywrightSharp
 		/// Passing zero timeout disables this.
 		/// Shortcut for main frame's <see cref="IFrame.UncheckAsync"/>.
 		/// </summary>
-		Task UncheckAsync(string selector, bool force, bool noWaitAfter, float timeout);
+		Task UncheckAsync(string selector, bool force, bool noWaitAfter, int timeout);
 		/// <summary>
 		/// Removes a route created with <see cref="IPage.RouteAsync"/>. When {PARAM} is not specified, removes all routes for the {PARAM}.
 		/// </summary>
-		Task UnrouteAsync(Union url, Action handler);
+		Task UnrouteAsync(string sUrl, Regex rUrl, Func<Uri, bool> fUrl, Action<IRoute, IRequest> handler);
 		/// <summary>
 		/// Shortcut for main frame's <see cref="IFrame.Url"/>.
 		/// </summary>
@@ -579,14 +580,14 @@ namespace PlaywrightSharp
 		/// To pass an argument to the predicate of <see cref="IPage.WaitForFunctionAsync"/> function:
 		/// Shortcut for main frame's <see cref="IFrame.WaitForFunctionAsync"/>.
 		/// </summary>
-		Task<IJSHandle> WaitForFunctionAsync(EvaluationArgument arg, Polling polling, float timeout);
+		Task<IJSHandle> WaitForFunctionAsync(object arg, Polling polling, int timeout);
 		/// <summary>
 		/// Returns when the required load state has been reached.
 		/// This resolves when the page reaches a required load state, `load` by default. The navigation must have been committed when
 		/// this method is called. If current document has already reached the required state, resolves immediately.
 		/// Shortcut for main frame's <see cref="IFrame.WaitForLoadStateAsync"/>.
 		/// </summary>
-		Task WaitForLoadStateAsync(State state, float timeout);
+		Task WaitForLoadStateAsync(State state, int timeout);
 		/// <summary>
 		/// Waits for the main frame navigation and returns the main resource response. In case of multiple redirects, the navigation
 		/// will resolve with the response of the last redirect. In case of navigation to a different anchor or navigation due to History
@@ -596,15 +597,15 @@ namespace PlaywrightSharp
 		/// this example:
 		/// Shortcut for main frame's <see cref="IFrame.WaitForNavigationAsync"/>.
 		/// </summary>
-		Task<IResponse> WaitForNavigationAsync(float timeout, Union url, WaitUntil waitUntil);
+		Task<IResponse> WaitForNavigationAsync(int timeout, string sUrl, Regex rUrl, Func<Uri, bool> fUrl, WaitUntil waitUntil);
 		/// <summary>
 		/// Waits for the matching request and returns it.
 		/// </summary>
-		Task<IRequest> WaitForRequestAsync(Union urlOrPredicate, float timeout);
+		Task<IRequest> WaitForRequestAsync(string sUrlOrPredicate, Regex rUrlOrPredicate, Func<IRequest, bool> fUrlOrPredicate, int timeout);
 		/// <summary>
 		/// Returns the matched response.
 		/// </summary>
-		Task<IResponse> WaitForResponseAsync(Union urlOrPredicate, float timeout);
+		Task<IResponse> WaitForResponseAsync(string sUrlOrPredicate, Regex rUrlOrPredicate, Func<IResponse, bool> fUrlOrPredicate, int timeout);
 		/// <summary>
 		/// Returns when element specified by selector satisfies {OPTION} option. Returns `null` if waiting for `hidden` or `detached`.
 		/// Wait for the {PARAM} to satisfy {OPTION} option (either appear/disappear from dom, or become visible/hidden). If at the moment
@@ -612,14 +613,14 @@ namespace PlaywrightSharp
 		/// satisfy the condition for the {OPTION} milliseconds, the function will throw.
 		/// This method works across navigations:
 		/// </summary>
-		Task<IElementHandle> WaitForSelectorAsync(string selector, State state, float timeout);
+		Task<IElementHandle> WaitForSelectorAsync(string selector, State state, int timeout);
 		/// <summary>
 		/// Waits for the given {PARAM} in milliseconds.
 		/// Note that `page.waitForTimeout()` should only be used for debugging. Tests using the timer in production are going to be
 		/// flaky. Use signals such as network events, selectors becoming visible and others instead.
 		/// Shortcut for main frame's <see cref="IFrame.WaitForTimeoutAsync"/>.
 		/// </summary>
-		Task WaitForTimeoutAsync(float timeout);
+		Task WaitForTimeoutAsync(int timeout);
 		/// <summary>
 		/// This method returns all of the dedicated <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">WebWorkers</a> associated
 		/// with the page.

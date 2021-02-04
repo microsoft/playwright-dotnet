@@ -38,6 +38,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -45,8 +46,8 @@ namespace PlaywrightSharp
 {
     public class BrowserTypeGeolocation
 	{
-		float Latitude { get; set; }
-		float Longitude { get; set; }
-		float Accuracy { get; set; }
+		decimal Latitude { get; set; }
+		decimal Longitude { get; set; }
+		decimal Accuracy { get; set; }
 	}
 }
