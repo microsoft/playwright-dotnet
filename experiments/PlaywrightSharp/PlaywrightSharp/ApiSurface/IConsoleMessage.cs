@@ -47,7 +47,7 @@ namespace PlaywrightSharp
     /// <summary>
 	/// <see cref="IConsoleMessage"/> objects are dispatched by page via the <see cref="IPage.OnConsole"/> event.
 	/// </summary>
-	public interface IConsoleMessage
+	public partial interface IConsoleMessage
 	{
 		dynamic GetArgs();
 		ConsoleMessageLocationResult GetLocation();

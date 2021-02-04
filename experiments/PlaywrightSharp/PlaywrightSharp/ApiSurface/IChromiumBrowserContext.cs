@@ -48,7 +48,7 @@ namespace PlaywrightSharp
 	/// <seealso cref="<see cref="IBrowserContext"/>"/>
 	/// Chromium-specific features including background pages, service worker support, etc.
 	/// </summary>
-	public interface IChromiumBrowserContext : IBrowserContext
+	public partial interface IChromiumBrowserContext : IBrowserContext
 	{
 		event EventHandler<IPage> BackgroundPage;
 		event EventHandler<IWorker> ServiceWorker;

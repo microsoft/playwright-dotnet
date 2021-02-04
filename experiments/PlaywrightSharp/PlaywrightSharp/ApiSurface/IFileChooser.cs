@@ -47,7 +47,7 @@ namespace PlaywrightSharp
     /// <summary>
 	/// <see cref="IFileChooser"/> objects are dispatched by the page in the <see cref="IPage.FileChooser"/> event.
 	/// </summary>
-	public interface IFileChooser
+	public partial interface IFileChooser
 	{
 		/// <summary>
 		/// Returns input element associated with this file chooser.

@@ -56,7 +56,7 @@ namespace PlaywrightSharp
 	/// or by assistive technologies themselves. By default, Playwright tries to approximate this filtering, exposing only the "interesting"
 	/// nodes of the tree.
 	/// </summary>
-	public interface IAccessibility
+	public partial interface IAccessibility
 	{
 		/// <summary>
 		/// Captures the current state of the accessibility tree. The returned object represents the root accessible node of the page.

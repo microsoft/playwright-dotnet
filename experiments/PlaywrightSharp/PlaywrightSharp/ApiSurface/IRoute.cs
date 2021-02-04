@@ -48,7 +48,7 @@ namespace PlaywrightSharp
 	/// Whenever a network route is set up with <see cref="IPage.RouteAsync"/> or <see cref="IBrowserContext.RouteAsync"/>, the `Route`
 	/// object allows to handle the route.
 	/// </summary>
-	public interface IRoute
+	public partial interface IRoute
 	{
 		/// <summary>
 		/// Aborts the route's request.

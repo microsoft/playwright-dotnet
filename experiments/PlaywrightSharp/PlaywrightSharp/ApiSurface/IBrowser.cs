@@ -49,7 +49,7 @@ namespace PlaywrightSharp
 	/// A Browser is created via <see cref="IBrowserType.LaunchAsync"/>. An example of using a <see cref="IBrowser"/> to create a
 	/// <see cref="IPage"/>:
 	/// </summary>
-	public interface IBrowser
+	public partial interface IBrowser
 	{
 		event EventHandler<IBrowser> OnDisconnected;
 		/// <summary>

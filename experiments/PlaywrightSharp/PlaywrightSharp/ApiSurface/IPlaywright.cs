@@ -48,7 +48,7 @@ namespace PlaywrightSharp
 	/// Playwright module provides a method to launch a browser instance. The following is a typical example of using Playwright
 	/// to drive automation:
 	/// </summary>
-	public interface IPlaywright
+	public partial interface IPlaywright
 	{
 		IBrowserType Chromium { get; set; }
 		object Devices { get; set; }

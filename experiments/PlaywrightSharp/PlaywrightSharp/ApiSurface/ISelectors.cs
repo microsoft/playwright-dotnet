@@ -48,7 +48,7 @@ namespace PlaywrightSharp
 	/// Selectors can be used to install custom selector engines. See <a href="./selectors.md">Working with selectors</a> for more
 	/// information.
 	/// </summary>
-	public interface ISelectors
+	public partial interface ISelectors
 	{
 		/// <summary>
 		/// An example of registering selector engine that queries elements based on a tag name:

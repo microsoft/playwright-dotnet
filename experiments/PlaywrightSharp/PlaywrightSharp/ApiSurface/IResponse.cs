@@ -47,7 +47,7 @@ namespace PlaywrightSharp
     /// <summary>
 	/// <see cref="IResponse"/> class represents responses which are received by page.
 	/// </summary>
-	public interface IResponse
+	public partial interface IResponse
 	{
 		/// <summary>
 		/// Returns the buffer with response body.

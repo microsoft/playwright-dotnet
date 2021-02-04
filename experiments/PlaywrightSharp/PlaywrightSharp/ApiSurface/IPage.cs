@@ -55,7 +55,7 @@ namespace PlaywrightSharp
 	/// This example logs a message for a single page `load` event:
 	/// To unsubscribe from events use the `removeListener` method:
 	/// </summary>
-	public interface IPage
+	public partial interface IPage
 	{
 		event EventHandler<IPage> OnClose;
 		event EventHandler<IConsoleMessage> OnConsole;

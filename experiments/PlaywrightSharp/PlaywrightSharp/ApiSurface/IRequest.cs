@@ -60,7 +60,7 @@ namespace PlaywrightSharp
 	/// If request gets a 'redirect' response, the request is successfully finished with the 'requestfinished' event, and a new request
 	/// is  issued to a redirected url.
 	/// </summary>
-	public interface IRequest
+	public partial interface IRequest
 	{
 		/// <summary>
 		/// The method returns `null` unless this request has failed, as reported by `requestfailed` event.

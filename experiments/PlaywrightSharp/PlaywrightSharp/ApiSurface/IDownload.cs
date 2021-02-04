@@ -50,7 +50,7 @@ namespace PlaywrightSharp
 	/// files are deleted when the browser closes.
 	/// Download event is emitted once the download starts. Download path becomes available once download completes:
 	/// </summary>
-	public interface IDownload
+	public partial interface IDownload
 	{
 		/// <summary>
 		/// Deletes the downloaded file.

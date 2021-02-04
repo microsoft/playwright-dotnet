@@ -51,13 +51,13 @@ namespace PlaywrightSharp
 	/// Playwright allows creation of "incognito" browser contexts with `browser.newContext()` method. "Incognito" browser contexts
 	/// don't write any browsing data to disk.
 	/// </summary>
-	public interface IBrowserContext
+	public partial interface IBrowserContext
 	{
 		event EventHandler<IBrowserContext> OnClose;
 		event EventHandler<IPage> OnPage;
 		/// <summary>
 		/// Adds cookies into this browser context. All pages within this context will have these cookies installed. Cookies can be obtained
-		/// via <see cref="IBrowserContext.CookiesAsync"/>.
+		/// via <see cref="IBrowserContext.'GetCookiesAsync'"/>.
 		/// </summary>
 		Task AddCookiesAsync(BrowserContextCookies[] cookies);
 		/// <summary>
@@ -92,7 +92,7 @@ namespace PlaywrightSharp
 		/// If no URLs are specified, this method returns all cookies. If URLs are specified, only cookies that affect those URLs are
 		/// returned.
 		/// </summary>
-		Task<BrowserContextCookiesResult[]> CookiesAsync(string[] urls);
+		Task<BrowserContextCookiesResult[]> GetCookiesAsync(string[] urls);
 		/// <summary>
 		/// The method adds a function called {PARAM} on the `window` object of every frame in every page in the context. When called,
 		/// the function executes {PARAM} and returns a [Promise] which resolves to the return value of {PARAM}. If the {PARAM} returns a [Promise], it will be awaited.

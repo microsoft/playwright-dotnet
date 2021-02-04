@@ -53,7 +53,7 @@ namespace PlaywrightSharp
 	/// An example of pressing uppercase `A`
 	/// An example to trigger select-all with the keyboard
 	/// </summary>
-	public interface IKeyboard
+	public partial interface IKeyboard
 	{
 		/// <summary>
 		/// Dispatches a `keydown` event.

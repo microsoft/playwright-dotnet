@@ -58,7 +58,7 @@ namespace PlaywrightSharp
 	/// <item><description>Getting Started with DevTools Protocol: https://github.com/aslushnikov/getting-started-with-cdp/blob/master/README.md</description>
 	/// </item>
 	/// </summary>
-	public interface ICDPSession
+	public partial interface ICDPSession
 	{
 		/// <summary>
 		/// Detaches the CDPSession from the target. Once detached, the CDPSession object won't emit any events and can't be used to

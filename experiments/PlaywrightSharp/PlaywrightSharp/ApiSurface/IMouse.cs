@@ -48,7 +48,7 @@ namespace PlaywrightSharp
 	/// The Mouse class operates in main-frame CSS pixels relative to the top-left corner of the viewport.
 	/// Every `page` object has its own Mouse, accessible with <see cref="IPage.Mouse"/>.
 	/// </summary>
-	public interface IMouse
+	public partial interface IMouse
 	{
 		/// <summary>
 		/// Shortcut for <see cref="IMouse.MoveAsync"/>, <see cref="IMouse.DownAsync"/>, <see cref="IMouse.UpAsync"/>.

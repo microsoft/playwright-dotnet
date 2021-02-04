@@ -58,7 +58,7 @@ namespace PlaywrightSharp
 	/// </list>
 	/// An example of dumping frame tree:
 	/// </summary>
-	public interface IFrame
+	public partial interface IFrame
 	{
 		/// <summary>
 		/// Returns the ElementHandle pointing to the frame element.

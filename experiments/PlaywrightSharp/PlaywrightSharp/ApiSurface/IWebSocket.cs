@@ -47,7 +47,7 @@ namespace PlaywrightSharp
     /// <summary>
 	/// The <see cref="IWebSocket"/> class represents websocket connections in the page.
 	/// </summary>
-	public interface IWebSocket
+	public partial interface IWebSocket
 	{
 		event EventHandler<IWebSocket> OnClose;
 		event EventHandler<FrameReceivedPayload> FrameReceived;

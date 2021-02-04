@@ -52,7 +52,7 @@ namespace PlaywrightSharp
 	/// JSHandle instances can be used as an argument in <see cref="IPage.EvalOnSelectorAsync"/>, <see cref="IPage.EvaluateAsync"/> and
 	/// <see cref="IPage.EvaluateHandleAsync"/> methods.
 	/// </summary>
-	public interface IJSHandle
+	public partial interface IJSHandle
 	{
 		/// <summary>
 		/// Returns either `null` or the object handle itself, if the object handle is an instance of <see cref="IElementHandle"/>.

@@ -48,7 +48,7 @@ namespace PlaywrightSharp
 	/// BrowserType provides methods to launch a specific browser instance or connect to an existing one. The following is a typical
 	/// example of using Playwright to drive automation:
 	/// </summary>
-	public interface IBrowserType
+	public partial interface IBrowserType
 	{
 		/// <summary>
 		/// A path where Playwright expects to find a bundled browser executable.

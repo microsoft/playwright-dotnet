@@ -51,7 +51,7 @@ namespace PlaywrightSharp
 	/// ElementHandles are auto-disposed when their origin frame gets navigated.
 	/// ElementHandle instances can be used as an argument in <see cref="IPage.EvalOnSelectorAsync"/> and <see cref="IPage.EvaluateAsync"/> methods.
 	/// </summary>
-	public interface IElementHandle : IJSHandle
+	public partial interface IElementHandle : IJSHandle
 	{
 		/// <summary>
 		/// The method finds an element matching the specified selector in the `ElementHandle`'s subtree. See <a href="./selectors.md">Working with selectors</a> for

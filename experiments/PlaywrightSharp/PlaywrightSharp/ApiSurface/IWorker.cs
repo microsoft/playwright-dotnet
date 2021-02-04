@@ -49,7 +49,7 @@ namespace PlaywrightSharp
 	/// event is emitted on the page object to signal a worker creation. `close` event is emitted on the worker object when the worker
 	/// is gone.
 	/// </summary>
-	public interface IWorker
+	public partial interface IWorker
 	{
 		event EventHandler<IWorker> OnClose;
 		/// <summary>

@@ -48,7 +48,7 @@ namespace PlaywrightSharp
 	/// <see cref="IDialog"/> objects are dispatched by page via the <see cref="IPage.OnDialog"/> event.
 	/// An example of using `Dialog` class:
 	/// </summary>
-	public interface IDialog
+	public partial interface IDialog
 	{
 		/// <summary>
 		/// Returns when the dialog has been accepted.
