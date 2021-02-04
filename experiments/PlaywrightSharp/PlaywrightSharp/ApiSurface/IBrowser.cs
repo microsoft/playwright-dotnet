@@ -51,7 +51,7 @@ namespace PlaywrightSharp
 	/// </summary>
 	public partial interface IBrowser
 	{
-		event EventHandler<IBrowser> OnDisconnected;
+		event EventHandler<IBrowser> Disconnected;
 		/// <summary>
 		/// In case this browser is obtained using <see cref="IBrowserType.LaunchAsync"/>, closes the browser and all of its pages (if
 		/// any were opened).

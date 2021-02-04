@@ -51,7 +51,7 @@ namespace PlaywrightSharp
 	/// </summary>
 	public partial interface IWorker
 	{
-		event EventHandler<IWorker> OnClose;
+		event EventHandler<IWorker> Close;
 		/// <summary>
 		/// Returns the return value of {PARAM}
 		/// If the function passed to the `worker.evaluate` returns a [Promise], then `worker.evaluate` would wait for the promise to resolve and return its value.

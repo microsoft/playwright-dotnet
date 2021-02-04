@@ -45,7 +45,7 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// <see cref="IConsoleMessage"/> objects are dispatched by page via the <see cref="IPage.OnConsole"/> event.
+	/// <see cref="IConsoleMessage"/> objects are dispatched by page via the <see cref="IPage.Console"/> event.
 	/// </summary>
 	public partial interface IConsoleMessage
 	{

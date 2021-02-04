@@ -57,25 +57,25 @@ namespace PlaywrightSharp
 	/// </summary>
 	public partial interface IPage
 	{
-		event EventHandler<IPage> OnClose;
-		event EventHandler<IConsoleMessage> OnConsole;
-		event EventHandler<IPage> OnCrash;
-		event EventHandler<IDialog> OnDialog;
+		event EventHandler<IPage> Close;
+		event EventHandler<IConsoleMessage> Console;
+		event EventHandler<IPage> Crash;
+		event EventHandler<IDialog> Dialog;
 		event EventHandler<IPage> DOMContentLoaded;
-		event EventHandler<IDownload> OnDownload;
+		event EventHandler<IDownload> Download;
 		event EventHandler<IFileChooser> FileChooser;
 		event EventHandler<IFrame> FrameAttached;
 		event EventHandler<IFrame> FrameDetached;
 		event EventHandler<IFrame> FrameNavigated;
-		event EventHandler<IPage> OnLoad;
+		event EventHandler<IPage> Load;
 		event EventHandler<Exception> PageError;
 		event EventHandler<IPage> PopUp;
-		event EventHandler<IRequest> OnRequest;
-		event EventHandler<IRequest> OnRequestfailed;
-		event EventHandler<IRequest> OnRequestfinished;
-		event EventHandler<IResponse> OnResponse;
-		event EventHandler<IWebSocket> OnWebsocket;
-		event EventHandler<IWorker> OnWorker;
+		event EventHandler<IRequest> Request;
+		event EventHandler<IRequest> Requestfailed;
+		event EventHandler<IRequest> Requestfinished;
+		event EventHandler<IResponse> Response;
+		event EventHandler<IWebSocket> Websocket;
+		event EventHandler<IWorker> Worker;
 		/// <summary>
 		/// The method finds an element matching the specified selector within the page. If no elements match the selector, the return
 		/// value resolves to `null`.

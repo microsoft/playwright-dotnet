@@ -49,7 +49,7 @@ namespace PlaywrightSharp
 	/// </summary>
 	public partial interface IWebSocket
 	{
-		event EventHandler<IWebSocket> OnClose;
+		event EventHandler<IWebSocket> Close;
 		event EventHandler<FrameReceivedPayload> FrameReceived;
 		event EventHandler<FrameSentPayload> FrameSent;
 		event EventHandler<String> SocketError;

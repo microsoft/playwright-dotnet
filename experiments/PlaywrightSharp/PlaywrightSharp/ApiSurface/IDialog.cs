@@ -45,7 +45,7 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// <see cref="IDialog"/> objects are dispatched by page via the <see cref="IPage.OnDialog"/> event.
+	/// <see cref="IDialog"/> objects are dispatched by page via the <see cref="IPage.Dialog"/> event.
 	/// An example of using `Dialog` class:
 	/// </summary>
 	public partial interface IDialog

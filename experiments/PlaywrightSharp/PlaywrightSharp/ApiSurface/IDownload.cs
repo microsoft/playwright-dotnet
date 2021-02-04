@@ -45,7 +45,7 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// <see cref="IDownload"/> objects are dispatched by page via the <see cref="IPage.OnDownload"/> event.
+	/// <see cref="IDownload"/> objects are dispatched by page via the <see cref="IPage.Download"/> event.
 	/// All the downloaded files belonging to the browser context are deleted when the browser context is closed. All downloaded
 	/// files are deleted when the browser closes.
 	/// Download event is emitted once the download starts. Download path becomes available once download completes:

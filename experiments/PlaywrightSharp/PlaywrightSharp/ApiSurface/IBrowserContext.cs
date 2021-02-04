@@ -53,11 +53,11 @@ namespace PlaywrightSharp
 	/// </summary>
 	public partial interface IBrowserContext
 	{
-		event EventHandler<IBrowserContext> OnClose;
-		event EventHandler<IPage> OnPage;
+		event EventHandler<IBrowserContext> Close;
+		event EventHandler<IPage> Page;
 		/// <summary>
 		/// Adds cookies into this browser context. All pages within this context will have these cookies installed. Cookies can be obtained
-		/// via <see cref="IBrowserContext.'GetCookiesAsync'"/>.
+		/// via <see cref="IBrowserContext.GetCookiesAsync"/>.
 		/// </summary>
 		Task AddCookiesAsync(BrowserContextCookies[] cookies);
 		/// <summary>

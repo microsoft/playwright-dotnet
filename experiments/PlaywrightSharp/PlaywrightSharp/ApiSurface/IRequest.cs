@@ -48,15 +48,15 @@ namespace PlaywrightSharp
 	/// Whenever the page sends a request for a network resource the following sequence of events are emitted by 
 	/// <see cref="IPage"/>:
 	/// <list>
-	/// <item><description><see cref="IPage.OnRequest"/> emitted when the request is issued by the page.</description>
+	/// <item><description><see cref="IPage.Request"/> emitted when the request is issued by the page.</description>
 	/// </item>
-	/// <item><description><see cref="IPage.OnResponse"/> emitted when/if the response status and headers are received for the request.
+	/// <item><description><see cref="IPage.Response"/> emitted when/if the response status and headers are received for the request.
 	/// </description></item>
-	/// <item><description><see cref="IPage.OnRequestfinished"/> emitted when the response body is downloaded and the request is
-	/// complete.</description></item>
+	/// <item><description><see cref="IPage.Requestfinished"/> emitted when the response body is downloaded and the request is complete.
+	/// </description></item>
 	/// </list>
 	/// If request fails at some point, then instead of `'requestfinished'` event (and possibly instead of 'response' event), the
-	/// <see cref="IPage.OnRequestfailed"/> event is emitted.
+	/// <see cref="IPage.Requestfailed"/> event is emitted.
 	/// If request gets a 'redirect' response, the request is successfully finished with the 'requestfinished' event, and a new request
 	/// is  issued to a redirected url.
 	/// </summary>
