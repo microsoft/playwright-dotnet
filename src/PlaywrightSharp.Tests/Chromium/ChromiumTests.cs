@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -10,17 +10,15 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Chromium
 {
-    ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-    ///<playwright-describe>Chromium.startTracing</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class ChromiumBrowserContextTests : PlaywrightSharpPageBaseTest
+    public class ChromiumTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public ChromiumBrowserContextTests(ITestOutputHelper output) : base(output)
+        public ChromiumTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("chromium/chromium.spec.js", "Chromium.startTracing", "should create a worker from a service worker")]
+        [PlaywrightTest("chromium/chromium.spec.ts", "chromium", "should create a worker from a service worker")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldCreateAWorkerFromAServiceWorker()
         {
@@ -31,7 +29,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal("[object ServiceWorkerGlobalScope]", await worker.EvaluateAsync<string>("() => self.toString()"));
         }
 
-        [PlaywrightTest("chromium/chromium.spec.js", "Chromium.startTracing", "serviceWorkers() should return current workers")]
+        [PlaywrightTest("chromium/chromium.spec.ts", "chromium", "serviceWorkers() should return current workers")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ServiceWorkersShouldReturnCurrentWorkers()
         {
@@ -50,7 +48,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Contains(worker2.Worker, ((IChromiumBrowserContext)Context).ServiceWorkers);
         }
 
-        [PlaywrightTest("chromium/chromium.spec.js", "Chromium.startTracing", "should not create a worker from a shared worker")]
+        [PlaywrightTest("chromium/chromium.spec.ts", "chromium", "should not create a worker from a shared worker")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldNotCreateAWorkerFromASharedWorker()
         {
@@ -65,7 +63,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.False(serviceWorkerCreated);
         }
 
-        [PlaywrightTest("chromium/chromium.spec.js", "Chromium.startTracing", "should close service worker together with the context")]
+        [PlaywrightTest("chromium/chromium.spec.ts", "chromium", "should close service worker together with the context")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldCloseServiceWorkerTogetherWithTheContext()
         {
@@ -80,6 +78,31 @@ namespace PlaywrightSharp.Tests.Chromium
             await Context.CloseAsync();
 
             Assert.Equal("worker|context", string.Join("|", messages));
+        }
+
+        [PlaywrightTest("chromium/chromium.spec.js", "chromium", "Page.route should work with intervention headers")]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
+        public async Task PageRouteShouldWorkWithInterventionHeaders()
+        {
+            Server.SetRoute("/intervention", context => context.Response.WriteAsync($@"
+              <script>
+                document.write('<script src=""{TestConstants.CrossProcessHttpPrefix}/intervention.js"">' + '</scr' + 'ipt>');
+              </script>
+            "));
+            Server.SetRedirect("/intervention.js", "/redirect.js");
+
+            string interventionHeader = null;
+            Server.SetRoute("/redirect.js", context =>
+            {
+                interventionHeader = context.Request.Headers["intervention"];
+                return context.Response.WriteAsync("console.log(1);");
+            });
+
+            await Page.RouteAsync("*", (route, _) => route.ContinueAsync());
+
+            await Page.GoToAsync(TestConstants.ServerUrl + "/intervention");
+
+            Assert.Contains("feature/5718547946799104", interventionHeader);
         }
     }
 }

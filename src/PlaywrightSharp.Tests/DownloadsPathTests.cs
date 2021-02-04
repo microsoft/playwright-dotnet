@@ -1,29 +1,26 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.DownloadsPath
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>downloadspath.spec.js</playwright-file>
-    ///<playwright-describe>browserType.launch({downloadsPath})</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class DownloadsPathLaunchTests : PlaywrightSharpBaseTest, IAsyncLifetime
+    public class DownloadsPathTests : PlaywrightSharpBaseTest, IAsyncLifetime
     {
         private IBrowser _browser { get; set; }
         private TempDirectory _tmp = null;
 
         /// <inheritdoc/>
-        public DownloadsPathLaunchTests(ITestOutputHelper output) : base(output)
+        public DownloadsPathTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("downloadspath.spec.js", "browserType.launch({downloadsPath})", "should keep downloadsPath folder")]
+        [PlaywrightTest("downloads-path.spec.ts", "should keep downloadsPath folder")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldKeepDownloadsPathFolder()
         {
@@ -46,7 +43,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
             Assert.True(new DirectoryInfo(_tmp.Path).Exists);
         }
 
-        [PlaywrightTest("downloadspath.spec.js", "browserType.launch({downloadsPath})", "should delete downloads when context closes")]
+        [PlaywrightTest("downloads-path.spec.ts", "should delete downloads when context closes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeleteDownloadsWhenContextCloses()
         {
@@ -65,7 +62,7 @@ namespace PlaywrightSharp.Tests.DownloadsPath
             Assert.False(new FileInfo(path).Exists);
         }
 
-        [PlaywrightTest("downloadspath.spec.js", "browserType.launch({downloadsPath})", "should report downloads in downloadsPath folder")]
+        [PlaywrightTest("downloads-path.spec.ts", "should report downloads in downloadsPath folder")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDownloadsInDownloadsPathFolder()
         {

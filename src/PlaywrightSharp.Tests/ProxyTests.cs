@@ -7,19 +7,17 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.BrowserType
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>proxy.spec.js</playwright-file>
-    ///<playwright-describe>HTTP Proxy</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class HttpProxyTests : PlaywrightSharpBaseTest
+    public class ProxyTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
-        public HttpProxyTests(ITestOutputHelper output) : base(output)
+        public ProxyTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("proxy.spec.js", "HTTP Proxy", "should return all of the pages")]
+        [PlaywrightTest("proxy.spec.ts", "should return all of the pages")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnAllOfThePages()
         {
@@ -36,7 +34,7 @@ namespace PlaywrightSharp.Tests.BrowserType
             Assert.Equal("Served by the proxy", await page.GetTitleAsync());
         }
 
-        [PlaywrightTest("proxy.spec.js", "HTTP Proxy", "should authenticate")]
+        [PlaywrightTest("proxy.spec.ts", "should authenticate")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAuthenticate()
         {
@@ -69,7 +67,7 @@ namespace PlaywrightSharp.Tests.BrowserType
             Assert.Equal("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:secret")), await page.GetTitleAsync());
         }
 
-        [PlaywrightTest("proxy.spec.js", "HTTP Proxy", "should exclude patterns")]
+        [PlaywrightTest("proxy.spec.ts", "should exclude patterns")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldExcludePatterns()
         {

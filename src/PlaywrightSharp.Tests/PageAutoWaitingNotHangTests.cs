@@ -4,19 +4,17 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Autowaiting
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>autowaiting.spec.js</playwright-file>
-    ///<playwright-describe>Auto waiting should not hang when</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class AutoWaitingShouldNotHangTests : PlaywrightSharpPageBaseTest
+    public class PageAutoWaitingNotHangTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public AutoWaitingShouldNotHangTests(ITestOutputHelper output) : base(output)
+        public PageAutoWaitingNotHangTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("autowaiting.spec.js", "Auto waiting should not hang when", "clicking on links which do not commit navigation")]
+        [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "clicking on links which do not commit navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ClickingOnLinksWhichDoNotCommitNavigation()
         {
@@ -25,7 +23,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             await Page.ClickAsync("a");
         }
 
-        [PlaywrightTest("autowaiting.spec.js", "Auto waiting should not hang when", "calling window.stop async")]
+        [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "calling window.stop async")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task CallingWindowStopAsync()
         {
@@ -37,7 +35,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
              }}", TestConstants.EmptyPage);
         }
 
-        [PlaywrightTest("autowaiting.spec.js", "Auto waiting should not hang when", "calling window.stop")]
+        [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "calling window.stop")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task CallingWindowStop()
         {
@@ -49,7 +47,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
              }}", TestConstants.EmptyPage);
         }
 
-        [PlaywrightTest("autowaiting.spec.js", "Auto waiting should not hang when", "assigning location to about:blank")]
+        [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "assigning location to about:blank")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task AssigningLocationToAboutBlank()
         {
@@ -57,7 +55,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
             await Page.EvaluateAsync("window.location.href = 'about:blank';");
         }
 
-        [PlaywrightTest("autowaiting.spec.js", "Auto waiting should not hang when", "assigning location to about:blank after non-about:blank")]
+        [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "assigning location to about:blank after non-about:blank")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task AssigningLocationToAboutBlankAfterNonAboutBlank()
         {
@@ -69,7 +67,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
              }}", TestConstants.EmptyPage);
         }
 
-        [PlaywrightTest("autowaiting.spec.js", "Auto waiting should not hang when", "calling window.open and window.close")]
+        [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "calling window.open and window.close")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task CallingWindowOpenAndWindowClose()
         {
@@ -81,7 +79,7 @@ namespace PlaywrightSharp.Tests.Autowaiting
              }}", TestConstants.EmptyPage);
         }
 
-        [PlaywrightTest("autowaiting.spec.js", "Auto waiting should not hang when", "opening a popup")]
+        [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "opening a popup")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task OpeningAPopup()
         {

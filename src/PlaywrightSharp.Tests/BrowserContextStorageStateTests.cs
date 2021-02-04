@@ -11,8 +11,6 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
 {
-
-    /// <playwright-file>browsercontext-storage-state.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public sealed class BrowsercontextStorageStateTests : PlaywrightSharpPageBaseTest
     {

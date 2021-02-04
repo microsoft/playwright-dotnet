@@ -8,19 +8,17 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.BrowserContext
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>browsercontext.spec.js</playwright-file>
-    ///<playwright-describe>Events.BrowserContext.Page</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class EventsBrowserContextPageTests : PlaywrightSharpBrowserBaseTest
+    public class BrowserContectPageEventTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>
-        public EventsBrowserContextPageTests(ITestOutputHelper output) : base(output)
+        public BrowserContectPageEventTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "Events.BrowserContext.Page", "should have url")]
+        [PlaywrightTest("browsercontext-page-event.spec.ts", "should have url")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveUrl()
         {
@@ -34,7 +32,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(TestConstants.EmptyPage, otherPage.Page.Url);
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "Events.BrowserContext.Page", "should have url after domcontentloaded")]
+        [PlaywrightTest("browsercontext-page-event.spec.ts", "should have url after domcontentloaded")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveUrlAfterDomcontentloaded()
         {
@@ -49,7 +47,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(TestConstants.EmptyPage, otherPage.Page.Url);
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "Events.BrowserContext.Page", "should have about:blank url with domcontentloaded")]
+        [PlaywrightTest("browsercontext-page-event.spec.ts", "should have about:blank url with domcontentloaded")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveAboutBlankUrlWithDomcontentloaded()
         {
@@ -64,7 +62,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal("about:blank", otherPage.Page.Url);
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "Events.BrowserContext.Page", "should have about:blank for empty url with domcontentloaded")]
+        [PlaywrightTest("browsercontext-page-event.spec.ts", "should have about:blank for empty url with domcontentloaded")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveAboutBlankUrlForEmptyUrlWithDomcontentloaded()
         {
@@ -79,7 +77,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal("about:blank", otherPage.Page.Url);
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "Events.BrowserContext.Page", "should report when a new page is created and closed")]
+        [PlaywrightTest("browsercontext-page-event.spec.ts", "should report when a new page is created and closed")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportWhenANewPageIsCreatedAndClosed()
         {
@@ -111,7 +109,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.DoesNotContain(otherPage, allPages);
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "Events.BrowserContext.Page", "should report initialized pages")]
+        [PlaywrightTest("browsercontext-page-event.spec.ts", "should report initialized pages")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportInitializedPages()
         {
@@ -128,7 +126,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await evaluateTask;
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "Events.BrowserContext.Page", "should not crash while redirecting of original request was missed")]
+        [PlaywrightTest("browsercontext-page-event.spec.ts", "should not crash while redirecting of original request was missed")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotCrashWhileRedirectingOfOriginalRequestWasMissed()
         {
@@ -154,7 +152,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(TestConstants.ServerUrl + "/one-style.html", newPage.Url);
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "Events.BrowserContext.Page", "should have an opener")]
+        [PlaywrightTest("browsercontext-page-event.spec.ts", "should have an opener")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveAnOpener()
         {
@@ -172,7 +170,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Null(await page.GetOpenerAsync());
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "Events.BrowserContext.Page", "should fire page lifecycle events")]
+        [PlaywrightTest("browsercontext-page-event.spec.ts", "should fire page lifecycle events")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFirePageLifecycleEvents()
         {
@@ -197,7 +195,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
                 events);
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "Events.BrowserContext.Page", "should work with Shift-clicking")]
+        [PlaywrightTest("browsercontext-page-event.spec.ts", "should work with Shift-clicking")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldWorkWithShiftClicking()
         {
@@ -215,7 +213,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Null(await popupEventTask.Result.Page.GetOpenerAsync());
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "Events.BrowserContext.Page", "should report when a new page is created and closed")]
+        [PlaywrightTest("browsercontext-page-event.spec.ts", "should report when a new page is created and closed")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task ShouldWorkWithCtrlClicking()
         {

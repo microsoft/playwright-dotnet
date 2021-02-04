@@ -7,10 +7,8 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.BrowserContext
+namespace PlaywrightSharp.Tests
 {
-    /// <playwright-file>cookies.spec.js</playwright-file>
-    /// <playwright-describe>BrowserContext.setCookies</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class BrowserContextAddCookiesTests : PlaywrightSharpPageBaseTest
     {
@@ -19,7 +17,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should work")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -33,7 +31,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal("password=123456", await Page.EvaluateAsync<string>("document.cookie"));
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should roundtrip cookie")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should roundtrip cookie")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRoundtripCookie()
         {
@@ -51,7 +49,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(cookies, newCookies);
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should send cookie header")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should send cookie header")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendCookieHeader()
         {
@@ -74,7 +72,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal("cookie=value", cookie);
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should isolate cookies in browser contexts")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should isolate cookies in browser contexts")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateCookiesInBrowserContexts()
         {
@@ -104,7 +102,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal("page2value", cookies2.ElementAt(0).Value);
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should isolate session cookies")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should isolate session cookies")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateSessionCookies()
         {
@@ -127,7 +125,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Empty(cookies);
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should isolate persistent cookies")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should isolate persistent cookies")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolatePersistentCookies()
         {
@@ -153,7 +151,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Empty(cookies2);
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should isolate send cookie header")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should isolate send cookie header")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateSendCookieHeader()
         {
@@ -181,7 +179,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Empty(cookie);
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should isolate cookies between launches")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should isolate cookies between launches")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateCookiesBetweenLaunches()
         {
@@ -206,7 +204,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             }
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should set multiple cookies")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should set multiple cookies")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetMultipleCookies()
         {
@@ -240,7 +238,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             );
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should have |expires| set to |-1| for session cookies")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should have |expires| set to |-1| for session cookies")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveExpiresSetToMinus1ForSessionCookies()
         {
@@ -256,7 +254,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(-1, cookies.ElementAt(0).Expires);
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should set cookie with reasonable defaults")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should set cookie with reasonable defaults")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetCookieWithReasonableDefaults()
         {
@@ -278,7 +276,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(SameSite.None, cookie.SameSite);
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should set a cookie with a path")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should set a cookie with a path")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetACookieWithAPath()
         {
@@ -307,7 +305,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal("gridcookie=GRID", await Page.EvaluateAsync<string>("document.cookie"));
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should not set a cookie with blank page URL")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should not set a cookie with blank page URL")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotSetACookieWithBlankPageURL()
         {
@@ -330,7 +328,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal("Blank page can not have cookie \"example-cookie-blank\"", exception.Message);
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should not set a cookie on a data URL page")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should not set a cookie on a data URL page")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotSetACookieOnADataURLPage()
         {
@@ -347,7 +345,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal("Data URL page can not have cookie \"example-cookie\"", exception.Message);
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should default to setting secure cookie for HTTPS websites")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should default to setting secure cookie for HTTPS websites")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDefaultToSettingSecureCookieForHttpsWebsites()
         {
@@ -364,7 +362,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.True(cookie.Secure);
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should be able to set unsecure cookie for HTTP website")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should be able to set unsecure cookie for HTTP website")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToSetUnsecureCookieForHttpWebSite()
         {
@@ -381,7 +379,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.False(cookie.Secure);
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should set a cookie on a different domain")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should set a cookie on a different domain")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetACookieOnADifferentDomain()
         {
@@ -399,7 +397,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(SameSite.None, cookie.SameSite);
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should set cookies for a frame")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should set cookies for a frame")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetCookiesForAFrame()
         {
@@ -425,7 +423,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal("frame-cookie=value", await Page.FirstChildFrame().EvaluateAsync<string>("document.cookie"));
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.setCookies", "should(not) block third party cookies")]
+        [PlaywrightTest("browsercontext-add-cookies.spec.js", "should(not) block third party cookies")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotBlockThirdPartyCookies()
         {

@@ -7,17 +7,15 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.BrowserContext
 {
-    ///<playwright-file>browsercontext.spec.js</playwright-file>
-    ///<playwright-describe>BrowserContext({httpCredentials})</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class BrowserContextHttpCredentialsTests : PlaywrightSharpBrowserBaseTest
+    public class BrowserContextCredentialsTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>
-        public BrowserContextHttpCredentialsTests(ITestOutputHelper output) : base(output)
+        public BrowserContextCredentialsTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "BrowserContext({httpCredentials})", "sshould fail without credentials")]
+        [PlaywrightTest("browsercontext-credentials.spec.ts", "should fail without credentials")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWithoutCredentials()
         {
@@ -28,7 +26,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(HttpStatusCode.Unauthorized, response.Status);
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "BrowserContext({httpCredentials})", "should work with setHTTPCredentials")]
+        [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with setHTTPCredentials")]
         [Fact(Skip = "This sends a deprecarte which breaks the pipe")]
         public async Task ShouldWorkWithSetHTTPCredentials()
         {
@@ -46,7 +44,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(HttpStatusCode.OK, response.Status);
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "BrowserContext({httpCredentials})", "should work with correct credentials")]
+        [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with correct credentials")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCorrectCredentials()
         {
@@ -66,7 +64,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(HttpStatusCode.OK, response.Status);
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "BrowserContext({httpCredentials})", "should fail if wrong credentials")]
+        [PlaywrightTest("browsercontext-credentials.spec.ts", "should fail if wrong credentials")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailIfWrongCredentials()
         {
@@ -86,7 +84,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(HttpStatusCode.Unauthorized, response.Status);
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "BrowserContext({httpCredentials})", "should return resource body")]
+        [PlaywrightTest("browsercontext-credentials.spec.ts", "should return resource body")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnResourceBody()
         {

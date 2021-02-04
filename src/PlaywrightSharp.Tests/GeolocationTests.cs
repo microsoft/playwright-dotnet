@@ -7,10 +7,8 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.BrowserContext
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>geolocation.spec.js</playwright-file>
-    ///<playwright-describe>Overrides.setGeolocation</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class GeolocationTests : PlaywrightSharpPageBaseTest
     {
@@ -19,7 +17,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
         }
 
-        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "should work")]
+        [PlaywrightTest("geolocation.spec.ts", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -41,7 +39,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             }, geolocation);
         }
 
-        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "should throw when invalid longitude")]
+        [PlaywrightTest("geolocation.spec.ts", "should throw when invalid longitude")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenInvalidLongitude()
         {
@@ -55,7 +53,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Contains("failed", exception.Message);
         }
 
-        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "should isolate contexts")]
+        [PlaywrightTest("geolocation.spec.ts", "should isolate contexts")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateContexts()
         {
@@ -98,11 +96,11 @@ namespace PlaywrightSharp.Tests.BrowserContext
             }, geolocation2);
         }
 
-        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "should throw with missing latitude")]
+        [PlaywrightTest("geolocation.spec.ts", "should throw with missing latitude")]
         [Fact(Skip = "We don't this test")]
         public void ShouldThrowWithMissingLatitude() { }
 
-        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "should not modify passed default options object")]
+        [PlaywrightTest("geolocation.spec.ts", "should not modify passed default options object")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldNotModifyPassedDefaultOptionsObject()
         {
@@ -118,11 +116,11 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(options.Geolocation, geolocation);
         }
 
-        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "should throw with missing longitude in default options")]
+        [PlaywrightTest("geolocation.spec.ts", "should throw with missing longitude in default options")]
         [Fact(Skip = "We don't this test")]
         public void ShouldThrowWithMissingLongitudeInDefaultOptions() { }
 
-        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "should use context options")]
+        [PlaywrightTest("geolocation.spec.ts", "should use context options")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldUseContextOptions()
         {
@@ -146,7 +144,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(options.Geolocation, geolocation);
         }
 
-        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "watchPosition should be notified")]
+        [PlaywrightTest("geolocation.spec.ts", "watchPosition should be notified")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task WatchPositionShouldBeNotified()
         {
@@ -187,7 +185,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Contains("lat=40 lng=50", allMessages);
         }
 
-        [PlaywrightTest("geolocation.spec.js", "Overrides.setGeolocation", "should use context options for popup")]
+        [PlaywrightTest("geolocation.spec.ts", "should use context options for popup")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldUseContextOptionsForPopup()
         {

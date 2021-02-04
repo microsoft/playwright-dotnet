@@ -1,29 +1,23 @@
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
 using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.BrowserContext
+namespace PlaywrightSharp.Tests
 {
-    /// <playwright-file>defaultbrowsercontext.spec.js</playwright-file>
-    /// <playwright-describe>launchPersistentContext()</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class LaunchPersistentContextTests : PlaywrightSharpBaseTest
+    public class DefaultBrowserContext1Tests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
-        public LaunchPersistentContextTests(ITestOutputHelper output) : base(output)
+        public DefaultBrowserContext1Tests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("defaultbrowsercontext.spec.js", "launchPersistentContext()", "context.cookies() should work")]
+        [PlaywrightTest("defaultbrowsercontext-1.specs.ts", "context.cookies() should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ContextCookiesShouldWork()
         {
@@ -51,7 +45,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext.spec.js", "launchPersistentContext()", "context.addCookies() should work")]
+        [PlaywrightTest("defaultbrowsercontext-1.specs.ts", "context.addCookies() should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ContextAddCookiesShouldWork()
         {
@@ -81,7 +75,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext.spec.js", "launchPersistentContext()", "context.clearCookies() should work")]
+        [PlaywrightTest("defaultbrowsercontext-1.specs.ts", "context.clearCookies() should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ContextClearCookiesShouldWork()
         {
@@ -113,7 +107,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext.spec.js", "launchPersistentContext()", "should(not) block third party cookies")]
+        [PlaywrightTest("defaultbrowsercontext-1.specs.ts", "should(not) block third party cookies")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotBlockThirdPartyCookies()
         {
@@ -157,7 +151,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext.spec.js", "launchPersistentContext()", "should support viewport option")]
+        [PlaywrightTest("defaultbrowsercontext-1.specs.ts", "should support viewport option")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportViewportOption()
         {
@@ -178,7 +172,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext.spec.js", "launchPersistentContext()", "should support deviceScaleFactor option")]
+        [PlaywrightTest("defaultbrowsercontext-1.specs.ts", "should support deviceScaleFactor option")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportDeviceScaleFactorOption()
         {
@@ -193,7 +187,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext.spec.js", "launchPersistentContext()", "should support userAgent option")]
+        [PlaywrightTest("defaultbrowsercontext-1.specs.ts", "should support userAgent option")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportUserAgentOption()
         {
@@ -214,7 +208,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext.spec.js", "launchPersistentContext()", "should support bypassCSP option")]
+        [PlaywrightTest("defaultbrowsercontext-1.specs.ts", "should support bypassCSP option")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportBypassCSPOption()
         {
@@ -231,7 +225,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext.spec.js", "launchPersistentContext()", "should support javascriptEnabled option")]
+        [PlaywrightTest("defaultbrowsercontext-1.specs.ts", "should support javascriptEnabled option")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportJavascriptEnabledOption()
         {
@@ -256,7 +250,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext.spec.js", "launchPersistentContext()", "should support httpCredentials option")]
+        [PlaywrightTest("defaultbrowsercontext-1.specs.ts", "should support httpCredentials option")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRupportHttpCredentialsOption()
         {
@@ -277,7 +271,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext.spec.js", "launchPersistentContext()", "should support offline option")]
+        [PlaywrightTest("defaultbrowsercontext-1.specs.ts", "should support offline option")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportOfflineOption()
         {
@@ -292,7 +286,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext.spec.js", "launchPersistentContext()", "should support acceptDownloads option")]
+        [PlaywrightTest("defaultbrowsercontext-1.specs.ts", "should support acceptDownloads option")]
         [Fact(Skip = "Skipped on playwright")]
         public void ShouldSupportAcceptDownloadsOption()
         {

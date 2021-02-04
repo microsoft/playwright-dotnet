@@ -8,19 +8,17 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Chromium
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-    ///<playwright-describe>CSSCoverage</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class CSSCoverageTests : PlaywrightSharpPageBaseTest
+    public class ChroimiumCSSCoverageTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public CSSCoverageTests(ITestOutputHelper output) : base(output)
+        public ChroimiumCSSCoverageTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("chromium/chromium.spec.js", "CSSCoverage", "should work")]
+        [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should work")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWork()
         {
@@ -41,7 +39,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal("div { color: green; }", coverage[0].Text.Substring(range.Start, range.End - range.Start));
         }
 
-        [PlaywrightTest("chromium/chromium.spec.js", "CSSCoverage", "should report sourceURLs")]
+        [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should report sourceURLs")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportSourceUrls()
         {
@@ -52,7 +50,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal("nicename.css", coverage[0].Url);
         }
 
-        [PlaywrightTest("chromium/chromium.spec.js", "CSSCoverage", "should report multiple stylesheets")]
+        [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should report multiple stylesheets")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportMultipleStylesheets()
         {
@@ -65,7 +63,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Contains("/csscoverage/stylesheet2.css", orderedList[1].Url);
         }
 
-        [PlaywrightTest("chromium/chromium.spec.js", "CSSCoverage", "should report stylesheets that have no coverage")]
+        [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should report stylesheets that have no coverage")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportStylesheetsThatHaveNoCoverage()
         {
@@ -78,7 +76,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Empty(entry.Ranges);
         }
 
-        [PlaywrightTest("chromium/chromium.spec.js", "CSSCoverage", "should work with media queries")]
+        [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should work with media queries")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWorkWithMediaQueries()
         {
@@ -98,7 +96,7 @@ namespace PlaywrightSharp.Tests.Chromium
             }, coverage[0].Ranges);
         }
 
-        [PlaywrightTest("chromium/chromium.spec.js", "CSSCoverage", "should work with complicated usecases")]
+        [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should work with complicated usecases")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWorkWithComplicatedUseCases()
         {
@@ -126,7 +124,7 @@ namespace PlaywrightSharp.Tests.Chromium
                 Regex.Replace(TestUtils.CompressText(JsonConvert.SerializeObject(coverage)), @":\d{4}\/", ":<PORT>/"));
         }
 
-        [PlaywrightTest("chromium/chromium.spec.js", "CSSCoverage", "should ignore injected stylesheets")]
+        [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should ignore injected stylesheets")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldIgnoreInjectedStylesheets()
         {
@@ -137,6 +135,47 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal("10px", margin);
             var coverage = await Page.Coverage.StopCSSCoverageAsync();
             Assert.Empty(coverage);
+        }
+
+        [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should report stylesheets across navigations")]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
+        public async Task ShouldReportStylesheetsAcrossNavigations()
+        {
+            await Page.Coverage.StartCSSCoverageAsync(false);
+            await Page.GoToAsync(TestConstants.ServerUrl + "/csscoverage/multiple.html");
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var coverage = await Page.Coverage.StopCSSCoverageAsync();
+            Assert.Equal(2, coverage.Length);
+        }
+
+        [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should NOT report stylesheets across navigations")]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
+        public async Task ShouldNotReportScriptsAcrossNavigations()
+        {
+            await Page.Coverage.StartCSSCoverageAsync();
+            await Page.GoToAsync(TestConstants.ServerUrl + "/csscoverage/multiple.html");
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var coverage = await Page.Coverage.StopCSSCoverageAsync();
+            Assert.Empty(coverage);
+        }
+
+        [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should work with a recently loaded stylesheet")]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
+        public async Task ShouldWorkWithArRecentlyLoadedStylesheet()
+        {
+            await Page.Coverage.StartCSSCoverageAsync();
+            await Page.EvaluateAsync(@"async url => {
+                document.body.textContent = 'hello, world';
+
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = url;
+                document.head.appendChild(link);
+                await new Promise(x => link.onload = x);
+                await new Promise(f => requestAnimationFrame(f));
+            }", TestConstants.ServerUrl + "/csscoverage/stylesheet1.css");
+            var coverage = await Page.Coverage.StopCSSCoverageAsync();
+            Assert.Single(coverage);
         }
     }
 }

@@ -1,27 +1,22 @@
-using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Chromium
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>chromium/chromium.spec.js</playwright-file>
-    ///<playwright-describe>JSCoverage</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class JSCoverageTests : PlaywrightSharpPageBaseTest
+    public class ChromiumJSCoverageTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public JSCoverageTests(ITestOutputHelper output) : base(output)
+        public ChromiumJSCoverageTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("chromium/chromium.spec.js", "JSCoverage", "should work")]
+        [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "should work")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWork()
         {
@@ -33,7 +28,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal(1, coverage[0].Functions.FirstOrDefault(f => f.FunctionName == "foo").Ranges[0].Count);
         }
 
-        [PlaywrightTest("chromium/chromium.spec.js", "JSCoverage", "should report sourceURLs")]
+        [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "should report sourceURLs")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportSourceUrls()
         {
@@ -44,7 +39,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal("nicename.js", coverage[0].Url);
         }
 
-        [PlaywrightTest("chromium/chromium.spec.js", "JSCoverage", "should ignore eval() scripts by default")]
+        [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "should ignore eval() scripts by default")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldIgnoreEvalScriptsByDefault()
         {
@@ -54,7 +49,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Single(coverage);
         }
 
-        [PlaywrightTest("chromium/chromium.spec.js", "JSCoverage", "shouldn't ignore eval() scripts if reportAnonymousScripts is true")]
+        [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "shouldn't ignore eval() scripts if reportAnonymousScripts is true")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldNotIgnoreEvalScriptsIfReportAnonymousScriptsIsTrue()
         {
@@ -65,7 +60,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal(2, coverage.Length);
         }
 
-        [PlaywrightTest("chromium/chromium.spec.js", "JSCoverage", "should report multiple scripts")]
+        [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "should report multiple scripts")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportMultipleScripts()
         {
@@ -76,6 +71,40 @@ namespace PlaywrightSharp.Tests.Chromium
             var orderedList = coverage.OrderBy(c => c.Url).ToArray();
             Assert.Contains("/jscoverage/script1.js", orderedList[0].Url);
             Assert.Contains("/jscoverage/script2.js", orderedList[1].Url);
+        }
+
+        [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "should report scripts across navigations when disabled")]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
+        public async Task ShouldReportScriptsAcrossNavigationsWhenDisabled()
+        {
+            await Page.Coverage.StartJSCoverageAsync(false);
+            await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/multiple.html");
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var coverage = await Page.Coverage.StopJSCoverageAsync();
+            Assert.Equal(2, coverage.Length);
+        }
+
+        [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "should NOT report scripts across navigations when enabled")]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
+        public async Task ShouldNotReportScriptsAcrossNavigationsWhenEnabled()
+        {
+            await Page.Coverage.StartJSCoverageAsync();
+            await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/multiple.html");
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var coverage = await Page.Coverage.StopJSCoverageAsync();
+            Assert.Empty(coverage);
+        }
+
+        [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "should not hang when there is a debugger statement")]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
+        public async Task ShouldNotHangWhenThereIsADebuggerStatement()
+        {
+            await Page.Coverage.StartJSCoverageAsync();
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.EvaluateAsync(@"() => {
+                debugger; // eslint-disable-line no-debugger
+            }");
+            await Page.Coverage.StopJSCoverageAsync();
         }
     }
 }

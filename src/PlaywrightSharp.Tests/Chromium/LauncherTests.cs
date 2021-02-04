@@ -1,7 +1,8 @@
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Chromium;
-using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
@@ -9,19 +10,17 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Chromium.Launcher
+namespace PlaywrightSharp.Tests.Chromium
 {
-    ///<playwright-file>chromium/launcher.spec.js</playwright-file>
-    ///<playwright-describe>extensions</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class ExtensionsTests : PlaywrightSharpBaseTest
+    public class LauncherTests : PlaywrightSharpBaseTest
     {
         /// <inheritdoc/>
-        public ExtensionsTests(ITestOutputHelper output) : base(output)
+        public LauncherTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("chromium/launcher.spec.js", "extensions", "should return background pages")]
+        [PlaywrightTest("chromium/launcher.spec.ts", "should return background pages")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReturnBackgroundPages()
         {
@@ -42,6 +41,29 @@ namespace PlaywrightSharp.Tests.Chromium.Launcher
             Assert.NotNull(backgroundPage);
             Assert.Contains(backgroundPage, ((IChromiumBrowserContext)context).BackgroundPages);
             Assert.DoesNotContain(backgroundPage, context.Pages);
+        }
+
+        [PlaywrightTest("chromium/launcher.spec.ts", "should not create pages automatically")]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
+        public async Task ShouldNotCreatePagesAutomatically()
+        {
+            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            var browserSession = await ((IChromiumBrowser)browser).NewBrowserCDPSessionAsync();
+
+            var targets = new List<JsonElement?>();
+
+            browserSession.MessageReceived += (sender, e) =>
+            {
+                if (e.Method == "Target.targetCreated" && e.Params.Value.GetProperty("targetInfo").GetProperty("type").GetString() != "browser")
+                {
+                    targets.Add(e.Params);
+                }
+            };
+
+            await browserSession.SendAsync("Target.setDiscoverTargets", new { discover = true });
+            await browser.NewContextAsync();
+            await browser.CloseAsync();
+            Assert.Empty(targets);
         }
     }
 }

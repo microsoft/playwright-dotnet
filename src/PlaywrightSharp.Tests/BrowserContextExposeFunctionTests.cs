@@ -8,7 +8,6 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>browsercontext-expose-function.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class BrowserContextExposeFunctionTests : PlaywrightSharpBrowserContextBaseTest
     {

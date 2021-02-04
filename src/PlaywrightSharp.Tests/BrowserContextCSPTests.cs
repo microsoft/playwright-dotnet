@@ -4,19 +4,17 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.BrowserContext
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>browsercontext.spec.js</playwright-file>
-    ///<playwright-describe>BrowserContext({bypassCSP})</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class BrowserContextBypassCSPTests : PlaywrightSharpBrowserBaseTest
+    public class BrowserContextCSPTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>
-        public BrowserContextBypassCSPTests(ITestOutputHelper output) : base(output)
+        public BrowserContextCSPTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "BrowserContext({bypassCSP})", "should bypass CSP meta tag")]
+        [PlaywrightTest("browsercontext-csp.spec.ts", "should bypass CSP meta tag")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBypassCSPMetatag()
         {
@@ -38,7 +36,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             }
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "BrowserContext({bypassCSP})", "should bypass CSP header")]
+        [PlaywrightTest("browsercontext-csp.spec.ts", "should bypass CSP header")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBypassCSPHeader()
         {
@@ -63,7 +61,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             }
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "BrowserContext({bypassCSP})", "should bypass after cross-process navigation")]
+        [PlaywrightTest("browsercontext-csp.spec.ts", "should bypass after cross-process navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBypassAfterCrossProcessNavigation()
         {
@@ -78,7 +76,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Equal(42, await page.EvaluateAsync<int>("window.__injected"));
         }
 
-        [PlaywrightTest("browsercontext.spec.js", "BrowserContext({bypassCSP})", "should bypass CSP in iframes as well")]
+        [PlaywrightTest("browsercontext-csp.spec.ts", "should bypass CSP in iframes as well")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBypassCSPInIframesAsWell()
         {

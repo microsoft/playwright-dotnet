@@ -4,10 +4,8 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.BrowserContext
+namespace PlaywrightSharp.Tests
 {
-    /// <playwright-file>cookies.spec.js</playwright-file>
-    /// <playwright-describe>BrowserContext.clearCookies</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class BrowserContextClearCookiesTests : PlaywrightSharpPageBaseTest
     {
@@ -16,7 +14,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
         {
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.clearCookies", "should clear cookies")]
+        [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should clear cookies")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearCookes()
         {
@@ -34,7 +32,7 @@ namespace PlaywrightSharp.Tests.BrowserContext
             Assert.Empty(await Page.EvaluateAsync<string>("document.cookie"));
         }
 
-        [PlaywrightTest("cookies.spec.js", "BrowserContext.clearCookies", "should isolate cookies when clearing")]
+        [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should isolate cookies when clearing")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateWhenClearing()
         {

@@ -6,19 +6,17 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Accessibility
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>accessibility.spec.js</playwright-file>
-    ///<playwright-describe>Accessibility</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class AccessibilityTests : PlaywrightSharpPageBaseTest
+    public class PageAccessibilityTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public AccessibilityTests(ITestOutputHelper output) : base(output)
+        public PageAccessibilityTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("accessibility.spec.js", "Accessibility", "should work")]
+        [PlaywrightTest("page-accessibility.spec.ts", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -203,7 +201,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.True(result.AreEqual, result.DifferencesString);
         }
 
-        [PlaywrightTest("accessibility.spec.js", "Accessibility", "should work with regular text")]
+        [PlaywrightTest("page-accessibility.spec.ts", "should work with regular text")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithRegularRext()
         {
@@ -216,7 +214,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             }, snapshot.Children[0]);
         }
 
-        [PlaywrightTest("accessibility.spec.js", "Accessibility", "roledescription")]
+        [PlaywrightTest("page-accessibility.spec.ts", "roledescription")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task RoleDescription()
         {
@@ -225,7 +223,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.Equal("foo", snapshot.Children[0].RoleDescription);
         }
 
-        [PlaywrightTest("accessibility.spec.js", "Accessibility", "orientation")]
+        [PlaywrightTest("page-accessibility.spec.ts", "orientation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task Orientation()
         {
@@ -234,7 +232,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.Equal("vertical", snapshot.Children[0].Orientation);
         }
 
-        [PlaywrightTest("accessibility.spec.js", "Accessibility", "autocomplete")]
+        [PlaywrightTest("page-accessibility.spec.ts", "autocomplete")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task Autocomplete()
         {
@@ -243,7 +241,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.Equal("list", snapshot.Children[0].AutoComplete);
         }
 
-        [PlaywrightTest("accessibility.spec.js", "Accessibility", "multiselectable")]
+        [PlaywrightTest("page-accessibility.spec.ts", "multiselectable")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task Multiselectable()
         {
@@ -252,7 +250,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.True(snapshot.Children[0].Multiselectable);
         }
 
-        [PlaywrightTest("accessibility.spec.js", "Accessibility", "keyshortcuts")]
+        [PlaywrightTest("page-accessibility.spec.ts", "keyshortcuts")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task KeyShortcuts()
         {
@@ -261,7 +259,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.Equal("foo", snapshot.Children[0].KeyShortcuts);
         }
 
-        [PlaywrightTest("accessibility.spec.js", "Accessibility", "filtering children of leaf nodes")]
+        [PlaywrightTest("page-accessibility.spec.ts", "filtering children of leaf nodes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task FilteringChildrenOfLeafNodes()
         {
@@ -295,7 +293,7 @@ namespace PlaywrightSharp.Tests.Accessibility
                 snapshot);
         }
 
-        [PlaywrightTest("accessibility.spec.js", "Accessibility", "rich text editable fields should have children")]
+        [PlaywrightTest("page-accessibility.spec.ts", "rich text editable fields should have children")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task RichTextEditableFieldsShouldHaveChildren()
         {
@@ -354,7 +352,7 @@ namespace PlaywrightSharp.Tests.Accessibility
             Assert.Equal(node, snapshot.Children[0]);
         }
 
-        [PlaywrightTest("accessibility.spec.js", "Accessibility", "rich text editable fields with role should have children")]
+        [PlaywrightTest("page-accessibility.spec.ts", "rich text editable fields with role should have children")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task RichTextEditableFieldsWithRoleShouldHaveChildren()
         {
@@ -406,6 +404,116 @@ namespace PlaywrightSharp.Tests.Accessibility
             }
 
             Assert.Equal(node, (await Page.Accessibility.SnapshotAsync()).Children[0]);
+        }
+
+        [PlaywrightTest("page-accessibility.spec.ts", "should work a button")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldWorkAButton()
+        {
+            await Page.SetContentAsync("<button>My Button</button>");
+            var button = await Page.QuerySelectorAsync("button");
+
+            Assert.Equal(
+                new SerializedAXNode
+                {
+                    Role = "button",
+                    Name = "My Button"
+                },
+                await Page.Accessibility.SnapshotAsync(root: button));
+        }
+
+        [PlaywrightTest("page-accessibility.spec.ts", "should work an input")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldWorkAnInput()
+        {
+            await Page.SetContentAsync("<input title=\"My Input\" value=\"My Value\">");
+            var input = await Page.QuerySelectorAsync("input");
+
+            Assert.Equal(
+                new SerializedAXNode
+                {
+                    Role = "textbox",
+                    Name = "My Input",
+                    ValueString = "My Value"
+                },
+                await Page.Accessibility.SnapshotAsync(root: input));
+        }
+
+        [PlaywrightTest("page-accessibility.spec.ts", "should work on a menu")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldWorkOnAMenu()
+        {
+            await Page.SetContentAsync(@"
+            <div role=""menu"" title=""My Menu"">
+              <div role=""menuitem"">First Item</div>
+              <div role=""menuitem"">Second Item</div>
+              <div role=""menuitem"">Third Item</div>
+            </div>
+            ");
+            var menu = await Page.QuerySelectorAsync("div[role=\"menu\"]");
+
+            var nodeToCheck = new SerializedAXNode
+            {
+                Role = "menu",
+                Name = "My Menu",
+                Children = new SerializedAXNode[]
+                    {
+                        new SerializedAXNode
+                        {
+                            Role = "menuitem",
+                            Name = "First Item"
+                        },
+                        new SerializedAXNode
+                        {
+                            Role = "menuitem",
+                            Name = "Second Item"
+                        },
+                        new SerializedAXNode
+                        {
+                            Role = "menuitem",
+                            Name = "Third Item"
+                        }
+                    },
+                Orientation = TestConstants.IsWebKit ? "vertical" : null
+            };
+
+            CompareLogic compareLogic = new CompareLogic();
+            var result = compareLogic.Compare(nodeToCheck, await Page.Accessibility.SnapshotAsync(root: menu));
+            Assert.True(result.AreEqual, result.DifferencesString);
+        }
+
+        [PlaywrightTest("page-accessibility.spec.ts", "should return null when the element is no longer in DOM")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldReturnNullWhenTheElementIsNoLongerInDOM()
+        {
+            await Page.SetContentAsync("<button>My Button</button>");
+            var button = await Page.QuerySelectorAsync("button");
+            await Page.EvalOnSelectorAsync("button", "button => button.remove()");
+
+            Assert.Null(await Page.Accessibility.SnapshotAsync(root: button));
+        }
+
+        [PlaywrightTest("page-accessibility.spec.ts", "should show uninteresting nodes")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldReportUninterestingNodes()
+        {
+            await Page.SetContentAsync(@"
+            <div id=""root"" role=""textbox"">
+              <div>
+                hello
+                <div>
+                  world
+                </div>
+              </div>
+            </div>
+            ");
+
+            var root = await Page.QuerySelectorAsync("#root");
+            var snapshot = await Page.Accessibility.SnapshotAsync(false, root);
+            Assert.Equal("textbox", snapshot.Role);
+            Assert.Contains("hello", snapshot.ValueString.ToString());
+            Assert.Contains("world", snapshot.ValueString.ToString());
+            Assert.NotEmpty(snapshot.Children);
         }
     }
 }

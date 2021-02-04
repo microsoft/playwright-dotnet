@@ -11,7 +11,6 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>browsercontext-basic.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class BrowserContextBasicTests : PlaywrightSharpBrowserBaseTest
     {

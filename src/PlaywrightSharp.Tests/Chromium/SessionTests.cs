@@ -12,17 +12,15 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Chromium
 {
-    ///<playwright-file>chromium/session.spec.js</playwright-file>
-    ///<playwright-describe>ChromiumBrowserContext.createSession</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class ChromiumBrowserContextCreateSessionTests : PlaywrightSharpPageBaseTest
+    public class SessionTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public ChromiumBrowserContextCreateSessionTests(ITestOutputHelper output) : base(output)
+        public SessionTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("chromium/session.spec.js", "ChromiumBrowserContext.createSession", "should work")]
+        [PlaywrightTest("chromium/session.spec.ts", "session", "should work")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWork()
         {
@@ -36,7 +34,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal("bar", foo);
         }
 
-        [PlaywrightTest("chromium/session.spec.js", "ChromiumBrowserContext.createSession", "should send events")]
+        [PlaywrightTest("chromium/session.spec.ts", "session", "should send events")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldSendEvents()
         {
@@ -57,7 +55,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Single(events);
         }
 
-        [PlaywrightTest("chromium/session.spec.js", "ChromiumBrowserContext.createSession", "should enable and disable domains independently")]
+        [PlaywrightTest("chromium/session.spec.ts", "session", "should enable and disable domains independently")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldEnableAndDisableDomainsIndependently()
         {
@@ -83,7 +81,7 @@ namespace PlaywrightSharp.Tests.Chromium
                 Page.EvaluateAsync("//# sourceURL=foo.js"));
         }
 
-        [PlaywrightTest("chromium/session.spec.js", "ChromiumBrowserContext.createSession", "should be able to detach session")]
+        [PlaywrightTest("chromium/session.spec.ts", "session", "should be able to detach session")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldBeAbleToDetachSession()
         {
@@ -106,7 +104,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Contains(DriverMessages.BrowserOrContextClosedExceptionMessage, exception.Message);
         }
 
-        [PlaywrightTest("chromium/session.spec.js", "ChromiumBrowserContext.createSession", "should throw nice errors")]
+        [PlaywrightTest("chromium/session.spec.ts", "session", "should throw nice errors")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldThrowNiceErrors()
         {
@@ -121,7 +119,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Contains("ThisCommand.DoesNotExist", exception.Message);
         }
 
-        [PlaywrightTest("chromium/session.spec.js", "ChromiumBrowserContext.createSession", "should not break page.close()")]
+        [PlaywrightTest("chromium/session.spec.ts", "session", "should not break page.close()")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldNotBreakPageClose()
         {
@@ -130,13 +128,34 @@ namespace PlaywrightSharp.Tests.Chromium
             await Page.CloseAsync();
         }
 
-        [PlaywrightTest("chromium/session.spec.js", "ChromiumBrowserContext.createSession", "should detach when page closes")]
+        [PlaywrightTest("chromium/session.spec.ts", "session", "should detach when page closes")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldDetachWhenPageCloses()
         {
             var session = await ((IChromiumBrowserContext)Page.Context).NewCDPSessionAsync(Page);
             await Page.CloseAsync();
             await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => session.DetachAsync());
+        }
+
+        [PlaywrightTest("chromium/session.spec.ts", "session", "should work with newBrowserCDPSession")]
+        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
+        public async Task ShouldWorkWithNewBrowserCDPSession()
+        {
+            var session = await ((IChromiumBrowser)Browser).NewBrowserCDPSessionAsync();
+            Assert.NotNull(await session.SendAsync<object>("Browser.getVersion"));
+
+            bool gotEvent = false;
+            session.MessageReceived += (sender, e) =>
+            {
+                if (e.Method == "Target.targetCreated")
+                {
+                    gotEvent = true;
+                }
+            };
+
+            await session.SendAsync("Target.setDiscoverTargets", new { discover = true });
+            Assert.True(gotEvent);
+            await session.DetachAsync();
         }
     }
 }
