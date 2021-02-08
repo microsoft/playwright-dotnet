@@ -4,10 +4,8 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.ElementHandle
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>elementhandle.spec.js</playwright-file>
-    ///<playwright-describe>ElementHandle.click</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ElementHandleClickTests : PlaywrightSharpPageBaseTest
     {
@@ -16,7 +14,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         {
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.click", "should work")]
+        [PlaywrightTest("elementhandle-click.spec.ts", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -26,7 +24,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("() => result"));
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.click", "should work with Node removed")]
+        [PlaywrightTest("elementhandle-click.spec.ts", "should work with Node removed")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNodeRemoved()
         {
@@ -37,7 +35,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("() => result"));
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.click", "should work for Shadow DOM v1")]
+        [PlaywrightTest("elementhandle-click.spec.ts", "should work for Shadow DOM v1")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForShadowDOMV1()
         {
@@ -47,7 +45,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.True(await Page.EvaluateAsync<bool>("() => clicked"));
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.click", "should work for TextNodes")]
+        [PlaywrightTest("elementhandle-click.spec.ts", "should work for TextNodes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForTextNodes()
         {
@@ -57,7 +55,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("() => result"));
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.click", "should throw for detached nodes")]
+        [PlaywrightTest("elementhandle-click.spec.ts", "should throw for detached nodes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForDetachedNodes()
         {
@@ -68,7 +66,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Contains("Element is not attached to the DOM", exception.Message);
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.click", "should throw for hidden nodes with force")]
+        [PlaywrightTest("elementhandle-click.spec.ts", "should throw for hidden nodes with force")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForHiddenNodesWithForce()
         {
@@ -79,7 +77,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Contains("Element is not visible", exception.Message);
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.click", "should throw for recursively hidden nodes with force")]
+        [PlaywrightTest("elementhandle-click.spec.ts", "should throw for recursively hidden nodes with force")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForRecursivelyHiddenNodesWithForce()
         {
@@ -90,7 +88,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Contains("Element is not visible", exception.Message);
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.click", "should throw for &lt;br&gt; elements with force")]
+        [PlaywrightTest("elementhandle-click.spec.ts", "should throw for &lt;br&gt; elements with force")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForBrElementsWithforce()
         {
@@ -100,7 +98,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Contains("Element is outside of the viewport", exception.Message);
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.click", "should double click the button")]
+        [PlaywrightTest("elementhandle-click.spec.ts", "should double click the button")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDoubleClickTheButton()
         {

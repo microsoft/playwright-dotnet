@@ -1,12 +1,11 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Evaluation
+namespace PlaywrightSharp.Tests
 {
     ///<playwright-file>evaluation.spec.js</playwright-file>
     ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
@@ -18,7 +17,7 @@ namespace PlaywrightSharp.Tests.Evaluation
         {
         }
 
-        [PlaywrightTest("evaluation.spec.js", "Page.evaluateOnNewDocument", "should evaluate before anything else on the page")]
+        [PlaywrightTest("page-add-init-script.spec.ts", "should evaluate before anything else on the page")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEvaluateBeforeAnythingElseOnThePage()
         {
@@ -29,7 +28,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(123, await Page.EvaluateAsync<int>("() => window.result"));
         }
 
-        [PlaywrightTest("evaluation.spec.js", "Page.evaluateOnNewDocument", "should work with a path")]
+        [PlaywrightTest("page-add-init-script.spec.ts", "should work with a path")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAPath()
         {
@@ -39,7 +38,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(123, await Page.EvaluateAsync<int>("() => window.result"));
         }
 
-        [PlaywrightTest("evaluation.spec.js", "Page.evaluateOnNewDocument", "should work with a path")]
+        [PlaywrightTest("page-add-init-script.spec.ts", "should work with a path")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithContents()
         {
@@ -50,12 +49,12 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(123, await Page.EvaluateAsync<int>("() => window.result"));
         }
 
-        [PlaywrightTest("evaluation.spec.js", "Page.evaluateOnNewDocument", "should throw without path and content")]
+        [PlaywrightTest("page-add-init-script.spec.ts", "should throw without path and content")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public Task ShouldThrowWithoutPathAndContent()
             => Assert.ThrowsAnyAsync<ArgumentException>(() => Page.AddInitScriptAsync());
 
-        [PlaywrightTest("evaluation.spec.js", "Page.evaluateOnNewDocument", "should work with browser context scripts")]
+        [PlaywrightTest("page-add-init-script.spec.ts", "should work with browser context scripts")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBrowserContextScripts()
         {
@@ -72,7 +71,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(123, await page.EvaluateAsync<int>("() => window.result"));
         }
 
-        [PlaywrightTest("evaluation.spec.js", "Page.evaluateOnNewDocument", "should work with browser context scripts with path")]
+        [PlaywrightTest("page-add-init-script.spec.ts", "should work with browser context scripts with path")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBrowserContextScriptsWithPath()
         {
@@ -85,7 +84,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(123, await page.EvaluateAsync<int>("() => window.result"));
         }
 
-        [PlaywrightTest("evaluation.spec.js", "Page.evaluateOnNewDocument", "should work with browser context scripts for already created pages")]
+        [PlaywrightTest("page-add-init-script.spec.ts", "should work with browser context scripts for already created pages")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBrowserContextScriptsForAlreadyCreatedPages()
         {
@@ -104,7 +103,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(123, await page.EvaluateAsync<int>("() => window.result"));
         }
 
-        [PlaywrightTest("evaluation.spec.js", "Page.evaluateOnNewDocument", "should support multiple scripts")]
+        [PlaywrightTest("page-add-init-script.spec.ts", "should support multiple scripts")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportMultipleScripts()
         {
@@ -119,7 +118,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Equal(2, await Page.EvaluateAsync<int>("() => window.script2"));
         }
 
-        [PlaywrightTest("evaluation.spec.js", "Page.evaluateOnNewDocument", "should work with CSP")]
+        [PlaywrightTest("page-add-init-script.spec.ts", "should work with CSP")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCSP()
         {
@@ -143,7 +142,7 @@ namespace PlaywrightSharp.Tests.Evaluation
             Assert.Null(await Page.EvaluateAsync("() => window.e"));
         }
 
-        [PlaywrightTest("evaluation.spec.js", "Page.evaluateOnNewDocument", "should work after a cross origin navigation")]
+        [PlaywrightTest("page-add-init-script.spec.ts", "should work after a cross origin navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkAfterACrossOriginNavigation()
         {

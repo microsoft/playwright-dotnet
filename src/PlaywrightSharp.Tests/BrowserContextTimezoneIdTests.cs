@@ -7,13 +7,11 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Emulation
 {
-    ///<playwright-file>emulation.spec.js</playwright-file>
-    ///<playwright-describe>BrowserContext({timezoneId})</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class BrowserContextTimezoneTests : PlaywrightSharpBrowserBaseTest
+    public class BrowserContextTimezoneIdTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>
-        public BrowserContextTimezoneTests(ITestOutputHelper output) : base(output)
+        public BrowserContextTimezoneIdTests(ITestOutputHelper output) : base(output)
         {
         }
 

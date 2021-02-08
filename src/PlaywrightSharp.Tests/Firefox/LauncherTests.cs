@@ -18,7 +18,7 @@ namespace PlaywrightSharp.Tests.Firefox
         {
         }
 
-        [PlaywrightTest("firefox/launcher.spec.js", "launcher", "should pass firefox user preferences")]
+        [PlaywrightTest("firefox/launcher.spec.ts", "should pass firefox user preferences")]
         [SkipBrowserAndPlatformFact(skipChromium: true, skipWebkit: true)]
         public async Task ShouldPassFirefoxUserPreferences()
         {

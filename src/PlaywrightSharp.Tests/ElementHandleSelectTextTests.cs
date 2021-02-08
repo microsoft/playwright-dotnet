@@ -5,10 +5,8 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.ElementHandle
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>elementhandle.spec.js</playwright-file>
-    ///<playwright-describe>ElementHandle.selectText</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ElementHandleSelectTextTests : PlaywrightSharpPageBaseTest
     {
@@ -17,7 +15,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         {
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.selectText", "should select textarea")]
+        [PlaywrightTest("elementhandle-select-text.spec.ts", "should select textarea")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectTextarea()
         {
@@ -37,7 +35,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             }
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.selectText", "should select input")]
+        [PlaywrightTest("elementhandle-select-text.spec.ts", "should select input")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectInput()
         {
@@ -57,7 +55,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             }
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.selectText", "should select plain div")]
+        [PlaywrightTest("elementhandle-select-text.spec.ts", "should select plain div")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectPlainDiv()
         {
@@ -69,7 +67,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal("Plain div", await Page.EvaluateAsync<string>("() => window.getSelection().toString()"));
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.selectText", "should timeout waiting for invisible element")]
+        [PlaywrightTest("elementhandle-select-text.spec.ts", "should timeout waiting for invisible element")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForInvisibleElement()
         {
@@ -81,7 +79,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Contains("element is not visible", exception.Message);
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.selectText", "should wait for visible")]
+        [PlaywrightTest("elementhandle-select-text.spec.ts", "should wait for visible")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisible()
         {

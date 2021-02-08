@@ -7,20 +7,18 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Emulation
 {
-    ///<playwright-file>emulation.spec.js</playwright-file>
-    ///<playwright-describe>Page.emulate</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageEmulateTests : PlaywrightSharpBrowserBaseTest
+    public class BrowserContextDeviceTests : PlaywrightSharpBrowserBaseTest
     {
         private readonly BrowserContextOptions _iPhone;
 
         /// <inheritdoc/>
-        public PageEmulateTests(ITestOutputHelper output) : base(output)
+        public BrowserContextDeviceTests(ITestOutputHelper output) : base(output)
         {
             _iPhone = Playwright.Devices["iPhone 6"];
         }
 
-        [PlaywrightTest("emulation.spec.js", "Page.emulate", "should work")]
+        [PlaywrightTest("browsercontext-device.spec.ts", "should work")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWork()
         {
@@ -32,7 +30,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Contains("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
         }
 
-        [PlaywrightTest("emulation.spec.js", "Page.emulate", "should support clicking")]
+        [PlaywrightTest("browsercontext-device.spec.ts", "should support clicking")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldSupportClicking()
         {
@@ -46,7 +44,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Equal("Clicked", await page.EvaluateAsync<string>("() => result"));
         }
 
-        [PlaywrightTest("emulation.spec.js", "Page.emulate", "should scroll to click")]
+        [PlaywrightTest("browsercontext-device.spec.ts", "should scroll to click")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldScrollToClick()
         {

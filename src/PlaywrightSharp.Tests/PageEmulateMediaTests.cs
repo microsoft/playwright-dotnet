@@ -5,19 +5,17 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Emulation
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>emulation.spec.js</playwright-file>
-    ///<playwright-describe>Page.emulateMedia colorScheme</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageEmulateMediaColorSchemeTests : PlaywrightSharpPageBaseTest
+    public class PageEmulateMediaTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public PageEmulateMediaColorSchemeTests(ITestOutputHelper output) : base(output)
+        public PageEmulateMediaTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("emulation.spec.js", "Page.emulateMedia colorScheme", "should work")]
+        [PlaywrightTest("page-emulate-media.spec.ts", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -30,7 +28,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
         }
 
-        [PlaywrightTest("emulation.spec.js", "Page.emulateMedia colorScheme", "should default to light")]
+        [PlaywrightTest("page-emulate-media.spec.ts", "should default to light")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDefaultToLight()
         {
@@ -46,11 +44,11 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
         }
 
-        [PlaywrightTest("emulation.spec.js", "Page.emulateMedia colorScheme", "should throw in case of bad type argument")]
+        [PlaywrightTest("page-emulate-media.spec.ts", "should throw in case of bad media argument")]
         [Fact(Skip = "We don't need this test. Leaving for tracking purposes")]
-        public void ShouldThrowInCaseOfBadTypeArgument() { }
+        public void ShouldThrowInCaseOfBadMediaArgument() { }
 
-        [PlaywrightTest("emulation.spec.js", "Page.emulateMedia colorScheme", "should work during navigation")]
+        [PlaywrightTest("page-emulate-media.spec.ts", "should work during navigation")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkDuringNavigation()
         {
@@ -67,7 +65,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
         }
 
-        [PlaywrightTest("emulation.spec.js", "Page.emulateMedia colorScheme", "should work in popup")]
+        [PlaywrightTest("page-emulate-media.spec.ts", "should work in popup")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkInPopup()
         {
@@ -110,7 +108,7 @@ namespace PlaywrightSharp.Tests.Emulation
             }
         }
 
-        [PlaywrightTest("emulation.spec.js", "Page.emulateMedia colorScheme", "should work in cross-process iframe")]
+        [PlaywrightTest("page-emulate-media.spec.ts", "should work in cross-process iframe")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkInCrossProcessIframe()
         {
@@ -126,5 +124,26 @@ namespace PlaywrightSharp.Tests.Emulation
 
             Assert.True(await frame.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
         }
+
+        [PlaywrightTest("page-emulate-media.spec.js", "should emulate type")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldEmulateType()
+        {
+            Assert.True(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
+            Assert.False(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
+            await Page.EmulateMediaAsync(MediaType.Print);
+            Assert.False(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
+            Assert.True(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
+            await Page.EmulateMediaAsync();
+            Assert.False(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
+            Assert.True(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
+            await Page.EmulateMediaAsync(MediaType.Null);
+            Assert.True(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
+            Assert.False(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
+        }
+
+        [PlaywrightTest("emulation.spec.js", "Page.emulateMedia type", "should throw in case of bad colorScheme argument")]
+        [Fact(Skip = "We don't need this test. Leaving for tracking purposes")]
+        public void ShouldThrowInCaseOfBadColorSchemeArgument() { }
     }
 }

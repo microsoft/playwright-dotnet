@@ -1,16 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Emulation
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>emulation.spec.js</playwright-file>
-    ///<playwright-describe>BrowserContext({locale})</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class BrowserContextLocaleTests : PlaywrightSharpBrowserBaseTest
     {
@@ -19,7 +16,7 @@ namespace PlaywrightSharp.Tests.Emulation
         {
         }
 
-        [PlaywrightTest("emulation.spec.js", "BrowserContext({locale})", "should affect accept-language header")]
+        [PlaywrightTest("browsercontext-locale.spec.ts", "should affect accept-language header")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAffectAcceptLanguageHeader()
         {
@@ -35,7 +32,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.StartsWith("fr-CH", acceptLanguage);
         }
 
-        [PlaywrightTest("emulation.spec.js", "BrowserContext({locale})", "should affect navigator.language")]
+        [PlaywrightTest("browsercontext-locale.spec.ts", "should affect navigator.language")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAffectNavigatorLanguage()
         {
@@ -47,7 +44,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Equal("fr-CH", await page.EvaluateAsync<string>("navigator.language"));
         }
 
-        [PlaywrightTest("emulation.spec.js", "BrowserContext({locale})", "should format number")]
+        [PlaywrightTest("browsercontext-locale.spec.ts", "should format number")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatNumber()
         {
@@ -73,7 +70,7 @@ namespace PlaywrightSharp.Tests.Emulation
             }
         }
 
-        [PlaywrightTest("emulation.spec.js", "BrowserContext({locale})", "should format date")]
+        [PlaywrightTest("browsercontext-locale.spec.ts", "should format date")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatDate()
         {
@@ -104,7 +101,7 @@ namespace PlaywrightSharp.Tests.Emulation
             }
         }
 
-        [PlaywrightTest("emulation.spec.js", "BrowserContext({locale})", "should format number in popups")]
+        [PlaywrightTest("browsercontext-locale.spec.ts", "should format number in popups")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatNumberInPopups()
         {
@@ -126,7 +123,7 @@ namespace PlaywrightSharp.Tests.Emulation
             Assert.Equal("1 000 000,5", await popup.EvaluateAsync<string>("() => window.result"));
         }
 
-        [PlaywrightTest("emulation.spec.js", "BrowserContext({locale})", "should affect navigator.language in popups")]
+        [PlaywrightTest("browsercontext-locale.spec.ts", "should affect navigator.language in popups")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAffectNavigatorLanguageInPopups()
         {

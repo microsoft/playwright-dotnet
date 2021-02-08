@@ -4,19 +4,17 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Frame
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>frame.spec.js</playwright-file>
-    ///<playwright-describe>Frame.frameElement</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class FrameElementTests : PlaywrightSharpPageBaseTest
+    public class FrameFrameElementTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public FrameElementTests(ITestOutputHelper output) : base(output)
+        public FrameFrameElementTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("frame.spec.js", "Frame.frameElement", "should work")]
+        [PlaywrightTest("frame-frame-element.spec.ts", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -38,7 +36,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.NotNull(windowHandle);
         }
 
-        [PlaywrightTest("frame.spec.js", "Frame.frameElement", "should work with contentFrame")]
+        [PlaywrightTest("frame-frame-element.spec.ts", "should work with contentFrame")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithContentFrame()
         {
@@ -50,7 +48,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.Same(contentFrame, frame);
         }
 
-        [PlaywrightTest("frame.spec.js", "Frame.frameElement", "should throw when detached")]
+        [PlaywrightTest("frame-frame-element.spec.ts", "should throw when detached")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenDetached()
         {

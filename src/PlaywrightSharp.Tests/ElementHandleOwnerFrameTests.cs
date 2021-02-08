@@ -5,10 +5,8 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.ElementHandle
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>elementhandle.spec.js</playwright-file>
-    ///<playwright-describe>ElementHandle.ownerFrame</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ElementHandleOwnerFrameTests : PlaywrightSharpPageBaseTest
     {
@@ -17,7 +15,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         {
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.ownerFrame", "should work")]
+        [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -28,7 +26,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal(frame, await elementHandle.GetOwnerFrameAsync());
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.ownerFrame", "should work for cross-process iframes")]
+        [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for cross-process iframes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForCrossProcessIframes()
         {
@@ -39,7 +37,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal(frame, await elementHandle.GetOwnerFrameAsync());
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.ownerFrame", "should work for document")]
+        [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for document")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForDocument()
         {
@@ -50,7 +48,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal(frame, await elementHandle.GetOwnerFrameAsync());
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.ownerFrame", "should work for iframe elements")]
+        [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for iframe elements")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForIframeElements()
         {
@@ -61,7 +59,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal(frame, await elementHandle.GetOwnerFrameAsync());
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.ownerFrame", "should work for cross-frame evaluations")]
+        [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for cross-frame evaluations")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForCrossFrameEvaluations()
         {
@@ -72,7 +70,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal(frame.ChildFrames[0], await elementHandle.GetOwnerFrameAsync());
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.ownerFrame", "should work for detached elements")]
+        [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for detached elements")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForDetachedElements()
         {
@@ -90,7 +88,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal(Page.MainFrame, await divHandle.GetOwnerFrameAsync());
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.ownerFrame", "should work for adopted elements")]
+        [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for adopted elements")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkForAdoptedElements()
         {

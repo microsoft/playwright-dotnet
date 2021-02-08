@@ -4,10 +4,8 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.ElementHandle
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>elementhandle.spec.js</playwright-file>
-    ///<playwright-describe>ElementHandle.contentFrame</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ElementHandleContentFrameTests : PlaywrightSharpPageBaseTest
     {
@@ -16,7 +14,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
         {
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.contentFrame", "should work")]
+        [PlaywrightTest("elementhandle-content-frame.spec.ts", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -27,7 +25,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal(Page.Frames[1], frame);
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.contentFrame", "should work for cross-process iframes")]
+        [PlaywrightTest("elementhandle-content-frame.spec.ts", "should work for cross-process iframes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForCrossProcessIframes()
         {
@@ -38,7 +36,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal(Page.Frames[1], frame);
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.contentFrame", "should work for cross-frame evaluations")]
+        [PlaywrightTest("elementhandle-content-frame.spec.ts", "should work for cross-frame evaluations")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForCrossFrameEvaluations()
         {
@@ -49,7 +47,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal(frame, await elementHandle.GetContentFrameAsync());
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.contentFrame", "should return null for non-iframes")]
+        [PlaywrightTest("elementhandle-content-frame.spec.ts", "should return null for non-iframes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullForNonIframes()
         {
@@ -60,7 +58,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Null(await elementHandle.GetContentFrameAsync());
         }
 
-        [PlaywrightTest("elementhandle.spec.js", "ElementHandle.contentFrame", "should return null for document.documentElement")]
+        [PlaywrightTest("elementhandle-content-frame.spec.ts", "should return null for document.documentElement")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullForDocumentDocumentElement()
         {
