@@ -1,16 +1,13 @@
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Frame.JsHandle
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>jshandle.spec.js</playwright-file>
-    ///<playwright-describe>JSHandle.jsonValue</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class JSHandleJsonValueTests : PlaywrightSharpPageBaseTest
     {
@@ -19,7 +16,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         {
         }
 
-        [PlaywrightTest("jshandle.spec.js", "JSHandle.jsonValue", "should work")]
+        [PlaywrightTest("jshandle-json-value.spec.ts", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -28,7 +25,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
             Assert.Equal("bar", json.GetProperty("foo").GetString());
         }
 
-        [PlaywrightTest("jshandle.spec.js", "JSHandle.jsonValue", "should work with dates")]
+        [PlaywrightTest("jshandle-json-value.spec.ts", "should work with dates")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDates()
         {
@@ -37,7 +34,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
             Assert.Equal(2017, json.Year);
         }
 
-        [PlaywrightTest("jshandle.spec.js", "JSHandle.jsonValue", "should throw for circular objects")]
+        [PlaywrightTest("jshandle-json-value.spec.ts", "should throw for circular objects")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForCircularObjects()
         {

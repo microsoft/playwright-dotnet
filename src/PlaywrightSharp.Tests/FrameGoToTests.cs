@@ -8,19 +8,17 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Frame
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>navigation.spec.js</playwright-file>
-    ///<playwright-describe>Frame.goto</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class GoToTests : PlaywrightSharpPageBaseTest
+    public class FrameGoToTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public GoToTests(ITestOutputHelper output) : base(output)
+        public FrameGoToTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("navigation.spec.js", "Frame.goto", "should navigate subframes")]
+        [PlaywrightTest("frame-goto.spec.ts", "should navigate subframes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateSubFrames()
         {
@@ -33,7 +31,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.Same(response.Frame, childFrame);
         }
 
-        [PlaywrightTest("navigation.spec.js", "Frame.goto", "should reject when frame detaches")]
+        [PlaywrightTest("frame-goto.spec.ts", "should reject when frame detaches")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectWhenFrameDetaches()
         {
@@ -47,7 +45,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.Contains("frame was detached", exception.Message);
         }
 
-        [PlaywrightTest("navigation.spec.js", "Frame.goto", "should continue after client redirect")]
+        [PlaywrightTest("frame-goto.spec.ts", "should continue after client redirect")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldContinueAfterClientRedirect()
         {
@@ -59,7 +57,7 @@ namespace PlaywrightSharp.Tests.Frame
             Assert.Contains($"navigating to \"{url}\", waiting until \"networkidle\"", exception.Message);
         }
 
-        [PlaywrightTest("navigation.spec.js", "Frame.goto", "should return matching responses")]
+        [PlaywrightTest("frame-goto.spec.ts", "should return matching responses")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnMatchingResponses()
         {

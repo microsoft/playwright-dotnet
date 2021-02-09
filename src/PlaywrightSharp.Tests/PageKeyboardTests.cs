@@ -8,19 +8,17 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Keyboard
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>keyboard.spec.js</playwright-file>
-    ///<playwright-describe>Keyboard</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class KeyboardTests : PlaywrightSharpPageBaseTest
+    public class PageKeyboardTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public KeyboardTests(ITestOutputHelper output) : base(output)
+        public PageKeyboardTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should type into a textarea")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should type into a textarea")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTypeIntoATextarea()
         {
@@ -34,7 +32,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             Assert.Equal(text, await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should press the metaKey")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should press the metaKey")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldPressTheMetaKey1()
         {
@@ -46,7 +44,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             Assert.Equal(TestConstants.IsFirefox && !TestConstants.IsMacOSX ? "OS" : "Meta", await Page.EvaluateAsync<string>("keyPromise"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should move with the arrow keys")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should move with the arrow keys")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldMoveWithTheArrowKeys()
         {
@@ -69,7 +67,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             Assert.Equal("Hello World!", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should send a character with ElementHandle.press")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should send a character with ElementHandle.press")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendACharacterWithElementHandlePress()
         {
@@ -84,7 +82,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             Assert.Equal("a", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should send a character with sendCharacter")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should send a character with sendCharacter")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendACharacterWithSendCharacter()
         {
@@ -97,7 +95,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             Assert.Equal("嗨a", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "insertText should only emit input event")]
+        [PlaywrightTest("page-keyboard.spec.ts", "insertText should only emit input event")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task InsertTextShouldOnlyEmitInputEvent()
         {
@@ -117,7 +115,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             Assert.Equal(new[] { "input" }, await events.GetJsonValueAsync<string[]>());
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should report shiftKey")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should report shiftKey")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipOSX: true)]
         public async Task ShouldReportShiftKey()
         {
@@ -147,7 +145,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             }
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should report multiple modifiers")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should report multiple modifiers")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportMultipleModifiers()
         {
@@ -167,7 +165,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             Assert.Equal("Keyup: Alt AltLeft 18 []", await Page.EvaluateAsync<string>("() => getResult()"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should send proper codes while typing")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should send proper codes while typing")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendProperCodesWhileTyping()
         {
@@ -184,7 +182,7 @@ namespace PlaywrightSharp.Tests.Keyboard
                 "Keyup: ^ Digit6 54 []"), await Page.EvaluateAsync<string>("() => getResult()"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should send proper codes while typing with shift")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should send proper codes while typing with shift")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendProperCodesWhileTypingWithShift()
         {
@@ -200,7 +198,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             await keyboard.UpAsync("Shift");
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should not type canceled events")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should not type canceled events")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotTypeCanceledEvents()
         {
@@ -220,7 +218,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             Assert.Equal("He Wrd!", await Page.EvaluateAsync<string>("() => textarea.value"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should press plus")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should press plus")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldPressPlus()
         {
@@ -238,7 +236,7 @@ namespace PlaywrightSharp.Tests.Keyboard
                 await Page.EvaluateAsync<string>("() => getResult()"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should press shift plus")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should press shift plus")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldPressShiftPlus()
         {
@@ -258,7 +256,7 @@ namespace PlaywrightSharp.Tests.Keyboard
                 await Page.EvaluateAsync<string>("() => getResult()"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should support plus-separated modifiers")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should support plus-separated modifiers")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportPlusSeparatedModifiers()
         {
@@ -278,7 +276,7 @@ namespace PlaywrightSharp.Tests.Keyboard
                 await Page.EvaluateAsync<string>("() => getResult()"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should support multiple plus-separated modifiers")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should support multiple plus-separated modifiers")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportMultiplePlusSeparatedModifiers()
         {
@@ -299,7 +297,7 @@ namespace PlaywrightSharp.Tests.Keyboard
                 await Page.EvaluateAsync<string>("() => getResult()"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should shift raw codes")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should shift raw codes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldShiftRawCodes()
         {
@@ -319,7 +317,7 @@ namespace PlaywrightSharp.Tests.Keyboard
                 await Page.EvaluateAsync<string>("() => getResult()"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should specify repeat property")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should specify repeat property")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSpecifyRepeatProperty()
         {
@@ -342,7 +340,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             Assert.False(await lastEvent.EvaluateAsync<bool>("e => e.repeat"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should type all kinds of characters")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should type all kinds of characters")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTypeAllKindsOfCharacters()
         {
@@ -353,7 +351,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             Assert.Equal(text, await Page.EvaluateAsync<string>("result"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should specify location")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should specify location")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSpecifyLocation()
         {
@@ -374,7 +372,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             Assert.Equal(3, await lastEventHandle.EvaluateAsync<int>("e => e.location"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should press Enter")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should press Enter")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldPressEnter()
         {
@@ -400,7 +398,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             }
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should throw on unknown keys")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should throw on unknown keys")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowOnUnknownKeys()
         {
@@ -414,7 +412,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             Assert.Equal("Unknown key: \"😊\"", exception.Message);
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should type emoji")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should type emoji")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTypeEmoji()
         {
@@ -423,7 +421,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             Assert.Equal("👹 Tokyo street Japan 🇯🇵", await Page.EvalOnSelectorAsync<string>("textarea", "textarea => textarea.value"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should type emoji into an iframe")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should type emoji into an iframe")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTypeEmojiIntoAnIframe()
         {
@@ -435,7 +433,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             Assert.Equal("👹 Tokyo street Japan 🇯🇵", await frame.EvalOnSelectorAsync<string>("textarea", "textarea => textarea.value"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should handle selectAll")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should handle selectAll")]
         [SkipBrowserAndPlatformFact(skipOSX: true, skipChromium: true)]
         public async Task ShouldHandleSelectAll()
         {
@@ -450,7 +448,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             Assert.Empty(await Page.EvalOnSelectorAsync<string>("textarea", "textarea => textarea.value"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should be able to prevent selectAll")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should be able to prevent selectAll")]
         [SkipBrowserAndPlatformFact(skipOSX: true, skipChromium: true)]
         public async Task ShouldBeAbleToPreventSelectAll()
         {
@@ -471,7 +469,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             Assert.Equal("some tex", await Page.EvalOnSelectorAsync<string>("textarea", "textarea => textarea.value"));
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should press the meta key")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should press the meta key")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldPressTheMetaKey2()
         {
@@ -510,7 +508,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             }
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should work after a cross origin navigation")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should work after a cross origin navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkAfterACrossOriginNavigation()
         {
@@ -522,7 +520,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             Assert.Equal("a", result.key);
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should expose keyIdentifier in webkit")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should expose keyIdentifier in webkit")]
         [SkipBrowserAndPlatformFact(skipChromium: true, skipFirefox: true)]
         public async Task ShouldExposeKeyIdentifierInWebkit()
         {
@@ -548,7 +546,7 @@ namespace PlaywrightSharp.Tests.Keyboard
             }
         }
 
-        [PlaywrightTest("keyboard.spec.js", "Keyboard", "should scroll with PageDown")]
+        [PlaywrightTest("page-keyboard.spec.ts", "should scroll with PageDown")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldScrollWithPageDown()
         {

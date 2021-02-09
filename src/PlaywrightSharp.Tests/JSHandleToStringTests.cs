@@ -1,14 +1,11 @@
-using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Frame.JsHandle
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>jshandle.spec.js</playwright-file>
-    ///<playwright-describe>JSHandle.toString</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class JSHandleToStringTests : PlaywrightSharpPageBaseTest
     {
@@ -17,7 +14,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
         {
         }
 
-        [PlaywrightTest("jshandle.spec.js", "JSHandle.toString", "should work for primitives")]
+        [PlaywrightTest("jshandle-to-string.spec.ts", "should work for primitives")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForPrimitives()
         {
@@ -27,7 +24,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
             Assert.Equal("JSHandle@a", stringHandle.ToString());
         }
 
-        [PlaywrightTest("jshandle.spec.js", "JSHandle.toString", "should work for complicated objects")]
+        [PlaywrightTest("jshandle-to-string.spec.ts", "should work for complicated objects")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForComplicatedObjects()
         {
@@ -35,7 +32,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
             Assert.Equal("JSHandle@object", aHandle.ToString());
         }
 
-        [PlaywrightTest("jshandle.spec.js", "JSHandle.toString", "should work for promises")]
+        [PlaywrightTest("jshandle-to-string.spec.ts", "should work for promises")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForPromises()
         {
@@ -45,7 +42,7 @@ namespace PlaywrightSharp.Tests.Frame.JsHandle
             Assert.Equal("JSHandle@promise", bHandle.ToString());
         }
 
-        [PlaywrightTest("jshandle.spec.js", "JSHandle.toString", "should work with different subtypes")]
+        [PlaywrightTest("jshandle-to-string.spec.ts", "should work with different subtypes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDifferentSubtypes()
         {
