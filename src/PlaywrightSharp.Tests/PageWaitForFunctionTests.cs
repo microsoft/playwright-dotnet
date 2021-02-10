@@ -15,6 +15,16 @@ namespace PlaywrightSharp.Tests
         {
         }
 
+        [PlaywrightTest("page-wait-for-function.spec.ts", "should timeout")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldTimeout()
+        {
+            var startTime = DateTime.Now;
+            int timeout = 42;
+            await Page.WaitForTimeoutAsync(timeout);
+            Assert.True((DateTime.Now - startTime).TotalMilliseconds > timeout / 2);
+        }
+
         [PlaywrightTest("page-wait-for-function.spec.ts", "should accept a string")]
         [Fact(Skip = "We don't this test")]
         public void ShouldAcceptAString()
