@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>wait-for-selector-1.spec.js</playwright-file>
+    ///<playwright-file>wait-for-selector-1.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class WaitForSelector1Tests : PlaywrightSharpPageBaseTest
     {
@@ -19,19 +19,19 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("wait-for-selector-1.spec.js", "should throw on waitFor")]
+        [PlaywrightTest("wait-for-selector-1.spec.ts", "should throw on waitFor")]
         [Fact(Skip = "We don't need to test this")]
         public void ShouldThrowOnWaitFor()
         {
         }
 
-        [PlaywrightTest("wait-for-selector-1.spec.js", "should tolerate waitFor=visible")]
+        [PlaywrightTest("wait-for-selector-1.spec.ts", "should tolerate waitFor=visible")]
         [Fact(Skip = "We don't need to test this")]
         public void ShouldTolerateWaitForVisible()
         {
         }
 
-        [PlaywrightTest("wait-for-selector-1.spec.js", "should immediately resolve promise if node exists")]
+        [PlaywrightTest("wait-for-selector-1.spec.ts", "should immediately resolve promise if node exists")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldImmediatelyResolveTaskIfNodeExists()
         {
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests
             await frame.WaitForSelectorAsync("div", WaitForState.Attached);
         }
 
-        [PlaywrightTest("wait-for-selector-1.spec.js", "elementHandle.waitForSelector should immediately resolve if node exists")]
+        [PlaywrightTest("wait-for-selector-1.spec.ts", "elementHandle.waitForSelector should immediately resolve if node exists")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ElementHandleWaitForSelectorShouldImmediatelyResolveIfNodeExists()
         {
@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("target", await span.EvaluateAsync<string>("e => e.textContent"));
         }
 
-        [PlaywrightTest("wait-for-selector-1.spec.js", "elementHandle.waitForSelector should wait")]
+        [PlaywrightTest("wait-for-selector-1.spec.ts", "elementHandle.waitForSelector should wait")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ElementHandleWaitForSelectorShouldWait()
         {
@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("target", await span.EvaluateAsync<string>("e => e.textContent"));
         }
 
-        [PlaywrightTest("wait-for-selector-1.spec.js", "elementHandle.waitForSelector should timeout")]
+        [PlaywrightTest("wait-for-selector-1.spec.ts", "elementHandle.waitForSelector should timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ElementHandleWaitForSelectorShouldTimeout()
         {
@@ -74,7 +74,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("Timeout 100ms exceeded.", exception.Message);
         }
 
-        [PlaywrightTest("wait-for-selector-1.spec.js", "elementHandle.waitForSelector should throw on navigation")]
+        [PlaywrightTest("wait-for-selector-1.spec.ts", "elementHandle.waitForSelector should throw on navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ElementHandleWaitForSelectorShouldThrowOnNavigation()
         {
@@ -92,7 +92,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("Execution context was destroyed, most likely because of a navigation", exception.Message);
         }
 
-        [PlaywrightTest("wait-for-selector-1.spec.js", "should work with removed MutationObserver")]
+        [PlaywrightTest("wait-for-selector-1.spec.ts", "should work with removed MutationObserver")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithRemovedMutationObserver()
         {
@@ -106,7 +106,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("anything", await Page.EvaluateAsync<string>("x => x.textContent", await waitForSelector));
         }
 
-        [PlaywrightTest("wait-for-selector-1.spec.js", "should resolve promise when node is added")]
+        [PlaywrightTest("wait-for-selector-1.spec.ts", "should resolve promise when node is added")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldResolveTaskWhenNodeIsAdded()
         {
@@ -121,7 +121,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("DIV", tagName);
         }
 
-        [PlaywrightTest("wait-for-selector-1.spec.js", "should report logs while waiting for visible")]
+        [PlaywrightTest("wait-for-selector-1.spec.ts", "should report logs while waiting for visible")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportLogsWhileWaitingForVisible()
         {
@@ -161,7 +161,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("selector resolved to hidden <div class=\"another\"></div>", exception.Message);
         }
 
-        [PlaywrightTest("wait-for-selector-1.spec.js", "should report logs while waiting for hidden")]
+        [PlaywrightTest("wait-for-selector-1.spec.ts", "should report logs while waiting for hidden")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportLogsWhileWaitingForHidden()
         {
@@ -196,7 +196,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("selector resolved to visible <div class=\"another\">hello</div>", exception.Message);
         }
 
-        [PlaywrightTest("wait-for-selector-1.spec.js", "should resolve promise when node is added in shadow dom")]
+        [PlaywrightTest("wait-for-selector-1.spec.ts", "should resolve promise when node is added in shadow dom")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldResolvePromiseWhenNodeIsAddedInShadowDom()
         {
@@ -222,7 +222,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("Hello from shadow", await handle.EvaluateAsync<string>("e => e.textContent"));
         }
 
-        [PlaywrightTest("wait-for-selector-1.spec.js", "should work when node is added through innerHTML")]
+        [PlaywrightTest("wait-for-selector-1.spec.ts", "should work when node is added through innerHTML")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenNodeIsAddedThroughInnerHTML()
         {
@@ -233,7 +233,7 @@ namespace PlaywrightSharp.Tests
             await watchdog;
         }
 
-        [PlaywrightTest("wait-for-selector-1.spec.js", "Page.$ waitFor is shortcut for main frame")]
+        [PlaywrightTest("wait-for-selector-1.spec.ts", "Page.$ waitFor is shortcut for main frame")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PageWaitForSelectorAsyncIsShortcutForMainFrame()
         {
@@ -247,7 +247,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(Page.MainFrame, await eHandle.GetOwnerFrameAsync());
         }
 
-        [PlaywrightTest("wait-for-selector-1.spec.js", "should run in specified frame")]
+        [PlaywrightTest("wait-for-selector-1.spec.ts", "should run in specified frame")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRunInSpecifiedFrame()
         {
@@ -262,7 +262,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(frame2, await eHandle.GetOwnerFrameAsync());
         }
 
-        [PlaywrightTest("wait-for-selector-1.spec.js", "should throw when frame is detached")]
+        [PlaywrightTest("wait-for-selector-1.spec.ts", "should throw when frame is detached")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenFrameIsDetached()
         {

@@ -1,4 +1,4 @@
-using System.Dynamic;
+﻿using System.Dynamic;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -173,7 +173,7 @@ namespace PlaywrightSharp.Tests
             Assert.NotNull(await Page.Frames[1].QuerySelectorAsync("DIV"));
         }
 
-        [PlaywrightTest("frame-evaluate.spec.js", "evaluateHandle should work")]
+        [PlaywrightTest("frame-evaluate.spec.ts", "evaluateHandle should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task EvaluateHandleShouldWork()
         {

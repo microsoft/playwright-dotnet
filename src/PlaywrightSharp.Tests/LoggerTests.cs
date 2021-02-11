@@ -1,4 +1,4 @@
-using PlaywrightSharp.Tests.BaseTests;
+﻿using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
@@ -13,13 +13,13 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("logger.spec.js", "should log")]
+        [PlaywrightTest("logger.spec.ts", "should log")]
         [Fact(Skip = "We don't test CHANNEL")]
         public void ShouldLog()
         {
         }
 
-        [PlaywrightTest("logger.spec.js", "should log context-level")]
+        [PlaywrightTest("logger.spec.ts", "should log context-level")]
         [Fact(Skip = "We don't test CHANNEL")]
         public void ShouldLogContextLevel()
         {

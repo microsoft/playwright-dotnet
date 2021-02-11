@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>evaluation.spec.js</playwright-file>
+    ///<playwright-file>evaluation.spec.ts</playwright-file>
     ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageAddInitScriptTests : PlaywrightSharpPageBaseTest

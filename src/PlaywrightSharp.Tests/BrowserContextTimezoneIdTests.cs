@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
@@ -15,7 +15,7 @@ namespace PlaywrightSharp.Tests.Emulation
         {
         }
 
-        [PlaywrightTest("emulation.spec.js", "BrowserContext({timezoneId})", "should work")]
+        [PlaywrightTest("emulation.spec.ts", "BrowserContext({timezoneId})", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -56,7 +56,7 @@ namespace PlaywrightSharp.Tests.Emulation
             }
         }
 
-        [PlaywrightTest("emulation.spec.js", "BrowserContext({timezoneId})", "should throw for invalid timezone IDs")]
+        [PlaywrightTest("emulation.spec.ts", "BrowserContext({timezoneId})", "should throw for invalid timezone IDs")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForInvalidTimezoneId()
         {
@@ -73,7 +73,7 @@ namespace PlaywrightSharp.Tests.Emulation
             }
         }
 
-        [PlaywrightTest("emulation.spec.js", "BrowserContext({timezoneId})", "should work for multiple pages sharing same process")]
+        [PlaywrightTest("emulation.spec.ts", "BrowserContext({timezoneId})", "should work for multiple pages sharing same process")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForMultiplePagesSharingSameProcess()
         {

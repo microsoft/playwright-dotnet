@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,7 +12,7 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
 {
-    /// <playwright-file>defaultbrowsercontext-2.spec.js</playwright-file>
+    /// <playwright-file>defaultbrowsercontext-2.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class DefaultBrowsercontext2Tests : PlaywrightSharpBaseTest
     {
@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should support hasTouch option")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support hasTouch option")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportHasTouchOption()
         {
@@ -37,7 +37,7 @@ namespace PlaywrightSharp.Tests
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should work in persistent context")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should work in persistent context")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkInPersistentContext()
         {
@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Tests
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should support colorScheme option")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support colorScheme option")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportColorSchemeOption()
         {
@@ -74,7 +74,7 @@ namespace PlaywrightSharp.Tests
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should support timezoneId option")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support timezoneId option")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportTimezoneIdOption()
         {
@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should support locale option")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support locale option")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportLocaleOption()
         {
@@ -104,7 +104,7 @@ namespace PlaywrightSharp.Tests
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should support geolocation and permissions options")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support geolocation and permissions options")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportGeolocationAndPermissionsOptions()
         {
@@ -129,7 +129,7 @@ namespace PlaywrightSharp.Tests
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should support ignoreHTTPSErrors option")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support ignoreHTTPSErrors option")]
         // [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldSupportIgnoreHTTPSErrorsOption()
@@ -146,7 +146,7 @@ namespace PlaywrightSharp.Tests
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should support extraHTTPHeaders option")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support extraHTTPHeaders option")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportExtraHTTPHeadersOption()
         {
@@ -170,7 +170,7 @@ namespace PlaywrightSharp.Tests
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should accept userDataDir")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should accept userDataDir")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptUserDataDir()
         {
@@ -182,7 +182,7 @@ namespace PlaywrightSharp.Tests
             tmp.Dispose();
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should restore state from userDataDir")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should restore state from userDataDir")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRestoreStateFromUserDataDir()
         {
@@ -214,7 +214,7 @@ namespace PlaywrightSharp.Tests
             userDataDir.Dispose();
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should restore cookies from userDataDir")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should restore cookies from userDataDir")]
         [SkipBrowserAndPlatformFact(skipChromium: true, skipWindows: true, skipOSX: true)]
         public async Task ShouldRestoreCookiesFromUserDataDir()
         {
@@ -251,7 +251,7 @@ namespace PlaywrightSharp.Tests
             userDataDir.Dispose();
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should have default URL when launching browser")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should have default URL when launching browser")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveDefaultURLWhenLaunchingBrowser()
         {
@@ -264,7 +264,7 @@ namespace PlaywrightSharp.Tests
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should throw if page argument is passed")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should throw if page argument is passed")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldThrowIfPageArgumentIsPassed()
         {
@@ -277,25 +277,25 @@ namespace PlaywrightSharp.Tests
             tmp.Dispose();
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should have passed URL when launching with ignoreDefaultArgs: true")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should have passed URL when launching with ignoreDefaultArgs: true")]
         [Fact(Skip = "Skip USES_HOOKS")]
         public void ShouldHavePassedURLWhenLaunchingWithIgnoreDefaultArgsTrue()
         {
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should handle timeout")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should handle timeout")]
         [Fact(Skip = "Skip USES_HOOKS")]
         public void ShouldHandleTimeout()
         {
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should handle exception")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should handle exception")]
         [Fact(Skip = "Skip USES_HOOKS")]
         public void ShouldHandleException()
         {
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should fire close event for a persistent context")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should fire close event for a persistent context")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireCloseEventForAPersistentContext()
         {
@@ -310,7 +310,7 @@ namespace PlaywrightSharp.Tests
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "coverage should work")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "coverage should work")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task CoverageShouldWork()
         {
@@ -327,7 +327,7 @@ namespace PlaywrightSharp.Tests
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "coverage should be missing")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "coverage should be missing")]
         [SkipBrowserAndPlatformFact(skipChromium: true)]
         public async Task CoverageShouldBeMissing()
         {
@@ -337,7 +337,7 @@ namespace PlaywrightSharp.Tests
             await context.DisposeAsync();
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should respect selectors")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should respect selectors")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectSelectors()
         {

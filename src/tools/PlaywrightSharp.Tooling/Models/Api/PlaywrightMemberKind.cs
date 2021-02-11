@@ -9,6 +9,6 @@ namespace PlaywrightSharp.Tooling.Models.Api
         [EnumMember(Value = "event")]
         Event,
         [EnumMember(Value = "property")]
-        Property
+        Property,
     }
 }

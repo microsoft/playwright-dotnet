@@ -43,6 +43,5 @@ namespace PlaywrightSharp.Tooling
 
         [Option(Required = false, Default = true, HelpText = "When True, looks inside subdirectories of specified location as well.")]
         public bool Recursive { get; set; }
-
     }
 }

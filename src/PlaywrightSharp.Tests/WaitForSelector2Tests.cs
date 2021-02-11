@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>wait-for-selector-2.spec.js</playwright-file>
+    ///<playwright-file>wait-for-selector-2.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class WaitForSelector2Tests : PlaywrightSharpPageBaseTest
     {
@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        ///<playwright-file>wait-for-selector-2.spec.js</playwright-file>
+        ///<playwright-file>wait-for-selector-2.spec.ts</playwright-file>
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSurviveCrossProcessNavigation()
         {
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(boxFound);
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should wait for visible")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should wait for visible")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisible()
         {
@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(divFound);
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should not consider visible when zero-sized")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should not consider visible when zero-sized")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotConsiderVisibleWhenZeroSized()
         {
@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Tests
             Assert.NotNull(await Page.WaitForSelectorAsync("div", timeout: 1000));
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should wait for visible recursively")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should wait for visible recursively")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisibleRecursively()
         {
@@ -79,8 +79,8 @@ namespace PlaywrightSharp.Tests
             Assert.True(divVisible);
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "hidden should wait for hidden")]
-        [PlaywrightTest("wait-for-selector-2.spec.js", "hidden should wait for display: none")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "hidden should wait for hidden")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "hidden should wait for display: none")]
         [Theory]
         [InlineData("visibility", "hidden")]
         [InlineData("display", "none")]
@@ -97,7 +97,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(divHidden);
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "hidden should wait for removal")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "hidden should wait for removal")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task HiddenShouldWaitForRemoval()
         {
@@ -112,7 +112,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(divRemoved);
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should return null if waiting to hide non-existing element")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should return null if waiting to hide non-existing element")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullIfWaitingToHideNonExistingElement()
         {
@@ -120,7 +120,7 @@ namespace PlaywrightSharp.Tests
             Assert.Null(handle);
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should respect timeout")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should respect timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
@@ -131,7 +131,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("waiting for selector \"div\"", exception.Message);
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should have an error message specifically for awaiting an element to be hidden")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should have an error message specifically for awaiting an element to be hidden")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveAnErrorMessageSpecificallyForAwaitingAnElementToBeHidden()
         {
@@ -143,7 +143,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("waiting for selector \"div\" to be hidden", exception.Message);
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should respond to node attribute mutation")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should respond to node attribute mutation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespondToNodeAttributeMutation()
         {
@@ -155,7 +155,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(await waitForSelector);
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should return the element handle")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should return the element handle")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnTheElementHandle()
         {
@@ -164,7 +164,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("anything", await Page.EvaluateAsync<string>("x => x.textContent", await waitForSelector));
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should have correct stack trace for timeout")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should have correct stack trace for timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveCorrectStackTraceForTimeout()
         {
@@ -173,23 +173,23 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("WaitForSelector2Tests", exception.StackTrace);
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should throw for unknown state option")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should throw for unknown state option")]
         [Fact(Skip = "We don't need this test")]
         public void ShouldThrowForUnknownStateOption() { }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should throw for visibility option")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should throw for visibility option")]
         [Fact(Skip = "We don't need this test")]
         public void ShouldThrowForVisibilityOption() { }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should throw for true state option")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should throw for true state option")]
         [Fact(Skip = "We don't need this test")]
         public void ShouldThrowForTrueStateOption() { }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should throw for false state option")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should throw for false state option")]
         [Fact(Skip = "We don't need this test")]
         public void ShouldThrowForFalseStateOption() { }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should support >> selector syntax")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should support >> selector syntax")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportSelectorSyntax()
         {
@@ -205,7 +205,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("SPAN", tagName);
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should wait for detached if already detached")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should wait for detached if already detached")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForDetachedIfAlreadyDetached()
         {
@@ -213,7 +213,7 @@ namespace PlaywrightSharp.Tests
             Assert.Null(await Page.WaitForSelectorAsync("css=div", WaitForState.Detached));
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should wait for detached")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should wait for detached")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForDetached()
         {
@@ -226,7 +226,7 @@ namespace PlaywrightSharp.Tests
             await waitForTask;
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should support some fancy xpath")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should support some fancy xpath")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportSomeFancyXpath()
         {
@@ -235,7 +235,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("hello  world  ", await Page.EvaluateAsync<string>("x => x.textContent", await waitForXPath));
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should respect timeout xpath")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should respect timeout xpath")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeoutXpath()
         {
@@ -246,7 +246,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("waiting for selector \"//div\"", exception.Message);
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should run in specified frame xpath")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should run in specified frame xpath")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRunInSpecifiedFrameXPath()
         {
@@ -261,7 +261,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(frame2, await eHandle.GetOwnerFrameAsync());
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should throw when frame is detached xpath")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should throw when frame is detached xpath")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenFrameIsDetachedXPath()
         {
@@ -273,7 +273,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("waitForFunction failed: frame got detached.", exception.Message);
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should return the element handle xpath")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should return the element handle xpath")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnTheElementHandleXPath()
         {
@@ -282,7 +282,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("anything", await Page.EvaluateAsync<string>("x => x.textContent", await waitForXPath));
         }
 
-        [PlaywrightTest("wait-for-selector-2.spec.js", "should allow you to select an element with single slash xpath")]
+        [PlaywrightTest("wait-for-selector-2.spec.ts", "should allow you to select an element with single slash xpath")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAllowYouToSelectAnElementWithSingleSlashXPath()
         {

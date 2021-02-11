@@ -1,7 +1,6 @@
-using System;
 namespace PlaywrightSharp.Tooling.Models.Mismatch
 {
-    public class MismatchEntity
+    internal class MismatchEntity
     {
         public string UpstreamClassName { get; set; }
 

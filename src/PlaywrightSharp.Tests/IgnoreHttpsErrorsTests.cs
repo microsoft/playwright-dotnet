@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +9,7 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>ignorehttpserrors.spec.js</playwright-file>
+    ///<playwright-file>ignorehttpserrors.spec.ts</playwright-file>
     ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class IgnoreHttpsErrorsTests : PlaywrightSharpBrowserBaseTest

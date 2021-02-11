@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Firefox
 {
-    ///<playwright-file>firefox/launcher.spec.js</playwright-file>
+    ///<playwright-file>firefox/launcher.spec.ts</playwright-file>
     ///<playwright-describe>launcher</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class LauncherTests : PlaywrightSharpBaseTest

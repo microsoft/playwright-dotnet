@@ -188,7 +188,7 @@ namespace PlaywrightSharp.Tests
             await closedTsc.Task;
         }
 
-        [PlaywrightTest("page-basic.spec.js", "should fire load when expected")]
+        [PlaywrightTest("page-basic.spec.ts", "should fire load when expected")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireLoadWhenExpected()
         {
@@ -198,7 +198,7 @@ namespace PlaywrightSharp.Tests
             );
         }
 
-        [PlaywrightTest("page-basic.spec.js", "should fire domcontentloaded when expected")]
+        [PlaywrightTest("page-basic.spec.ts", "should fire domcontentloaded when expected")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireDOMcontentloadedWhenExpected()
         {

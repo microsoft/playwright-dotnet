@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Chromium;
@@ -80,7 +80,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal("worker|context", string.Join("|", messages));
         }
 
-        [PlaywrightTest("chromium/chromium.spec.js", "chromium", "Page.route should work with intervention headers")]
+        [PlaywrightTest("chromium/chromium.spec.ts", "chromium", "Page.route should work with intervention headers")]
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task PageRouteShouldWorkWithInterventionHeaders()
         {

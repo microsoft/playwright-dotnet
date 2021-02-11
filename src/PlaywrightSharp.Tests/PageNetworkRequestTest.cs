@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -9,16 +9,16 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>network-request.spec.js</playwright-file>
+    ///<playwright-file>network-request.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class NetworkRequestTest : PlaywrightSharpPageBaseTest
+    public class PageNetworkRequestTest : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public NetworkRequestTest(ITestOutputHelper output) : base(output)
+        public PageNetworkRequestTest(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("network-request.spec.js", "should work for main frame navigation request")]
+        [PlaywrightTest("page-network-request.spec.ts", "should work for main frame navigation request")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForMainFrameNavigationRequests()
         {
@@ -29,7 +29,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(Page.MainFrame, requests[0].Frame);
         }
 
-        [PlaywrightTest("network-request.spec.js", "should work for subframe navigation request")]
+        [PlaywrightTest("page-network-request.spec.ts", "should work for subframe navigation request")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForSubframeNavigationRequest()
         {
@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(Page.FirstChildFrame(), requests[1].Frame);
         }
 
-        [PlaywrightTest("network-request.spec.js", "should work for fetch requests")]
+        [PlaywrightTest("page-network-request.spec.ts", "should work for fetch requests")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForFetchRequests()
         {
@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(Page.MainFrame, requests[0].Frame);
         }
 
-        [PlaywrightTest("network-request.spec.js", "should return headers")]
+        [PlaywrightTest("page-network-request.spec.ts", "should return headers")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnHeaders()
         {
@@ -71,13 +71,13 @@ namespace PlaywrightSharp.Tests
                 response.Request.Headers["user-agent"]);
         }
 
-        [PlaywrightTest("network-request.spec.js", "Request.headers", "should get the same headers as the server")]
+        [PlaywrightTest("page-network-request.spec.ts", "Request.headers", "should get the same headers as the server")]
         [Fact(Skip = "We don't need to test this")]
         public void ShouldGetTheSameHeadersAsTheServer()
         {
         }
 
-        [PlaywrightTest("network-request.spec.js", "should return postData")]
+        [PlaywrightTest("page-network-request.spec.ts", "should return postData")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnPostData()
         {
@@ -90,7 +90,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("{\"foo\":\"bar\"}", request.PostData);
         }
 
-        [PlaywrightTest("network-request.spec.js", "should work with binary post data")]
+        [PlaywrightTest("page-network-request.spec.ts", "should work with binary post data")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBinaryPostData()
         {
@@ -109,7 +109,7 @@ namespace PlaywrightSharp.Tests
             }
         }
 
-        [PlaywrightTest("network-request.spec.js", "should work with binary post data and interception")]
+        [PlaywrightTest("page-network-request.spec.ts", "should work with binary post data and interception")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBinaryPostDataAndInterception()
         {
@@ -129,7 +129,7 @@ namespace PlaywrightSharp.Tests
             }
         }
 
-        [PlaywrightTest("network-request.spec.js", "should be |undefined| when there is no post data")]
+        [PlaywrightTest("page-network-request.spec.ts", "should be |undefined| when there is no post data")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeUndefinedWhenThereIsNoPostData()
         {
@@ -138,7 +138,7 @@ namespace PlaywrightSharp.Tests
         }
 
 
-        [PlaywrightTest("network-request.spec.js", "should parse the json post data")]
+        [PlaywrightTest("page-network-request.spec.ts", "should parse the json post data")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldParseTheJsonPostData()
         {
@@ -151,7 +151,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("bar", request.GetPostDataJson().RootElement.GetProperty("foo").ToString());
         }
 
-        [PlaywrightTest("network-request.spec.js", "should parse the data if content-type is application/x-www-form-urlencoded")]
+        [PlaywrightTest("page-network-request.spec.ts", "should parse the data if content-type is application/x-www-form-urlencoded")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldParseTheDataIfContentTypeIsApplicationXWwwFormUrlencoded()
         {
@@ -168,7 +168,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("123", element.GetProperty("baz").ToString());
         }
 
-        [PlaywrightTest("network-request.spec.js", "should be |undefined| when there is no post data")]
+        [PlaywrightTest("page-network-request.spec.ts", "should be |undefined| when there is no post data")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeUndefinedWhenThereIsNoPostData2()
         {
@@ -176,7 +176,7 @@ namespace PlaywrightSharp.Tests
             Assert.Null(response.Request.GetPostDataJson());
         }
 
-        [PlaywrightTest("network-request.spec.js", "should return event source")]
+        [PlaywrightTest("page-network-request.spec.ts", "should return event source")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEventSource()
         {
@@ -207,7 +207,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(ResourceType.EventSource, requests[0].ResourceType);
         }
 
-        [PlaywrightTest("network.spec.js", "should return navigation bit")]
+        [PlaywrightTest("network.spec.ts", "should return navigation bit")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNavigationBit()
         {
@@ -222,7 +222,7 @@ namespace PlaywrightSharp.Tests
             Assert.False(requests["style.css"].IsNavigationRequest);
         }
 
-        [PlaywrightTest("network.spec.js", "Request.isNavigationRequest", "should return navigation bit when navigating to image")]
+        [PlaywrightTest("network.spec.ts", "Request.isNavigationRequest", "should return navigation bit when navigating to image")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNavigationBitWhenNavigatingToImage()
         {

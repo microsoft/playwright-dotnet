@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
@@ -125,7 +125,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(await frame.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
         }
 
-        [PlaywrightTest("page-emulate-media.spec.js", "should emulate type")]
+        [PlaywrightTest("page-emulate-media.spec.ts", "should emulate type")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmulateType()
         {
@@ -142,7 +142,7 @@ namespace PlaywrightSharp.Tests
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
         }
 
-        [PlaywrightTest("emulation.spec.js", "Page.emulateMedia type", "should throw in case of bad colorScheme argument")]
+        [PlaywrightTest("emulation.spec.ts", "Page.emulateMedia type", "should throw in case of bad colorScheme argument")]
         [Fact(Skip = "We don't need this test. Leaving for tracking purposes")]
         public void ShouldThrowInCaseOfBadColorSchemeArgument() { }
     }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.js", "should throw if page argument is passed")]
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should throw if page argument is passed")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldThrowIfPageArgumentIsPassed()
         {
@@ -123,7 +123,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("launcher.spec.js", "should fire close event for all contexts")]
+        [PlaywrightTest("browsertype-launch.spec.ts", "should fire close event for all contexts")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireCloseEventForAllContexts()
         {
@@ -136,7 +136,7 @@ namespace PlaywrightSharp.Tests
             await TaskUtils.WhenAll(browser.CloseAsync(), closeTask.Task);
         }
 
-        [PlaywrightTest("launcher.spec.js", "should be callable twice")]
+        [PlaywrightTest("browsertype-launch.spec.ts", "should be callable twice")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeCallableTwice()
         {

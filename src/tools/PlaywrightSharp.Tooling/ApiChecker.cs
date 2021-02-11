@@ -257,7 +257,6 @@ namespace PlaywrightSharp.Tooling
 
                 report.AppendLine("</ul>");
                 report.AppendLine("</li>");
-
             }
             else
             {
@@ -373,8 +372,7 @@ namespace PlaywrightSharp.Tooling
 
                                 if ((
                                         playwrightSharpArgument.ParameterType.IsInterface ||
-                                        playwrightSharpArgument.ParameterType.IsClass
-                                    ) &&
+                                        playwrightSharpArgument.ParameterType.IsClass) &&
                                     playwrightSharpArgument.ParameterType != typeof(string))
                                 {
                                     EvaluateProperty(prop, GetBaseType(playwrightSharpArgument.ParameterType), report, mismatches);
@@ -542,7 +540,6 @@ namespace PlaywrightSharp.Tooling
             }
             else
             {
-
                 var mismatch = mismatches.Entities.FirstOrDefault(e => e.ClassName == playwrightSharpType.Name)?
                     .Members.FirstOrDefault(m => m.UpstreamMemberName == e.Name);
 

@@ -13,11 +13,11 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("should require top-level Errors", "should require top-level Errors")]
+        [PlaywrightTest("launcher.spec.ts", "should require top-level Errors")]
         [Fact(Skip = "We don't need this test. Leaving for tracking purposes")]
         public void ShouldRequireTopLevelErrors() { }
 
-        [PlaywrightTest("should require top-level Errors", "should require top-level DeviceDescriptors")]
+        [PlaywrightTest("launcher.spec.ts", "should require top-level DeviceDescriptors")]
         [Fact(Skip = "We don't need this test. Leaving for tracking purposes")]
         public void ShouldRequireTopLevelDeviceDescriptors() { }
     }

@@ -68,19 +68,13 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => window.CLICKED"));
         }
 
-        [PlaywrightTest("page-click.spec.ts", "should avoid side effects after timeout")]
-        [Fact(Skip = "Ignore USES_HOOKS")]
-        public void ShouldAvoidSideEffectsAfterTimeout()
-        {
-        }
-
         [PlaywrightTest("page-click.spec.ts", "should not throw UnhandledPromiseRejection when page closes")]
         [Fact(Skip = "We don't need to test this race condition")]
         public void ShouldGracefullyFailWhenPageCloses()
         {
         }
 
-        [PlaywrightTest("page-click.spec.ts", "should click the button after navigation ")]
+        [PlaywrightTest("page-click.spec.ts", "should click the button after navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonAfterNavigation()
         {
@@ -91,7 +85,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }
 
-        [PlaywrightTest("page-click.spec.ts", "should click the button after a cross origin navigation ")]
+        [PlaywrightTest("page-click.spec.ts", "should click the button after a cross origin navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonAfterACrossOriginNavigation()
         {
@@ -237,35 +231,6 @@ namespace PlaywrightSharp.Tests
             await clickTask.WithTimeout(TestConstants.DefaultTaskTimeout);
 
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
-        }
-
-        [PlaywrightTest("page-click.spec.ts", "should timeout waiting for display:none to be gone")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldTimeoutWaitingForDisplayNoneToBeGone()
-        {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.EvalOnSelectorAsync("button", "b => b.style.display = 'none'");
-            var exception = await Assert.ThrowsAsync<TimeoutException>(()
-                => Page.ClickAsync("button", timeout: 5000));
-
-            Assert.Contains("Timeout 5000ms exceeded", exception.Message);
-            Assert.Contains("waiting for element to be visible, enabled and not moving", exception.Message);
-            Assert.Contains("element is not visible - waiting", exception.Message);
-        }
-
-        [PlaywrightTest("page-click.spec.ts", "should timeout waiting for visbility:hidden to be gone")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldTimeoutWaitingForVisbilityHiddenToBeGone()
-        {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.EvalOnSelectorAsync("button", "b => b.style.visibility = 'hidden'");
-            var clickTask = Page.ClickAsync("button", timeout: 5000);
-            var exception = await Assert.ThrowsAsync<TimeoutException>(()
-                => Page.ClickAsync("button", timeout: 5000));
-
-            Assert.Contains("Timeout 5000ms exceeded", exception.Message);
-            Assert.Contains("waiting for element to be visible, enabled and not moving", exception.Message);
-            Assert.Contains("element is not visible - waiting", exception.Message);
         }
 
         [PlaywrightTest("page-click.spec.ts", "should waitFor visible when parent is hidden")]
@@ -654,36 +619,6 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
         }
 
-        [PlaywrightTest("page-click.spec.ts", "should timeout waiting for hit target")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldTimeoutWaitingForHitTarget()
-        {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            var button = await Page.QuerySelectorAsync("button");
-
-            await Page.EvalOnSelectorAsync("button", @"button => {
-                button.style.borderWidth = '0';
-                button.style.width = '200px';
-                button.style.height = '20px';
-                document.body.style.margin = '0';
-                document.body.style.position = 'relative';
-                const flyOver = document.createElement('div');
-                flyOver.className = 'flyover';
-                flyOver.style.position = 'absolute';
-                flyOver.style.width = '400px';
-                flyOver.style.height = '20px';
-                flyOver.style.left = '-200px';
-                flyOver.style.top = '0';
-                flyOver.style.background = 'red';
-                document.body.appendChild(flyOver);
-            }");
-
-            var exception = await Assert.ThrowsAsync<TimeoutException>(()
-                => button.ClickAsync(timeout: 5000));
-
-            Assert.Contains("Timeout 5000ms exceeded.", exception.Message);
-        }
-
         [PlaywrightTest("page-click.spec.ts", "should fail when obscured and not waiting for hit target")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenObscuredAndNotWaitingForHitTarget()
@@ -717,20 +652,6 @@ namespace PlaywrightSharp.Tests
             await Page.EvaluateAsync("() => document.querySelector('button').removeAttribute('disabled')");
             await clickTask.WithTimeout(TestConstants.DefaultTaskTimeout);
             Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
-        }
-
-        [PlaywrightTest("page-click.spec.ts", "should timeout waiting for button to be enabled")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldTimeoutWaitingForButtonToBeEnabled()
-        {
-            await Page.SetContentAsync("<button onclick=\"javascript: window.__CLICKED = true;\" disabled><span>Click target</span></button>");
-            var clickTask = Page.ClickAsync("text=Click target", timeout: 3000);
-            Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
-
-            var exception = await Assert.ThrowsAsync<TimeoutException>(() => clickTask);
-
-            Assert.Contains("Timeout 3000ms exceeded", exception.Message);
-            Assert.Contains("element is disabled - waiting", exception.Message);
         }
 
         [PlaywrightTest("page-click.spec.ts", "should wait for input to be enabled")]
@@ -970,12 +891,6 @@ namespace PlaywrightSharp.Tests
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => clickTask);
             Assert.Null(await Page.EvaluateAsync<bool?>("window.clicked"));
             Assert.Contains("Element is outside of the viewport", exception.Message);
-        }
-
-        [PlaywrightTest("page-click.spec.ts", "should fail when element jumps during hit testing")]
-        [Fact(Skip = " Skip USES_HOOKS")]
-        public void ShouldFailWhenElementJumpsDuringHitTesting()
-        {
         }
 
         [PlaywrightTest("page-click.spec.ts", "should dispatch microtasks in order")]

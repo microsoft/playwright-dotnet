@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -8,19 +8,17 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.RequestInterception
+namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>interception.spec.js</playwright-file>
-    ///<playwright-describe>Request.continue</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class RequestContinueTests : PlaywrightSharpPageBaseTest
+    public class PageRequestContinueTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public RequestContinueTests(ITestOutputHelper output) : base(output)
+        public PageRequestContinueTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("interception.spec.js", "Request.continue", "should work")]
+        [PlaywrightTest("page-request-continue.spec.ts", "should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
@@ -28,7 +26,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             await Page.GoToAsync(TestConstants.EmptyPage);
         }
 
-        [PlaywrightTest("interception.spec.js", "Request.continue", "should amend HTTP headers")]
+        [PlaywrightTest("page-request-continue.spec.ts", "should amend HTTP headers")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAmendHTTPHeaders()
         {
@@ -46,7 +44,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.Equal("bar", requestTask.Result);
         }
 
-        [PlaywrightTest("interception.spec.js", "Request.continue", "should amend method on main request")]
+        [PlaywrightTest("page-request-continue.spec.ts", "should amend method on main request")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAmendMethodOnMainRequest()
         {
@@ -56,7 +54,7 @@ namespace PlaywrightSharp.Tests.RequestInterception
             Assert.Equal("POST", await methodTask);
         }
 
-        [PlaywrightTest("interception.spec.js", "Request.continue", "should amend post data")]
+        [PlaywrightTest("page-request-continue.spec.ts", "should amend post data")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAmendPostData()
         {

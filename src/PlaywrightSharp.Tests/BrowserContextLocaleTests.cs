@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
@@ -143,50 +143,6 @@ namespace PlaywrightSharp.Tests
             var popup = popupTask.Result.Page;
             await popup.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
             Assert.Equal("fr-CH", await popup.EvaluateAsync<string>("() => window.initialNavigatorLanguage"));
-        }
-
-        [PlaywrightTest("emulation.spec.js", "BrowserContext({timezoneId})", "should work for multiple pages sharing same process")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldWorkForMultiplePagesSharingSameProcess()
-        {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions { Locale = "ru-RU" });
-
-            var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
-
-            await TaskUtils.WhenAll(
-                page.WaitForEventAsync(PageEvent.Popup),
-                page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
-
-            await TaskUtils.WhenAll(
-                page.WaitForEventAsync(PageEvent.Popup),
-                page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
-        }
-
-        [PlaywrightTest("emulation.spec.js", "BrowserContext({timezoneId})", "should be isolated between contexts")]
-        [Fact(Skip = "Flacky")]
-        public async Task ShouldBeIsolatedBetweenContexts()
-        {
-            await using var context1 = await Browser.NewContextAsync(new BrowserContextOptions { Locale = "en-US" });
-            var tasks = new List<Task>();
-
-            for (int i = 0; i < 9; i++)
-            {
-                tasks.Add(context1.NewPageAsync());
-            }
-            await TaskUtils.WhenAll(tasks);
-
-            await using var context2 = await Browser.NewContextAsync(new BrowserContextOptions { Locale = "ru-RU" });
-            var page2 = await context2.NewPageAsync();
-
-            string[] numbers = await TaskUtils.WhenAll(context1.Pages.Select(p => p.EvaluateAsync<string>("() => (1000000.50).toLocaleString()")));
-
-            foreach (string number in numbers)
-            {
-                Assert.Equal("1,000,000.5", number);
-            }
-
-            Assert.Equal("1 000 000,5", await page2.EvaluateAsync<string>("() => (1000000.50).toLocaleString()"));
         }
     }
 }

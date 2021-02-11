@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>resource-timing.spec.js</playwright-file>
+    ///<playwright-file>resource-timing.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ResourceTimingTests : PlaywrightSharpPageBaseTest
     {
@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("resource-timing.spec.js", "should work")]
+        [PlaywrightTest("resource-timing.spec.ts", "should work")]
         [Fact]
         public async Task ShouldWork()
         {
@@ -40,7 +40,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(timing.ResponseEnd < 10000);
         }
 
-        [PlaywrightTest("resource-timing.spec.js", "should work for subresource")]
+        [PlaywrightTest("resource-timing.spec.ts", "should work for subresource")]
         [Fact]
         public async Task ShouldWorkForSubresource()
         {
@@ -75,7 +75,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(timing.ResponseEnd < 10000);
         }
 
-        [PlaywrightTest("resource-timing.spec.js", "should work for SSL")]
+        [PlaywrightTest("resource-timing.spec.ts", "should work for SSL")]
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldWorkForSSL()
         {
@@ -101,7 +101,7 @@ namespace PlaywrightSharp.Tests
             await page.CloseAsync();
         }
 
-        [PlaywrightTest("resource-timing.spec.js", "should work for redirect")]
+        [PlaywrightTest("resource-timing.spec.ts", "should work for redirect")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldWorkForRedirect()
         {

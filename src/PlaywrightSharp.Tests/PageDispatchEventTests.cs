@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
@@ -7,16 +7,16 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>dispatchevent.spec.js</playwright-file>
+    ///<playwright-file>dispatchevent.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class DispatchEventTests : PlaywrightSharpPageBaseTest
+    public class PageDispatchEventTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public DispatchEventTests(ITestOutputHelper output) : base(output)
+        public PageDispatchEventTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("dispatchevent.spec.js", "should dispatch click event")]
+        [PlaywrightTest("page-dispatchevent.spec.ts", "should dispatch click event")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDispatchClickEvent()
         {
@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("() => result"));
         }
 
-        [PlaywrightTest("dispatchevent.spec.js", "should dispatch click event properties")]
+        [PlaywrightTest("page-dispatchevent.spec.ts", "should dispatch click event properties")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDispatchClickEventProperties()
         {
@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(await Page.EvaluateAsync<bool>("() => composed"));
         }
 
-        [PlaywrightTest("dispatchevent.spec.js", "should dispatch click svg")]
+        [PlaywrightTest("page-dispatchevent.spec.ts", "should dispatch click svg")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDispatchClickSvg()
         {
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => window.__CLICKED"));
         }
 
-        [PlaywrightTest("dispatchevent.spec.js", "should dispatch click on a span with an inline element inside")]
+        [PlaywrightTest("page-dispatchevent.spec.ts", "should dispatch click on a span with an inline element inside")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDispatchClickOnASpanWithAnInlineElementInside()
         {
@@ -65,7 +65,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => window.CLICKED"));
         }
 
-        [PlaywrightTest("dispatchevent.spec.js", "should dispatch click after navigation")]
+        [PlaywrightTest("page-dispatchevent.spec.ts", "should dispatch click after navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDispatchClickAfterNavigation()
         {
@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("() => result"));
         }
 
-        [PlaywrightTest("dispatchevent.spec.js", "should dispatch click after a cross origin navigation")]
+        [PlaywrightTest("page-dispatchevent.spec.ts", "should dispatch click after a cross origin navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDispatchClickAfterACrossOriginNavigation()
         {
@@ -87,7 +87,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("() => result"));
         }
 
-        [PlaywrightTest("dispatchevent.spec.js", "should not fail when element is blocked on hover")]
+        [PlaywrightTest("page-dispatchevent.spec.ts", "should not fail when element is blocked on hover")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotFailWhenElementIsBlockedOnHover()
         {
@@ -107,7 +107,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(await Page.EvaluateAsync<bool>("() => window.clicked"));
         }
 
-        [PlaywrightTest("dispatchevent.spec.js", "should dispatch click when node is added in shadow dom")]
+        [PlaywrightTest("page-dispatchevent.spec.ts", "should dispatch click when node is added in shadow dom")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDispatchClickWhenNodeIsAddedInShadowDom()
         {
@@ -132,7 +132,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(await Page.EvaluateAsync<bool>("() => window.clicked"));
         }
 
-        [PlaywrightTest("dispatchevent.spec.js", "should be atomic")]
+        [PlaywrightTest("page-dispatchevent.spec.ts", "should be atomic")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAtomic()
         {
@@ -152,13 +152,13 @@ namespace PlaywrightSharp.Tests
                 }
             })";
 
-            await TestUtils.RegisterEngineAsync(Playwright, "dispatchEvent", createDummySelector);
+            await TestUtils.RegisterEngineAsync(Playwright, "page-dispatchevent", createDummySelector);
             await Page.SetContentAsync("<div onclick=\"window._clicked = true\">Hello</div>");
-            await Page.DispatchEventAsync("dispatchEvent=div", "click");
+            await Page.DispatchEventAsync("page-dispatchevent=div", "click");
             Assert.True(await Page.EvaluateAsync<bool>("() => window['_clicked']"));
         }
 
-        [PlaywrightTest("dispatchevent.spec.js", "Page.dispatchEvent(drag)", "should dispatch drag drop events")]
+        [PlaywrightTest("page-dispatchevent.spec.ts", "Page.dispatchEvent(drag)", "should dispatch drag drop events")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldDispatchDragDropEvents()
         {
@@ -174,7 +174,7 @@ namespace PlaywrightSharp.Tests
             }", new { source, target }));
         }
 
-        [PlaywrightTest("dispatchevent.spec.js", "Page.dispatchEvent(drag)", "should dispatch drag drop events")]
+        [PlaywrightTest("page-dispatchevent.spec.ts", "Page.dispatchEvent(drag)", "should dispatch drag drop events")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ElementHandleShouldDispatchDragDropEvents()
         {
@@ -190,7 +190,7 @@ namespace PlaywrightSharp.Tests
             }", new { source, target }));
         }
 
-        [PlaywrightTest("dispatchevent.spec.js", "should dispatch click event")]
+        [PlaywrightTest("page-dispatchevent.spec.ts", "should dispatch click event")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ElementHandleShouldDispatchClickEvent()
         {

@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>browser.spec.js</playwright-file>
+    ///<playwright-file>browser.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class BrowserTests : PlaywrightSharpBrowserBaseTest
     {
@@ -16,7 +16,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("browser.spec.js", "should create new page")]
+        [PlaywrightTest("browser.spec.ts", "should create new page")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCreateNewPage()
         {
@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests
             await page2.CloseAsync();
         }
 
-        [PlaywrightTest("browser.spec.js", "should throw upon second create new page")]
+        [PlaywrightTest("browser.spec.ts", "should throw upon second create new page")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowUponSecondCreateNewPage()
         {
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("Please use Browser.NewContextAsync()", ex.Message);
         }
 
-        [PlaywrightTest("browser.spec.js", "version should work")]
+        [PlaywrightTest("browser.spec.ts", "version should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public void VersionShouldWork()
         {

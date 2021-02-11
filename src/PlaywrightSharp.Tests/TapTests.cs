@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  * 
  * Copyright (c) Microsoft Corporation.
@@ -31,7 +31,7 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
 {
-    /// <playwright-file>tap.specs.ts</playwright-file>
+    /// <playwright-file>tap.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public sealed class TapTests : PlaywrightSharpPageBaseTest
     {
@@ -48,7 +48,7 @@ namespace PlaywrightSharp.Tests
             Page = await Browser.NewPageAsync(hasTouch: true);
         }
 
-        [PlaywrightTest("tap.specs.ts", "should send all of the correct events")]
+        [PlaywrightTest("tap.spec.ts", "should send all of the correct events")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendAllOfTheCorrectEvents()
         {
@@ -74,7 +74,7 @@ namespace PlaywrightSharp.Tests
             });
         }
 
-        [PlaywrightTest("tap.specs.ts", "should not send mouse events touchstart is canceled")]
+        [PlaywrightTest("tap.spec.ts", "should not send mouse events touchstart is canceled")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotSendMouseEventsTouchStartIsCanceled()
         {
@@ -98,7 +98,7 @@ namespace PlaywrightSharp.Tests
             });
         }
 
-        [PlaywrightTest("tap.specs.ts", "should not send mouse events when touchend is canceled")]
+        [PlaywrightTest("tap.spec.ts", "should not send mouse events when touchend is canceled")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotSendMouseEventsWhenTouchEndIsCanceled()
         {
@@ -122,7 +122,7 @@ namespace PlaywrightSharp.Tests
             });
         }
 
-        [PlaywrightTest("tap.specs.ts", "should wait for a navigation caused by a tap")]
+        [PlaywrightTest("tap.spec.ts", "should wait for a navigation caused by a tap")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForANavigationCausedByATap()
         {
@@ -152,7 +152,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(loaded);
         }
 
-        [PlaywrightTest("tap.specs.ts", "should work with modifiers")]
+        [PlaywrightTest("tap.spec.ts", "should work with modifiers")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithModifiers()
         {
@@ -170,7 +170,7 @@ namespace PlaywrightSharp.Tests
             Assert.True((await altKeyTask));
         }
 
-        [PlaywrightTest("tap.specs.ts", "should send well formed touch points")]
+        [PlaywrightTest("tap.spec.ts", "should send well formed touch points")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendWellFormedTouchPoints()
         {
@@ -226,7 +226,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(0, touchStartResult.rotationAngle);
         }
 
-        [PlaywrightTest("tap.specs.ts", "should wait until an element is visible to tap it")]
+        [PlaywrightTest("tap.spec.ts", "should wait until an element is visible to tap it")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitUntilAnElementIsVisibleToTapIt()
         {

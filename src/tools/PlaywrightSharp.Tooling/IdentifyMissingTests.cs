@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Tooling
                     noMatches++;
                     missingTests.Add((atx.FileName, atx.TestName));
                 }
-                else if (potentialMatch.Count(x => string.Equals(x.FileName, atx.TrimmedName, StringComparison.InvariantCultureIgnoreCase)) == 1)
+                else if (potentialMatch.Any(x => string.Equals(x.FileName, atx.TrimmedName, StringComparison.InvariantCultureIgnoreCase)))
                 {
                     fullMatches++;
                     continue;
