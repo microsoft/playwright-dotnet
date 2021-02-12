@@ -8,10 +8,10 @@ using Xunit.Abstractions;
 namespace PlaywrightSharp.Tests
 {
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class QuerySelectorAllTests : PlaywrightSharpPageBaseTest
+    public class QuerySelectorTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public QuerySelectorAllTests(ITestOutputHelper output) : base(output)
+        public QuerySelectorTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -35,9 +35,9 @@ namespace PlaywrightSharp.Tests
             Assert.Empty(elements);
         }
 
-        [PlaywrightTest("queryselector.spec.ts", "should query existing element")]
+        [PlaywrightTest("queryselector.spec.ts", "xpath should query existing element")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldQueryExistingElement()
+        public async Task XpathShouldQueryExistingElement()
         {
             await Page.SetContentAsync("<section>test</section>");
             var elements = await Page.QuerySelectorAllAsync("xpath=/html/body/section");

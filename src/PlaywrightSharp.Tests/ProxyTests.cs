@@ -17,9 +17,9 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("proxy.spec.ts", "should return all of the pages")]
+        [PlaywrightTest("proxy.spec.ts", "should use proxy")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldReturnAllOfThePages()
+        public async Task ShouldUseProxy()
         {
             Server.SetRoute("/target.html", ctx => ctx.Response.WriteAsync("<html><title>Served by the proxy</title></html>"));
 

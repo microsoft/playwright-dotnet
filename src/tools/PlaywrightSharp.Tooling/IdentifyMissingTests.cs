@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tooling
             }
 
             // let's map the test cases from the spec files
-            MapTestsCases(directoryInfo, options);
+            MapTestsCases(directoryInfo, options, string.Empty);
 
             // now, let's load the DLL and use some reflection-fu
             var assembly = Assembly.LoadFrom(options.TestsAssemblyPath);
@@ -119,23 +119,25 @@ namespace PlaywrightSharp.Tooling
             Console.WriteLine($"Found/Mismatched/Missing: {fullMatches}/{potentialMatches}/{noMatches} out of {totalTests}");
         }
 
-        private static void MapTestsCases(DirectoryInfo directoryInfo, IdentifyMissingTestsOptions options)
+        private static void MapTestsCases(DirectoryInfo directoryInfo, IdentifyMissingTestsOptions options, string basePath)
         {
             // get the sub-directories
             if (options.Recursive)
             {
                 foreach (var subdirectory in directoryInfo.GetDirectories())
                 {
-                    MapTestsCases(subdirectory, options);
+                    MapTestsCases(subdirectory, options, $"{basePath}{subdirectory.Name}/");
                 }
             }
 
             foreach (var fileInfo in directoryInfo.GetFiles(options.Pattern))
             {
-                ScaffoldTest.FindTestsInFile(fileInfo.FullName, (testName) =>
-                {
-                    _testPairs.Add(new(fileInfo.Name.Substring(0, fileInfo.Name.IndexOf('.')), testName));
-                });
+                ScaffoldTest.FindTestsInFile(
+                    fileInfo.FullName,
+                    (testName) =>
+                    {
+                        _testPairs.Add(new(basePath + fileInfo.Name.Substring(0, fileInfo.Name.IndexOf('.')), testName));
+                    });
             }
         }
     }

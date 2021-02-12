@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("page-click-timeout2.spec.ts", "should timeout waiting for display:none to be gone")]
+        [PlaywrightTest("page-click-timeout-2.spec.ts", "should timeout waiting for display:none to be gone")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForDisplayNoneToBeGone()
         {
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("element is not visible - waiting", exception.Message);
         }
 
-        [PlaywrightTest("page-click-timeout2.spec.ts", "should timeout waiting for visbility:hidden to be gone")]
+        [PlaywrightTest("page-click-timeout-2.spec.ts", "should timeout waiting for visbility:hidden to be gone")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForVisbilityHiddenToBeGone()
         {

@@ -16,6 +16,18 @@ namespace PlaywrightSharp.Tests
         {
         }
 
+        [PlaywrightTest("page-basic.spec.ts", "should reject all promises when page is closed")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldRejectAllPromisesWhenPageIsClosed()
+        {
+            var newPage = await Context.NewPageAsync();
+            var exception = await Assert.ThrowsAsync<TargetClosedException>(() => TaskUtils.WhenAll(
+                newPage.EvaluateAsync<string>("() => new Promise(r => { })"),
+                newPage.CloseAsync()
+            ));
+            Assert.Contains("Protocol error", Assert.IsType<TargetClosedException>(exception).Message);
+        }
+
         [PlaywrightTest("page-basic.spec.ts", "async stacks should work")]
         [Fact(Skip = "We don't need to test this in .NET")]
         public async Task AsyncStacksShouldWork()
@@ -205,6 +217,56 @@ namespace PlaywrightSharp.Tests
             var task = Page.GoToAsync("about:blank");
             await Page.WaitForEventAsync(PageEvent.DOMContentLoaded);
             await task;
+        }
+
+        [PlaywrightTest("page-basic.spec.ts", "should set the page close state")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldSetThePageCloseState()
+        {
+            var newPage = await Context.NewPageAsync();
+            Assert.False(newPage.IsClosed);
+            await newPage.CloseAsync();
+            Assert.True(newPage.IsClosed);
+        }
+
+        [PlaywrightTest("page-basic.spec.ts", "should terminate network waiters")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldTerminateNetworkWaiters()
+        {
+            var newPage = await Context.NewPageAsync();
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => TaskUtils.WhenAll(
+                newPage.WaitForRequestAsync(TestConstants.EmptyPage),
+                newPage.WaitForResponseAsync(TestConstants.EmptyPage),
+                newPage.CloseAsync()
+            ));
+            for (int i = 0; i < 2; i++)
+            {
+                string message = exception.Message;
+                Assert.Contains("Page closed", message);
+                Assert.DoesNotContain("Timeout", message);
+            }
+        }
+
+        [PlaywrightTest("page-basic.spec.ts", "should be callable twice")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldBeCallableTwice()
+        {
+            var newPage = await Context.NewPageAsync();
+            await TaskUtils.WhenAll(
+                newPage.CloseAsync(),
+                newPage.CloseAsync());
+
+            await newPage.CloseAsync();
+        }
+
+        [PlaywrightTest("page-basic.spec.ts", "should not be visible in context.pages")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldNotBeVisibleInContextPages()
+        {
+            var newPage = await Context.NewPageAsync();
+            Assert.Contains(newPage, Context.Pages);
+            await newPage.CloseAsync();
+            Assert.DoesNotContain(newPage, Context.Pages);
         }
     }
 }

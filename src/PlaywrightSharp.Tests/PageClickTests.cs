@@ -567,24 +567,6 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(10, await Page.EvaluateAsync<int>("pageY"));
         }
 
-        [PlaywrightTest("page-click.spec.ts", "should timeout waiting for stable position")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldTimeoutWaitingForStablePosition()
-        {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.EvalOnSelectorAsync("button", @"button => {
-                button.style.transition = 'margin 5s linear 0s';
-                button.style.marginLeft = '200px';
-            }");
-
-            var exception = await Assert.ThrowsAsync<TimeoutException>(()
-                => Page.ClickAsync("button", timeout: 3000));
-
-            Assert.Contains("Timeout 3000ms exceeded", exception.Message);
-            Assert.Contains("waiting for element to be visible, enabled and not moving", exception.Message);
-            Assert.Contains("element is moving - waiting", exception.Message);
-        }
-
         [PlaywrightTest("page-click.spec.ts", "should wait for becoming hit target")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForBecomingHitTarget()
@@ -919,61 +901,6 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(1, await Page.EvaluateAsync<int>("window.result"));
         }
 
-        [PlaywrightTest("page-click.spec.ts", "should retarget when element is recycled during hit testing")]
-        [Fact(Skip = " Skip USES_HOOKS")]
-        public void ShouldRetargetWhenElementIsRecycledDuringHitTesting()
-        {
-        }
-
-        [PlaywrightTest("page-click.spec.ts", "should report that selector does not match anymore")]
-        [Fact(Skip = " Skip USES_HOOKS")]
-        public void ShouldReportThatSelectorDoesNotMatchAnymore()
-        {
-        }
-
-        [PlaywrightTest("page-click.spec.ts", "should retarget when element is recycled before enabled check")]
-        [Fact(Skip = " Skip USES_HOOKS")]
-        public void ShouldRetargetWhenElementIsRecycledBeforeEnabledCheck()
-        {
-        }
-
-        [PlaywrightTest("page-click.spec.ts", "should not retarget the handle when element is recycled")]
-        [Fact(Skip = " Skip USES_HOOKS")]
-        public void ShouldNotRetargetTheHandleWhenElementIsRecycled()
-        {
-        }
-
-        [PlaywrightTest("page-click.spec.ts", "should not retarget when element changes on hover")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldNotRetargetWhenElementChangesOnHover()
-        {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/react.html");
-            await Page.EvaluateAsync(@"() => {
-                renderComponent(e('div', {}, [e(MyButton, { name: 'button1', renameOnHover: true }), e(MyButton, { name: 'button2' })] ));
-            }");
-
-            await Page.ClickAsync("text=button1");
-            Assert.True(await Page.EvaluateAsync<bool?>("window.button1"));
-            Assert.Null(await Page.EvaluateAsync<bool?>("window.button2"));
-        }
-
-        [PlaywrightTest("page-click.spec.ts", "should not retarget when element is recycled on hover")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldNotRetargetWhenElementIsRecycledOnHover()
-        {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/react.html");
-            await Page.EvaluateAsync(@"() => {
-                function shuffle() {
-                    renderComponent(e('div', {}, [e(MyButton, { name: 'button2' }), e(MyButton, { name: 'button1' })] ));
-                }
-                renderComponent(e('div', {}, [e(MyButton, { name: 'button1', onHover: shuffle }), e(MyButton, { name: 'button2' })] ));
-            }");
-
-            await Page.ClickAsync("text=button1");
-            Assert.Null(await Page.EvaluateAsync<bool?>("window.button1"));
-            Assert.True(await Page.EvaluateAsync<bool?>("window.button2"));
-        }
-
         [PlaywrightTest("page-click.spec.ts", "should click the button when window.innerWidth is corrupted")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonWhenWindowInnerWidthIsCorrupted()
@@ -983,20 +910,6 @@ namespace PlaywrightSharp.Tests
 
             await Page.ClickAsync("button");
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
-        }
-
-        [PlaywrightTest("page-click.spec.ts", "should timeout when click opens alert")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldTimeoutWhenClickOpensAlert()
-        {
-            var dialogTask = Page.WaitForEventAsync(PageEvent.Dialog);
-
-            await Page.SetContentAsync("<div onclick='window.alert(123)'>Click me</div>");
-
-            var exception = await Assert.ThrowsAsync<TimeoutException>(() => Page.ClickAsync("div", timeout: 3000));
-            Assert.Contains("Timeout 3000ms exceeded", exception.Message);
-            var dialog = await dialogTask;
-            await dialog.Dialog.DismissAsync();
         }
 
         private async Task GiveItAChanceToClick(IPage page)

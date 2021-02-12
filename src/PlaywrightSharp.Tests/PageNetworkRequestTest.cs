@@ -207,7 +207,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(ResourceType.EventSource, requests[0].ResourceType);
         }
 
-        [PlaywrightTest("network.spec.ts", "should return navigation bit")]
+        [PlaywrightTest("page-network-request.spec.ts", "should return navigation bit")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNavigationBit()
         {
@@ -222,7 +222,7 @@ namespace PlaywrightSharp.Tests
             Assert.False(requests["style.css"].IsNavigationRequest);
         }
 
-        [PlaywrightTest("network.spec.ts", "Request.isNavigationRequest", "should return navigation bit when navigating to image")]
+        [PlaywrightTest("page-network-request.spec.ts", "Request.isNavigationRequest", "should return navigation bit when navigating to image")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNavigationBitWhenNavigatingToImage()
         {

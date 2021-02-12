@@ -20,13 +20,13 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("page-click-timeout3.spec.ts", "should fail when element jumps during hit testing")]
+        [PlaywrightTest("page-click-timeout-3.spec.ts", "should fail when element jumps during hit testing")]
         [Fact(Skip = " Skip USES_HOOKS")]
         public void ShouldFailWhenElementJumpsDuringHitTesting()
         {
         }
 
-        [PlaywrightTest("page-click-timeout3.spec.ts", "should timeout waiting for hit target")]
+        [PlaywrightTest("page-click-timeout-3.spec.ts", "should timeout waiting for hit target")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForHitTarget()
         {

@@ -15,9 +15,9 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("page-emulate-media.spec.ts", "should work")]
+        [PlaywrightTest("page-emulate-media.spec.ts", "should emulate scheme work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldWork()
+        public async Task ShouldEmulateSchemeWork()
         {
             await Page.EmulateMediaAsync(ColorScheme.Light);
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
@@ -142,7 +142,7 @@ namespace PlaywrightSharp.Tests
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
         }
 
-        [PlaywrightTest("emulation.spec.ts", "Page.emulateMedia type", "should throw in case of bad colorScheme argument")]
+        [PlaywrightTest("page-emulate-media.spec.ts", "should throw in case of bad colorScheme argument")]
         [Fact(Skip = "We don't need this test. Leaving for tracking purposes")]
         public void ShouldThrowInCaseOfBadColorSchemeArgument() { }
     }

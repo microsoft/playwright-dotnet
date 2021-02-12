@@ -15,13 +15,13 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("page-click-timeout1.spec.ts", "should avoid side effects after timeout")]
+        [PlaywrightTest("page-click-timeout-1.spec.ts", "should avoid side effects after timeout")]
         [Fact(Skip = "Ignore USES_HOOKS")]
         public void ShouldAvoidSideEffectsAfterTimeout()
         {
         }
 
-        [PlaywrightTest("page-click-timeout1.spec.ts", "should timeout waiting for button to be enabled")]
+        [PlaywrightTest("page-click-timeout-1.spec.ts", "should timeout waiting for button to be enabled")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForButtonToBeEnabled()
         {

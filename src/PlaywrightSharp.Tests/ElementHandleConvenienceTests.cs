@@ -88,7 +88,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal("Text,\nmore text", await Page.GetTextContentAsync("#outer"));
         }
 
-        [PlaywrightTest("dispatchevent.spec.ts", "Page.dispatchEvent(click)", "textContent should be atomic")]
+        [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "textContent should be atomic")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task TextContentShouldBeAtomic()
         {
@@ -115,7 +115,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').textContent"));
         }
 
-        [PlaywrightTest("dispatchevent.spec.ts", "Page.dispatchEvent(click)", "innerText should be atomic")]
+        [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "innerText should be atomic")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task InnerTextShouldBeAtomic()
         {
@@ -142,7 +142,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').textContent"));
         }
 
-        [PlaywrightTest("dispatchevent.spec.ts", "Page.dispatchEvent(click)", "innerHTML should be atomic")]
+        [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "innerHTML should be atomic")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task InnerHtmlShouldBeAtomic()
         {
@@ -169,7 +169,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').textContent"));
         }
 
-        [PlaywrightTest("dispatchevent.spec.ts", "Page.dispatchEvent(click)", "getAttribute should be atomic")]
+        [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "getAttribute should be atomic")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task GetAttributeShouldBeAtomic()
         {
@@ -196,7 +196,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.Equal("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').getAttribute('foo')"));
         }
 
-        [PlaywrightTest("dispatchevent.spec.ts", "isVisible and isHidden should work")]
+        [PlaywrightTest("elementhandle-convenience.spec.ts", "isVisible and isHidden should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task IsVisibleAndIsHiddenShouldWork()
         {
@@ -213,7 +213,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.True(await Page.IsHiddenAsync("span"));
         }
 
-        [PlaywrightTest("dispatchevent.spec.ts", "isEnabled and isDisabled should work")]
+        [PlaywrightTest("elementhandle-convenience.spec.ts", "isEnabled and isDisabled should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task IsEnabledAndIsDisabledShouldWork()
         {
@@ -238,7 +238,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.False(await Page.IsDisabledAsync(":text('button2')"));
         }
 
-        [PlaywrightTest("dispatchevent.spec.ts", "isEditable should work")]
+        [PlaywrightTest("elementhandle-convenience.spec.ts", "isEditable should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task IsEditableShouldWork()
         {
@@ -255,7 +255,7 @@ namespace PlaywrightSharp.Tests.ElementHandle
             Assert.False(await Page.IsEditableAsync("textarea"));
         }
 
-        [PlaywrightTest("dispatchevent.spec.ts", "isChecked should work")]
+        [PlaywrightTest("elementhandle-convenience.spec.ts", "isChecked should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task IsCheckedShouldWork()
         {

@@ -8,14 +8,14 @@ using Xunit.Abstractions;
 namespace PlaywrightSharp.Tests
 {
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class WorkerTests : PlaywrightSharpPageBaseTest
+    public class WorkersTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public WorkerTests(ITestOutputHelper output) : base(output)
+        public WorkersTests(ITestOutputHelper output) : base(output)
         {
         }
 
-        [PlaywrightTest("worker.spec.ts", "Page.Workers")]
+        [PlaywrightTest("workers.spec.ts", "Page.workers")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PageWorkers()
         {
@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests
             Assert.Empty(Page.Workers);
         }
 
-        [PlaywrightTest("worker.spec.ts", "should emit created and destroyed events")]
+        [PlaywrightTest("workers.spec.ts", "should emit created and destroyed events")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitCreatedAndDestroyedEvents()
         {
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("Most likely the worker has been closed.", exception.Message);
         }
 
-        [PlaywrightTest("worker.spec.ts", "should report console logs")]
+        [PlaywrightTest("workers.spec.ts", "should report console logs")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportConsoleLogs()
         {
@@ -61,7 +61,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("1", message.Message.Text);
         }
 
-        [PlaywrightTest("worker.spec.ts", "should have JSHandles for console logs")]
+        [PlaywrightTest("workers.spec.ts", "should have JSHandles for console logs")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveJSHandlesForConsoleLogs()
         {
@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("null", json);
         }
 
-        [PlaywrightTest("worker.spec.ts", "should evaluate")]
+        [PlaywrightTest("workers.spec.ts", "should evaluate")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEvaluate()
         {
@@ -87,7 +87,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(2, await workerCreatedTask.Result.Worker.EvaluateAsync<int>("1+1"));
         }
 
-        [PlaywrightTest("worker.spec.ts", "should report errors")]
+        [PlaywrightTest("workers.spec.ts", "should report errors")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportErrors()
         {
@@ -105,7 +105,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("this is my error", errorLog);
         }
 
-        [PlaywrightTest("worker.spec.ts", "should clear upon navigation")]
+        [PlaywrightTest("workers.spec.ts", "should clear upon navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearUponNavigation()
         {
@@ -123,7 +123,7 @@ namespace PlaywrightSharp.Tests
             Assert.Empty(Page.Workers);
         }
 
-        [PlaywrightTest("worker.spec.ts", "should clear upon cross-process navigation")]
+        [PlaywrightTest("workers.spec.ts", "should clear upon cross-process navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearUponCrossProcessNavigation()
         {
@@ -141,7 +141,7 @@ namespace PlaywrightSharp.Tests
             Assert.Empty(Page.Workers);
         }
 
-        [PlaywrightTest("worker.spec.ts", "should report network activity")]
+        [PlaywrightTest("workers.spec.ts", "should report network activity")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNetworkActivity()
         {
@@ -163,7 +163,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(responseTask.Result.Ok);
         }
 
-        [PlaywrightTest("worker.spec.ts", "should report network activity on worker creation")]
+        [PlaywrightTest("workers.spec.ts", "should report network activity on worker creation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNetworkActivityOnWorkerCreation()
         {
@@ -184,7 +184,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(responseTask.Result.Ok);
         }
 
-        [PlaywrightTest("worker.spec.ts", "should format number using context locale")]
+        [PlaywrightTest("workers.spec.ts", "should format number using context locale")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatNumberUsingContextLocale()
         {

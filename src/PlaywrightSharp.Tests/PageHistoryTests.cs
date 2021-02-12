@@ -59,9 +59,9 @@ namespace PlaywrightSharp.Tests
         }
 
 
-        [PlaywrightTest("page-history.spec.ts", "should work")]
+        [PlaywrightTest("page-history.spec.ts", "page.reload should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldWork()
+        public async Task PageReloadShouldWork()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.EvaluateAsync("() => window._foo = 10");
