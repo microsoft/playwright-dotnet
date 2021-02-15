@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>screencast.spec.js</playwright-file>
+    ///<playwright-file>screencast.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ScreencastTests : PlaywrightSharpBrowserBaseTest
     {
@@ -20,25 +20,25 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("screencast.spec.js", "videoSize should require videosPath")]
+        [PlaywrightTest("screencast.spec.ts", "videoSize should require videosPath")]
         [Fact(Skip = "We are not using old properties")]
         public void VideoSizeShouldRequireVideosPath()
         {
         }
 
-        [PlaywrightTest("screencast.spec.js", "should work with old options")]
+        [PlaywrightTest("screencast.spec.ts", "should work with old options")]
         [Fact(Skip = "We are not using old properties")]
         public void ShouldWorkWithOldOptions()
         {
         }
 
-        [PlaywrightTest("screencast.spec.js", "should throw without recordVideo.dir")]
+        [PlaywrightTest("screencast.spec.ts", "should throw without recordVideo.dir")]
         [Fact(Skip = "We don't need to test this")]
         public void ShouldThrowWithoutRecordVideoDir()
         {
         }
 
-        [PlaywrightTest("screencast.spec.js", "should capture static page")]
+        [PlaywrightTest("screencast.spec.ts", "should capture static page")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true)]
         public async Task ShouldCaptureStaticPage()
         {
@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Tests
             Assert.NotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
         }
 
-        [PlaywrightTest("screencast.spec.js", "should expose video path")]
+        [PlaywrightTest("screencast.spec.ts", "should expose video path")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldExposeVideoPath()
         {
@@ -79,7 +79,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(new FileInfo(path).Exists);
         }
 
-        [PlaywrightTest("screencast.spec.js", "should expose video path blank page")]
+        [PlaywrightTest("screencast.spec.ts", "should expose video path blank page")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldExposeVideoPathBlankPage()
         {
@@ -99,49 +99,49 @@ namespace PlaywrightSharp.Tests
             Assert.True(new FileInfo(path).Exists);
         }
 
-        [PlaywrightTest("screencast.spec.js", "should expose video path blank popup")]
+        [PlaywrightTest("screencast.spec.ts", "should expose video path blank popup")]
         [Fact(Skip = "We don't need to test video details")]
         public void ShouldExposeVideoPathBlankPopup()
         {
         }
 
-        [PlaywrightTest("screencast.spec.js", "should capture navigation")]
+        [PlaywrightTest("screencast.spec.ts", "should capture navigation")]
         [Fact(Skip = "We don't need to test video details")]
         public void ShouldCaptureNavigation()
         {
         }
 
-        [PlaywrightTest("screencast.spec.js", "should capture css transformation")]
+        [PlaywrightTest("screencast.spec.ts", "should capture css transformation")]
         [Fact(Skip = "We don't need to test video details")]
         public void ShouldCaptureCssTransformation()
         {
         }
 
-        [PlaywrightTest("screencast.spec.js", "should work for popups")]
+        [PlaywrightTest("screencast.spec.ts", "should work for popups")]
         [Fact(Skip = "We don't need to test video details")]
         public void ShouldWorkForPopups()
         {
         }
 
-        [PlaywrightTest("screencast.spec.js", "should scale frames down to the requested size")]
+        [PlaywrightTest("screencast.spec.ts", "should scale frames down to the requested size")]
         [Fact(Skip = "We don't need to test video details")]
         public void ShouldScaleFramesDownToTheRequestedSize()
         {
         }
 
-        [PlaywrightTest("screencast.spec.js", "should use viewport as default size")]
+        [PlaywrightTest("screencast.spec.ts", "should use viewport as default size")]
         [Fact(Skip = "We don't need to test video details")]
         public void ShouldUseViewportAsDefaultSize()
         {
         }
 
-        [PlaywrightTest("screencast.spec.js", "should be 1280x720 by default")]
+        [PlaywrightTest("screencast.spec.ts", "should be 1280x720 by default")]
         [Fact(Skip = "We don't need to test video details")]
         public void ShouldBe1280x720ByDefault()
         {
         }
 
-        [PlaywrightTest("screencast.spec.js", "should capture static page in persistent context")]
+        [PlaywrightTest("screencast.spec.ts", "should capture static page in persistent context")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task ShouldCaptureStaticPageInPersistentContext()
         {

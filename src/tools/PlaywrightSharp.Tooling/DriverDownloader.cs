@@ -43,8 +43,8 @@ namespace PlaywrightSharp.Tooling
 
         private static Process GetProcess(string driverExecutablePath)
             => new()
-        {
-            StartInfo =
+            {
+                StartInfo =
                 {
                     FileName = driverExecutablePath,
                     UseShellExecute = false,
@@ -54,7 +54,7 @@ namespace PlaywrightSharp.Tooling
                     CreateNoWindow = true,
                     Arguments = "print-api-json",
                 },
-        };
+            };
 
         private static async Task UpdateBrowserVersionsAsync(string basePath, string driverVersion)
         {
@@ -215,6 +215,5 @@ namespace PlaywrightSharp.Tooling
 
             throw new Exception("Unknown platform");
         }
-
     }
 }

@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests
 {
-    ///<playwright-file>headful.spec.js</playwright-file>
+    ///<playwright-file>headful.spec.ts</playwright-file>
 
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class HeadfulTests : PlaywrightSharpBaseTest
@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("headful.spec.js", "should have default url when launching browser")]
+        [PlaywrightTest("headful.spec.ts", "should have default url when launching browser")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveDefaultUrlWhenLaunchingBrowser()
         {
@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(new[] { "about:blank" }, pages);
         }
 
-        [PlaywrightTest("headful.spec.js", "headless should be able to read cookies written by headful")]
+        [PlaywrightTest("headful.spec.ts", "headless should be able to read cookies written by headful")]
         [Fact(Skip = "Flaky")]
         public async Task HeadlessShouldBeAbleToReadCookiesWrittenByHeadful()
         {
@@ -56,7 +56,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("foo=true", cookie);
         }
 
-        [PlaywrightTest("headful.spec.js", "should close browser with beforeunload page")]
+        [PlaywrightTest("headful.spec.ts", "should close browser with beforeunload page")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCloseBrowserWithBeforeunloadPage()
         {
@@ -69,7 +69,7 @@ namespace PlaywrightSharp.Tests
             await page.ClickAsync("body");
         }
 
-        [PlaywrightTest("headful.spec.js", "should not crash when creating second context")]
+        [PlaywrightTest("headful.spec.ts", "should not crash when creating second context")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotCrashWhenCreatingSecondContext()
         {
@@ -86,7 +86,7 @@ namespace PlaywrightSharp.Tests
             }
         }
 
-        [PlaywrightTest("headful.spec.js", "should click background tab")]
+        [PlaywrightTest("headful.spec.ts", "should click background tab")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickBackgroundTab()
         {
@@ -97,7 +97,7 @@ namespace PlaywrightSharp.Tests
             await page.ClickAsync("button");
         }
 
-        [PlaywrightTest("headful.spec.js", "should close browser after context menu was triggered")]
+        [PlaywrightTest("headful.spec.ts", "should close browser after context menu was triggered")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCloseBrowserAfterContextMenuWasTriggered()
         {
@@ -107,7 +107,7 @@ namespace PlaywrightSharp.Tests
             await page.ClickAsync("body", button: MouseButton.Right);
         }
 
-        [PlaywrightTest("headful.spec.js", "should(not) block third party cookies")]
+        [PlaywrightTest("headful.spec.ts", "should(not) block third party cookies")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotBlockThirdPartyCookies()
         {
@@ -154,7 +154,7 @@ namespace PlaywrightSharp.Tests
             }
         }
 
-        [PlaywrightTest("headful.spec.js", "should not override viewport size when passed null")]
+        [PlaywrightTest("headful.spec.ts", "should not override viewport size when passed null")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldNotOverrideViewportSizeWhenPassedNull()
         {
@@ -176,7 +176,7 @@ namespace PlaywrightSharp.Tests
             await popup.WaitForFunctionAsync("() => window.outerWidth === 500 && window.outerHeight === 450");
         }
 
-        [PlaywrightTest("headful.spec.js", "Page.bringToFront should work")]
+        [PlaywrightTest("headful.spec.ts", "Page.bringToFront should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PageBringToFrontShouldWork()
         {

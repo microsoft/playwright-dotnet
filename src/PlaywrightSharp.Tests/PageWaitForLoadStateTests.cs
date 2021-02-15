@@ -115,5 +115,31 @@ namespace PlaywrightSharp.Tests
             await connectedPage.WaitForLoadStateAsync();
             Assert.Equal(TestConstants.EmptyPage, connectedPage.Url);
         }
+
+        [PlaywrightTest("page-wait-for-load-state.spec.ts", "should work for frame")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldWorkForFrame()
+        {
+            await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
+            var frame = Page.Frames[1];
+
+            TaskCompletionSource<bool> requestTask = new TaskCompletionSource<bool>();
+            TaskCompletionSource<bool> routeReachedTask = new TaskCompletionSource<bool>();
+            await Page.RouteAsync(TestConstants.ServerUrl + "/one-style.css", async (route, __) =>
+            {
+                routeReachedTask.TrySetResult(true);
+                await requestTask.Task;
+                await route.ContinueAsync();
+            });
+
+            await frame.GoToAsync(TestConstants.ServerUrl + "/one-style.html", LifecycleEvent.DOMContentLoaded);
+
+            await routeReachedTask.Task;
+            var loadTask = frame.WaitForLoadStateAsync();
+            await Page.EvaluateAsync("1");
+            Assert.False(loadTask.IsCompleted);
+            requestTask.TrySetResult(true);
+            await loadTask;
+        }
     }
 }

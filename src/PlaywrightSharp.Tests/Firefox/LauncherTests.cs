@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace PlaywrightSharp.Tests.Firefox
 {
-    ///<playwright-file>firefox/launcher.spec.js</playwright-file>
+    ///<playwright-file>firefox/launcher.spec.ts</playwright-file>
     ///<playwright-describe>launcher</playwright-describe>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class LauncherTests : PlaywrightSharpBaseTest
@@ -18,7 +18,7 @@ namespace PlaywrightSharp.Tests.Firefox
         {
         }
 
-        [PlaywrightTest("firefox/launcher.spec.js", "launcher", "should pass firefox user preferences")]
+        [PlaywrightTest("firefox/launcher.spec.ts", "should pass firefox user preferences")]
         [SkipBrowserAndPlatformFact(skipChromium: true, skipWebkit: true)]
         public async Task ShouldPassFirefoxUserPreferences()
         {

@@ -1,6 +1,6 @@
 namespace PlaywrightSharp.Tooling.Models.Mismatch
 {
-    public class MismatchMember
+    internal class MismatchMember
     {
         public string UpstreamMemberName { get; set; }
 
