@@ -45,14 +45,24 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// The Touchscreen class operates in main-frame CSS pixels relative to the top-left corner of the viewport. Methods on the touchscreen
-	/// can only be used in browser contexts that have been intialized with `hasTouch` set to true.
+	/// <para>
+	/// The Touchscreen class operates in main-frame CSS pixels relative to the top-left
+	/// corner of the viewport. Methods on the touchscreen can only be used in browser contexts
+	/// that have been intialized with <c>hasTouch</c> set to true.
+	/// </para>
 	/// </summary>
 	public partial interface ITouchscreen
 	{
 		/// <summary>
-		/// Dispatches a `touchstart` and `touchend` event with a single touch at the position ({PARAM},{PARAM}).
+		/// <para>
+		/// Dispatches a <c>touchstart` and `touchend</c> event with a single touch at the position
+		/// (<paramref name="x"/>,<paramref name="y"/>).
+		/// </para>
 		/// </summary>
+		/// <param name="x">
+		/// </param>
+		/// <param name="y">
+		/// </param>
 		Task TapAsync(decimal x, decimal y);
 	}
 }

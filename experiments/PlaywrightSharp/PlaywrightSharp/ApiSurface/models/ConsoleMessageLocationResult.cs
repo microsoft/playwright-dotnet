@@ -47,7 +47,9 @@ namespace PlaywrightSharp
     public class ConsoleMessageLocationResult
 	{
 		string Url { get; set; }
+	
 		int LineNumber { get; set; }
+	
 		int ColumnNumber { get; set; }
 	}
 }

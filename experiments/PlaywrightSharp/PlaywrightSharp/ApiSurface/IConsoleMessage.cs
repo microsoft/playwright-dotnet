@@ -45,16 +45,26 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// <see cref="IConsoleMessage"/> objects are dispatched by page via the <see cref="IPage.Console"/> event.
+	/// <para>
+	/// <see cref="IConsoleMessage"/> objects are dispatched by page via the <see cref="IPage.Console"/>
+	/// event.
+	/// </para>
 	/// </summary>
 	public partial interface IConsoleMessage
 	{
 		dynamic GetArgs();
+	
 		ConsoleMessageLocationResult GetLocation();
+	
 		string GetText();
+	
 		/// <summary>
-		/// One of the following values: `'log'`, `'debug'`, `'info'`, `'error'`, `'warning'`, `'dir'`, `'dirxml'`, `'table'`, `'trace'`,
-		/// `'clear'`, `'startGroup'`, `'startGroupCollapsed'`, `'endGroup'`, `'assert'`, `'profile'`, `'profileEnd'`, `'count'`, `'timeEnd'`.
+		/// <para>
+		/// One of the following values: <c>'log'`, `'debug'`, `'info'`, `'error'`, `'warning'`,
+		/// `'dir'`, `'dirxml'`, `'table'`, `'trace'`, `'clear'`, `'startGroup'`, `'startGroupCollapsed'`,
+		/// `'endGroup'`, `'assert'`, `'profile'`, `'profileEnd'`, `'count'`, `'timeEnd'</c>
+		/// 
+		/// </para>
 		/// </summary>
 		string GetType();
 	}

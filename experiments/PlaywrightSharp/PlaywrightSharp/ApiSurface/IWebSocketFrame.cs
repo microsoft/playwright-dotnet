@@ -44,24 +44,19 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-    public class BrowserStorageStateCookies
+    /// <summary>
+	/// <para>
+	/// The <see cref="IWebSocketFrame"/> class represents frames sent over <see cref="IWebSocket"/>
+	/// connections in the page. Frame payload is returned by either <see cref="IWebSocketFrame.Text"/>
+	/// or <see cref="IWebSocketFrame.Binary"/> method depending on the its type.
+	/// </para>
+	/// </summary>
+	public partial interface IWebSocketFrame
 	{
-		string Name { get; set; }
+		/// <summary><para>Returns binary payload.</para></summary>
+		byte[] GetBinary();
 	
-		string Value { get; set; }
-	
-		string Url { get; set; }
-	
-		string Domain { get; set; }
-	
-		string Path { get; set; }
-	
-		decimal Expires { get; set; }
-	
-		bool HttpOnly { get; set; }
-	
-		bool Secure { get; set; }
-	
-		SameSite SameSite { get; set; }
+		/// <summary><para>Returns text payload.</para></summary>
+		string GetText();
 	}
 }

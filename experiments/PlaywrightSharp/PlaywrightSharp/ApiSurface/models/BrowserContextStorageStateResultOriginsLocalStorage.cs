@@ -47,6 +47,7 @@ namespace PlaywrightSharp
     public class BrowserContextStorageStateResultOriginsLocalStorage
 	{
 		string Name { get; set; }
+	
 		string Value { get; set; }
 	}
 }

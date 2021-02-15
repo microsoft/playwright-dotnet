@@ -47,30 +47,55 @@ namespace PlaywrightSharp
     public class AccessibilitySnapshotResult
 	{
 		string Role { get; set; }
+	
 		string Name { get; set; }
+	
 		string Value { get; set; }
+	
 		string Description { get; set; }
+	
 		string Keyshortcuts { get; set; }
+	
 		string Roledescription { get; set; }
+	
 		string Valuetext { get; set; }
+	
 		bool Disabled { get; set; }
+	
 		bool Expanded { get; set; }
+	
 		bool Focused { get; set; }
+	
 		bool Modal { get; set; }
+	
 		bool Multiline { get; set; }
+	
 		bool Multiselectable { get; set; }
+	
 		bool Readonly { get; set; }
+	
 		bool Required { get; set; }
+	
 		bool Selected { get; set; }
+	
 		MixedState Checked { get; set; }
+	
 		MixedState Pressed { get; set; }
+	
 		int Level { get; set; }
+	
 		decimal Valuemin { get; set; }
+	
 		decimal Valuemax { get; set; }
+	
 		string Autocomplete { get; set; }
+	
 		string Haspopup { get; set; }
+	
 		string Invalid { get; set; }
+	
 		string Orientation { get; set; }
+	
 		object[] Children { get; set; }
 	}
 }

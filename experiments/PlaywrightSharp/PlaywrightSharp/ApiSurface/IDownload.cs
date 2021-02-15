@@ -45,38 +45,53 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// <see cref="IDownload"/> objects are dispatched by page via the <see cref="IPage.Download"/> event.
-	/// All the downloaded files belonging to the browser context are deleted when the browser context is closed. All downloaded
-	/// files are deleted when the browser closes.
-	/// Download event is emitted once the download starts. Download path becomes available once download completes:
+	/// <para>
+	/// <see cref="IDownload"/> objects are dispatched by page via the <see cref="IPage.Download"/>
+	/// event.
+	/// </para>
+	/// <para>
+	/// All the downloaded files belonging to the browser context are deleted when the browser
+	/// context is closed. All downloaded files are deleted when the browser closes.
+	/// </para>
+	/// <para>
+	/// Download event is emitted once the download starts. Download path becomes available
+	/// once download completes:
+	/// </para>
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Browser context **must** be created with the <paramref name="acceptDownloads"/>
+	/// set to <c>true</c> when user needs access to the downloaded content. If <paramref
+	/// name="acceptDownloads"/> is not set, download events are emitted, but the actual
+	/// download is not performed and user has no access to the downloaded files.
+	/// </para>
+	/// </remarks>
 	public partial interface IDownload
 	{
-		/// <summary>
-		/// Deletes the downloaded file.
-		/// </summary>
+		/// <summary><para>Deletes the downloaded file.</para></summary>
 		Task DeleteAsync();
-		/// <summary>
-		/// Returns download error if any.
-		/// </summary>
+	
+		/// <summary><para>Returns download error if any.</para></summary>
 		Task<string> GetFailureAsync();
-		/// <summary>
-		/// Returns path to the downloaded file in case of successful download.
-		/// </summary>
+	
+		/// <summary><para>Returns path to the downloaded file in case of successful download.</para></summary>
 		Task<string> GetPathAsync();
-		/// <summary>
-		/// Saves the download to a user-specified path.
-		/// </summary>
+	
+		/// <summary><para>Saves the download to a user-specified path.</para></summary>
+		/// <param name="path">Path where the download should be saved.</param>
 		Task SaveAsAsync(string path);
+	
 		/// <summary>
-		/// Returns suggested filename for this download. It is typically computed by the browser from the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition">`Content-Disposition`</a> response
-		/// header or the `download` attribute. See the spec on <a href="https://html.spec.whatwg.org/#downloading-resources">whatwg</a>.
+		/// <para>
+		/// Returns suggested filename for this download. It is typically computed by the browser
+		/// from the [`Content-Disposition`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition)
+		/// response header or the <c>download</c> attribute. See the spec on [whatwg](https://html.spec.whatwg.org/#downloading-resources).
 		/// Different browsers can use different logic for computing it.
+		/// </para>
 		/// </summary>
 		string GetSuggestedFilename();
-		/// <summary>
-		/// Returns downloaded url.
-		/// </summary>
+	
+		/// <summary><para>Returns downloaded url.</para></summary>
 		string GetUrl();
 	}
 }

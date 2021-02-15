@@ -47,6 +47,7 @@ namespace PlaywrightSharp
     public class ElementHandlePosition
 	{
 		decimal X { get; set; }
+	
 		decimal Y { get; set; }
 	}
 }

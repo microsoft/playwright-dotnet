@@ -45,50 +45,96 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// JSHandle represents an in-page JavaScript object. JSHandles can be created with the <see cref="IPage.EvaluateHandleAsync"/> method.
-	/// JSHandle prevents the referenced JavaScript object being garbage collected unless the handle is exposed with 
-	/// <see cref="IJSHandle.DisposeAsync"/>. JSHandles are auto-disposed when their origin frame gets navigated or the parent context
-	/// gets destroyed.
-	/// JSHandle instances can be used as an argument in <see cref="IPage.EvalOnSelectorAsync"/>, <see cref="IPage.EvaluateAsync"/> and
-	/// <see cref="IPage.EvaluateHandleAsync"/> methods.
+	/// <para>
+	/// JSHandle represents an in-page JavaScript object. JSHandles can be created with
+	/// the <see cref="IPage.EvaluateHandleAsync"/> method.
+	/// </para>
+	/// <para>
+	/// JSHandle prevents the referenced JavaScript object being garbage collected unless
+	/// the handle is exposed with <see cref="IJSHandle.DisposeAsync"/>. JSHandles are auto-disposed
+	/// when their origin frame gets navigated or the parent context gets destroyed.
+	/// </para>
+	/// <para>
+	/// JSHandle instances can be used as an argument in <see cref="IPage.EvalOnSelectorAsync"/>,
+	/// <see cref="IPage.EvaluateAsync"/> and <see cref="IPage.EvaluateHandleAsync"/> methods.
+	/// </para>
 	/// </summary>
 	public partial interface IJSHandle
 	{
 		/// <summary>
-		/// Returns either `null` or the object handle itself, if the object handle is an instance of <see cref="IElementHandle"/>.
+		/// <para>
+		/// Returns either <c>null</c> or the object handle itself, if the object handle is
+		/// an instance of <see cref="IElementHandle"/>.
+		/// </para>
 		/// </summary>
 		IElementHandle GetAsElement();
-		/// <summary>
-		/// The `jsHandle.dispose` method stops referencing the element handle.
-		/// </summary>
+	
+		/// <summary><para>The <c>jsHandle.dispose</c> method stops referencing the element handle.</para></summary>
 		Task DisposeAsync();
+	
 		/// <summary>
-		/// Returns the return value of {PARAM}
-		/// This method passes this handle as the first argument to {PARAM}.
-		/// If {PARAM} returns a [Promise], then `handle.evaluate` would wait for the promise to resolve and return its value.
-		/// Examples:
+		/// <para>Returns the return value of <paramref name="expression"/>.</para>
+		/// <para>This method passes this handle as the first argument to <paramref name="expression"/>.</para>
+		/// <para>
+		/// If <paramref name="expression"/> returns a [Promise], then <c>handle.evaluate</c>
+		/// would wait for the promise to resolve and return its value.
+		/// </para>
+		/// <para>Examples:</para>
 		/// </summary>
-		Task<T> EvaluateAsync<T>(object arg);
+		/// <param name="expression">
+		/// JavaScript expression to be evaluated in the browser context. If it looks like a
+		/// function declaration, it is interpreted as a function. Otherwise, evaluated as an
+		/// expression.
+		/// </param>
+		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+		Task<T> EvaluateAsync<T>(string expression, object arg);
+	
 		/// <summary>
-		/// Returns the return value of {PARAM} as in-page object (JSHandle).
-		/// This method passes this handle as the first argument to {PARAM}.
-		/// The only difference between `jsHandle.evaluate` and `jsHandle.evaluateHandle` is that `jsHandle.evaluateHandle` returns in-page
-		/// object (JSHandle).
-		/// If the function passed to the `jsHandle.evaluateHandle` returns a [Promise], then `jsHandle.evaluateHandle` would wait for the promise to resolve and return its value.
-		/// See <see cref="IPage.EvaluateHandleAsync"/> for more details.
+		/// <para>Returns the return value of <paramref name="expression"/> as a <see cref="IJSHandle"/>.</para>
+		/// <para>This method passes this handle as the first argument to <paramref name="expression"/>.</para>
+		/// <para>
+		/// The only difference between <c>jsHandle.evaluate` and `jsHandle.evaluateHandle`
+		/// is that `jsHandle.evaluateHandle</c> returns <see cref="IJSHandle"/>.
+		/// </para>
+		/// <para>
+		/// If the function passed to the <c>jsHandle.evaluateHandle</c> returns a [Promise],
+		/// then <c>jsHandle.evaluateHandle</c> would wait for the promise to resolve and return
+		/// its value.
+		/// </para>
+		/// <para>See <see cref="IPage.EvaluateHandleAsync"/> for more details.</para>
 		/// </summary>
-		Task<IJSHandle> EvaluateHandleAsync(object arg);
+		/// <param name="expression">
+		/// JavaScript expression to be evaluated in the browser context. If it looks like a
+		/// function declaration, it is interpreted as a function. Otherwise, evaluated as an
+		/// expression.
+		/// </param>
+		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+		Task<IJSHandle> EvaluateHandleAsync(string expression, object arg);
+	
 		/// <summary>
-		/// The method returns a map with **own property names** as keys and JSHandle instances for the property values.
+		/// <para>
+		/// The method returns a map with **own property names** as keys and JSHandle instances
+		/// for the property values.
+		/// </para>
 		/// </summary>
 		Task<Dictionary<string, IJSHandle>> GetPropertiesAsync();
-		/// <summary>
-		/// Fetches a single property from the referenced object.
-		/// </summary>
+	
+		/// <summary><para>Fetches a single property from the referenced object.</para></summary>
+		/// <param name="propertyName">property to get</param>
 		Task<IJSHandle> GetPropertyAsync(string propertyName);
+	
 		/// <summary>
-		/// Returns a JSON representation of the object. If the object has a `toJSON` function, it **will not be called**.
+		/// <para>
+		/// Returns a JSON representation of the object. If the object has a <c>toJSON</c> function,
+		/// it **will not be called**.
+		/// </para>
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The method will return an empty JSON object if the referenced object is not stringifiable.
+		/// It will throw an error if the object has circular references.
+		/// </para>
+		/// </remarks>
 		Task<T> GetJsonValueAsync<T>();
 	}
 }

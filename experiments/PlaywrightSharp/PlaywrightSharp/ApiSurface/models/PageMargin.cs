@@ -47,8 +47,11 @@ namespace PlaywrightSharp
     public class PageMargin
 	{
 		string Top { get; set; }
+	
 		string Right { get; set; }
+	
 		string Bottom { get; set; }
+	
 		string Left { get; set; }
 	}
 }

@@ -45,28 +45,73 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// Whenever a network route is set up with <see cref="IPage.RouteAsync"/> or <see cref="IBrowserContext.RouteAsync"/>, the `Route`
-	/// object allows to handle the route.
+	/// <para>
+	/// Whenever a network route is set up with <see cref="IPage.RouteAsync"/> or <see cref="IBrowserContext.RouteAsync"/>,
+	/// the <c>Route</c> object allows to handle the route.
+	/// </para>
 	/// </summary>
 	public partial interface IRoute
 	{
-		/// <summary>
-		/// Aborts the route's request.
-		/// </summary>
+		/// <summary><para>Aborts the route's request.</para></summary>
+		/// <param name="errorCode">
+		/// Optional error code. Defaults to <c>failed</c>  could be one of the following:
+		/// <list type="bullet">
+		/// <item><description>`'aborted'` - An operation was aborted (due to user action)</description></item>
+		/// <item><description>
+		/// `'accessdenied'` - Permission to access a resource, other than the network, was
+		/// denied
+		/// </description></item>
+		/// <item><description>
+		/// `'addressunreachable'` - The IP address is unreachable. This usually means that
+		/// there is no route to the specified host or network.
+		/// </description></item>
+		/// <item><description>`'blockedbyclient'` - The client chose to block the request.</description></item>
+		/// <item><description>
+		/// `'blockedbyresponse'` - The request failed because the response was delivered along
+		/// with requirements which are not met ('X-Frame-Options' and 'Content-Security-Policy'
+		/// ancestor checks, for instance).
+		/// </description></item>
+		/// <item><description>
+		/// `'connectionaborted'` - A connection timed out as a result of not receiving an ACK
+		/// for data sent.
+		/// </description></item>
+		/// <item><description>`'connectionclosed'` - A connection was closed (corresponding to a TCP FIN).</description></item>
+		/// <item><description>`'connectionfailed'` - A connection attempt failed.</description></item>
+		/// <item><description>`'connectionrefused'` - A connection attempt was refused.</description></item>
+		/// <item><description>`'connectionreset'` - A connection was reset (corresponding to a TCP RST).</description></item>
+		/// <item><description>`'internetdisconnected'` - The Internet connection has been lost.</description></item>
+		/// <item><description>`'namenotresolved'` - The host name could not be resolved.</description></item>
+		/// <item><description>`'timedout'` - An operation timed out.</description></item>
+		/// <item><description>`'failed'` - A generic failure occurred.</description></item>
+		/// </list>
+		/// </param>
 		Task AbortAsync(string errorCode);
+	
+		/// <summary><para>Continues route's request with optional overrides.</para></summary>
+		/// <param name="headers">If set changes the request HTTP headers. Header values will be converted to a string.</param>
+		/// <param name="method">If set changes the request method (e.g. GET or POST)</param>
+		/// <param name="postData">If set changes the post data of request</param>
+		/// <param name="url">If set changes the request URL. New URL must have same protocol as original one.</param>
+		Task resume(IEnumerable<KeyValuePair<string, string>> headers, string method, byte[] postData, string url);
+	
 		/// <summary>
-		/// Continues route's request with optional overrides.
+		/// <para>Fulfills route's request with given response.</para>
+		/// <para>An example of fulfilling all requests with 404 responses:</para>
+		/// <para>An example of serving static file:</para>
 		/// </summary>
-		Task ContinueAsync(IEnumerable<KeyValuePair<string, string>> headers, string method, byte[] postData, string url);
-		/// <summary>
-		/// Fulfills route's request with given response.
-		/// An example of fulfilling all requests with 404 responses:
-		/// An example of serving static file:
-		/// </summary>
-		Task FulfillAsync(byte[] body, string contentType, IEnumerable<KeyValuePair<string, string>> headers, string path, int status);
-		/// <summary>
-		/// A request to be routed.
-		/// </summary>
+		/// <param name="body">Optional response body as text.</param>
+		/// <param name="bodyBytes">Optional response body as raw bytes.</param>
+		/// <param name="contentType">If set, equals to setting <c>Content-Type</c> response header.</param>
+		/// <param name="headers">Response headers. Header values will be converted to a string.</param>
+		/// <param name="path">
+		/// File path to respond with. The content type will be inferred from file extension.
+		/// If <c>path</c> is a relative path, then it is resolved relative to the current working
+		/// directory.
+		/// </param>
+		/// <param name="status">Response status code, defaults to <c>200</c></param>
+		Task FulfillAsync(string body, byte[] bodyBytes, string contentType, IEnumerable<KeyValuePair<string, string>> headers, string path, int status);
+	
+		/// <summary><para>A request to be routed.</para></summary>
 		IRequest GetRequest();
 	}
 }

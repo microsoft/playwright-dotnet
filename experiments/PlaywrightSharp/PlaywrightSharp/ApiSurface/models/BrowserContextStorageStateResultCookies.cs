@@ -47,12 +47,19 @@ namespace PlaywrightSharp
     public class BrowserContextStorageStateResultCookies
 	{
 		string Name { get; set; }
+	
 		string Value { get; set; }
+	
 		string Domain { get; set; }
+	
 		string Path { get; set; }
+	
 		decimal Expires { get; set; }
+	
 		bool HttpOnly { get; set; }
+	
 		bool Secure { get; set; }
+	
 		SameSite SameSite { get; set; }
 	}
 }

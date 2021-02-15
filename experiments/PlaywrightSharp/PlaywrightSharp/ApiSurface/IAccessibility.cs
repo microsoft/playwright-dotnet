@@ -45,24 +45,46 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// The Accessibility class provides methods for inspecting Chromium's accessibility tree. The accessibility tree is used by
-	/// assistive technology such as <a href="https://en.wikipedia.org/wiki/Screen_reader">screen readers</a> or 
-	/// <a href="https://en.wikipedia.org/wiki/Switch_access">switches</a>.
-	/// Accessibility is a very platform-specific thing. On different platforms, there are different screen readers that might have
-	/// wildly different output.
-	/// Rendering engines of Chromium, Firefox and Webkit have a concept of "accessibility tree", which is then translated into different
-	/// platform-specific APIs. Accessibility namespace gives access to this Accessibility Tree.
-	/// Most of the accessibility tree gets filtered out when converting from internal browser AX Tree to Platform-specific AX-Tree
-	/// or by assistive technologies themselves. By default, Playwright tries to approximate this filtering, exposing only the "interesting"
+	/// <para>
+	/// The Accessibility class provides methods for inspecting Chromium's accessibility
+	/// tree. The accessibility tree is used by assistive technology such as [screen readers](https://en.wikipedia.org/wiki/Screen_reader)
+	/// or [switches](https://en.wikipedia.org/wiki/Switch_access).
+	/// </para>
+	/// <para>
+	/// Accessibility is a very platform-specific thing. On different platforms, there are
+	/// different screen readers that might have wildly different output.
+	/// </para>
+	/// <para>
+	/// Rendering engines of Chromium, Firefox and Webkit have a concept of "accessibility
+	/// tree", which is then translated into different platform-specific APIs. Accessibility
+	/// namespace gives access to this Accessibility Tree.
+	/// </para>
+	/// <para>
+	/// Most of the accessibility tree gets filtered out when converting from internal browser
+	/// AX Tree to Platform-specific AX-Tree or by assistive technologies themselves. By
+	/// default, Playwright tries to approximate this filtering, exposing only the "interesting"
 	/// nodes of the tree.
+	/// </para>
 	/// </summary>
 	public partial interface IAccessibility
 	{
 		/// <summary>
-		/// Captures the current state of the accessibility tree. The returned object represents the root accessible node of the page.
-		/// An example of dumping the entire accessibility tree:
-		/// An example of logging the focused node's name:
+		/// <para>
+		/// Captures the current state of the accessibility tree. The returned object represents
+		/// the root accessible node of the page.
+		/// </para>
+		/// <para>An example of dumping the entire accessibility tree:</para>
+		/// <para>An example of logging the focused node's name:</para>
 		/// </summary>
-		Task<AccessibilitySnapshotResult> SnapshotAsync(bool interestingOnly, IElementHandle root);
+		/// <remarks>
+		/// <para>
+		/// The Chromium accessibility tree contains nodes that go unused on most platforms
+		/// and by most screen readers. Playwright will discard them as well for an easier to
+		/// process tree, unless <paramref name="interestingOnly"/> is set to <c>false</c>
+		/// </para>
+		/// </remarks>
+		/// <param name="interestingOnly">Prune uninteresting nodes from the tree. Defaults to <c>true</c></param>
+		/// <param name="root">The root DOM element for the snapshot. Defaults to the whole page.</param>
+		Task<string> SnapshotAsync(bool interestingOnly, IElementHandle root);
 	}
 }

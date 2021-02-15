@@ -47,6 +47,7 @@ namespace PlaywrightSharp
     public class FramePosition
 	{
 		decimal X { get; set; }
+	
 		decimal Y { get; set; }
 	}
 }

@@ -47,13 +47,21 @@ namespace PlaywrightSharp
     public class RequestTimingResult
 	{
 		decimal StartTime { get; set; }
+	
 		decimal DomainLookupStart { get; set; }
+	
 		decimal DomainLookupEnd { get; set; }
+	
 		decimal ConnectStart { get; set; }
+	
 		decimal SecureConnectionStart { get; set; }
+	
 		decimal ConnectEnd { get; set; }
+	
 		decimal RequestStart { get; set; }
+	
 		decimal ResponseStart { get; set; }
+	
 		decimal ResponseEnd { get; set; }
 	}
 }

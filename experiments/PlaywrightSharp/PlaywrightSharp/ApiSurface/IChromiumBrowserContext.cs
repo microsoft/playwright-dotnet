@@ -44,25 +44,21 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-    /// <summary>
-	/// <seealso cref="<see cref="IBrowserContext"/>"/>
-	/// Chromium-specific features including background pages, service worker support, etc.
-	/// </summary>
+    /// <summary><para>Chromium-specific features including background pages, service worker support, etc.</para></summary>
+	/// <remarks>Inherits from <see cref="IBrowserContext"/></remarks>
 	public partial interface IChromiumBrowserContext : IBrowserContext
 	{
+		/// <summary><para>Emitted when new background page is created in the context.</para></summary>
+		/// <remarks><para>Only works with persistent context.</para></remarks>
 		event EventHandler<IPage> BackgroundPage;
+	
+		/// <summary><para>Emitted when new service worker is created in the context.</para></summary>
 		event EventHandler<IWorker> ServiceWorker;
-		/// <summary>
-		/// All existing background pages in the context.
-		/// </summary>
+	
+		/// <summary><para>All existing background pages in the context.</para></summary>
 		dynamic GetBackgroundPages();
-		/// <summary>
-		/// Returns the newly created session.
-		/// </summary>
-		Task<ICDPSession> NewCDPSessionAsync(IPage page);
-		/// <summary>
-		/// All existing service workers in the context.
-		/// </summary>
+	
+		/// <summary><para>All existing service workers in the context.</para></summary>
 		dynamic GetServiceWorkers();
 	}
 }

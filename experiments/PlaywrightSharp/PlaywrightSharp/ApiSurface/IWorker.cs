@@ -45,26 +45,71 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// The Worker class represents a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">WebWorker</a>. `worker`
-	/// event is emitted on the page object to signal a worker creation. `close` event is emitted on the worker object when the worker
-	/// is gone.
+	/// <para>
+	/// The Worker class represents a [WebWorker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API).
+	/// <c>worker` event is emitted on the page object to signal a worker creation. `close</c>
+	/// event is emitted on the worker object when the worker is gone.
+	/// </para>
 	/// </summary>
 	public partial interface IWorker
 	{
+		/// <summary>
+		/// <para>
+		/// Emitted when this dedicated [WebWorker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API)
+		/// is terminated.
+		/// </para>
+		/// </summary>
 		event EventHandler<IWorker> Close;
+	
 		/// <summary>
-		/// Returns the return value of {PARAM}
-		/// If the function passed to the `worker.evaluate` returns a [Promise], then `worker.evaluate` would wait for the promise to resolve and return its value.
-		/// If the function passed to the `worker.evaluate` returns a non-[Serializable] value, then `worker.evaluate` returns `undefined`. DevTools Protocol also supports transferring some additional values that are not serializable by `JSON`: `-0`, `NaN`, `Infinity`, `-Infinity`, and bigint literals.
+		/// <para>Returns the return value of <paramref name="expression"/>.</para>
+		/// <para>
+		/// If the function passed to the <see cref="IWorker.EvaluateAsync"/> returns a [Promise],
+		/// then <see cref="IWorker.EvaluateAsync"/> would wait for the promise to resolve and
+		/// return its value.
+		/// </para>
+		/// <para>
+		/// If the function passed to the <see cref="IWorker.EvaluateAsync"/> returns a non-[Serializable]
+		/// value, then <see cref="IWorker.EvaluateAsync"/> returns <c>undefined`. Playwright
+		/// also supports transferring some  additional values that are not serializable by
+		/// `JSON`: `-0`, `NaN`, `Infinity`, `-Infinity</c>
+		/// </para>
 		/// </summary>
-		Task<T> EvaluateAsync<T>(object arg);
+		/// <param name="expression">
+		/// JavaScript expression to be evaluated in the browser context. If it looks like a
+		/// function declaration, it is interpreted as a function. Otherwise, evaluated as an
+		/// expression.
+		/// </param>
+		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+		Task<T> EvaluateAsync<T>(string expression, object arg);
+	
 		/// <summary>
-		/// Returns the return value of {PARAM} as in-page object (JSHandle).
-		/// The only difference between `worker.evaluate` and `worker.evaluateHandle` is that `worker.evaluateHandle` returns in-page
-		/// object (JSHandle).
-		/// If the function passed to the `worker.evaluateHandle` returns a [Promise], then `worker.evaluateHandle` would wait for the promise to resolve and return its value.
+		/// <para>Returns the return value of <paramref name="expression"/> as a <see cref="IJSHandle"/>.</para>
+		/// <para>
+		/// The only difference between <see cref="IWorker.EvaluateAsync"/> and <see cref="IWorker.EvaluateHandleAsync"/>
+		/// is that <see cref="IWorker.EvaluateHandleAsync"/> returns <see cref="IJSHandle"/>.
+		/// </para>
+		/// <para>
+		/// If the function passed to the <see cref="IWorker.EvaluateHandleAsync"/> returns
+		/// a [Promise], then <see cref="IWorker.EvaluateHandleAsync"/> would wait for the promise
+		/// to resolve and return its value.
+		/// </para>
 		/// </summary>
-		Task<IJSHandle> EvaluateHandleAsync(object arg);
+		/// <param name="expression">
+		/// JavaScript expression to be evaluated in the browser context. If it looks like a
+		/// function declaration, it is interpreted as a function. Otherwise, evaluated as an
+		/// expression.
+		/// </param>
+		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+		Task<IJSHandle> EvaluateHandleAsync(string expression, object arg);
+	
 		string GetUrl();
+	
+		/// <summary><para>Performs action and waits for the Worker to close.</para></summary>
+		/// <param name="timeout">
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
+		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// </param>
+		IWorker WaitForClose(int timeout);
 	}
 }

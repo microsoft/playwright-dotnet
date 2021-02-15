@@ -45,374 +45,1086 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// <seealso cref="[EventEmitter]"/>
-	/// Page provides methods to interact with a single tab in a <see cref="IBrowser"/>, or an <a href="https://developer.chrome.com/extensions/background_pages">extension background page</a> in
-	/// Chromium. One <see cref="IBrowser"/> instance might have multiple <see cref="IPage"/> instances.
-	/// This example creates a page, navigates it to a URL, and then saves a screenshot:
-	/// The Page class emits various events (described below) which can be handled using any of Node's native 
-	/// <a href="https://nodejs.org/api/events.html#events_class_eventemitter">`EventEmitter`</a> methods, such as `on`, `once` or
-	/// `removeListener`.
-	/// This example logs a message for a single page `load` event:
-	/// To unsubscribe from events use the `removeListener` method:
+	/// <para>
+	/// Page provides methods to interact with a single tab in a <see cref="IBrowser"/>,
+	/// or an [extension background page](https://developer.chrome.com/extensions/background_pages)
+	/// in Chromium. One <see cref="IBrowser"/> instance might have multiple <see cref="IPage"/>
+	/// instances.
+	/// </para>
+	/// <para>This example creates a page, navigates it to a URL, and then saves a screenshot:</para>
+	/// <para>
+	/// The Page class emits various events (described below) which can be handled using
+	/// any of Node's native [`EventEmitter`](https://nodejs.org/api/events.html#events_class_eventemitter)
+	/// methods, such as <c>on`, `once` or `removeListener</c>
+	/// </para>
+	/// <para>This example logs a message for a single page <c>load</c> event:</para>
+	/// <para>To unsubscribe from events use the <c>removeListener</c> method:</para>
 	/// </summary>
 	public partial interface IPage
 	{
+		/// <summary><para>Emitted when the page closes.</para></summary>
 		event EventHandler<IPage> Close;
+	
+		/// <summary>
+		/// <para>
+		/// Emitted when JavaScript within the page calls one of console API methods, e.g. <c>console.log`
+		/// or `console.dir</c>  Also emitted if the page throws an error or a warning.
+		/// </para>
+		/// <para>The arguments passed into <c>console.log</c> appear as arguments on the event handler.</para>
+		/// <para>An example of handling <c>console</c> event:</para>
+		/// </summary>
 		event EventHandler<IConsoleMessage> Console;
+	
+		/// <summary>
+		/// <para>
+		/// Emitted when the page crashes. Browser pages might crash if they try to allocate
+		/// too much memory. When the page crashes, ongoing and subsequent operations will throw.
+		/// </para>
+		/// <para>The most common way to deal with crashes is to catch an exception:</para>
+		/// </summary>
 		event EventHandler<IPage> Crash;
+	
+		/// <summary>
+		/// <para>
+		/// Emitted when a JavaScript dialog appears, such as <c>alert`, `prompt`, `confirm`
+		/// or `beforeunload</c>  Listener **must** either <see cref="IDialog.AcceptAsync"/>
+		/// or <see cref="IDialog.DismissAsync"/> the dialog - otherwise the page will [freeze](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop#never_blocking)
+		/// waiting for the dialog, and actions like click will never finish.
+		/// </para>
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// When no <see cref="IPage.Dialog"/> listeners are present, all dialogs are automatically
+		/// dismissed.
+		/// </para>
+		/// </remarks>
 		event EventHandler<IDialog> Dialog;
+	
+		/// <summary>
+		/// <para>
+		/// Emitted when the JavaScript [`DOMContentLoaded`](https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded)
+		/// event is dispatched.
+		/// </para>
+		/// </summary>
 		event EventHandler<IPage> DOMContentLoaded;
+	
+		/// <summary>
+		/// <para>
+		/// Emitted when attachment download started. User can access basic file operations
+		/// on downloaded content via the passed <see cref="IDownload"/> instance.
+		/// </para>
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Browser context **must** be created with the <paramref name="acceptDownloads"/>
+		/// set to <c>true</c> when user needs access to the downloaded content. If <paramref
+		/// name="acceptDownloads"/> is not set, download events are emitted, but the actual
+		/// download is not performed and user has no access to the downloaded files.
+		/// </para>
+		/// </remarks>
 		event EventHandler<IDownload> Download;
+	
+		/// <summary>
+		/// <para>
+		/// Emitted when a file chooser is supposed to appear, such as after clicking the  <c><input
+		/// type=file></c>  Playwright can respond to it via setting the input files using <see
+		/// cref="IFileChooser.SetFilesAsync"/> that can be uploaded after that.
+		/// </para>
+		/// </summary>
 		event EventHandler<IFileChooser> FileChooser;
+	
+		/// <summary><para>Emitted when a frame is attached.</para></summary>
 		event EventHandler<IFrame> FrameAttached;
+	
+		/// <summary><para>Emitted when a frame is detached.</para></summary>
 		event EventHandler<IFrame> FrameDetached;
+	
+		/// <summary><para>Emitted when a frame is navigated to a new url.</para></summary>
 		event EventHandler<IFrame> FrameNavigated;
+	
+		/// <summary>
+		/// <para>
+		/// Emitted when the JavaScript [`load`](https://developer.mozilla.org/en-US/docs/Web/Events/load)
+		/// event is dispatched.
+		/// </para>
+		/// </summary>
 		event EventHandler<IPage> Load;
+	
+		/// <summary><para>Emitted when an uncaught exception happens within the page.</para></summary>
 		event EventHandler<Exception> PageError;
-		event EventHandler<IPage> PopUp;
+	
+		/// <summary>
+		/// <para>
+		/// Emitted when the page opens a new tab or window. This event is emitted in addition
+		/// to the <see cref="IBrowserContext.Page"/>, but only for popups relevant to this
+		/// page.
+		/// </para>
+		/// <para>
+		/// The earliest moment that page is available is when it has navigated to the initial
+		/// url. For example, when opening a popup with <c>window.open('http://example.com')</c>
+		/// this event will fire when the network request to "http://example.com" is done and
+		/// its response has started loading in the popup.
+		/// </para>
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Use <see cref="IPage.WaitForLoadStateAsync"/> to wait until the page gets to a particular
+		/// state (you should not need it in most cases).
+		/// </para>
+		/// </remarks>
+		event EventHandler<IPage> Popup;
+	
+		/// <summary>
+		/// <para>
+		/// Emitted when a page issues a request. The [request] object is read-only. In order
+		/// to intercept and mutate requests, see <see cref="IPage.RouteAsync"/> or <see cref="IBrowserContext.RouteAsync"/>.
+		/// </para>
+		/// </summary>
 		event EventHandler<IRequest> Request;
-		event EventHandler<IRequest> Requestfailed;
-		event EventHandler<IRequest> Requestfinished;
+	
+		/// <summary><para>Emitted when a request fails, for example by timing out.</para></summary>
+		/// <remarks>
+		/// <para>
+		/// HTTP Error responses, such as 404 or 503, are still successful responses from HTTP
+		/// standpoint, so request will complete with <see cref="IPage.RequestFinished"/> event
+		/// and not with <see cref="IPage.RequestFailed"/>.
+		/// </para>
+		/// </remarks>
+		event EventHandler<IRequest> RequestFailed;
+	
+		/// <summary>
+		/// <para>
+		/// Emitted when a request finishes successfully after downloading the response body.
+		/// For a successful response, the sequence of events is <c>request`, `response` and
+		/// `requestfinished</c>
+		/// </para>
+		/// </summary>
+		event EventHandler<IRequest> RequestFinished;
+	
+		/// <summary>
+		/// <para>
+		/// Emitted when [response] status and headers are received for a request. For a successful
+		/// response, the sequence of events is <c>request`, `response` and `requestfinished</c>
+		/// 
+		/// </para>
+		/// </summary>
 		event EventHandler<IResponse> Response;
-		event EventHandler<IWebSocket> Websocket;
+	
+		/// <summary><para>Emitted when <<see cref="IWebSocket"/>> request is sent.</para></summary>
+		event EventHandler<IWebSocket> WebSocket;
+	
+		/// <summary>
+		/// <para>
+		/// Emitted when a dedicated [WebWorker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API)
+		/// is spawned by the page.
+		/// </para>
+		/// </summary>
 		event EventHandler<IWorker> Worker;
-		/// <summary>
-		/// The method finds an element matching the specified selector within the page. If no elements match the selector, the return
-		/// value resolves to `null`.
-		/// Shortcut for main frame's <see cref="IFrame.QuerySelectorAsync"/>.
-		/// </summary>
-		Task<IElementHandle> QuerySelectorAsync(string selector);
-		/// <summary>
-		/// The method finds all elements matching the specified selector within the page. If no elements match the selector, the return
-		/// value resolves to `[]`.
-		/// Shortcut for main frame's <see cref="IFrame.QuerySelectorAllAsync"/>.
-		/// </summary>
-		Task<dynamic> QuerySelectorAllAsync(string selector);
-		/// <summary>
-		/// The method finds an element matching the specified selector within the page and passes it as a first argument to {PARAM}.
-		/// If no elements match the selector, the method throws an error. Returns the value of {PARAM}.
-		/// If {PARAM} returns a [Promise], then <see cref="IPage.EvalOnSelectorAsync"/> would wait for the promise to resolve and return
-		/// its value.
-		/// Examples:
-		/// Shortcut for main frame's <see cref="IFrame.EvalOnSelectorAsync"/>.
-		/// </summary>
-		Task<T> EvalOnSelectorAsync<T>(string selector, object arg);
-		/// <summary>
-		/// The method finds all elements matching the specified selector within the page and passes an array of matched elements as
-		/// a first argument to {PARAM}. Returns the result of {PARAM} invocation.
-		/// If {PARAM} returns a [Promise], then <see cref="IPage.EvalOnSelectorAllAsync"/> would wait for the promise to resolve and
-		/// return its value.
-		/// Examples:
-		/// </summary>
-		Task<T> EvalOnSelectorAllAsync<T>(string selector, object arg);
+	
 		IAccessibility Accessibility { get; set; }
+	
 		/// <summary>
-		/// Adds a script which would be evaluated in one of the following scenarios:
-		/// <list>
+		/// <para>Adds a script which would be evaluated in one of the following scenarios:</para>
+		/// <list type="bullet">
 		/// <item><description>Whenever the page is navigated.</description></item>
-		/// <item><description>Whenever the child frame is attached or navigated. In this case, the script is evaluated in the context of the newly attached frame.</description>
-		/// </item>
+		/// <item><description>
+		/// Whenever the child frame is attached or navigated. In this case, the script is evaluated
+		/// in the context of the newly attached frame.
+		/// </description></item>
 		/// </list>
-		/// The script is evaluated after the document was created but before any of its scripts were run. This is useful to amend the
-		/// JavaScript environment, e.g. to seed `Math.random`.
-		/// An example of overriding `Math.random` before the page loads:
+		/// <para>
+		/// The script is evaluated after the document was created but before any of its scripts
+		/// were run. This is useful to amend the JavaScript environment, e.g. to seed <c>Math.random</c>
+		/// 
+		/// </para>
+		/// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
 		/// </summary>
-		Task AddInitScriptAsync();
+		/// <remarks>
+		/// <para>
+		/// The order of evaluation of multiple scripts installed via <see cref="IBrowserContext.AddInitScriptAsync"/>
+		/// and <see cref="IPage.AddInitScriptAsync"/> is not defined.
+		/// </para>
+		/// </remarks>
+		/// <param name="aScript">Script to be evaluated in the page.</param>
+		/// <param name="sScript">Script to be evaluated in the page.</param>
+		/// <param name="pScript">Script to be evaluated in the page.</param>
+		Task AddInitScriptAsync(Action aScript, string sScript, PageScript pScript);
+	
 		/// <summary>
-		/// Adds a `<script>` tag into the page with the desired url or content. Returns the added tag when the script's onload fires or when the script content was injected into frame.
-		/// Shortcut for main frame's <see cref="IFrame.AddScriptTagAsync"/>.
+		/// <para>
+		/// Adds a <c><script></c> tag into the page with the desired url or content. Returns
+		/// the added tag when the script's onload fires or when the script content was injected
+		/// into frame.
+		/// </para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.AddScriptTagAsync"/>.</para>
 		/// </summary>
+		/// <param name="content">Raw JavaScript content to be injected into frame.</param>
+		/// <param name="path">
+		/// Path to the JavaScript file to be injected into frame. If <c>path</c> is a relative
+		/// path, then it is resolved relative to the current working directory.
+		/// </param>
+		/// <param name="type">
+		/// Script type. Use 'module' in order to load a Javascript ES6 module. See [script](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script)
+		/// for more details.
+		/// </param>
+		/// <param name="url">URL of a script to be added.</param>
 		Task<IElementHandle> AddScriptTagAsync(string content, string path, string type, string url);
+	
 		/// <summary>
-		/// Adds a `<link rel="stylesheet">` tag into the page with the desired url or a `<style type="text/css">` tag with the content. Returns the added tag when the stylesheet's onload fires or when the CSS content was injected into frame.
-		/// Shortcut for main frame's <see cref="IFrame.AddStyleTagAsync"/>.
+		/// <para>
+		/// Adds a <c><link rel="stylesheet">` tag into the page with the desired url or a `<style
+		/// type="text/css"></c> tag with the content. Returns the added tag when the stylesheet's
+		/// onload fires or when the CSS content was injected into frame.
+		/// </para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.AddStyleTagAsync"/>.</para>
 		/// </summary>
+		/// <param name="content">Raw CSS content to be injected into frame.</param>
+		/// <param name="path">
+		/// Path to the CSS file to be injected into frame. If <c>path</c> is a relative path,
+		/// then it is resolved relative to the current working directory.
+		/// </param>
+		/// <param name="url">URL of the <c><link></c> tag.</param>
 		Task<IElementHandle> AddStyleTagAsync(string content, string path, string url);
-		/// <summary>
-		/// Brings page to front (activates tab).
-		/// </summary>
+	
+		/// <summary><para>Brings page to front (activates tab).</para></summary>
 		Task BringToFrontAsync();
+	
 		/// <summary>
-		/// This method checks an element matching {PARAM} by performing the following steps:
-		/// <list>
-		/// <item><description>Find an element match matching {PARAM}. If there is none, wait until a matching element is attached to the DOM.</description>
-		/// </item>
-		/// <item><description>Ensure that matched element is a checkbox or a radio input. If not, this method rejects. If the element is already checked, this method returns immediately.</description>
-		/// </item>
-		/// <item><description>Wait for <a href="./actionability.md">actionability</a> checks on the matched element, unless {OPTION}
-		/// option is set. If the element is detached during the checks, the whole action is retried.</description>
-		/// </item>
+		/// <para>
+		/// This method checks an element matching <paramref name="selector"/> by performing
+		/// the following steps:
+		/// </para>
+		/// <list type="ordinal">
+		/// <item><description>
+		/// Find an element match matching <paramref name="selector"/>. If there is none, wait
+		/// until a matching element is attached to the DOM.
+		/// </description></item>
+		/// <item><description>
+		/// Ensure that matched element is a checkbox or a radio input. If not, this method
+		/// rejects. If the element is already checked, this method returns immediately.
+		/// </description></item>
+		/// <item><description>
+		/// Wait for [actionability](./actionability.md) checks on the matched element, unless
+		/// <paramref name="force"/> option is set. If the element is detached during the checks,
+		/// the whole action is retried.
+		/// </description></item>
 		/// <item><description>Scroll the element into view if needed.</description></item>
 		/// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
-		/// <item><description>Wait for initiated navigations to either succeed or fail, unless {OPTION} option is set.</description>
-		/// </item>
+		/// <item><description>
+		/// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
+		/// option is set.
+		/// </description></item>
 		/// <item><description>Ensure that the element is now checked. If not, this method rejects.</description></item>
 		/// </list>
-		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
-		/// Passing zero timeout disables this.
-		/// Shortcut for main frame's <see cref="IFrame.CheckAsync"/>.
+		/// <para>
+		/// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+		/// this method rejects with a <see cref="ITimeoutError"/>. Passing zero timeout disables
+		/// this.
+		/// </para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.CheckAsync"/>.</para>
 		/// </summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="force">
+		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
+		/// 
+		/// </param>
+		/// <param name="noWaitAfter">
+		/// Actions that initiate navigations are waiting for these navigations to happen and
+		/// for pages to start loading. You can opt out of waiting via setting this flag. You
+		/// would only need this option in the exceptional cases such as navigating to inaccessible
+		/// pages. Defaults to <c>false</c>
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task CheckAsync(string selector, bool force, bool noWaitAfter, int timeout);
+	
 		/// <summary>
-		/// This method clicks an element matching {PARAM} by performing the following steps:
-		/// <list>
-		/// <item><description>Find an element match matching {PARAM}. If there is none, wait until a matching element is attached to the DOM.</description>
-		/// </item>
-		/// <item><description>Wait for <a href="./actionability.md">actionability</a> checks on the matched element, unless {OPTION}
-		/// option is set. If the element is detached during the checks, the whole action is retried.</description>
-		/// </item>
-		/// <item><description>Scroll the element into view if needed.</description></item>
-		/// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element, or the specified {OPTION}.
+		/// <para>
+		/// This method clicks an element matching <paramref name="selector"/> by performing
+		/// the following steps:
+		/// </para>
+		/// <list type="ordinal">
+		/// <item><description>
+		/// Find an element match matching <paramref name="selector"/>. If there is none, wait
+		/// until a matching element is attached to the DOM.
 		/// </description></item>
-		/// <item><description>Wait for initiated navigations to either succeed or fail, unless {OPTION} option is set.</description>
-		/// </item>
+		/// <item><description>
+		/// Wait for [actionability](./actionability.md) checks on the matched element, unless
+		/// <paramref name="force"/> option is set. If the element is detached during the checks,
+		/// the whole action is retried.
+		/// </description></item>
+		/// <item><description>Scroll the element into view if needed.</description></item>
+		/// <item><description>
+		/// Use <see cref="IPage.Mouse"/> to click in the center of the element, or the specified
+		/// <paramref name="position"/>.
+		/// </description></item>
+		/// <item><description>
+		/// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
+		/// option is set.
+		/// </description></item>
 		/// </list>
-		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
-		/// Passing zero timeout disables this.
-		/// Shortcut for main frame's <see cref="IFrame.ClickAsync"/>.
+		/// <para>
+		/// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+		/// this method rejects with a <see cref="ITimeoutError"/>. Passing zero timeout disables
+		/// this.
+		/// </para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.ClickAsync"/>.</para>
 		/// </summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="button">Defaults to <c>left</c></param>
+		/// <param name="clickCount">defaults to 1. See [UIEvent.detail].</param>
+		/// <param name="delay">
+		/// Time to wait between <c>mousedown` and `mouseup</c> in milliseconds. Defaults to
+		/// 0.
+		/// </param>
+		/// <param name="force">
+		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
+		/// 
+		/// </param>
+		/// <param name="modifiers">
+		/// Modifier keys to press. Ensures that only these modifiers are pressed during the
+		/// operation, and then restores current modifiers back. If not specified, currently
+		/// pressed modifiers are used.
+		/// </param>
+		/// <param name="noWaitAfter">
+		/// Actions that initiate navigations are waiting for these navigations to happen and
+		/// for pages to start loading. You can opt out of waiting via setting this flag. You
+		/// would only need this option in the exceptional cases such as navigating to inaccessible
+		/// pages. Defaults to <c>false</c>
+		/// </param>
+		/// <param name="position">
+		/// A point to use relative to the top-left corner of element padding box. If not specified,
+		/// uses some visible point of the element.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task ClickAsync(string selector, Button button, int clickCount, decimal delay, bool force, Modifiers[] modifiers, bool noWaitAfter, PagePosition position, int timeout);
+	
 		/// <summary>
-		/// If {OPTION} is `false`, does not run any unload handlers and waits for the page to be closed. If {OPTION} is `true` the method
-		/// will run unload handlers, but will **not** wait for the page to close.
-		/// By default, `page.close()` **does not** run `beforeunload` handlers.
+		/// <para>
+		/// If <paramref name="runBeforeUnload"/> is <c>false`, does not run any unload handlers
+		/// and waits for the page to be closed. If <paramref name="runBeforeUnload"/> is `true</c>
+		/// the method will run unload handlers, but will **not** wait for the page to close.
+		/// </para>
+		/// <para>By default, <c>page.close()` **does not** run `beforeunload</c> handlers.</para>
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// if <paramref name="runBeforeUnload"/> is passed as true, a <c>beforeunload</c> dialog
+		/// might be summoned and should be handled manually via <see cref="IPage.Dialog"/>
+		/// event.
+		/// </para>
+		/// </remarks>
+		/// <param name="runBeforeUnload">
+		/// Defaults to <c>false</c>  Whether to run the [before unload](https://developer.mozilla.org/en-US/docs/Web/Events/beforeunload)
+		/// page handlers.
+		/// </param>
 		Task CloseAsync(bool runBeforeUnload);
-		/// <summary>
-		/// Gets the full HTML contents of the page, including the doctype.
-		/// </summary>
+	
+		/// <summary><para>Gets the full HTML contents of the page, including the doctype.</para></summary>
 		Task<string> GetContentAsync();
-		/// <summary>
-		/// Get the browser context that the page belongs to.
-		/// </summary>
+	
+		/// <summary><para>Get the browser context that the page belongs to.</para></summary>
 		IBrowserContext GetContext();
+	
 		/// <summary>
-		/// This method double clicks an element matching {PARAM} by performing the following steps:
-		/// <list>
-		/// <item><description>Find an element match matching {PARAM}. If there is none, wait until a matching element is attached to the DOM.</description>
-		/// </item>
-		/// <item><description>Wait for <a href="./actionability.md">actionability</a> checks on the matched element, unless {OPTION}
-		/// option is set. If the element is detached during the checks, the whole action is retried.</description>
-		/// </item>
+		/// <para>
+		/// This method double clicks an element matching <paramref name="selector"/> by performing
+		/// the following steps:
+		/// </para>
+		/// <list type="ordinal">
+		/// <item><description>
+		/// Find an element match matching <paramref name="selector"/>. If there is none, wait
+		/// until a matching element is attached to the DOM.
+		/// </description></item>
+		/// <item><description>
+		/// Wait for [actionability](./actionability.md) checks on the matched element, unless
+		/// <paramref name="force"/> option is set. If the element is detached during the checks,
+		/// the whole action is retried.
+		/// </description></item>
 		/// <item><description>Scroll the element into view if needed.</description></item>
-		/// <item><description>Use <see cref="IPage.Mouse"/> to double click in the center of the element, or the specified {OPTION}.
+		/// <item><description>
+		/// Use <see cref="IPage.Mouse"/> to double click in the center of the element, or the
+		/// specified <paramref name="position"/>.
 		/// </description></item>
-		/// <item><description>Wait for initiated navigations to either succeed or fail, unless {OPTION} option is set. Note that if the first click of the `dblclick()` triggers a navigation event, this method will reject.</description>
-		/// </item>
+		/// <item><description>
+		/// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
+		/// option is set. Note that if the first click of the <c>dblclick()</c> triggers a
+		/// navigation event, this method will reject.
+		/// </description></item>
 		/// </list>
-		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
-		/// Passing zero timeout disables this.
-		/// Shortcut for main frame's <see cref="IFrame.DblclickAsync"/>.
+		/// <para>
+		/// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+		/// this method rejects with a <see cref="ITimeoutError"/>. Passing zero timeout disables
+		/// this.
+		/// </para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.DblclickAsync"/>.</para>
 		/// </summary>
+		/// <remarks><para>`page.dblclick( <c> dispatches two `click` events and a single `dblclick</c> event.</para></remarks>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="button">Defaults to <c>left</c></param>
+		/// <param name="delay">
+		/// Time to wait between <c>mousedown` and `mouseup</c> in milliseconds. Defaults to
+		/// 0.
+		/// </param>
+		/// <param name="force">
+		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
+		/// 
+		/// </param>
+		/// <param name="modifiers">
+		/// Modifier keys to press. Ensures that only these modifiers are pressed during the
+		/// operation, and then restores current modifiers back. If not specified, currently
+		/// pressed modifiers are used.
+		/// </param>
+		/// <param name="noWaitAfter">
+		/// Actions that initiate navigations are waiting for these navigations to happen and
+		/// for pages to start loading. You can opt out of waiting via setting this flag. You
+		/// would only need this option in the exceptional cases such as navigating to inaccessible
+		/// pages. Defaults to <c>false</c>
+		/// </param>
+		/// <param name="position">
+		/// A point to use relative to the top-left corner of element padding box. If not specified,
+		/// uses some visible point of the element.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task DblclickAsync(string selector, Button button, decimal delay, bool force, Modifiers[] modifiers, bool noWaitAfter, PagePosition position, int timeout);
+	
 		/// <summary>
-		/// The snippet below dispatches the `click` event on the element. Regardless of the visibility state of the elment, `click`
-		/// is dispatched. This is equivalend to calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click">element.click()</a>.
-		/// Under the hood, it creates an instance of an event based on the given {PARAM}, initializes it with {PARAM} properties and
-		/// dispatches it on the element. Events are `composed`, `cancelable` and bubble by default.
-		/// Since {PARAM} is event-specific, please refer to the events documentation for the lists of initial properties:
-		/// <list>
-		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/DragEvent/DragEvent">DragEvent</a>
-		/// </description></item>
-		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/FocusEvent/FocusEvent">FocusEvent</a>
-		/// </description></item>
-		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/KeyboardEvent">KeyboardEvent</a>
-		/// </description></item>
-		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/MouseEvent">MouseEvent</a>
-		/// </description></item>
-		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/PointerEvent">PointerEvent</a>
-		/// </description></item>
-		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent/TouchEvent">TouchEvent</a>
-		/// </description></item>
-		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/Event/Event">Event</a></description>
-		/// </item>
+		/// <para>
+		/// The snippet below dispatches the <c>click` event on the element. Regardless of the
+		/// visibility state of the elment, `click</c> is dispatched. This is equivalend to
+		/// calling [element.click()](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click).
+		/// </para>
+		/// <para>
+		/// Under the hood, it creates an instance of an event based on the given <paramref
+		/// name="type"/>, initializes it with <paramref name="eventInit"/> properties and dispatches
+		/// it on the element. Events are <c>composed`, `cancelable</c> and bubble by default.
+		/// </para>
+		/// <para>
+		/// Since <paramref name="eventInit"/> is event-specific, please refer to the events
+		/// documentation for the lists of initial properties:
+		/// </para>
+		/// <list type="bullet">
+		/// <item><description>[DragEvent](https://developer.mozilla.org/en-US/docs/Web/API/DragEvent/DragEvent)</description></item>
+		/// <item><description>[FocusEvent](https://developer.mozilla.org/en-US/docs/Web/API/FocusEvent/FocusEvent)</description></item>
+		/// <item><description>[KeyboardEvent](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/KeyboardEvent)</description></item>
+		/// <item><description>[MouseEvent](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/MouseEvent)</description></item>
+		/// <item><description>[PointerEvent](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/PointerEvent)</description></item>
+		/// <item><description>[TouchEvent](https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent/TouchEvent)</description></item>
+		/// <item><description>[Event](https://developer.mozilla.org/en-US/docs/Web/API/Event/Event)</description></item>
 		/// </list>
-		/// You can also specify `JSHandle` as the property value if you want live objects to be passed into the event:
+		/// <para>
+		/// You can also specify <c>JSHandle</c> as the property value if you want live objects
+		/// to be passed into the event:
+		/// </para>
 		/// </summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="type">DOM event type: <c>"click"`, `"dragstart"</c>  etc.</param>
+		/// <param name="eventInit">Optional event-specific initialization properties.</param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task DispatchEventAsync(string selector, string type, object eventInit, int timeout);
-		Task EmulateMediaAsync();
+	
+		/// <param name="colorScheme">
+		/// Emulates <c>'prefers-colors-scheme'` media feature, supported values are `'light'`,
+		/// `'dark'`, `'no-preference'`. Passing `null</c> disables color scheme emulation.
+		/// </param>
+		/// <param name="media">
+		/// Changes the CSS media type of the page. The only allowed values are <c>'screen'`,
+		/// `'print'` and `null`. Passing `null</c> disables CSS media emulation.
+		/// </param>
+		Task EmulateMediaAsync(ColorScheme? colorScheme, Media? media);
+	
 		/// <summary>
-		/// Returns the value of the {PARAM} invocation.
-		/// If the function passed to the <see cref="IPage.EvaluateAsync"/> returns a [Promise], then <see cref="IPage.EvaluateAsync"/> would
-		/// wait for the promise to resolve and return its value.
-		/// If the function passed to the <see cref="IPage.EvaluateAsync"/> returns a non-[Serializable] value, then <see cref="IPage.EvaluateAsync"/> resolves
-		/// to `undefined`. DevTools Protocol also supports transferring some additional values that are not serializable by `JSON`:
-		/// `-0`, `NaN`, `Infinity`, `-Infinity`, and bigint literals.
-		/// Passing argument to {PARAM}:
-		/// A string can also be passed in instead of a function:
-		/// <see cref="IElementHandle"/> instances can be passed as an argument to the <see cref="IPage.EvaluateAsync"/>:
-		/// Shortcut for main frame's <see cref="IFrame.EvaluateAsync"/>.
+		/// <para>
+		/// The method finds an element matching the specified selector within the page and
+		/// passes it as a first argument to <paramref name="expression"/>. If no elements match
+		/// the selector, the method throws an error. Returns the value of <paramref name="expression"/>.
+		/// </para>
+		/// <para>
+		/// If <paramref name="expression"/> returns a [Promise], then <see cref="IPage.EvalOnSelectorAsync"/>
+		/// would wait for the promise to resolve and return its value.
+		/// </para>
+		/// <para>Examples:</para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.EvalOnSelectorAsync"/>.</para>
 		/// </summary>
-		Task<T> EvaluateAsync<T>(object arg);
+		/// <param name="selector">A selector to query for. See [working with selectors](./selectors.md) for more details.</param>
+		/// <param name="expression">
+		/// JavaScript expression to be evaluated in the browser context. If it looks like a
+		/// function declaration, it is interpreted as a function. Otherwise, evaluated as an
+		/// expression.
+		/// </param>
+		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+		Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg);
+	
 		/// <summary>
-		/// Returns the value of the {PARAM} invocation as in-page object (JSHandle).
-		/// The only difference between <see cref="IPage.EvaluateAsync"/> and <see cref="IPage.EvaluateHandleAsync"/> is that 
-		/// <see cref="IPage.EvaluateHandleAsync"/> returns in-page object (JSHandle).
-		/// If the function passed to the <see cref="IPage.EvaluateHandleAsync"/> returns a [Promise], then <see cref="IPage.EvaluateHandleAsync"/> would
-		/// wait for the promise to resolve and return its value.
-		/// A string can also be passed in instead of a function:
-		/// <see cref="IJSHandle"/> instances can be passed as an argument to the <see cref="IPage.EvaluateHandleAsync"/>:
+		/// <para>
+		/// The method finds all elements matching the specified selector within the page and
+		/// passes an array of matched elements as a first argument to <paramref name="expression"/>.
+		/// Returns the result of <paramref name="expression"/> invocation.
+		/// </para>
+		/// <para>
+		/// If <paramref name="expression"/> returns a [Promise], then <see cref="IPage.EvalOnSelectorAllAsync"/>
+		/// would wait for the promise to resolve and return its value.
+		/// </para>
+		/// <para>Examples:</para>
 		/// </summary>
-		Task<IJSHandle> EvaluateHandleAsync(object arg);
+		/// <param name="selector">A selector to query for. See [working with selectors](./selectors.md) for more details.</param>
+		/// <param name="expression">
+		/// JavaScript expression to be evaluated in the browser context. If it looks like a
+		/// function declaration, it is interpreted as a function. Otherwise, evaluated as an
+		/// expression.
+		/// </param>
+		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+		Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg);
+	
 		/// <summary>
-		/// The method adds a function called {PARAM} on the `window` object of every frame in this page. When called, the function executes
-		/// {PARAM} and returns a [Promise] which resolves to the return value of {PARAM}. If the {PARAM} returns a [Promise], it will be awaited.
-		/// The first argument of the {PARAM} function contains information about the caller: `{ browserContext: BrowserContext, page:
-		/// Page, frame: Frame }`.
-		/// See <see cref="IBrowserContext.ExposeBindingAsync"/> for the context-wide version.
-		/// An example of exposing page URL to all frames in a page:
-		/// An example of passing an element handle:
+		/// <para>Returns the value of the <paramref name="expression"/> invocation.</para>
+		/// <para>
+		/// If the function passed to the <see cref="IPage.EvaluateAsync"/> returns a [Promise],
+		/// then <see cref="IPage.EvaluateAsync"/> would wait for the promise to resolve and
+		/// return its value.
+		/// </para>
+		/// <para>
+		/// If the function passed to the <see cref="IPage.EvaluateAsync"/> returns a non-[Serializable]
+		/// value, then <see cref="IPage.EvaluateAsync"/> resolves to <c>undefined`. Playwright
+		/// also supports transferring some additional values that are not serializable by `JSON`:
+		/// `-0`, `NaN`, `Infinity`, `-Infinity</c>
+		/// </para>
+		/// <para>Passing argument to <paramref name="expression"/>:</para>
+		/// <para>A string can also be passed in instead of a function:</para>
+		/// <para>
+		/// <see cref="IElementHandle"/> instances can be passed as an argument to the <see
+		/// cref="IPage.EvaluateAsync"/>:
+		/// </para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.EvaluateAsync"/>.</para>
 		/// </summary>
+		/// <param name="expression">
+		/// JavaScript expression to be evaluated in the browser context. If it looks like a
+		/// function declaration, it is interpreted as a function. Otherwise, evaluated as an
+		/// expression.
+		/// </param>
+		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+		Task<T> EvaluateAsync<T>(string expression, object arg);
+	
+		/// <summary>
+		/// <para>Returns the value of the <paramref name="expression"/> invocation as a <see cref="IJSHandle"/>.</para>
+		/// <para>
+		/// The only difference between <see cref="IPage.EvaluateAsync"/> and <see cref="IPage.EvaluateHandleAsync"/>
+		/// is that <see cref="IPage.EvaluateHandleAsync"/> returns <see cref="IJSHandle"/>.
+		/// </para>
+		/// <para>
+		/// If the function passed to the <see cref="IPage.EvaluateHandleAsync"/> returns a
+		/// [Promise], then <see cref="IPage.EvaluateHandleAsync"/> would wait for the promise
+		/// to resolve and return its value.
+		/// </para>
+		/// <para>A string can also be passed in instead of a function:</para>
+		/// <para><see cref="IJSHandle"/> instances can be passed as an argument to the <see cref="IPage.EvaluateHandleAsync"/>:</para>
+		/// </summary>
+		/// <param name="expression">
+		/// JavaScript expression to be evaluated in the browser context. If it looks like a
+		/// function declaration, it is interpreted as a function. Otherwise, evaluated as an
+		/// expression.
+		/// </param>
+		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+		Task<IJSHandle> EvaluateHandleAsync(string expression, object arg);
+	
+		/// <summary>
+		/// <para>
+		/// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+		/// of every frame in this page. When called, the function executes <paramref name="callback"/>
+		/// and returns a [Promise] which resolves to the return value of <paramref name="callback"/>.
+		/// If the <paramref name="callback"/> returns a [Promise], it will be awaited.
+		/// </para>
+		/// <para>
+		/// The first argument of the <paramref name="callback"/> function contains information
+		/// about the caller: <c>{ browserContext: BrowserContext, page: Page, frame: Frame
+		/// }</c>
+		/// </para>
+		/// <para>See <see cref="IBrowserContext.ExposeBindingAsync"/> for the context-wide version.</para>
+		/// <para>An example of exposing page URL to all frames in a page:</para>
+		/// <para>An example of passing an element handle:</para>
+		/// </summary>
+		/// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+		/// <param name="name">Name of the function on the window object.</param>
+		/// <param name="callback">Callback function that will be called in the Playwright's context.</param>
+		/// <param name="handle">
+		/// Whether to pass the argument as a handle, instead of passing by value. When passing
+		/// a handle, only one argument is supported. When passing by value, multiple arguments
+		/// are supported.
+		/// </param>
 		Task ExposeBindingAsync(string name, Action callback, bool handle);
+	
 		/// <summary>
-		/// The method adds a function called {PARAM} on the `window` object of every frame in the page. When called, the function executes
-		/// {PARAM} and returns a [Promise] which resolves to the return value of {PARAM}.
-		/// If the {PARAM} returns a [Promise], it will be awaited.
-		/// See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.
-		/// An example of adding an `sha1` function to the page:
+		/// <para>
+		/// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+		/// of every frame in the page. When called, the function executes <paramref name="callback"/>
+		/// and returns a [Promise] which resolves to the return value of <paramref name="callback"/>.
+		/// </para>
+		/// <para>If the <paramref name="callback"/> returns a [Promise], it will be awaited.</para>
+		/// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
+		/// <para>An example of adding an <c>sha1</c> function to the page:</para>
 		/// </summary>
+		/// <remarks><para>Functions installed via <see cref="IPage.ExposeFunctionAsync"/> survive navigations.</para></remarks>
+		/// <param name="name">Name of the function on the window object</param>
+		/// <param name="callback">Callback function which will be called in Playwright's context.</param>
 		Task ExposeFunctionAsync(string name, Action callback);
+	
 		/// <summary>
-		/// This method waits for an element matching {PARAM}, waits for <a href="./actionability.md">actionability</a> checks, focuses
-		/// the element, fills it and triggers an `input` event after filling. If the element matching {PARAM} is not an `
-		/// <input>`, `<textarea>` or `[contenteditable]` element, this method throws an error. Note that you can pass an empty string to clear the input field.
-		/// To send fine-grained keyboard events, use <see cref="IPage.TypeAsync"/>.
-		/// Shortcut for main frame's <see cref="IFrame.FillAsync"/>
+		/// <para>
+		/// This method waits for an element matching <paramref name="selector"/>, waits for
+		/// [actionability](./actionability.md) checks, focuses the element, fills it and triggers
+		/// an <c>input` event after filling. If the element is inside the `<label></c> element
+		/// that has associated [control](https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control),
+		/// that control will be filled instead. If the element to be filled is not an <c><input>`,
+		/// `<textarea>` or `[contenteditable]</c> element, this method throws an error. Note
+		/// that you can pass an empty string to clear the input field.
+		/// </para>
+		/// <para>To send fine-grained keyboard events, use <see cref="IPage.TypeAsync"/>.</para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.FillAsync"/></para>
 		/// </summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="value">Value to fill for the <c><input>`, `<textarea>` or `[contenteditable]</c> element.</param>
+		/// <param name="noWaitAfter">
+		/// Actions that initiate navigations are waiting for these navigations to happen and
+		/// for pages to start loading. You can opt out of waiting via setting this flag. You
+		/// would only need this option in the exceptional cases such as navigating to inaccessible
+		/// pages. Defaults to <c>false</c>
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task FillAsync(string selector, string value, bool noWaitAfter, int timeout);
+	
 		/// <summary>
-		/// This method fetches an element with {PARAM} and focuses it. If there's no element matching {PARAM}, the method waits until
+		/// <para>
+		/// This method fetches an element with <paramref name="selector"/> and focuses it.
+		/// If there's no element matching <paramref name="selector"/>, the method waits until
 		/// a matching element appears in the DOM.
-		/// Shortcut for main frame's <see cref="IFrame.FocusAsync"/>.
+		/// </para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.FocusAsync"/>.</para>
 		/// </summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task FocusAsync(string selector, int timeout);
+	
 		/// <summary>
-		/// Returns frame matching the specified criteria. Either `name` or `url` must be specified.
+		/// <para>
+		/// Returns frame matching the specified criteria. Either <c>name` or `url</c> must
+		/// be specified.
+		/// </para>
 		/// </summary>
 		IFrame GetFrame();
-		/// <summary>
-		/// An array of all frames attached to the page.
-		/// </summary>
+	
+		/// <summary><para>An array of all frames attached to the page.</para></summary>
 		dynamic GetFrames();
-		/// <summary>
-		/// Returns element attribute value.
-		/// </summary>
+	
+		/// <summary><para>Returns element attribute value.</para></summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="name">Attribute name to get the value for.</param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task<string> GetAttributeAsync(string selector, string name, int timeout);
+	
 		/// <summary>
-		/// Returns the main resource response. In case of multiple redirects, the navigation will resolve with the response of the last
-		/// redirect. If can not go back, returns `null`.
-		/// Navigate to the previous page in history.
+		/// <para>
+		/// Returns the main resource response. In case of multiple redirects, the navigation
+		/// will resolve with the response of the last redirect. If can not go back, returns
+		/// <c>null</c>
+		/// </para>
+		/// <para>Navigate to the previous page in history.</para>
 		/// </summary>
+		/// <param name="timeout">
+		/// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
+		/// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
+		/// <param name="waitUntil">
+		/// When to consider operation succeeded, defaults to <c>load</c>  Events can be either:
+		/// <list type="bullet">
+		/// <item><description>
+		/// `'domcontentloaded <c> - consider operation to be finished when the `DOMContentLoaded</c>
+		/// event is fired.
+		/// </description></item>
+		/// <item><description>`'load <c> - consider operation to be finished when the `load</c> event is fired.</description></item>
+		/// <item><description>
+		/// `'networkidle <c> - consider operation to be finished when there are no network
+		/// connections for at least `500</c> ms.
+		/// </description></item>
+		/// </list>
+		/// </param>
 		Task<IResponse> GoBackAsync(int timeout, WaitUntil waitUntil);
+	
 		/// <summary>
-		/// Returns the main resource response. In case of multiple redirects, the navigation will resolve with the response of the last
-		/// redirect. If can not go forward, returns `null`.
-		/// Navigate to the next page in history.
+		/// <para>
+		/// Returns the main resource response. In case of multiple redirects, the navigation
+		/// will resolve with the response of the last redirect. If can not go forward, returns
+		/// <c>null</c>
+		/// </para>
+		/// <para>Navigate to the next page in history.</para>
 		/// </summary>
+		/// <param name="timeout">
+		/// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
+		/// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
+		/// <param name="waitUntil">
+		/// When to consider operation succeeded, defaults to <c>load</c>  Events can be either:
+		/// <list type="bullet">
+		/// <item><description>
+		/// `'domcontentloaded <c> - consider operation to be finished when the `DOMContentLoaded</c>
+		/// event is fired.
+		/// </description></item>
+		/// <item><description>`'load <c> - consider operation to be finished when the `load</c> event is fired.</description></item>
+		/// <item><description>
+		/// `'networkidle <c> - consider operation to be finished when there are no network
+		/// connections for at least `500</c> ms.
+		/// </description></item>
+		/// </list>
+		/// </param>
 		Task<IResponse> GoForwardAsync(int timeout, WaitUntil waitUntil);
+	
 		/// <summary>
-		/// Returns the main resource response. In case of multiple redirects, the navigation will resolve with the response of the last
-		/// redirect.
-		/// `page.goto` will throw an error if:
-		/// <list>
+		/// <para>
+		/// Returns the main resource response. In case of multiple redirects, the navigation
+		/// will resolve with the response of the last redirect.
+		/// </para>
+		/// <para>`page.goto` will throw an error if:</para>
+		/// <list type="bullet">
 		/// <item><description>there's an SSL error (e.g. in case of self-signed certificates).</description></item>
 		/// <item><description>target URL is invalid.</description></item>
-		/// <item><description>the {OPTION} is exceeded during navigation.</description></item>
+		/// <item><description>the <paramref name="timeout"/> is exceeded during navigation.</description></item>
 		/// <item><description>the remote server does not respond or is unreachable.</description></item>
 		/// <item><description>the main resource failed to load.</description></item>
 		/// </list>
-		/// `page.goto` will not throw an error when any valid HTTP status code is returned by the remote server, including 404 "Not
-		/// Found" and 500 "Internal Server Error".  The status code for such responses can be retrieved by calling 
-		/// <see cref="IResponse.Status"/>.
-		/// Shortcut for main frame's <see cref="IFrame.GotoAsync"/>
+		/// <para>
+		/// `page.goto` will not throw an error when any valid HTTP status code is returned
+		/// by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
+		/// The status code for such responses can be retrieved by calling <see cref="IResponse.Status"/>.
+		/// </para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.GotoAsync"/></para>
 		/// </summary>
-		Task<IResponse> GotoAsync(string url, string referer, int timeout, WaitUntil waitUntil);
-		/// <summary>
-		/// This method hovers over an element matching {PARAM} by performing the following steps:
-		/// <list>
-		/// <item><description>Find an element match matching {PARAM}. If there is none, wait until a matching element is attached to the DOM.</description>
-		/// </item>
-		/// <item><description>Wait for <a href="./actionability.md">actionability</a> checks on the matched element, unless {OPTION}
-		/// option is set. If the element is detached during the checks, the whole action is retried.</description>
-		/// </item>
-		/// <item><description>Scroll the element into view if needed.</description></item>
-		/// <item><description>Use <see cref="IPage.Mouse"/> to hover over the center of the element, or the specified {OPTION}.
+		/// <remarks>
+		/// <para>
+		/// `page.got <c> either throws an error or returns a main resource response. The only
+		/// exceptions are navigation to `about:blank` or navigation to the same URL with a
+		/// different hash, which would succeed and return `null</c>
+		/// </para>
+		/// <para>Headless mode doesn't support navigation to a PDF document. See the [upstream issue](https://bugs.chromium.org/p/chromium/issues/detail?id=761295).</para>
+		/// </remarks>
+		/// <param name="url">URL to navigate page to. The url should include scheme, e.g. <c>https://</c></param>
+		/// <param name="referer">
+		/// Referer header value. If provided it will take preference over the referer header
+		/// value set by <see cref="IPage.SetExtraHTTPHeadersAsync"/>.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
+		/// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
+		/// <param name="waitUntil">
+		/// When to consider operation succeeded, defaults to <c>load</c>  Events can be either:
+		/// <list type="bullet">
+		/// <item><description>
+		/// `'domcontentloaded <c> - consider operation to be finished when the `DOMContentLoaded</c>
+		/// event is fired.
 		/// </description></item>
-		/// <item><description>Wait for initiated navigations to either succeed or fail, unless `noWaitAfter` option is set.</description>
-		/// </item>
+		/// <item><description>`'load <c> - consider operation to be finished when the `load</c> event is fired.</description></item>
+		/// <item><description>
+		/// `'networkidle <c> - consider operation to be finished when there are no network
+		/// connections for at least `500</c> ms.
+		/// </description></item>
 		/// </list>
-		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
-		/// Passing zero timeout disables this.
-		/// Shortcut for main frame's <see cref="IFrame.HoverAsync"/>.
+		/// </param>
+		Task<IResponse> GotoAsync(string url, string referer, int timeout, WaitUntil waitUntil);
+	
+		/// <summary>
+		/// <para>
+		/// This method hovers over an element matching <paramref name="selector"/> by performing
+		/// the following steps:
+		/// </para>
+		/// <list type="ordinal">
+		/// <item><description>
+		/// Find an element match matching <paramref name="selector"/>. If there is none, wait
+		/// until a matching element is attached to the DOM.
+		/// </description></item>
+		/// <item><description>
+		/// Wait for [actionability](./actionability.md) checks on the matched element, unless
+		/// <paramref name="force"/> option is set. If the element is detached during the checks,
+		/// the whole action is retried.
+		/// </description></item>
+		/// <item><description>Scroll the element into view if needed.</description></item>
+		/// <item><description>
+		/// Use <see cref="IPage.Mouse"/> to hover over the center of the element, or the specified
+		/// <paramref name="position"/>.
+		/// </description></item>
+		/// <item><description>
+		/// Wait for initiated navigations to either succeed or fail, unless <c>noWaitAfter</c>
+		/// option is set.
+		/// </description></item>
+		/// </list>
+		/// <para>
+		/// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+		/// this method rejects with a <see cref="ITimeoutError"/>. Passing zero timeout disables
+		/// this.
+		/// </para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.HoverAsync"/>.</para>
 		/// </summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="force">
+		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
+		/// 
+		/// </param>
+		/// <param name="modifiers">
+		/// Modifier keys to press. Ensures that only these modifiers are pressed during the
+		/// operation, and then restores current modifiers back. If not specified, currently
+		/// pressed modifiers are used.
+		/// </param>
+		/// <param name="position">
+		/// A point to use relative to the top-left corner of element padding box. If not specified,
+		/// uses some visible point of the element.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task HoverAsync(string selector, bool force, Modifiers[] modifiers, PagePosition position, int timeout);
-		/// <summary>
-		/// Returns `element.innerHTML`.
-		/// </summary>
+	
+		/// <summary><para>Returns <c>element.innerHTML</c></para></summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task<string> InnerHTMLAsync(string selector, int timeout);
-		/// <summary>
-		/// Returns `element.innerText`.
-		/// </summary>
+	
+		/// <summary><para>Returns <c>element.innerText</c></para></summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task<string> InnerTextAsync(string selector, int timeout);
+	
 		/// <summary>
-		/// Returns whether the element is checked. Throws if the element is not a checkbox or radio input.
+		/// <para>
+		/// Returns whether the element is checked. Throws if the element is not a checkbox
+		/// or radio input.
+		/// </para>
 		/// </summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task<bool> IsCheckedAsync(string selector, int timeout);
-		/// <summary>
-		/// Indicates that the page has been closed.
-		/// </summary>
+	
+		/// <summary><para>Indicates that the page has been closed.</para></summary>
 		bool IsClosed();
-		/// <summary>
-		/// Returns whether the element is disabled, the opposite of <a href="./actionability.md#enabled">enabled</a>.
-		/// </summary>
+	
+		/// <summary><para>Returns whether the element is disabled, the opposite of [enabled](./actionability.md#enabled).</para></summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task<bool> IsDisabledAsync(string selector, int timeout);
-		/// <summary>
-		/// Returns whether the element is <a href="./actionability.md#editable">editable</a>.
-		/// </summary>
+	
+		/// <summary><para>Returns whether the element is [editable](./actionability.md#editable).</para></summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task<bool> IsEditableAsync(string selector, int timeout);
-		/// <summary>
-		/// Returns whether the element is <a href="./actionability.md#enabled">enabled</a>.
-		/// </summary>
+	
+		/// <summary><para>Returns whether the element is [enabled](./actionability.md#enabled).</para></summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task<bool> IsEnabledAsync(string selector, int timeout);
-		/// <summary>
-		/// Returns whether the element is hidden, the opposite of <a href="./actionability.md#visible">visible</a>.
-		/// </summary>
+	
+		/// <summary><para>Returns whether the element is hidden, the opposite of [visible](./actionability.md#visible).</para></summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task<bool> IsHiddenAsync(string selector, int timeout);
-		/// <summary>
-		/// Returns whether the element is <a href="./actionability.md#visible">visible</a>.
-		/// </summary>
+	
+		/// <summary><para>Returns whether the element is [visible](./actionability.md#visible).</para></summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task<bool> IsVisibleAsync(string selector, int timeout);
+	
 		IKeyboard Keyboard { get; set; }
+	
 		/// <summary>
-		/// The page's main frame. Page is guaranteed to have a main frame which persists during navigations.
+		/// <para>
+		/// The page's main frame. Page is guaranteed to have a main frame which persists during
+		/// navigations.
+		/// </para>
 		/// </summary>
 		IFrame GetMainFrame();
+	
 		IMouse Mouse { get; set; }
+	
 		/// <summary>
-		/// Returns the opener for popup pages and `null` for others. If the opener has been closed already the returns `null`.
+		/// <para>
+		/// Returns the opener for popup pages and <c>null` for others. If the opener has been
+		/// closed already the returns `null</c>
+		/// </para>
 		/// </summary>
 		Task<IPage> GetOpenerAsync();
+	
 		/// <summary>
-		/// Returns the PDF buffer.
-		/// `page.pdf()` generates a pdf of the page with `print` css media. To generate a pdf with `screen` media, call 
-		/// <see cref="IPage.EmulateMediaAsync"/> before calling `page.pdf()`:
-		/// The {OPTION}, {OPTION}, and {OPTION} options accept values labeled with units. Unlabeled values are treated as pixels.
-		/// A few examples:
-		/// <list>
+		/// <para>
+		/// Pauses script execution. Playwright will stop executing the script and wait for
+		/// the user to either press 'Resume' button in the page overlay or to call <c>playwright.resume()</c>
+		/// in the DevTools console.
+		/// </para>
+		/// <para>
+		/// User can inspect selectors or perform manual steps while paused. Resume will continue
+		/// running the original script from the place it was paused.
+		/// </para>
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This method requires Playwright to be started in a headed mode, with a falsy [`options:
+		/// headless`] value in the <see cref="IBrowserType.LaunchAsync"/>.
+		/// </para>
+		/// </remarks>
+		Task PauseAsync();
+	
+		/// <summary>
+		/// <para>Returns the PDF buffer.</para>
+		/// <para>
+		/// `page.pdf( <c> generates a pdf of the page with `print` css media. To generate a
+		/// pdf with `screen` media, call <see cref="IPage.EmulateMediaAsync"/> before calling
+		/// `page.pdf()</c>
+		/// </para>
+		/// <para>
+		/// The <paramref name="width"/>, <paramref name="height"/>, and <paramref name="margin"/>
+		/// options accept values labeled with units. Unlabeled values are treated as pixels.
+		/// </para>
+		/// <para>A few examples:</para>
+		/// <list type="bullet">
 		/// <item><description>`page.pdf({width: 100})` - prints with width set to 100 pixels</description></item>
 		/// <item><description>`page.pdf({width: '100px'})` - prints with width set to 100 pixels</description></item>
-		/// <item><description>`page.pdf({width: '10cm'})` - prints with width set to 10 centimeters.</description>
-		/// </item>
+		/// <item><description>`page.pdf({width: '10cm'})` - prints with width set to 10 centimeters.</description></item>
 		/// </list>
-		/// All possible units are:
-		/// <list>
+		/// <para>All possible units are:</para>
+		/// <list type="bullet">
 		/// <item><description>`px` - pixel</description></item>
 		/// <item><description>`in` - inch</description></item>
 		/// <item><description>`cm` - centimeter</description></item>
 		/// <item><description>`mm` - millimeter</description></item>
 		/// </list>
-		/// The {OPTION} options are:
-		/// <list>
+		/// <para>The <paramref name="format"/> options are:</para>
+		/// <list type="bullet">
 		/// <item><description>`Letter`: 8.5in x 11in</description></item>
 		/// <item><description>`Legal`: 8.5in x 14in</description></item>
 		/// <item><description>`Tabloid`: 11in x 17in</description></item>
@@ -424,207 +1136,883 @@ namespace PlaywrightSharp
 		/// <item><description>`A4`: 8.27in x 11.7in</description></item>
 		/// <item><description>`A5`: 5.83in x 8.27in</description></item>
 		/// <item><description>`A6`: 4.13in x 5.83in</description></item>
+		/// </list>
 		/// </summary>
+		/// <remarks>
+		/// <para>Generating a pdf is currently only supported in Chromium headless.</para>
+		/// <para>
+		/// By default, <c>page.pdf()</c> generates a pdf with modified colors for printing.
+		/// Use the [`-webkit-print-color-adjust`](https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-print-color-adjust)
+		/// property to force rendering of exact colors.
+		/// </para>
+		/// <para>
+		/// <paramref name="headerTemplate"/> and <paramref name="footerTemplate"/> markup have
+		/// the following limitations: > 1. Script tags inside templates are not evaluated.
+		/// > 2. Page styles are not visible inside templates.
+		/// </para>
+		/// </remarks>
+		/// <param name="displayHeaderFooter">Display header and footer. Defaults to <c>false</c></param>
+		/// <param name="footerTemplate">
+		/// HTML template for the print footer. Should use the same format as the <paramref
+		/// name="headerTemplate"/>.
+		/// </param>
+		/// <param name="format">
+		/// Paper format. If set, takes priority over <paramref name="width"/> or <paramref
+		/// name="height"/> options. Defaults to 'Letter'.
+		/// </param>
+		/// <param name="headerTemplate">
+		/// HTML template for the print header. Should be valid HTML markup with following classes
+		/// used to inject printing values into them:
+		/// <list type="bullet">
+		/// <item><description>`'date'` formatted print date</description></item>
+		/// <item><description>`'title'` document title</description></item>
+		/// <item><description>`'url'` document location</description></item>
+		/// <item><description>`'pageNumber'` current page number</description></item>
+		/// <item><description>`'totalPages'` total pages in the document</description></item>
+		/// </list>
+		/// </param>
+		/// <param name="height">Paper height, accepts values labeled with units.</param>
+		/// <param name="landscape">Paper orientation. Defaults to <c>false</c></param>
+		/// <param name="margin">Paper margins, defaults to none.</param>
+		/// <param name="pageRanges">
+		/// Paper ranges to print, e.g., '1-5, 8, 11-13'. Defaults to the empty string, which
+		/// means print all pages.
+		/// </param>
+		/// <param name="path">
+		/// The file path to save the PDF to. If <paramref name="path"/> is a relative path,
+		/// then it is resolved relative to the current working directory. If no path is provided,
+		/// the PDF won't be saved to the disk.
+		/// </param>
+		/// <param name="preferCSSPageSize">
+		/// Give any CSS <c>@page` size declared in the page priority over what is declared
+		/// in <paramref name="width"/> and <paramref name="height"/> or <paramref name="format"/>
+		/// options. Defaults to `false</c>  which will scale the content to fit the paper size.
+		/// </param>
+		/// <param name="printBackground">Print background graphics. Defaults to <c>false</c></param>
+		/// <param name="scale">
+		/// Scale of the webpage rendering. Defaults to <c>1</c>  Scale amount must be between
+		/// 0.1 and 2.
+		/// </param>
+		/// <param name="width">Paper width, accepts values labeled with units.</param>
 		Task<byte[]> PdfAsync(bool displayHeaderFooter, string footerTemplate, string format, string headerTemplate, string height, bool landscape, PageMargin margin, string pageRanges, string path, bool preferCSSPageSize, bool printBackground, decimal scale, string width);
+	
 		/// <summary>
-		/// Focuses the element, and then uses <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.
-		/// {PARAM} can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a> value
-		/// or a single character to generate the text for. A superset of the {PARAM} values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">here</a>.
+		/// <para>Focuses the element, and then uses <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.</para>
+		/// <para>
+		/// <paramref name="key"/> can specify the intended [keyboardEvent.key](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key)
+		/// value or a single character to generate the text for. A superset of the <paramref
+		/// name="key"/> values can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values).
 		/// Examples of the keys are:
-		/// `F1` - `F12`, `Digit0`- `Digit9`, `KeyA`- `KeyZ`, `Backquote`, `Minus`, `Equal`, `Backslash`, `Backspace`, `Tab`, `Delete`,
-		/// `Escape`, `ArrowDown`, `End`, `Enter`, `Home`, `Insert`, `PageDown`, `PageUp`, `ArrowRight`, `ArrowUp`, etc.
-		/// Following modification shortcuts are also supported: `Shift`, `Control`, `Alt`, `Meta`, `ShiftLeft`.
-		/// Holding down `Shift` will type the text that corresponds to the {PARAM} in the upper case.
-		/// If {PARAM} is a single character, it is case-sensitive, so the values `a` and `A` will generate different respective texts.
-		/// Shortcuts such as `key: "Control+o"` or `key: "Control+Shift+T"` are supported as well. When speficied with the modifier,
-		/// modifier is pressed and being held while the subsequent key is being pressed.
+		/// </para>
+		/// <para>
+		/// `F <c> - `F12`, `Digit0`- `Digit9`, `KeyA`- `KeyZ`, `Backquote`, `Minus`, `Equal`,
+		/// `Backslash`, `Backspace`, `Tab`, `Delete`, `Escape`, `ArrowDown`, `End`, `Enter`,
+		/// `Home`, `Insert`, `PageDown`, `PageUp`, `ArrowRight`, `ArrowUp</c>  etc.
+		/// </para>
+		/// <para>
+		/// Following modification shortcuts are also supported: <c>Shift`, `Control`, `Alt`,
+		/// `Meta`, `ShiftLeft</c>
+		/// </para>
+		/// <para>
+		/// Holding down <c>Shift</c> will type the text that corresponds to the <paramref name="key"/>
+		/// in the upper case.
+		/// </para>
+		/// <para>
+		/// If <paramref name="key"/> is a single character, it is case-sensitive, so the values
+		/// <c>a` and `A</c> will generate different respective texts.
+		/// </para>
+		/// <para>
+		/// Shortcuts such as <c>key: "Control+o"` or `key: "Control+Shift+T"</c> are supported
+		/// as well. When speficied with the modifier, modifier is pressed and being held while
+		/// the subsequent key is being pressed.
+		/// </para>
 		/// </summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="key">
+		/// Name of the key to press or a character to generate, such as <c>ArrowLeft` or `a</c>
+		/// 
+		/// </param>
+		/// <param name="delay">Time to wait between <c>keydown` and `keyup</c> in milliseconds. Defaults to 0.</param>
+		/// <param name="noWaitAfter">
+		/// Actions that initiate navigations are waiting for these navigations to happen and
+		/// for pages to start loading. You can opt out of waiting via setting this flag. You
+		/// would only need this option in the exceptional cases such as navigating to inaccessible
+		/// pages. Defaults to <c>false</c>
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task PressAsync(string selector, string key, decimal delay, bool noWaitAfter, int timeout);
+	
 		/// <summary>
-		/// Returns the main resource response. In case of multiple redirects, the navigation will resolve with the response of the last
-		/// redirect.
+		/// <para>
+		/// The method finds an element matching the specified selector within the page. If
+		/// no elements match the selector, the return value resolves to <c>null</c>
+		/// </para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.QuerySelectorAsync"/>.</para>
 		/// </summary>
+		/// <param name="selector">A selector to query for. See [working with selectors](./selectors.md) for more details.</param>
+		Task<IElementHandle> QuerySelectorAsync(string selector);
+	
+		/// <summary>
+		/// <para>
+		/// The method finds all elements matching the specified selector within the page. If
+		/// no elements match the selector, the return value resolves to <c>[]</c>
+		/// </para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.QuerySelectorAllAsync"/>.</para>
+		/// </summary>
+		/// <param name="selector">A selector to query for. See [working with selectors](./selectors.md) for more details.</param>
+		Task<dynamic> QuerySelectorAllAsync(string selector);
+	
+		/// <summary>
+		/// <para>
+		/// Returns the main resource response. In case of multiple redirects, the navigation
+		/// will resolve with the response of the last redirect.
+		/// </para>
+		/// </summary>
+		/// <param name="timeout">
+		/// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
+		/// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
+		/// <param name="waitUntil">
+		/// When to consider operation succeeded, defaults to <c>load</c>  Events can be either:
+		/// <list type="bullet">
+		/// <item><description>
+		/// `'domcontentloaded <c> - consider operation to be finished when the `DOMContentLoaded</c>
+		/// event is fired.
+		/// </description></item>
+		/// <item><description>`'load <c> - consider operation to be finished when the `load</c> event is fired.</description></item>
+		/// <item><description>
+		/// `'networkidle <c> - consider operation to be finished when there are no network
+		/// connections for at least `500</c> ms.
+		/// </description></item>
+		/// </list>
+		/// </param>
 		Task<IResponse> ReloadAsync(int timeout, WaitUntil waitUntil);
+	
 		/// <summary>
-		/// Routing provides the capability to modify network requests that are made by a page.
-		/// Once routing is enabled, every request matching the url pattern will stall unless it's continued, fulfilled or aborted.
-		/// An example of a naïve handler that aborts all image requests:
-		/// or the same snippet using a regex pattern instead:
-		/// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync"/>) when request
-		/// matches both handlers.
+		/// <para>Routing provides the capability to modify network requests that are made by a page.</para>
+		/// <para>
+		/// Once routing is enabled, every request matching the url pattern will stall unless
+		/// it's continued, fulfilled or aborted.
+		/// </para>
+		/// <para>An example of a naïve handler that aborts all image requests:</para>
+		/// <para>or the same snippet using a regex pattern instead:</para>
+		/// <para>
+		/// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync"/>)
+		/// when request matches both handlers.
+		/// </para>
 		/// </summary>
+		/// <remarks>
+		/// <para>The handler will only be called for the first url if the response is a redirect.</para>
+		/// <para>Enabling routing disables http cache.</para>
+		/// </remarks>
+		/// <param name="sUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="rUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="fUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="handler">handler function to route the request.</param>
 		Task RouteAsync(string sUrl, Regex rUrl, Func<Uri, bool> fUrl, Action<IRoute, IRequest> handler);
-		/// <summary>
-		/// Returns the buffer with the captured screenshot.
-		/// </summary>
+	
+		/// <summary><para>Returns the buffer with the captured screenshot.</para></summary>
+		/// <remarks>
+		/// <para>
+		/// Screenshots take at least 1/6 second on Chromium OS X and Chromium Windows. See
+		/// https://crbug.com/741689 for discussion.
+		/// </para>
+		/// </remarks>
+		/// <param name="clip">
+		/// An object which specifies clipping of the resulting image. Should have the following
+		/// fields:
+		/// </param>
+		/// <param name="fullPage">
+		/// When true, takes a screenshot of the full scrollable page, instead of the currently
+		/// visible viewport. Defaults to <c>false</c>
+		/// </param>
+		/// <param name="omitBackground">
+		/// Hides default white background and allows capturing screenshots with transparency.
+		/// Not applicable to <c>jpeg` images. Defaults to `false</c>
+		/// </param>
+		/// <param name="path">
+		/// The file path to save the image to. The screenshot type will be inferred from file
+		/// extension. If <paramref name="path"/> is a relative path, then it is resolved relative
+		/// to the current working directory. If no path is provided, the image won't be saved
+		/// to the disk.
+		/// </param>
+		/// <param name="quality">The quality of the image, between 0-100. Not applicable to <c>png</c> images.</param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
+		/// <param name="type">Specify screenshot type, defaults to <c>png</c></param>
 		Task<byte[]> ScreenshotAsync(PageClip clip, bool fullPage, bool omitBackground, string path, int quality, int timeout, Type type);
+	
 		/// <summary>
-		/// Returns the array of option values that have been successfully selected.
-		/// Triggers a `change` and `input` event once all the provided options have been selected. If there's no `
-		/// <select>` element matching {PARAM}, the method throws an error.
-		/// Will wait until all specified options are present in the `<select>` element.
-		/// Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>
+		/// <para>Returns the array of option values that have been successfully selected.</para>
+		/// <para>
+		/// Triggers a <c>change` and `input` event once all the provided options have been
+		/// selected. If there's no `<select></c> element matching <paramref name="selector"/>,
+		/// the method throws an error.
+		/// </para>
+		/// <para>Will wait until all specified options are present in the <c><select></c> element.</para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/></para>
 		/// </summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="noWaitAfter">
+		/// Actions that initiate navigations are waiting for these navigations to happen and
+		/// for pages to start loading. You can opt out of waiting via setting this flag. You
+		/// would only need this option in the exceptional cases such as navigating to inaccessible
+		/// pages. Defaults to <c>false</c>
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task<dynamic> SelectOptionAsync(string selector, bool noWaitAfter, int timeout);
+	
+		/// <param name="html">HTML markup to assign to the page.</param>
+		/// <param name="timeout">
+		/// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
+		/// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
+		/// <param name="waitUntil">
+		/// When to consider operation succeeded, defaults to <c>load</c>  Events can be either:
+		/// <list type="bullet">
+		/// <item><description>
+		/// `'domcontentloaded <c> - consider operation to be finished when the `DOMContentLoaded</c>
+		/// event is fired.
+		/// </description></item>
+		/// <item><description>`'load <c> - consider operation to be finished when the `load</c> event is fired.</description></item>
+		/// <item><description>
+		/// `'networkidle <c> - consider operation to be finished when there are no network
+		/// connections for at least `500</c> ms.
+		/// </description></item>
+		/// </list>
+		/// </param>
 		Task SetContentAsync(string html, int timeout, WaitUntil waitUntil);
+	
 		/// <summary>
-		/// This setting will change the default maximum navigation time for the following methods and related shortcuts:
-		/// <list>
+		/// <para>
+		/// This setting will change the default maximum navigation time for the following methods
+		/// and related shortcuts:
+		/// </para>
+		/// <list type="bullet">
 		/// <item><description><see cref="IPage.GoBackAsync"/></description></item>
 		/// <item><description><see cref="IPage.GoForwardAsync"/></description></item>
 		/// <item><description><see cref="IPage.GotoAsync"/></description></item>
 		/// <item><description><see cref="IPage.ReloadAsync"/></description></item>
 		/// <item><description><see cref="IPage.SetContentAsync"/></description></item>
 		/// <item><description><see cref="IPage.WaitForNavigationAsync"/></description></item>
-		/// </summary>
-		void SetDefaultNavigationTimeout(int timeout);
-		/// <summary>
-		/// This setting will change the default maximum time for all the methods accepting {PARAM} option.
-		/// </summary>
-		void SetDefaultTimeout(int timeout);
-		/// <summary>
-		/// The extra HTTP headers will be sent with every request the page initiates.
-		/// </summary>
-		Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers);
-		/// <summary>
-		/// This method expects {PARAM} to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input element</a>.
-		/// Sets the value of the file input to these file paths or files. If some of the `filePaths` are relative paths, then they are
-		/// resolved relative to the the current working directory. For empty array, clears the selected files.
-		/// </summary>
-		Task SetInputFilesAsync(string selector, string[] files, bool noWaitAfter, int timeout);
-		/// <summary>
-		/// In the case of multiple pages in a single browser, each page can have its own viewport size. However, 
-		/// <see cref="IBrowser.NewContextAsync"/> allows to set viewport size (and more) for all pages in the context at once.
-		/// `page.setViewportSize` will resize the page. A lot of websites don't expect phones to change size, so you should set the
-		/// viewport size before navigating to the page.
-		/// </summary>
-		Task SetViewportSizeAsync(PageViewportSize viewportSize);
-		/// <summary>
-		/// This method taps an element matching {PARAM} by performing the following steps:
-		/// <list>
-		/// <item><description>Find an element match matching {PARAM}. If there is none, wait until a matching element is attached to the DOM.</description>
-		/// </item>
-		/// <item><description>Wait for <a href="./actionability.md">actionability</a> checks on the matched element, unless {OPTION}
-		/// option is set. If the element is detached during the checks, the whole action is retried.</description>
-		/// </item>
-		/// <item><description>Scroll the element into view if needed.</description></item>
-		/// <item><description>Use <see cref="IPage.Touchscreen"/> to tap the center of the element, or the specified {OPTION}.
-		/// </description></item>
-		/// <item><description>Wait for initiated navigations to either succeed or fail, unless {OPTION} option is set.</description>
-		/// </item>
 		/// </list>
-		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
-		/// Passing zero timeout disables this.
-		/// Shortcut for main frame's <see cref="IFrame.TapAsync"/>.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// <see cref="IPage.SetDefaultNavigationTimeout"/> takes priority over <see cref="IPage.SetDefaultTimeout"/>,
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/> and <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>.
+		/// </para>
+		/// </remarks>
+		/// <param name="timeout">Maximum navigation time in milliseconds</param>
+		void SetDefaultNavigationTimeout(int timeout);
+	
+		/// <summary>
+		/// <para>
+		/// This setting will change the default maximum time for all the methods accepting
+		/// <paramref name="timeout"/> option.
+		/// </para>
+		/// </summary>
+		/// <remarks><para><see cref="IPage.SetDefaultNavigationTimeout"/> takes priority over <see cref="IPage.SetDefaultTimeout"/>.</para></remarks>
+		/// <param name="timeout">Maximum time in milliseconds</param>
+		void SetDefaultTimeout(int timeout);
+	
+		/// <summary><para>The extra HTTP headers will be sent with every request the page initiates.</para></summary>
+		/// <remarks>
+		/// <para>
+		/// <see cref="IPage.SetExtraHTTPHeadersAsync"/> does not guarantee the order of headers
+		/// in the outgoing requests.
+		/// </para>
+		/// </remarks>
+		/// <param name="headers">
+		/// An object containing additional HTTP headers to be sent with every request. All
+		/// header values must be strings.
+		/// </param>
+		Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers);
+	
+		/// <summary>
+		/// <para>This method expects <paramref name="selector"/> to point to an [input element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input).</para>
+		/// <para>
+		/// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
+		/// are relative paths, then they are resolved relative to the the current working directory.
+		/// For empty array, clears the selected files.
+		/// </para>
+		/// </summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="files">
+		/// </param>
+		/// <param name="noWaitAfter">
+		/// Actions that initiate navigations are waiting for these navigations to happen and
+		/// for pages to start loading. You can opt out of waiting via setting this flag. You
+		/// would only need this option in the exceptional cases such as navigating to inaccessible
+		/// pages. Defaults to <c>false</c>
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
+		Task SetInputFilesAsync(string selector, string[] files, bool noWaitAfter, int timeout);
+	
+		/// <summary>
+		/// <para>
+		/// In the case of multiple pages in a single browser, each page can have its own viewport
+		/// size. However, <see cref="IBrowser.NewContextAsync"/> allows to set viewport size
+		/// (and more) for all pages in the context at once.
+		/// </para>
+		/// <para>
+		/// `page.setViewportSize` will resize the page. A lot of websites don't expect phones
+		/// to change size, so you should set the viewport size before navigating to the page.
+		/// </para>
+		/// </summary>
+		/// <param name="viewportSize">
+		/// </param>
+		Task SetViewportSizeAsync(PageViewportSize viewportSize);
+	
+		/// <summary>
+		/// <para>
+		/// This method taps an element matching <paramref name="selector"/> by performing the
+		/// following steps:
+		/// </para>
+		/// <list type="ordinal">
+		/// <item><description>
+		/// Find an element match matching <paramref name="selector"/>. If there is none, wait
+		/// until a matching element is attached to the DOM.
+		/// </description></item>
+		/// <item><description>
+		/// Wait for [actionability](./actionability.md) checks on the matched element, unless
+		/// <paramref name="force"/> option is set. If the element is detached during the checks,
+		/// the whole action is retried.
+		/// </description></item>
+		/// <item><description>Scroll the element into view if needed.</description></item>
+		/// <item><description>
+		/// Use <see cref="IPage.Touchscreen"/> to tap the center of the element, or the specified
+		/// <paramref name="position"/>.
+		/// </description></item>
+		/// <item><description>
+		/// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
+		/// option is set.
+		/// </description></item>
+		/// </list>
+		/// <para>
+		/// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+		/// this method rejects with a <see cref="ITimeoutError"/>. Passing zero timeout disables
+		/// this.
+		/// </para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.TapAsync"/>.</para>
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// <see cref="IPage.TapAsync"/> requires that the <paramref name="hasTouch"/> option
+		/// of the browser context be set to true.
+		/// </para>
+		/// </remarks>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="force">
+		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
+		/// 
+		/// </param>
+		/// <param name="modifiers">
+		/// Modifier keys to press. Ensures that only these modifiers are pressed during the
+		/// operation, and then restores current modifiers back. If not specified, currently
+		/// pressed modifiers are used.
+		/// </param>
+		/// <param name="noWaitAfter">
+		/// Actions that initiate navigations are waiting for these navigations to happen and
+		/// for pages to start loading. You can opt out of waiting via setting this flag. You
+		/// would only need this option in the exceptional cases such as navigating to inaccessible
+		/// pages. Defaults to <c>false</c>
+		/// </param>
+		/// <param name="position">
+		/// A point to use relative to the top-left corner of element padding box. If not specified,
+		/// uses some visible point of the element.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task TapAsync(string selector, bool force, Modifiers[] modifiers, bool noWaitAfter, PagePosition position, int timeout);
-		/// <summary>
-		/// Returns `element.textContent`.
-		/// </summary>
+	
+		/// <summary><para>Returns <c>element.textContent</c></para></summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task<string> TextContentAsync(string selector, int timeout);
-		/// <summary>
-		/// Returns the page's title. Shortcut for main frame's <see cref="IFrame.TitleAsync"/>.
-		/// </summary>
+	
+		/// <summary><para>Returns the page's title. Shortcut for main frame's <see cref="IFrame.TitleAsync"/>.</para></summary>
 		Task<string> GetTitleAsync();
+	
 		ITouchscreen Touchscreen { get; set; }
+	
 		/// <summary>
-		/// Sends a `keydown`, `keypress`/`input`, and `keyup` event for each character in the text. `page.type` can be used to send
-		/// fine-grained keyboard events. To fill values in form fields, use <see cref="IPage.FillAsync"/>.
-		/// To press a special key, like `Control` or `ArrowDown`, use <see cref="IKeyboard.PressAsync"/>.
-		/// Shortcut for main frame's <see cref="IFrame.TypeAsync"/>.
+		/// <para>
+		/// Sends a <c>keydown`, `keypress`/`input`, and `keyup` event for each character in
+		/// the text. `page.type</c> can be used to send fine-grained keyboard events. To fill
+		/// values in form fields, use <see cref="IPage.FillAsync"/>.
+		/// </para>
+		/// <para>To press a special key, like <c>Control` or `ArrowDown</c>  use <see cref="IKeyboard.PressAsync"/>.</para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.TypeAsync"/>.</para>
 		/// </summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="text">A text to type into a focused element.</param>
+		/// <param name="delay">Time to wait between key presses in milliseconds. Defaults to 0.</param>
+		/// <param name="noWaitAfter">
+		/// Actions that initiate navigations are waiting for these navigations to happen and
+		/// for pages to start loading. You can opt out of waiting via setting this flag. You
+		/// would only need this option in the exceptional cases such as navigating to inaccessible
+		/// pages. Defaults to <c>false</c>
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task TypeAsync(string selector, string text, decimal delay, bool noWaitAfter, int timeout);
+	
 		/// <summary>
-		/// This method unchecks an element matching {PARAM} by performing the following steps:
-		/// <list>
-		/// <item><description>Find an element match matching {PARAM}. If there is none, wait until a matching element is attached to the DOM.</description>
-		/// </item>
-		/// <item><description>Ensure that matched element is a checkbox or a radio input. If not, this method rejects. If the element is already unchecked, this method returns immediately.</description>
-		/// </item>
-		/// <item><description>Wait for <a href="./actionability.md">actionability</a> checks on the matched element, unless {OPTION}
-		/// option is set. If the element is detached during the checks, the whole action is retried.</description>
-		/// </item>
+		/// <para>
+		/// This method unchecks an element matching <paramref name="selector"/> by performing
+		/// the following steps:
+		/// </para>
+		/// <list type="ordinal">
+		/// <item><description>
+		/// Find an element match matching <paramref name="selector"/>. If there is none, wait
+		/// until a matching element is attached to the DOM.
+		/// </description></item>
+		/// <item><description>
+		/// Ensure that matched element is a checkbox or a radio input. If not, this method
+		/// rejects. If the element is already unchecked, this method returns immediately.
+		/// </description></item>
+		/// <item><description>
+		/// Wait for [actionability](./actionability.md) checks on the matched element, unless
+		/// <paramref name="force"/> option is set. If the element is detached during the checks,
+		/// the whole action is retried.
+		/// </description></item>
 		/// <item><description>Scroll the element into view if needed.</description></item>
 		/// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
-		/// <item><description>Wait for initiated navigations to either succeed or fail, unless {OPTION} option is set.</description>
-		/// </item>
-		/// <item><description>Ensure that the element is now unchecked. If not, this method rejects.</description>
-		/// </item>
+		/// <item><description>
+		/// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
+		/// option is set.
+		/// </description></item>
+		/// <item><description>Ensure that the element is now unchecked. If not, this method rejects.</description></item>
 		/// </list>
-		/// When all steps combined have not finished during the specified {OPTION}, this method rejects with a <see cref="ITimeoutError"/>.
-		/// Passing zero timeout disables this.
-		/// Shortcut for main frame's <see cref="IFrame.UncheckAsync"/>.
+		/// <para>
+		/// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+		/// this method rejects with a <see cref="ITimeoutError"/>. Passing zero timeout disables
+		/// this.
+		/// </para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.UncheckAsync"/>.</para>
 		/// </summary>
+		/// <param name="selector">
+		/// A selector to search for element. If there are multiple elements satisfying the
+		/// selector, the first will be used. See [working with selectors](./selectors.md) for
+		/// more details.
+		/// </param>
+		/// <param name="force">
+		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
+		/// 
+		/// </param>
+		/// <param name="noWaitAfter">
+		/// Actions that initiate navigations are waiting for these navigations to happen and
+		/// for pages to start loading. You can opt out of waiting via setting this flag. You
+		/// would only need this option in the exceptional cases such as navigating to inaccessible
+		/// pages. Defaults to <c>false</c>
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task UncheckAsync(string selector, bool force, bool noWaitAfter, int timeout);
+	
 		/// <summary>
-		/// Removes a route created with <see cref="IPage.RouteAsync"/>. When {PARAM} is not specified, removes all routes for the {PARAM}.
+		/// <para>
+		/// Removes a route created with <see cref="IPage.RouteAsync"/>. When <paramref name="handler"/>
+		/// is not specified, removes all routes for the <paramref name="url"/>.
+		/// </para>
 		/// </summary>
+		/// <param name="sUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="rUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="fUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="handler">Optional handler function to route the request.</param>
 		Task UnrouteAsync(string sUrl, Regex rUrl, Func<Uri, bool> fUrl, Action<IRoute, IRequest> handler);
-		/// <summary>
-		/// Shortcut for main frame's <see cref="IFrame.Url"/>.
-		/// </summary>
+	
+		/// <summary><para>Shortcut for main frame's <see cref="IFrame.Url"/>.</para></summary>
 		string GetUrl();
-		/// <summary>
-		/// Video object associated with this page.
-		/// </summary>
+	
+		/// <summary><para>Video object associated with this page.</para></summary>
 		IVideo GetVideo();
+	
 		PageViewportSizeResult GetViewportSize();
+	
+		/// <summary><para>Performs action and waits for the Page to close.</para></summary>
+		/// <param name="timeout">
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
+		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// </param>
+		IPage WaitForClose(int timeout);
+	
 		/// <summary>
-		/// Waits for event to fire and passes its value into the predicate function. Returns when the predicate returns truthy value.
-		/// Will throw an error if the page is closed before the event is fired. Returns the event data value.
+		/// <para>
+		/// Performs action and waits for a [ConoleMessage] to be logged by in the page. If
+		/// predicate is provided, it passes <see cref="IConsoleMessage"/> value into the <c>predicate`
+		/// function and waits for `predicate(message)</c> to return a truthy value. Will throw
+		/// an error if the page is closed before the console event is fired.
+		/// </para>
 		/// </summary>
-		Task<T> WaitForEventAsync<T>(string @event);
+		/// <param name="predicate">
+		/// Receives the <see cref="IConsoleMessage"/> object and resolves to truthy value when
+		/// the waiting should resolve.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
+		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// </param>
+		Task<IConsoleMessage> WaitForConsoleMessageAsync(Func<IConsoleMessage, bool> predicate, int timeout);
+	
 		/// <summary>
-		/// Returns when the {PARAM} returns a truthy value. It resolves to a JSHandle of the truthy value.
-		/// The <see cref="IPage.WaitForFunctionAsync"/> can be used to observe viewport size change:
-		/// To pass an argument to the predicate of <see cref="IPage.WaitForFunctionAsync"/> function:
-		/// Shortcut for main frame's <see cref="IFrame.WaitForFunctionAsync"/>.
+		/// <para>
+		/// Performs action and waits for a new <see cref="IDownload"/>. If predicate is provided,
+		/// it passes <see cref="IDownload"/> value into the <c>predicate` function and waits
+		/// for `predicate(download)</c> to return a truthy value. Will throw an error if the
+		/// page is closed before the download event is fired.
+		/// </para>
 		/// </summary>
-		Task<IJSHandle> WaitForFunctionAsync(object arg, Polling polling, int timeout);
+		/// <param name="predicate">
+		/// Receives the <see cref="IDownload"/> object and resolves to truthy value when the
+		/// waiting should resolve.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
+		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// </param>
+		Task<IDownload> WaitForDownloadAsync(Func<IDownload, bool> predicate, int timeout);
+	
 		/// <summary>
-		/// Returns when the required load state has been reached.
-		/// This resolves when the page reaches a required load state, `load` by default. The navigation must have been committed when
-		/// this method is called. If current document has already reached the required state, resolves immediately.
-		/// Shortcut for main frame's <see cref="IFrame.WaitForLoadStateAsync"/>.
+		/// <para>
+		/// Waits for event to fire and passes its value into the predicate function. Returns
+		/// when the predicate returns truthy value. Will throw an error if the page is closed
+		/// before the event is fired. Returns the event data value.
+		/// </para>
 		/// </summary>
+		/// <param name="event">Event name, same one typically passed into <c>*.on(event)</c></param>
+		/// <param name="timeout">
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
+		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// </param>
+		Task<T> WaitForEventAsync<T>(string @event, int timeout);
+	
+		/// <summary>
+		/// <para>
+		/// Performs action and waits for a new <see cref="IFileChooser"/> to be created. If
+		/// predicate is provided, it passes <see cref="IFileChooser"/> value into the <c>predicate`
+		/// function and waits for `predicate(fileChooser)</c> to return a truthy value. Will
+		/// throw an error if the page is closed before the file chooser is opened.
+		/// </para>
+		/// </summary>
+		/// <param name="predicate">
+		/// Receives the <see cref="IFileChooser"/> object and resolves to truthy value when
+		/// the waiting should resolve.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
+		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// </param>
+		Task<IFileChooser> WaitForFileChooserAsync(Func<IFileChooser, bool> predicate, int timeout);
+	
+		/// <summary>
+		/// <para>
+		/// Returns when the <paramref name="expression"/> returns a truthy value. It resolves
+		/// to a JSHandle of the truthy value.
+		/// </para>
+		/// <para>
+		/// The <see cref="IPage.WaitForFunctionAsync"/> can be used to observe viewport size
+		/// change:
+		/// </para>
+		/// <para>
+		/// To pass an argument to the predicate of <see cref="IPage.WaitForFunctionAsync"/>
+		/// function:
+		/// </para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.WaitForFunctionAsync"/>.</para>
+		/// </summary>
+		/// <param name="expression">
+		/// JavaScript expression to be evaluated in the browser context. If it looks like a
+		/// function declaration, it is interpreted as a function. Otherwise, evaluated as an
+		/// expression.
+		/// </param>
+		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+		/// <param name="polling">
+		/// If <paramref name="polling"/> is <c>'raf'`, then <paramref name="expression"/> is
+		/// constantly executed in `requestAnimationFrame` callback. If <paramref name="polling"/>
+		/// is a number, then it is treated as an interval in milliseconds at which the function
+		/// would be executed. Defaults to `raf</c>
+		/// </param>
+		/// <param name="timeout">
+		/// maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
+		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// </param>
+		Task<IJSHandle> WaitForFunctionAsync(string expression, object arg, Polling polling, int timeout);
+	
+		/// <summary>
+		/// <para>Returns when the required load state has been reached.</para>
+		/// <para>
+		/// This resolves when the page reaches a required load state, <c>load</c> by default.
+		/// The navigation must have been committed when this method is called. If current document
+		/// has already reached the required state, resolves immediately.
+		/// </para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.WaitForLoadStateAsync"/>.</para>
+		/// </summary>
+		/// <param name="state">
+		/// Optional load state to wait for, defaults to <c>load</c>  If the state has been
+		/// already reached while loading current document, the method resolves immediately.
+		/// Can be one of:
+		/// <list type="bullet">
+		/// <item><description>`'load <c> - wait for the `load</c> event to be fired.</description></item>
+		/// <item><description>`'domcontentloaded <c> - wait for the `DOMContentLoaded</c> event to be fired.</description></item>
+		/// <item><description>
+		/// `'networkidle <c> - wait until there are no network connections for at least `500</c>
+		/// ms.
+		/// </description></item>
+		/// </list>
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
+		/// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task WaitForLoadStateAsync(State state, int timeout);
+	
 		/// <summary>
-		/// Waits for the main frame navigation and returns the main resource response. In case of multiple redirects, the navigation
-		/// will resolve with the response of the last redirect. In case of navigation to a different anchor or navigation due to History
-		/// API usage, the navigation will resolve with `null`.
-		/// This resolves when the page navigates to a new URL or reloads. It is useful for when you run code which will indirectly cause
-		/// the page to navigate. e.g. The click target has an `onclick` handler that triggers navigation from a `setTimeout`. Consider
-		/// this example:
-		/// Shortcut for main frame's <see cref="IFrame.WaitForNavigationAsync"/>.
+		/// <para>
+		/// Waits for the main frame navigation and returns the main resource response. In case
+		/// of multiple redirects, the navigation will resolve with the response of the last
+		/// redirect. In case of navigation to a different anchor or navigation due to History
+		/// API usage, the navigation will resolve with <c>null</c>
+		/// </para>
+		/// <para>
+		/// This resolves when the page navigates to a new URL or reloads. It is useful for
+		/// when you run code which will indirectly cause the page to navigate. e.g. The click
+		/// target has an <c>onclick` handler that triggers navigation from a `setTimeout</c>
+		/// Consider this example:
+		/// </para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.WaitForNavigationAsync"/>.</para>
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Usage of the [History API](https://developer.mozilla.org/en-US/docs/Web/API/History_API)
+		/// to change the URL is considered a navigation.
+		/// </para>
+		/// </remarks>
+		/// <param name="timeout">
+		/// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
+		/// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
+		/// <param name="sUrl">
+		/// A glob pattern, regex pattern or predicate receiving [URL] to match while waiting
+		/// for the navigation.
+		/// </param>
+		/// <param name="rUrl">
+		/// A glob pattern, regex pattern or predicate receiving [URL] to match while waiting
+		/// for the navigation.
+		/// </param>
+		/// <param name="fUrl">
+		/// A glob pattern, regex pattern or predicate receiving [URL] to match while waiting
+		/// for the navigation.
+		/// </param>
+		/// <param name="waitUntil">
+		/// When to consider operation succeeded, defaults to <c>load</c>  Events can be either:
+		/// <list type="bullet">
+		/// <item><description>
+		/// `'domcontentloaded <c> - consider operation to be finished when the `DOMContentLoaded</c>
+		/// event is fired.
+		/// </description></item>
+		/// <item><description>`'load <c> - consider operation to be finished when the `load</c> event is fired.</description></item>
+		/// <item><description>
+		/// `'networkidle <c> - consider operation to be finished when there are no network
+		/// connections for at least `500</c> ms.
+		/// </description></item>
+		/// </list>
+		/// </param>
 		Task<IResponse> WaitForNavigationAsync(int timeout, string sUrl, Regex rUrl, Func<Uri, bool> fUrl, WaitUntil waitUntil);
+	
 		/// <summary>
-		/// Waits for the matching request and returns it.
+		/// <para>
+		/// Performs action and waits for a popup <see cref="IPage"/>. If predicate is provided,
+		/// it passes [Popup] value into the <c>predicate` function and waits for `predicate(page)</c>
+		/// to return a truthy value. Will throw an error if the page is closed before the popup
+		/// event is fired.
+		/// </para>
 		/// </summary>
+		/// <param name="predicate">
+		/// Receives the <see cref="IPage"/> object and resolves to truthy value when the waiting
+		/// should resolve.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
+		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// </param>
+		Task<IPage> WaitForPopupAsync(Func<IPage, bool> predicate, int timeout);
+	
+		/// <summary><para>Waits for the matching request and returns it.</para></summary>
+		/// <param name="sUrlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+		/// <param name="rUrlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+		/// <param name="fUrlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+		/// <param name="timeout">
+		/// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
+		/// the timeout. The default value can be changed by using the <see cref="IPage.SetDefaultTimeout"/>
+		/// method.
+		/// </param>
 		Task<IRequest> WaitForRequestAsync(string sUrlOrPredicate, Regex rUrlOrPredicate, Func<IRequest, bool> fUrlOrPredicate, int timeout);
-		/// <summary>
-		/// Returns the matched response.
-		/// </summary>
+	
+		/// <summary><para>Returns the matched response.</para></summary>
+		/// <param name="sUrlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+		/// <param name="rUrlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+		/// <param name="fUrlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+		/// <param name="timeout">
+		/// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
+		/// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task<IResponse> WaitForResponseAsync(string sUrlOrPredicate, Regex rUrlOrPredicate, Func<IResponse, bool> fUrlOrPredicate, int timeout);
+	
 		/// <summary>
-		/// Returns when element specified by selector satisfies {OPTION} option. Returns `null` if waiting for `hidden` or `detached`.
-		/// Wait for the {PARAM} to satisfy {OPTION} option (either appear/disappear from dom, or become visible/hidden). If at the moment
-		/// of calling the method {PARAM} already satisfies the condition, the method will return immediately. If the selector doesn't
-		/// satisfy the condition for the {OPTION} milliseconds, the function will throw.
-		/// This method works across navigations:
+		/// <para>
+		/// Returns when element specified by selector satisfies <paramref name="state"/> option.
+		/// Returns <c>null` if waiting for `hidden` or `detached</c>
+		/// </para>
+		/// <para>
+		/// Wait for the <paramref name="selector"/> to satisfy <paramref name="state"/> option
+		/// (either appear/disappear from dom, or become visible/hidden). If at the moment of
+		/// calling the method <paramref name="selector"/> already satisfies the condition,
+		/// the method will return immediately. If the selector doesn't satisfy the condition
+		/// for the <paramref name="timeout"/> milliseconds, the function will throw.
+		/// </para>
+		/// <para>This method works across navigations:</para>
 		/// </summary>
+		/// <param name="selector">A selector to query for. See [working with selectors](./selectors.md) for more details.</param>
+		/// <param name="state">
+		/// Defaults to <c>'visible'</c>  Can be either:
+		/// <list type="bullet">
+		/// <item><description>`'attached'` - wait for element to be present in DOM.</description></item>
+		/// <item><description>`'detached'` - wait for element to not be present in DOM.</description></item>
+		/// <item><description>
+		/// `'visible <c> - wait for element to have non-empty bounding box and no `visibility:hidden`.
+		/// Note that element without any content or with `display:none</c> has an empty bounding
+		/// box and is not considered visible.
+		/// </description></item>
+		/// <item><description>
+		/// `'hidden <c> - wait for element to be either detached from DOM, or have an empty
+		/// bounding box or `visibility:hidden`. This is opposite to the `'visible'</c> option.
+		/// </description></item>
+		/// </list>
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
+		/// </param>
 		Task<IElementHandle> WaitForSelectorAsync(string selector, State state, int timeout);
+	
 		/// <summary>
-		/// Waits for the given {PARAM} in milliseconds.
-		/// Note that `page.waitForTimeout()` should only be used for debugging. Tests using the timer in production are going to be
-		/// flaky. Use signals such as network events, selectors becoming visible and others instead.
-		/// Shortcut for main frame's <see cref="IFrame.WaitForTimeoutAsync"/>.
+		/// <para>Waits for the given <paramref name="timeout"/> in milliseconds.</para>
+		/// <para>
+		/// Note that <c>page.waitForTimeout()</c> should only be used for debugging. Tests
+		/// using the timer in production are going to be flaky. Use signals such as network
+		/// events, selectors becoming visible and others instead.
+		/// </para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.WaitForTimeoutAsync"/>.</para>
 		/// </summary>
+		/// <param name="timeout">A timeout to wait for</param>
 		Task WaitForTimeoutAsync(int timeout);
+	
 		/// <summary>
-		/// This method returns all of the dedicated <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">WebWorkers</a> associated
-		/// with the page.
+		/// <para>
+		/// Performs action and waits for a new <see cref="IWebSocket"/>. If predicate is provided,
+		/// it passes <see cref="IWebSocket"/> value into the <c>predicate` function and waits
+		/// for `predicate(webSocket)</c> to return a truthy value. Will throw an error if the
+		/// page is closed before the WebSocket event is fired.
+		/// </para>
 		/// </summary>
+		/// <param name="predicate">
+		/// Receives the <see cref="IWebSocket"/> object and resolves to truthy value when the
+		/// waiting should resolve.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
+		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// </param>
+		Task<IWebSocket> WaitForWebSocketAsync(Func<IWebSocket, bool> predicate, int timeout);
+	
+		/// <summary>
+		/// <para>
+		/// Performs action and waits for a new <see cref="IWorker"/>. If predicate is provided,
+		/// it passes <see cref="IWorker"/> value into the <c>predicate` function and waits
+		/// for `predicate(worker)</c> to return a truthy value. Will throw an error if the
+		/// page is closed before the worker event is fired.
+		/// </para>
+		/// </summary>
+		/// <param name="predicate">
+		/// Receives the <see cref="IWorker"/> object and resolves to truthy value when the
+		/// waiting should resolve.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
+		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// </param>
+		Task<IWorker> WaitForWorkerAsync(Func<IWorker, bool> predicate, int timeout);
+	
+		/// <summary>
+		/// <para>
+		/// This method returns all of the dedicated [WebWorkers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API)
+		/// associated with the page.
+		/// </para>
+		/// </summary>
+		/// <remarks><para>This does not contain ServiceWorkers</para></remarks>
 		dynamic GetWorkers();
 	}
 }

@@ -45,90 +45,116 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// Whenever the page sends a request for a network resource the following sequence of events are emitted by 
-	/// <see cref="IPage"/>:
-	/// <list>
-	/// <item><description><see cref="IPage.Request"/> emitted when the request is issued by the page.</description>
-	/// </item>
-	/// <item><description><see cref="IPage.Response"/> emitted when/if the response status and headers are received for the request.
+	/// <para>
+	/// Whenever the page sends a request for a network resource the following sequence
+	/// of events are emitted by <see cref="IPage"/>:
+	/// </para>
+	/// <list type="bullet">
+	/// <item><description><see cref="IPage.Request"/> emitted when the request is issued by the page.</description></item>
+	/// <item><description>
+	/// <see cref="IPage.Response"/> emitted when/if the response status and headers are
+	/// received for the request.
 	/// </description></item>
-	/// <item><description><see cref="IPage.Requestfinished"/> emitted when the response body is downloaded and the request is complete.
+	/// <item><description>
+	/// <see cref="IPage.RequestFinished"/> emitted when the response body is downloaded
+	/// and the request is complete.
 	/// </description></item>
 	/// </list>
-	/// If request fails at some point, then instead of `'requestfinished'` event (and possibly instead of 'response' event), the
-	/// <see cref="IPage.Requestfailed"/> event is emitted.
-	/// If request gets a 'redirect' response, the request is successfully finished with the 'requestfinished' event, and a new request
-	/// is  issued to a redirected url.
+	/// <para>
+	/// If request fails at some point, then instead of <c>'requestfinished'</c> event (and
+	/// possibly instead of 'response' event), the  <see cref="IPage.RequestFailed"/> event
+	/// is emitted.
+	/// </para>
+	/// <para>
+	/// If request gets a 'redirect' response, the request is successfully finished with
+	/// the 'requestfinished' event, and a new request is  issued to a redirected url.
+	/// </para>
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// HTTP Error responses, such as 404 or 503, are still successful responses from HTTP
+	/// standpoint, so request will complete with <c>'requestfinished'</c> event.
+	/// </para>
+	/// </remarks>
 	public partial interface IRequest
 	{
 		/// <summary>
-		/// The method returns `null` unless this request has failed, as reported by `requestfailed` event.
-		/// Example of logging of all the failed requests:
+		/// <para>
+		/// The method returns <c>null` unless this request has failed, as reported by `requestfailed</c>
+		/// event.
+		/// </para>
+		/// <para>Example of logging of all the failed requests:</para>
 		/// </summary>
-		RequestFailureResult GetFailure();
-		/// <summary>
-		/// Returns the <see cref="IFrame"/> that initiated this request.
-		/// </summary>
+		string GetFailure();
+	
+		/// <summary><para>Returns the <see cref="IFrame"/> that initiated this request.</para></summary>
 		IFrame GetFrame();
-		/// <summary>
-		/// An object with HTTP headers associated with the request. All header names are lower-case.
-		/// </summary>
+	
+		/// <summary><para>An object with HTTP headers associated with the request. All header names are lower-case.</para></summary>
 		IEnumerable<KeyValuePair<string, string>> GetHeaders();
-		/// <summary>
-		/// Whether this request is driving frame's navigation.
-		/// </summary>
+	
+		/// <summary><para>Whether this request is driving frame's navigation.</para></summary>
 		bool IsNavigationRequest();
-		/// <summary>
-		/// Request's method (GET, POST, etc.)
-		/// </summary>
+	
+		/// <summary><para>Request's method (GET, POST, etc.)</para></summary>
 		string GetMethod();
-		/// <summary>
-		/// Request's post body, if any.
-		/// </summary>
+	
+		/// <summary><para>Request's post body, if any.</para></summary>
 		string GetPostData();
-		/// <summary>
-		/// Request's post body in a binary form, if any.
-		/// </summary>
+	
+		/// <summary><para>Request's post body in a binary form, if any.</para></summary>
 		byte[] GetPostDataBuffer();
+	
 		/// <summary>
-		/// Returns parsed request's body for `form-urlencoded` and JSON as a fallback if any.
-		/// When the response is `application/x-www-form-urlencoded` then a key/value object of the values will be returned. Otherwise
-		/// it will be parsed as JSON.
-		/// </summary>
-		T GetPostDataJSON<T>();
-		/// <summary>
-		/// Request that was redirected by the server to this one, if any.
-		/// When the server responds with a redirect, Playwright creates a new <see cref="IRequest"/> object. The two requests are connected
-		/// by `redirectedFrom()` and `redirectedTo()` methods. When multiple server redirects has happened, it is possible to construct
-		/// the whole redirect chain by repeatedly calling `redirectedFrom()`.
-		/// For example, if the website `http://example.com` redirects to `https://example.com`:
-		/// If the website `https://google.com` has no redirects:
+		/// <para>Request that was redirected by the server to this one, if any.</para>
+		/// <para>
+		/// When the server responds with a redirect, Playwright creates a new <see cref="IRequest"/>
+		/// object. The two requests are connected by <c>redirectedFrom()` and `redirectedTo()`
+		/// methods. When multiple server redirects has happened, it is possible to construct
+		/// the whole redirect chain by repeatedly calling `redirectedFrom()</c>
+		/// </para>
+		/// <para>
+		/// For example, if the website <c>http://example.com` redirects to `https://example.com</c>
+		/// 
+		/// </para>
+		/// <para>If the website <c>https://google.com</c> has no redirects:</para>
 		/// </summary>
 		IRequest GetRedirectedFrom();
+	
 		/// <summary>
-		/// New request issued by the browser if the server responded with redirect.
-		/// This method is the opposite of <see cref="IRequest.RedirectedFrom"/>:
+		/// <para>New request issued by the browser if the server responded with redirect.</para>
+		/// <para>This method is the opposite of <see cref="IRequest.RedirectedFrom"/>:</para>
 		/// </summary>
 		IRequest GetRedirectedTo();
+	
 		/// <summary>
-		/// Contains the request's resource type as it was perceived by the rendering engine. ResourceType will be one of the following:
-		/// `document`, `stylesheet`, `image`, `media`, `font`, `script`, `texttrack`, `xhr`, `fetch`, `eventsource`, `websocket`, `manifest`,
-		/// `other`.
+		/// <para>
+		/// Contains the request's resource type as it was perceived by the rendering engine.
+		/// ResourceType will be one of the following: <c>document`, `stylesheet`, `image`,
+		/// `media`, `font`, `script`, `texttrack`, `xhr`, `fetch`, `eventsource`, `websocket`,
+		/// `manifest`, `other</c>
+		/// </para>
 		/// </summary>
 		string GetResourceType();
+	
 		/// <summary>
-		/// Returns the matching <see cref="IResponse"/> object, or `null` if the response was not received due to error.
+		/// <para>
+		/// Returns the matching <see cref="IResponse"/> object, or <c>null</c> if the response
+		/// was not received due to error.
+		/// </para>
 		/// </summary>
 		Task<IResponse> GetResponseAsync();
+	
 		/// <summary>
-		/// Returns resource timing information for given request. Most of the timing values become available upon the response, `responseEnd`
-		/// becomes available when request finishes. Find more information at <a href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceResourceTiming">Resource Timing API</a>.
+		/// <para>
+		/// Returns resource timing information for given request. Most of the timing values
+		/// become available upon the response, <c>responseEnd</c> becomes available when request
+		/// finishes. Find more information at [Resource Timing API](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceResourceTiming).
+		/// </para>
 		/// </summary>
 		RequestTimingResult GetTiming();
-		/// <summary>
-		/// URL of the request.
-		/// </summary>
+	
+		/// <summary><para>URL of the request.</para></summary>
 		string GetUrl();
 	}
 }

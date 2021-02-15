@@ -65,6 +65,9 @@ namespace PlaywrightSharp
 		/// send messages.
 		/// </summary>
 		Task DetachAsync();
+	
+		/// <param name="method">To be generated.</param>
+		/// <param name="@params">To be generated.</param>
 		Task<dynamic> SendAsync(string method, object @params);
 	}
 }

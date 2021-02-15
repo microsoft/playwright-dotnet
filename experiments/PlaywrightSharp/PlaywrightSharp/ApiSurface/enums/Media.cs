@@ -44,24 +44,11 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-    public class BrowserStorageStateCookies
+    public enum Media
 	{
-		string Name { get; set; }
-	
-		string Value { get; set; }
-	
-		string Url { get; set; }
-	
-		string Domain { get; set; }
-	
-		string Path { get; set; }
-	
-		decimal Expires { get; set; }
-	
-		bool HttpOnly { get; set; }
-	
-		bool Secure { get; set; }
-	
-		SameSite SameSite { get; set; }
+		[EnumMember(Value = "screen")]
+		Screen,
+		[EnumMember(Value = "print")]
+		Print,
 	}
 }

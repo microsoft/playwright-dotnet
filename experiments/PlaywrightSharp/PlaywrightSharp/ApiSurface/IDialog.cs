@@ -45,29 +45,43 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// <see cref="IDialog"/> objects are dispatched by page via the <see cref="IPage.Dialog"/> event.
-	/// An example of using `Dialog` class:
+	/// <para>
+	/// <see cref="IDialog"/> objects are dispatched by page via the <see cref="IPage.Dialog"/>
+	/// event.
+	/// </para>
+	/// <para>An example of using <c>Dialog</c> class:</para>
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Dialogs are dismissed automatically, unless there is a <see cref="IPage.Dialog"/>
+	/// listener. When listener is present, it **must** either <see cref="IDialog.AcceptAsync"/>
+	/// or <see cref="IDialog.DismissAsync"/> the dialog - otherwise the page will [freeze](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop#never_blocking)
+	/// waiting for the dialog, and actions like click will never finish.
+	/// </para>
+	/// </remarks>
 	public partial interface IDialog
 	{
-		/// <summary>
-		/// Returns when the dialog has been accepted.
-		/// </summary>
+		/// <summary><para>Returns when the dialog has been accepted.</para></summary>
+		/// <param name="promptText">
+		/// A text to enter in prompt. Does not cause any effects if the dialog's <c>type</c>
+		/// is not prompt. Optional.
+		/// </param>
 		Task AcceptAsync(string promptText);
-		/// <summary>
-		/// If dialog is prompt, returns default prompt value. Otherwise, returns empty string.
-		/// </summary>
+	
+		/// <summary><para>If dialog is prompt, returns default prompt value. Otherwise, returns empty string.</para></summary>
 		string GetDefaultValue();
-		/// <summary>
-		/// Returns when the dialog has been dismissed.
-		/// </summary>
+	
+		/// <summary><para>Returns when the dialog has been dismissed.</para></summary>
 		Task DismissAsync();
-		/// <summary>
-		/// A message displayed in the dialog.
-		/// </summary>
+	
+		/// <summary><para>A message displayed in the dialog.</para></summary>
 		string GetMessage();
+	
 		/// <summary>
-		/// Returns dialog's type, can be one of `alert`, `beforeunload`, `confirm` or `prompt`.
+		/// <para>
+		/// Returns dialog's type, can be one of <c>alert`, `beforeunload`, `confirm` or `prompt</c>
+		/// 
+		/// </para>
 		/// </summary>
 		string GetType();
 	}

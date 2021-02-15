@@ -45,39 +45,214 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// BrowserType provides methods to launch a specific browser instance or connect to an existing one. The following is a typical
-	/// example of using Playwright to drive automation:
+	/// <para>
+	/// BrowserType provides methods to launch a specific browser instance or connect to
+	/// an existing one. The following is a typical example of using Playwright to drive
+	/// automation:
+	/// </para>
 	/// </summary>
 	public partial interface IBrowserType
 	{
-		/// <summary>
-		/// A path where Playwright expects to find a bundled browser executable.
-		/// </summary>
+		/// <summary><para>A path where Playwright expects to find a bundled browser executable.</para></summary>
 		string GetExecutablePath();
+	
 		/// <summary>
-		/// Returns the browser instance.
-		/// You can use {OPTION} to filter out `--mute-audio` from default arguments:
-		/// > **Chromium-only** Playwright can also be used to control the Chrome browser, but it works best with the version of Chromium
-		/// it is bundled with. There is no guarantee it will work with any other version. Use {OPTION} option with extreme caution.
-		/// >
-		/// > If Google Chrome (rather than Chromium) is preferred, a <a href="https://www.google.com/chrome/browser/canary.html">Chrome Canary</a> or
-		/// <a href="https://www.chromium.org/getting-involved/dev-channel">Dev Channel</a> build is suggested.
-		/// >
-		/// > In <see cref="IBrowserType.LaunchAsync"/> above, any mention of Chromium also applies to Chrome.
-		/// >
-		/// > See <a href="https://www.howtogeek.com/202825/what%E2%80%99s-the-difference-between-chromium-and-chrome/">`this article`</a> for
-		/// a description of the differences between Chromium and Chrome. <a href="https://chromium.googlesource.com/chromium/src/+/lkgr/docs/chromium_browser_vs_google_chrome.md">`This article`</a> describes
-		/// some differences for Linux users.
+		/// <para>Returns the browser instance.</para>
+		/// <para>
+		/// You can use <paramref name="ignoreDefaultArgs"/> to filter out <c>--mute-audio</c>
+		/// from default arguments:
+		/// </para>
+		/// <para>
+		/// > **Chromium-only** Playwright can also be used to control the Chrome browser, but
+		/// it works best with the version of Chromium it is bundled with. There is no guarantee
+		/// it will work with any other version. Use <paramref name="executablePath"/> option
+		/// with extreme caution.
+		/// </para>
+		/// <para>></para>
+		/// <para>
+		/// > If Google Chrome (rather than Chromium) is preferred, a [Chrome Canary](https://www.google.com/chrome/browser/canary.html)
+		/// or [Dev Channel](https://www.chromium.org/getting-involved/dev-channel) build is
+		/// suggested.
+		/// </para>
+		/// <para>></para>
+		/// <para>
+		/// > In <see cref="IBrowserType.LaunchAsync"/> above, any mention of Chromium also
+		/// applies to Chrome.
+		/// </para>
+		/// <para>></para>
+		/// <para>
+		/// > See [`this article`](https://www.howtogeek.com/202825/what%E2%80%99s-the-difference-between-chromium-and-chrome/)
+		/// for a description of the differences between Chromium and Chrome. [`This article`](https://chromium.googlesource.com/chromium/src/+/lkgr/docs/chromium_browser_vs_google_chrome.md)
+		/// describes some differences for Linux users.
+		/// </para>
 		/// </summary>
-		Task<IBrowser> LaunchAsync(string[] args, bool chromiumSandbox, bool devtools, string downloadsPath, IEnumerable<KeyValuePair<string, string>> env, string executablePath, IEnumerable<KeyValuePair<string, string>> firefoxUserPrefs, bool handleSIGHUP, bool handleSIGINT, bool handleSIGTERM, bool headless, bool ignoreDefaultArgs, string[] ignoreDefaultArgsValues, BrowserTypeProxy proxy, decimal slowMo, int timeout);
+		/// <param name="args">
+		/// Additional arguments to pass to the browser instance. The list of Chromium flags
+		/// can be found [here](http://peter.sh/experiments/chromium-command-line-switches/).
+		/// </param>
+		/// <param name="chromiumSandbox">Enable Chromium sandboxing. Defaults to <c>false</c></param>
+		/// <param name="devtools">
+		/// **Chromium-only** Whether to auto-open a Developer Tools panel for each tab. If
+		/// this option is <c>true`, the <paramref name="headless"/> option will be set `false</c>
+		/// 
+		/// </param>
+		/// <param name="downloadsPath">
+		/// If specified, accepted downloads are downloaded into this directory. Otherwise,
+		/// temporary directory is created and is deleted when browser is closed.
+		/// </param>
+		/// <param name="env">
+		/// Specify environment variables that will be visible to the browser. Defaults to <c>process.env</c>
+		/// 
+		/// </param>
+		/// <param name="executablePath">
+		/// Path to a browser executable to run instead of the bundled one. If <paramref name="executablePath"/>
+		/// is a relative path, then it is resolved relative to the current working directory.
+		/// Note that Playwright only works with the bundled Chromium, Firefox or WebKit, use
+		/// at your own risk.
+		/// </param>
+		/// <param name="firefoxUserPrefs">Firefox user preferences. Learn more about the Firefox user preferences at [`about:config`](https://support.mozilla.org/en-US/kb/about-config-editor-firefox).</param>
+		/// <param name="handleSIGHUP">Close the browser process on SIGHUP. Defaults to <c>true</c></param>
+		/// <param name="handleSIGINT">Close the browser process on Ctrl-C. Defaults to <c>true</c></param>
+		/// <param name="handleSIGTERM">Close the browser process on SIGTERM. Defaults to <c>true</c></param>
+		/// <param name="headless">
+		/// Whether to run browser in headless mode. More details for [Chromium](https://developers.google.com/web/updates/2017/04/headless-chrome)
+		/// and [Firefox](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Headless_mode).
+		/// Defaults to <c>true` unless the <paramref name="devtools"/> option is `true</c>
+		/// 
+		/// </param>
+		/// <param name="ignoreAllDefaultArgs">
+		/// If <c>true`, Playwright does not pass its own configurations args and only uses
+		/// the ones from <paramref name="args"/>. Dangerous option; use with care. Defaults
+		/// to `false</c>
+		/// </param>
+		/// <param name="ignoreDefaultArgs">
+		/// If <c>true</c>  Playwright does not pass its own configurations args and only uses
+		/// the ones from <paramref name="args"/>. Dangerous option; use with care.
+		/// </param>
+		/// <param name="proxy">Network proxy settings.</param>
+		/// <param name="slowMo">
+		/// Slows down Playwright operations by the specified amount of milliseconds. Useful
+		/// so that you can see what is going on.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds to wait for the browser instance to start. Defaults
+		/// to <c>30000` (30 seconds). Pass `0</c> to disable timeout.
+		/// </param>
+		Task<IBrowser> LaunchAsync(string[] args, bool chromiumSandbox, bool devtools, string downloadsPath, IEnumerable<KeyValuePair<string, string>> env, string executablePath, IEnumerable<KeyValuePair<string, object>> firefoxUserPrefs, bool handleSIGHUP, bool handleSIGINT, bool handleSIGTERM, bool headless, bool ignoreAllDefaultArgs, string[] ignoreDefaultArgs, BrowserTypeProxy proxy, decimal slowMo, int timeout);
+	
 		/// <summary>
-		/// Returns the persistent browser context instance.
-		/// Launches browser that uses persistent storage located at {PARAM} and returns the only context. Closing this context will
-		/// automatically close the browser.
+		/// <para>Returns the persistent browser context instance.</para>
+		/// <para>
+		/// Launches browser that uses persistent storage located at <paramref name="userDataDir"/>
+		/// and returns the only context. Closing this context will automatically close the
+		/// browser.
+		/// </para>
 		/// </summary>
-		Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, bool acceptDownloads, string[] args, bool bypassCSP, bool chromiumSandbox, ColorScheme colorScheme, decimal deviceScaleFactor, bool devtools, string downloadsPath, IEnumerable<KeyValuePair<string, string>> env, string executablePath, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders, BrowserTypeGeolocation geolocation, bool handleSIGHUP, bool handleSIGINT, bool handleSIGTERM, bool hasTouch, bool headless, BrowserTypeHttpCredentials httpCredentials, bool ignoreDefaultArgs, string[] ignoreDefaultArgsValues, bool ignoreHTTPSErrors, bool isMobile, bool javaScriptEnabled, string locale, bool offline, string[] permissions, BrowserTypeProxy proxy, decimal slowMo, int timeout, string timezoneId, string userAgent);
+		/// <param name="userDataDir">
+		/// Path to a User Data Directory, which stores browser session data like cookies and
+		/// local storage. More details for [Chromium](https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md#introduction)
+		/// and [Firefox](https://developer.mozilla.org/en-US/docs/Mozilla/Command_Line_Options#User_Profile).
+		/// Note that Chromium's user data directory is the **parent** directory of the "Profile
+		/// Path" seen at <c>chrome://version</c>
+		/// </param>
+		/// <param name="acceptDownloads">
+		/// Whether to automatically download all the attachments. Defaults to <c>false</c>
+		/// where all the downloads are canceled.
+		/// </param>
+		/// <param name="args">
+		/// Additional arguments to pass to the browser instance. The list of Chromium flags
+		/// can be found [here](http://peter.sh/experiments/chromium-command-line-switches/).
+		/// </param>
+		/// <param name="bypassCSP">Toggles bypassing page's Content-Security-Policy.</param>
+		/// <param name="chromiumSandbox">Enable Chromium sandboxing. Defaults to <c>true</c></param>
+		/// <param name="colorScheme">
+		/// Emulates <c>'prefers-colors-scheme'` media feature, supported values are `'light'`,
+		/// `'dark'`, `'no-preference'`. See <see cref="IPage.EmulateMediaAsync"/> for more
+		/// details. Defaults to '`light</c> .
+		/// </param>
+		/// <param name="deviceScaleFactor">Specify device scale factor (can be thought of as dpr). Defaults to <c>1</c></param>
+		/// <param name="devtools">
+		/// **Chromium-only** Whether to auto-open a Developer Tools panel for each tab. If
+		/// this option is <c>true`, the <paramref name="headless"/> option will be set `false</c>
+		/// 
+		/// </param>
+		/// <param name="downloadsPath">
+		/// If specified, accepted downloads are downloaded into this directory. Otherwise,
+		/// temporary directory is created and is deleted when browser is closed.
+		/// </param>
+		/// <param name="env">
+		/// Specify environment variables that will be visible to the browser. Defaults to <c>process.env</c>
+		/// 
+		/// </param>
+		/// <param name="executablePath">
+		/// Path to a browser executable to run instead of the bundled one. If <paramref name="executablePath"/>
+		/// is a relative path, then it is resolved relative to the current working directory.
+		/// **BEWARE**: Playwright is only guaranteed to work with the bundled Chromium, Firefox
+		/// or WebKit, use at your own risk.
+		/// </param>
+		/// <param name="extraHTTPHeaders">
+		/// An object containing additional HTTP headers to be sent with every request. All
+		/// header values must be strings.
+		/// </param>
+		/// <param name="geolocation">
+		/// </param>
+		/// <param name="handleSIGHUP">Close the browser process on SIGHUP. Defaults to <c>true</c></param>
+		/// <param name="handleSIGINT">Close the browser process on Ctrl-C. Defaults to <c>true</c></param>
+		/// <param name="handleSIGTERM">Close the browser process on SIGTERM. Defaults to <c>true</c></param>
+		/// <param name="hasTouch">Specifies if viewport supports touch events. Defaults to false.</param>
+		/// <param name="headless">
+		/// Whether to run browser in headless mode. More details for [Chromium](https://developers.google.com/web/updates/2017/04/headless-chrome)
+		/// and [Firefox](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Headless_mode).
+		/// Defaults to <c>true` unless the <paramref name="devtools"/> option is `true</c>
+		/// 
+		/// </param>
+		/// <param name="httpCredentials">Credentials for [HTTP authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication).</param>
+		/// <param name="ignoreAllDefaultArgs">
+		/// If <c>true`, Playwright does not pass its own configurations args and only uses
+		/// the ones from <paramref name="args"/>. Dangerous option; use with care. Defaults
+		/// to `false</c>
+		/// </param>
+		/// <param name="ignoreDefaultArgs">
+		/// If <c>true</c>  Playwright does not pass its own configurations args and only uses
+		/// the ones from <paramref name="args"/>. Dangerous option; use with care.
+		/// </param>
+		/// <param name="ignoreHTTPSErrors">Whether to ignore HTTPS errors during navigation. Defaults to <c>false</c></param>
+		/// <param name="isMobile">
+		/// Whether the <c>meta viewport` tag is taken into account and touch events are enabled.
+		/// Defaults to `false</c>  Not supported in Firefox.
+		/// </param>
+		/// <param name="javaScriptEnabled">Whether or not to enable JavaScript in the context. Defaults to <c>true</c></param>
+		/// <param name="locale">
+		/// Specify user locale, for example <c>en-GB`, `de-DE`, etc. Locale will affect `navigator.language`
+		/// value, `Accept-Language</c> request header value as well as number and date formatting
+		/// rules.
+		/// </param>
+		/// <param name="offline">Whether to emulate network being offline. Defaults to <c>false</c></param>
+		/// <param name="permissions">
+		/// A list of permissions to grant to all pages in this context. See <see cref="IBrowserContext.GrantPermissionsAsync"/>
+		/// for more details.
+		/// </param>
+		/// <param name="proxy">Network proxy settings.</param>
+		/// <param name="slowMo">
+		/// Slows down Playwright operations by the specified amount of milliseconds. Useful
+		/// so that you can see what is going on. Defaults to 0.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time in milliseconds to wait for the browser instance to start. Defaults
+		/// to <c>30000` (30 seconds). Pass `0</c> to disable timeout.
+		/// </param>
+		/// <param name="timezoneId">
+		/// Changes the timezone of the context. See [ICU's metaZones.txt](https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1)
+		/// for a list of supported timezone IDs.
+		/// </param>
+		/// <param name="userAgent">Specific user agent to use in this context.</param>
+		Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, bool acceptDownloads, string[] args, bool bypassCSP, bool chromiumSandbox, ColorScheme colorScheme, decimal deviceScaleFactor, bool devtools, string downloadsPath, IEnumerable<KeyValuePair<string, string>> env, string executablePath, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders, BrowserTypeGeolocation geolocation, bool handleSIGHUP, bool handleSIGINT, bool handleSIGTERM, bool hasTouch, bool headless, BrowserTypeHttpCredentials httpCredentials, bool ignoreAllDefaultArgs, string[] ignoreDefaultArgs, bool ignoreHTTPSErrors, bool isMobile, bool javaScriptEnabled, string locale, bool offline, string[] permissions, BrowserTypeProxy proxy, decimal slowMo, int timeout, string timezoneId, string userAgent);
+	
 		/// <summary>
-		/// Returns browser name. For example: `'chromium'`, `'webkit'` or `'firefox'`.
+		/// <para>
+		/// Returns browser name. For example: <c>'chromium'`, `'webkit'` or `'firefox'</c>
+		/// 
+		/// </para>
 		/// </summary>
 		string GetName();
 	}

@@ -45,31 +45,65 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// The Mouse class operates in main-frame CSS pixels relative to the top-left corner of the viewport.
-	/// Every `page` object has its own Mouse, accessible with <see cref="IPage.Mouse"/>.
+	/// <para>
+	/// The Mouse class operates in main-frame CSS pixels relative to the top-left corner
+	/// of the viewport.
+	/// </para>
+	/// <para>Every <c>page</c> object has its own Mouse, accessible with <see cref="IPage.Mouse"/>.</para>
 	/// </summary>
 	public partial interface IMouse
 	{
 		/// <summary>
-		/// Shortcut for <see cref="IMouse.MoveAsync"/>, <see cref="IMouse.DownAsync"/>, <see cref="IMouse.UpAsync"/>.
+		/// <para>
+		/// Shortcut for <see cref="IMouse.MoveAsync"/>, <see cref="IMouse.DownAsync"/>, <see
+		/// cref="IMouse.UpAsync"/>.
+		/// </para>
 		/// </summary>
+		/// <param name="x">
+		/// </param>
+		/// <param name="y">
+		/// </param>
+		/// <param name="button">Defaults to <c>left</c></param>
+		/// <param name="clickCount">defaults to 1. See [UIEvent.detail].</param>
+		/// <param name="delay">
+		/// Time to wait between <c>mousedown` and `mouseup</c> in milliseconds. Defaults to
+		/// 0.
+		/// </param>
 		Task ClickAsync(decimal x, decimal y, Button button, int clickCount, decimal delay);
+	
 		/// <summary>
-		/// Shortcut for <see cref="IMouse.MoveAsync"/>, <see cref="IMouse.DownAsync"/>, <see cref="IMouse.UpAsync"/>, 
-		/// <see cref="IMouse.DownAsync"/> and <see cref="IMouse.UpAsync"/>.
+		/// <para>
+		/// Shortcut for <see cref="IMouse.MoveAsync"/>, <see cref="IMouse.DownAsync"/>, <see
+		/// cref="IMouse.UpAsync"/>, <see cref="IMouse.DownAsync"/> and <see cref="IMouse.UpAsync"/>.
+		/// </para>
 		/// </summary>
+		/// <param name="x">
+		/// </param>
+		/// <param name="y">
+		/// </param>
+		/// <param name="button">Defaults to <c>left</c></param>
+		/// <param name="delay">
+		/// Time to wait between <c>mousedown` and `mouseup</c> in milliseconds. Defaults to
+		/// 0.
+		/// </param>
 		Task DblclickAsync(decimal x, decimal y, Button button, decimal delay);
-		/// <summary>
-		/// Dispatches a `mousedown` event.
-		/// </summary>
+	
+		/// <summary><para>Dispatches a <c>mousedown</c> event.</para></summary>
+		/// <param name="button">Defaults to <c>left</c></param>
+		/// <param name="clickCount">defaults to 1. See [UIEvent.detail].</param>
 		Task DownAsync(Button button, int clickCount);
-		/// <summary>
-		/// Dispatches a `mousemove` event.
-		/// </summary>
+	
+		/// <summary><para>Dispatches a <c>mousemove</c> event.</para></summary>
+		/// <param name="x">
+		/// </param>
+		/// <param name="y">
+		/// </param>
+		/// <param name="steps">defaults to 1. Sends intermediate <c>mousemove</c> events.</param>
 		Task MoveAsync(decimal x, decimal y, int steps);
-		/// <summary>
-		/// Dispatches a `mouseup` event.
-		/// </summary>
+	
+		/// <summary><para>Dispatches a <c>mouseup</c> event.</para></summary>
+		/// <param name="button">Defaults to <c>left</c></param>
+		/// <param name="clickCount">defaults to 1. See [UIEvent.detail].</param>
 		Task UpAsync(Button button, int clickCount);
 	}
 }

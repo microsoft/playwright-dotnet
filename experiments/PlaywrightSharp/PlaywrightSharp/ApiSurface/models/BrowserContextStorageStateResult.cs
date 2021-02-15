@@ -47,6 +47,7 @@ namespace PlaywrightSharp
     public class BrowserContextStorageStateResult
 	{
 		BrowserContextStorageStateResultCookies[] Cookies { get; set; }
+	
 		BrowserContextStorageStateResultOrigins[] Origins { get; set; }
 	}
 }

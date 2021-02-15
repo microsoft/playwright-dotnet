@@ -45,43 +45,180 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// <seealso cref="[EventEmitter]"/>
-	/// A Browser is created via <see cref="IBrowserType.LaunchAsync"/>. An example of using a <see cref="IBrowser"/> to create a
-	/// <see cref="IPage"/>:
+	/// <para>
+	/// A Browser is created via <see cref="IBrowserType.LaunchAsync"/>. An example of using
+	/// a <see cref="IBrowser"/> to create a <see cref="IPage"/>:
+	/// </para>
 	/// </summary>
 	public partial interface IBrowser
 	{
-		event EventHandler<IBrowser> Disconnected;
 		/// <summary>
-		/// In case this browser is obtained using <see cref="IBrowserType.LaunchAsync"/>, closes the browser and all of its pages (if
-		/// any were opened).
-		/// In case this browser is connected to, clears all created contexts belonging to this browser and disconnects from the browser
-		/// server.
-		/// The <see cref="IBrowser"/> object itself is considered to be disposed and cannot be used anymore.
+		/// <para>
+		/// Emitted when Browser gets disconnected from the browser application. This might
+		/// happen because of one of the following:
+		/// </para>
+		/// <list type="bullet">
+		/// <item><description>Browser application is closed or crashed.</description></item>
+		/// <item><description>The <see cref="IBrowser.CloseAsync"/> method was called.</description></item>
+		/// </list>
+		/// </summary>
+		event EventHandler<IBrowser> Disconnected;
+	
+		/// <summary>
+		/// <para>
+		/// In case this browser is obtained using <see cref="IBrowserType.LaunchAsync"/>, closes
+		/// the browser and all of its pages (if any were opened).
+		/// </para>
+		/// <para>
+		/// In case this browser is connected to, clears all created contexts belonging to this
+		/// browser and disconnects from the browser server.
+		/// </para>
+		/// <para>
+		/// The <see cref="IBrowser"/> object itself is considered to be disposed and cannot
+		/// be used anymore.
+		/// </para>
 		/// </summary>
 		Task CloseAsync();
+	
 		/// <summary>
-		/// Returns an array of all open browser contexts. In a newly created browser, this will return zero browser contexts.
+		/// <para>
+		/// Returns an array of all open browser contexts. In a newly created browser, this
+		/// will return zero browser contexts.
+		/// </para>
 		/// </summary>
 		dynamic GetContexts();
-		/// <summary>
-		/// Indicates that the browser is connected.
-		/// </summary>
+	
+		/// <summary><para>Indicates that the browser is connected.</para></summary>
 		bool IsConnected();
+	
+		/// <summary><para>Creates a new browser context. It won't share cookies/cache with other browser contexts.</para></summary>
+		/// <param name="acceptDownloads">
+		/// Whether to automatically download all the attachments. Defaults to <c>false</c>
+		/// where all the downloads are canceled.
+		/// </param>
+		/// <param name="bypassCSP">Toggles bypassing page's Content-Security-Policy.</param>
+		/// <param name="colorScheme">
+		/// Emulates <c>'prefers-colors-scheme'` media feature, supported values are `'light'`,
+		/// `'dark'`, `'no-preference'`. See <see cref="IPage.EmulateMediaAsync"/> for more
+		/// details. Defaults to '`light</c> .
+		/// </param>
+		/// <param name="deviceScaleFactor">Specify device scale factor (can be thought of as dpr). Defaults to <c>1</c></param>
+		/// <param name="extraHTTPHeaders">
+		/// An object containing additional HTTP headers to be sent with every request. All
+		/// header values must be strings.
+		/// </param>
+		/// <param name="geolocation">
+		/// </param>
+		/// <param name="hasTouch">Specifies if viewport supports touch events. Defaults to false.</param>
+		/// <param name="httpCredentials">Credentials for [HTTP authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication).</param>
+		/// <param name="ignoreHTTPSErrors">Whether to ignore HTTPS errors during navigation. Defaults to <c>false</c></param>
+		/// <param name="isMobile">
+		/// Whether the <c>meta viewport` tag is taken into account and touch events are enabled.
+		/// Defaults to `false</c>  Not supported in Firefox.
+		/// </param>
+		/// <param name="javaScriptEnabled">Whether or not to enable JavaScript in the context. Defaults to <c>true</c></param>
+		/// <param name="locale">
+		/// Specify user locale, for example <c>en-GB`, `de-DE`, etc. Locale will affect `navigator.language`
+		/// value, `Accept-Language</c> request header value as well as number and date formatting
+		/// rules.
+		/// </param>
+		/// <param name="offline">Whether to emulate network being offline. Defaults to <c>false</c></param>
+		/// <param name="permissions">
+		/// A list of permissions to grant to all pages in this context. See <see cref="IBrowserContext.GrantPermissionsAsync"/>
+		/// for more details.
+		/// </param>
+		/// <param name="proxy">
+		/// Network proxy settings to use with this context. Note that browser needs to be launched
+		/// with the global proxy for this option to work. If all contexts override the proxy,
+		/// global proxy will be never used and can be any string, for example <c>launch({ proxy:
+		/// { server: 'per-context' } })</c>
+		/// </param>
+		/// <param name="storageState">
+		/// Populates context with given storage state. This option can be used to initialize
+		/// context with logged-in information obtained via <see cref="IBrowserContext.StorageStateAsync"/>.
+		/// </param>
+		/// <param name="storageStatePath">
+		/// Populates context with given storage state. This option can be used to initialize
+		/// context with logged-in information obtained via <see cref="IBrowserContext.StorageStateAsync"/>.
+		/// Path to the file with saved storage state.
+		/// </param>
+		/// <param name="timezoneId">
+		/// Changes the timezone of the context. See [ICU's metaZones.txt](https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1)
+		/// for a list of supported timezone IDs.
+		/// </param>
+		/// <param name="userAgent">Specific user agent to use in this context.</param>
+		Task<IBrowserContext> NewContextAsync(bool acceptDownloads, bool bypassCSP, ColorScheme colorScheme, decimal deviceScaleFactor, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders, BrowserGeolocation geolocation, bool hasTouch, BrowserHttpCredentials httpCredentials, bool ignoreHTTPSErrors, bool isMobile, bool javaScriptEnabled, string locale, bool offline, string[] permissions, BrowserProxy proxy, string storageState, string storageStatePath, string timezoneId, string userAgent);
+	
 		/// <summary>
-		/// Creates a new browser context. It won't share cookies/cache with other browser contexts.
+		/// <para>
+		/// Creates a new page in a new browser context. Closing this page will close the context
+		/// as well.
+		/// </para>
+		/// <para>
+		/// This is a convenience API that should only be used for the single-page scenarios
+		/// and short snippets. Production code and testing frameworks should explicitly create
+		/// <see cref="IBrowser.NewContextAsync"/> followed by the <see cref="IBrowserContext.NewPageAsync"/>
+		/// to control their exact life times.
+		/// </para>
 		/// </summary>
-		Task<IBrowserContext> NewContextAsync(bool acceptDownloads, bool bypassCSP, ColorScheme colorScheme, decimal deviceScaleFactor, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders, BrowserGeolocation geolocation, bool hasTouch, BrowserHttpCredentials httpCredentials, bool ignoreHTTPSErrors, bool isMobile, bool javaScriptEnabled, string locale, bool offline, string[] permissions, BrowserProxy proxy, BrowserStorageState storageState, string timezoneId, string userAgent);
-		/// <summary>
-		/// Creates a new page in a new browser context. Closing this page will close the context as well.
-		/// This is a convenience API that should only be used for the single-page scenarios and short snippets. Production code and
-		/// testing frameworks should explicitly create <see cref="IBrowser.NewContextAsync"/> followed by the <see cref="IBrowserContext.NewPageAsync"/> to
-		/// control their exact life times.
-		/// </summary>
-		Task<IPage> NewPageAsync(bool acceptDownloads, bool bypassCSP, ColorScheme colorScheme, decimal deviceScaleFactor, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders, BrowserGeolocation geolocation, bool hasTouch, BrowserHttpCredentials httpCredentials, bool ignoreHTTPSErrors, bool isMobile, bool javaScriptEnabled, string locale, bool offline, string[] permissions, BrowserProxy proxy, BrowserStorageState storageState, string timezoneId, string userAgent);
-		/// <summary>
-		/// Returns the browser version.
-		/// </summary>
+		/// <param name="acceptDownloads">
+		/// Whether to automatically download all the attachments. Defaults to <c>false</c>
+		/// where all the downloads are canceled.
+		/// </param>
+		/// <param name="bypassCSP">Toggles bypassing page's Content-Security-Policy.</param>
+		/// <param name="colorScheme">
+		/// Emulates <c>'prefers-colors-scheme'` media feature, supported values are `'light'`,
+		/// `'dark'`, `'no-preference'`. See <see cref="IPage.EmulateMediaAsync"/> for more
+		/// details. Defaults to '`light</c> .
+		/// </param>
+		/// <param name="deviceScaleFactor">Specify device scale factor (can be thought of as dpr). Defaults to <c>1</c></param>
+		/// <param name="extraHTTPHeaders">
+		/// An object containing additional HTTP headers to be sent with every request. All
+		/// header values must be strings.
+		/// </param>
+		/// <param name="geolocation">
+		/// </param>
+		/// <param name="hasTouch">Specifies if viewport supports touch events. Defaults to false.</param>
+		/// <param name="httpCredentials">Credentials for [HTTP authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication).</param>
+		/// <param name="ignoreHTTPSErrors">Whether to ignore HTTPS errors during navigation. Defaults to <c>false</c></param>
+		/// <param name="isMobile">
+		/// Whether the <c>meta viewport` tag is taken into account and touch events are enabled.
+		/// Defaults to `false</c>  Not supported in Firefox.
+		/// </param>
+		/// <param name="javaScriptEnabled">Whether or not to enable JavaScript in the context. Defaults to <c>true</c></param>
+		/// <param name="locale">
+		/// Specify user locale, for example <c>en-GB`, `de-DE`, etc. Locale will affect `navigator.language`
+		/// value, `Accept-Language</c> request header value as well as number and date formatting
+		/// rules.
+		/// </param>
+		/// <param name="offline">Whether to emulate network being offline. Defaults to <c>false</c></param>
+		/// <param name="permissions">
+		/// A list of permissions to grant to all pages in this context. See <see cref="IBrowserContext.GrantPermissionsAsync"/>
+		/// for more details.
+		/// </param>
+		/// <param name="proxy">
+		/// Network proxy settings to use with this context. Note that browser needs to be launched
+		/// with the global proxy for this option to work. If all contexts override the proxy,
+		/// global proxy will be never used and can be any string, for example <c>launch({ proxy:
+		/// { server: 'per-context' } })</c>
+		/// </param>
+		/// <param name="storageState">
+		/// Populates context with given storage state. This option can be used to initialize
+		/// context with logged-in information obtained via <see cref="IBrowserContext.StorageStateAsync"/>.
+		/// </param>
+		/// <param name="storageStatePath">
+		/// Populates context with given storage state. This option can be used to initialize
+		/// context with logged-in information obtained via <see cref="IBrowserContext.StorageStateAsync"/>.
+		/// Path to the file with saved storage state.
+		/// </param>
+		/// <param name="timezoneId">
+		/// Changes the timezone of the context. See [ICU's metaZones.txt](https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1)
+		/// for a list of supported timezone IDs.
+		/// </param>
+		/// <param name="userAgent">Specific user agent to use in this context.</param>
+		Task<IPage> NewPageAsync(bool acceptDownloads, bool bypassCSP, ColorScheme colorScheme, decimal deviceScaleFactor, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders, BrowserGeolocation geolocation, bool hasTouch, BrowserHttpCredentials httpCredentials, bool ignoreHTTPSErrors, bool isMobile, bool javaScriptEnabled, string locale, bool offline, string[] permissions, BrowserProxy proxy, string storageState, string storageStatePath, string timezoneId, string userAgent);
+	
+		/// <summary><para>Returns the browser version.</para></summary>
 		string GetVersion();
 	}
 }

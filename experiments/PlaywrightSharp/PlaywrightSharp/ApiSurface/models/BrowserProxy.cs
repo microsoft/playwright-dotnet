@@ -47,8 +47,11 @@ namespace PlaywrightSharp
     public class BrowserProxy
 	{
 		string Server { get; set; }
+	
 		string Bypass { get; set; }
+	
 		string Username { get; set; }
+	
 		string Password { get; set; }
 	}
 }

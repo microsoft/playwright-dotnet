@@ -45,15 +45,21 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// Playwright module provides a method to launch a browser instance. The following is a typical example of using Playwright
-	/// to drive automation:
+	/// <para>
+	/// Playwright module provides a method to launch a browser instance. The following
+	/// is a typical example of using Playwright to drive automation:
+	/// </para>
 	/// </summary>
 	public partial interface IPlaywright
 	{
 		IBrowserType Chromium { get; set; }
+	
 		object Devices { get; set; }
+	
 		IBrowserType Firefox { get; set; }
+	
 		ISelectors Selectors { get; set; }
+	
 		IBrowserType Webkit { get; set; }
 	}
 }

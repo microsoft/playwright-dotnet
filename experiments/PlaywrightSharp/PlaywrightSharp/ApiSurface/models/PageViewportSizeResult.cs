@@ -47,6 +47,7 @@ namespace PlaywrightSharp
     public class PageViewportSizeResult
 	{
 		int Width { get; set; }
+	
 		int Height { get; set; }
 	}
 }

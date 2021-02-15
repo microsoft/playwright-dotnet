@@ -45,13 +45,18 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// When browser context is created with the `videosPath` option, each page has a video object associated with it.
+	/// <para>
+	/// When browser context is created with the <c>videosPath</c> option, each page has
+	/// a video object associated with it.
+	/// </para>
 	/// </summary>
 	public partial interface IVideo
 	{
 		/// <summary>
-		/// Returns the file system path this video will be recorded to. The video is guaranteed to be written to the filesystem upon
-		/// closing the browser context.
+		/// <para>
+		/// Returns the file system path this video will be recorded to. The video is guaranteed
+		/// to be written to the filesystem upon closing the browser context.
+		/// </para>
 		/// </summary>
 		Task<string> GetPathAsync();
 	}

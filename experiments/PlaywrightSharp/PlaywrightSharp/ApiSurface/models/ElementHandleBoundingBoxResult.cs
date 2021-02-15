@@ -47,8 +47,11 @@ namespace PlaywrightSharp
     public class ElementHandleBoundingBoxResult
 	{
 		decimal X { get; set; }
+	
 		decimal Y { get; set; }
+	
 		decimal Width { get; set; }
+	
 		decimal Height { get; set; }
 	}
 }

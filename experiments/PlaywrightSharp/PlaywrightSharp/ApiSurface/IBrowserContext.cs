@@ -45,133 +45,367 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// <seealso cref="[EventEmitter]"/>
-	/// BrowserContexts provide a way to operate multiple independent browser sessions.
-	/// If a page opens another page, e.g. with a `window.open` call, the popup will belong to the parent page's browser context.
-	/// Playwright allows creation of "incognito" browser contexts with `browser.newContext()` method. "Incognito" browser contexts
-	/// don't write any browsing data to disk.
+	/// <para>BrowserContexts provide a way to operate multiple independent browser sessions.</para>
+	/// <para>
+	/// If a page opens another page, e.g. with a <c>window.open</c> call, the popup will
+	/// belong to the parent page's browser context.
+	/// </para>
+	/// <para>
+	/// Playwright allows creation of "incognito" browser contexts with <c>browser.newContext()</c>
+	/// method. "Incognito" browser contexts don't write any browsing data to disk.
+	/// </para>
 	/// </summary>
 	public partial interface IBrowserContext
 	{
-		event EventHandler<IBrowserContext> Close;
-		event EventHandler<IPage> Page;
 		/// <summary>
-		/// Adds cookies into this browser context. All pages within this context will have these cookies installed. Cookies can be obtained
-		/// via <see cref="IBrowserContext.GetCookiesAsync"/>.
-		/// </summary>
-		Task AddCookiesAsync(BrowserContextCookies[] cookies);
-		/// <summary>
-		/// Adds a script which would be evaluated in one of the following scenarios:
-		/// <list>
-		/// <item><description>Whenever a page is created in the browser context or is navigated.</description></item>
-		/// <item><description>Whenever a child frame is attached or navigated in any page in the browser context. In this case, the script is evaluated in the context of the newly attached frame.</description>
-		/// </item>
+		/// <para>
+		/// Emitted when Browser context gets closed. This might happen because of one of the
+		/// following:
+		/// </para>
+		/// <list type="bullet">
+		/// <item><description>Browser context is closed.</description></item>
+		/// <item><description>Browser application is closed or crashed.</description></item>
+		/// <item><description>The <see cref="IBrowser.CloseAsync"/> method was called.</description></item>
 		/// </list>
-		/// The script is evaluated after the document was created but before any of its scripts were run. This is useful to amend the
-		/// JavaScript environment, e.g. to seed `Math.random`.
-		/// An example of overriding `Math.random` before the page loads:
 		/// </summary>
-		Task AddInitScriptAsync();
+		event EventHandler<IBrowserContext> Close;
+	
 		/// <summary>
-		/// Returns the browser instance of the context. If it was launched as a persistent context null gets returned.
+		/// <para>
+		/// The event is emitted when a new Page is created in the BrowserContext. The page
+		/// may still be loading. The event will also fire for popup pages. See also <see cref="IPage.Popup"/>
+		/// to receive events about popups relevant to a specific page.
+		/// </para>
+		/// <para>
+		/// The earliest moment that page is available is when it has navigated to the initial
+		/// url. For example, when opening a popup with <c>window.open('http://example.com')</c>
+		/// this event will fire when the network request to "http://example.com" is done and
+		/// its response has started loading in the popup.
+		/// </para>
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Use <see cref="IPage.WaitForLoadStateAsync"/> to wait until the page gets to a particular
+		/// state (you should not need it in most cases).
+		/// </para>
+		/// </remarks>
+		event EventHandler<IPage> Page;
+	
+		/// <summary>
+		/// <para>
+		/// Adds cookies into this browser context. All pages within this context will have
+		/// these cookies installed. Cookies can be obtained via <see cref="IBrowserContext.GetCookiesAsync"/>.
+		/// </para>
+		/// </summary>
+		/// <param name="cookies">
+		/// </param>
+		Task AddCookiesAsync(BrowserContextCookies[] cookies);
+	
+		/// <summary>
+		/// <para>Adds a script which would be evaluated in one of the following scenarios:</para>
+		/// <list type="bullet">
+		/// <item><description>Whenever a page is created in the browser context or is navigated.</description></item>
+		/// <item><description>
+		/// Whenever a child frame is attached or navigated in any page in the browser context.
+		/// In this case, the script is evaluated in the context of the newly attached frame.
+		/// </description></item>
+		/// </list>
+		/// <para>
+		/// The script is evaluated after the document was created but before any of its scripts
+		/// were run. This is useful to amend the JavaScript environment, e.g. to seed <c>Math.random</c>
+		/// 
+		/// </para>
+		/// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The order of evaluation of multiple scripts installed via <see cref="IBrowserContext.AddInitScriptAsync"/>
+		/// and <see cref="IPage.AddInitScriptAsync"/> is not defined.
+		/// </para>
+		/// </remarks>
+		/// <param name="aScript">Script to be evaluated in all pages in the browser context.</param>
+		/// <param name="sScript">Script to be evaluated in all pages in the browser context.</param>
+		/// <param name="bScript">Script to be evaluated in all pages in the browser context.</param>
+		Task AddInitScriptAsync(Action aScript, string sScript, BrowserContextScript bScript);
+	
+		/// <summary>
+		/// <para>
+		/// Returns the browser instance of the context. If it was launched as a persistent
+		/// context null gets returned.
+		/// </para>
 		/// </summary>
 		IBrowser GetBrowser();
-		/// <summary>
-		/// Clears context cookies.
-		/// </summary>
+	
+		/// <summary><para>Clears context cookies.</para></summary>
 		Task ClearCookiesAsync();
-		/// <summary>
-		/// Clears all permission overrides for the browser context.
-		/// </summary>
+	
+		/// <summary><para>Clears all permission overrides for the browser context.</para></summary>
 		Task ClearPermissionsAsync();
+	
 		/// <summary>
-		/// Closes the browser context. All the pages that belong to the browser context will be closed.
+		/// <para>
+		/// Closes the browser context. All the pages that belong to the browser context will
+		/// be closed.
+		/// </para>
 		/// </summary>
+		/// <remarks><para>The default browser context cannot be closed.</para></remarks>
 		Task CloseAsync();
+	
 		/// <summary>
-		/// If no URLs are specified, this method returns all cookies. If URLs are specified, only cookies that affect those URLs are
-		/// returned.
+		/// <para>
+		/// If no URLs are specified, this method returns all cookies. If URLs are specified,
+		/// only cookies that affect those URLs are returned.
+		/// </para>
 		/// </summary>
+		/// <param name="urls">Optional list of URLs.</param>
 		Task<BrowserContextCookiesResult[]> GetCookiesAsync(string[] urls);
+	
 		/// <summary>
-		/// The method adds a function called {PARAM} on the `window` object of every frame in every page in the context. When called,
-		/// the function executes {PARAM} and returns a [Promise] which resolves to the return value of {PARAM}. If the {PARAM} returns a [Promise], it will be awaited.
-		/// The first argument of the {PARAM} function contains information about the caller: `{ browserContext: BrowserContext, page:
-		/// Page, frame: Frame }`.
-		/// See <see cref="IPage.ExposeBindingAsync"/> for page-only version.
-		/// An example of exposing page URL to all frames in all pages in the context:
-		/// An example of passing an element handle:
+		/// <para>
+		/// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+		/// of every frame in every page in the context. When called, the function executes
+		/// <paramref name="callback"/> and returns a [Promise] which resolves to the return
+		/// value of <paramref name="callback"/>. If the <paramref name="callback"/> returns
+		/// a [Promise], it will be awaited.
+		/// </para>
+		/// <para>
+		/// The first argument of the <paramref name="callback"/> function contains information
+		/// about the caller: <c>{ browserContext: BrowserContext, page: Page, frame: Frame
+		/// }</c>
+		/// </para>
+		/// <para>See <see cref="IPage.ExposeBindingAsync"/> for page-only version.</para>
+		/// <para>An example of exposing page URL to all frames in all pages in the context:</para>
+		/// <para>An example of passing an element handle:</para>
 		/// </summary>
+		/// <param name="name">Name of the function on the window object.</param>
+		/// <param name="callback">Callback function that will be called in the Playwright's context.</param>
+		/// <param name="handle">
+		/// Whether to pass the argument as a handle, instead of passing by value. When passing
+		/// a handle, only one argument is supported. When passing by value, multiple arguments
+		/// are supported.
+		/// </param>
 		Task ExposeBindingAsync(string name, Action callback, bool handle);
+	
 		/// <summary>
-		/// The method adds a function called {PARAM} on the `window` object of every frame in every page in the context. When called,
-		/// the function executes {PARAM} and returns a [Promise] which resolves to the return value of {PARAM}.
-		/// If the {PARAM} returns a [Promise], it will be awaited.
-		/// See <see cref="IPage.ExposeFunctionAsync"/> for page-only version.
-		/// An example of adding an `md5` function to all pages in the context:
+		/// <para>
+		/// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+		/// of every frame in every page in the context. When called, the function executes
+		/// <paramref name="callback"/> and returns a [Promise] which resolves to the return
+		/// value of <paramref name="callback"/>.
+		/// </para>
+		/// <para>If the <paramref name="callback"/> returns a [Promise], it will be awaited.</para>
+		/// <para>See <see cref="IPage.ExposeFunctionAsync"/> for page-only version.</para>
+		/// <para>An example of adding an <c>md5</c> function to all pages in the context:</para>
 		/// </summary>
+		/// <param name="name">Name of the function on the window object.</param>
+		/// <param name="callback">Callback function that will be called in the Playwright's context.</param>
 		Task ExposeFunctionAsync(string name, Action callback);
+	
 		/// <summary>
-		/// Grants specified permissions to the browser context. Only grants corresponding permissions to the given origin if specified.
+		/// <para>
+		/// Grants specified permissions to the browser context. Only grants corresponding permissions
+		/// to the given origin if specified.
+		/// </para>
 		/// </summary>
+		/// <param name="permissions">
+		/// A permission or an array of permissions to grant. Permissions can be one of the
+		/// following values:
+		/// <list type="bullet">
+		/// <item><description>`'geolocation'`</description></item>
+		/// <item><description>`'midi'`</description></item>
+		/// <item><description>`'midi-sysex'` (system-exclusive midi)</description></item>
+		/// <item><description>`'notifications'`</description></item>
+		/// <item><description>`'push'`</description></item>
+		/// <item><description>`'camera'`</description></item>
+		/// <item><description>`'microphone'`</description></item>
+		/// <item><description>`'background-sync'`</description></item>
+		/// <item><description>`'ambient-light-sensor'`</description></item>
+		/// <item><description>`'accelerometer'`</description></item>
+		/// <item><description>`'gyroscope'`</description></item>
+		/// <item><description>`'magnetometer'`</description></item>
+		/// <item><description>`'accessibility-events'`</description></item>
+		/// <item><description>`'clipboard-read'`</description></item>
+		/// <item><description>`'clipboard-write'`</description></item>
+		/// <item><description>`'payment-handler'`</description></item>
+		/// </list>
+		/// </param>
+		/// <param name="origin">The [origin] to grant permissions to, e.g. "https://example.com".</param>
 		Task GrantPermissionsAsync(string[] permissions, string origin);
-		/// <summary>
-		/// Creates a new page in the browser context.
-		/// </summary>
+	
+		/// <summary><para>Creates a new page in the browser context.</para></summary>
 		Task<IPage> GetNewPageAsync();
+	
 		/// <summary>
-		/// Returns all open pages in the context. Non visible pages, such as `"background_page"`, will not be listed here. You can find
-		/// them using <see cref="IChromiumBrowserContext.BackgroundPages"/>.
+		/// <para>
+		/// Returns all open pages in the context. Non visible pages, such as <c>"background_page"</c>
+		/// will not be listed here. You can find them using <see cref="IChromiumBrowserContext.BackgroundPages"/>.
+		/// </para>
 		/// </summary>
 		dynamic GetPages();
+	
 		/// <summary>
-		/// Routing provides the capability to modify network requests that are made by any page in the browser context. Once route is
-		/// enabled, every request matching the url pattern will stall unless it's continued, fulfilled or aborted.
-		/// An example of a naïve handler that aborts all image requests:
-		/// or the same snippet using a regex pattern instead:
-		/// Page routes (set up with <see cref="IPage.RouteAsync"/>) take precedence over browser context routes when request matches
-		/// both handlers.
+		/// <para>
+		/// Routing provides the capability to modify network requests that are made by any
+		/// page in the browser context. Once route is enabled, every request matching the url
+		/// pattern will stall unless it's continued, fulfilled or aborted.
+		/// </para>
+		/// <para>An example of a naïve handler that aborts all image requests:</para>
+		/// <para>or the same snippet using a regex pattern instead:</para>
+		/// <para>
+		/// Page routes (set up with <see cref="IPage.RouteAsync"/>) take precedence over browser
+		/// context routes when request matches both handlers.
+		/// </para>
 		/// </summary>
+		/// <remarks><para>Enabling routing disables http cache.</para></remarks>
+		/// <param name="sUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="rUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="fUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="handler">handler function to route the request.</param>
 		Task RouteAsync(string sUrl, Regex rUrl, Func<Uri, bool> fUrl, Action<IRoute, IRequest> handler);
+	
 		/// <summary>
-		/// This setting will change the default maximum navigation time for the following methods and related shortcuts:
-		/// <list>
+		/// <para>
+		/// This setting will change the default maximum navigation time for the following methods
+		/// and related shortcuts:
+		/// </para>
+		/// <list type="bullet">
 		/// <item><description><see cref="IPage.GoBackAsync"/></description></item>
 		/// <item><description><see cref="IPage.GoForwardAsync"/></description></item>
 		/// <item><description><see cref="IPage.GotoAsync"/></description></item>
 		/// <item><description><see cref="IPage.ReloadAsync"/></description></item>
 		/// <item><description><see cref="IPage.SetContentAsync"/></description></item>
 		/// <item><description><see cref="IPage.WaitForNavigationAsync"/></description></item>
+		/// </list>
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// <see cref="IPage.SetDefaultNavigationTimeout"/> and <see cref="IPage.SetDefaultTimeout"/>
+		/// take priority over <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>.
+		/// </para>
+		/// </remarks>
+		/// <param name="timeout">Maximum navigation time in milliseconds</param>
 		void SetDefaultNavigationTimeout(int timeout);
+	
 		/// <summary>
-		/// This setting will change the default maximum time for all the methods accepting {PARAM} option.
+		/// <para>
+		/// This setting will change the default maximum time for all the methods accepting
+		/// <paramref name="timeout"/> option.
+		/// </para>
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// <see cref="IPage.SetDefaultNavigationTimeout"/>, <see cref="IPage.SetDefaultTimeout"/>
+		/// and <see cref="IBrowserContext.SetDefaultNavigationTimeout"/> take priority over
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// </para>
+		/// </remarks>
+		/// <param name="timeout">Maximum time in milliseconds</param>
 		void SetDefaultTimeout(int timeout);
+	
 		/// <summary>
-		/// The extra HTTP headers will be sent with every request initiated by any page in the context. These headers are merged with
-		/// page-specific extra HTTP headers set with <see cref="IPage.SetExtraHTTPHeadersAsync"/>. If page overrides a particular header,
-		/// page-specific header value will be used instead of the browser context header value.
+		/// <para>
+		/// The extra HTTP headers will be sent with every request initiated by any page in
+		/// the context. These headers are merged with page-specific extra HTTP headers set
+		/// with <see cref="IPage.SetExtraHTTPHeadersAsync"/>. If page overrides a particular
+		/// header, page-specific header value will be used instead of the browser context header
+		/// value.
+		/// </para>
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// <see cref="IBrowserContext.SetExtraHTTPHeadersAsync"/> does not guarantee the order
+		/// of headers in the outgoing requests.
+		/// </para>
+		/// </remarks>
+		/// <param name="headers">
+		/// An object containing additional HTTP headers to be sent with every request. All
+		/// header values must be strings.
+		/// </param>
 		Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers);
+	
 		/// <summary>
-		/// Sets the context's geolocation. Passing `null` or `undefined` emulates position unavailable.
+		/// <para>
+		/// Sets the context's geolocation. Passing <c>null` or `undefined</c> emulates position
+		/// unavailable.
+		/// </para>
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Consider using <see cref="IBrowserContext.GrantPermissionsAsync"/> to grant permissions
+		/// for the browser context pages to read its geolocation.
+		/// </para>
+		/// </remarks>
+		/// <param name="geolocation">
+		/// </param>
 		Task SetGeolocationAsync(BrowserContextGeolocation geolocation);
+	
+		/// <param name="offline">Whether to emulate network being offline for the browser context.</param>
 		Task SetOfflineAsync(bool offline);
+	
 		/// <summary>
-		/// Returns storage state for this browser context, contains current cookies and local storage snapshot.
+		/// <para>
+		/// Returns storage state for this browser context, contains current cookies and local
+		/// storage snapshot.
+		/// </para>
 		/// </summary>
+		/// <param name="path">
+		/// The file path to save the storage state to. If <paramref name="path"/> is a relative
+		/// path, then it is resolved relative to current working directory. If no path is provided,
+		/// storage state is still returned, but won't be saved to the disk.
+		/// </param>
 		Task<BrowserContextStorageStateResult> StorageStateAsync(string path);
+	
 		/// <summary>
-		/// Removes a route created with <see cref="IBrowserContext.RouteAsync"/>. When {PARAM} is not specified, removes all routes
-		/// for the {PARAM}.
+		/// <para>
+		/// Removes a route created with <see cref="IBrowserContext.RouteAsync"/>. When <paramref
+		/// name="handler"/> is not specified, removes all routes for the <paramref name="url"/>.
+		/// </para>
 		/// </summary>
+		/// <param name="sUrl">
+		/// A glob pattern, regex pattern or predicate receiving [URL] used to register a routing
+		/// with <see cref="IBrowserContext.RouteAsync"/>.
+		/// </param>
+		/// <param name="rUrl">
+		/// A glob pattern, regex pattern or predicate receiving [URL] used to register a routing
+		/// with <see cref="IBrowserContext.RouteAsync"/>.
+		/// </param>
+		/// <param name="fUrl">
+		/// A glob pattern, regex pattern or predicate receiving [URL] used to register a routing
+		/// with <see cref="IBrowserContext.RouteAsync"/>.
+		/// </param>
+		/// <param name="handler">Optional handler function used to register a routing with <see cref="IBrowserContext.RouteAsync"/>.</param>
 		Task UnrouteAsync(string sUrl, Regex rUrl, Func<Uri, bool> fUrl, Action<IRoute, IRequest> handler);
+	
 		/// <summary>
-		/// Waits for event to fire and passes its value into the predicate function. Returns when the predicate returns truthy value.
-		/// Will throw an error if the context closes before the event is fired. Returns the event data value.
+		/// <para>
+		/// Waits for event to fire and passes its value into the predicate function. Returns
+		/// when the predicate returns truthy value. Will throw an error if the context closes
+		/// before the event is fired. Returns the event data value.
+		/// </para>
 		/// </summary>
-		Task<T> WaitForEventAsync<T>(string @event);
+		/// <param name="event">Event name, same one would pass into <c>browserContext.on(event)</c></param>
+		/// <param name="timeout">
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
+		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// </param>
+		Task<T> WaitForEventAsync<T>(string @event, int timeout);
+	
+		/// <summary>
+		/// <para>
+		/// Performs action and waits for a new <see cref="IPage"/> to be created in the context.
+		/// If predicate is provided, it passes <see cref="IPage"/> value into the <c>predicate`
+		/// function and waits for `predicate(event)</c> to return a truthy value. Will throw
+		/// an error if the context closes before new <see cref="IPage"/> is created.
+		/// </para>
+		/// </summary>
+		/// <param name="predicate">
+		/// Receives the <see cref="IPage"/> object and resolves to truthy value when the waiting
+		/// should resolve.
+		/// </param>
+		/// <param name="timeout">
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
+		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// </param>
+		Task<IPage> WaitForPageAsync(Func<IPage, bool> predicate, int timeout);
 	}
 }

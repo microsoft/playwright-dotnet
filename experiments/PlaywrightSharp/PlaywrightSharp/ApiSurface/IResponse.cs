@@ -44,55 +44,56 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-    /// <summary>
-	/// <see cref="IResponse"/> class represents responses which are received by page.
-	/// </summary>
+    /// <summary><para><see cref="IResponse"/> class represents responses which are received by page.</para></summary>
 	public partial interface IResponse
 	{
-		/// <summary>
-		/// Returns the buffer with response body.
-		/// </summary>
+		/// <summary><para>Returns the buffer with response body.</para></summary>
 		Task<byte[]> GetBodyAsync();
-		/// <summary>
-		/// Waits for this response to finish, returns failure error if request failed.
-		/// </summary>
-		Task FinishedAsync();
-		/// <summary>
-		/// Returns the <see cref="IFrame"/> that initiated this response.
-		/// </summary>
+	
+		/// <summary><para>Waits for this response to finish, returns failure error if request failed.</para></summary>
+		Task<string> GetFinishedAsync();
+	
+		/// <summary><para>Returns the <see cref="IFrame"/> that initiated this response.</para></summary>
 		IFrame GetFrame();
+	
 		/// <summary>
-		/// Returns the object with HTTP headers associated with the response. All header names are lower-case.
+		/// <para>
+		/// Returns the object with HTTP headers associated with the response. All header names
+		/// are lower-case.
+		/// </para>
 		/// </summary>
 		IEnumerable<KeyValuePair<string, string>> GetHeaders();
+	
 		/// <summary>
-		/// Returns the JSON representation of response body.
-		/// This method will throw if the response body is not parsable via `JSON.parse`.
+		/// <para>Returns the JSON representation of response body.</para>
+		/// <para>
+		/// This method will throw if the response body is not parsable via <c>JSON.parse</c>
+		/// 
+		/// </para>
 		/// </summary>
 		Task<T> GetJsonAsync<T>();
+	
 		/// <summary>
-		/// Contains a boolean stating whether the response was successful (status in the range 200-299) or not.
+		/// <para>
+		/// Contains a boolean stating whether the response was successful (status in the range
+		/// 200-299) or not.
+		/// </para>
 		/// </summary>
 		bool GetOk();
-		/// <summary>
-		/// Returns the matching <see cref="IRequest"/> object.
-		/// </summary>
+	
+		/// <summary><para>Returns the matching <see cref="IRequest"/> object.</para></summary>
 		IRequest GetRequest();
-		/// <summary>
-		/// Contains the status code of the response (e.g., 200 for a success).
-		/// </summary>
+	
+		/// <summary><para>Contains the status code of the response (e.g., 200 for a success).</para></summary>
 		int GetStatus();
-		/// <summary>
-		/// Contains the status text of the response (e.g. usually an "OK" for a success).
-		/// </summary>
+	
+		/// <summary><para>Contains the status text of the response (e.g. usually an "OK" for a success).</para></summary>
 		string GetStatusText();
-		/// <summary>
-		/// Returns the text representation of response body.
-		/// </summary>
+	
+		/// <summary><para>Returns the text representation of response body.</para></summary>
 		Task<string> GetTextAsync();
-		/// <summary>
-		/// Contains the URL of the response.
-		/// </summary>
+	
+		/// <summary><para>Contains the URL of the response.</para></summary>
 		string GetUrl();
 	}
 }

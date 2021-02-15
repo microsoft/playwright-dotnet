@@ -45,58 +45,145 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// Keyboard provides an api for managing a virtual keyboard. The high level api is <see cref="IKeyboard.TypeAsync"/>, which
-	/// takes raw characters and generates proper keydown, keypress/input, and keyup events on your page.
-	/// For finer control, you can use <see cref="IKeyboard.DownAsync"/>, <see cref="IKeyboard.UpAsync"/>, and 
-	/// <see cref="IKeyboard.InsertTextAsync"/> to manually fire events as if they were generated from a real keyboard.
-	/// An example of holding down `Shift` in order to select and delete some text:
-	/// An example of pressing uppercase `A`
-	/// An example to trigger select-all with the keyboard
+	/// <para>
+	/// Keyboard provides an api for managing a virtual keyboard. The high level api is
+	/// <see cref="IKeyboard.TypeAsync"/>, which takes raw characters and generates proper
+	/// keydown, keypress/input, and keyup events on your page.
+	/// </para>
+	/// <para>
+	/// For finer control, you can use <see cref="IKeyboard.DownAsync"/>, <see cref="IKeyboard.UpAsync"/>,
+	/// and <see cref="IKeyboard.InsertTextAsync"/> to manually fire events as if they were
+	/// generated from a real keyboard.
+	/// </para>
+	/// <para>An example of holding down <c>Shift</c> in order to select and delete some text:</para>
+	/// <para>An example of pressing uppercase `A`</para>
+	/// <para>An example to trigger select-all with the keyboard</para>
 	/// </summary>
 	public partial interface IKeyboard
 	{
 		/// <summary>
-		/// Dispatches a `keydown` event.
-		/// {PARAM} can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a> value
-		/// or a single character to generate the text for. A superset of the {PARAM} values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">here</a>.
+		/// <para>Dispatches a <c>keydown</c> event.</para>
+		/// <para>
+		/// <paramref name="key"/> can specify the intended [keyboardEvent.key](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key)
+		/// value or a single character to generate the text for. A superset of the <paramref
+		/// name="key"/> values can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values).
 		/// Examples of the keys are:
-		/// `F1` - `F12`, `Digit0`- `Digit9`, `KeyA`- `KeyZ`, `Backquote`, `Minus`, `Equal`, `Backslash`, `Backspace`, `Tab`, `Delete`,
-		/// `Escape`, `ArrowDown`, `End`, `Enter`, `Home`, `Insert`, `PageDown`, `PageUp`, `ArrowRight`, `ArrowUp`, etc.
-		/// Following modification shortcuts are also supported: `Shift`, `Control`, `Alt`, `Meta`, `ShiftLeft`.
-		/// Holding down `Shift` will type the text that corresponds to the {PARAM} in the upper case.
-		/// If {PARAM} is a single character, it is case-sensitive, so the values `a` and `A` will generate different respective texts.
-		/// If {PARAM} is a modifier key, `Shift`, `Meta`, `Control`, or `Alt`, subsequent key presses will be sent with that modifier
-		/// active. To release the modifier key, use <see cref="IKeyboard.UpAsync"/>.
-		/// After the key is pressed once, subsequent calls to <see cref="IKeyboard.DownAsync"/> will have <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/repeat">repeat</a> set
-		/// to true. To release the key, use <see cref="IKeyboard.UpAsync"/>.
+		/// </para>
+		/// <para>
+		/// `F <c> - `F12`, `Digit0`- `Digit9`, `KeyA`- `KeyZ`, `Backquote`, `Minus`, `Equal`,
+		/// `Backslash`, `Backspace`, `Tab`, `Delete`, `Escape`, `ArrowDown`, `End`, `Enter`,
+		/// `Home`, `Insert`, `PageDown`, `PageUp`, `ArrowRight`, `ArrowUp</c>  etc.
+		/// </para>
+		/// <para>
+		/// Following modification shortcuts are also supported: <c>Shift`, `Control`, `Alt`,
+		/// `Meta`, `ShiftLeft</c>
+		/// </para>
+		/// <para>
+		/// Holding down <c>Shift</c> will type the text that corresponds to the <paramref name="key"/>
+		/// in the upper case.
+		/// </para>
+		/// <para>
+		/// If <paramref name="key"/> is a single character, it is case-sensitive, so the values
+		/// <c>a` and `A</c> will generate different respective texts.
+		/// </para>
+		/// <para>
+		/// If <paramref name="key"/> is a modifier key, <c>Shift`, `Meta`, `Control`, or `Alt</c>
+		/// subsequent key presses will be sent with that modifier active. To release the modifier
+		/// key, use <see cref="IKeyboard.UpAsync"/>.
+		/// </para>
+		/// <para>
+		/// After the key is pressed once, subsequent calls to <see cref="IKeyboard.DownAsync"/>
+		/// will have [repeat](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/repeat)
+		/// set to true. To release the key, use <see cref="IKeyboard.UpAsync"/>.
+		/// </para>
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Modifier keys DO influence <c>keyboard.down`. Holding down `Shift</c> will type
+		/// the text in upper case.
+		/// </para>
+		/// </remarks>
+		/// <param name="key">
+		/// Name of the key to press or a character to generate, such as <c>ArrowLeft` or `a</c>
+		/// 
+		/// </param>
 		Task DownAsync(string key);
+	
 		/// <summary>
-		/// Dispatches only `input` event, does not emit the `keydown`, `keyup` or `keypress` events.
+		/// <para>
+		/// Dispatches only <c>input` event, does not emit the `keydown`, `keyup` or `keypress</c>
+		/// events.
+		/// </para>
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Modifier keys DO NOT effect <c>keyboard.insertText`. Holding down `Shift</c> will
+		/// not type the text in upper case.
+		/// </para>
+		/// </remarks>
+		/// <param name="text">Sets input to the specified text value.</param>
 		Task InsertTextAsync(string text);
+	
 		/// <summary>
-		/// {PARAM} can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a> value
-		/// or a single character to generate the text for. A superset of the {PARAM} values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">here</a>.
+		/// <para>
+		/// <paramref name="key"/> can specify the intended [keyboardEvent.key](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key)
+		/// value or a single character to generate the text for. A superset of the <paramref
+		/// name="key"/> values can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values).
 		/// Examples of the keys are:
-		/// `F1` - `F12`, `Digit0`- `Digit9`, `KeyA`- `KeyZ`, `Backquote`, `Minus`, `Equal`, `Backslash`, `Backspace`, `Tab`, `Delete`,
-		/// `Escape`, `ArrowDown`, `End`, `Enter`, `Home`, `Insert`, `PageDown`, `PageUp`, `ArrowRight`, `ArrowUp`, etc.
-		/// Following modification shortcuts are also supported: `Shift`, `Control`, `Alt`, `Meta`, `ShiftLeft`.
-		/// Holding down `Shift` will type the text that corresponds to the {PARAM} in the upper case.
-		/// If {PARAM} is a single character, it is case-sensitive, so the values `a` and `A` will generate different respective texts.
-		/// Shortcuts such as `key: "Control+o"` or `key: "Control+Shift+T"` are supported as well. When speficied with the modifier,
-		/// modifier is pressed and being held while the subsequent key is being pressed.
-		/// Shortcut for <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.
+		/// </para>
+		/// <para>
+		/// `F <c> - `F12`, `Digit0`- `Digit9`, `KeyA`- `KeyZ`, `Backquote`, `Minus`, `Equal`,
+		/// `Backslash`, `Backspace`, `Tab`, `Delete`, `Escape`, `ArrowDown`, `End`, `Enter`,
+		/// `Home`, `Insert`, `PageDown`, `PageUp`, `ArrowRight`, `ArrowUp</c>  etc.
+		/// </para>
+		/// <para>
+		/// Following modification shortcuts are also supported: <c>Shift`, `Control`, `Alt`,
+		/// `Meta`, `ShiftLeft</c>
+		/// </para>
+		/// <para>
+		/// Holding down <c>Shift</c> will type the text that corresponds to the <paramref name="key"/>
+		/// in the upper case.
+		/// </para>
+		/// <para>
+		/// If <paramref name="key"/> is a single character, it is case-sensitive, so the values
+		/// <c>a` and `A</c> will generate different respective texts.
+		/// </para>
+		/// <para>
+		/// Shortcuts such as <c>key: "Control+o"` or `key: "Control+Shift+T"</c> are supported
+		/// as well. When speficied with the modifier, modifier is pressed and being held while
+		/// the subsequent key is being pressed.
+		/// </para>
+		/// <para>Shortcut for <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.</para>
 		/// </summary>
+		/// <param name="key">
+		/// Name of the key to press or a character to generate, such as <c>ArrowLeft` or `a</c>
+		/// 
+		/// </param>
+		/// <param name="delay">Time to wait between <c>keydown` and `keyup</c> in milliseconds. Defaults to 0.</param>
 		Task PressAsync(string key, decimal delay);
+	
 		/// <summary>
-		/// Sends a `keydown`, `keypress`/`input`, and `keyup` event for each character in the text.
-		/// To press a special key, like `Control` or `ArrowDown`, use <see cref="IKeyboard.PressAsync"/>.
+		/// <para>
+		/// Sends a <c>keydown`, `keypress`/`input`, and `keyup</c> event for each character
+		/// in the text.
+		/// </para>
+		/// <para>To press a special key, like <c>Control` or `ArrowDown</c>  use <see cref="IKeyboard.PressAsync"/>.</para>
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Modifier keys DO NOT effect <c>keyboard.type`. Holding down `Shift</c> will not
+		/// type the text in upper case.
+		/// </para>
+		/// </remarks>
+		/// <param name="text">A text to type into a focused element.</param>
+		/// <param name="delay">Time to wait between key presses in milliseconds. Defaults to 0.</param>
 		Task TypeAsync(string text, decimal delay);
-		/// <summary>
-		/// Dispatches a `keyup` event.
-		/// </summary>
+	
+		/// <summary><para>Dispatches a <c>keyup</c> event.</para></summary>
+		/// <param name="key">
+		/// Name of the key to press or a character to generate, such as <c>ArrowLeft` or `a</c>
+		/// 
+		/// </param>
 		Task UpAsync(string key);
 	}
 }

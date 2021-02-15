@@ -47,7 +47,9 @@ namespace PlaywrightSharp
     public class BrowserContextGeolocation
 	{
 		decimal Latitude { get; set; }
+	
 		decimal Longitude { get; set; }
+	
 		decimal Accuracy { get; set; }
 	}
 }
