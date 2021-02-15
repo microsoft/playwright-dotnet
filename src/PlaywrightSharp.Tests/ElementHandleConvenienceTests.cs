@@ -4,7 +4,7 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.ElementHandle
+namespace PlaywrightSharp.Tests
 {
     ///<playwright-file>elementhandle-convenience.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]

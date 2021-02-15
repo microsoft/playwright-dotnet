@@ -5,7 +5,7 @@ using PlaywrightSharp.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.BrowserContext
+namespace PlaywrightSharp.Tests
 {
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class BrowserContextCredentialsTests : PlaywrightSharpBrowserBaseTest
