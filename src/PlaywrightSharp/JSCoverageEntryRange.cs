@@ -28,7 +28,7 @@ namespace PlaywrightSharp
                 return false;
             }
 
-            var range = obj as JSCoverageEntryRange;
+            var range = (JSCoverageEntryRange)obj;
 
             return range.StartOffset == StartOffset &&
                    range.EndOffset == EndOffset &&
