@@ -17,7 +17,7 @@ namespace PdfDemo
             await page.GoToAsync("http://www.microsoft.com");
 
             Console.WriteLine("Taking Screenshot");
-            File.WriteAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "microsoft.png"), await page.ScreenshotAsync());
+            await File.WriteAllBytesAsync(Path.Combine(Directory.GetCurrentDirectory(), "microsoft.png"), await page.ScreenshotAsync());
 
             Console.WriteLine("Export completed");
         }
