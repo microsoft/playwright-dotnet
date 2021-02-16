@@ -651,8 +651,9 @@ namespace PlaywrightSharp.Helpers
         /// Determine if the script is a javascript function and not an expression.
         /// </summary>
         /// <param name="script">Script to evaluate.</param>
+        /// <param name="retry">Whether it should retry by wrapping the code in parenthesis.</param>
         /// <returns>Whether the script is a function or not.</returns>
-        public static bool IsJavascriptFunction(this string script)
+        public static bool IsJavascriptFunction(this string script, bool retry = true)
         {
             try
             {
@@ -670,19 +671,12 @@ namespace PlaywrightSharp.Helpers
             }
             catch (ParserException)
             {
-                // Retry using parenthesis
-                var parser = new JavaScriptParser($"({script})");
-                var program = parser.ParseScript();
-
-                if (program.Body.Count > 0)
+                if (retry)
                 {
-                    return
-                        program.Body.Count > 0 &&
-                        program.Body[0] is ExpressionStatement expression &&
-                        expression.Expression.Type == Nodes.FunctionExpression;
+                    return IsJavascriptFunction($"({script})", false);
                 }
 
-                return false;
+                return true;
             }
         }
 
