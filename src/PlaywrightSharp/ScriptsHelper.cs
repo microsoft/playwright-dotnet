@@ -44,7 +44,7 @@ namespace PlaywrightSharp
         {
             var parseEvaluateResult = typeof(ScriptsHelper)
                 .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
-                .FirstOrDefault(m => m.Name == "ParseEvaluateResult" && m.GetGenericArguments().Any());
+                .Single(m => m.Name == "ParseEvaluateResult" && m.GetGenericArguments().Any());
 
             var genericMethod = parseEvaluateResult.MakeGenericMethod(new[] { t });
             return genericMethod.Invoke(null, new object[] { element });
