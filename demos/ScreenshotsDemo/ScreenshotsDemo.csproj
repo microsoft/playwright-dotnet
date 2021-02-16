@@ -6,9 +6,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="PlaywrightSharp" Version="0.162.0" />
     </ItemGroup>
 </Project>

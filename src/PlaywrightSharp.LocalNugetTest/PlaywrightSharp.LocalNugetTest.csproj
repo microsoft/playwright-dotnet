@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
-        <LangVersion>8.0</LangVersion>
         <ReleaseVersion>0.0.0</ReleaseVersion>
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>

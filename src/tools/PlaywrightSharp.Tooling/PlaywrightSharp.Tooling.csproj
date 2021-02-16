@@ -5,8 +5,6 @@
 		<TargetFramework>net5.0</TargetFramework>
 		<CodeAnalysisRuleSet>../../PlaywrightSharp.ruleset</CodeAnalysisRuleSet>
 		<ReleaseVersion>0.0.0</ReleaseVersion>
-	</PropertyGroup>
-	<PropertyGroup>
 		<IsTool>true</IsTool>
 	</PropertyGroup>
 	<Import Project="../../Common/PackageInfo.props" />
