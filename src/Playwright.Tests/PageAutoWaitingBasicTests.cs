@@ -192,9 +192,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoWaitAfterTrue()
         {
-            var messages = new List<string>();
             Server.SetRoute("/empty.html", _ => Task.CompletedTask);
-
             await Page.SetContentAsync($@"<a href=""{ Server.EmptyPage}"" target=target>empty.html</a>");
             await Page.ClickAsync("a", new PageClickOptions { NoWaitAfter = true });
         }
