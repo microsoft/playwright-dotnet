@@ -45,16 +45,14 @@ namespace PlaywrightSharp
     public class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     {
         private readonly FrameChannel _channel;
-        private readonly FrameInitializer _initializer;
         private readonly List<LifecycleEvent> _loadStates = new List<LifecycleEvent>();
 
         internal Frame(IChannelOwner parent, string guid, FrameInitializer initializer) : base(parent, guid)
         {
             _channel = new FrameChannel(guid, parent.Connection, this);
-            _initializer = initializer;
-            Url = _initializer.Url;
-            Name = _initializer.Name;
-            ParentFrame = _initializer.ParentFrame;
+            Url = initializer.Url;
+            Name = initializer.Name;
+            ParentFrame = initializer.ParentFrame;
             _loadStates = initializer.LoadStates;
 
             _channel.LoadState += (sender, e) =>
