@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using PlaywrightSharp.Tooling.Extensions;
 using PlaywrightSharp.Tooling.Models.Api;
 using PlaywrightSharp.Tooling.Models.Mismatch;
@@ -21,12 +22,12 @@ namespace PlaywrightSharp.Tooling
 
         public string AssemblyPath { get; set; }
 
-        public bool Execute()
+        public async Task<bool> ExecuteAsync()
         {
             var assembly = Assembly.LoadFrom(AssemblyPath);
 
             var report = new StringBuilder("<html><body><ul>");
-            string json = File.ReadAllText(Path.Combine(BasePath, "src", "PlaywrightSharp", "runtimes", "api.json"));
+            string json = await File.ReadAllTextAsync(Path.Combine(BasePath, "src", "PlaywrightSharp", "runtimes", "api.json")).ConfigureAwait(false);
             var api = JsonSerializer.Deserialize<PlaywrightEntity[]>(json, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
@@ -37,7 +38,7 @@ namespace PlaywrightSharp.Tooling
             });
 
             string mismatchJsonFile = Path.Combine(BasePath, "src", "PlaywrightSharp", "runtimes", "expected_api_mismatch.json");
-            string mismatchJson = File.ReadAllText(mismatchJsonFile);
+            string mismatchJson = await File.ReadAllTextAsync(mismatchJsonFile).ConfigureAwait(false);
             Mismatch mismatches;
 
             try
@@ -58,19 +59,22 @@ namespace PlaywrightSharp.Tooling
             }
 
             report.Append("</ul></body></html>");
-            File.WriteAllText(
+            await File.WriteAllTextAsync(
                 Path.Combine(BasePath, "src", "PlaywrightSharp", "runtimes", "report.html"),
-                report.ToString());
+                report.ToString()).ConfigureAwait(false);
 
             return true;
         }
 
-        internal static void Run(ApiCheckerOptions o)
-            => new ApiChecker
+        internal static Task RunAsync(ApiCheckerOptions o)
+        {
+            ApiChecker apiChecker = new ApiChecker
             {
                 BasePath = o.BasePath,
                 AssemblyPath = Path.Combine(o.BasePath, "src", "PlaywrightSharp", "bin", "Debug", "net5.0", "PlaywrightSharp.dll"),
-            }.Execute();
+            };
+            return apiChecker.ExecuteAsync();
+        }
 
         private static string TranslateMethodName(string memberName)
             => memberName

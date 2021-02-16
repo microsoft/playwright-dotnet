@@ -32,15 +32,13 @@ namespace PlaywrightSharp.Tooling
 {
     internal static class Program
     {
-        internal static void Main(string[] args)
+        internal static async Task Main(string[] args)
         {
-            Parser.Default.ParseArguments<ScaffoldTestOptions, IdentifyMissingTestsOptions, DownloadDriversOptions, ApiCheckerOptions>(args)
-                .WithParsed<ScaffoldTestOptions>(o => ScaffoldTest.Run(o))
-                .WithParsed<IdentifyMissingTestsOptions>(o => IdentifyMissingTests.Run(o))
-#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
-                .WithParsed<DownloadDriversOptions>(o => DriverDownloader.RunAsync(o).GetAwaiter().GetResult())
-#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
-                .WithParsed<ApiCheckerOptions>(o => ApiChecker.Run(o));
+            ParserResult<object> result = Parser.Default.ParseArguments<ScaffoldTestOptions, IdentifyMissingTestsOptions, DownloadDriversOptions, ApiCheckerOptions>(args);
+            result.WithParsed<ScaffoldTestOptions>(ScaffoldTest.Run);
+            result.WithParsed<IdentifyMissingTestsOptions>(IdentifyMissingTests.Run);
+            await result.WithParsedAsync<DownloadDriversOptions>(DriverDownloader.RunAsync).ConfigureAwait(false);
+            await result.WithParsedAsync<ApiCheckerOptions>(ApiChecker.RunAsync).ConfigureAwait(false);
         }
     }
 }
