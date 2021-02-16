@@ -36,8 +36,8 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
-            var exception = await Assert.ThrowsAsync<TimeoutException>(
-                () => Page.WaitForEventAsync<ResponseEventArgs>(PageEvent.Response, _ => false, 1));
+            await Assert.ThrowsAsync<TimeoutException>(
+                () => Page.WaitForEventAsync(PageEvent.Response, _ => false, 1));
         }
 
         [PlaywrightTest("page-wait-for-response.spec.ts", "should respect default timeout")]
@@ -45,8 +45,8 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldRespectDefaultTimeout()
         {
             Page.DefaultTimeout = 1;
-            var exception = await Assert.ThrowsAsync<TimeoutException>(
-                () => Page.WaitForEventAsync<ResponseEventArgs>(PageEvent.Response, _ => false));
+            await Assert.ThrowsAsync<TimeoutException>(
+                () => Page.WaitForEventAsync(PageEvent.Response, _ => false));
         }
 
         [PlaywrightTest("page-wait-for-response.spec.ts", "should work with predicate")]
@@ -54,7 +54,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkWithPredicate()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var task = Page.WaitForEventAsync<ResponseEventArgs>(PageEvent.Response, e => e.Response.Url == TestConstants.ServerUrl + "/digits/2.png");
+            var task = Page.WaitForEventAsync(PageEvent.Response, e => e.Response.Url == TestConstants.ServerUrl + "/digits/2.png");
             var (responseEvent, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync<string>(@"() => {

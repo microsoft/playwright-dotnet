@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests
                 route.ContinueAsync();
             });
 
-            var response = await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Equal(new[] { 1 }, intercepted.ToArray());
 
             intercepted.Clear();

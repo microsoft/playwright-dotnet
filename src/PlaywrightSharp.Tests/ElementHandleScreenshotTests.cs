@@ -417,7 +417,7 @@ namespace PlaywrightSharp.Tests
                 <div class=""to-screenshot""></div>");
 
             var sizeBefore = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
-            var elementHandle = await page.QuerySelectorAsync("div.to-screenshot");
+            await page.QuerySelectorAsync("div.to-screenshot");
             byte[] screenshot = await page.ScreenshotAsync();
             Assert.NotNull(screenshot);
             Assert.NotEmpty(screenshot);

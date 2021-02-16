@@ -199,7 +199,6 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoWaitAfterTrue()
         {
-            var messages = new List<string>();
             Server.SetRoute("/empty.html", context => Task.CompletedTask);
 
             await Page.SetContentAsync($@"<a href=""{ TestConstants.EmptyPage}"" target=target>empty.html</a>");
