@@ -4,7 +4,6 @@
         <TargetFrameworks>netcoreapp3.1;net5.0;net48</TargetFrameworks>
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
-        <LangVersion>8.0</LangVersion>
         <ReleaseVersion>0.0.0</ReleaseVersion>
     </PropertyGroup>
     <Import Project="../Common/SignAssembly.props" />
