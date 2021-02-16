@@ -184,7 +184,7 @@ namespace PlaywrightSharp.Transport
         {
             if (Objects.TryGetValue(guid, out var channel))
             {
-                return channel as T;
+                return (T)channel;
             }
 
             if (IsClosed)
@@ -194,7 +194,7 @@ namespace PlaywrightSharp.Transport
 
             var tcs = new TaskCompletionSource<IChannelOwner>(TaskCreationOptions.RunContinuationsAsynchronously);
             _waitingForObject.TryAdd(guid, tcs);
-            return await tcs.Task.ConfigureAwait(false) as T;
+            return (T)await tcs.Task.ConfigureAwait(false);
         }
 
         internal void OnObjectCreated(string guid, IChannelOwner result)
