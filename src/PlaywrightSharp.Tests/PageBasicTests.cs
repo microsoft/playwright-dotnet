@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests
         public async Task FramePressShouldWork()
         {
             await Page.SetContentAsync($"<iframe name =inner src=\"{TestConstants.ServerUrl}/input/textarea.html\"></iframe>");
-            var frame = Page.Frames.FirstOrDefault(f => f.Name == "inner");
+            var frame = Page.Frames.Single(f => f.Name == "inner");
             await frame.PressAsync("textarea", "a");
             Assert.Equal("a", await frame.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
         }

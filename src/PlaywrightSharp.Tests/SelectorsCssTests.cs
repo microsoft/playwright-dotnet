@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Tests
             var root2 = await Page.QuerySelectorAsync("css=div div");
             Assert.Equal("Hello from root2", await root2.EvalOnSelectorAsync<string>("css=#target", "e => e.textContent"));
             Assert.Null(await root2.QuerySelectorAsync("css:light=#target"));
-            var root2Shadow = await root2.EvaluateHandleAsync("r => r.shadowRoot") as IElementHandle;
+            var root2Shadow = (IElementHandle)await root2.EvaluateHandleAsync("r => r.shadowRoot");
             Assert.Equal("Hello from root2", await root2Shadow.EvalOnSelectorAsync<string>("css:light=#target", "e => e.textContent"));
             var root3 = (await Page.QuerySelectorAllAsync("css=div div")).ElementAt(1);
             Assert.Equal("Hello from root3", await root3.EvalOnSelectorAsync<string>("text=root3", "e => e.textContent"));
