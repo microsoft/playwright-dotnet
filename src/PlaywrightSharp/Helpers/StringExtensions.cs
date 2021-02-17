@@ -663,7 +663,9 @@ namespace PlaywrightSharp.Helpers
                 if (program.Body.Count > 0)
                 {
                     return
-                        (program.Body[0] is ExpressionStatement expression && expression.Expression.Type == Nodes.ArrowFunctionExpression) ||
+                        (program.Body[0] is ExpressionStatement expression && (
+                            expression.Expression.Type == Nodes.ArrowFunctionExpression ||
+                            expression.Expression.Type == Nodes.FunctionExpression)) ||
                         program.Body[0] is FunctionDeclaration;
                 }
 
