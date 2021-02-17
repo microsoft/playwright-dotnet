@@ -16,7 +16,7 @@ namespace PlaywrightSharp
     {
         private static readonly MethodInfo _parseEvaluateResult = typeof(ScriptsHelper)
             .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
-            .Single(m => m.Name == "ParseEvaluateResult" && m.IsGenericMethod);
+            .Single(m => m.Name == nameof(ParseEvaluateResult) && m.IsGenericMethod);
 
         internal static bool IsPrimitiveValue(Type type)
             => type == typeof(string) ||
