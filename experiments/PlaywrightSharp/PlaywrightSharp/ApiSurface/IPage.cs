@@ -246,7 +246,8 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </remarks>
 		/// <param name="script">Script to be evaluated in all pages in the browser context.</param>
-		Task AddInitScriptAsync(string script);
+		/// <param name="scriptPath">Instead of specifying <paramref name="script"/>, gives the file name to load from.</param>
+		Task AddInitScriptAsync(string script, string scriptPath);
 	
 		/// <summary>
 		/// <para>
@@ -759,19 +760,19 @@ namespace PlaywrightSharp
 		IFrame Frame(string name);
 	
 		/// <summary><para>Returns frame with matching URL.</para></summary>
-		/// <param name="sUrl">
+		/// <param name="urlString">
 		/// A glob pattern, regex pattern or predicate receiving frame's <c>url</c> as a [URL]
 		/// object.
 		/// </param>
-		/// <param name="rUrl">
+		/// <param name="urlRegex">
 		/// A glob pattern, regex pattern or predicate receiving frame's <c>url</c> as a [URL]
 		/// object.
 		/// </param>
-		/// <param name="fUrl">
+		/// <param name="urlFunc">
 		/// A glob pattern, regex pattern or predicate receiving frame's <c>url</c> as a [URL]
 		/// object.
 		/// </param>
-		IFrame FrameByUrl(string sUrl, Regex rUrl, Func<Uri, bool> fUrl);
+		IFrame FrameByUrl(string urlString, Regex urlRegex, Func<Uri, bool> urlFunc);
 	
 		/// <summary><para>An array of all frames attached to the page.</para></summary>
 		dynamic Frames { get; }
@@ -1339,11 +1340,11 @@ namespace PlaywrightSharp
 		/// <para>The handler will only be called for the first url if the response is a redirect.</para>
 		/// <para>Enabling routing disables http cache.</para>
 		/// </remarks>
-		/// <param name="sUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
-		/// <param name="rUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
-		/// <param name="fUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="urlString">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="urlRegex">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="urlFunc">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
 		/// <param name="handler">handler function to route the request.</param>
-		Task RouteAsync(string sUrl, Regex rUrl, Func<Uri, bool> fUrl, Action<IRoute> handler);
+		Task RouteAsync(string urlString, Regex urlRegex, Func<Uri, bool> urlFunc, Action<IRoute> handler);
 	
 		/// <summary><para>Returns the buffer with the captured screenshot.</para></summary>
 		/// <remarks>
@@ -1697,11 +1698,11 @@ namespace PlaywrightSharp
 		/// is not specified, removes all routes for the <paramref name="url"/>.
 		/// </para>
 		/// </summary>
-		/// <param name="sUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
-		/// <param name="rUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
-		/// <param name="fUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="urlString">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="urlRegex">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="urlFunc">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
 		/// <param name="handler">Optional handler function to route the request.</param>
-		Task UnrouteAsync(string sUrl, Regex rUrl, Func<Uri, bool> fUrl, Action<IRoute> handler = null);
+		Task UnrouteAsync(string urlString, Regex urlRegex, Func<Uri, bool> urlFunc, Action<IRoute> handler = null);
 	
 		/// <summary><para>Shortcut for main frame's <see cref="IFrame.Url"/>.</para></summary>
 		string Url { get; }
@@ -1876,15 +1877,15 @@ namespace PlaywrightSharp
 		/// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		/// <param name="sUrl">
+		/// <param name="urlString">
 		/// A glob pattern, regex pattern or predicate receiving [URL] to match while waiting
 		/// for the navigation.
 		/// </param>
-		/// <param name="rUrl">
+		/// <param name="urlRegex">
 		/// A glob pattern, regex pattern or predicate receiving [URL] to match while waiting
 		/// for the navigation.
 		/// </param>
-		/// <param name="fUrl">
+		/// <param name="urlFunc">
 		/// A glob pattern, regex pattern or predicate receiving [URL] to match while waiting
 		/// for the navigation.
 		/// </param>
@@ -1902,7 +1903,7 @@ namespace PlaywrightSharp
 		/// </description></item>
 		/// </list>
 		/// </param>
-		Task<IResponse> WaitForNavigationAsync(int timeout = 0, string sUrl = null, Regex rUrl = null, Func<Uri, bool> fUrl = null, WaitUntil? waitUntil = null);
+		Task<IResponse> WaitForNavigationAsync(int timeout = 0, string urlString = null, Regex urlRegex = null, Func<Uri, bool> urlFunc = null, WaitUntil? waitUntil = null);
 	
 		/// <summary>
 		/// <para>
@@ -1923,26 +1924,26 @@ namespace PlaywrightSharp
 		Task<IPage> WaitForPopupAsync(Func<IPage, bool> predicate = null, int timeout = 0);
 	
 		/// <summary><para>Waits for the matching request and returns it.</para></summary>
-		/// <param name="sUrlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
-		/// <param name="rUrlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
-		/// <param name="fUrlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+		/// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+		/// <param name="urlOrPredicateRegex">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+		/// <param name="urlOrPredicateFunc">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
 		/// <param name="timeout">
 		/// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
 		/// the timeout. The default value can be changed by using the <see cref="IPage.SetDefaultTimeout"/>
 		/// method.
 		/// </param>
-		Task<IRequest> WaitForRequestAsync(string sUrlOrPredicate, Regex rUrlOrPredicate, Func<IRequest, bool> fUrlOrPredicate, int timeout = 0);
+		Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, Regex urlOrPredicateRegex, Func<IRequest, bool> urlOrPredicateFunc, int timeout = 0);
 	
 		/// <summary><para>Returns the matched response.</para></summary>
-		/// <param name="sUrlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
-		/// <param name="rUrlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
-		/// <param name="fUrlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+		/// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+		/// <param name="urlOrPredicateRegex">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+		/// <param name="urlOrPredicateFunc">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
 		/// <param name="timeout">
 		/// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
 		/// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<IResponse> WaitForResponseAsync(string sUrlOrPredicate, Regex rUrlOrPredicate, Func<IResponse, bool> fUrlOrPredicate, int timeout = 0);
+		Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, Regex urlOrPredicateRegex, Func<IResponse, bool> urlOrPredicateFunc, int timeout = 0);
 	
 		/// <summary>
 		/// <para>

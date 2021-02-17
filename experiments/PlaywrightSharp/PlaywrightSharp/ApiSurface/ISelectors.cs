@@ -58,12 +58,13 @@ namespace PlaywrightSharp
 		/// selectors. May only contain `[a-zA-Z0-9_]</c> characters.
 		/// </param>
 		/// <param name="script">Script that evaluates to a selector engine instance.</param>
+		/// <param name="scriptPath">Instead of specifying <paramref name="script"/>, gives the file name to load from.</param>
 		/// <param name="contentScript">
 		/// Whether to run this selector engine in isolated JavaScript environment. This environment
 		/// has access to the same DOM, but not any JavaScript objects from the frame's scripts.
 		/// Defaults to <c>false</c>  Note that running as a content script is not guaranteed
 		/// when this engine is used together with other registered engines.
 		/// </param>
-		Task RegisterAsync(string name, string script, bool? contentScript = null);
+		Task RegisterAsync(string name, string script, string scriptPath, bool? contentScript = null);
 	}
 }

@@ -124,7 +124,8 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </remarks>
 		/// <param name="script">Script to be evaluated in all pages in the browser context.</param>
-		Task AddInitScriptAsync(string script);
+		/// <param name="scriptPath">Instead of specifying <paramref name="script"/>, gives the file name to load from.</param>
+		Task AddInitScriptAsync(string script, string scriptPath);
 	
 		/// <summary>
 		/// <para>
@@ -255,11 +256,11 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </summary>
 		/// <remarks><para>Enabling routing disables http cache.</para></remarks>
-		/// <param name="sUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
-		/// <param name="rUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
-		/// <param name="fUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="urlString">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="urlRegex">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
+		/// <param name="urlFunc">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
 		/// <param name="handler">handler function to route the request.</param>
-		Task RouteAsync(string sUrl, Regex rUrl, Func<Uri, bool> fUrl, Action<IRoute> handler);
+		Task RouteAsync(string urlString, Regex urlRegex, Func<Uri, bool> urlFunc, Action<IRoute> handler);
 	
 		/// <summary>
 		/// <para>
@@ -359,20 +360,20 @@ namespace PlaywrightSharp
 		/// name="handler"/> is not specified, removes all routes for the <paramref name="url"/>.
 		/// </para>
 		/// </summary>
-		/// <param name="sUrl">
+		/// <param name="urlString">
 		/// A glob pattern, regex pattern or predicate receiving [URL] used to register a routing
 		/// with <see cref="IBrowserContext.RouteAsync"/>.
 		/// </param>
-		/// <param name="rUrl">
+		/// <param name="urlRegex">
 		/// A glob pattern, regex pattern or predicate receiving [URL] used to register a routing
 		/// with <see cref="IBrowserContext.RouteAsync"/>.
 		/// </param>
-		/// <param name="fUrl">
+		/// <param name="urlFunc">
 		/// A glob pattern, regex pattern or predicate receiving [URL] used to register a routing
 		/// with <see cref="IBrowserContext.RouteAsync"/>.
 		/// </param>
 		/// <param name="handler">Optional handler function used to register a routing with <see cref="IBrowserContext.RouteAsync"/>.</param>
-		Task UnrouteAsync(string sUrl, Regex rUrl, Func<Uri, bool> fUrl, Action<IRoute> handler = null);
+		Task UnrouteAsync(string urlString, Regex urlRegex, Func<Uri, bool> urlFunc, Action<IRoute> handler = null);
 	
 		/// <summary>
 		/// <para>

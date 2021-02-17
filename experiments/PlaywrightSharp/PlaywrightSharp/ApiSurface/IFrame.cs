@@ -1170,15 +1170,15 @@ namespace PlaywrightSharp
 		/// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		/// <param name="sUrl">
+		/// <param name="urlString">
 		/// URL string, URL regex pattern or predicate receiving [URL] to match while waiting
 		/// for the navigation.
 		/// </param>
-		/// <param name="rUrl">
+		/// <param name="urlRegex">
 		/// URL string, URL regex pattern or predicate receiving [URL] to match while waiting
 		/// for the navigation.
 		/// </param>
-		/// <param name="fUrl">
+		/// <param name="urlFunc">
 		/// URL string, URL regex pattern or predicate receiving [URL] to match while waiting
 		/// for the navigation.
 		/// </param>
@@ -1196,7 +1196,7 @@ namespace PlaywrightSharp
 		/// </description></item>
 		/// </list>
 		/// </param>
-		Task<IResponse> WaitForNavigationAsync(int timeout = 0, string sUrl = null, Regex rUrl = null, Func<Uri, bool> fUrl = null, WaitUntil? waitUntil = null);
+		Task<IResponse> WaitForNavigationAsync(int timeout = 0, string urlString = null, Regex urlRegex = null, Func<Uri, bool> urlFunc = null, WaitUntil? waitUntil = null);
 	
 		/// <summary>
 		/// <para>
