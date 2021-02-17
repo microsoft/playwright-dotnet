@@ -46,5 +46,7 @@ jobs:
       - name: Delete browsers on windows
         if: matrix.os == 'windows-latest'
         run: Remove-Item -path $env:USERPROFILE\AppData\Local\ms-playwright -recurse
+      - name: Download Drivers
+        run: dotnet run -p ./src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj -- download-drivers --basepath .
       - name: Run Tests
         run: dotnet test ./src/PlaywrightSharp.LocalNugetTest/PlaywrightSharp.LocalNugetTest.csproj
