@@ -68,7 +68,7 @@ namespace PlaywrightSharp
 		/// <item><description>The <see cref="IBrowser.CloseAsync"/> method was called.</description></item>
 		/// </list>
 		/// </summary>
-		event EventHandler<IBrowserContext> Close;
+		event EventHandler Close;
 	
 		/// <summary>
 		/// <para>
@@ -123,10 +123,8 @@ namespace PlaywrightSharp
 		/// and <see cref="IPage.AddInitScriptAsync"/> is not defined.
 		/// </para>
 		/// </remarks>
-		/// <param name="aScript">Script to be evaluated in all pages in the browser context.</param>
-		/// <param name="sScript">Script to be evaluated in all pages in the browser context.</param>
-		/// <param name="bScript">Script to be evaluated in all pages in the browser context.</param>
-		Task AddInitScriptAsync(Action aScript, string sScript, BrowserContextScript bScript);
+		/// <param name="script">Script to be evaluated in all pages in the browser context.</param>
+		Task AddInitScriptAsync(string script);
 	
 		/// <summary>
 		/// <para>
@@ -134,7 +132,7 @@ namespace PlaywrightSharp
 		/// context null gets returned.
 		/// </para>
 		/// </summary>
-		IBrowser GetBrowser();
+		IBrowser Browser { get; }
 	
 		/// <summary><para>Clears context cookies.</para></summary>
 		Task ClearCookiesAsync();
@@ -158,7 +156,7 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </summary>
 		/// <param name="urls">Optional list of URLs.</param>
-		Task<BrowserContextCookiesResult[]> GetCookiesAsync(string[] urls);
+		Task<BrowserContextCookiesResult[]> GetCookiesAsync(string[] urls = null);
 	
 		/// <summary>
 		/// <para>
@@ -184,7 +182,7 @@ namespace PlaywrightSharp
 		/// a handle, only one argument is supported. When passing by value, multiple arguments
 		/// are supported.
 		/// </param>
-		Task ExposeBindingAsync(string name, Action callback, bool handle);
+		Task ExposeBindingAsync(string name, Action callback, bool? handle = null);
 	
 		/// <summary>
 		/// <para>
@@ -230,7 +228,7 @@ namespace PlaywrightSharp
 		/// </list>
 		/// </param>
 		/// <param name="origin">The [origin] to grant permissions to, e.g. "https://example.com".</param>
-		Task GrantPermissionsAsync(string[] permissions, string origin);
+		Task GrantPermissionsAsync(string[] permissions, string origin = null);
 	
 		/// <summary><para>Creates a new page in the browser context.</para></summary>
 		Task<IPage> GetNewPageAsync();
@@ -238,10 +236,10 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// Returns all open pages in the context. Non visible pages, such as <c>"background_page"</c>
-		/// will not be listed here. You can find them using <see cref="IChromiumBrowserContext.BackgroundPages"/>.
+		/// will not be listed here.
 		/// </para>
 		/// </summary>
-		dynamic GetPages();
+		dynamic Pages { get; }
 	
 		/// <summary>
 		/// <para>
@@ -261,7 +259,7 @@ namespace PlaywrightSharp
 		/// <param name="rUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
 		/// <param name="fUrl">A glob pattern, regex pattern or predicate receiving [URL] to match while routing.</param>
 		/// <param name="handler">handler function to route the request.</param>
-		Task RouteAsync(string sUrl, Regex rUrl, Func<Uri, bool> fUrl, Action<IRoute, IRequest> handler);
+		Task RouteAsync(string sUrl, Regex rUrl, Func<Uri, bool> fUrl, Action<IRoute> handler);
 	
 		/// <summary>
 		/// <para>
@@ -284,7 +282,7 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </remarks>
 		/// <param name="timeout">Maximum navigation time in milliseconds</param>
-		void SetDefaultNavigationTimeout(int timeout);
+		void SetDefaultNavigationTimeout(int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -300,7 +298,7 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </remarks>
 		/// <param name="timeout">Maximum time in milliseconds</param>
-		void SetDefaultTimeout(int timeout);
+		void SetDefaultTimeout(int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -353,7 +351,7 @@ namespace PlaywrightSharp
 		/// path, then it is resolved relative to current working directory. If no path is provided,
 		/// storage state is still returned, but won't be saved to the disk.
 		/// </param>
-		Task<BrowserContextStorageStateResult> StorageStateAsync(string path);
+		Task<BrowserContextStorageStateResult> StorageStateAsync(string path = null);
 	
 		/// <summary>
 		/// <para>
@@ -374,7 +372,7 @@ namespace PlaywrightSharp
 		/// with <see cref="IBrowserContext.RouteAsync"/>.
 		/// </param>
 		/// <param name="handler">Optional handler function used to register a routing with <see cref="IBrowserContext.RouteAsync"/>.</param>
-		Task UnrouteAsync(string sUrl, Regex rUrl, Func<Uri, bool> fUrl, Action<IRoute, IRequest> handler);
+		Task UnrouteAsync(string sUrl, Regex rUrl, Func<Uri, bool> fUrl, Action<IRoute> handler = null);
 	
 		/// <summary>
 		/// <para>
@@ -388,7 +386,7 @@ namespace PlaywrightSharp
 		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
 		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
-		Task<T> WaitForEventAsync<T>(string @event, int timeout);
+		Task<object> WaitForEventAsync(string @event, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -406,6 +404,6 @@ namespace PlaywrightSharp
 		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
 		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
-		Task<IPage> WaitForPageAsync(Func<IPage, bool> predicate, int timeout);
+		Task<IPage> WaitForPageAsync(Func<IPage, bool> predicate = null, int timeout = 0);
 	}
 }

@@ -46,20 +46,28 @@ namespace PlaywrightSharp
 {
     public class BrowserContextCookiesResult
 	{
+		/// <summary><para></para></summary>
 		string Name { get; set; }
 	
+		/// <summary><para></para></summary>
 		string Value { get; set; }
 	
+		/// <summary><para></para></summary>
 		string Domain { get; set; }
 	
+		/// <summary><para></para></summary>
 		string Path { get; set; }
 	
+		/// <summary><para>Unix time in seconds.</para></summary>
 		decimal Expires { get; set; }
 	
+		/// <summary><para></para></summary>
 		bool HttpOnly { get; set; }
 	
+		/// <summary><para></para></summary>
 		bool Secure { get; set; }
 	
+		/// <summary><para></para></summary>
 		SameSite SameSite { get; set; }
 	}
 }

@@ -46,10 +46,13 @@ namespace PlaywrightSharp
 {
     public class BrowserGeolocation
 	{
+		/// <summary><para>Latitude between -90 and 90.</para></summary>
 		decimal Latitude { get; set; }
 	
+		/// <summary><para>Longitude between -180 and 180.</para></summary>
 		decimal Longitude { get; set; }
 	
+		/// <summary><para>Non-negative accuracy value. Defaults to <c>0</c></para></summary>
 		decimal Accuracy { get; set; }
 	}
 }

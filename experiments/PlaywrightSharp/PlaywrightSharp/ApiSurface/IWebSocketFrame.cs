@@ -54,9 +54,9 @@ namespace PlaywrightSharp
 	public partial interface IWebSocketFrame
 	{
 		/// <summary><para>Returns binary payload.</para></summary>
-		byte[] GetBinary();
+		byte[] Binary { get; }
 	
 		/// <summary><para>Returns text payload.</para></summary>
-		string GetText();
+		string Text { get; }
 	}
 }

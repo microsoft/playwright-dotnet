@@ -59,7 +59,7 @@ namespace PlaywrightSharp
 		/// is terminated.
 		/// </para>
 		/// </summary>
-		event EventHandler<IWorker> Close;
+		event EventHandler Close;
 	
 		/// <summary>
 		/// <para>Returns the return value of <paramref name="expression"/>.</para>
@@ -81,7 +81,7 @@ namespace PlaywrightSharp
 		/// expression.
 		/// </param>
 		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-		Task<T> EvaluateAsync<T>(string expression, object arg);
+		Task<T> EvaluateAsync<T>(string expression, object arg = null);
 	
 		/// <summary>
 		/// <para>Returns the return value of <paramref name="expression"/> as a <see cref="IJSHandle"/>.</para>
@@ -101,15 +101,15 @@ namespace PlaywrightSharp
 		/// expression.
 		/// </param>
 		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-		Task<IJSHandle> EvaluateHandleAsync(string expression, object arg);
+		Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = null);
 	
-		string GetUrl();
+		string Url { get; }
 	
 		/// <summary><para>Performs action and waits for the Worker to close.</para></summary>
 		/// <param name="timeout">
 		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
 		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
-		IWorker WaitForClose(int timeout);
+		IWorker WaitForClose(int timeout = 0);
 	}
 }

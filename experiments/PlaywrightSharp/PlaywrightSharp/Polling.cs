@@ -1,4 +1,6 @@
-﻿namespace PlaywrightSharp
+﻿using System.Collections.Generic;
+
+namespace PlaywrightSharp
 {
     public class Polling
     {

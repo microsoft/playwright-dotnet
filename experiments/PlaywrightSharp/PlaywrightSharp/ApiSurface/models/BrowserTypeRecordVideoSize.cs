@@ -44,24 +44,12 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-    public class BrowserStorageStateCookies
+    public class BrowserTypeRecordVideoSize
 	{
-		string Name { get; set; }
+		/// <summary><para>Video frame width.</para></summary>
+		int Width { get; set; }
 	
-		string Value { get; set; }
-	
-		string Url { get; set; }
-	
-		string Domain { get; set; }
-	
-		string Path { get; set; }
-	
-		decimal Expires { get; set; }
-	
-		bool HttpOnly { get; set; }
-	
-		bool Secure { get; set; }
-	
-		SameSite SameSite { get; set; }
+		/// <summary><para>Video frame height.</para></summary>
+		int Height { get; set; }
 	}
 }

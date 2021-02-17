@@ -85,25 +85,25 @@ namespace PlaywrightSharp
 		/// </para>
 		/// <para>Example of logging of all the failed requests:</para>
 		/// </summary>
-		string GetFailure();
+		string Failure { get; }
 	
 		/// <summary><para>Returns the <see cref="IFrame"/> that initiated this request.</para></summary>
-		IFrame GetFrame();
+		IFrame Frame { get; }
 	
 		/// <summary><para>An object with HTTP headers associated with the request. All header names are lower-case.</para></summary>
-		IEnumerable<KeyValuePair<string, string>> GetHeaders();
+		IEnumerable<KeyValuePair<string, string>> Headers { get; }
 	
 		/// <summary><para>Whether this request is driving frame's navigation.</para></summary>
 		bool IsNavigationRequest();
 	
 		/// <summary><para>Request's method (GET, POST, etc.)</para></summary>
-		string GetMethod();
+		string Method { get; }
 	
 		/// <summary><para>Request's post body, if any.</para></summary>
-		string GetPostData();
+		string PostData { get; }
 	
 		/// <summary><para>Request's post body in a binary form, if any.</para></summary>
-		byte[] GetPostDataBuffer();
+		byte[] PostDataBuffer { get; }
 	
 		/// <summary>
 		/// <para>Request that was redirected by the server to this one, if any.</para>
@@ -119,13 +119,13 @@ namespace PlaywrightSharp
 		/// </para>
 		/// <para>If the website <c>https://google.com</c> has no redirects:</para>
 		/// </summary>
-		IRequest GetRedirectedFrom();
+		IRequest RedirectedFrom { get; }
 	
 		/// <summary>
 		/// <para>New request issued by the browser if the server responded with redirect.</para>
 		/// <para>This method is the opposite of <see cref="IRequest.RedirectedFrom"/>:</para>
 		/// </summary>
-		IRequest GetRedirectedTo();
+		IRequest RedirectedTo { get; }
 	
 		/// <summary>
 		/// <para>
@@ -135,7 +135,7 @@ namespace PlaywrightSharp
 		/// `manifest`, `other</c>
 		/// </para>
 		/// </summary>
-		string GetResourceType();
+		string ResourceType { get; }
 	
 		/// <summary>
 		/// <para>
@@ -152,9 +152,9 @@ namespace PlaywrightSharp
 		/// finishes. Find more information at [Resource Timing API](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceResourceTiming).
 		/// </para>
 		/// </summary>
-		RequestTimingResult GetTiming();
+		RequestTimingResult Timing { get; }
 	
 		/// <summary><para>URL of the request.</para></summary>
-		string GetUrl();
+		string Url { get; }
 	}
 }

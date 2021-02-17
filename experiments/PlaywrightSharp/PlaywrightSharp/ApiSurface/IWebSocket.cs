@@ -48,13 +48,13 @@ namespace PlaywrightSharp
 	public partial interface IWebSocket
 	{
 		/// <summary><para>Fired when the websocket closes.</para></summary>
-		event EventHandler<IWebSocket> Close;
+		event EventHandler Close;
 	
 		/// <summary><para>Fired when the websocket recieves a frame.</para></summary>
-		event EventHandler<FrameReceivedPayload> FrameReceived;
+		event EventHandler<IWebSocketFrame> FrameReceived;
 	
 		/// <summary><para>Fired when the websocket sends a frame.</para></summary>
-		event EventHandler<FrameSentPayload> FrameSent;
+		event EventHandler<IWebSocketFrame> FrameSent;
 	
 		/// <summary><para>Fired when the websocket has an error.</para></summary>
 		event EventHandler<String> SocketError;
@@ -63,7 +63,7 @@ namespace PlaywrightSharp
 		bool IsClosed();
 	
 		/// <summary><para>Contains the URL of the WebSocket.</para></summary>
-		string GetUrl();
+		string Url { get; }
 	
 		/// <summary>
 		/// <para>
@@ -77,7 +77,7 @@ namespace PlaywrightSharp
 		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
 		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
-		Task<T> WaitForEventAsync<T>(string @event, int timeout);
+		Task<object> WaitForEventAsync(string @event, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -95,7 +95,7 @@ namespace PlaywrightSharp
 		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
 		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
-		IWebSocketFrame WaitForFrameReceived(Func<IWebSocketFrame, bool> predicate, int timeout);
+		IWebSocketFrame WaitForFrameReceived(Func<IWebSocketFrame, bool> predicate = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -113,6 +113,6 @@ namespace PlaywrightSharp
 		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
 		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
-		IWebSocketFrame WaitForFrameSent(Func<IWebSocketFrame, bool> predicate, int timeout);
+		IWebSocketFrame WaitForFrameSent(Func<IWebSocketFrame, bool> predicate = null, int timeout = 0);
 	}
 }

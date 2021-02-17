@@ -46,12 +46,16 @@ namespace PlaywrightSharp
 {
     public class ElementHandleBoundingBoxResult
 	{
+		/// <summary><para>the x coordinate of the element in pixels.</para></summary>
 		decimal X { get; set; }
 	
+		/// <summary><para>the y coordinate of the element in pixels.</para></summary>
 		decimal Y { get; set; }
 	
+		/// <summary><para>the width of the element in pixels.</para></summary>
 		decimal Width { get; set; }
 	
+		/// <summary><para>the height of the element in pixels.</para></summary>
 		decimal Height { get; set; }
 	}
 }

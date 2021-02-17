@@ -67,7 +67,7 @@ namespace PlaywrightSharp
 		/// an instance of <see cref="IElementHandle"/>.
 		/// </para>
 		/// </summary>
-		IElementHandle GetAsElement();
+		IElementHandle AsElement { get; }
 	
 		/// <summary><para>The <c>jsHandle.dispose</c> method stops referencing the element handle.</para></summary>
 		Task DisposeAsync();
@@ -87,7 +87,7 @@ namespace PlaywrightSharp
 		/// expression.
 		/// </param>
 		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-		Task<T> EvaluateAsync<T>(string expression, object arg);
+		Task<T> EvaluateAsync<T>(string expression, object arg = null);
 	
 		/// <summary>
 		/// <para>Returns the return value of <paramref name="expression"/> as a <see cref="IJSHandle"/>.</para>
@@ -109,7 +109,7 @@ namespace PlaywrightSharp
 		/// expression.
 		/// </param>
 		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-		Task<IJSHandle> EvaluateHandleAsync(string expression, object arg);
+		Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = null);
 	
 		/// <summary>
 		/// <para>

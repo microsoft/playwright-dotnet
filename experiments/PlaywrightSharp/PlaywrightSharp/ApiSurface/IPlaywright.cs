@@ -52,14 +52,31 @@ namespace PlaywrightSharp
 	/// </summary>
 	public partial interface IPlaywright
 	{
+		/// <summary>
+		/// <para>
+		/// This object can be used to launch or connect to Chromium, returning instances of
+		/// [ChromiumBrowser].
+		/// </para>
+		/// </summary>
 		IBrowserType Chromium { get; set; }
 	
-		object Devices { get; set; }
-	
+		/// <summary>
+		/// <para>
+		/// This object can be used to launch or connect to Firefox, returning instances of
+		/// [FirefoxBrowser].
+		/// </para>
+		/// </summary>
 		IBrowserType Firefox { get; set; }
 	
+		/// <summary>
+		/// <para>
+		/// Selectors can be used to install custom selector engines. See [Working with selectors](./selectors.md)
+		/// for more information.
+		/// </para>
+		/// </summary>
 		ISelectors Selectors { get; set; }
 	
+		/// <summary><para>This object can be used to launch or connect to WebKit, returning instances of [WebKitBrowser].</para></summary>
 		IBrowserType Webkit { get; set; }
 	}
 }

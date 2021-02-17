@@ -66,16 +66,16 @@ namespace PlaywrightSharp
 		/// A text to enter in prompt. Does not cause any effects if the dialog's <c>type</c>
 		/// is not prompt. Optional.
 		/// </param>
-		Task AcceptAsync(string promptText);
+		Task AcceptAsync(string promptText = null);
 	
 		/// <summary><para>If dialog is prompt, returns default prompt value. Otherwise, returns empty string.</para></summary>
-		string GetDefaultValue();
+		string DefaultValue { get; }
 	
 		/// <summary><para>Returns when the dialog has been dismissed.</para></summary>
 		Task DismissAsync();
 	
 		/// <summary><para>A message displayed in the dialog.</para></summary>
-		string GetMessage();
+		string Message { get; }
 	
 		/// <summary>
 		/// <para>
@@ -83,6 +83,6 @@ namespace PlaywrightSharp
 		/// 
 		/// </para>
 		/// </summary>
-		string GetType();
+		string Type { get; }
 	}
 }

@@ -46,8 +46,10 @@ namespace PlaywrightSharp
 {
     public class PagePosition
 	{
+		/// <summary><para></para></summary>
 		decimal X { get; set; }
 	
+		/// <summary><para></para></summary>
 		decimal Y { get; set; }
 	}
 }

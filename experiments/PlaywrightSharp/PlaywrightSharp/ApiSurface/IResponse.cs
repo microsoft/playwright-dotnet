@@ -54,7 +54,7 @@ namespace PlaywrightSharp
 		Task<string> GetFinishedAsync();
 	
 		/// <summary><para>Returns the <see cref="IFrame"/> that initiated this response.</para></summary>
-		IFrame GetFrame();
+		IFrame Frame { get; }
 	
 		/// <summary>
 		/// <para>
@@ -62,7 +62,7 @@ namespace PlaywrightSharp
 		/// are lower-case.
 		/// </para>
 		/// </summary>
-		IEnumerable<KeyValuePair<string, string>> GetHeaders();
+		IEnumerable<KeyValuePair<string, string>> Headers { get; }
 	
 		/// <summary>
 		/// <para>Returns the JSON representation of response body.</para>
@@ -79,21 +79,21 @@ namespace PlaywrightSharp
 		/// 200-299) or not.
 		/// </para>
 		/// </summary>
-		bool GetOk();
+		bool Ok { get; }
 	
 		/// <summary><para>Returns the matching <see cref="IRequest"/> object.</para></summary>
-		IRequest GetRequest();
+		IRequest Request { get; }
 	
 		/// <summary><para>Contains the status code of the response (e.g., 200 for a success).</para></summary>
-		int GetStatus();
+		int Status { get; }
 	
 		/// <summary><para>Contains the status text of the response (e.g. usually an "OK" for a success).</para></summary>
-		string GetStatusText();
+		string StatusText { get; }
 	
 		/// <summary><para>Returns the text representation of response body.</para></summary>
 		Task<string> GetTextAsync();
 	
 		/// <summary><para>Contains the URL of the response.</para></summary>
-		string GetUrl();
+		string Url { get; }
 	}
 }

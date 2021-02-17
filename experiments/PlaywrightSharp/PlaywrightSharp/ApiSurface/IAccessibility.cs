@@ -85,6 +85,6 @@ namespace PlaywrightSharp
 		/// </remarks>
 		/// <param name="interestingOnly">Prune uninteresting nodes from the tree. Defaults to <c>true</c></param>
 		/// <param name="root">The root DOM element for the snapshot. Defaults to the whole page.</param>
-		Task<string> SnapshotAsync(bool interestingOnly, IElementHandle root);
+		Task<string> SnapshotAsync(bool? interestingOnly = null, IElementHandle root = null);
 	}
 }

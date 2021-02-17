@@ -85,14 +85,14 @@ namespace PlaywrightSharp
 		/// <item><description>`'failed'` - A generic failure occurred.</description></item>
 		/// </list>
 		/// </param>
-		Task AbortAsync(string errorCode);
+		Task AbortAsync(string errorCode = null);
 	
 		/// <summary><para>Continues route's request with optional overrides.</para></summary>
 		/// <param name="headers">If set changes the request HTTP headers. Header values will be converted to a string.</param>
 		/// <param name="method">If set changes the request method (e.g. GET or POST)</param>
 		/// <param name="postData">If set changes the post data of request</param>
 		/// <param name="url">If set changes the request URL. New URL must have same protocol as original one.</param>
-		Task resume(IEnumerable<KeyValuePair<string, string>> headers, string method, byte[] postData, string url);
+		Task resume(IEnumerable<KeyValuePair<string, string>> headers = null, string method = null, byte[] postData = null, string url = null);
 	
 		/// <summary>
 		/// <para>Fulfills route's request with given response.</para>
@@ -109,9 +109,9 @@ namespace PlaywrightSharp
 		/// directory.
 		/// </param>
 		/// <param name="status">Response status code, defaults to <c>200</c></param>
-		Task FulfillAsync(string body, byte[] bodyBytes, string contentType, IEnumerable<KeyValuePair<string, string>> headers, string path, int status);
+		Task FulfillAsync(string body = null, byte[] bodyBytes = null, string contentType = null, IEnumerable<KeyValuePair<string, string>> headers = null, string path = null, int? status = null);
 	
 		/// <summary><para>A request to be routed.</para></summary>
-		IRequest GetRequest();
+		IRequest Request { get; }
 	}
 }

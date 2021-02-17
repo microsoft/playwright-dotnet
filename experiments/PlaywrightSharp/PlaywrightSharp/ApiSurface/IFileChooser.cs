@@ -53,13 +53,13 @@ namespace PlaywrightSharp
 	public partial interface IFileChooser
 	{
 		/// <summary><para>Returns input element associated with this file chooser.</para></summary>
-		IElementHandle GetElement();
+		IElementHandle Element { get; }
 	
 		/// <summary><para>Returns whether this file chooser accepts multiple files.</para></summary>
 		bool IsMultiple();
 	
 		/// <summary><para>Returns page this file chooser belongs to.</para></summary>
-		IPage GetPage();
+		IPage Page { get; }
 	
 		/// <summary>
 		/// <para>
@@ -81,6 +81,6 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task SetFilesAsync(string[] files, bool noWaitAfter, int timeout);
+		Task SetFilesAsync(string[] files, bool? noWaitAfter = null, int timeout = 0);
 	}
 }

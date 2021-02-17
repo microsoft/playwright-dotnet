@@ -6,4 +6,8 @@
     <Company>Microsoft</Company>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>./Microsoft.PlaywrightSharp.xml</DocumentationFile>
+  </PropertyGroup>
+
 </Project>

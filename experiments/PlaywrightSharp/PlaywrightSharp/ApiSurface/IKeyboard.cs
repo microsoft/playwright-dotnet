@@ -160,7 +160,7 @@ namespace PlaywrightSharp
 		/// 
 		/// </param>
 		/// <param name="delay">Time to wait between <c>keydown` and `keyup</c> in milliseconds. Defaults to 0.</param>
-		Task PressAsync(string key, decimal delay);
+		Task PressAsync(string key, decimal? delay = null);
 	
 		/// <summary>
 		/// <para>
@@ -177,7 +177,7 @@ namespace PlaywrightSharp
 		/// </remarks>
 		/// <param name="text">A text to type into a focused element.</param>
 		/// <param name="delay">Time to wait between key presses in milliseconds. Defaults to 0.</param>
-		Task TypeAsync(string text, decimal delay);
+		Task TypeAsync(string text, decimal? delay = null);
 	
 		/// <summary><para>Dispatches a <c>keyup</c> event.</para></summary>
 		/// <param name="key">

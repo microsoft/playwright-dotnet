@@ -57,12 +57,13 @@ namespace PlaywrightSharp
 		/// Name that is used in selectors as a prefix, e.g. <c>{name: 'foo'}` enables `foo=myselectorbody`
 		/// selectors. May only contain `[a-zA-Z0-9_]</c> characters.
 		/// </param>
+		/// <param name="script">Script that evaluates to a selector engine instance.</param>
 		/// <param name="contentScript">
 		/// Whether to run this selector engine in isolated JavaScript environment. This environment
 		/// has access to the same DOM, but not any JavaScript objects from the frame's scripts.
 		/// Defaults to <c>false</c>  Note that running as a content script is not guaranteed
 		/// when this engine is used together with other registered engines.
 		/// </param>
-		Task RegisterAsync(string name, bool contentScript);
+		Task RegisterAsync(string name, string script, bool? contentScript = null);
 	}
 }

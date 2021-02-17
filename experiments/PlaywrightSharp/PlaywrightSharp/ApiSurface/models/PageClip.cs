@@ -46,12 +46,16 @@ namespace PlaywrightSharp
 {
     public class PageClip
 	{
+		/// <summary><para>x-coordinate of top-left corner of clip area</para></summary>
 		decimal X { get; set; }
 	
+		/// <summary><para>y-coordinate of top-left corner of clip area</para></summary>
 		decimal Y { get; set; }
 	
+		/// <summary><para>width of clipping area</para></summary>
 		decimal Width { get; set; }
 	
+		/// <summary><para>height of clipping area</para></summary>
 		decimal Height { get; set; }
 	}
 }

@@ -54,7 +54,7 @@ namespace PlaywrightSharp
 	public partial interface IBrowserType
 	{
 		/// <summary><para>A path where Playwright expects to find a bundled browser executable.</para></summary>
-		string GetExecutablePath();
+		string ExecutablePath { get; }
 	
 		/// <summary>
 		/// <para>Returns the browser instance.</para>
@@ -63,10 +63,10 @@ namespace PlaywrightSharp
 		/// from default arguments:
 		/// </para>
 		/// <para>
-		/// > **Chromium-only** Playwright can also be used to control the Chrome browser, but
-		/// it works best with the version of Chromium it is bundled with. There is no guarantee
-		/// it will work with any other version. Use <paramref name="executablePath"/> option
-		/// with extreme caution.
+		/// > **Chromium-only** Playwright can also be used to control the Google Chrome or
+		/// Microsoft Edge browsers, but it works best with the version of Chromium it is bundled
+		/// with. There is no guarantee it will work with any other version. Use <paramref name="executablePath"/>
+		/// option with extreme caution.
 		/// </para>
 		/// <para>></para>
 		/// <para>
@@ -76,13 +76,9 @@ namespace PlaywrightSharp
 		/// </para>
 		/// <para>></para>
 		/// <para>
-		/// > In <see cref="IBrowserType.LaunchAsync"/> above, any mention of Chromium also
-		/// applies to Chrome.
-		/// </para>
-		/// <para>></para>
-		/// <para>
-		/// > See [`this article`](https://www.howtogeek.com/202825/what%E2%80%99s-the-difference-between-chromium-and-chrome/)
-		/// for a description of the differences between Chromium and Chrome. [`This article`](https://chromium.googlesource.com/chromium/src/+/lkgr/docs/chromium_browser_vs_google_chrome.md)
+		/// > Stock browsers like Google Chrome and Microsoft Edge are suitable for tests that
+		/// require proprietary media codecs for video playback. See [this article](https://www.howtogeek.com/202825/what%E2%80%99s-the-difference-between-chromium-and-chrome/)
+		/// for other differences between Chromium and Chrome. [This article](https://chromium.googlesource.com/chromium/src/+/lkgr/docs/chromium_browser_vs_google_chrome.md)
 		/// describes some differences for Linux users.
 		/// </para>
 		/// </summary>
@@ -138,7 +134,7 @@ namespace PlaywrightSharp
 		/// Maximum time in milliseconds to wait for the browser instance to start. Defaults
 		/// to <c>30000` (30 seconds). Pass `0</c> to disable timeout.
 		/// </param>
-		Task<IBrowser> LaunchAsync(string[] args, bool chromiumSandbox, bool devtools, string downloadsPath, IEnumerable<KeyValuePair<string, string>> env, string executablePath, IEnumerable<KeyValuePair<string, object>> firefoxUserPrefs, bool handleSIGHUP, bool handleSIGINT, bool handleSIGTERM, bool headless, bool ignoreAllDefaultArgs, string[] ignoreDefaultArgs, BrowserTypeProxy proxy, decimal slowMo, int timeout);
+		Task<IBrowser> LaunchAsync(string[] args = null, bool? chromiumSandbox = null, bool? devtools = null, string downloadsPath = null, IEnumerable<KeyValuePair<string, string>> env = null, string executablePath = null, IEnumerable<KeyValuePair<string, object>> firefoxUserPrefs = null, bool? handleSIGHUP = null, bool? handleSIGINT = null, bool? handleSIGTERM = null, bool? headless = null, bool? ignoreAllDefaultArgs = null, string[] ignoreDefaultArgs = null, BrowserTypeProxy proxy = null, decimal? slowMo = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>Returns the persistent browser context instance.</para>
@@ -233,6 +229,18 @@ namespace PlaywrightSharp
 		/// for more details.
 		/// </param>
 		/// <param name="proxy">Network proxy settings.</param>
+		/// <param name="recordHarOmitContent">
+		/// Optional setting to control whether to omit request content from the HAR. Defaults
+		/// to <c>false</c>
+		/// </param>
+		/// <param name="recordHarPath">Path on the filesystem to write the HAR file to.</param>
+		/// <param name="recordVideoDir">Path to the directory to put videos into.</param>
+		/// <param name="recordVideoSize">
+		/// Dimensions of the recorded videos. If not specified the size will be equal to <c>viewport`
+		/// scaled down to fit into 800x800. If `viewport</c> is not configured explicitly the
+		/// video size defaults to 800x450. Actual picture of each page will be scaled down
+		/// if necessary to fit the specified size.
+		/// </param>
 		/// <param name="slowMo">
 		/// Slows down Playwright operations by the specified amount of milliseconds. Useful
 		/// so that you can see what is going on. Defaults to 0.
@@ -246,7 +254,7 @@ namespace PlaywrightSharp
 		/// for a list of supported timezone IDs.
 		/// </param>
 		/// <param name="userAgent">Specific user agent to use in this context.</param>
-		Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, bool acceptDownloads, string[] args, bool bypassCSP, bool chromiumSandbox, ColorScheme colorScheme, decimal deviceScaleFactor, bool devtools, string downloadsPath, IEnumerable<KeyValuePair<string, string>> env, string executablePath, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders, BrowserTypeGeolocation geolocation, bool handleSIGHUP, bool handleSIGINT, bool handleSIGTERM, bool hasTouch, bool headless, BrowserTypeHttpCredentials httpCredentials, bool ignoreAllDefaultArgs, string[] ignoreDefaultArgs, bool ignoreHTTPSErrors, bool isMobile, bool javaScriptEnabled, string locale, bool offline, string[] permissions, BrowserTypeProxy proxy, decimal slowMo, int timeout, string timezoneId, string userAgent);
+		Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, bool? acceptDownloads = null, string[] args = null, bool? bypassCSP = null, bool? chromiumSandbox = null, ColorScheme? colorScheme = null, decimal? deviceScaleFactor = null, bool? devtools = null, string downloadsPath = null, IEnumerable<KeyValuePair<string, string>> env = null, string executablePath = null, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null, BrowserTypeGeolocation geolocation = null, bool? handleSIGHUP = null, bool? handleSIGINT = null, bool? handleSIGTERM = null, bool? hasTouch = null, bool? headless = null, BrowserTypeHttpCredentials httpCredentials = null, bool? ignoreAllDefaultArgs = null, string[] ignoreDefaultArgs = null, bool? ignoreHTTPSErrors = null, bool? isMobile = null, bool? javaScriptEnabled = null, string locale = null, bool? offline = null, string[] permissions = null, BrowserTypeProxy proxy = null, bool? recordHarOmitContent = null, string recordHarPath = null, string recordVideoDir = null, BrowserTypeRecordVideoSize recordVideoSize = null, decimal? slowMo = null, int timeout = 0, string timezoneId = null, string userAgent = null);
 	
 		/// <summary>
 		/// <para>
@@ -254,6 +262,6 @@ namespace PlaywrightSharp
 		/// 
 		/// </para>
 		/// </summary>
-		string GetName();
+		string Name { get; }
 	}
 }

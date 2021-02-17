@@ -46,22 +46,31 @@ namespace PlaywrightSharp
 {
     public class BrowserContextCookies
 	{
+		/// <summary><para></para></summary>
 		string Name { get; set; }
 	
+		/// <summary><para></para></summary>
 		string Value { get; set; }
 	
+		/// <summary><para>either url or domain / path are required. Optional.</para></summary>
 		string Url { get; set; }
 	
+		/// <summary><para>either url or domain / path are required Optional.</para></summary>
 		string Domain { get; set; }
 	
+		/// <summary><para>either url or domain / path are required Optional.</para></summary>
 		string Path { get; set; }
 	
+		/// <summary><para>Unix time in seconds. Optional.</para></summary>
 		decimal Expires { get; set; }
 	
+		/// <summary><para>Optional.</para></summary>
 		bool HttpOnly { get; set; }
 	
+		/// <summary><para>Optional.</para></summary>
 		bool Secure { get; set; }
 	
+		/// <summary><para>Optional.</para></summary>
 		SameSite SameSite { get; set; }
 	}
 }

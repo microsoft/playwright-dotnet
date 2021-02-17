@@ -46,8 +46,10 @@ namespace PlaywrightSharp
 {
     public class PageViewportSizeResult
 	{
+		/// <summary><para>page width in pixels.</para></summary>
 		int Width { get; set; }
 	
+		/// <summary><para>page height in pixels.</para></summary>
 		int Height { get; set; }
 	}
 }

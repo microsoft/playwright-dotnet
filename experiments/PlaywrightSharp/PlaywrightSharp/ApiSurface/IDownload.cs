@@ -89,9 +89,9 @@ namespace PlaywrightSharp
 		/// Different browsers can use different logic for computing it.
 		/// </para>
 		/// </summary>
-		string GetSuggestedFilename();
+		string SuggestedFilename { get; }
 	
 		/// <summary><para>Returns downloaded url.</para></summary>
-		string GetUrl();
+		string Url { get; }
 	}
 }

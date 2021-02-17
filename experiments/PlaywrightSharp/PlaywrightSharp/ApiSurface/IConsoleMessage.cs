@@ -52,11 +52,17 @@ namespace PlaywrightSharp
 	/// </summary>
 	public partial interface IConsoleMessage
 	{
-		dynamic GetArgs();
+		dynamic Args { get; }
 	
-		ConsoleMessageLocationResult GetLocation();
+		/// <summary>
+		/// <para>
+		/// URL of the resource followed by 0-based line and column numbers in the resource
+		/// formatted as <c>URL:line:column</c>
+		/// </para>
+		/// </summary>
+		string Location { get; }
 	
-		string GetText();
+		string Text { get; }
 	
 		/// <summary>
 		/// <para>
@@ -66,6 +72,6 @@ namespace PlaywrightSharp
 		/// 
 		/// </para>
 		/// </summary>
-		string GetType();
+		string Type { get; }
 	}
 }

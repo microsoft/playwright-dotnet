@@ -62,7 +62,7 @@ namespace PlaywrightSharp
 		/// <item><description>The <see cref="IBrowser.CloseAsync"/> method was called.</description></item>
 		/// </list>
 		/// </summary>
-		event EventHandler<IBrowser> Disconnected;
+		event EventHandler Disconnected;
 	
 		/// <summary>
 		/// <para>
@@ -86,7 +86,7 @@ namespace PlaywrightSharp
 		/// will return zero browser contexts.
 		/// </para>
 		/// </summary>
-		dynamic GetContexts();
+		dynamic Contexts { get; }
 	
 		/// <summary><para>Indicates that the browser is connected.</para></summary>
 		bool IsConnected();
@@ -133,6 +133,18 @@ namespace PlaywrightSharp
 		/// global proxy will be never used and can be any string, for example <c>launch({ proxy:
 		/// { server: 'per-context' } })</c>
 		/// </param>
+		/// <param name="recordHarOmitContent">
+		/// Optional setting to control whether to omit request content from the HAR. Defaults
+		/// to <c>false</c>
+		/// </param>
+		/// <param name="recordHarPath">Path on the filesystem to write the HAR file to.</param>
+		/// <param name="recordVideoDir">Path to the directory to put videos into.</param>
+		/// <param name="recordVideoSize">
+		/// Dimensions of the recorded videos. If not specified the size will be equal to <c>viewport`
+		/// scaled down to fit into 800x800. If `viewport</c> is not configured explicitly the
+		/// video size defaults to 800x450. Actual picture of each page will be scaled down
+		/// if necessary to fit the specified size.
+		/// </param>
 		/// <param name="storageState">
 		/// Populates context with given storage state. This option can be used to initialize
 		/// context with logged-in information obtained via <see cref="IBrowserContext.StorageStateAsync"/>.
@@ -147,7 +159,7 @@ namespace PlaywrightSharp
 		/// for a list of supported timezone IDs.
 		/// </param>
 		/// <param name="userAgent">Specific user agent to use in this context.</param>
-		Task<IBrowserContext> NewContextAsync(bool acceptDownloads, bool bypassCSP, ColorScheme colorScheme, decimal deviceScaleFactor, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders, BrowserGeolocation geolocation, bool hasTouch, BrowserHttpCredentials httpCredentials, bool ignoreHTTPSErrors, bool isMobile, bool javaScriptEnabled, string locale, bool offline, string[] permissions, BrowserProxy proxy, string storageState, string storageStatePath, string timezoneId, string userAgent);
+		Task<IBrowserContext> NewContextAsync(bool? acceptDownloads = null, bool? bypassCSP = null, ColorScheme? colorScheme = null, decimal? deviceScaleFactor = null, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null, BrowserGeolocation geolocation = null, bool? hasTouch = null, BrowserHttpCredentials httpCredentials = null, bool? ignoreHTTPSErrors = null, bool? isMobile = null, bool? javaScriptEnabled = null, string locale = null, bool? offline = null, string[] permissions = null, BrowserProxy proxy = null, bool? recordHarOmitContent = null, string recordHarPath = null, string recordVideoDir = null, BrowserRecordVideoSize recordVideoSize = null, string storageState = null, string storageStatePath = null, string timezoneId = null, string userAgent = null);
 	
 		/// <summary>
 		/// <para>
@@ -202,6 +214,18 @@ namespace PlaywrightSharp
 		/// global proxy will be never used and can be any string, for example <c>launch({ proxy:
 		/// { server: 'per-context' } })</c>
 		/// </param>
+		/// <param name="recordHarOmitContent">
+		/// Optional setting to control whether to omit request content from the HAR. Defaults
+		/// to <c>false</c>
+		/// </param>
+		/// <param name="recordHarPath">Path on the filesystem to write the HAR file to.</param>
+		/// <param name="recordVideoDir">Path to the directory to put videos into.</param>
+		/// <param name="recordVideoSize">
+		/// Dimensions of the recorded videos. If not specified the size will be equal to <c>viewport`
+		/// scaled down to fit into 800x800. If `viewport</c> is not configured explicitly the
+		/// video size defaults to 800x450. Actual picture of each page will be scaled down
+		/// if necessary to fit the specified size.
+		/// </param>
 		/// <param name="storageState">
 		/// Populates context with given storage state. This option can be used to initialize
 		/// context with logged-in information obtained via <see cref="IBrowserContext.StorageStateAsync"/>.
@@ -216,9 +240,9 @@ namespace PlaywrightSharp
 		/// for a list of supported timezone IDs.
 		/// </param>
 		/// <param name="userAgent">Specific user agent to use in this context.</param>
-		Task<IPage> NewPageAsync(bool acceptDownloads, bool bypassCSP, ColorScheme colorScheme, decimal deviceScaleFactor, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders, BrowserGeolocation geolocation, bool hasTouch, BrowserHttpCredentials httpCredentials, bool ignoreHTTPSErrors, bool isMobile, bool javaScriptEnabled, string locale, bool offline, string[] permissions, BrowserProxy proxy, string storageState, string storageStatePath, string timezoneId, string userAgent);
+		Task<IPage> NewPageAsync(bool? acceptDownloads = null, bool? bypassCSP = null, ColorScheme? colorScheme = null, decimal? deviceScaleFactor = null, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null, BrowserGeolocation geolocation = null, bool? hasTouch = null, BrowserHttpCredentials httpCredentials = null, bool? ignoreHTTPSErrors = null, bool? isMobile = null, bool? javaScriptEnabled = null, string locale = null, bool? offline = null, string[] permissions = null, BrowserProxy proxy = null, bool? recordHarOmitContent = null, string recordHarPath = null, string recordVideoDir = null, BrowserRecordVideoSize recordVideoSize = null, string storageState = null, string storageStatePath = null, string timezoneId = null, string userAgent = null);
 	
 		/// <summary><para>Returns the browser version.</para></summary>
-		string GetVersion();
+		string Version { get; }
 	}
 }

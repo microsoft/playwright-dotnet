@@ -88,7 +88,7 @@ namespace PlaywrightSharp
 		/// for more details.
 		/// </param>
 		/// <param name="url">URL of a script to be added.</param>
-		Task<IElementHandle> AddScriptTagAsync(string content, string path, string type, string url);
+		Task<IElementHandle> AddScriptTagAsync(string content = null, string path = null, string type = null, string url = null);
 	
 		/// <summary>
 		/// <para>
@@ -106,7 +106,7 @@ namespace PlaywrightSharp
 		/// then it is resolved relative to the current working directory.
 		/// </param>
 		/// <param name="url">URL of the <c><link></c> tag.</param>
-		Task<IElementHandle> AddStyleTagAsync(string content, string path, string url);
+		Task<IElementHandle> AddStyleTagAsync(string content = null, string path = null, string url = null);
 	
 		/// <summary>
 		/// <para>
@@ -161,9 +161,9 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task CheckAsync(string selector, bool force, bool noWaitAfter, int timeout);
+		Task CheckAsync(string selector, bool? force = null, bool? noWaitAfter = null, int timeout = 0);
 	
-		dynamic GetChildFrames();
+		dynamic ChildFrames { get; }
 	
 		/// <summary>
 		/// <para>
@@ -231,7 +231,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task ClickAsync(string selector, Button button, int clickCount, decimal delay, bool force, Modifiers[] modifiers, bool noWaitAfter, FramePosition position, int timeout);
+		Task ClickAsync(string selector, Button? button = null, int? clickCount = null, decimal? delay = null, bool? force = null, Modifiers[] modifiers = null, bool? noWaitAfter = null, FramePosition position = null, int timeout = 0);
 	
 		/// <summary><para>Gets the full HTML contents of the frame, including the doctype.</para></summary>
 		Task<string> GetContentAsync();
@@ -303,7 +303,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task DblclickAsync(string selector, Button button, decimal delay, bool force, Modifiers[] modifiers, bool noWaitAfter, FramePosition position, int timeout);
+		Task DblclickAsync(string selector, Button? button = null, decimal? delay = null, bool? force = null, Modifiers[] modifiers = null, bool? noWaitAfter = null, FramePosition position = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -346,7 +346,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task DispatchEventAsync(string selector, string type, object eventInit, int timeout);
+		Task DispatchEventAsync(string selector, string type, object eventInit = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>Returns the return value of <paramref name="expression"/>.</para>
@@ -369,7 +369,7 @@ namespace PlaywrightSharp
 		/// expression.
 		/// </param>
 		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-		Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg);
+		Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg = null);
 	
 		/// <summary>
 		/// <para>Returns the return value of <paramref name="expression"/>.</para>
@@ -391,7 +391,7 @@ namespace PlaywrightSharp
 		/// expression.
 		/// </param>
 		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-		Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg);
+		Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg = null);
 	
 		/// <summary>
 		/// <para>Returns the return value of <paramref name="expression"/>.</para>
@@ -418,7 +418,7 @@ namespace PlaywrightSharp
 		/// expression.
 		/// </param>
 		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-		Task<T> EvaluateAsync<T>(string expression, object arg);
+		Task<T> EvaluateAsync<T>(string expression, object arg = null);
 	
 		/// <summary>
 		/// <para>Returns the return value of <paramref name="expression"/> as a <see cref="IJSHandle"/>.</para>
@@ -440,7 +440,7 @@ namespace PlaywrightSharp
 		/// expression.
 		/// </param>
 		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-		Task<IJSHandle> EvaluateHandleAsync(string expression, object arg);
+		Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = null);
 	
 		/// <summary>
 		/// <para>
@@ -471,7 +471,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task FillAsync(string selector, string value, bool noWaitAfter, int timeout);
+		Task FillAsync(string selector, string value, bool? noWaitAfter = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -490,7 +490,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task FocusAsync(string selector, int timeout);
+		Task FocusAsync(string selector, int timeout = 0);
 	
 		/// <summary>
 		/// <para>Returns the <c>frame` or `iframe</c> element handle which corresponds to this frame.</para>
@@ -517,7 +517,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<string> GetAttributeAsync(string selector, string name, int timeout);
+		Task<string> GetAttributeAsync(string selector, string name, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -571,7 +571,7 @@ namespace PlaywrightSharp
 		/// </description></item>
 		/// </list>
 		/// </param>
-		Task<IResponse> GotoAsync(string url, string referer, int timeout, WaitUntil waitUntil);
+		Task<IResponse> GotoAsync(string url, string referer = null, int timeout = 0, WaitUntil? waitUntil = null);
 	
 		/// <summary>
 		/// <para>
@@ -627,7 +627,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task HoverAsync(string selector, bool force, Modifiers[] modifiers, FramePosition position, int timeout);
+		Task HoverAsync(string selector, bool? force = null, Modifiers[] modifiers = null, FramePosition position = null, int timeout = 0);
 	
 		/// <summary><para>Returns <c>element.innerHTML</c></para></summary>
 		/// <param name="selector">
@@ -640,7 +640,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<string> InnerHTMLAsync(string selector, int timeout);
+		Task<string> InnerHTMLAsync(string selector, int timeout = 0);
 	
 		/// <summary><para>Returns <c>element.innerText</c></para></summary>
 		/// <param name="selector">
@@ -653,7 +653,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<string> InnerTextAsync(string selector, int timeout);
+		Task<string> InnerTextAsync(string selector, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -671,7 +671,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<bool> IsCheckedAsync(string selector, int timeout);
+		Task<bool> IsCheckedAsync(string selector, int timeout = 0);
 	
 		/// <summary><para>Returns <c>true` if the frame has been detached, or `false</c> otherwise.</para></summary>
 		bool IsDetached();
@@ -687,7 +687,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<bool> IsDisabledAsync(string selector, int timeout);
+		Task<bool> IsDisabledAsync(string selector, int timeout = 0);
 	
 		/// <summary><para>Returns whether the element is [editable](./actionability.md#editable).</para></summary>
 		/// <param name="selector">
@@ -700,7 +700,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<bool> IsEditableAsync(string selector, int timeout);
+		Task<bool> IsEditableAsync(string selector, int timeout = 0);
 	
 		/// <summary><para>Returns whether the element is [enabled](./actionability.md#enabled).</para></summary>
 		/// <param name="selector">
@@ -713,9 +713,14 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<bool> IsEnabledAsync(string selector, int timeout);
+		Task<bool> IsEnabledAsync(string selector, int timeout = 0);
 	
-		/// <summary><para>Returns whether the element is hidden, the opposite of [visible](./actionability.md#visible).</para></summary>
+		/// <summary>
+		/// <para>
+		/// Returns whether the element is hidden, the opposite of [visible](./actionability.md#visible).
+		/// <paramref name="selector"/> that does not match any elements is considered hidden.
+		/// </para>
+		/// </summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
 		/// selector, the first will be used. See [working with selectors](./selectors.md) for
@@ -726,9 +731,14 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<bool> IsHiddenAsync(string selector, int timeout);
+		Task<bool> IsHiddenAsync(string selector, int timeout = 0);
 	
-		/// <summary><para>Returns whether the element is [visible](./actionability.md#visible).</para></summary>
+		/// <summary>
+		/// <para>
+		/// Returns whether the element is [visible](./actionability.md#visible). <paramref
+		/// name="selector"/> that does not match any elements is considered not visible.
+		/// </para>
+		/// </summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
 		/// selector, the first will be used. See [working with selectors](./selectors.md) for
@@ -739,7 +749,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<bool> IsVisibleAsync(string selector, int timeout);
+		Task<bool> IsVisibleAsync(string selector, int timeout = 0);
 	
 		/// <summary>
 		/// <para>Returns frame's name attribute as specified in the tag.</para>
@@ -751,13 +761,13 @@ namespace PlaywrightSharp
 		/// the attribute is changed later.
 		/// </para>
 		/// </remarks>
-		string GetName();
+		string Name { get; }
 	
 		/// <summary><para>Returns the page containing this frame.</para></summary>
-		IPage GetPage();
+		IPage Page { get; }
 	
 		/// <summary><para>Parent frame, if any. Detached frames and main frames return <c>null</c></para></summary>
-		IFrame GetParentFrame();
+		IFrame ParentFrame { get; }
 	
 		/// <summary>
 		/// <para>
@@ -810,7 +820,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task PressAsync(string selector, string key, decimal delay, bool noWaitAfter, int timeout);
+		Task PressAsync(string selector, string key, decimal? delay = null, bool? noWaitAfter = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>Returns the ElementHandle pointing to the frame element.</para>
@@ -855,7 +865,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<dynamic> SelectOptionAsync(string selector, bool noWaitAfter, int timeout);
+		Task<dynamic> SelectOptionAsync(string selector, bool? noWaitAfter = null, int timeout = 0);
 	
 		/// <param name="html">HTML markup to assign to the page.</param>
 		/// <param name="timeout">
@@ -878,7 +888,7 @@ namespace PlaywrightSharp
 		/// </description></item>
 		/// </list>
 		/// </param>
-		Task SetContentAsync(string html, int timeout, WaitUntil waitUntil);
+		Task SetContentAsync(string html, int timeout = 0, WaitUntil? waitUntil = null);
 	
 		/// <summary>
 		/// <para>This method expects <paramref name="selector"/> to point to an [input element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input).</para>
@@ -906,7 +916,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task SetInputFilesAsync(string selector, string[] files, bool noWaitAfter, int timeout);
+		Task SetInputFilesAsync(string selector, string[] files, bool? noWaitAfter = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -974,7 +984,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task TapAsync(string selector, bool force, Modifiers[] modifiers, bool noWaitAfter, FramePosition position, int timeout);
+		Task TapAsync(string selector, bool? force = null, Modifiers[] modifiers = null, bool? noWaitAfter = null, FramePosition position = null, int timeout = 0);
 	
 		/// <summary><para>Returns <c>element.textContent</c></para></summary>
 		/// <param name="selector">
@@ -987,7 +997,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<string> TextContentAsync(string selector, int timeout);
+		Task<string> TextContentAsync(string selector, int timeout = 0);
 	
 		/// <summary><para>Returns the page title.</para></summary>
 		Task<string> GetTitleAsync();
@@ -1018,7 +1028,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task TypeAsync(string selector, string text, decimal delay, bool noWaitAfter, int timeout);
+		Task TypeAsync(string selector, string text, decimal? delay = null, bool? noWaitAfter = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -1073,10 +1083,10 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task UncheckAsync(string selector, bool force, bool noWaitAfter, int timeout);
+		Task UncheckAsync(string selector, bool? force = null, bool? noWaitAfter = null, int timeout = 0);
 	
 		/// <summary><para>Returns frame's url.</para></summary>
-		string GetUrl();
+		string Url { get; }
 	
 		/// <summary>
 		/// <para>
@@ -1105,7 +1115,7 @@ namespace PlaywrightSharp
 		/// maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
 		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
-		Task<IJSHandle> WaitForFunctionAsync(string expression, object arg, Polling polling, int timeout);
+		Task<IJSHandle> WaitForFunctionAsync(string expression, object arg = null, Polling polling = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>Waits for the required load state to be reached.</para>
@@ -1134,7 +1144,7 @@ namespace PlaywrightSharp
 		/// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task WaitForLoadStateAsync(State state, int timeout);
+		Task WaitForLoadStateAsync(State? state = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -1186,7 +1196,7 @@ namespace PlaywrightSharp
 		/// </description></item>
 		/// </list>
 		/// </param>
-		Task<IResponse> WaitForNavigationAsync(int timeout, string sUrl, Regex rUrl, Func<Uri, bool> fUrl, WaitUntil waitUntil);
+		Task<IResponse> WaitForNavigationAsync(int timeout = 0, string sUrl = null, Regex rUrl = null, Func<Uri, bool> fUrl = null, WaitUntil? waitUntil = null);
 	
 		/// <summary>
 		/// <para>
@@ -1224,7 +1234,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<IElementHandle> WaitForSelectorAsync(string selector, State state, int timeout);
+		Task<IElementHandle> WaitForSelectorAsync(string selector, State? state = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>Waits for the given <paramref name="timeout"/> in milliseconds.</para>
@@ -1235,6 +1245,6 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </summary>
 		/// <param name="timeout">A timeout to wait for</param>
-		Task WaitForTimeoutAsync(int timeout);
+		Task WaitForTimeoutAsync(int timeout = 0);
 	}
 }

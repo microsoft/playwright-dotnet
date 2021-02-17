@@ -46,8 +46,10 @@ namespace PlaywrightSharp
 {
     public class BrowserHttpCredentials
 	{
+		/// <summary><para></para></summary>
 		string Username { get; set; }
 	
+		/// <summary><para></para></summary>
 		string Password { get; set; }
 	}
 }

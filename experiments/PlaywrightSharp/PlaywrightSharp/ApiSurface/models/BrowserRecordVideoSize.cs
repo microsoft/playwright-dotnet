@@ -44,10 +44,12 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-    public class BrowserStorageStateOrigins
+    public class BrowserRecordVideoSize
 	{
-		string Origin { get; set; }
+		/// <summary><para>Video frame width.</para></summary>
+		int Width { get; set; }
 	
-		BrowserStorageStateOriginsLocalStorage[] LocalStorage { get; set; }
+		/// <summary><para>Video frame height.</para></summary>
+		int Height { get; set; }
 	}
 }
