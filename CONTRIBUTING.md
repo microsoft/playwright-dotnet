@@ -14,11 +14,12 @@ use GitHub pull requests for this purpose. Consult
 [GitHub Help](https://help.github.com/articles/about-pull-requests/) for more
 information on pull requests.
 
-## Core Guidelines 
+## Core Guidelines
 
 The primary goal is to create an API as close as possible to Playwright. A developer should be able to switch easily to Playwright Sharp and vice-versa.
 
-Playwright Sharp should have a .NET/C# flavor. 
+Playwright Sharp should have a .NET/C# flavor.
+
  * A developer should be able to inject its objects using dependency injection.
  * Getter functions should be expressed as properties.
  * Async suffix should be honored.
@@ -70,28 +71,28 @@ dotnet run -p ./src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj
 
 ### Running Tests Locally
 
-When you run the tests locally for the first time, you might be greeted with the following error message. 
+When you run the tests locally for the first time, you might be greeted with the following error message.
 
-This happens because you're missing a certificate. To generate one, you can use the `dotnet dev-certs` tooling. 
+This happens because you're missing a certificate. To generate one, you can use the `dotnet dev-certs` tooling.
 
 In your repository root, run the following:
 
 ```powershell
- dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
- ```
+dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
+```
 
- You should be all set for running the tests now. You can run them by either executing all of them:
+You should be all set for running the tests now. You can run them by either executing all of them:
 
- ```powershell
+```powershell
 dotnet test .\src\PlaywrightSharp.sln
- ```
+```
 
- or specifying a filter, such as:
+or specifying a filter, such as:
 
 ```powershell
 dotnet test .\src\PlaywrightSharp.sln --filter PlaywrightSharp.Tests.TapTests
 ```
 
-to narrow down the tests. 
+to narrow down the tests.
 
 Additionally, you can use the Test Explorer if you're using Visual Studio.
