@@ -47,8 +47,8 @@ namespace PlaywrightSharp
     /// <summary>
 	/// <para>
 	/// The Accessibility class provides methods for inspecting Chromium's accessibility
-	/// tree. The accessibility tree is used by assistive technology such as [screen readers](https://en.wikipedia.org/wiki/Screen_reader)
-	/// or [switches](https://en.wikipedia.org/wiki/Switch_access).
+	/// tree. The accessibility tree is used by assistive technology such as <a href="https://en.wikipedia.org/wiki/Screen_reader)">screen
+	/// readers</a> or <a href="https://en.wikipedia.org/wiki/Switch_access)">switches</a>.
 	/// </para>
 	/// <para>
 	/// Accessibility is a very platform-specific thing. On different platforms, there are
@@ -80,10 +80,10 @@ namespace PlaywrightSharp
 		/// <para>
 		/// The Chromium accessibility tree contains nodes that go unused on most platforms
 		/// and by most screen readers. Playwright will discard them as well for an easier to
-		/// process tree, unless <paramref name="interestingOnly"/> is set to <c>false</c>
+		/// process tree, unless <paramref name="interestingOnly"/> is set to <c>false</c>.
 		/// </para>
 		/// </remarks>
-		/// <param name="interestingOnly">Prune uninteresting nodes from the tree. Defaults to <c>true</c></param>
+		/// <param name="interestingOnly">Prune uninteresting nodes from the tree. Defaults to <c>true</c>.</param>
 		/// <param name="root">The root DOM element for the snapshot. Defaults to the whole page.</param>
 		Task<string> SnapshotAsync(bool? interestingOnly = null, IElementHandle root = null);
 	}

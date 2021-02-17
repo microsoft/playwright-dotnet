@@ -74,7 +74,7 @@ namespace PlaywrightSharp
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.

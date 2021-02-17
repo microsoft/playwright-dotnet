@@ -80,7 +80,7 @@ namespace PlaywrightSharp
 	{
 		/// <summary>
 		/// <para>
-		/// The method returns <c>null` unless this request has failed, as reported by `requestfailed</c>
+		/// The method returns <c>null</c> unless this request has failed, as reported by <c>requestfailed</c>
 		/// event.
 		/// </para>
 		/// <para>Example of logging of all the failed requests:</para>
@@ -109,14 +109,11 @@ namespace PlaywrightSharp
 		/// <para>Request that was redirected by the server to this one, if any.</para>
 		/// <para>
 		/// When the server responds with a redirect, Playwright creates a new <see cref="IRequest"/>
-		/// object. The two requests are connected by <c>redirectedFrom()` and `redirectedTo()`
+		/// object. The two requests are connected by <c>redirectedFrom()</c> and <c>redirectedTo()</c>
 		/// methods. When multiple server redirects has happened, it is possible to construct
-		/// the whole redirect chain by repeatedly calling `redirectedFrom()</c>
+		/// the whole redirect chain by repeatedly calling <c>redirectedFrom()</c>.
 		/// </para>
-		/// <para>
-		/// For example, if the website <c>http://example.com` redirects to `https://example.com</c>
-		/// 
-		/// </para>
+		/// <para>For example, if the website <c>http://example.com</c> redirects to <c>https://example.com</c>:</para>
 		/// <para>If the website <c>https://google.com</c> has no redirects:</para>
 		/// </summary>
 		IRequest RedirectedFrom { get; }
@@ -130,9 +127,9 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// Contains the request's resource type as it was perceived by the rendering engine.
-		/// ResourceType will be one of the following: <c>document`, `stylesheet`, `image`,
-		/// `media`, `font`, `script`, `texttrack`, `xhr`, `fetch`, `eventsource`, `websocket`,
-		/// `manifest`, `other</c>
+		/// ResourceType will be one of the following: <c>document</c>, <c>stylesheet</c>, <c>image</c>,
+		/// <c>media</c>, <c>font</c>, <c>script</c>, <c>texttrack</c>, <c>xhr</c>, <c>fetch</c>,
+		/// <c>eventsource</c>, <c>websocket</c>, <c>manifest</c>, <c>other</c>.
 		/// </para>
 		/// </summary>
 		string ResourceType { get; }
@@ -149,7 +146,8 @@ namespace PlaywrightSharp
 		/// <para>
 		/// Returns resource timing information for given request. Most of the timing values
 		/// become available upon the response, <c>responseEnd</c> becomes available when request
-		/// finishes. Find more information at [Resource Timing API](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceResourceTiming).
+		/// finishes. Find more information at <a href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceResourceTiming)">Resource
+		/// Timing API</a>.
 		/// </para>
 		/// </summary>
 		RequestTimingResult Timing { get; }

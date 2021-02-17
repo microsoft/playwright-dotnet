@@ -49,7 +49,7 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// Proxy to be used for all requests. HTTP and SOCKS proxies are supported, for example
-		/// <c>http://myproxy.com:3128` or `socks5://myproxy.com:3128`. Short form `myproxy.com:3128</c>
+		/// <c>http://myproxy.com:3128</c> or <c>socks5://myproxy.com:3128</c>. Short form <c>myproxy.com:3128</c>
 		/// is considered an HTTP proxy.
 		/// </para>
 		/// </summary>
@@ -58,7 +58,7 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// Optional coma-separated domains to bypass proxy, for example <c>".com, chromium.org,
-		/// .domain.com"</c>
+		/// .domain.com"</c>.
 		/// </para>
 		/// </summary>
 		string Bypass { get; set; }

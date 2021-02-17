@@ -46,23 +46,23 @@ namespace PlaywrightSharp
 {
     /// <summary>
 	/// <para>
-	/// Selectors can be used to install custom selector engines. See [Working with selectors](./selectors.md)
-	/// for more information.
+	/// Selectors can be used to install custom selector engines. See <a href="./selectors.md)">Working
+	/// with selectors</a> for more information.
 	/// </para>
 	/// </summary>
 	public partial interface ISelectors
 	{
 		/// <summary><para>An example of registering selector engine that queries elements based on a tag name:</para></summary>
 		/// <param name="name">
-		/// Name that is used in selectors as a prefix, e.g. <c>{name: 'foo'}` enables `foo=myselectorbody`
-		/// selectors. May only contain `[a-zA-Z0-9_]</c> characters.
+		/// Name that is used in selectors as a prefix, e.g. <c>{name: 'foo'}</c> enables <c>foo=myselectorbody</c>
+		/// selectors. May only contain <c>[a-zA-Z0-9_]</c> characters.
 		/// </param>
 		/// <param name="script">Script that evaluates to a selector engine instance.</param>
 		/// <param name="scriptPath">Instead of specifying <paramref name="script"/>, gives the file name to load from.</param>
 		/// <param name="contentScript">
 		/// Whether to run this selector engine in isolated JavaScript environment. This environment
 		/// has access to the same DOM, but not any JavaScript objects from the frame's scripts.
-		/// Defaults to <c>false</c>  Note that running as a content script is not guaranteed
+		/// Defaults to <c>false</c>. Note that running as a content script is not guaranteed
 		/// when this engine is used together with other registered engines.
 		/// </param>
 		Task RegisterAsync(string name, string script, string scriptPath, bool? contentScript = null);

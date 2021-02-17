@@ -72,19 +72,20 @@ namespace PlaywrightSharp
 		/// closed before the event is fired. Returns the event data value.
 		/// </para>
 		/// </summary>
-		/// <param name="event">Event name, same one would pass into <c>webSocket.on(event)</c></param>
+		/// <param name="event">Event name, same one would pass into <c>webSocket.on(event)</c>.</param>
 		/// <param name="timeout">
-		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
-		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
 		Task<object> WaitForEventAsync(string @event, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
 		/// Performs action and waits for a frame to be sent. If predicate is provided, it passes
-		/// <see cref="IWebSocketFrame"/> value into the <c>predicate` function and waits for
-		/// `predicate(webSocketFrame)</c> to return a truthy value. Will throw an error if
-		/// the WebSocket or Page is closed before the frame is received.
+		/// <see cref="IWebSocketFrame"/> value into the <c>predicate</c> function and waits
+		/// for <c>predicate(webSocketFrame)</c> to return a truthy value. Will throw an error
+		/// if the WebSocket or Page is closed before the frame is received.
 		/// </para>
 		/// </summary>
 		/// <param name="predicate">
@@ -92,17 +93,18 @@ namespace PlaywrightSharp
 		/// the waiting should resolve.
 		/// </param>
 		/// <param name="timeout">
-		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
-		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
 		IWebSocketFrame WaitForFrameReceived(Func<IWebSocketFrame, bool> predicate = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
 		/// Performs action and waits for a frame to be sent. If predicate is provided, it passes
-		/// <see cref="IWebSocketFrame"/> value into the <c>predicate` function and waits for
-		/// `predicate(webSocketFrame)</c> to return a truthy value. Will throw an error if
-		/// the WebSocket or Page is closed before the frame is sent.
+		/// <see cref="IWebSocketFrame"/> value into the <c>predicate</c> function and waits
+		/// for <c>predicate(webSocketFrame)</c> to return a truthy value. Will throw an error
+		/// if the WebSocket or Page is closed before the frame is sent.
 		/// </para>
 		/// </summary>
 		/// <param name="predicate">
@@ -110,8 +112,9 @@ namespace PlaywrightSharp
 		/// the waiting should resolve.
 		/// </param>
 		/// <param name="timeout">
-		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
-		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
 		IWebSocketFrame WaitForFrameSent(Func<IWebSocketFrame, bool> predicate = null, int timeout = 0);
 	}

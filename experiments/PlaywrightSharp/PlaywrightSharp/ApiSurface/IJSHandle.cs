@@ -93,8 +93,8 @@ namespace PlaywrightSharp
 		/// <para>Returns the return value of <paramref name="expression"/> as a <see cref="IJSHandle"/>.</para>
 		/// <para>This method passes this handle as the first argument to <paramref name="expression"/>.</para>
 		/// <para>
-		/// The only difference between <c>jsHandle.evaluate` and `jsHandle.evaluateHandle`
-		/// is that `jsHandle.evaluateHandle</c> returns <see cref="IJSHandle"/>.
+		/// The only difference between <c>jsHandle.evaluate</c> and <c>jsHandle.evaluateHandle</c>
+		/// is that <c>jsHandle.evaluateHandle</c> returns <see cref="IJSHandle"/>.
 		/// </para>
 		/// <para>
 		/// If the function passed to the <c>jsHandle.evaluateHandle</c> returns a [Promise],

@@ -84,8 +84,8 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// Returns suggested filename for this download. It is typically computed by the browser
-		/// from the [`Content-Disposition`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition)
-		/// response header or the <c>download</c> attribute. See the spec on [whatwg](https://html.spec.whatwg.org/#downloading-resources).
+		/// from the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition)"><c>Content-Disposition</c></a>
+		/// response header or the <c>download</c> attribute. See the spec on <a href="https://html.spec.whatwg.org/#downloading-resources)">whatwg</a>.
 		/// Different browsers can use different logic for computing it.
 		/// </para>
 		/// </summary>

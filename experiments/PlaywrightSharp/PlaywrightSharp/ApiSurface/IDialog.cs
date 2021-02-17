@@ -55,7 +55,7 @@ namespace PlaywrightSharp
 	/// <para>
 	/// Dialogs are dismissed automatically, unless there is a <see cref="IPage.Dialog"/>
 	/// listener. When listener is present, it **must** either <see cref="IDialog.AcceptAsync"/>
-	/// or <see cref="IDialog.DismissAsync"/> the dialog - otherwise the page will [freeze](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop#never_blocking)
+	/// or <see cref="IDialog.DismissAsync"/> the dialog - otherwise the page will <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop#never_blocking)">freeze</a>
 	/// waiting for the dialog, and actions like click will never finish.
 	/// </para>
 	/// </remarks>
@@ -79,8 +79,8 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Returns dialog's type, can be one of <c>alert`, `beforeunload`, `confirm` or `prompt</c>
-		/// 
+		/// Returns dialog's type, can be one of <c>alert</c>, <c>beforeunload</c>, <c>confirm</c>
+		/// or <c>prompt</c>.
 		/// </para>
 		/// </summary>
 		string Type { get; }

@@ -78,7 +78,7 @@ namespace PlaywrightSharp
 		/// </para>
 		/// <para>
 		/// The earliest moment that page is available is when it has navigated to the initial
-		/// url. For example, when opening a popup with <c>window.open('http://example.com')</c>
+		/// url. For example, when opening a popup with <c>window.open('http://example.com')</c>,
 		/// this event will fire when the network request to "http://example.com" is done and
 		/// its response has started loading in the popup.
 		/// </para>
@@ -112,8 +112,7 @@ namespace PlaywrightSharp
 		/// </list>
 		/// <para>
 		/// The script is evaluated after the document was created but before any of its scripts
-		/// were run. This is useful to amend the JavaScript environment, e.g. to seed <c>Math.random</c>
-		/// 
+		/// were run. This is useful to amend the JavaScript environment, e.g. to seed <c>Math.random</c>.
 		/// </para>
 		/// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
 		/// </summary>
@@ -170,7 +169,7 @@ namespace PlaywrightSharp
 		/// <para>
 		/// The first argument of the <paramref name="callback"/> function contains information
 		/// about the caller: <c>{ browserContext: BrowserContext, page: Page, frame: Frame
-		/// }</c>
+		/// }</c>.
 		/// </para>
 		/// <para>See <see cref="IPage.ExposeBindingAsync"/> for page-only version.</para>
 		/// <para>An example of exposing page URL to all frames in all pages in the context:</para>
@@ -210,22 +209,22 @@ namespace PlaywrightSharp
 		/// A permission or an array of permissions to grant. Permissions can be one of the
 		/// following values:
 		/// <list type="bullet">
-		/// <item><description>`'geolocation'`</description></item>
-		/// <item><description>`'midi'`</description></item>
-		/// <item><description>`'midi-sysex'` (system-exclusive midi)</description></item>
-		/// <item><description>`'notifications'`</description></item>
-		/// <item><description>`'push'`</description></item>
-		/// <item><description>`'camera'`</description></item>
-		/// <item><description>`'microphone'`</description></item>
-		/// <item><description>`'background-sync'`</description></item>
-		/// <item><description>`'ambient-light-sensor'`</description></item>
-		/// <item><description>`'accelerometer'`</description></item>
-		/// <item><description>`'gyroscope'`</description></item>
-		/// <item><description>`'magnetometer'`</description></item>
-		/// <item><description>`'accessibility-events'`</description></item>
-		/// <item><description>`'clipboard-read'`</description></item>
-		/// <item><description>`'clipboard-write'`</description></item>
-		/// <item><description>`'payment-handler'`</description></item>
+		/// <item><description><c>'geolocation'</c></description></item>
+		/// <item><description><c>'midi'</c></description></item>
+		/// <item><description><c>'midi-sysex'</c> (system-exclusive midi)</description></item>
+		/// <item><description><c>'notifications'</c></description></item>
+		/// <item><description><c>'push'</c></description></item>
+		/// <item><description><c>'camera'</c></description></item>
+		/// <item><description><c>'microphone'</c></description></item>
+		/// <item><description><c>'background-sync'</c></description></item>
+		/// <item><description><c>'ambient-light-sensor'</c></description></item>
+		/// <item><description><c>'accelerometer'</c></description></item>
+		/// <item><description><c>'gyroscope'</c></description></item>
+		/// <item><description><c>'magnetometer'</c></description></item>
+		/// <item><description><c>'accessibility-events'</c></description></item>
+		/// <item><description><c>'clipboard-read'</c></description></item>
+		/// <item><description><c>'clipboard-write'</c></description></item>
+		/// <item><description><c>'payment-handler'</c></description></item>
 		/// </list>
 		/// </param>
 		/// <param name="origin">The [origin] to grant permissions to, e.g. "https://example.com".</param>
@@ -236,7 +235,7 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Returns all open pages in the context. Non visible pages, such as <c>"background_page"</c>
+		/// Returns all open pages in the context. Non visible pages, such as <c>"background_page"</c>,
 		/// will not be listed here.
 		/// </para>
 		/// </summary>
@@ -324,8 +323,8 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Sets the context's geolocation. Passing <c>null` or `undefined</c> emulates position
-		/// unavailable.
+		/// Sets the context's geolocation. Passing <c>null</c> or <c>undefined</c> emulates
+		/// position unavailable.
 		/// </para>
 		/// </summary>
 		/// <remarks>
@@ -382,18 +381,19 @@ namespace PlaywrightSharp
 		/// before the event is fired. Returns the event data value.
 		/// </para>
 		/// </summary>
-		/// <param name="event">Event name, same one would pass into <c>browserContext.on(event)</c></param>
+		/// <param name="event">Event name, same one would pass into <c>browserContext.on(event)</c>.</param>
 		/// <param name="timeout">
-		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
-		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
 		Task<object> WaitForEventAsync(string @event, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
 		/// Performs action and waits for a new <see cref="IPage"/> to be created in the context.
-		/// If predicate is provided, it passes <see cref="IPage"/> value into the <c>predicate`
-		/// function and waits for `predicate(event)</c> to return a truthy value. Will throw
+		/// If predicate is provided, it passes <see cref="IPage"/> value into the <c>predicate</c>
+		/// function and waits for <c>predicate(event)</c> to return a truthy value. Will throw
 		/// an error if the context closes before new <see cref="IPage"/> is created.
 		/// </para>
 		/// </summary>
@@ -402,8 +402,9 @@ namespace PlaywrightSharp
 		/// should resolve.
 		/// </param>
 		/// <param name="timeout">
-		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
-		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
 		Task<IPage> WaitForPageAsync(Func<IPage, bool> predicate = null, int timeout = 0);
 	}

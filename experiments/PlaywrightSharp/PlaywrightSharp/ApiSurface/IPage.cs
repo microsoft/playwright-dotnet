@@ -47,15 +47,15 @@ namespace PlaywrightSharp
     /// <summary>
 	/// <para>
 	/// Page provides methods to interact with a single tab in a <see cref="IBrowser"/>,
-	/// or an [extension background page](https://developer.chrome.com/extensions/background_pages)
-	/// in Chromium. One <see cref="IBrowser"/> instance might have multiple <see cref="IPage"/>
-	/// instances.
+	/// or an <a href="https://developer.chrome.com/extensions/background_pages)">extension
+	/// background page</a> in Chromium. One <see cref="IBrowser"/> instance might have
+	/// multiple <see cref="IPage"/> instances.
 	/// </para>
 	/// <para>This example creates a page, navigates it to a URL, and then saves a screenshot:</para>
 	/// <para>
 	/// The Page class emits various events (described below) which can be handled using
-	/// any of Node's native [`EventEmitter`](https://nodejs.org/api/events.html#events_class_eventemitter)
-	/// methods, such as <c>on`, `once` or `removeListener</c>
+	/// any of Node's native <a href="https://nodejs.org/api/events.html#events_class_eventemitter)"><c>EventEmitter</c></a>
+	/// methods, such as <c>on</c>, <c>once</c> or <c>removeListener</c>.
 	/// </para>
 	/// <para>This example logs a message for a single page <c>load</c> event:</para>
 	/// <para>To unsubscribe from events use the <c>removeListener</c> method:</para>
@@ -67,8 +67,8 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Emitted when JavaScript within the page calls one of console API methods, e.g. <c>console.log`
-		/// or `console.dir</c>  Also emitted if the page throws an error or a warning.
+		/// Emitted when JavaScript within the page calls one of console API methods, e.g. <c>console.log</c>
+		/// or <c>console.dir</c>. Also emitted if the page throws an error or a warning.
 		/// </para>
 		/// <para>The arguments passed into <c>console.log</c> appear as arguments on the event handler.</para>
 		/// <para>An example of handling <c>console</c> event:</para>
@@ -86,9 +86,9 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Emitted when a JavaScript dialog appears, such as <c>alert`, `prompt`, `confirm`
-		/// or `beforeunload</c>  Listener **must** either <see cref="IDialog.AcceptAsync"/>
-		/// or <see cref="IDialog.DismissAsync"/> the dialog - otherwise the page will [freeze](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop#never_blocking)
+		/// Emitted when a JavaScript dialog appears, such as <c>alert</c>, <c>prompt</c>, <c>confirm</c>
+		/// or <c>beforeunload</c>. Listener **must** either <see cref="IDialog.AcceptAsync"/>
+		/// or <see cref="IDialog.DismissAsync"/> the dialog - otherwise the page will <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop#never_blocking)">freeze</a>
 		/// waiting for the dialog, and actions like click will never finish.
 		/// </para>
 		/// </summary>
@@ -102,7 +102,7 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Emitted when the JavaScript [`DOMContentLoaded`](https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded)
+		/// Emitted when the JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded)"><c>DOMContentLoaded</c></a>
 		/// event is dispatched.
 		/// </para>
 		/// </summary>
@@ -126,9 +126,9 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Emitted when a file chooser is supposed to appear, such as after clicking the  <c><input
-		/// type=file></c>  Playwright can respond to it via setting the input files using <see
-		/// cref="IFileChooser.SetFilesAsync"/> that can be uploaded after that.
+		/// Emitted when a file chooser is supposed to appear, such as after clicking the  <c>&lt;input
+		/// type=file&gt;</c>. Playwright can respond to it via setting the input files using
+		/// <see cref="IFileChooser.SetFilesAsync"/> that can be uploaded after that.
 		/// </para>
 		/// </summary>
 		event EventHandler<IFileChooser> FileChooser;
@@ -144,7 +144,7 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Emitted when the JavaScript [`load`](https://developer.mozilla.org/en-US/docs/Web/Events/load)
+		/// Emitted when the JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/Events/load)"><c>load</c></a>
 		/// event is dispatched.
 		/// </para>
 		/// </summary>
@@ -161,7 +161,7 @@ namespace PlaywrightSharp
 		/// </para>
 		/// <para>
 		/// The earliest moment that page is available is when it has navigated to the initial
-		/// url. For example, when opening a popup with <c>window.open('http://example.com')</c>
+		/// url. For example, when opening a popup with <c>window.open('http://example.com')</c>,
 		/// this event will fire when the network request to "http://example.com" is done and
 		/// its response has started loading in the popup.
 		/// </para>
@@ -195,8 +195,8 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// Emitted when a request finishes successfully after downloading the response body.
-		/// For a successful response, the sequence of events is <c>request`, `response` and
-		/// `requestfinished</c>
+		/// For a successful response, the sequence of events is <c>request</c>, <c>response</c>
+		/// and <c>requestfinished</c>.
 		/// </para>
 		/// </summary>
 		event EventHandler<IRequest> RequestFinished;
@@ -204,18 +204,17 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// Emitted when [response] status and headers are received for a request. For a successful
-		/// response, the sequence of events is <c>request`, `response` and `requestfinished</c>
-		/// 
+		/// response, the sequence of events is <c>request</c>, <c>response</c> and <c>requestfinished</c>.
 		/// </para>
 		/// </summary>
 		event EventHandler<IResponse> Response;
 	
-		/// <summary><para>Emitted when <<see cref="IWebSocket"/>> request is sent.</para></summary>
+		/// <summary><para>Emitted when <see cref="IWebSocket"/> request is sent.</para></summary>
 		event EventHandler<IWebSocket> WebSocket;
 	
 		/// <summary>
 		/// <para>
-		/// Emitted when a dedicated [WebWorker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API)
+		/// Emitted when a dedicated <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API)">WebWorker</a>
 		/// is spawned by the page.
 		/// </para>
 		/// </summary>
@@ -234,8 +233,7 @@ namespace PlaywrightSharp
 		/// </list>
 		/// <para>
 		/// The script is evaluated after the document was created but before any of its scripts
-		/// were run. This is useful to amend the JavaScript environment, e.g. to seed <c>Math.random</c>
-		/// 
+		/// were run. This is useful to amend the JavaScript environment, e.g. to seed <c>Math.random</c>.
 		/// </para>
 		/// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
 		/// </summary>
@@ -251,9 +249,9 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Adds a <c><script></c> tag into the page with the desired url or content. Returns
-		/// the added tag when the script's onload fires or when the script content was injected
-		/// into frame.
+		/// Adds a <c>&lt;script&gt;</c> tag into the page with the desired url or content.
+		/// Returns the added tag when the script's onload fires or when the script content
+		/// was injected into frame.
 		/// </para>
 		/// <para>Shortcut for main frame's <see cref="IFrame.AddScriptTagAsync"/>.</para>
 		/// </summary>
@@ -263,7 +261,7 @@ namespace PlaywrightSharp
 		/// path, then it is resolved relative to the current working directory.
 		/// </param>
 		/// <param name="type">
-		/// Script type. Use 'module' in order to load a Javascript ES6 module. See [script](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script)
+		/// Script type. Use 'module' in order to load a Javascript ES6 module. See <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script)">script</a>
 		/// for more details.
 		/// </param>
 		/// <param name="url">URL of a script to be added.</param>
@@ -271,9 +269,10 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Adds a <c><link rel="stylesheet">` tag into the page with the desired url or a `<style
-		/// type="text/css"></c> tag with the content. Returns the added tag when the stylesheet's
-		/// onload fires or when the CSS content was injected into frame.
+		/// Adds a <c>&lt;link rel="stylesheet"&gt;</c> tag into the page with the desired url
+		/// or a <c>&lt;style type="text/css"&gt;</c> tag with the content. Returns the added
+		/// tag when the stylesheet's onload fires or when the CSS content was injected into
+		/// frame.
 		/// </para>
 		/// <para>Shortcut for main frame's <see cref="IFrame.AddStyleTagAsync"/>.</para>
 		/// </summary>
@@ -282,7 +281,7 @@ namespace PlaywrightSharp
 		/// Path to the CSS file to be injected into frame. If <c>path</c> is a relative path,
 		/// then it is resolved relative to the current working directory.
 		/// </param>
-		/// <param name="url">URL of the <c><link></c> tag.</param>
+		/// <param name="url">URL of the <c>&lt;link&gt;</c> tag.</param>
 		Task<IElementHandle> AddStyleTagAsync(string content = null, string path = null, string url = null);
 	
 		/// <summary><para>Brings page to front (activates tab).</para></summary>
@@ -303,9 +302,9 @@ namespace PlaywrightSharp
 		/// rejects. If the element is already checked, this method returns immediately.
 		/// </description></item>
 		/// <item><description>
-		/// Wait for [actionability](./actionability.md) checks on the matched element, unless
-		/// <paramref name="force"/> option is set. If the element is detached during the checks,
-		/// the whole action is retried.
+		/// Wait for <a href="./actionability.md)">actionability</a> checks on the matched element,
+		/// unless <paramref name="force"/> option is set. If the element is detached during
+		/// the checks, the whole action is retried.
 		/// </description></item>
 		/// <item><description>Scroll the element into view if needed.</description></item>
 		/// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
@@ -324,18 +323,18 @@ namespace PlaywrightSharp
 		/// </summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="force">
-		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
-		/// 
+		/// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
+		/// to <c>false</c>.
 		/// </param>
 		/// <param name="noWaitAfter">
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -355,9 +354,9 @@ namespace PlaywrightSharp
 		/// until a matching element is attached to the DOM.
 		/// </description></item>
 		/// <item><description>
-		/// Wait for [actionability](./actionability.md) checks on the matched element, unless
-		/// <paramref name="force"/> option is set. If the element is detached during the checks,
-		/// the whole action is retried.
+		/// Wait for <a href="./actionability.md)">actionability</a> checks on the matched element,
+		/// unless <paramref name="force"/> option is set. If the element is detached during
+		/// the checks, the whole action is retried.
 		/// </description></item>
 		/// <item><description>Scroll the element into view if needed.</description></item>
 		/// <item><description>
@@ -378,18 +377,18 @@ namespace PlaywrightSharp
 		/// </summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
-		/// <param name="button">Defaults to <c>left</c></param>
+		/// <param name="button">Defaults to <c>left</c>.</param>
 		/// <param name="clickCount">defaults to 1. See [UIEvent.detail].</param>
 		/// <param name="delay">
-		/// Time to wait between <c>mousedown` and `mouseup</c> in milliseconds. Defaults to
-		/// 0.
+		/// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
+		/// to 0.
 		/// </param>
 		/// <param name="force">
-		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
-		/// 
+		/// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
+		/// to <c>false</c>.
 		/// </param>
 		/// <param name="modifiers">
 		/// Modifier keys to press. Ensures that only these modifiers are pressed during the
@@ -400,7 +399,7 @@ namespace PlaywrightSharp
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="position">
 		/// A point to use relative to the top-left corner of element padding box. If not specified,
@@ -415,11 +414,11 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// If <paramref name="runBeforeUnload"/> is <c>false`, does not run any unload handlers
-		/// and waits for the page to be closed. If <paramref name="runBeforeUnload"/> is `true</c>
+		/// If <paramref name="runBeforeUnload"/> is <c>false</c>, does not run any unload handlers
+		/// and waits for the page to be closed. If <paramref name="runBeforeUnload"/> is <c>true</c>
 		/// the method will run unload handlers, but will **not** wait for the page to close.
 		/// </para>
-		/// <para>By default, <c>page.close()` **does not** run `beforeunload</c> handlers.</para>
+		/// <para>By default, <c>page.close()</c> **does not** run <c>beforeunload</c> handlers.</para>
 		/// </summary>
 		/// <remarks>
 		/// <para>
@@ -429,8 +428,8 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </remarks>
 		/// <param name="runBeforeUnload">
-		/// Defaults to <c>false</c>  Whether to run the [before unload](https://developer.mozilla.org/en-US/docs/Web/Events/beforeunload)
-		/// page handlers.
+		/// Defaults to <c>false</c>. Whether to run the <a href="https://developer.mozilla.org/en-US/docs/Web/Events/beforeunload)">before
+		/// unload</a> page handlers.
 		/// </param>
 		Task CloseAsync(bool? runBeforeUnload = null);
 	
@@ -451,9 +450,9 @@ namespace PlaywrightSharp
 		/// until a matching element is attached to the DOM.
 		/// </description></item>
 		/// <item><description>
-		/// Wait for [actionability](./actionability.md) checks on the matched element, unless
-		/// <paramref name="force"/> option is set. If the element is detached during the checks,
-		/// the whole action is retried.
+		/// Wait for <a href="./actionability.md)">actionability</a> checks on the matched element,
+		/// unless <paramref name="force"/> option is set. If the element is detached during
+		/// the checks, the whole action is retried.
 		/// </description></item>
 		/// <item><description>Scroll the element into view if needed.</description></item>
 		/// <item><description>
@@ -473,20 +472,25 @@ namespace PlaywrightSharp
 		/// </para>
 		/// <para>Shortcut for main frame's <see cref="IFrame.DblclickAsync"/>.</para>
 		/// </summary>
-		/// <remarks><para>`page.dblclick( <c> dispatches two `click` events and a single `dblclick</c> event.</para></remarks>
+		/// <remarks>
+		/// <para>
+		/// <c>page.dblclick()</c> dispatches two <c>click</c> events and a single <c>dblclick</c>
+		/// event.
+		/// </para>
+		/// </remarks>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
-		/// <param name="button">Defaults to <c>left</c></param>
+		/// <param name="button">Defaults to <c>left</c>.</param>
 		/// <param name="delay">
-		/// Time to wait between <c>mousedown` and `mouseup</c> in milliseconds. Defaults to
-		/// 0.
+		/// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
+		/// to 0.
 		/// </param>
 		/// <param name="force">
-		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
-		/// 
+		/// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
+		/// to <c>false</c>.
 		/// </param>
 		/// <param name="modifiers">
 		/// Modifier keys to press. Ensures that only these modifiers are pressed during the
@@ -497,7 +501,7 @@ namespace PlaywrightSharp
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="position">
 		/// A point to use relative to the top-left corner of element padding box. If not specified,
@@ -512,27 +516,27 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// The snippet below dispatches the <c>click` event on the element. Regardless of the
-		/// visibility state of the elment, `click</c> is dispatched. This is equivalend to
-		/// calling [element.click()](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click).
+		/// The snippet below dispatches the <c>click</c> event on the element. Regardless of
+		/// the visibility state of the elment, <c>click</c> is dispatched. This is equivalend
+		/// to calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click)">element.click()</a>.
 		/// </para>
 		/// <para>
 		/// Under the hood, it creates an instance of an event based on the given <paramref
 		/// name="type"/>, initializes it with <paramref name="eventInit"/> properties and dispatches
-		/// it on the element. Events are <c>composed`, `cancelable</c> and bubble by default.
+		/// it on the element. Events are <c>composed</c>, <c>cancelable</c> and bubble by default.
 		/// </para>
 		/// <para>
 		/// Since <paramref name="eventInit"/> is event-specific, please refer to the events
 		/// documentation for the lists of initial properties:
 		/// </para>
 		/// <list type="bullet">
-		/// <item><description>[DragEvent](https://developer.mozilla.org/en-US/docs/Web/API/DragEvent/DragEvent)</description></item>
-		/// <item><description>[FocusEvent](https://developer.mozilla.org/en-US/docs/Web/API/FocusEvent/FocusEvent)</description></item>
-		/// <item><description>[KeyboardEvent](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/KeyboardEvent)</description></item>
-		/// <item><description>[MouseEvent](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/MouseEvent)</description></item>
-		/// <item><description>[PointerEvent](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/PointerEvent)</description></item>
-		/// <item><description>[TouchEvent](https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent/TouchEvent)</description></item>
-		/// <item><description>[Event](https://developer.mozilla.org/en-US/docs/Web/API/Event/Event)</description></item>
+		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/DragEvent/DragEvent)">DragEvent</a></description></item>
+		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/FocusEvent/FocusEvent)">FocusEvent</a></description></item>
+		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/KeyboardEvent)">KeyboardEvent</a></description></item>
+		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/MouseEvent)">MouseEvent</a></description></item>
+		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/PointerEvent)">PointerEvent</a></description></item>
+		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent/TouchEvent)">TouchEvent</a></description></item>
+		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/Event/Event)">Event</a></description></item>
 		/// </list>
 		/// <para>
 		/// You can also specify <c>JSHandle</c> as the property value if you want live objects
@@ -541,10 +545,10 @@ namespace PlaywrightSharp
 		/// </summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
-		/// <param name="type">DOM event type: <c>"click"`, `"dragstart"</c>  etc.</param>
+		/// <param name="type">DOM event type: <c>"click"</c>, <c>"dragstart"</c>, etc.</param>
 		/// <param name="eventInit">Optional event-specific initialization properties.</param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -554,12 +558,13 @@ namespace PlaywrightSharp
 		Task DispatchEventAsync(string selector, string type, object eventInit = null, int timeout = 0);
 	
 		/// <param name="colorScheme">
-		/// Emulates <c>'prefers-colors-scheme'` media feature, supported values are `'light'`,
-		/// `'dark'`, `'no-preference'`. Passing `null</c> disables color scheme emulation.
+		/// Emulates <c>'prefers-colors-scheme'</c> media feature, supported values are <c>'light'</c>,
+		/// <c>'dark'</c>, <c>'no-preference'</c>. Passing <c>null</c> disables color scheme
+		/// emulation.
 		/// </param>
 		/// <param name="media">
-		/// Changes the CSS media type of the page. The only allowed values are <c>'screen'`,
-		/// `'print'` and `null`. Passing `null</c> disables CSS media emulation.
+		/// Changes the CSS media type of the page. The only allowed values are <c>'screen'</c>,
+		/// <c>'print'</c> and <c>null</c>. Passing <c>null</c> disables CSS media emulation.
 		/// </param>
 		Task EmulateMediaAsync(ColorScheme? colorScheme = null, Media? media = null);
 	
@@ -576,7 +581,10 @@ namespace PlaywrightSharp
 		/// <para>Examples:</para>
 		/// <para>Shortcut for main frame's <see cref="IFrame.EvalOnSelectorAsync"/>.</para>
 		/// </summary>
-		/// <param name="selector">A selector to query for. See [working with selectors](./selectors.md) for more details.</param>
+		/// <param name="selector">
+		/// A selector to query for. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
+		/// </param>
 		/// <param name="expression">
 		/// JavaScript expression to be evaluated in the browser context. If it looks like a
 		/// function declaration, it is interpreted as a function. Otherwise, evaluated as an
@@ -597,7 +605,10 @@ namespace PlaywrightSharp
 		/// </para>
 		/// <para>Examples:</para>
 		/// </summary>
-		/// <param name="selector">A selector to query for. See [working with selectors](./selectors.md) for more details.</param>
+		/// <param name="selector">
+		/// A selector to query for. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
+		/// </param>
 		/// <param name="expression">
 		/// JavaScript expression to be evaluated in the browser context. If it looks like a
 		/// function declaration, it is interpreted as a function. Otherwise, evaluated as an
@@ -615,9 +626,9 @@ namespace PlaywrightSharp
 		/// </para>
 		/// <para>
 		/// If the function passed to the <see cref="IPage.EvaluateAsync"/> returns a non-[Serializable]
-		/// value, then <see cref="IPage.EvaluateAsync"/> resolves to <c>undefined`. Playwright
-		/// also supports transferring some additional values that are not serializable by `JSON`:
-		/// `-0`, `NaN`, `Infinity`, `-Infinity</c>
+		/// value, then <see cref="IPage.EvaluateAsync"/> resolves to <c>undefined</c>. Playwright
+		/// also supports transferring some additional values that are not serializable by <c>JSON</c>:
+		/// <c>-0</c>, <c>NaN</c>, <c>Infinity</c>, <c>-Infinity</c>.
 		/// </para>
 		/// <para>Passing argument to <paramref name="expression"/>:</para>
 		/// <para>A string can also be passed in instead of a function:</para>
@@ -667,7 +678,7 @@ namespace PlaywrightSharp
 		/// <para>
 		/// The first argument of the <paramref name="callback"/> function contains information
 		/// about the caller: <c>{ browserContext: BrowserContext, page: Page, frame: Frame
-		/// }</c>
+		/// }</c>.
 		/// </para>
 		/// <para>See <see cref="IBrowserContext.ExposeBindingAsync"/> for the context-wide version.</para>
 		/// <para>An example of exposing page URL to all frames in a page:</para>
@@ -701,27 +712,30 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// This method waits for an element matching <paramref name="selector"/>, waits for
-		/// [actionability](./actionability.md) checks, focuses the element, fills it and triggers
-		/// an <c>input` event after filling. If the element is inside the `<label></c> element
-		/// that has associated [control](https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control),
-		/// that control will be filled instead. If the element to be filled is not an <c><input>`,
-		/// `<textarea>` or `[contenteditable]</c> element, this method throws an error. Note
-		/// that you can pass an empty string to clear the input field.
+		/// <a href="./actionability.md)">actionability</a> checks, focuses the element, fills
+		/// it and triggers an <c>input</c> event after filling. If the element is inside the
+		/// <c>&lt;label&gt;</c> element that has associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control)">control</a>,
+		/// that control will be filled instead. If the element to be filled is not an <c>&lt;input&gt;</c>,
+		/// <c>&lt;textarea&gt;</c> or <c>[contenteditable]</c> element, this method throws
+		/// an error. Note that you can pass an empty string to clear the input field.
 		/// </para>
 		/// <para>To send fine-grained keyboard events, use <see cref="IPage.TypeAsync"/>.</para>
 		/// <para>Shortcut for main frame's <see cref="IFrame.FillAsync"/></para>
 		/// </summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
-		/// <param name="value">Value to fill for the <c><input>`, `<textarea>` or `[contenteditable]</c> element.</param>
+		/// <param name="value">
+		/// Value to fill for the <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or <c>[contenteditable]</c>
+		/// element.
+		/// </param>
 		/// <param name="noWaitAfter">
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -740,8 +754,8 @@ namespace PlaywrightSharp
 		/// </summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -752,11 +766,11 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Returns frame matching the specified criteria. Either <c>name` or `url</c> must
-		/// be specified.
+		/// Returns frame matching the specified criteria. Either <c>name</c> or <c>url</c>
+		/// must be specified.
 		/// </para>
 		/// </summary>
-		/// <param name="name">Frame name specified in the <c>iframe`'s `name</c> attribute.</param>
+		/// <param name="name">Frame name specified in the <c>iframe</c>'s <c>name</c> attribute.</param>
 		IFrame Frame(string name);
 	
 		/// <summary><para>Returns frame with matching URL.</para></summary>
@@ -780,8 +794,8 @@ namespace PlaywrightSharp
 		/// <summary><para>Returns element attribute value.</para></summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="name">Attribute name to get the value for.</param>
 		/// <param name="timeout">
@@ -795,7 +809,7 @@ namespace PlaywrightSharp
 		/// <para>
 		/// Returns the main resource response. In case of multiple redirects, the navigation
 		/// will resolve with the response of the last redirect. If can not go back, returns
-		/// <c>null</c>
+		/// <c>null</c>.
 		/// </para>
 		/// <para>Navigate to the previous page in history.</para>
 		/// </summary>
@@ -806,16 +820,19 @@ namespace PlaywrightSharp
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
 		/// <param name="waitUntil">
-		/// When to consider operation succeeded, defaults to <c>load</c>  Events can be either:
+		/// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
 		/// <list type="bullet">
 		/// <item><description>
-		/// `'domcontentloaded <c> - consider operation to be finished when the `DOMContentLoaded</c>
+		/// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
 		/// event is fired.
 		/// </description></item>
-		/// <item><description>`'load <c> - consider operation to be finished when the `load</c> event is fired.</description></item>
 		/// <item><description>
-		/// `'networkidle <c> - consider operation to be finished when there are no network
-		/// connections for at least `500</c> ms.
+		/// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
+		/// fired.
+		/// </description></item>
+		/// <item><description>
+		/// <c>'networkidle'</c> - consider operation to be finished when there are no network
+		/// connections for at least <c>500</c> ms.
 		/// </description></item>
 		/// </list>
 		/// </param>
@@ -825,7 +842,7 @@ namespace PlaywrightSharp
 		/// <para>
 		/// Returns the main resource response. In case of multiple redirects, the navigation
 		/// will resolve with the response of the last redirect. If can not go forward, returns
-		/// <c>null</c>
+		/// <c>null</c>.
 		/// </para>
 		/// <para>Navigate to the next page in history.</para>
 		/// </summary>
@@ -836,16 +853,19 @@ namespace PlaywrightSharp
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
 		/// <param name="waitUntil">
-		/// When to consider operation succeeded, defaults to <c>load</c>  Events can be either:
+		/// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
 		/// <list type="bullet">
 		/// <item><description>
-		/// `'domcontentloaded <c> - consider operation to be finished when the `DOMContentLoaded</c>
+		/// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
 		/// event is fired.
 		/// </description></item>
-		/// <item><description>`'load <c> - consider operation to be finished when the `load</c> event is fired.</description></item>
 		/// <item><description>
-		/// `'networkidle <c> - consider operation to be finished when there are no network
-		/// connections for at least `500</c> ms.
+		/// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
+		/// fired.
+		/// </description></item>
+		/// <item><description>
+		/// <c>'networkidle'</c> - consider operation to be finished when there are no network
+		/// connections for at least <c>500</c> ms.
 		/// </description></item>
 		/// </list>
 		/// </param>
@@ -856,7 +876,7 @@ namespace PlaywrightSharp
 		/// Returns the main resource response. In case of multiple redirects, the navigation
 		/// will resolve with the response of the last redirect.
 		/// </para>
-		/// <para>`page.goto` will throw an error if:</para>
+		/// <para><c>page.goto</c> will throw an error if:</para>
 		/// <list type="bullet">
 		/// <item><description>there's an SSL error (e.g. in case of self-signed certificates).</description></item>
 		/// <item><description>target URL is invalid.</description></item>
@@ -865,7 +885,7 @@ namespace PlaywrightSharp
 		/// <item><description>the main resource failed to load.</description></item>
 		/// </list>
 		/// <para>
-		/// `page.goto` will not throw an error when any valid HTTP status code is returned
+		/// <c>page.goto</c> will not throw an error when any valid HTTP status code is returned
 		/// by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
 		/// The status code for such responses can be retrieved by calling <see cref="IResponse.Status"/>.
 		/// </para>
@@ -873,13 +893,16 @@ namespace PlaywrightSharp
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// `page.got <c> either throws an error or returns a main resource response. The only
-		/// exceptions are navigation to `about:blank` or navigation to the same URL with a
-		/// different hash, which would succeed and return `null</c>
+		/// <c>page.goto</c> either throws an error or returns a main resource response. The
+		/// only exceptions are navigation to <c>about:blank</c> or navigation to the same URL
+		/// with a different hash, which would succeed and return <c>null</c>.
 		/// </para>
-		/// <para>Headless mode doesn't support navigation to a PDF document. See the [upstream issue](https://bugs.chromium.org/p/chromium/issues/detail?id=761295).</para>
+		/// <para>
+		/// Headless mode doesn't support navigation to a PDF document. See the <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=761295)">upstream
+		/// issue</a>.
+		/// </para>
 		/// </remarks>
-		/// <param name="url">URL to navigate page to. The url should include scheme, e.g. <c>https://</c></param>
+		/// <param name="url">URL to navigate page to. The url should include scheme, e.g. <c>https://</c>.</param>
 		/// <param name="referer">
 		/// Referer header value. If provided it will take preference over the referer header
 		/// value set by <see cref="IPage.SetExtraHTTPHeadersAsync"/>.
@@ -891,16 +914,19 @@ namespace PlaywrightSharp
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
 		/// <param name="waitUntil">
-		/// When to consider operation succeeded, defaults to <c>load</c>  Events can be either:
+		/// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
 		/// <list type="bullet">
 		/// <item><description>
-		/// `'domcontentloaded <c> - consider operation to be finished when the `DOMContentLoaded</c>
+		/// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
 		/// event is fired.
 		/// </description></item>
-		/// <item><description>`'load <c> - consider operation to be finished when the `load</c> event is fired.</description></item>
 		/// <item><description>
-		/// `'networkidle <c> - consider operation to be finished when there are no network
-		/// connections for at least `500</c> ms.
+		/// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
+		/// fired.
+		/// </description></item>
+		/// <item><description>
+		/// <c>'networkidle'</c> - consider operation to be finished when there are no network
+		/// connections for at least <c>500</c> ms.
 		/// </description></item>
 		/// </list>
 		/// </param>
@@ -917,9 +943,9 @@ namespace PlaywrightSharp
 		/// until a matching element is attached to the DOM.
 		/// </description></item>
 		/// <item><description>
-		/// Wait for [actionability](./actionability.md) checks on the matched element, unless
-		/// <paramref name="force"/> option is set. If the element is detached during the checks,
-		/// the whole action is retried.
+		/// Wait for <a href="./actionability.md)">actionability</a> checks on the matched element,
+		/// unless <paramref name="force"/> option is set. If the element is detached during
+		/// the checks, the whole action is retried.
 		/// </description></item>
 		/// <item><description>Scroll the element into view if needed.</description></item>
 		/// <item><description>
@@ -940,12 +966,12 @@ namespace PlaywrightSharp
 		/// </summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="force">
-		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
-		/// 
+		/// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
+		/// to <c>false</c>.
 		/// </param>
 		/// <param name="modifiers">
 		/// Modifier keys to press. Ensures that only these modifiers are pressed during the
@@ -963,11 +989,11 @@ namespace PlaywrightSharp
 		/// </param>
 		Task HoverAsync(string selector, bool? force = null, Modifiers[] modifiers = null, PagePosition position = null, int timeout = 0);
 	
-		/// <summary><para>Returns <c>element.innerHTML</c></para></summary>
+		/// <summary><para>Returns <c>element.innerHTML</c>.</para></summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -976,11 +1002,11 @@ namespace PlaywrightSharp
 		/// </param>
 		Task<string> InnerHTMLAsync(string selector, int timeout = 0);
 	
-		/// <summary><para>Returns <c>element.innerText</c></para></summary>
+		/// <summary><para>Returns <c>element.innerText</c>.</para></summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -997,8 +1023,8 @@ namespace PlaywrightSharp
 		/// </summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -1010,11 +1036,11 @@ namespace PlaywrightSharp
 		/// <summary><para>Indicates that the page has been closed.</para></summary>
 		bool IsClosed();
 	
-		/// <summary><para>Returns whether the element is disabled, the opposite of [enabled](./actionability.md#enabled).</para></summary>
+		/// <summary><para>Returns whether the element is disabled, the opposite of <a href="./actionability.md#enabled)">enabled</a>.</para></summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -1023,11 +1049,11 @@ namespace PlaywrightSharp
 		/// </param>
 		Task<bool> IsDisabledAsync(string selector, int timeout = 0);
 	
-		/// <summary><para>Returns whether the element is [editable](./actionability.md#editable).</para></summary>
+		/// <summary><para>Returns whether the element is <a href="./actionability.md#editable)">editable</a>.</para></summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -1036,11 +1062,11 @@ namespace PlaywrightSharp
 		/// </param>
 		Task<bool> IsEditableAsync(string selector, int timeout = 0);
 	
-		/// <summary><para>Returns whether the element is [enabled](./actionability.md#enabled).</para></summary>
+		/// <summary><para>Returns whether the element is <a href="./actionability.md#enabled)">enabled</a>.</para></summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -1051,14 +1077,14 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Returns whether the element is hidden, the opposite of [visible](./actionability.md#visible).
+		/// Returns whether the element is hidden, the opposite of <a href="./actionability.md#visible)">visible</a>.
 		/// <paramref name="selector"/> that does not match any elements is considered hidden.
 		/// </para>
 		/// </summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -1069,14 +1095,14 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Returns whether the element is [visible](./actionability.md#visible). <paramref
-		/// name="selector"/> that does not match any elements is considered not visible.
+		/// Returns whether the element is <a href="./actionability.md#visible)">visible</a>.
+		/// <paramref name="selector"/> that does not match any elements is considered not visible.
 		/// </para>
 		/// </summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -1099,8 +1125,8 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Returns the opener for popup pages and <c>null` for others. If the opener has been
-		/// closed already the returns `null</c>
+		/// Returns the opener for popup pages and <c>null</c> for others. If the opener has
+		/// been closed already the returns <c>null</c>.
 		/// </para>
 		/// </summary>
 		Task<IPage> GetOpenerAsync();
@@ -1127,9 +1153,9 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>Returns the PDF buffer.</para>
 		/// <para>
-		/// `page.pdf( <c> generates a pdf of the page with `print` css media. To generate a
-		/// pdf with `screen` media, call <see cref="IPage.EmulateMediaAsync"/> before calling
-		/// `page.pdf()</c>
+		/// <c>page.pdf()</c> generates a pdf of the page with <c>print</c> css media. To generate
+		/// a pdf with <c>screen</c> media, call <see cref="IPage.EmulateMediaAsync"/> before
+		/// calling <c>page.pdf()</c>:
 		/// </para>
 		/// <para>
 		/// The <paramref name="width"/>, <paramref name="height"/>, and <paramref name="margin"/>
@@ -1137,37 +1163,37 @@ namespace PlaywrightSharp
 		/// </para>
 		/// <para>A few examples:</para>
 		/// <list type="bullet">
-		/// <item><description>`page.pdf({width: 100})` - prints with width set to 100 pixels</description></item>
-		/// <item><description>`page.pdf({width: '100px'})` - prints with width set to 100 pixels</description></item>
-		/// <item><description>`page.pdf({width: '10cm'})` - prints with width set to 10 centimeters.</description></item>
+		/// <item><description><c>page.pdf({width: 100})</c> - prints with width set to 100 pixels</description></item>
+		/// <item><description><c>page.pdf({width: '100px'})</c> - prints with width set to 100 pixels</description></item>
+		/// <item><description><c>page.pdf({width: '10cm'})</c> - prints with width set to 10 centimeters.</description></item>
 		/// </list>
 		/// <para>All possible units are:</para>
 		/// <list type="bullet">
-		/// <item><description>`px` - pixel</description></item>
-		/// <item><description>`in` - inch</description></item>
-		/// <item><description>`cm` - centimeter</description></item>
-		/// <item><description>`mm` - millimeter</description></item>
+		/// <item><description><c>px</c> - pixel</description></item>
+		/// <item><description><c>in</c> - inch</description></item>
+		/// <item><description><c>cm</c> - centimeter</description></item>
+		/// <item><description><c>mm</c> - millimeter</description></item>
 		/// </list>
 		/// <para>The <paramref name="format"/> options are:</para>
 		/// <list type="bullet">
-		/// <item><description>`Letter`: 8.5in x 11in</description></item>
-		/// <item><description>`Legal`: 8.5in x 14in</description></item>
-		/// <item><description>`Tabloid`: 11in x 17in</description></item>
-		/// <item><description>`Ledger`: 17in x 11in</description></item>
-		/// <item><description>`A0`: 33.1in x 46.8in</description></item>
-		/// <item><description>`A1`: 23.4in x 33.1in</description></item>
-		/// <item><description>`A2`: 16.54in x 23.4in</description></item>
-		/// <item><description>`A3`: 11.7in x 16.54in</description></item>
-		/// <item><description>`A4`: 8.27in x 11.7in</description></item>
-		/// <item><description>`A5`: 5.83in x 8.27in</description></item>
-		/// <item><description>`A6`: 4.13in x 5.83in</description></item>
+		/// <item><description><c>Letter</c>: 8.5in x 11in</description></item>
+		/// <item><description><c>Legal</c>: 8.5in x 14in</description></item>
+		/// <item><description><c>Tabloid</c>: 11in x 17in</description></item>
+		/// <item><description><c>Ledger</c>: 17in x 11in</description></item>
+		/// <item><description><c>A0</c>: 33.1in x 46.8in</description></item>
+		/// <item><description><c>A1</c>: 23.4in x 33.1in</description></item>
+		/// <item><description><c>A2</c>: 16.54in x 23.4in</description></item>
+		/// <item><description><c>A3</c>: 11.7in x 16.54in</description></item>
+		/// <item><description><c>A4</c>: 8.27in x 11.7in</description></item>
+		/// <item><description><c>A5</c>: 5.83in x 8.27in</description></item>
+		/// <item><description><c>A6</c>: 4.13in x 5.83in</description></item>
 		/// </list>
 		/// </summary>
 		/// <remarks>
 		/// <para>Generating a pdf is currently only supported in Chromium headless.</para>
 		/// <para>
 		/// By default, <c>page.pdf()</c> generates a pdf with modified colors for printing.
-		/// Use the [`-webkit-print-color-adjust`](https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-print-color-adjust)
+		/// Use the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-print-color-adjust)"><c>-webkit-print-color-adjust</c></a>
 		/// property to force rendering of exact colors.
 		/// </para>
 		/// <para>
@@ -1176,7 +1202,7 @@ namespace PlaywrightSharp
 		/// > 2. Page styles are not visible inside templates.
 		/// </para>
 		/// </remarks>
-		/// <param name="displayHeaderFooter">Display header and footer. Defaults to <c>false</c></param>
+		/// <param name="displayHeaderFooter">Display header and footer. Defaults to <c>false</c>.</param>
 		/// <param name="footerTemplate">
 		/// HTML template for the print footer. Should use the same format as the <paramref
 		/// name="headerTemplate"/>.
@@ -1189,15 +1215,15 @@ namespace PlaywrightSharp
 		/// HTML template for the print header. Should be valid HTML markup with following classes
 		/// used to inject printing values into them:
 		/// <list type="bullet">
-		/// <item><description>`'date'` formatted print date</description></item>
-		/// <item><description>`'title'` document title</description></item>
-		/// <item><description>`'url'` document location</description></item>
-		/// <item><description>`'pageNumber'` current page number</description></item>
-		/// <item><description>`'totalPages'` total pages in the document</description></item>
+		/// <item><description><c>'date'</c> formatted print date</description></item>
+		/// <item><description><c>'title'</c> document title</description></item>
+		/// <item><description><c>'url'</c> document location</description></item>
+		/// <item><description><c>'pageNumber'</c> current page number</description></item>
+		/// <item><description><c>'totalPages'</c> total pages in the document</description></item>
 		/// </list>
 		/// </param>
 		/// <param name="height">Paper height, accepts values labeled with units.</param>
-		/// <param name="landscape">Paper orientation. Defaults to <c>false</c></param>
+		/// <param name="landscape">Paper orientation. Defaults to <c>false</c>.</param>
 		/// <param name="margin">Paper margins, defaults to none.</param>
 		/// <param name="pageRanges">
 		/// Paper ranges to print, e.g., '1-5, 8, 11-13'. Defaults to the empty string, which
@@ -1209,13 +1235,14 @@ namespace PlaywrightSharp
 		/// the PDF won't be saved to the disk.
 		/// </param>
 		/// <param name="preferCSSPageSize">
-		/// Give any CSS <c>@page` size declared in the page priority over what is declared
+		/// Give any CSS <c>@page</c> size declared in the page priority over what is declared
 		/// in <paramref name="width"/> and <paramref name="height"/> or <paramref name="format"/>
-		/// options. Defaults to `false</c>  which will scale the content to fit the paper size.
+		/// options. Defaults to <c>false</c>, which will scale the content to fit the paper
+		/// size.
 		/// </param>
-		/// <param name="printBackground">Print background graphics. Defaults to <c>false</c></param>
+		/// <param name="printBackground">Print background graphics. Defaults to <c>false</c>.</param>
 		/// <param name="scale">
-		/// Scale of the webpage rendering. Defaults to <c>1</c>  Scale amount must be between
+		/// Scale of the webpage rendering. Defaults to <c>1</c>. Scale amount must be between
 		/// 0.1 and 2.
 		/// </param>
 		/// <param name="width">Paper width, accepts values labeled with units.</param>
@@ -1224,19 +1251,21 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>Focuses the element, and then uses <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.</para>
 		/// <para>
-		/// <paramref name="key"/> can specify the intended [keyboardEvent.key](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key)
+		/// <paramref name="key"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key)">keyboardEvent.key</a>
 		/// value or a single character to generate the text for. A superset of the <paramref
-		/// name="key"/> values can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values).
+		/// name="key"/> values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values)">here</a>.
 		/// Examples of the keys are:
 		/// </para>
 		/// <para>
-		/// `F <c> - `F12`, `Digit0`- `Digit9`, `KeyA`- `KeyZ`, `Backquote`, `Minus`, `Equal`,
-		/// `Backslash`, `Backspace`, `Tab`, `Delete`, `Escape`, `ArrowDown`, `End`, `Enter`,
-		/// `Home`, `Insert`, `PageDown`, `PageUp`, `ArrowRight`, `ArrowUp</c>  etc.
+		/// <c>F1</c> - <c>F12</c>, <c>Digit0</c>- <c>Digit9</c>, <c>KeyA</c>- <c>KeyZ</c>,
+		/// <c>Backquote</c>, <c>Minus</c>, <c>Equal</c>, <c>Backslash</c>, <c>Backspace</c>,
+		/// <c>Tab</c>, <c>Delete</c>, <c>Escape</c>, <c>ArrowDown</c>, <c>End</c>, <c>Enter</c>,
+		/// <c>Home</c>, <c>Insert</c>, <c>PageDown</c>, <c>PageUp</c>, <c>ArrowRight</c>, <c>ArrowUp</c>,
+		/// etc.
 		/// </para>
 		/// <para>
-		/// Following modification shortcuts are also supported: <c>Shift`, `Control`, `Alt`,
-		/// `Meta`, `ShiftLeft</c>
+		/// Following modification shortcuts are also supported: <c>Shift</c>, <c>Control</c>,
+		/// <c>Alt</c>, <c>Meta</c>, <c>ShiftLeft</c>.
 		/// </para>
 		/// <para>
 		/// Holding down <c>Shift</c> will type the text that corresponds to the <paramref name="key"/>
@@ -1244,29 +1273,32 @@ namespace PlaywrightSharp
 		/// </para>
 		/// <para>
 		/// If <paramref name="key"/> is a single character, it is case-sensitive, so the values
-		/// <c>a` and `A</c> will generate different respective texts.
+		/// <c>a</c> and <c>A</c> will generate different respective texts.
 		/// </para>
 		/// <para>
-		/// Shortcuts such as <c>key: "Control+o"` or `key: "Control+Shift+T"</c> are supported
+		/// Shortcuts such as <c>key: "Control+o"</c> or <c>key: "Control+Shift+T"</c> are supported
 		/// as well. When speficied with the modifier, modifier is pressed and being held while
 		/// the subsequent key is being pressed.
 		/// </para>
 		/// </summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="key">
-		/// Name of the key to press or a character to generate, such as <c>ArrowLeft` or `a</c>
-		/// 
+		/// Name of the key to press or a character to generate, such as <c>ArrowLeft</c> or
+		/// <c>a</c>.
 		/// </param>
-		/// <param name="delay">Time to wait between <c>keydown` and `keyup</c> in milliseconds. Defaults to 0.</param>
+		/// <param name="delay">
+		/// Time to wait between <c>keydown</c> and <c>keyup</c> in milliseconds. Defaults to
+		/// 0.
+		/// </param>
 		/// <param name="noWaitAfter">
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -1278,21 +1310,27 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// The method finds an element matching the specified selector within the page. If
-		/// no elements match the selector, the return value resolves to <c>null</c>
+		/// no elements match the selector, the return value resolves to <c>null</c>.
 		/// </para>
 		/// <para>Shortcut for main frame's <see cref="IFrame.QuerySelectorAsync"/>.</para>
 		/// </summary>
-		/// <param name="selector">A selector to query for. See [working with selectors](./selectors.md) for more details.</param>
+		/// <param name="selector">
+		/// A selector to query for. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
+		/// </param>
 		Task<IElementHandle> QuerySelectorAsync(string selector);
 	
 		/// <summary>
 		/// <para>
 		/// The method finds all elements matching the specified selector within the page. If
-		/// no elements match the selector, the return value resolves to <c>[]</c>
+		/// no elements match the selector, the return value resolves to <c>[]</c>.
 		/// </para>
 		/// <para>Shortcut for main frame's <see cref="IFrame.QuerySelectorAllAsync"/>.</para>
 		/// </summary>
-		/// <param name="selector">A selector to query for. See [working with selectors](./selectors.md) for more details.</param>
+		/// <param name="selector">
+		/// A selector to query for. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
+		/// </param>
 		Task<dynamic> QuerySelectorAllAsync(string selector);
 	
 		/// <summary>
@@ -1308,16 +1346,19 @@ namespace PlaywrightSharp
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
 		/// <param name="waitUntil">
-		/// When to consider operation succeeded, defaults to <c>load</c>  Events can be either:
+		/// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
 		/// <list type="bullet">
 		/// <item><description>
-		/// `'domcontentloaded <c> - consider operation to be finished when the `DOMContentLoaded</c>
+		/// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
 		/// event is fired.
 		/// </description></item>
-		/// <item><description>`'load <c> - consider operation to be finished when the `load</c> event is fired.</description></item>
 		/// <item><description>
-		/// `'networkidle <c> - consider operation to be finished when there are no network
-		/// connections for at least `500</c> ms.
+		/// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
+		/// fired.
+		/// </description></item>
+		/// <item><description>
+		/// <c>'networkidle'</c> - consider operation to be finished when there are no network
+		/// connections for at least <c>500</c> ms.
 		/// </description></item>
 		/// </list>
 		/// </param>
@@ -1359,11 +1400,11 @@ namespace PlaywrightSharp
 		/// </param>
 		/// <param name="fullPage">
 		/// When true, takes a screenshot of the full scrollable page, instead of the currently
-		/// visible viewport. Defaults to <c>false</c>
+		/// visible viewport. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="omitBackground">
 		/// Hides default white background and allows capturing screenshots with transparency.
-		/// Not applicable to <c>jpeg` images. Defaults to `false</c>
+		/// Not applicable to <c>jpeg</c> images. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="path">
 		/// The file path to save the image to. The screenshot type will be inferred from file
@@ -1377,29 +1418,29 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		/// <param name="type">Specify screenshot type, defaults to <c>png</c></param>
+		/// <param name="type">Specify screenshot type, defaults to <c>png</c>.</param>
 		Task<byte[]> ScreenshotAsync(PageClip clip = null, bool? fullPage = null, bool? omitBackground = null, string path = null, int? quality = null, int timeout = 0, Type? type = null);
 	
 		/// <summary>
 		/// <para>Returns the array of option values that have been successfully selected.</para>
 		/// <para>
-		/// Triggers a <c>change` and `input` event once all the provided options have been
-		/// selected. If there's no `<select></c> element matching <paramref name="selector"/>,
+		/// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
+		/// been selected. If there's no <c>&lt;select&gt;</c> element matching <paramref name="selector"/>,
 		/// the method throws an error.
 		/// </para>
-		/// <para>Will wait until all specified options are present in the <c><select></c> element.</para>
+		/// <para>Will wait until all specified options are present in the <c>&lt;select&gt;</c> element.</para>
 		/// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/></para>
 		/// </summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="noWaitAfter">
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -1416,16 +1457,19 @@ namespace PlaywrightSharp
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
 		/// <param name="waitUntil">
-		/// When to consider operation succeeded, defaults to <c>load</c>  Events can be either:
+		/// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
 		/// <list type="bullet">
 		/// <item><description>
-		/// `'domcontentloaded <c> - consider operation to be finished when the `DOMContentLoaded</c>
+		/// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
 		/// event is fired.
 		/// </description></item>
-		/// <item><description>`'load <c> - consider operation to be finished when the `load</c> event is fired.</description></item>
 		/// <item><description>
-		/// `'networkidle <c> - consider operation to be finished when there are no network
-		/// connections for at least `500</c> ms.
+		/// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
+		/// fired.
+		/// </description></item>
+		/// <item><description>
+		/// <c>'networkidle'</c> - consider operation to be finished when there are no network
+		/// connections for at least <c>500</c> ms.
 		/// </description></item>
 		/// </list>
 		/// </param>
@@ -1478,7 +1522,10 @@ namespace PlaywrightSharp
 		Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers);
 	
 		/// <summary>
-		/// <para>This method expects <paramref name="selector"/> to point to an [input element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input).</para>
+		/// <para>
+		/// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input)">input
+		/// element</a>.
+		/// </para>
 		/// <para>
 		/// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
 		/// are relative paths, then they are resolved relative to the the current working directory.
@@ -1487,8 +1534,8 @@ namespace PlaywrightSharp
 		/// </summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="files">
 		/// </param>
@@ -1496,7 +1543,7 @@ namespace PlaywrightSharp
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -1512,8 +1559,9 @@ namespace PlaywrightSharp
 		/// (and more) for all pages in the context at once.
 		/// </para>
 		/// <para>
-		/// `page.setViewportSize` will resize the page. A lot of websites don't expect phones
-		/// to change size, so you should set the viewport size before navigating to the page.
+		/// <c>page.setViewportSize</c> will resize the page. A lot of websites don't expect
+		/// phones to change size, so you should set the viewport size before navigating to
+		/// the page.
 		/// </para>
 		/// </summary>
 		/// <param name="viewportSize">
@@ -1531,9 +1579,9 @@ namespace PlaywrightSharp
 		/// until a matching element is attached to the DOM.
 		/// </description></item>
 		/// <item><description>
-		/// Wait for [actionability](./actionability.md) checks on the matched element, unless
-		/// <paramref name="force"/> option is set. If the element is detached during the checks,
-		/// the whole action is retried.
+		/// Wait for <a href="./actionability.md)">actionability</a> checks on the matched element,
+		/// unless <paramref name="force"/> option is set. If the element is detached during
+		/// the checks, the whole action is retried.
 		/// </description></item>
 		/// <item><description>Scroll the element into view if needed.</description></item>
 		/// <item><description>
@@ -1560,12 +1608,12 @@ namespace PlaywrightSharp
 		/// </remarks>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="force">
-		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
-		/// 
+		/// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
+		/// to <c>false</c>.
 		/// </param>
 		/// <param name="modifiers">
 		/// Modifier keys to press. Ensures that only these modifiers are pressed during the
@@ -1576,7 +1624,7 @@ namespace PlaywrightSharp
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="position">
 		/// A point to use relative to the top-left corner of element padding box. If not specified,
@@ -1589,11 +1637,11 @@ namespace PlaywrightSharp
 		/// </param>
 		Task TapAsync(string selector, bool? force = null, Modifiers[] modifiers = null, bool? noWaitAfter = null, PagePosition position = null, int timeout = 0);
 	
-		/// <summary><para>Returns <c>element.textContent</c></para></summary>
+		/// <summary><para>Returns <c>element.textContent</c>.</para></summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -1609,17 +1657,17 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Sends a <c>keydown`, `keypress`/`input`, and `keyup` event for each character in
-		/// the text. `page.type</c> can be used to send fine-grained keyboard events. To fill
-		/// values in form fields, use <see cref="IPage.FillAsync"/>.
+		/// Sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for
+		/// each character in the text. <c>page.type</c> can be used to send fine-grained keyboard
+		/// events. To fill values in form fields, use <see cref="IPage.FillAsync"/>.
 		/// </para>
-		/// <para>To press a special key, like <c>Control` or `ArrowDown</c>  use <see cref="IKeyboard.PressAsync"/>.</para>
+		/// <para>To press a special key, like <c>Control</c> or <c>ArrowDown</c>, use <see cref="IKeyboard.PressAsync"/>.</para>
 		/// <para>Shortcut for main frame's <see cref="IFrame.TypeAsync"/>.</para>
 		/// </summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="text">A text to type into a focused element.</param>
 		/// <param name="delay">Time to wait between key presses in milliseconds. Defaults to 0.</param>
@@ -1627,7 +1675,7 @@ namespace PlaywrightSharp
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -1651,9 +1699,9 @@ namespace PlaywrightSharp
 		/// rejects. If the element is already unchecked, this method returns immediately.
 		/// </description></item>
 		/// <item><description>
-		/// Wait for [actionability](./actionability.md) checks on the matched element, unless
-		/// <paramref name="force"/> option is set. If the element is detached during the checks,
-		/// the whole action is retried.
+		/// Wait for <a href="./actionability.md)">actionability</a> checks on the matched element,
+		/// unless <paramref name="force"/> option is set. If the element is detached during
+		/// the checks, the whole action is retried.
 		/// </description></item>
 		/// <item><description>Scroll the element into view if needed.</description></item>
 		/// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
@@ -1672,18 +1720,18 @@ namespace PlaywrightSharp
 		/// </summary>
 		/// <param name="selector">
 		/// A selector to search for element. If there are multiple elements satisfying the
-		/// selector, the first will be used. See [working with selectors](./selectors.md) for
-		/// more details.
+		/// selector, the first will be used. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
 		/// </param>
 		/// <param name="force">
-		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
-		/// 
+		/// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
+		/// to <c>false</c>.
 		/// </param>
 		/// <param name="noWaitAfter">
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -1714,17 +1762,18 @@ namespace PlaywrightSharp
 	
 		/// <summary><para>Performs action and waits for the Page to close.</para></summary>
 		/// <param name="timeout">
-		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
-		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
 		IPage WaitForClose(int timeout = 0);
 	
 		/// <summary>
 		/// <para>
 		/// Performs action and waits for a [ConoleMessage] to be logged by in the page. If
-		/// predicate is provided, it passes <see cref="IConsoleMessage"/> value into the <c>predicate`
-		/// function and waits for `predicate(message)</c> to return a truthy value. Will throw
-		/// an error if the page is closed before the console event is fired.
+		/// predicate is provided, it passes <see cref="IConsoleMessage"/> value into the <c>predicate</c>
+		/// function and waits for <c>predicate(message)</c> to return a truthy value. Will
+		/// throw an error if the page is closed before the console event is fired.
 		/// </para>
 		/// </summary>
 		/// <param name="predicate">
@@ -1732,17 +1781,18 @@ namespace PlaywrightSharp
 		/// the waiting should resolve.
 		/// </param>
 		/// <param name="timeout">
-		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
-		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
 		Task<IConsoleMessage> WaitForConsoleMessageAsync(Func<IConsoleMessage, bool> predicate = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
 		/// Performs action and waits for a new <see cref="IDownload"/>. If predicate is provided,
-		/// it passes <see cref="IDownload"/> value into the <c>predicate` function and waits
-		/// for `predicate(download)</c> to return a truthy value. Will throw an error if the
-		/// page is closed before the download event is fired.
+		/// it passes <see cref="IDownload"/> value into the <c>predicate</c> function and waits
+		/// for <c>predicate(download)</c> to return a truthy value. Will throw an error if
+		/// the page is closed before the download event is fired.
 		/// </para>
 		/// </summary>
 		/// <param name="predicate">
@@ -1750,8 +1800,9 @@ namespace PlaywrightSharp
 		/// waiting should resolve.
 		/// </param>
 		/// <param name="timeout">
-		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
-		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
 		Task<IDownload> WaitForDownloadAsync(Func<IDownload, bool> predicate = null, int timeout = 0);
 	
@@ -1762,18 +1813,19 @@ namespace PlaywrightSharp
 		/// before the event is fired. Returns the event data value.
 		/// </para>
 		/// </summary>
-		/// <param name="event">Event name, same one typically passed into <c>*.on(event)</c></param>
+		/// <param name="event">Event name, same one typically passed into <c>*.on(event)</c>.</param>
 		/// <param name="timeout">
-		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
-		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
 		Task<object> WaitForEventAsync(string @event, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
 		/// Performs action and waits for a new <see cref="IFileChooser"/> to be created. If
-		/// predicate is provided, it passes <see cref="IFileChooser"/> value into the <c>predicate`
-		/// function and waits for `predicate(fileChooser)</c> to return a truthy value. Will
+		/// predicate is provided, it passes <see cref="IFileChooser"/> value into the <c>predicate</c>
+		/// function and waits for <c>predicate(fileChooser)</c> to return a truthy value. Will
 		/// throw an error if the page is closed before the file chooser is opened.
 		/// </para>
 		/// </summary>
@@ -1782,8 +1834,9 @@ namespace PlaywrightSharp
 		/// the waiting should resolve.
 		/// </param>
 		/// <param name="timeout">
-		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
-		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
 		Task<IFileChooser> WaitForFileChooserAsync(Func<IFileChooser, bool> predicate = null, int timeout = 0);
 	
@@ -1809,14 +1862,15 @@ namespace PlaywrightSharp
 		/// </param>
 		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
 		/// <param name="polling">
-		/// If <paramref name="polling"/> is <c>'raf'`, then <paramref name="expression"/> is
-		/// constantly executed in `requestAnimationFrame` callback. If <paramref name="polling"/>
+		/// If <paramref name="polling"/> is <c>'raf'</c>, then <paramref name="expression"/>
+		/// is constantly executed in <c>requestAnimationFrame</c> callback. If <paramref name="polling"/>
 		/// is a number, then it is treated as an interval in milliseconds at which the function
-		/// would be executed. Defaults to `raf</c>
+		/// would be executed. Defaults to <c>raf</c>.
 		/// </param>
 		/// <param name="timeout">
-		/// maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
-		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
 		Task<IJSHandle> WaitForFunctionAsync(string expression, object arg = null, Polling polling = null, int timeout = 0);
 	
@@ -1830,15 +1884,15 @@ namespace PlaywrightSharp
 		/// <para>Shortcut for main frame's <see cref="IFrame.WaitForLoadStateAsync"/>.</para>
 		/// </summary>
 		/// <param name="state">
-		/// Optional load state to wait for, defaults to <c>load</c>  If the state has been
+		/// Optional load state to wait for, defaults to <c>load</c>. If the state has been
 		/// already reached while loading current document, the method resolves immediately.
 		/// Can be one of:
 		/// <list type="bullet">
-		/// <item><description>`'load <c> - wait for the `load</c> event to be fired.</description></item>
-		/// <item><description>`'domcontentloaded <c> - wait for the `DOMContentLoaded</c> event to be fired.</description></item>
+		/// <item><description><c>'load'</c> - wait for the <c>load</c> event to be fired.</description></item>
+		/// <item><description><c>'domcontentloaded'</c> - wait for the <c>DOMContentLoaded</c> event to be fired.</description></item>
 		/// <item><description>
-		/// `'networkidle <c> - wait until there are no network connections for at least `500</c>
-		/// ms.
+		/// <c>'networkidle'</c> - wait until there are no network connections for at least
+		/// <c>500</c> ms.
 		/// </description></item>
 		/// </list>
 		/// </param>
@@ -1855,20 +1909,20 @@ namespace PlaywrightSharp
 		/// Waits for the main frame navigation and returns the main resource response. In case
 		/// of multiple redirects, the navigation will resolve with the response of the last
 		/// redirect. In case of navigation to a different anchor or navigation due to History
-		/// API usage, the navigation will resolve with <c>null</c>
+		/// API usage, the navigation will resolve with <c>null</c>.
 		/// </para>
 		/// <para>
 		/// This resolves when the page navigates to a new URL or reloads. It is useful for
 		/// when you run code which will indirectly cause the page to navigate. e.g. The click
-		/// target has an <c>onclick` handler that triggers navigation from a `setTimeout</c>
+		/// target has an <c>onclick</c> handler that triggers navigation from a <c>setTimeout</c>.
 		/// Consider this example:
 		/// </para>
 		/// <para>Shortcut for main frame's <see cref="IFrame.WaitForNavigationAsync"/>.</para>
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// Usage of the [History API](https://developer.mozilla.org/en-US/docs/Web/API/History_API)
-		/// to change the URL is considered a navigation.
+		/// Usage of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API)">History
+		/// API</a> to change the URL is considered a navigation.
 		/// </para>
 		/// </remarks>
 		/// <param name="timeout">
@@ -1890,16 +1944,19 @@ namespace PlaywrightSharp
 		/// for the navigation.
 		/// </param>
 		/// <param name="waitUntil">
-		/// When to consider operation succeeded, defaults to <c>load</c>  Events can be either:
+		/// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
 		/// <list type="bullet">
 		/// <item><description>
-		/// `'domcontentloaded <c> - consider operation to be finished when the `DOMContentLoaded</c>
+		/// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
 		/// event is fired.
 		/// </description></item>
-		/// <item><description>`'load <c> - consider operation to be finished when the `load</c> event is fired.</description></item>
 		/// <item><description>
-		/// `'networkidle <c> - consider operation to be finished when there are no network
-		/// connections for at least `500</c> ms.
+		/// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
+		/// fired.
+		/// </description></item>
+		/// <item><description>
+		/// <c>'networkidle'</c> - consider operation to be finished when there are no network
+		/// connections for at least <c>500</c> ms.
 		/// </description></item>
 		/// </list>
 		/// </param>
@@ -1908,7 +1965,7 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// Performs action and waits for a popup <see cref="IPage"/>. If predicate is provided,
-		/// it passes [Popup] value into the <c>predicate` function and waits for `predicate(page)</c>
+		/// it passes [Popup] value into the <c>predicate</c> function and waits for <c>predicate(page)</c>
 		/// to return a truthy value. Will throw an error if the page is closed before the popup
 		/// event is fired.
 		/// </para>
@@ -1918,8 +1975,9 @@ namespace PlaywrightSharp
 		/// should resolve.
 		/// </param>
 		/// <param name="timeout">
-		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
-		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
 		Task<IPage> WaitForPopupAsync(Func<IPage, bool> predicate = null, int timeout = 0);
 	
@@ -1948,7 +2006,7 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// Returns when element specified by selector satisfies <paramref name="state"/> option.
-		/// Returns <c>null` if waiting for `hidden` or `detached</c>
+		/// Returns <c>null</c> if waiting for <c>hidden</c> or <c>detached</c>.
 		/// </para>
 		/// <para>
 		/// Wait for the <paramref name="selector"/> to satisfy <paramref name="state"/> option
@@ -1959,20 +2017,24 @@ namespace PlaywrightSharp
 		/// </para>
 		/// <para>This method works across navigations:</para>
 		/// </summary>
-		/// <param name="selector">A selector to query for. See [working with selectors](./selectors.md) for more details.</param>
+		/// <param name="selector">
+		/// A selector to query for. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
+		/// </param>
 		/// <param name="state">
-		/// Defaults to <c>'visible'</c>  Can be either:
+		/// Defaults to <c>'visible'</c>. Can be either:
 		/// <list type="bullet">
-		/// <item><description>`'attached'` - wait for element to be present in DOM.</description></item>
-		/// <item><description>`'detached'` - wait for element to not be present in DOM.</description></item>
+		/// <item><description><c>'attached'</c> - wait for element to be present in DOM.</description></item>
+		/// <item><description><c>'detached'</c> - wait for element to not be present in DOM.</description></item>
 		/// <item><description>
-		/// `'visible <c> - wait for element to have non-empty bounding box and no `visibility:hidden`.
-		/// Note that element without any content or with `display:none</c> has an empty bounding
+		/// <c>'visible'</c> - wait for element to have non-empty bounding box and no <c>visibility:hidden</c>.
+		/// Note that element without any content or with <c>display:none</c> has an empty bounding
 		/// box and is not considered visible.
 		/// </description></item>
 		/// <item><description>
-		/// `'hidden <c> - wait for element to be either detached from DOM, or have an empty
-		/// bounding box or `visibility:hidden`. This is opposite to the `'visible'</c> option.
+		/// <c>'hidden'</c> - wait for element to be either detached from DOM, or have an empty
+		/// bounding box or <c>visibility:hidden</c>. This is opposite to the <c>'visible'</c>
+		/// option.
 		/// </description></item>
 		/// </list>
 		/// </param>
@@ -1998,9 +2060,9 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// Performs action and waits for a new <see cref="IWebSocket"/>. If predicate is provided,
-		/// it passes <see cref="IWebSocket"/> value into the <c>predicate` function and waits
-		/// for `predicate(webSocket)</c> to return a truthy value. Will throw an error if the
-		/// page is closed before the WebSocket event is fired.
+		/// it passes <see cref="IWebSocket"/> value into the <c>predicate</c> function and
+		/// waits for <c>predicate(webSocket)</c> to return a truthy value. Will throw an error
+		/// if the page is closed before the WebSocket event is fired.
 		/// </para>
 		/// </summary>
 		/// <param name="predicate">
@@ -2008,16 +2070,17 @@ namespace PlaywrightSharp
 		/// waiting should resolve.
 		/// </param>
 		/// <param name="timeout">
-		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
-		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
 		Task<IWebSocket> WaitForWebSocketAsync(Func<IWebSocket, bool> predicate = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
 		/// Performs action and waits for a new <see cref="IWorker"/>. If predicate is provided,
-		/// it passes <see cref="IWorker"/> value into the <c>predicate` function and waits
-		/// for `predicate(worker)</c> to return a truthy value. Will throw an error if the
+		/// it passes <see cref="IWorker"/> value into the <c>predicate</c> function and waits
+		/// for <c>predicate(worker)</c> to return a truthy value. Will throw an error if the
 		/// page is closed before the worker event is fired.
 		/// </para>
 		/// </summary>
@@ -2026,14 +2089,15 @@ namespace PlaywrightSharp
 		/// waiting should resolve.
 		/// </param>
 		/// <param name="timeout">
-		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
-		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
 		Task<IWorker> WaitForWorkerAsync(Func<IWorker, bool> predicate = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
-		/// This method returns all of the dedicated [WebWorkers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API)
+		/// This method returns all of the dedicated <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API)">WebWorkers</a>
 		/// associated with the page.
 		/// </para>
 		/// </summary>

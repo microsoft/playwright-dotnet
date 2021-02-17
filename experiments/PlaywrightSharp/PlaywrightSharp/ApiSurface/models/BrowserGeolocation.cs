@@ -52,7 +52,7 @@ namespace PlaywrightSharp
 		/// <summary><para>Longitude between -180 and 180.</para></summary>
 		decimal Longitude { get; set; }
 	
-		/// <summary><para>Non-negative accuracy value. Defaults to <c>0</c></para></summary>
+		/// <summary><para>Non-negative accuracy value. Defaults to <c>0</c>.</para></summary>
 		decimal Accuracy { get; set; }
 	}
 }

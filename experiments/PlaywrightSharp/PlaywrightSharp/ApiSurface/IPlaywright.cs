@@ -70,8 +70,8 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Selectors can be used to install custom selector engines. See [Working with selectors](./selectors.md)
-		/// for more information.
+		/// Selectors can be used to install custom selector engines. See <a href="./selectors.md)">Working
+		/// with selectors</a> for more information.
 		/// </para>
 		/// </summary>
 		ISelectors Selectors { get; set; }

@@ -46,16 +46,16 @@ namespace PlaywrightSharp
 {
     public class PageMargin
 	{
-		/// <summary><para>Top margin, accepts values labeled with units. Defaults to <c>0</c></para></summary>
+		/// <summary><para>Top margin, accepts values labeled with units. Defaults to <c>0</c>.</para></summary>
 		string Top { get; set; }
 	
-		/// <summary><para>Right margin, accepts values labeled with units. Defaults to <c>0</c></para></summary>
+		/// <summary><para>Right margin, accepts values labeled with units. Defaults to <c>0</c>.</para></summary>
 		string Right { get; set; }
 	
-		/// <summary><para>Bottom margin, accepts values labeled with units. Defaults to <c>0</c></para></summary>
+		/// <summary><para>Bottom margin, accepts values labeled with units. Defaults to <c>0</c>.</para></summary>
 		string Bottom { get; set; }
 	
-		/// <summary><para>Left margin, accepts values labeled with units. Defaults to <c>0</c></para></summary>
+		/// <summary><para>Left margin, accepts values labeled with units. Defaults to <c>0</c>.</para></summary>
 		string Left { get; set; }
 	}
 }

@@ -46,8 +46,8 @@ namespace PlaywrightSharp
 {
     /// <summary>
 	/// <para>
-	/// The Worker class represents a [WebWorker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API).
-	/// <c>worker` event is emitted on the page object to signal a worker creation. `close</c>
+	/// The Worker class represents a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API)">WebWorker</a>.
+	/// <c>worker</c> event is emitted on the page object to signal a worker creation. <c>close</c>
 	/// event is emitted on the worker object when the worker is gone.
 	/// </para>
 	/// </summary>
@@ -55,7 +55,7 @@ namespace PlaywrightSharp
 	{
 		/// <summary>
 		/// <para>
-		/// Emitted when this dedicated [WebWorker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API)
+		/// Emitted when this dedicated <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API)">WebWorker</a>
 		/// is terminated.
 		/// </para>
 		/// </summary>
@@ -70,9 +70,9 @@ namespace PlaywrightSharp
 		/// </para>
 		/// <para>
 		/// If the function passed to the <see cref="IWorker.EvaluateAsync"/> returns a non-[Serializable]
-		/// value, then <see cref="IWorker.EvaluateAsync"/> returns <c>undefined`. Playwright
+		/// value, then <see cref="IWorker.EvaluateAsync"/> returns <c>undefined</c>. Playwright
 		/// also supports transferring some  additional values that are not serializable by
-		/// `JSON`: `-0`, `NaN`, `Infinity`, `-Infinity</c>
+		/// <c>JSON</c>: <c>-0</c>, <c>NaN</c>, <c>Infinity</c>, <c>-Infinity</c>.
 		/// </para>
 		/// </summary>
 		/// <param name="expression">
@@ -107,8 +107,9 @@ namespace PlaywrightSharp
 	
 		/// <summary><para>Performs action and waits for the Worker to close.</para></summary>
 		/// <param name="timeout">
-		/// Maximum time to wait for in milliseconds. Defaults to <c>30000` (30 seconds). Pass
-		/// `0</c> to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
 		/// </param>
 		IWorker WaitForClose(int timeout = 0);
 	}

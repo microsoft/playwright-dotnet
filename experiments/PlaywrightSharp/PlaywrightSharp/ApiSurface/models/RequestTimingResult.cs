@@ -52,7 +52,7 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// Time immediately before the browser starts the domain name lookup for the resource.
-		/// The value is given in milliseconds relative to <c>startTime</c>  -1 if not available.
+		/// The value is given in milliseconds relative to <c>startTime</c>, -1 if not available.
 		/// </para>
 		/// </summary>
 		decimal DomainLookupStart { get; set; }
@@ -60,7 +60,7 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// Time immediately after the browser starts the domain name lookup for the resource.
-		/// The value is given in milliseconds relative to <c>startTime</c>  -1 if not available.
+		/// The value is given in milliseconds relative to <c>startTime</c>, -1 if not available.
 		/// </para>
 		/// </summary>
 		decimal DomainLookupEnd { get; set; }
@@ -69,7 +69,7 @@ namespace PlaywrightSharp
 		/// <para>
 		/// Time immediately before the user agent starts establishing the connection to the
 		/// server to retrieve the resource. The value is given in milliseconds relative to
-		/// <c>startTime</c>  -1 if not available.
+		/// <c>startTime</c>, -1 if not available.
 		/// </para>
 		/// </summary>
 		decimal ConnectStart { get; set; }
@@ -77,7 +77,7 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// Time immediately before the browser starts the handshake process to secure the current
-		/// connection. The value is given in milliseconds relative to <c>startTime</c>  -1
+		/// connection. The value is given in milliseconds relative to <c>startTime</c>, -1
 		/// if not available.
 		/// </para>
 		/// </summary>
@@ -87,7 +87,7 @@ namespace PlaywrightSharp
 		/// <para>
 		/// Time immediately before the user agent starts establishing the connection to the
 		/// server to retrieve the resource. The value is given in milliseconds relative to
-		/// <c>startTime</c>  -1 if not available.
+		/// <c>startTime</c>, -1 if not available.
 		/// </para>
 		/// </summary>
 		decimal ConnectEnd { get; set; }
@@ -95,7 +95,7 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// Time immediately before the browser starts requesting the resource from the server,
-		/// cache, or local resource. The value is given in milliseconds relative to <c>startTime</c>
+		/// cache, or local resource. The value is given in milliseconds relative to <c>startTime</c>,
 		/// -1 if not available.
 		/// </para>
 		/// </summary>
@@ -104,7 +104,7 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// Time immediately after the browser starts requesting the resource from the server,
-		/// cache, or local resource. The value is given in milliseconds relative to <c>startTime</c>
+		/// cache, or local resource. The value is given in milliseconds relative to <c>startTime</c>,
 		/// -1 if not available.
 		/// </para>
 		/// </summary>
@@ -114,7 +114,7 @@ namespace PlaywrightSharp
 		/// <para>
 		/// Time immediately after the browser receives the last byte of the resource or immediately
 		/// before the transport connection is closed, whichever comes first. The value is given
-		/// in milliseconds relative to <c>startTime</c>  -1 if not available.
+		/// in milliseconds relative to <c>startTime</c>, -1 if not available.
 		/// </para>
 		/// </summary>
 		decimal ResponseEnd { get; set; }

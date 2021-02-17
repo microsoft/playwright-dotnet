@@ -57,7 +57,7 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// URL of the resource followed by 0-based line and column numbers in the resource
-		/// formatted as <c>URL:line:column</c>
+		/// formatted as <c>URL:line:column</c>.
 		/// </para>
 		/// </summary>
 		string Location { get; }
@@ -66,10 +66,10 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// One of the following values: <c>'log'`, `'debug'`, `'info'`, `'error'`, `'warning'`,
-		/// `'dir'`, `'dirxml'`, `'table'`, `'trace'`, `'clear'`, `'startGroup'`, `'startGroupCollapsed'`,
-		/// `'endGroup'`, `'assert'`, `'profile'`, `'profileEnd'`, `'count'`, `'timeEnd'</c>
-		/// 
+		/// One of the following values: <c>'log'</c>, <c>'debug'</c>, <c>'info'</c>, <c>'error'</c>,
+		/// <c>'warning'</c>, <c>'dir'</c>, <c>'dirxml'</c>, <c>'table'</c>, <c>'trace'</c>,
+		/// <c>'clear'</c>, <c>'startGroup'</c>, <c>'startGroupCollapsed'</c>, <c>'endGroup'</c>,
+		/// <c>'assert'</c>, <c>'profile'</c>, <c>'profileEnd'</c>, <c>'count'</c>, <c>'timeEnd'</c>.
 		/// </para>
 		/// </summary>
 		string Type { get; }

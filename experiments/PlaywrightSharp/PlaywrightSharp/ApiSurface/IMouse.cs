@@ -63,11 +63,11 @@ namespace PlaywrightSharp
 		/// </param>
 		/// <param name="y">
 		/// </param>
-		/// <param name="button">Defaults to <c>left</c></param>
+		/// <param name="button">Defaults to <c>left</c>.</param>
 		/// <param name="clickCount">defaults to 1. See [UIEvent.detail].</param>
 		/// <param name="delay">
-		/// Time to wait between <c>mousedown` and `mouseup</c> in milliseconds. Defaults to
-		/// 0.
+		/// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
+		/// to 0.
 		/// </param>
 		Task ClickAsync(decimal x, decimal y, Button? button = null, int? clickCount = null, decimal? delay = null);
 	
@@ -81,15 +81,15 @@ namespace PlaywrightSharp
 		/// </param>
 		/// <param name="y">
 		/// </param>
-		/// <param name="button">Defaults to <c>left</c></param>
+		/// <param name="button">Defaults to <c>left</c>.</param>
 		/// <param name="delay">
-		/// Time to wait between <c>mousedown` and `mouseup</c> in milliseconds. Defaults to
-		/// 0.
+		/// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
+		/// to 0.
 		/// </param>
 		Task DblclickAsync(decimal x, decimal y, Button? button = null, decimal? delay = null);
 	
 		/// <summary><para>Dispatches a <c>mousedown</c> event.</para></summary>
-		/// <param name="button">Defaults to <c>left</c></param>
+		/// <param name="button">Defaults to <c>left</c>.</param>
 		/// <param name="clickCount">defaults to 1. See [UIEvent.detail].</param>
 		Task DownAsync(Button? button = null, int? clickCount = null);
 	
@@ -102,7 +102,7 @@ namespace PlaywrightSharp
 		Task MoveAsync(decimal x, decimal y, int? steps = null);
 	
 		/// <summary><para>Dispatches a <c>mouseup</c> event.</para></summary>
-		/// <param name="button">Defaults to <c>left</c></param>
+		/// <param name="button">Defaults to <c>left</c>.</param>
 		/// <param name="clickCount">defaults to 1. See [UIEvent.detail].</param>
 		Task UpAsync(Button? button = null, int? clickCount = null);
 	}

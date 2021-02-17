@@ -70,59 +70,54 @@ namespace PlaywrightSharp
 		/// </para>
 		/// <para>></para>
 		/// <para>
-		/// > If Google Chrome (rather than Chromium) is preferred, a [Chrome Canary](https://www.google.com/chrome/browser/canary.html)
-		/// or [Dev Channel](https://www.chromium.org/getting-involved/dev-channel) build is
-		/// suggested.
+		/// > If Google Chrome (rather than Chromium) is preferred, a <a href="https://www.google.com/chrome/browser/canary.html)">Chrome
+		/// Canary</a> or <a href="https://www.chromium.org/getting-involved/dev-channel)">Dev
+		/// Channel</a> build is suggested.
 		/// </para>
 		/// <para>></para>
 		/// <para>
 		/// > Stock browsers like Google Chrome and Microsoft Edge are suitable for tests that
-		/// require proprietary media codecs for video playback. See [this article](https://www.howtogeek.com/202825/what%E2%80%99s-the-difference-between-chromium-and-chrome/)
-		/// for other differences between Chromium and Chrome. [This article](https://chromium.googlesource.com/chromium/src/+/lkgr/docs/chromium_browser_vs_google_chrome.md)
-		/// describes some differences for Linux users.
+		/// require proprietary media codecs for video playback. See <a href="https://www.howtogeek.com/202825/what%E2%80%99s-the-difference-between-chromium-and-chrome/)">this
+		/// article</a> for other differences between Chromium and Chrome. <a href="https://chromium.googlesource.com/chromium/src/+/lkgr/docs/chromium_browser_vs_google_chrome.md)">This
+		/// article</a> describes some differences for Linux users.
 		/// </para>
 		/// </summary>
 		/// <param name="args">
 		/// Additional arguments to pass to the browser instance. The list of Chromium flags
-		/// can be found [here](http://peter.sh/experiments/chromium-command-line-switches/).
+		/// can be found <a href="http://peter.sh/experiments/chromium-command-line-switches/)">here</a>.
 		/// </param>
-		/// <param name="chromiumSandbox">Enable Chromium sandboxing. Defaults to <c>false</c></param>
+		/// <param name="chromiumSandbox">Enable Chromium sandboxing. Defaults to <c>false</c>.</param>
 		/// <param name="devtools">
 		/// **Chromium-only** Whether to auto-open a Developer Tools panel for each tab. If
-		/// this option is <c>true`, the <paramref name="headless"/> option will be set `false</c>
-		/// 
+		/// this option is <c>true</c>, the <paramref name="headless"/> option will be set <c>false</c>.
 		/// </param>
 		/// <param name="downloadsPath">
 		/// If specified, accepted downloads are downloaded into this directory. Otherwise,
 		/// temporary directory is created and is deleted when browser is closed.
 		/// </param>
-		/// <param name="env">
-		/// Specify environment variables that will be visible to the browser. Defaults to <c>process.env</c>
-		/// 
-		/// </param>
+		/// <param name="env">Specify environment variables that will be visible to the browser. Defaults to <c>process.env</c>.</param>
 		/// <param name="executablePath">
 		/// Path to a browser executable to run instead of the bundled one. If <paramref name="executablePath"/>
 		/// is a relative path, then it is resolved relative to the current working directory.
 		/// Note that Playwright only works with the bundled Chromium, Firefox or WebKit, use
 		/// at your own risk.
 		/// </param>
-		/// <param name="firefoxUserPrefs">Firefox user preferences. Learn more about the Firefox user preferences at [`about:config`](https://support.mozilla.org/en-US/kb/about-config-editor-firefox).</param>
-		/// <param name="handleSIGHUP">Close the browser process on SIGHUP. Defaults to <c>true</c></param>
-		/// <param name="handleSIGINT">Close the browser process on Ctrl-C. Defaults to <c>true</c></param>
-		/// <param name="handleSIGTERM">Close the browser process on SIGTERM. Defaults to <c>true</c></param>
+		/// <param name="firefoxUserPrefs">Firefox user preferences. Learn more about the Firefox user preferences at <a href="https://support.mozilla.org/en-US/kb/about-config-editor-firefox)"><c>about:config</c></a>.</param>
+		/// <param name="handleSIGHUP">Close the browser process on SIGHUP. Defaults to <c>true</c>.</param>
+		/// <param name="handleSIGINT">Close the browser process on Ctrl-C. Defaults to <c>true</c>.</param>
+		/// <param name="handleSIGTERM">Close the browser process on SIGTERM. Defaults to <c>true</c>.</param>
 		/// <param name="headless">
-		/// Whether to run browser in headless mode. More details for [Chromium](https://developers.google.com/web/updates/2017/04/headless-chrome)
-		/// and [Firefox](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Headless_mode).
-		/// Defaults to <c>true` unless the <paramref name="devtools"/> option is `true</c>
-		/// 
+		/// Whether to run browser in headless mode. More details for <a href="https://developers.google.com/web/updates/2017/04/headless-chrome)">Chromium</a>
+		/// and <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Headless_mode)">Firefox</a>.
+		/// Defaults to <c>true</c> unless the <paramref name="devtools"/> option is <c>true</c>.
 		/// </param>
 		/// <param name="ignoreAllDefaultArgs">
-		/// If <c>true`, Playwright does not pass its own configurations args and only uses
+		/// If <c>true</c>, Playwright does not pass its own configurations args and only uses
 		/// the ones from <paramref name="args"/>. Dangerous option; use with care. Defaults
-		/// to `false</c>
+		/// to <c>false</c>.
 		/// </param>
 		/// <param name="ignoreDefaultArgs">
-		/// If <c>true</c>  Playwright does not pass its own configurations args and only uses
+		/// If <c>true</c>, Playwright does not pass its own configurations args and only uses
 		/// the ones from <paramref name="args"/>. Dangerous option; use with care.
 		/// </param>
 		/// <param name="proxy">Network proxy settings.</param>
@@ -132,7 +127,7 @@ namespace PlaywrightSharp
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds to wait for the browser instance to start. Defaults
-		/// to <c>30000` (30 seconds). Pass `0</c> to disable timeout.
+		/// to <c>30000</c> (30 seconds). Pass <c>0</c> to disable timeout.
 		/// </param>
 		Task<IBrowser> LaunchAsync(string[] args = null, bool? chromiumSandbox = null, bool? devtools = null, string downloadsPath = null, IEnumerable<KeyValuePair<string, string>> env = null, string executablePath = null, IEnumerable<KeyValuePair<string, object>> firefoxUserPrefs = null, bool? handleSIGHUP = null, bool? handleSIGINT = null, bool? handleSIGTERM = null, bool? headless = null, bool? ignoreAllDefaultArgs = null, string[] ignoreDefaultArgs = null, BrowserTypeProxy proxy = null, decimal? slowMo = null, int timeout = 0);
 	
@@ -146,10 +141,10 @@ namespace PlaywrightSharp
 		/// </summary>
 		/// <param name="userDataDir">
 		/// Path to a User Data Directory, which stores browser session data like cookies and
-		/// local storage. More details for [Chromium](https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md#introduction)
-		/// and [Firefox](https://developer.mozilla.org/en-US/docs/Mozilla/Command_Line_Options#User_Profile).
+		/// local storage. More details for <a href="https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md#introduction)">Chromium</a>
+		/// and <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Command_Line_Options#User_Profile)">Firefox</a>.
 		/// Note that Chromium's user data directory is the **parent** directory of the "Profile
-		/// Path" seen at <c>chrome://version</c>
+		/// Path" seen at <c>chrome://version</c>.
 		/// </param>
 		/// <param name="acceptDownloads">
 		/// Whether to automatically download all the attachments. Defaults to <c>false</c>
@@ -157,29 +152,25 @@ namespace PlaywrightSharp
 		/// </param>
 		/// <param name="args">
 		/// Additional arguments to pass to the browser instance. The list of Chromium flags
-		/// can be found [here](http://peter.sh/experiments/chromium-command-line-switches/).
+		/// can be found <a href="http://peter.sh/experiments/chromium-command-line-switches/)">here</a>.
 		/// </param>
 		/// <param name="bypassCSP">Toggles bypassing page's Content-Security-Policy.</param>
-		/// <param name="chromiumSandbox">Enable Chromium sandboxing. Defaults to <c>true</c></param>
+		/// <param name="chromiumSandbox">Enable Chromium sandboxing. Defaults to <c>true</c>.</param>
 		/// <param name="colorScheme">
-		/// Emulates <c>'prefers-colors-scheme'` media feature, supported values are `'light'`,
-		/// `'dark'`, `'no-preference'`. See <see cref="IPage.EmulateMediaAsync"/> for more
-		/// details. Defaults to '`light</c> .
+		/// Emulates <c>'prefers-colors-scheme'</c> media feature, supported values are <c>'light'</c>,
+		/// <c>'dark'</c>, <c>'no-preference'</c>. See <see cref="IPage.EmulateMediaAsync"/>
+		/// for more details. Defaults to '<c>light</c>'.
 		/// </param>
-		/// <param name="deviceScaleFactor">Specify device scale factor (can be thought of as dpr). Defaults to <c>1</c></param>
+		/// <param name="deviceScaleFactor">Specify device scale factor (can be thought of as dpr). Defaults to <c>1</c>.</param>
 		/// <param name="devtools">
 		/// **Chromium-only** Whether to auto-open a Developer Tools panel for each tab. If
-		/// this option is <c>true`, the <paramref name="headless"/> option will be set `false</c>
-		/// 
+		/// this option is <c>true</c>, the <paramref name="headless"/> option will be set <c>false</c>.
 		/// </param>
 		/// <param name="downloadsPath">
 		/// If specified, accepted downloads are downloaded into this directory. Otherwise,
 		/// temporary directory is created and is deleted when browser is closed.
 		/// </param>
-		/// <param name="env">
-		/// Specify environment variables that will be visible to the browser. Defaults to <c>process.env</c>
-		/// 
-		/// </param>
+		/// <param name="env">Specify environment variables that will be visible to the browser. Defaults to <c>process.env</c>.</param>
 		/// <param name="executablePath">
 		/// Path to a browser executable to run instead of the bundled one. If <paramref name="executablePath"/>
 		/// is a relative path, then it is resolved relative to the current working directory.
@@ -192,38 +183,40 @@ namespace PlaywrightSharp
 		/// </param>
 		/// <param name="geolocation">
 		/// </param>
-		/// <param name="handleSIGHUP">Close the browser process on SIGHUP. Defaults to <c>true</c></param>
-		/// <param name="handleSIGINT">Close the browser process on Ctrl-C. Defaults to <c>true</c></param>
-		/// <param name="handleSIGTERM">Close the browser process on SIGTERM. Defaults to <c>true</c></param>
+		/// <param name="handleSIGHUP">Close the browser process on SIGHUP. Defaults to <c>true</c>.</param>
+		/// <param name="handleSIGINT">Close the browser process on Ctrl-C. Defaults to <c>true</c>.</param>
+		/// <param name="handleSIGTERM">Close the browser process on SIGTERM. Defaults to <c>true</c>.</param>
 		/// <param name="hasTouch">Specifies if viewport supports touch events. Defaults to false.</param>
 		/// <param name="headless">
-		/// Whether to run browser in headless mode. More details for [Chromium](https://developers.google.com/web/updates/2017/04/headless-chrome)
-		/// and [Firefox](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Headless_mode).
-		/// Defaults to <c>true` unless the <paramref name="devtools"/> option is `true</c>
-		/// 
+		/// Whether to run browser in headless mode. More details for <a href="https://developers.google.com/web/updates/2017/04/headless-chrome)">Chromium</a>
+		/// and <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Headless_mode)">Firefox</a>.
+		/// Defaults to <c>true</c> unless the <paramref name="devtools"/> option is <c>true</c>.
 		/// </param>
-		/// <param name="httpCredentials">Credentials for [HTTP authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication).</param>
+		/// <param name="httpCredentials">
+		/// Credentials for <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication)">HTTP
+		/// authentication</a>.
+		/// </param>
 		/// <param name="ignoreAllDefaultArgs">
-		/// If <c>true`, Playwright does not pass its own configurations args and only uses
+		/// If <c>true</c>, Playwright does not pass its own configurations args and only uses
 		/// the ones from <paramref name="args"/>. Dangerous option; use with care. Defaults
-		/// to `false</c>
+		/// to <c>false</c>.
 		/// </param>
 		/// <param name="ignoreDefaultArgs">
-		/// If <c>true</c>  Playwright does not pass its own configurations args and only uses
+		/// If <c>true</c>, Playwright does not pass its own configurations args and only uses
 		/// the ones from <paramref name="args"/>. Dangerous option; use with care.
 		/// </param>
-		/// <param name="ignoreHTTPSErrors">Whether to ignore HTTPS errors during navigation. Defaults to <c>false</c></param>
+		/// <param name="ignoreHTTPSErrors">Whether to ignore HTTPS errors during navigation. Defaults to <c>false</c>.</param>
 		/// <param name="isMobile">
-		/// Whether the <c>meta viewport` tag is taken into account and touch events are enabled.
-		/// Defaults to `false</c>  Not supported in Firefox.
+		/// Whether the <c>meta viewport</c> tag is taken into account and touch events are
+		/// enabled. Defaults to <c>false</c>. Not supported in Firefox.
 		/// </param>
-		/// <param name="javaScriptEnabled">Whether or not to enable JavaScript in the context. Defaults to <c>true</c></param>
+		/// <param name="javaScriptEnabled">Whether or not to enable JavaScript in the context. Defaults to <c>true</c>.</param>
 		/// <param name="locale">
-		/// Specify user locale, for example <c>en-GB`, `de-DE`, etc. Locale will affect `navigator.language`
-		/// value, `Accept-Language</c> request header value as well as number and date formatting
-		/// rules.
+		/// Specify user locale, for example <c>en-GB</c>, <c>de-DE</c>, etc. Locale will affect
+		/// <c>navigator.language</c> value, <c>Accept-Language</c> request header value as
+		/// well as number and date formatting rules.
 		/// </param>
-		/// <param name="offline">Whether to emulate network being offline. Defaults to <c>false</c></param>
+		/// <param name="offline">Whether to emulate network being offline. Defaults to <c>false</c>.</param>
 		/// <param name="permissions">
 		/// A list of permissions to grant to all pages in this context. See <see cref="IBrowserContext.GrantPermissionsAsync"/>
 		/// for more details.
@@ -231,14 +224,14 @@ namespace PlaywrightSharp
 		/// <param name="proxy">Network proxy settings.</param>
 		/// <param name="recordHarOmitContent">
 		/// Optional setting to control whether to omit request content from the HAR. Defaults
-		/// to <c>false</c>
+		/// to <c>false</c>.
 		/// </param>
 		/// <param name="recordHarPath">Path on the filesystem to write the HAR file to.</param>
 		/// <param name="recordVideoDir">Path to the directory to put videos into.</param>
 		/// <param name="recordVideoSize">
-		/// Dimensions of the recorded videos. If not specified the size will be equal to <c>viewport`
-		/// scaled down to fit into 800x800. If `viewport</c> is not configured explicitly the
-		/// video size defaults to 800x450. Actual picture of each page will be scaled down
+		/// Dimensions of the recorded videos. If not specified the size will be equal to <c>viewport</c>
+		/// scaled down to fit into 800x800. If <c>viewport</c> is not configured explicitly
+		/// the video size defaults to 800x450. Actual picture of each page will be scaled down
 		/// if necessary to fit the specified size.
 		/// </param>
 		/// <param name="slowMo">
@@ -247,21 +240,16 @@ namespace PlaywrightSharp
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds to wait for the browser instance to start. Defaults
-		/// to <c>30000` (30 seconds). Pass `0</c> to disable timeout.
+		/// to <c>30000</c> (30 seconds). Pass <c>0</c> to disable timeout.
 		/// </param>
 		/// <param name="timezoneId">
-		/// Changes the timezone of the context. See [ICU's metaZones.txt](https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1)
-		/// for a list of supported timezone IDs.
+		/// Changes the timezone of the context. See <a href="https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1)">ICU's
+		/// metaZones.txt</a> for a list of supported timezone IDs.
 		/// </param>
 		/// <param name="userAgent">Specific user agent to use in this context.</param>
 		Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, bool? acceptDownloads = null, string[] args = null, bool? bypassCSP = null, bool? chromiumSandbox = null, ColorScheme? colorScheme = null, decimal? deviceScaleFactor = null, bool? devtools = null, string downloadsPath = null, IEnumerable<KeyValuePair<string, string>> env = null, string executablePath = null, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null, BrowserTypeGeolocation geolocation = null, bool? handleSIGHUP = null, bool? handleSIGINT = null, bool? handleSIGTERM = null, bool? hasTouch = null, bool? headless = null, BrowserTypeHttpCredentials httpCredentials = null, bool? ignoreAllDefaultArgs = null, string[] ignoreDefaultArgs = null, bool? ignoreHTTPSErrors = null, bool? isMobile = null, bool? javaScriptEnabled = null, string locale = null, bool? offline = null, string[] permissions = null, BrowserTypeProxy proxy = null, bool? recordHarOmitContent = null, string recordHarPath = null, string recordVideoDir = null, BrowserTypeRecordVideoSize recordVideoSize = null, decimal? slowMo = null, int timeout = 0, string timezoneId = null, string userAgent = null);
 	
-		/// <summary>
-		/// <para>
-		/// Returns browser name. For example: <c>'chromium'`, `'webkit'` or `'firefox'</c>
-		/// 
-		/// </para>
-		/// </summary>
+		/// <summary><para>Returns browser name. For example: <c>'chromium'</c>, <c>'webkit'</c> or <c>'firefox'</c>.</para></summary>
 		string Name { get; }
 	}
 }

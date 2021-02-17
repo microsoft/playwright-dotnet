@@ -55,8 +55,8 @@ namespace PlaywrightSharp
 	{
 		/// <summary>
 		/// <para>
-		/// Dispatches a <c>touchstart` and `touchend</c> event with a single touch at the position
-		/// (<paramref name="x"/>,<paramref name="y"/>).
+		/// Dispatches a <c>touchstart</c> and <c>touchend</c> event with a single touch at
+		/// the position (<paramref name="x"/>,<paramref name="y"/>).
 		/// </para>
 		/// </summary>
 		/// <param name="x">

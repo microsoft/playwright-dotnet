@@ -69,12 +69,12 @@ namespace PlaywrightSharp
 		/// - which is usually the same as the browser window.
 		/// </para>
 		/// <para>
-		/// Scrolling affects the returned bonding box, similarly to [Element.getBoundingClientRect](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect).
-		/// That means <c>x` and/or `y</c> may be negative.
+		/// Scrolling affects the returned bonding box, similarly to <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect)">Element.getBoundingClientRect</a>.
+		/// That means <c>x</c> and/or <c>y</c> may be negative.
 		/// </para>
 		/// <para>
 		/// Elements from child frames return the bounding box relative to the main frame, unlike
-		/// the [Element.getBoundingClientRect](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect).
+		/// the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect)">Element.getBoundingClientRect</a>.
 		/// </para>
 		/// <para>
 		/// Assuming the page is static, it is safe to use bounding box coordinates to perform
@@ -91,8 +91,8 @@ namespace PlaywrightSharp
 		/// If the element is already checked, this method returns immediately.
 		/// </description></item>
 		/// <item><description>
-		/// Wait for [actionability](./actionability.md) checks on the element, unless <paramref
-		/// name="force"/> option is set.
+		/// Wait for <a href="./actionability.md)">actionability</a> checks on the element,
+		/// unless <paramref name="force"/> option is set.
 		/// </description></item>
 		/// <item><description>Scroll the element into view if needed.</description></item>
 		/// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
@@ -113,14 +113,14 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </summary>
 		/// <param name="force">
-		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
-		/// 
+		/// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
+		/// to <c>false</c>.
 		/// </param>
 		/// <param name="noWaitAfter">
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -133,8 +133,8 @@ namespace PlaywrightSharp
 		/// <para>This method clicks the element by performing the following steps:</para>
 		/// <list type="ordinal">
 		/// <item><description>
-		/// Wait for [actionability](./actionability.md) checks on the element, unless <paramref
-		/// name="force"/> option is set.
+		/// Wait for <a href="./actionability.md)">actionability</a> checks on the element,
+		/// unless <paramref name="force"/> option is set.
 		/// </description></item>
 		/// <item><description>Scroll the element into view if needed.</description></item>
 		/// <item><description>
@@ -156,15 +156,15 @@ namespace PlaywrightSharp
 		/// this.
 		/// </para>
 		/// </summary>
-		/// <param name="button">Defaults to <c>left</c></param>
+		/// <param name="button">Defaults to <c>left</c>.</param>
 		/// <param name="clickCount">defaults to 1. See [UIEvent.detail].</param>
 		/// <param name="delay">
-		/// Time to wait between <c>mousedown` and `mouseup</c> in milliseconds. Defaults to
-		/// 0.
+		/// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
+		/// to 0.
 		/// </param>
 		/// <param name="force">
-		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
-		/// 
+		/// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
+		/// to <c>false</c>.
 		/// </param>
 		/// <param name="modifiers">
 		/// Modifier keys to press. Ensures that only these modifiers are pressed during the
@@ -175,7 +175,7 @@ namespace PlaywrightSharp
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="position">
 		/// A point to use relative to the top-left corner of element padding box. If not specified,
@@ -200,8 +200,8 @@ namespace PlaywrightSharp
 		/// <para>This method double clicks the element by performing the following steps:</para>
 		/// <list type="ordinal">
 		/// <item><description>
-		/// Wait for [actionability](./actionability.md) checks on the element, unless <paramref
-		/// name="force"/> option is set.
+		/// Wait for <a href="./actionability.md)">actionability</a> checks on the element,
+		/// unless <paramref name="force"/> option is set.
 		/// </description></item>
 		/// <item><description>Scroll the element into view if needed.</description></item>
 		/// <item><description>
@@ -226,18 +226,18 @@ namespace PlaywrightSharp
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// `elementHandle.dblclick( <c> dispatches two `click` events and a single `dblclick</c>
-		/// event.
+		/// <c>elementHandle.dblclick()</c> dispatches two <c>click</c> events and a single
+		/// <c>dblclick</c> event.
 		/// </para>
 		/// </remarks>
-		/// <param name="button">Defaults to <c>left</c></param>
+		/// <param name="button">Defaults to <c>left</c>.</param>
 		/// <param name="delay">
-		/// Time to wait between <c>mousedown` and `mouseup</c> in milliseconds. Defaults to
-		/// 0.
+		/// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
+		/// to 0.
 		/// </param>
 		/// <param name="force">
-		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
-		/// 
+		/// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
+		/// to <c>false</c>.
 		/// </param>
 		/// <param name="modifiers">
 		/// Modifier keys to press. Ensures that only these modifiers are pressed during the
@@ -248,7 +248,7 @@ namespace PlaywrightSharp
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="position">
 		/// A point to use relative to the top-left corner of element padding box. If not specified,
@@ -263,44 +263,44 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// The snippet below dispatches the <c>click` event on the element. Regardless of the
-		/// visibility state of the elment, `click</c> is dispatched. This is equivalend to
-		/// calling [element.click()](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click).
+		/// The snippet below dispatches the <c>click</c> event on the element. Regardless of
+		/// the visibility state of the elment, <c>click</c> is dispatched. This is equivalend
+		/// to calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click)">element.click()</a>.
 		/// </para>
 		/// <para>
 		/// Under the hood, it creates an instance of an event based on the given <paramref
 		/// name="type"/>, initializes it with <paramref name="eventInit"/> properties and dispatches
-		/// it on the element. Events are <c>composed`, `cancelable</c> and bubble by default.
+		/// it on the element. Events are <c>composed</c>, <c>cancelable</c> and bubble by default.
 		/// </para>
 		/// <para>
 		/// Since <paramref name="eventInit"/> is event-specific, please refer to the events
 		/// documentation for the lists of initial properties:
 		/// </para>
 		/// <list type="bullet">
-		/// <item><description>[DragEvent](https://developer.mozilla.org/en-US/docs/Web/API/DragEvent/DragEvent)</description></item>
-		/// <item><description>[FocusEvent](https://developer.mozilla.org/en-US/docs/Web/API/FocusEvent/FocusEvent)</description></item>
-		/// <item><description>[KeyboardEvent](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/KeyboardEvent)</description></item>
-		/// <item><description>[MouseEvent](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/MouseEvent)</description></item>
-		/// <item><description>[PointerEvent](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/PointerEvent)</description></item>
-		/// <item><description>[TouchEvent](https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent/TouchEvent)</description></item>
-		/// <item><description>[Event](https://developer.mozilla.org/en-US/docs/Web/API/Event/Event)</description></item>
+		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/DragEvent/DragEvent)">DragEvent</a></description></item>
+		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/FocusEvent/FocusEvent)">FocusEvent</a></description></item>
+		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/KeyboardEvent)">KeyboardEvent</a></description></item>
+		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/MouseEvent)">MouseEvent</a></description></item>
+		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/PointerEvent)">PointerEvent</a></description></item>
+		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent/TouchEvent)">TouchEvent</a></description></item>
+		/// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/Event/Event)">Event</a></description></item>
 		/// </list>
 		/// <para>
 		/// You can also specify <c>JSHandle</c> as the property value if you want live objects
 		/// to be passed into the event:
 		/// </para>
 		/// </summary>
-		/// <param name="type">DOM event type: <c>"click"`, `"dragstart"</c>  etc.</param>
+		/// <param name="type">DOM event type: <c>"click"</c>, <c>"dragstart"</c>, etc.</param>
 		/// <param name="eventInit">Optional event-specific initialization properties.</param>
 		Task DispatchEventAsync(string type, object eventInit = null);
 	
 		/// <summary>
 		/// <para>Returns the return value of <paramref name="expression"/>.</para>
 		/// <para>
-		/// The method finds an element matching the specified selector in the <c>ElementHandle</c>
+		/// The method finds an element matching the specified selector in the <c>ElementHandle</c>s
 		/// subtree and passes it as a first argument to <paramref name="expression"/>. See
-		/// [Working with selectors](./selectors.md) for more details. If no elements match
-		/// the selector, the method throws an error.
+		/// <a href="./selectors.md)">Working with selectors</a> for more details. If no elements
+		/// match the selector, the method throws an error.
 		/// </para>
 		/// <para>
 		/// If <paramref name="expression"/> returns a [Promise], then <see cref="IElementHandle.EvalOnSelectorAsync"/>
@@ -308,7 +308,10 @@ namespace PlaywrightSharp
 		/// </para>
 		/// <para>Examples:</para>
 		/// </summary>
-		/// <param name="selector">A selector to query for. See [working with selectors](./selectors.md) for more details.</param>
+		/// <param name="selector">
+		/// A selector to query for. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
+		/// </param>
 		/// <param name="expression">
 		/// JavaScript expression to be evaluated in the browser context. If it looks like a
 		/// function declaration, it is interpreted as a function. Otherwise, evaluated as an
@@ -320,9 +323,10 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>Returns the return value of <paramref name="expression"/>.</para>
 		/// <para>
-		/// The method finds all elements matching the specified selector in the <c>ElementHandle</c>
-		/// s subtree and passes an array of matched elements as a first argument to <paramref
-		/// name="expression"/>. See [Working with selectors](./selectors.md) for more details.
+		/// The method finds all elements matching the specified selector in the <c>ElementHandle</c>'s
+		/// subtree and passes an array of matched elements as a first argument to <paramref
+		/// name="expression"/>. See <a href="./selectors.md)">Working with selectors</a> for
+		/// more details.
 		/// </para>
 		/// <para>
 		/// If <paramref name="expression"/> returns a [Promise], then <see cref="IElementHandle.EvalOnSelectorAllAsync"/>
@@ -330,7 +334,10 @@ namespace PlaywrightSharp
 		/// </para>
 		/// <para>Examples:</para>
 		/// </summary>
-		/// <param name="selector">A selector to query for. See [working with selectors](./selectors.md) for more details.</param>
+		/// <param name="selector">
+		/// A selector to query for. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
+		/// </param>
 		/// <param name="expression">
 		/// JavaScript expression to be evaluated in the browser context. If it looks like a
 		/// function declaration, it is interpreted as a function. Otherwise, evaluated as an
@@ -341,20 +348,23 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// This method waits for [actionability](./actionability.md) checks, focuses the element,
-		/// fills it and triggers an <c>input` event after filling. If the element is inside
-		/// the `<label></c> element that has associated [control](https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control),
-		/// that control will be filled instead. If the element to be filled is not an <c><input>`,
-		/// `<textarea>` or `[contenteditable]</c> element, this method throws an error. Note
-		/// that you can pass an empty string to clear the input field.
+		/// This method waits for <a href="./actionability.md)">actionability</a> checks, focuses
+		/// the element, fills it and triggers an <c>input</c> event after filling. If the element
+		/// is inside the <c>&lt;label&gt;</c> element that has associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control)">control</a>,
+		/// that control will be filled instead. If the element to be filled is not an <c>&lt;input&gt;</c>,
+		/// <c>&lt;textarea&gt;</c> or <c>[contenteditable]</c> element, this method throws
+		/// an error. Note that you can pass an empty string to clear the input field.
 		/// </para>
 		/// </summary>
-		/// <param name="value">Value to set for the <c><input>`, `<textarea>` or `[contenteditable]</c> element.</param>
+		/// <param name="value">
+		/// Value to set for the <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or <c>[contenteditable]</c>
+		/// element.
+		/// </param>
 		/// <param name="noWaitAfter">
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -365,7 +375,7 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Calls [focus](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus)
+		/// Calls <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus)">focus</a>
 		/// on the element.
 		/// </para>
 		/// </summary>
@@ -379,8 +389,8 @@ namespace PlaywrightSharp
 		/// <para>This method hovers over the element by performing the following steps:</para>
 		/// <list type="ordinal">
 		/// <item><description>
-		/// Wait for [actionability](./actionability.md) checks on the element, unless <paramref
-		/// name="force"/> option is set.
+		/// Wait for <a href="./actionability.md)">actionability</a> checks on the element,
+		/// unless <paramref name="force"/> option is set.
 		/// </description></item>
 		/// <item><description>Scroll the element into view if needed.</description></item>
 		/// <item><description>
@@ -403,8 +413,8 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </summary>
 		/// <param name="force">
-		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
-		/// 
+		/// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
+		/// to <c>false</c>.
 		/// </param>
 		/// <param name="modifiers">
 		/// Modifier keys to press. Ensures that only these modifiers are pressed during the
@@ -422,10 +432,10 @@ namespace PlaywrightSharp
 		/// </param>
 		Task HoverAsync(bool? force = null, Modifiers[] modifiers = null, ElementHandlePosition position = null, int timeout = 0);
 	
-		/// <summary><para>Returns the <c>element.innerHTML</c></para></summary>
+		/// <summary><para>Returns the <c>element.innerHTML</c>.</para></summary>
 		Task<string> GetInnerHTMLAsync();
 	
-		/// <summary><para>Returns the <c>element.innerText</c></para></summary>
+		/// <summary><para>Returns the <c>element.innerText</c>.</para></summary>
 		Task<string> GetInnerTextAsync();
 	
 		/// <summary>
@@ -436,19 +446,19 @@ namespace PlaywrightSharp
 		/// </summary>
 		Task<bool> IsCheckedAsync();
 	
-		/// <summary><para>Returns whether the element is disabled, the opposite of [enabled](./actionability.md#enabled).</para></summary>
+		/// <summary><para>Returns whether the element is disabled, the opposite of <a href="./actionability.md#enabled)">enabled</a>.</para></summary>
 		Task<bool> IsDisabledAsync();
 	
-		/// <summary><para>Returns whether the element is [editable](./actionability.md#editable).</para></summary>
+		/// <summary><para>Returns whether the element is <a href="./actionability.md#editable)">editable</a>.</para></summary>
 		Task<bool> IsEditableAsync();
 	
-		/// <summary><para>Returns whether the element is [enabled](./actionability.md#enabled).</para></summary>
+		/// <summary><para>Returns whether the element is <a href="./actionability.md#enabled)">enabled</a>.</para></summary>
 		Task<bool> IsEnabledAsync();
 	
-		/// <summary><para>Returns whether the element is hidden, the opposite of [visible](./actionability.md#visible).</para></summary>
+		/// <summary><para>Returns whether the element is hidden, the opposite of <a href="./actionability.md#visible)">visible</a>.</para></summary>
 		Task<bool> IsHiddenAsync();
 	
-		/// <summary><para>Returns whether the element is [visible](./actionability.md#visible).</para></summary>
+		/// <summary><para>Returns whether the element is <a href="./actionability.md#visible)">visible</a>.</para></summary>
 		Task<bool> IsVisibleAsync();
 	
 		/// <summary><para>Returns the frame containing the given element.</para></summary>
@@ -457,19 +467,21 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>Focuses the element, and then uses <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.</para>
 		/// <para>
-		/// <paramref name="key"/> can specify the intended [keyboardEvent.key](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key)
+		/// <paramref name="key"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key)">keyboardEvent.key</a>
 		/// value or a single character to generate the text for. A superset of the <paramref
-		/// name="key"/> values can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values).
+		/// name="key"/> values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values)">here</a>.
 		/// Examples of the keys are:
 		/// </para>
 		/// <para>
-		/// `F <c> - `F12`, `Digit0`- `Digit9`, `KeyA`- `KeyZ`, `Backquote`, `Minus`, `Equal`,
-		/// `Backslash`, `Backspace`, `Tab`, `Delete`, `Escape`, `ArrowDown`, `End`, `Enter`,
-		/// `Home`, `Insert`, `PageDown`, `PageUp`, `ArrowRight`, `ArrowUp</c>  etc.
+		/// <c>F1</c> - <c>F12</c>, <c>Digit0</c>- <c>Digit9</c>, <c>KeyA</c>- <c>KeyZ</c>,
+		/// <c>Backquote</c>, <c>Minus</c>, <c>Equal</c>, <c>Backslash</c>, <c>Backspace</c>,
+		/// <c>Tab</c>, <c>Delete</c>, <c>Escape</c>, <c>ArrowDown</c>, <c>End</c>, <c>Enter</c>,
+		/// <c>Home</c>, <c>Insert</c>, <c>PageDown</c>, <c>PageUp</c>, <c>ArrowRight</c>, <c>ArrowUp</c>,
+		/// etc.
 		/// </para>
 		/// <para>
-		/// Following modification shortcuts are also supported: <c>Shift`, `Control`, `Alt`,
-		/// `Meta`, `ShiftLeft</c>
+		/// Following modification shortcuts are also supported: <c>Shift</c>, <c>Control</c>,
+		/// <c>Alt</c>, <c>Meta</c>, <c>ShiftLeft</c>.
 		/// </para>
 		/// <para>
 		/// Holding down <c>Shift</c> will type the text that corresponds to the <paramref name="key"/>
@@ -477,24 +489,27 @@ namespace PlaywrightSharp
 		/// </para>
 		/// <para>
 		/// If <paramref name="key"/> is a single character, it is case-sensitive, so the values
-		/// <c>a` and `A</c> will generate different respective texts.
+		/// <c>a</c> and <c>A</c> will generate different respective texts.
 		/// </para>
 		/// <para>
-		/// Shortcuts such as <c>key: "Control+o"` or `key: "Control+Shift+T"</c> are supported
+		/// Shortcuts such as <c>key: "Control+o"</c> or <c>key: "Control+Shift+T"</c> are supported
 		/// as well. When speficied with the modifier, modifier is pressed and being held while
 		/// the subsequent key is being pressed.
 		/// </para>
 		/// </summary>
 		/// <param name="key">
-		/// Name of the key to press or a character to generate, such as <c>ArrowLeft` or `a</c>
-		/// 
+		/// Name of the key to press or a character to generate, such as <c>ArrowLeft</c> or
+		/// <c>a</c>.
 		/// </param>
-		/// <param name="delay">Time to wait between <c>keydown` and `keyup</c> in milliseconds. Defaults to 0.</param>
+		/// <param name="delay">
+		/// Time to wait between <c>keydown</c> and <c>keyup</c> in milliseconds. Defaults to
+		/// 0.
+		/// </param>
 		/// <param name="noWaitAfter">
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -505,35 +520,41 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// The method finds an element matching the specified selector in the <c>ElementHandle</c>
-		/// s subtree. See [Working with selectors](./selectors.md) for more details. If no
-		/// elements match the selector, returns <c>null</c>
+		/// The method finds an element matching the specified selector in the <c>ElementHandle</c>'s
+		/// subtree. See <a href="./selectors.md)">Working with selectors</a> for more details.
+		/// If no elements match the selector, returns <c>null</c>.
 		/// </para>
 		/// </summary>
-		/// <param name="selector">A selector to query for. See [working with selectors](./selectors.md) for more details.</param>
+		/// <param name="selector">
+		/// A selector to query for. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
+		/// </param>
 		Task<IElementHandle> QuerySelectorAsync(string selector);
 	
 		/// <summary>
 		/// <para>
-		/// The method finds all elements matching the specified selector in the <c>ElementHandle</c>
-		/// subtree. See [Working with selectors](./selectors.md) for more details. If no elements
-		/// match the selector, returns empty array.
+		/// The method finds all elements matching the specified selector in the <c>ElementHandle</c>s
+		/// subtree. See <a href="./selectors.md)">Working with selectors</a> for more details.
+		/// If no elements match the selector, returns empty array.
 		/// </para>
 		/// </summary>
-		/// <param name="selector">A selector to query for. See [working with selectors](./selectors.md) for more details.</param>
+		/// <param name="selector">
+		/// A selector to query for. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
+		/// </param>
 		Task<dynamic> QuerySelectorAllAsync(string selector);
 	
 		/// <summary>
 		/// <para>Returns the buffer with the captured screenshot.</para>
 		/// <para>
-		/// This method waits for the [actionability](./actionability.md) checks, then scrolls
-		/// element into view before taking a screenshot. If the element is detached from DOM,
-		/// the method throws an error.
+		/// This method waits for the <a href="./actionability.md)">actionability</a> checks,
+		/// then scrolls element into view before taking a screenshot. If the element is detached
+		/// from DOM, the method throws an error.
 		/// </para>
 		/// </summary>
 		/// <param name="omitBackground">
 		/// Hides default white background and allows capturing screenshots with transparency.
-		/// Not applicable to <c>jpeg` images. Defaults to `false</c>
+		/// Not applicable to <c>jpeg</c> images. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="path">
 		/// The file path to save the image to. The screenshot type will be inferred from file
@@ -547,17 +568,18 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		/// <param name="type">Specify screenshot type, defaults to <c>png</c></param>
+		/// <param name="type">Specify screenshot type, defaults to <c>png</c>.</param>
 		Task<byte[]> ScreenshotAsync(bool? omitBackground = null, string path = null, int? quality = null, int timeout = 0, Type? type = null);
 	
 		/// <summary>
 		/// <para>
-		/// This method waits for [actionability](./actionability.md) checks, then tries to
-		/// scroll element into view, unless it is completely visible as defined by [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)'s
-		/// <c>ratio</c>
+		/// This method waits for <a href="./actionability.md)">actionability</a> checks, then
+		/// tries to scroll element into view, unless it is completely visible as defined by
+		/// <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)">IntersectionObserver</a>'s
+		/// <c>ratio</c>.
 		/// </para>
 		/// <para>
-		/// Throws when <c>elementHandle</c> does not point to an element [connected](https://developer.mozilla.org/en-US/docs/Web/API/Node/isConnected)
+		/// Throws when <c>elementHandle</c> does not point to an element <a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/isConnected)">connected</a>
 		/// to a Document or a ShadowRoot.
 		/// </para>
 		/// </summary>
@@ -571,16 +593,17 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>Returns the array of option values that have been successfully selected.</para>
 		/// <para>
-		/// Triggers a <c>change` and `input` event once all the provided options have been
-		/// selected. If element is not a `<select></c> element, the method throws an error.
+		/// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
+		/// been selected. If element is not a <c>&lt;select&gt;</c> element, the method throws
+		/// an error.
 		/// </para>
-		/// <para>Will wait until all specified options are present in the <c><select></c> element.</para>
+		/// <para>Will wait until all specified options are present in the <c>&lt;select&gt;</c> element.</para>
 		/// </summary>
 		/// <param name="noWaitAfter">
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -591,8 +614,8 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// This method waits for [actionability](./actionability.md) checks, then focuses the
-		/// element and selects all its text content.
+		/// This method waits for <a href="./actionability.md)">actionability</a> checks, then
+		/// focuses the element and selects all its text content.
 		/// </para>
 		/// </summary>
 		/// <param name="timeout">
@@ -603,7 +626,10 @@ namespace PlaywrightSharp
 		Task SelectTextAsync(int timeout = 0);
 	
 		/// <summary>
-		/// <para>This method expects <c>elementHandle</c> to point to an [input element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input).</para>
+		/// <para>
+		/// This method expects <c>elementHandle</c> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input)">input
+		/// element</a>.
+		/// </para>
 		/// <para>
 		/// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
 		/// are relative paths, then they are resolved relative to the the current working directory.
@@ -616,7 +642,7 @@ namespace PlaywrightSharp
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -629,8 +655,8 @@ namespace PlaywrightSharp
 		/// <para>This method taps the element by performing the following steps:</para>
 		/// <list type="ordinal">
 		/// <item><description>
-		/// Wait for [actionability](./actionability.md) checks on the element, unless <paramref
-		/// name="force"/> option is set.
+		/// Wait for <a href="./actionability.md)">actionability</a> checks on the element,
+		/// unless <paramref name="force"/> option is set.
 		/// </description></item>
 		/// <item><description>Scroll the element into view if needed.</description></item>
 		/// <item><description>
@@ -654,13 +680,13 @@ namespace PlaywrightSharp
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// `elementHandle.tap( <c> requires that the `hasTouch</c> option of the browser context
-		/// be set to true.
+		/// <c>elementHandle.tap()</c> requires that the <c>hasTouch</c> option of the browser
+		/// context be set to true.
 		/// </para>
 		/// </remarks>
 		/// <param name="force">
-		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
-		/// 
+		/// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
+		/// to <c>false</c>.
 		/// </param>
 		/// <param name="modifiers">
 		/// Modifier keys to press. Ensures that only these modifiers are pressed during the
@@ -671,7 +697,7 @@ namespace PlaywrightSharp
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="position">
 		/// A point to use relative to the top-left corner of element padding box. If not specified,
@@ -684,15 +710,15 @@ namespace PlaywrightSharp
 		/// </param>
 		Task TapAsync(bool? force = null, Modifiers[] modifiers = null, bool? noWaitAfter = null, ElementHandlePosition position = null, int timeout = 0);
 	
-		/// <summary><para>Returns the <c>node.textContent</c></para></summary>
+		/// <summary><para>Returns the <c>node.textContent</c>.</para></summary>
 		Task<string> GetTextContentAsync();
 	
 		/// <summary>
 		/// <para>
-		/// Focuses the element, and then sends a <c>keydown`, `keypress`/`input`, and `keyup</c>
-		/// event for each character in the text.
+		/// Focuses the element, and then sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>,
+		/// and <c>keyup</c> event for each character in the text.
 		/// </para>
-		/// <para>To press a special key, like <c>Control` or `ArrowDown</c>  use <see cref="IElementHandle.PressAsync"/>.</para>
+		/// <para>To press a special key, like <c>Control</c> or <c>ArrowDown</c>, use <see cref="IElementHandle.PressAsync"/>.</para>
 		/// <para>An example of typing into a text field and then submitting the form:</para>
 		/// </summary>
 		/// <param name="text">A text to type into a focused element.</param>
@@ -701,7 +727,7 @@ namespace PlaywrightSharp
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -718,8 +744,8 @@ namespace PlaywrightSharp
 		/// If the element is already unchecked, this method returns immediately.
 		/// </description></item>
 		/// <item><description>
-		/// Wait for [actionability](./actionability.md) checks on the element, unless <paramref
-		/// name="force"/> option is set.
+		/// Wait for <a href="./actionability.md)">actionability</a> checks on the element,
+		/// unless <paramref name="force"/> option is set.
 		/// </description></item>
 		/// <item><description>Scroll the element into view if needed.</description></item>
 		/// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
@@ -740,14 +766,14 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </summary>
 		/// <param name="force">
-		/// Whether to bypass the [actionability](./actionability.md) checks. Defaults to <c>false</c>
-		/// 
+		/// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
+		/// to <c>false</c>.
 		/// </param>
 		/// <param name="noWaitAfter">
 		/// Actions that initiate navigations are waiting for these navigations to happen and
 		/// for pages to start loading. You can opt out of waiting via setting this flag. You
 		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>
+		/// pages. Defaults to <c>false</c>.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
@@ -760,23 +786,27 @@ namespace PlaywrightSharp
 		/// <para>Returns when the element satisfies the <paramref name="state"/>.</para>
 		/// <para>
 		/// Depending on the <paramref name="state"/> parameter, this method waits for one of
-		/// the [actionability](./actionability.md) checks to pass. This method throws when
-		/// the element is detached while waiting, unless waiting for the <c>"hidden"</c> state.
+		/// the <a href="./actionability.md)">actionability</a> checks to pass. This method
+		/// throws when the element is detached while waiting, unless waiting for the <c>"hidden"</c>
+		/// state.
 		/// </para>
 		/// <list type="bullet">
-		/// <item><description>`"visible"` Wait until the element is [visible](./actionability.md#visible).</description></item>
+		/// <item><description><c>"visible"</c> Wait until the element is <a href="./actionability.md#visible)">visible</a>.</description></item>
 		/// <item><description>
-		/// `"hidden"` Wait until the element is [not visible](./actionability.md#visible) or
-		/// [not attached](./actionability.md#attached). Note that waiting for hidden does not
-		/// throw when the element detaches.
+		/// <c>"hidden"</c> Wait until the element is <a href="./actionability.md#visible)">not
+		/// visible</a> or <a href="./actionability.md#attached)">not attached</a>. Note that
+		/// waiting for hidden does not throw when the element detaches.
 		/// </description></item>
 		/// <item><description>
-		/// `"stable"` Wait until the element is both [visible](./actionability.md#visible)
-		/// and [stable](./actionability.md#stable).
+		/// <c>"stable"</c> Wait until the element is both <a href="./actionability.md#visible)">visible</a>
+		/// and <a href="./actionability.md#stable)">stable</a>.
 		/// </description></item>
-		/// <item><description>`"enabled"` Wait until the element is [enabled](./actionability.md#enabled).</description></item>
-		/// <item><description>`"disabled"` Wait until the element is [not enabled](./actionability.md#enabled).</description></item>
-		/// <item><description>`"editable"` Wait until the element is [editable](./actionability.md#editable).</description></item>
+		/// <item><description><c>"enabled"</c> Wait until the element is <a href="./actionability.md#enabled)">enabled</a>.</description></item>
+		/// <item><description>
+		/// <c>"disabled"</c> Wait until the element is <a href="./actionability.md#enabled)">not
+		/// enabled</a>.
+		/// </description></item>
+		/// <item><description><c>"editable"</c> Wait until the element is <a href="./actionability.md#editable)">editable</a>.</description></item>
 		/// </list>
 		/// <para>
 		/// If the element does not satisfy the condition for the <paramref name="timeout"/>
@@ -794,7 +824,7 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// Returns element specified by selector when it satisfies <paramref name="state"/>
-		/// option. Returns <c>null` if waiting for `hidden` or `detached</c>
+		/// option. Returns <c>null</c> if waiting for <c>hidden</c> or <c>detached</c>.
 		/// </para>
 		/// <para>
 		/// Wait for the <paramref name="selector"/> relative to the element handle to satisfy
@@ -811,20 +841,24 @@ namespace PlaywrightSharp
 		/// instead.
 		/// </para>
 		/// </remarks>
-		/// <param name="selector">A selector to query for. See [working with selectors](./selectors.md) for more details.</param>
+		/// <param name="selector">
+		/// A selector to query for. See <a href="./selectors.md)">working with selectors</a>
+		/// for more details.
+		/// </param>
 		/// <param name="state">
-		/// Defaults to <c>'visible'</c>  Can be either:
+		/// Defaults to <c>'visible'</c>. Can be either:
 		/// <list type="bullet">
-		/// <item><description>`'attached'` - wait for element to be present in DOM.</description></item>
-		/// <item><description>`'detached'` - wait for element to not be present in DOM.</description></item>
+		/// <item><description><c>'attached'</c> - wait for element to be present in DOM.</description></item>
+		/// <item><description><c>'detached'</c> - wait for element to not be present in DOM.</description></item>
 		/// <item><description>
-		/// `'visible <c> - wait for element to have non-empty bounding box and no `visibility:hidden`.
-		/// Note that element without any content or with `display:none</c> has an empty bounding
+		/// <c>'visible'</c> - wait for element to have non-empty bounding box and no <c>visibility:hidden</c>.
+		/// Note that element without any content or with <c>display:none</c> has an empty bounding
 		/// box and is not considered visible.
 		/// </description></item>
 		/// <item><description>
-		/// `'hidden <c> - wait for element to be either detached from DOM, or have an empty
-		/// bounding box or `visibility:hidden`. This is opposite to the `'visible'</c> option.
+		/// <c>'hidden'</c> - wait for element to be either detached from DOM, or have an empty
+		/// bounding box or <c>visibility:hidden</c>. This is opposite to the <c>'visible'</c>
+		/// option.
 		/// </description></item>
 		/// </list>
 		/// </param>

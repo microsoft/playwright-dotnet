@@ -54,35 +54,35 @@ namespace PlaywrightSharp
 	{
 		/// <summary><para>Aborts the route's request.</para></summary>
 		/// <param name="errorCode">
-		/// Optional error code. Defaults to <c>failed</c>  could be one of the following:
+		/// Optional error code. Defaults to <c>failed</c>, could be one of the following:
 		/// <list type="bullet">
-		/// <item><description>`'aborted'` - An operation was aborted (due to user action)</description></item>
+		/// <item><description><c>'aborted'</c> - An operation was aborted (due to user action)</description></item>
 		/// <item><description>
-		/// `'accessdenied'` - Permission to access a resource, other than the network, was
-		/// denied
+		/// <c>'accessdenied'</c> - Permission to access a resource, other than the network,
+		/// was denied
 		/// </description></item>
 		/// <item><description>
-		/// `'addressunreachable'` - The IP address is unreachable. This usually means that
-		/// there is no route to the specified host or network.
+		/// <c>'addressunreachable'</c> - The IP address is unreachable. This usually means
+		/// that there is no route to the specified host or network.
 		/// </description></item>
-		/// <item><description>`'blockedbyclient'` - The client chose to block the request.</description></item>
+		/// <item><description><c>'blockedbyclient'</c> - The client chose to block the request.</description></item>
 		/// <item><description>
-		/// `'blockedbyresponse'` - The request failed because the response was delivered along
-		/// with requirements which are not met ('X-Frame-Options' and 'Content-Security-Policy'
+		/// <c>'blockedbyresponse'</c> - The request failed because the response was delivered
+		/// along with requirements which are not met ('X-Frame-Options' and 'Content-Security-Policy'
 		/// ancestor checks, for instance).
 		/// </description></item>
 		/// <item><description>
-		/// `'connectionaborted'` - A connection timed out as a result of not receiving an ACK
-		/// for data sent.
+		/// <c>'connectionaborted'</c> - A connection timed out as a result of not receiving
+		/// an ACK for data sent.
 		/// </description></item>
-		/// <item><description>`'connectionclosed'` - A connection was closed (corresponding to a TCP FIN).</description></item>
-		/// <item><description>`'connectionfailed'` - A connection attempt failed.</description></item>
-		/// <item><description>`'connectionrefused'` - A connection attempt was refused.</description></item>
-		/// <item><description>`'connectionreset'` - A connection was reset (corresponding to a TCP RST).</description></item>
-		/// <item><description>`'internetdisconnected'` - The Internet connection has been lost.</description></item>
-		/// <item><description>`'namenotresolved'` - The host name could not be resolved.</description></item>
-		/// <item><description>`'timedout'` - An operation timed out.</description></item>
-		/// <item><description>`'failed'` - A generic failure occurred.</description></item>
+		/// <item><description><c>'connectionclosed'</c> - A connection was closed (corresponding to a TCP FIN).</description></item>
+		/// <item><description><c>'connectionfailed'</c> - A connection attempt failed.</description></item>
+		/// <item><description><c>'connectionrefused'</c> - A connection attempt was refused.</description></item>
+		/// <item><description><c>'connectionreset'</c> - A connection was reset (corresponding to a TCP RST).</description></item>
+		/// <item><description><c>'internetdisconnected'</c> - The Internet connection has been lost.</description></item>
+		/// <item><description><c>'namenotresolved'</c> - The host name could not be resolved.</description></item>
+		/// <item><description><c>'timedout'</c> - An operation timed out.</description></item>
+		/// <item><description><c>'failed'</c> - A generic failure occurred.</description></item>
 		/// </list>
 		/// </param>
 		Task AbortAsync(string errorCode = null);
@@ -108,7 +108,7 @@ namespace PlaywrightSharp
 		/// If <c>path</c> is a relative path, then it is resolved relative to the current working
 		/// directory.
 		/// </param>
-		/// <param name="status">Response status code, defaults to <c>200</c></param>
+		/// <param name="status">Response status code, defaults to <c>200</c>.</param>
 		Task FulfillAsync(string body = null, byte[] bodyBytes = null, string contentType = null, IEnumerable<KeyValuePair<string, string>> headers = null, string path = null, int? status = null);
 	
 		/// <summary><para>A request to be routed.</para></summary>

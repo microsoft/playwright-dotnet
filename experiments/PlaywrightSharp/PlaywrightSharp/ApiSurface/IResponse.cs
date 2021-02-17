@@ -66,10 +66,7 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>Returns the JSON representation of response body.</para>
-		/// <para>
-		/// This method will throw if the response body is not parsable via <c>JSON.parse</c>
-		/// 
-		/// </para>
+		/// <para>This method will throw if the response body is not parsable via <c>JSON.parse</c>.</para>
 		/// </summary>
 		Task<T> GetJsonAsync<T>();
 	
