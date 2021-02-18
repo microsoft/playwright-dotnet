@@ -42,14 +42,5 @@ namespace PlaywrightSharp.Tests
 
             return result;
         }
-
-        internal static async Task NavigateFrameAsync(IPage page, string frameId, string url)
-        {
-            await page.EvaluateAsync(@"function navigateFrame(frameId, url) {
-              const frame = document.getElementById(frameId);
-              frame.src = url;
-              return new Promise(x => frame.onload = x);
-            }", new { frameId, url });
-        }
     }
 }

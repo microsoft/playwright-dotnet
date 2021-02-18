@@ -89,8 +89,6 @@ namespace PlaywrightSharp.Transport
             await tcs.Task.ConfigureAwait(false);
         }
 
-        internal void RemoveObject(string guid) => Objects.TryRemove(guid, out _);
-
         internal Task<JsonElement?> SendMessageToServerAsync(
             string guid,
             string method,

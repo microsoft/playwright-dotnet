@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,15 +13,6 @@ namespace PlaywrightSharp
 {
     internal static class ScriptsHelper
     {
-        internal static bool IsPrimitiveValue(Type type)
-            => type == typeof(string) ||
-            type == typeof(decimal) ||
-            type == typeof(double) ||
-            type == typeof(bool) ||
-            type == typeof(decimal?) ||
-            type == typeof(double?) ||
-            type == typeof(bool?);
-
         internal static string SerializeScriptCall(string script, object[] args)
         {
             args ??= Array.Empty<object>();
