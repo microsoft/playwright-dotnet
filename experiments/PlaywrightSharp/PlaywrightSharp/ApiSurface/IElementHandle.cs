@@ -186,7 +186,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task ClickAsync(Button? button = null, int? clickCount = null, decimal? delay = null, bool? force = null, Modifiers[] modifiers = null, bool? noWaitAfter = null, ElementHandlePosition position = null, int timeout = 0);
+		Task ClickAsync(Button? button = null, int? clickCount = null, decimal? delay = null, bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, ElementHandlePosition position = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -259,7 +259,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task DblclickAsync(Button? button = null, decimal? delay = null, bool? force = null, Modifiers[] modifiers = null, bool? noWaitAfter = null, ElementHandlePosition position = null, int timeout = 0);
+		Task DblclickAsync(Button? button = null, decimal? delay = null, bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, ElementHandlePosition position = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -430,7 +430,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task HoverAsync(bool? force = null, Modifiers[] modifiers = null, ElementHandlePosition position = null, int timeout = 0);
+		Task HoverAsync(bool? force = null, IEnumerable<Modifiers> modifiers = null, ElementHandlePosition position = null, int timeout = 0);
 	
 		/// <summary><para>Returns the <c>element.innerHTML</c>.</para></summary>
 		Task<string> GetInnerHTMLAsync();
@@ -542,7 +542,7 @@ namespace PlaywrightSharp
 		/// A selector to query for. See <a href="./selectors.md)">working with selectors</a>
 		/// for more details.
 		/// </param>
-		Task<dynamic> QuerySelectorAllAsync(string selector);
+		Task<IReadOnlyCollection<IElementHandle>> QuerySelectorAllAsync(string selector);
 	
 		/// <summary>
 		/// <para>Returns the buffer with the captured screenshot.</para>
@@ -610,7 +610,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<dynamic> SelectOptionAsync(bool? noWaitAfter = null, int timeout = 0);
+		Task<IReadOnlyCollection<string>> SelectOptionAsync(bool? noWaitAfter = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -649,7 +649,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task SetInputFilesAsync(string[] files, bool? noWaitAfter = null, int timeout = 0);
+		Task SetInputFilesAsync(IEnumerable<string> files, bool? noWaitAfter = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>This method taps the element by performing the following steps:</para>
@@ -708,7 +708,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task TapAsync(bool? force = null, Modifiers[] modifiers = null, bool? noWaitAfter = null, ElementHandlePosition position = null, int timeout = 0);
+		Task TapAsync(bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, ElementHandlePosition position = null, int timeout = 0);
 	
 		/// <summary><para>Returns the <c>node.textContent</c>.</para></summary>
 		Task<string> GetTextContentAsync();

@@ -99,7 +99,7 @@ namespace PlaywrightSharp
 		/// </summary>
 		/// <param name="cookies">
 		/// </param>
-		Task AddCookiesAsync(BrowserContextCookies[] cookies);
+		Task AddCookiesAsync(IEnumerable<BrowserContextCookies> cookies);
 	
 		/// <summary>
 		/// <para>Adds a script which would be evaluated in one of the following scenarios:</para>
@@ -156,7 +156,7 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </summary>
 		/// <param name="urls">Optional list of URLs.</param>
-		Task<BrowserContextCookiesResult[]> GetCookiesAsync(string[] urls = null);
+		Task<IReadOnlyCollection<BrowserContextCookiesResult>> GetCookiesAsync(IEnumerable<string> urls = null);
 	
 		/// <summary>
 		/// <para>
@@ -228,7 +228,7 @@ namespace PlaywrightSharp
 		/// </list>
 		/// </param>
 		/// <param name="origin">The [origin] to grant permissions to, e.g. "https://example.com".</param>
-		Task GrantPermissionsAsync(string[] permissions, string origin = null);
+		Task GrantPermissionsAsync(IEnumerable<string> permissions, string origin = null);
 	
 		/// <summary><para>Creates a new page in the browser context.</para></summary>
 		Task<IPage> GetNewPageAsync();
@@ -239,7 +239,7 @@ namespace PlaywrightSharp
 		/// will not be listed here.
 		/// </para>
 		/// </summary>
-		dynamic Pages { get; }
+		IReadOnlyCollection<IPage> Pages { get; }
 	
 		/// <summary>
 		/// <para>

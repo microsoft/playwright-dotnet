@@ -163,7 +163,7 @@ namespace PlaywrightSharp
 		/// </param>
 		Task CheckAsync(string selector, bool? force = null, bool? noWaitAfter = null, int timeout = 0);
 	
-		dynamic ChildFrames { get; }
+		IReadOnlyCollection<IFrame> ChildFrames { get; }
 	
 		/// <summary>
 		/// <para>
@@ -231,7 +231,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task ClickAsync(string selector, Button? button = null, int? clickCount = null, decimal? delay = null, bool? force = null, Modifiers[] modifiers = null, bool? noWaitAfter = null, FramePosition position = null, int timeout = 0);
+		Task ClickAsync(string selector, Button? button = null, int? clickCount = null, decimal? delay = null, bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, FramePosition position = null, int timeout = 0);
 	
 		/// <summary><para>Gets the full HTML contents of the frame, including the doctype.</para></summary>
 		Task<string> GetContentAsync();
@@ -308,7 +308,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task DblclickAsync(string selector, Button? button = null, decimal? delay = null, bool? force = null, Modifiers[] modifiers = null, bool? noWaitAfter = null, FramePosition position = null, int timeout = 0);
+		Task DblclickAsync(string selector, Button? button = null, decimal? delay = null, bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, FramePosition position = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -650,7 +650,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task HoverAsync(string selector, bool? force = null, Modifiers[] modifiers = null, FramePosition position = null, int timeout = 0);
+		Task HoverAsync(string selector, bool? force = null, IEnumerable<Modifiers> modifiers = null, FramePosition position = null, int timeout = 0);
 	
 		/// <summary><para>Returns <c>element.innerHTML</c>.</para></summary>
 		/// <param name="selector">
@@ -876,7 +876,7 @@ namespace PlaywrightSharp
 		/// A selector to query for. See <a href="./selectors.md)">working with selectors</a>
 		/// for more details.
 		/// </param>
-		Task<dynamic> QuerySelectorAllAsync(string selector);
+		Task<IReadOnlyCollection<IElementHandle>> QuerySelectorAllAsync(string selector);
 	
 		/// <summary>
 		/// <para>Returns the array of option values that have been successfully selected.</para>
@@ -902,7 +902,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<dynamic> SelectOptionAsync(string selector, bool? noWaitAfter = null, int timeout = 0);
+		Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, bool? noWaitAfter = null, int timeout = 0);
 	
 		/// <param name="html">HTML markup to assign to the page.</param>
 		/// <param name="timeout">
@@ -959,7 +959,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task SetInputFilesAsync(string selector, string[] files, bool? noWaitAfter = null, int timeout = 0);
+		Task SetInputFilesAsync(string selector, IEnumerable<string> files, bool? noWaitAfter = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -1027,7 +1027,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task TapAsync(string selector, bool? force = null, Modifiers[] modifiers = null, bool? noWaitAfter = null, FramePosition position = null, int timeout = 0);
+		Task TapAsync(string selector, bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, FramePosition position = null, int timeout = 0);
 	
 		/// <summary><para>Returns <c>element.textContent</c>.</para></summary>
 		/// <param name="selector">

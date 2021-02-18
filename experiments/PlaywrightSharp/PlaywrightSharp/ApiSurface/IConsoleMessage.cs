@@ -52,7 +52,7 @@ namespace PlaywrightSharp
 	/// </summary>
 	public partial interface IConsoleMessage
 	{
-		dynamic Args { get; }
+		IReadOnlyCollection<IJSHandle> Args { get; }
 	
 		/// <summary>
 		/// <para>

@@ -50,6 +50,6 @@ namespace PlaywrightSharp
 		string Origin { get; set; }
 	
 		/// <summary><para></para></summary>
-		BrowserContextStorageStateResultOriginsLocalStorage[] LocalStorage { get; set; }
+		IEnumerable<BrowserContextStorageStateResultOriginsLocalStorage> LocalStorage { get; set; }
 	}
 }

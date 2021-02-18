@@ -81,6 +81,6 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task SetFilesAsync(string[] files, bool? noWaitAfter = null, int timeout = 0);
+		Task SetFilesAsync(IEnumerable<string> files, bool? noWaitAfter = null, int timeout = 0);
 	}
 }
