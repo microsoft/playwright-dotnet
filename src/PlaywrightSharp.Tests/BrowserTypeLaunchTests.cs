@@ -86,9 +86,8 @@ namespace PlaywrightSharp.Tests
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => playwright[TestConstants.Product].LaunchAsync());
 
             Assert.Contains("Failed to launch", exception.Message);
-            Assert.Contains("Try re-installing the browsers running `playwright-cli.exe install` in windows or `playwright-cli install` in MacOS or Linux.", exception.Message);
+            Assert.Contains("Try re-installing the browsers running `playwright.cmd install` in windows or `./playwright.sh install` in MacOS or Linux.", exception.Message);
             Assert.DoesNotContain("npm install playwright", exception.Message);
-            Assert.Contains("pass `debug: \"pw:api\"` to LaunchAsync", exception.Message);
             Environment.SetEnvironmentVariable(EnvironmentVariables.BrowsersPathEnvironmentVariable, null);
         }
 
@@ -102,7 +101,6 @@ namespace PlaywrightSharp.Tests
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => BrowserType.LaunchAsync(options));
 
             Assert.Contains("Failed to launch", exception.Message);
-            Assert.Contains("pass `debug: \"pw:api\"` to LaunchAsync", exception.Message);
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should handle timeout")]
