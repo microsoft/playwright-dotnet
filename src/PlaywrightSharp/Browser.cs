@@ -265,8 +265,8 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         public async Task<IPage> NewPageAsync(BrowserContextOptions options)
         {
-            var context = await NewContextAsync(options).ConfigureAwait(false) as BrowserContext;
-            var page = await context.NewPageAsync().ConfigureAwait(false) as Page;
+            var context = (BrowserContext)await NewContextAsync(options).ConfigureAwait(false);
+            var page = (Page)await context.NewPageAsync().ConfigureAwait(false);
             page.OwnedContext = context;
             context.OwnerPage = page;
             return page;

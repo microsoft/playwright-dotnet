@@ -230,13 +230,13 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitUntilAnElementIsVisibleToTapIt()
         {
-            var div = await Page.EvaluateHandleAsync(@"() => {
+            var div = (IElementHandle)await Page.EvaluateHandleAsync(@"() => {
                 const button = document.createElement('button');
                 button.textContent = 'not clicked';
                 document.body.appendChild(button);
                 button.style.display = 'none';
                 return button;
-            }") as IElementHandle;
+            }");
 
             var tapTask = div.TapAsync();
 

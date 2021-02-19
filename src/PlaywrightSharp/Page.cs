@@ -55,7 +55,7 @@ namespace PlaywrightSharp
 
         internal Page(IChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
         {
-            Context = parent as BrowserContext;
+            Context = (BrowserContext)parent;
 
             _channel = new PageChannel(guid, parent.Connection, this);
 
@@ -1026,7 +1026,7 @@ namespace PlaywrightSharp
 
         private void Channel_FrameDetached(object sender, FrameEventArgs e)
         {
-            var frame = e.Frame as Frame;
+            var frame = (Frame)e.Frame;
             _frames.Remove(frame);
             frame.IsDetached = true;
             frame.ParentFrame?.ChildFramesList?.Remove(frame);
@@ -1035,7 +1035,7 @@ namespace PlaywrightSharp
 
         private void Channel_FrameAttached(object sender, FrameEventArgs e)
         {
-            var frame = e.Frame as Frame;
+            var frame = (Frame)e.Frame;
             frame.Page = this;
             _frames.Add(frame);
             frame.ParentFrame?.ChildFramesList?.Add(frame);
