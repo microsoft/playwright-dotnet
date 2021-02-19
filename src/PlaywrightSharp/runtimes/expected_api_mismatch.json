@@ -703,6 +703,19 @@
       "justification": "We don't support this yet"
     },
     {
+      "className": "WebSocketFrameEventArgs",
+      "members": [
+        {
+          "upstreamMemberName": "binary",
+          "justification": "We are solving it a little bit different in this implementation"
+        },
+        {
+          "upstreamMemberName": "text",
+          "justification": "We are solving it a little bit different in this implementation"
+        }
+      ]
+    },
+    {
       "upstreamClassName": "browserContextOptions",
       "className": "BrowserContextOptions",
       "members": [
