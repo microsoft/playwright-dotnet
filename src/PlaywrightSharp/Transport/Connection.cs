@@ -479,7 +479,7 @@ namespace PlaywrightSharp.Transport
             string message = error.Message
                 .Replace(
                     "Try re-installing playwright with \"npm install playwright\"",
-                    "Try re-installing the browsers running `playwright-cli.exe install` in windows or `playwright-cli install` in MacOS or Linux.")
+                    "Try re-installing the browsers running `playwright.cmd install` in windows or `./playwright.sh install` in MacOS or Linux.")
                 .Replace(
                     "use DEBUG=pw:api environment variable and rerun",
                     "pass `debug: \"pw:api\"` to LaunchAsync");

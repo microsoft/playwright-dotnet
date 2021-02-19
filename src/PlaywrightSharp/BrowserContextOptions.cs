@@ -269,6 +269,8 @@ namespace PlaywrightSharp
                 args["storageState"] = StorageState;
             }
 
+            args["sdkLanguage"] = "csharp";
+
             return args;
         }
     }

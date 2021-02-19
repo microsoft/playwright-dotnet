@@ -34,8 +34,8 @@ namespace PlaywrightSharp.Tests
                 => Page.ClickAsync("button", timeout: 3000));
 
             Assert.Contains("Timeout 3000ms exceeded", exception.Message);
-            Assert.Contains("waiting for element to be visible, enabled and not moving", exception.Message);
-            Assert.Contains("element is moving - waiting", exception.Message);
+            Assert.Contains("waiting for element to be visible, enabled and stable", exception.Message);
+            Assert.Contains("element is not stable - waiting", exception.Message);
         }
     }
 }
