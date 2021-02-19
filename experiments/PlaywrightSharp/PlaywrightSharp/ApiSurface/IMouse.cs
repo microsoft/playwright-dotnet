@@ -35,6 +35,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
@@ -69,7 +70,7 @@ namespace PlaywrightSharp
 		/// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
 		/// to 0.
 		/// </param>
-		Task ClickAsync(decimal x, decimal y, Button? button = null, int? clickCount = null, decimal? delay = null);
+		Task ClickAsync(decimal x, decimal y, Button button = default, int? clickCount = null, decimal? delay = null);
 	
 		/// <summary>
 		/// <para>
@@ -86,12 +87,12 @@ namespace PlaywrightSharp
 		/// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
 		/// to 0.
 		/// </param>
-		Task DblclickAsync(decimal x, decimal y, Button? button = null, decimal? delay = null);
+		Task DblclickAsync(decimal x, decimal y, Button button = default, decimal? delay = null);
 	
 		/// <summary><para>Dispatches a <c>mousedown</c> event.</para></summary>
 		/// <param name="button">Defaults to <c>left</c>.</param>
 		/// <param name="clickCount">defaults to 1. See [UIEvent.detail].</param>
-		Task DownAsync(Button? button = null, int? clickCount = null);
+		Task DownAsync(Button button = default, int? clickCount = null);
 	
 		/// <summary><para>Dispatches a <c>mousemove</c> event.</para></summary>
 		/// <param name="x">
@@ -104,6 +105,6 @@ namespace PlaywrightSharp
 		/// <summary><para>Dispatches a <c>mouseup</c> event.</para></summary>
 		/// <param name="button">Defaults to <c>left</c>.</param>
 		/// <param name="clickCount">defaults to 1. See [UIEvent.detail].</param>
-		Task UpAsync(Button? button = null, int? clickCount = null);
+		Task UpAsync(Button button = default, int? clickCount = null);
 	}
 }

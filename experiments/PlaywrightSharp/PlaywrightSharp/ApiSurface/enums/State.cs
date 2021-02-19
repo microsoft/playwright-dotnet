@@ -35,6 +35,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
@@ -46,6 +47,7 @@ namespace PlaywrightSharp
 {
     public enum State
 	{
+		Undefined = 0,
 		[EnumMember(Value = "visible")]
 		Visible,
 		[EnumMember(Value = "hidden")]

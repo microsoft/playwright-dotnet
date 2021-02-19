@@ -35,6 +35,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
@@ -186,7 +187,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task ClickAsync(Button? button = null, int? clickCount = null, decimal? delay = null, bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, ElementHandlePosition position = null, int timeout = 0);
+		Task ClickAsync(Button button = default, int? clickCount = null, decimal? delay = null, bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, ElementHandlePosition position = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -259,7 +260,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task DblclickAsync(Button? button = null, decimal? delay = null, bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, ElementHandlePosition position = null, int timeout = 0);
+		Task DblclickAsync(Button button = default, decimal? delay = null, bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, ElementHandlePosition position = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -569,7 +570,7 @@ namespace PlaywrightSharp
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
 		/// <param name="type">Specify screenshot type, defaults to <c>png</c>.</param>
-		Task<byte[]> ScreenshotAsync(bool? omitBackground = null, string path = null, int? quality = null, int timeout = 0, Type? type = null);
+		Task<byte[]> ScreenshotAsync(bool? omitBackground = null, string path = null, int? quality = null, int timeout = 0, Type type = default);
 	
 		/// <summary>
 		/// <para>
@@ -867,6 +868,6 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<IElementHandle> WaitForSelectorAsync(string selector, State? state = null, int timeout = 0);
+		Task<IElementHandle> WaitForSelectorAsync(string selector, State state = default, int timeout = 0);
 	}
 }

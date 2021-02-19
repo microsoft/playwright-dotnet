@@ -35,6 +35,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
@@ -410,7 +411,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task ClickAsync(string selector, Button? button = null, int? clickCount = null, decimal? delay = null, bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, PagePosition position = null, int timeout = 0);
+		Task ClickAsync(string selector, Button button = default, int? clickCount = null, decimal? delay = null, bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, PagePosition position = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -512,7 +513,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task DblclickAsync(string selector, Button? button = null, decimal? delay = null, bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, PagePosition position = null, int timeout = 0);
+		Task DblclickAsync(string selector, Button button = default, decimal? delay = null, bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, PagePosition position = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -566,7 +567,7 @@ namespace PlaywrightSharp
 		/// Changes the CSS media type of the page. The only allowed values are <c>'screen'</c>,
 		/// <c>'print'</c> and <c>null</c>. Passing <c>null</c> disables CSS media emulation.
 		/// </param>
-		Task EmulateMediaAsync(ColorScheme? colorScheme = null, Media? media = null);
+		Task EmulateMediaAsync(ColorScheme colorScheme = default, Media media = default);
 	
 		/// <summary>
 		/// <para>
@@ -836,7 +837,7 @@ namespace PlaywrightSharp
 		/// </description></item>
 		/// </list>
 		/// </param>
-		Task<IResponse> GoBackAsync(int timeout = 0, WaitUntil? waitUntil = null);
+		Task<IResponse> GoBackAsync(int timeout = 0, WaitUntil waitUntil = default);
 	
 		/// <summary>
 		/// <para>
@@ -869,7 +870,7 @@ namespace PlaywrightSharp
 		/// </description></item>
 		/// </list>
 		/// </param>
-		Task<IResponse> GoForwardAsync(int timeout = 0, WaitUntil? waitUntil = null);
+		Task<IResponse> GoForwardAsync(int timeout = 0, WaitUntil waitUntil = default);
 	
 		/// <summary>
 		/// <para>
@@ -905,7 +906,7 @@ namespace PlaywrightSharp
 		/// <param name="url">URL to navigate page to. The url should include scheme, e.g. <c>https://</c>.</param>
 		/// <param name="referer">
 		/// Referer header value. If provided it will take preference over the referer header
-		/// value set by <see cref="IPage.SetExtraHTTPHeadersAsync"/>.
+		/// value set by <see cref="IPage.setExtraHTTPHeaders"/>.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
@@ -930,7 +931,7 @@ namespace PlaywrightSharp
 		/// </description></item>
 		/// </list>
 		/// </param>
-		Task<IResponse> GotoAsync(string url, string referer = null, int timeout = 0, WaitUntil? waitUntil = null);
+		Task<IResponse> GotoAsync(string url, string referer = null, int timeout = 0, WaitUntil waitUntil = default);
 	
 		/// <summary>
 		/// <para>
@@ -1362,7 +1363,7 @@ namespace PlaywrightSharp
 		/// </description></item>
 		/// </list>
 		/// </param>
-		Task<IResponse> ReloadAsync(int timeout = 0, WaitUntil? waitUntil = null);
+		Task<IResponse> ReloadAsync(int timeout = 0, WaitUntil waitUntil = default);
 	
 		/// <summary>
 		/// <para>Routing provides the capability to modify network requests that are made by a page.</para>
@@ -1419,7 +1420,7 @@ namespace PlaywrightSharp
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
 		/// <param name="type">Specify screenshot type, defaults to <c>png</c>.</param>
-		Task<byte[]> ScreenshotAsync(PageClip clip = null, bool? fullPage = null, bool? omitBackground = null, string path = null, int? quality = null, int timeout = 0, Type? type = null);
+		Task<byte[]> ScreenshotAsync(PageClip clip = null, bool? fullPage = null, bool? omitBackground = null, string path = null, int? quality = null, int timeout = 0, Type type = default);
 	
 		/// <summary>
 		/// <para>Returns the array of option values that have been successfully selected.</para>
@@ -1473,7 +1474,7 @@ namespace PlaywrightSharp
 		/// </description></item>
 		/// </list>
 		/// </param>
-		Task SetContentAsync(string html, int timeout = 0, WaitUntil? waitUntil = null);
+		Task SetContentAsync(string html, int timeout = 0, WaitUntil waitUntil = default);
 	
 		/// <summary>
 		/// <para>
@@ -1511,7 +1512,7 @@ namespace PlaywrightSharp
 		/// <summary><para>The extra HTTP headers will be sent with every request the page initiates.</para></summary>
 		/// <remarks>
 		/// <para>
-		/// <see cref="IPage.SetExtraHTTPHeadersAsync"/> does not guarantee the order of headers
+		/// <see cref="IPage.setExtraHTTPHeaders"/> does not guarantee the order of headers
 		/// in the outgoing requests.
 		/// </para>
 		/// </remarks>
@@ -1519,7 +1520,7 @@ namespace PlaywrightSharp
 		/// An object containing additional HTTP headers to be sent with every request. All
 		/// header values must be strings.
 		/// </param>
-		Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers);
+		Task setExtraHTTPHeaders(IEnumerable<KeyValuePair<string, string>> headers);
 	
 		/// <summary>
 		/// <para>
@@ -1902,7 +1903,7 @@ namespace PlaywrightSharp
 		/// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task WaitForLoadStateAsync(State? state = null, int timeout = 0);
+		Task WaitForLoadStateAsync(State state = default, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -1960,7 +1961,7 @@ namespace PlaywrightSharp
 		/// </description></item>
 		/// </list>
 		/// </param>
-		Task<IResponse> WaitForNavigationAsync(int timeout = 0, string urlString = null, Regex urlRegex = null, Func<Uri, bool> urlFunc = null, WaitUntil? waitUntil = null);
+		Task<IResponse> WaitForNavigationAsync(int timeout = 0, string urlString = null, Regex urlRegex = null, Func<Uri, bool> urlFunc = null, WaitUntil waitUntil = default);
 	
 		/// <summary>
 		/// <para>
@@ -2043,7 +2044,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<IElementHandle> WaitForSelectorAsync(string selector, State? state = null, int timeout = 0);
+		Task<IElementHandle> WaitForSelectorAsync(string selector, State state = default, int timeout = 0);
 	
 		/// <summary>
 		/// <para>Waits for the given <paramref name="timeout"/> in milliseconds.</para>

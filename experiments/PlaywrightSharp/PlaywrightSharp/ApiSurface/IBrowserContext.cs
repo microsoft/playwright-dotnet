@@ -35,6 +35,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
@@ -304,22 +305,21 @@ namespace PlaywrightSharp
 		/// <para>
 		/// The extra HTTP headers will be sent with every request initiated by any page in
 		/// the context. These headers are merged with page-specific extra HTTP headers set
-		/// with <see cref="IPage.SetExtraHTTPHeadersAsync"/>. If page overrides a particular
-		/// header, page-specific header value will be used instead of the browser context header
-		/// value.
+		/// with <see cref="IPage.setExtraHTTPHeaders"/>. If page overrides a particular header,
+		/// page-specific header value will be used instead of the browser context header value.
 		/// </para>
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// <see cref="IBrowserContext.SetExtraHTTPHeadersAsync"/> does not guarantee the order
-		/// of headers in the outgoing requests.
+		/// <see cref="IBrowserContext.setExtraHTTPHeaders"/> does not guarantee the order of
+		/// headers in the outgoing requests.
 		/// </para>
 		/// </remarks>
 		/// <param name="headers">
 		/// An object containing additional HTTP headers to be sent with every request. All
 		/// header values must be strings.
 		/// </param>
-		Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers);
+		Task setExtraHTTPHeaders(IEnumerable<KeyValuePair<string, string>> headers);
 	
 		/// <summary>
 		/// <para>

@@ -35,6 +35,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
@@ -231,7 +232,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task ClickAsync(string selector, Button? button = null, int? clickCount = null, decimal? delay = null, bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, FramePosition position = null, int timeout = 0);
+		Task ClickAsync(string selector, Button button = default, int? clickCount = null, decimal? delay = null, bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, FramePosition position = null, int timeout = 0);
 	
 		/// <summary><para>Gets the full HTML contents of the frame, including the doctype.</para></summary>
 		Task<string> GetContentAsync();
@@ -308,7 +309,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task DblclickAsync(string selector, Button? button = null, decimal? delay = null, bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, FramePosition position = null, int timeout = 0);
+		Task DblclickAsync(string selector, Button button = default, decimal? delay = null, bool? force = null, IEnumerable<Modifiers> modifiers = null, bool? noWaitAfter = null, FramePosition position = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -569,7 +570,7 @@ namespace PlaywrightSharp
 		/// <param name="url">URL to navigate frame to. The url should include scheme, e.g. <c>https://</c>.</param>
 		/// <param name="referer">
 		/// Referer header value. If provided it will take preference over the referer header
-		/// value set by <see cref="IPage.SetExtraHTTPHeadersAsync"/>.
+		/// value set by <see cref="IPage.setExtraHTTPHeaders"/>.
 		/// </param>
 		/// <param name="timeout">
 		/// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
@@ -594,7 +595,7 @@ namespace PlaywrightSharp
 		/// </description></item>
 		/// </list>
 		/// </param>
-		Task<IResponse> GotoAsync(string url, string referer = null, int timeout = 0, WaitUntil? waitUntil = null);
+		Task<IResponse> GotoAsync(string url, string referer = null, int timeout = 0, WaitUntil waitUntil = default);
 	
 		/// <summary>
 		/// <para>
@@ -928,7 +929,7 @@ namespace PlaywrightSharp
 		/// </description></item>
 		/// </list>
 		/// </param>
-		Task SetContentAsync(string html, int timeout = 0, WaitUntil? waitUntil = null);
+		Task SetContentAsync(string html, int timeout = 0, WaitUntil waitUntil = default);
 	
 		/// <summary>
 		/// <para>
@@ -1188,7 +1189,7 @@ namespace PlaywrightSharp
 		/// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task WaitForLoadStateAsync(State? state = null, int timeout = 0);
+		Task WaitForLoadStateAsync(State state = default, int timeout = 0);
 	
 		/// <summary>
 		/// <para>
@@ -1243,7 +1244,7 @@ namespace PlaywrightSharp
 		/// </description></item>
 		/// </list>
 		/// </param>
-		Task<IResponse> WaitForNavigationAsync(int timeout = 0, string urlString = null, Regex urlRegex = null, Func<Uri, bool> urlFunc = null, WaitUntil? waitUntil = null);
+		Task<IResponse> WaitForNavigationAsync(int timeout = 0, string urlString = null, Regex urlRegex = null, Func<Uri, bool> urlFunc = null, WaitUntil waitUntil = default);
 	
 		/// <summary>
 		/// <para>
@@ -1285,7 +1286,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<IElementHandle> WaitForSelectorAsync(string selector, State? state = null, int timeout = 0);
+		Task<IElementHandle> WaitForSelectorAsync(string selector, State state = default, int timeout = 0);
 	
 		/// <summary>
 		/// <para>Waits for the given <paramref name="timeout"/> in milliseconds.</para>

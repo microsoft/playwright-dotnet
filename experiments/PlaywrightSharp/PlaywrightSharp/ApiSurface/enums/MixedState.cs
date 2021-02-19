@@ -35,6 +35,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
@@ -46,6 +47,7 @@ namespace PlaywrightSharp
 {
     public enum MixedState
 	{
+		Undefined = 0,
 		[EnumMember(Value = "On")]
 		On,
 		[EnumMember(Value = "Off")]

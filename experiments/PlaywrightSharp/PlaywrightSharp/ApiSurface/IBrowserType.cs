@@ -35,6 +35,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
@@ -102,7 +103,7 @@ namespace PlaywrightSharp
 		/// Note that Playwright only works with the bundled Chromium, Firefox or WebKit, use
 		/// at your own risk.
 		/// </param>
-		/// <param name="firefoxUserPrefs">Firefox user preferences. Learn more about the Firefox user preferences at <a href="https://support.mozilla.org/en-US/kb/about-config-editor-firefox)"><c>about:config</c></a>.</param>
+		/// <param name="firefoxUserPreferences">Firefox user preferences. Learn more about the Firefox user preferences at <a href="https://support.mozilla.org/en-US/kb/about-config-editor-firefox)"><c>about:config</c></a>.</param>
 		/// <param name="handleSIGHUP">Close the browser process on SIGHUP. Defaults to <c>true</c>.</param>
 		/// <param name="handleSIGINT">Close the browser process on Ctrl-C. Defaults to <c>true</c>.</param>
 		/// <param name="handleSIGTERM">Close the browser process on SIGTERM. Defaults to <c>true</c>.</param>
@@ -129,17 +130,17 @@ namespace PlaywrightSharp
 		/// Maximum time in milliseconds to wait for the browser instance to start. Defaults
 		/// to <c>30000</c> (30 seconds). Pass <c>0</c> to disable timeout.
 		/// </param>
-		Task<IBrowser> LaunchAsync(IEnumerable<string> args = null, bool? chromiumSandbox = null, bool? devtools = null, string downloadsPath = null, IEnumerable<KeyValuePair<string, string>> env = null, string executablePath = null, IEnumerable<KeyValuePair<string, object>> firefoxUserPrefs = null, bool? handleSIGHUP = null, bool? handleSIGINT = null, bool? handleSIGTERM = null, bool? headless = null, bool? ignoreAllDefaultArgs = null, IEnumerable<string> ignoreDefaultArgs = null, BrowserTypeProxy proxy = null, decimal? slowMo = null, int timeout = 0);
+		Task<IBrowser> LaunchAsync(IEnumerable<string> args = null, bool? chromiumSandbox = null, bool? devtools = null, string downloadsPath = null, IEnumerable<KeyValuePair<string, string>> env = null, string executablePath = null, IEnumerable<KeyValuePair<string, object>> firefoxUserPreferences = null, bool? handleSIGHUP = null, bool? handleSIGINT = null, bool? handleSIGTERM = null, bool? headless = null, bool? ignoreAllDefaultArgs = null, IEnumerable<string> ignoreDefaultArgs = null, BrowserTypeProxy proxy = null, decimal? slowMo = null, int timeout = 0);
 	
 		/// <summary>
 		/// <para>Returns the persistent browser context instance.</para>
 		/// <para>
-		/// Launches browser that uses persistent storage located at <paramref name="userDataDir"/>
+		/// Launches browser that uses persistent storage located at <paramref name="userDataDirectory"/>
 		/// and returns the only context. Closing this context will automatically close the
 		/// browser.
 		/// </para>
 		/// </summary>
-		/// <param name="userDataDir">
+		/// <param name="userDataDirectory">
 		/// Path to a User Data Directory, which stores browser session data like cookies and
 		/// local storage. More details for <a href="https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md#introduction)">Chromium</a>
 		/// and <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Command_Line_Options#User_Profile)">Firefox</a>.
@@ -177,7 +178,7 @@ namespace PlaywrightSharp
 		/// **BEWARE**: Playwright is only guaranteed to work with the bundled Chromium, Firefox
 		/// or WebKit, use at your own risk.
 		/// </param>
-		/// <param name="extraHTTPHeaders">
+		/// <param name="extraHttpHeaders">
 		/// An object containing additional HTTP headers to be sent with every request. All
 		/// header values must be strings.
 		/// </param>
@@ -205,16 +206,16 @@ namespace PlaywrightSharp
 		/// If <c>true</c>, Playwright does not pass its own configurations args and only uses
 		/// the ones from <paramref name="args"/>. Dangerous option; use with care.
 		/// </param>
-		/// <param name="ignoreHTTPSErrors">Whether to ignore HTTPS errors during navigation. Defaults to <c>false</c>.</param>
+		/// <param name="ignoreHttpsErrors">Whether to ignore HTTPS errors during navigation. Defaults to <c>false</c>.</param>
 		/// <param name="isMobile">
 		/// Whether the <c>meta viewport</c> tag is taken into account and touch events are
 		/// enabled. Defaults to <c>false</c>. Not supported in Firefox.
 		/// </param>
 		/// <param name="javaScriptEnabled">Whether or not to enable JavaScript in the context. Defaults to <c>true</c>.</param>
 		/// <param name="locale">
-		/// Specify user locale, for example <c>en-GB</c>, <c>de-DE</c>, etc. Locale will affect
-		/// <c>navigator.language</c> value, <c>Accept-Language</c> request header value as
-		/// well as number and date formatting rules.
+		/// Specify user locale, for example using <c>CultureInfo.CurrentUICulture</c>. Locale
+		/// will affect <c>navigator.language</c> value, <c>Accept-Language</c> request header
+		/// value as well as number and date formatting rules.
 		/// </param>
 		/// <param name="offline">Whether to emulate network being offline. Defaults to <c>false</c>.</param>
 		/// <param name="permissions">
@@ -227,7 +228,7 @@ namespace PlaywrightSharp
 		/// to <c>false</c>.
 		/// </param>
 		/// <param name="recordHarPath">Path on the filesystem to write the HAR file to.</param>
-		/// <param name="recordVideoDir">Path to the directory to put videos into.</param>
+		/// <param name="recordVideoDirectory">Path to the directory to put videos into.</param>
 		/// <param name="recordVideoSize">
 		/// Dimensions of the recorded videos. If not specified the size will be equal to <c>viewport</c>
 		/// scaled down to fit into 800x800. If <c>viewport</c> is not configured explicitly
@@ -242,12 +243,9 @@ namespace PlaywrightSharp
 		/// Maximum time in milliseconds to wait for the browser instance to start. Defaults
 		/// to <c>30000</c> (30 seconds). Pass <c>0</c> to disable timeout.
 		/// </param>
-		/// <param name="timezoneId">
-		/// Changes the timezone of the context. See <a href="https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1)">ICU's
-		/// metaZones.txt</a> for a list of supported timezone IDs.
-		/// </param>
+		/// <param name="timezoneId">Changes the timezone of the context.</param>
 		/// <param name="userAgent">Specific user agent to use in this context.</param>
-		Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, bool? acceptDownloads = null, IEnumerable<string> args = null, bool? bypassCSP = null, bool? chromiumSandbox = null, ColorScheme? colorScheme = null, decimal? deviceScaleFactor = null, bool? devtools = null, string downloadsPath = null, IEnumerable<KeyValuePair<string, string>> env = null, string executablePath = null, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null, BrowserTypeGeolocation geolocation = null, bool? handleSIGHUP = null, bool? handleSIGINT = null, bool? handleSIGTERM = null, bool? hasTouch = null, bool? headless = null, BrowserTypeHttpCredentials httpCredentials = null, bool? ignoreAllDefaultArgs = null, IEnumerable<string> ignoreDefaultArgs = null, bool? ignoreHTTPSErrors = null, bool? isMobile = null, bool? javaScriptEnabled = null, string locale = null, bool? offline = null, IEnumerable<string> permissions = null, BrowserTypeProxy proxy = null, bool? recordHarOmitContent = null, string recordHarPath = null, string recordVideoDir = null, BrowserTypeRecordVideoSize recordVideoSize = null, decimal? slowMo = null, int timeout = 0, string timezoneId = null, string userAgent = null);
+		Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDirectory, bool? acceptDownloads = null, IEnumerable<string> args = null, bool? bypassCSP = null, bool? chromiumSandbox = null, ColorScheme colorScheme = default, decimal? deviceScaleFactor = null, bool? devtools = null, string downloadsPath = null, IEnumerable<KeyValuePair<string, string>> env = null, string executablePath = null, IEnumerable<KeyValuePair<string, string>> extraHttpHeaders = null, BrowserTypeGeolocation geolocation = null, bool? handleSIGHUP = null, bool? handleSIGINT = null, bool? handleSIGTERM = null, bool? hasTouch = null, bool? headless = null, BrowserTypeHttpCredentials httpCredentials = null, bool? ignoreAllDefaultArgs = null, IEnumerable<string> ignoreDefaultArgs = null, bool? ignoreHttpsErrors = null, bool? isMobile = null, bool? javaScriptEnabled = null, CultureInfo locale = null, bool? offline = null, IEnumerable<string> permissions = null, BrowserTypeProxy proxy = null, bool? recordHarOmitContent = null, string recordHarPath = null, string recordVideoDirectory = null, BrowserTypeRecordVideoSize recordVideoSize = null, decimal? slowMo = null, int timeout = 0, TimeZoneInfo timezoneId = null, string userAgent = null);
 	
 		/// <summary><para>Returns browser name. For example: <c>'chromium'</c>, <c>'webkit'</c> or <c>'firefox'</c>.</para></summary>
 		string Name { get; }
