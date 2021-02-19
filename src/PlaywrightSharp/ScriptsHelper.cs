@@ -13,6 +13,10 @@ namespace PlaywrightSharp
 {
     internal static class ScriptsHelper
     {
+        private static readonly MethodInfo _parseEvaluateResult = typeof(ScriptsHelper)
+            .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
+            .Single(m => m.Name == nameof(ParseEvaluateResult) && m.IsGenericMethod);
+
         internal static string SerializeScriptCall(string script, object[] args)
         {
             args ??= Array.Empty<object>();
@@ -32,11 +36,7 @@ namespace PlaywrightSharp
 
         internal static object ParseEvaluateResult(JsonElement? element, Type t)
         {
-            var parseEvaluateResult = typeof(ScriptsHelper)
-                .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
-                .FirstOrDefault(m => m.Name == "ParseEvaluateResult" && m.GetGenericArguments().Any());
-
-            var genericMethod = parseEvaluateResult.MakeGenericMethod(new[] { t });
+            var genericMethod = _parseEvaluateResult.MakeGenericMethod(t);
             return genericMethod.Invoke(null, new object[] { element });
         }
 
