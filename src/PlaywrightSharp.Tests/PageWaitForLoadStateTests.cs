@@ -106,7 +106,7 @@ namespace PlaywrightSharp.Tests
 
             // order is not guaranteed
             var mainPage = pages.FirstOrDefault(p => ReferenceEquals(Page, p));
-            var connectedPage = pages.FirstOrDefault(p => !ReferenceEquals(Page, p));
+            var connectedPage = pages.Single(p => !ReferenceEquals(Page, p));
 
             Assert.NotNull(mainPage);
             Assert.Equal(TestConstants.EmptyPage, mainPage.Url);

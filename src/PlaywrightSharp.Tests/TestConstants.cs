@@ -46,7 +46,6 @@ namespace PlaywrightSharp.Tests
             return options;
         }
 
-        public static readonly string ExtensionPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "simple-extension");
         public static string FileToUpload => TestUtils.GetWebServerFile("file-to-upload.txt");
 
         internal static ILoggerFactory LoggerFactory { get; set; } = LoggerFactory = new LoggerFactory();

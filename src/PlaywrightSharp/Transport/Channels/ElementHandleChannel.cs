@@ -110,18 +110,6 @@ namespace PlaywrightSharp.Transport.Channels
                     ["selector"] = selector,
                 });
 
-        internal Task<JSHandleChannel> EvalOnSelectorAsync(string selector, string script, bool isFunction, object arg)
-            => Connection.SendMessageToServerAsync<JSHandleChannel>(
-                Guid,
-                "evalOnSelector",
-                new Dictionary<string, object>
-                {
-                    ["selector"] = selector,
-                    ["expression"] = script,
-                    ["isFunction"] = isFunction,
-                    ["arg"] = arg,
-                });
-
         internal async Task<string> ScreenshotAsync(string path, bool omitBackground, ScreenshotFormat? type, int? quality, int? timeout)
         {
             var args = new Dictionary<string, object>
@@ -156,18 +144,6 @@ namespace PlaywrightSharp.Transport.Channels
             => Connection.SendMessageToServerAsync<JsonElement?>(
                 Guid,
                 "evalOnSelector",
-                new Dictionary<string, object>
-                {
-                    ["selector"] = selector,
-                    ["expression"] = script,
-                    ["isFunction"] = isFunction,
-                    ["arg"] = arg,
-                });
-
-        internal Task<JSHandleChannel> EvalOnSelectorAllAsync(string selector, string script, bool isFunction, object arg)
-            => Connection.SendMessageToServerAsync<JSHandleChannel>(
-                Guid,
-                "evalOnSelectorAll",
                 new Dictionary<string, object>
                 {
                     ["selector"] = selector,
