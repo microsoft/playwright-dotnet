@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
@@ -105,21 +104,13 @@ namespace PlaywrightSharp.Transport.Channels
             bool isPage,
             bool serializeArgument = false)
         {
-            JsonSerializerOptions serializerOptions;
-
             if (serializeArgument)
             {
-                serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
                 arg = new EvaluateArgument
                 {
                     Handles = new List<EvaluateArgumentGuidElement>(),
                     Value = arg,
                 };
-                serializerOptions.Converters.Add(new EvaluateArgumentConverter());
-            }
-            else
-            {
-                serializerOptions = Connection.DefaultJsonSerializerOptions;
             }
 
             return Connection.SendMessageToServerAsync<JSHandleChannel>(
@@ -132,7 +123,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["arg"] = arg,
                     ["isPage"] = isPage,
                 },
-                serializerOptions: serializerOptions);
+                ignoreNullValues: false);
         }
 
         internal Task<JSHandleChannel> WaitForFunctionAsync(
@@ -144,21 +135,13 @@ namespace PlaywrightSharp.Transport.Channels
             int? polling,
             bool serializeArgument = false)
         {
-            JsonSerializerOptions serializerOptions;
-
             if (serializeArgument)
             {
-                serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
                 arg = new EvaluateArgument
                 {
                     Handles = new List<EvaluateArgumentGuidElement>(),
                     Value = arg,
                 };
-                serializerOptions.Converters.Add(new EvaluateArgumentConverter());
-            }
-            else
-            {
-                serializerOptions = Connection.DefaultJsonSerializerOptions;
             }
 
             var args = new Dictionary<string, object>
@@ -183,7 +166,7 @@ namespace PlaywrightSharp.Transport.Channels
                 Guid,
                 "waitForFunction",
                 args,
-                serializerOptions: serializerOptions);
+                ignoreNullValues: false);
         }
 
         internal Task<JsonElement?> EvaluateExpressionAsync(
@@ -193,21 +176,13 @@ namespace PlaywrightSharp.Transport.Channels
             bool isPage,
             bool serializeArgument = false)
         {
-            JsonSerializerOptions serializerOptions;
-
             if (serializeArgument)
             {
-                serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
                 arg = new EvaluateArgument
                 {
                     Handles = new List<EvaluateArgumentGuidElement>(),
                     Value = arg,
                 };
-                serializerOptions.Converters.Add(new EvaluateArgumentConverter());
-            }
-            else
-            {
-                serializerOptions = Connection.DefaultJsonSerializerOptions;
             }
 
             return Connection.SendMessageToServerAsync<JsonElement?>(
@@ -220,7 +195,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["arg"] = arg,
                     ["isPage"] = isPage,
                 },
-                serializerOptions: serializerOptions);
+                ignoreNullValues: false);
         }
 
         internal Task<JSHandleChannel> EvalOnSelectorAsync(string selector, string script, bool isFunction, object arg, bool isPage)

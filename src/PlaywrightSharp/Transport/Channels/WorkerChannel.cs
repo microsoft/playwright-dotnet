@@ -42,21 +42,13 @@ namespace PlaywrightSharp.Transport.Channels
             object arg,
             bool serializeArgument = false)
         {
-            JsonSerializerOptions serializerOptions;
-
             if (serializeArgument)
             {
-                serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
                 arg = new EvaluateArgument
                 {
                     Handles = new List<EvaluateArgumentGuidElement>(),
                     Value = arg,
                 };
-                serializerOptions.Converters.Add(new EvaluateArgumentConverter());
-            }
-            else
-            {
-                serializerOptions = Connection.DefaultJsonSerializerOptions;
             }
 
             return Connection.SendMessageToServerAsync<JsonElement?>(
@@ -68,7 +60,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isFunction"] = isFunction,
                     ["arg"] = arg,
                 },
-                serializerOptions: serializerOptions);
+                ignoreNullValues: false);
         }
     }
 }
