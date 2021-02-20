@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
-using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp.Chromium
 {
