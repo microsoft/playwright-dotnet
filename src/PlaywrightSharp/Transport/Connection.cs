@@ -137,7 +137,19 @@ namespace PlaywrightSharp.Transport
                     Params = args,
                 };
 
-                string messageString = JsonSerializer.Serialize(message, serializerOptions ?? DefaultIgnoreNullJsonSerializerOptions);
+                if (serializerOptions == null)
+                {
+                    if (ignoreNullValues)
+                    {
+                        serializerOptions = DefaultIgnoreNullJsonSerializerOptions;
+                    }
+                    else
+                    {
+                        serializerOptions = DefaultJsonSerializerOptions;
+                    }
+                }
+
+                string messageString = JsonSerializer.Serialize(message, serializerOptions);
                 _logger?.LogInformation($"pw:channel:command {messageString}");
 
                 return _transport.SendAsync(messageString);
