@@ -56,7 +56,7 @@ namespace PlaywrightSharp.Transport.Channels
             }
             else
             {
-                serializerOptions = Connection.GetDefaultJsonSerializerOptions(false);
+                serializerOptions = Connection.DefaultJsonSerializerOptions;
             }
 
             return Connection.SendMessageToServerAsync<JsonElement?>(
