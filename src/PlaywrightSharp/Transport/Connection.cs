@@ -54,12 +54,19 @@ namespace PlaywrightSharp.Transport
             _transport.MessageReceived += Transport_MessageReceived;
             _transport.LogReceived += (s, e) => debugLogger?.LogInformation(e.Message);
             _transport.TransportClosed += (sender, e) => Close(e.CloseReason);
+
+            DefaultJsonSerializerOptions = GetDefaultJsonSerializerOptions();
+            DefaultIgnoreNullJsonSerializerOptions = GetDefaultJsonSerializerOptions(true);
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
         ~Connection() => Dispose(false);
 
         public ConcurrentDictionary<string, IChannelOwner> Objects { get; } = new ConcurrentDictionary<string, IChannelOwner>();
+
+        public JsonSerializerOptions DefaultIgnoreNullJsonSerializerOptions { get; }
+
+        public JsonSerializerOptions DefaultJsonSerializerOptions { get; }
 
         public bool IsClosed { get; private set; }
 
@@ -130,7 +137,7 @@ namespace PlaywrightSharp.Transport
                     Params = args,
                 };
 
-                string messageString = JsonSerializer.Serialize(message, serializerOptions ?? GetDefaultJsonSerializerOptions(ignoreNullValues));
+                string messageString = JsonSerializer.Serialize(message, serializerOptions ?? DefaultIgnoreNullJsonSerializerOptions);
                 _logger?.LogInformation($"pw:channel:command {messageString}");
 
                 return _transport.SendAsync(messageString);
@@ -151,12 +158,12 @@ namespace PlaywrightSharp.Transport
                 var enumerate = result.Value.EnumerateObject();
 
                 return enumerate.Any()
-                    ? enumerate.FirstOrDefault().Value.ToObject<T>(GetDefaultJsonSerializerOptions())
+                    ? enumerate.FirstOrDefault().Value.ToObject<T>(DefaultJsonSerializerOptions)
                     : default;
             }
             else
             {
-                return result.Value.ToObject<T>(GetDefaultJsonSerializerOptions());
+                return result.Value.ToObject<T>(DefaultJsonSerializerOptions);
             }
         }
 
@@ -164,17 +171,6 @@ namespace PlaywrightSharp.Transport
         {
             Objects.TryGetValue(guid, out var result);
             return result;
-        }
-
-        internal JsonSerializerOptions GetDefaultJsonSerializerOptions(bool ignoreNullValues = false)
-        {
-            var options = JsonExtensions.GetNewDefaultSerializerOptions(ignoreNullValues);
-            options.Converters.Add(new ElementHandleToGuidConverter(this));
-            options.Converters.Add(new ChannelOwnerToGuidConverter(this));
-            options.Converters.Add(new ChannelToGuidConverter(this));
-            options.Converters.Add(new HttpMethodConverter());
-
-            return options;
         }
 
         internal async Task<T> WaitForObjectWithKnownNameAsync<T>(string guid)
@@ -271,6 +267,17 @@ namespace PlaywrightSharp.Transport
             }
 
             return executableFile;
+        }
+
+        private JsonSerializerOptions GetDefaultJsonSerializerOptions(bool ignoreNullValues = false)
+        {
+            var options = JsonExtensions.GetNewDefaultSerializerOptions(ignoreNullValues);
+            options.Converters.Add(new ElementHandleToGuidConverter(this));
+            options.Converters.Add(new ChannelOwnerToGuidConverter(this));
+            options.Converters.Add(new ChannelToGuidConverter(this));
+            options.Converters.Add(new HttpMethodConverter());
+
+            return options;
         }
 
         private void Transport_MessageReceived(object sender, MessageReceivedEventArgs e)

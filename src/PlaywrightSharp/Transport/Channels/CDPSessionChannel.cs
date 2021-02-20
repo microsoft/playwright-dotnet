@@ -26,7 +26,7 @@ namespace PlaywrightSharp.Transport.Channels
                     Disconnected?.Invoke(this, EventArgs.Empty);
                     break;
                 case "event":
-                    CDPEvent?.Invoke(this, serverParams?.ToObject<CDPEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
+                    CDPEvent?.Invoke(this, serverParams?.ToObject<CDPEventArgs>(Connection.DefaultJsonSerializerOptions));
                     break;
             }
         }

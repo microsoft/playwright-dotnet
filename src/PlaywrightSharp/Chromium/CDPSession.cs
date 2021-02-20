@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Chromium
         public async Task<T> SendAsync<T>(string method, object args = null)
         {
             var result = await _channel.SendAsync(method, args).ConfigureAwait(false);
-            return result == null ? default : result.Value.ToObject<T>(_connection.GetDefaultJsonSerializerOptions());
+            return result == null ? default : result.Value.ToObject<T>(_connection.DefaultJsonSerializerOptions);
         }
 
         /// <inheritdoc/>

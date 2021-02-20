@@ -10,12 +10,21 @@ namespace PlaywrightSharp.Helpers
     /// </summary>
     public static class JsonExtensions
     {
-        static JsonExtensions() => DefaultJsonSerializerOptions = GetNewDefaultSerializerOptions();
+        static JsonExtensions()
+        {
+            DefaultJsonSerializerOptions = GetNewDefaultSerializerOptions();
+            DefaultIgnoreNullJsonSerializerOptions = GetNewDefaultSerializerOptions(true);
+        }
 
         /// <summary>
         /// Base serialization options used by PlaywrightSharp.
         /// </summary>
         public static JsonSerializerOptions DefaultJsonSerializerOptions { get; }
+
+        /// <summary>
+        /// Base serialization options used by PlaywrightSharp when ignoring nulls.
+        /// </summary>
+        public static JsonSerializerOptions DefaultIgnoreNullJsonSerializerOptions { get; }
 
         /// <summary>
         /// Convert a <see cref="JsonElement"/> to an object.

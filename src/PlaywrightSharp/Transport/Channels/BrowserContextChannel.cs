@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new BindingCallEventArgs
                         {
-                            BidingCall = serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Connection.GetDefaultJsonSerializerOptions()).Object,
+                            BidingCall = serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Connection.DefaultJsonSerializerOptions).Object,
                         });
                     break;
                 case "route":
@@ -46,8 +46,8 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new RouteEventArgs
                         {
-                            Route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Connection.GetDefaultJsonSerializerOptions()).Object,
-                            Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.GetDefaultJsonSerializerOptions()).Object,
+                            Route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Connection.DefaultJsonSerializerOptions).Object,
+                            Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.DefaultJsonSerializerOptions).Object,
                         });
                     break;
                 case "page":
@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new BrowserContextPageEventArgs
                         {
-                            PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.GetDefaultJsonSerializerOptions()),
+                            PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions),
                         });
                     break;
                 case "crBackgroundPage":
@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new BrowserContextPageEventArgs
                         {
-                            PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.GetDefaultJsonSerializerOptions()),
+                            PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions),
                         });
                     break;
                 case "crServiceWorker":
@@ -71,7 +71,7 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new WorkerChannelEventArgs
                         {
-                            WorkerChannel = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Connection.GetDefaultJsonSerializerOptions()),
+                            WorkerChannel = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Connection.DefaultJsonSerializerOptions),
                         });
                     break;
             }

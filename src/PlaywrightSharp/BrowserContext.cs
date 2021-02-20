@@ -325,7 +325,7 @@ namespace PlaywrightSharp
             {
                 File.WriteAllText(
                     path,
-                    JsonSerializer.Serialize(state, Channel.Connection.GetDefaultJsonSerializerOptions()));
+                    JsonSerializer.Serialize(state, Channel.Connection.DefaultJsonSerializerOptions));
             }
 
             return state;

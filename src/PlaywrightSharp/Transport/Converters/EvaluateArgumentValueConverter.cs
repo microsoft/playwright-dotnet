@@ -310,7 +310,7 @@ namespace PlaywrightSharp.Transport.Converters
                         return dynamicResult;
                     }
 
-                    var defaultConverter = JsonExtensions.GetNewDefaultSerializerOptions(false);
+                    var defaultConverter = JsonExtensions.DefaultJsonSerializerOptions;
                     string serialized = JsonSerializer.Serialize(dicResult, defaultConverter);
 
                     return JsonSerializer.Deserialize<T>(serialized, defaultConverter);

@@ -77,7 +77,7 @@ namespace PlaywrightSharp
         public async Task<T> GetJsonAsync<T>(JsonSerializerOptions options = null)
         {
             string content = await GetTextAsync().ConfigureAwait(false);
-            return JsonSerializer.Deserialize<T>(content, options ?? _channel.Connection.GetDefaultJsonSerializerOptions());
+            return JsonSerializer.Deserialize<T>(content, options ?? _channel.Connection.DefaultJsonSerializerOptions);
         }
 
         /// <inheritdoc />

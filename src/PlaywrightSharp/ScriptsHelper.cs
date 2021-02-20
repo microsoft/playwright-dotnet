@@ -23,7 +23,7 @@ namespace PlaywrightSharp
 
             if (script.IsJavascriptFunction())
             {
-                return $"({script})({string.Join(",", args.Select(a => JsonSerializer.Serialize(a, JsonExtensions.GetNewDefaultSerializerOptions())))})";
+                return $"({script})({string.Join(",", args.Select(a => JsonSerializer.Serialize(a, JsonExtensions.DefaultJsonSerializerOptions)))})";
             }
 
             if (args.Length > 0)
