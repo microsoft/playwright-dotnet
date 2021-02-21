@@ -208,7 +208,7 @@ namespace PlaywrightSharp.TestServer
             string authHeader = context.Request.Headers["Authorization"];
             if (authHeader != null && authHeader.StartsWith("Basic", StringComparison.Ordinal))
             {
-                string encodedUsernamePassword = authHeader.Substring("Basic ".Length).Trim();
+                string encodedUsernamePassword = authHeader["Basic ".Length..].Trim();
                 var encoding = Encoding.GetEncoding("iso-8859-1");
                 string auth = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword));
 

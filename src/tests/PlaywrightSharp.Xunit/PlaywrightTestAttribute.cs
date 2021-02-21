@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Xunit
         /// <summary>
         /// Returns the trimmed file name.
         /// </summary>
-        public string TrimmedName => FileName.Substring(0, FileName.IndexOf('.'));
+        public string TrimmedName => FileName[..FileName.IndexOf('.')];
 
         /// <summary>
         /// The name of the test, the decorated code is based on.

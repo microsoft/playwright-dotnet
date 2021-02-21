@@ -126,7 +126,7 @@ namespace PlaywrightSharp.Transport
 #endif
                     if (!token.IsCancellationRequested)
                     {
-                        _data.AddRange(buffer.AsMemory().Slice(0, read).ToArray());
+                        _data.AddRange(buffer.AsMemory()[..read].ToArray());
 
                         ProcessStream(token);
                     }

@@ -96,7 +96,7 @@ namespace PlaywrightSharp.Tests
             await Page.RouteAsync("**/foo", (route, _) =>
             {
                 int slash = route.Request.Url.LastIndexOf("/");
-                string name = route.Request.Url.Substring(slash + 1);
+                string name = route.Request.Url[(slash + 1)..];
 
                 route.FulfillAsync(HttpStatusCode.OK, "responseFromInterception:" + name, contentType: "text/css");
             });

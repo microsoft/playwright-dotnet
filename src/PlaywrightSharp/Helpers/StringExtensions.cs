@@ -635,7 +635,7 @@ namespace PlaywrightSharp.Helpers
 
             if (query.StartsWith("?", StringComparison.InvariantCultureIgnoreCase))
             {
-                query = query.Substring(1, query.Length - 1);
+                query = query[1..^1];
             }
 
             foreach (string keyValue in query.Split('&').Where(kv => kv.Contains("=")))
@@ -822,7 +822,7 @@ namespace PlaywrightSharp.Helpers
                 return null;
             }
 
-            return path.Substring(index);
+            return path[index..];
         }
     }
 }

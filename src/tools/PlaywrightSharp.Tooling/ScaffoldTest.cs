@@ -74,7 +74,7 @@ namespace PlaywrightSharp.Tooling
             var fileInfo = new FileInfo(options.SpecFile);
 
             int dotSeparator = fileInfo.Name.IndexOf('.');
-            string name = _textInfo.ToTitleCase(fileInfo.Name.Substring(0, dotSeparator)) + "Tests";
+            string name = _textInfo.ToTitleCase(fileInfo.Name[..dotSeparator]) + "Tests";
             var targetClass = GenerateClass(options.Namespace, name, fileInfo.Name);
 
             FindTestsInFile(options.SpecFile, (name) => AddTest(targetClass, name, fileInfo.Name));

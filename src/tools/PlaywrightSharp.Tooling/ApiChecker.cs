@@ -264,7 +264,7 @@ namespace PlaywrightSharp.Tooling
 
                 if (playwrightSharpProperty == null && memberName.StartsWith("set"))
                 {
-                    playwrightSharpProperty = playwrightSharpType.GetProperties().FirstOrDefault(p => string.Equals(p.Name, memberName.Substring(3, memberName.Length - 3), StringComparison.OrdinalIgnoreCase));
+                    playwrightSharpProperty = playwrightSharpType.GetProperties().FirstOrDefault(p => string.Equals(p.Name, memberName[3..^3], StringComparison.OrdinalIgnoreCase));
                 }
 
                 if (playwrightSharpProperty != null)

@@ -136,7 +136,7 @@ namespace PlaywrightSharp.Tooling
                     fileInfo.FullName,
                     (testName) =>
                     {
-                        _testPairs.Add(new(basePath + fileInfo.Name.Substring(0, fileInfo.Name.IndexOf('.')), testName));
+                        _testPairs.Add(new(basePath + fileInfo.Name[..fileInfo.Name.IndexOf('.')], testName));
                     });
             }
         }
