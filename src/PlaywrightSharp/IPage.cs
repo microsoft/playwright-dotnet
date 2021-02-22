@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -499,63 +499,63 @@ namespace PlaywrightSharp
         /// <summary>
         /// Waits for a function to be evaluated to a truthy value.
         /// </summary>
-        /// <param name="pageFunction">Function to be evaluated in browser context.</param>
+        /// <param name="expression">Function to be evaluated in browser context.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
-        Task<IJSHandle> WaitForFunctionAsync(string pageFunction, int? timeout = null);
+        Task<IJSHandle> WaitForFunctionAsync(string expression, int? timeout = null);
 
         /// <summary>
         /// Waits for a function to be evaluated to a truthy value.
         /// </summary>
-        /// <param name="pageFunction">Function to be evaluated in browser context.</param>
+        /// <param name="expression">Function to be evaluated in browser context.</param>
         /// <param name="polling">An interval at which the <c>pageFunction</c> is executed. defaults to <see cref="Polling.Raf"/>.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
-        Task<IJSHandle> WaitForFunctionAsync(string pageFunction, Polling polling, int? timeout = null);
+        Task<IJSHandle> WaitForFunctionAsync(string expression, Polling polling, int? timeout = null);
 
         /// <summary>
         /// Waits for a function to be evaluated to a truthy value.
         /// </summary>
-        /// <param name="pageFunction">Function to be evaluated in browser context.</param>
+        /// <param name="expression">Function to be evaluated in browser context.</param>
         /// <param name="polling">An interval at which the function is executed. If no value is specified will use <paramref name="polling"/>.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
-        Task<IJSHandle> WaitForFunctionAsync(string pageFunction, int polling, int? timeout = null);
+        Task<IJSHandle> WaitForFunctionAsync(string expression, int polling, int? timeout = null);
 
         /// <summary>
         /// Waits for a function to be evaluated to a truthy value.
         /// </summary>
-        /// <param name="pageFunction">Function to be evaluated in browser context.</param>
+        /// <param name="expression">Function to be evaluated in browser context.</param>
         /// <param name="arg">Arguments to pass to <c>script</c>.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
-        Task<IJSHandle> WaitForFunctionAsync(string pageFunction, object arg, int? timeout = null);
+        Task<IJSHandle> WaitForFunctionAsync(string expression, object arg, int? timeout = null);
 
         /// <summary>
         /// Waits for a function to be evaluated to a truthy value.
         /// </summary>
-        /// <param name="pageFunction">Function to be evaluated in browser context.</param>
+        /// <param name="expression">Function to be evaluated in browser context.</param>
         /// <param name="arg">Arguments to pass to <c>script</c>.</param>
         /// <param name="polling">An interval at which the <c>pageFunction</c> is executed. defaults to <see cref="Polling.Raf"/>.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
-        Task<IJSHandle> WaitForFunctionAsync(string pageFunction, object arg, Polling polling, int? timeout = null);
+        Task<IJSHandle> WaitForFunctionAsync(string expression, object arg, Polling polling, int? timeout = null);
 
         /// <summary>
         /// Waits for a function to be evaluated to a truthy value.
         /// </summary>
-        /// <param name="pageFunction">Function to be evaluated in browser context.</param>
+        /// <param name="expression">Function to be evaluated in browser context.</param>
         /// <param name="arg">Arguments to pass to <c>script</c>.</param>
         /// <param name="polling">An interval at which the function is executed. If no value is specified will use <paramref name="polling"/>.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that resolves when the <c>script</c> returns a truthy value, yielding a <see cref="IJSHandle"/>.</returns>
-        Task<IJSHandle> WaitForFunctionAsync(string pageFunction, object arg, int polling, int? timeout = null);
+        Task<IJSHandle> WaitForFunctionAsync(string expression, object arg, int polling, int? timeout = null);
 
         /// <summary>
         /// Waits for event to fire and passes its value into the predicate function.
@@ -626,19 +626,19 @@ namespace PlaywrightSharp
         /// <summary>
         /// Executes a script in browser context.
         /// </summary>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <typeparam name="T">Return type.</typeparam>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <seealso cref="IFrame.EvaluateAsync{T}(string)"/>
         /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvaluateAsync<T>(string pageFunction);
+        Task<T> EvaluateAsync<T>(string expression);
 
         /// <summary>
         /// Executes a script in browser context.
         /// </summary>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <param name="arg">Arguments to pass to script.</param>
         /// <typeparam name="T">Return type.</typeparam>
         /// <remarks>
@@ -646,107 +646,107 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <seealso cref="IFrame.EvaluateAsync{T}(string, object)"/>
         /// <returns>A <see cref="Task"/>  that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvaluateAsync<T>(string pageFunction, object arg);
+        Task<T> EvaluateAsync<T>(string expression, object arg);
 
         /// <summary>
-        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to pageFunction.
+        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to expression.
         /// If there's no element matching selector, the method throws an error.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <param name="arg">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task EvalOnSelectorAsync(string selector, string pageFunction, object arg);
+        Task EvalOnSelectorAsync(string selector, string expression, object arg);
 
         /// <summary>
-        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to pageFunction.
+        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to expression.
         /// If there's no element matching selector, the method throws an error.
         /// </summary>
         /// <typeparam name="T">Result type.</typeparam>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <param name="arg">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvalOnSelectorAsync<T>(string selector, string pageFunction, object arg);
+        Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg);
 
         /// <summary>
-        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to pageFunction.
+        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to expression.
         /// If there's no element matching selector, the method throws an error.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task EvalOnSelectorAsync(string selector, string pageFunction);
+        Task EvalOnSelectorAsync(string selector, string expression);
 
         /// <summary>
-        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to pageFunction.
+        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to expression.
         /// If there's no element matching selector, the method throws an error.
         /// </summary>
         /// <typeparam name="T">Result type.</typeparam>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvalOnSelectorAsync<T>(string selector, string pageFunction);
+        Task<T> EvalOnSelectorAsync<T>(string selector, string expression);
 
         /// <summary>
-        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to pageFunction.
+        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to expression.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <param name="arg">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task EvalOnSelectorAllAsync(string selector, string pageFunction, object arg);
+        Task EvalOnSelectorAllAsync(string selector, string expression, object arg);
 
         /// <summary>
-        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to pageFunction.
+        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to expression.
         /// </summary>
         /// <typeparam name="T">Result type.</typeparam>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <param name="arg">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvalOnSelectorAllAsync<T>(string selector, string pageFunction, object arg);
+        Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg);
 
         /// <summary>
-        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to pageFunction.
+        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to expression.
         /// </summary>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task EvalOnSelectorAllAsync(string selector, string pageFunction);
+        Task EvalOnSelectorAllAsync(string selector, string expression);
 
         /// <summary>
-        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to pageFunction.
+        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to expression.
         /// </summary>
         /// <typeparam name="T">Result type.</typeparam>
         /// <param name="selector">A selector to query page for.</param>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvalOnSelectorAllAsync<T>(string selector, string pageFunction);
+        Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression);
 
         /// <summary>
         /// <![CDATA[
@@ -1043,25 +1043,25 @@ namespace PlaywrightSharp
         /// <summary>
         /// Executes a script in browser context.
         /// </summary>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <seealso cref="IFrame.EvaluateAsync(string)"/>
         /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script as an row Json element.</returns>
-        Task<JsonElement?> EvaluateAsync(string pageFunction);
+        Task<JsonElement?> EvaluateAsync(string expression);
 
         /// <summary>
         /// Executes a script in browser context.
         /// </summary>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <param name="arg">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <seealso cref="IFrame.EvaluateAsync(string, object)"/>
         /// <returns>Task that completes when the script finishes or the promise is resolved, yielding the result of the script as an row Json element.</returns>
-        Task<JsonElement?> EvaluateAsync(string pageFunction, object arg);
+        Task<JsonElement?> EvaluateAsync(string expression, object arg);
 
         /// <summary>
         /// Takes a screenshot of the page.
@@ -1170,25 +1170,25 @@ namespace PlaywrightSharp
         /// <summary>
         /// Executes a script in browser context.
         /// </summary>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// <see cref="IJSHandle"/> instances can be passed as arguments.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when function is executed, yielding the return value.</returns>
-        Task<IJSHandle> EvaluateHandleAsync(string pageFunction);
+        Task<IJSHandle> EvaluateHandleAsync(string expression);
 
         /// <summary>
         /// Executes a script in browser context.
         /// </summary>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <param name="arg">Function arguments.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// <see cref="IJSHandle"/> instances can be passed as arguments.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when function is executed, yielding the return value.</returns>
-        Task<IJSHandle> EvaluateHandleAsync(string pageFunction, object arg);
+        Task<IJSHandle> EvaluateHandleAsync(string expression, object arg);
 
         /// <summary>
         /// Adds a <c><![CDATA[<script>]]></c> tag into the page with the desired url or content.
