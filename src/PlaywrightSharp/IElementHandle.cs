@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -330,104 +330,104 @@ namespace PlaywrightSharp
         Task<IEnumerable<IElementHandle>> QuerySelectorAllAsync(string selector);
 
         /// <summary>
-        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to <paramref name="pageFunction"/>.
+        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to <paramref name="expression"/>.
         /// If there's no element matching selector, the method throws an error.
         /// </summary>
         /// <param name="selector">A selector to query element for.</param>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<JsonElement?> EvalOnSelectorAsync(string selector, string pageFunction);
+        Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression);
 
         /// <summary>
-        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to <paramref name="pageFunction"/>.
+        /// This method runs <c>document.querySelector</c> within the page and passes it as the first argument to <paramref name="expression"/>.
         /// If there's no element matching selector, the method throws an error.
         /// </summary>
         /// <param name="selector">A selector to query element for.</param>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <param name="arg">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<JsonElement?> EvalOnSelectorAsync(string selector, string pageFunction, object arg);
+        Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg);
 
         /// <summary>
-        /// This method runs <c>document.querySelector</c> within the element and passes it as the first argument to <paramref name="pageFunction"/>.
+        /// This method runs <c>document.querySelector</c> within the element and passes it as the first argument to <paramref name="expression"/>.
         /// If there's no element matching selector, the method throws an error.
         /// </summary>
         /// <typeparam name="T">Result type.</typeparam>
         /// <param name="selector">A selector to query element for.</param>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvalOnSelectorAsync<T>(string selector, string pageFunction);
+        Task<T> EvalOnSelectorAsync<T>(string selector, string expression);
 
         /// <summary>
-        /// This method runs <c>document.querySelector</c> within the element and passes it as the first argument to <paramref name="pageFunction"/>.
+        /// This method runs <c>document.querySelector</c> within the element and passes it as the first argument to <paramref name="expression"/>.
         /// If there's no element matching selector, the method throws an error.
         /// </summary>
         /// <typeparam name="T">Result type.</typeparam>
         /// <param name="selector">A selector to query element for.</param>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <param name="arg">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvalOnSelectorAsync<T>(string selector, string pageFunction, object arg);
+        Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg);
 
         /// <summary>
-        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to <paramref name="pageFunction"/>.
+        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to <paramref name="expression"/>.
         /// </summary>
         /// <param name="selector">A selector to query element for.</param>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string pageFunction);
+        Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression);
 
         /// <summary>
-        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to <paramref name="pageFunction"/>.
+        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the page and passes it as the first argument to <paramref name="expression"/>.
         /// </summary>
         /// <param name="selector">A selector to query element for.</param>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <param name="arg">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string pageFunction, object arg);
+        Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression, object arg);
 
         /// <summary>
-        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the element and passes it as the first argument to <paramref name="pageFunction"/>.
+        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the element and passes it as the first argument to <paramref name="expression"/>.
         /// </summary>
         /// <typeparam name="T">Result type.</typeparam>
         /// <param name="selector">A selector to query element for.</param>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvalOnSelectorAllAsync<T>(string selector, string pageFunction);
+        Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression);
 
         /// <summary>
-        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the element and passes it as the first argument to <paramref name="pageFunction"/>.
+        /// This method runs <c>Array.from(document.querySelectorAll(selector))</c> within the element and passes it as the first argument to <paramref name="expression"/>.
         /// </summary>
         /// <typeparam name="T">Result type.</typeparam>
         /// <param name="selector">A selector to query element for.</param>
-        /// <param name="pageFunction">Script to be evaluated in browser context.</param>
+        /// <param name="expression">Script to be evaluated in browser context.</param>
         /// <param name="arg">Arguments to pass to script.</param>
         /// <remarks>
         /// If the script, returns a Promise, then the method would wait for the promise to resolve and return its value.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the script finishes or the promise is resolved, yielding the result of the script.</returns>
-        Task<T> EvalOnSelectorAllAsync<T>(string selector, string pageFunction, object arg);
+        Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg);
 
         /// <summary>
         /// Calls focus on the element.
