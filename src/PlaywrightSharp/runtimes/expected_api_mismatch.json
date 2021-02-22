@@ -703,6 +703,38 @@
       "justification": "We don't support this yet"
     },
     {
+      "upstreamClassName": "Android",
+      "justification": "We don't support this yet"
+    },
+    {
+      "upstreamClassName": "AndroidDevice",
+      "justification": "We don't support this yet"
+    },
+    {
+      "upstreamClassName": "AndroidInput",
+      "justification": "We don't support this yet"
+    },
+    {
+      "upstreamClassName": "AndroidSocket",
+      "justification": "We don't support this yet"
+    },
+    {
+      "upstreamClassName": "AndroidWebView",
+      "justification": "We don't support this yet"
+    },
+    {
+      "upstreamClassName": "Electron",
+      "justification": "We don't support this yet"
+    },
+    {
+      "upstreamClassName": "ElectronApplication",
+      "justification": "We don't support this yet"
+    },
+    {
+      "upstreamClassName": "BrowserServer",
+      "justification": "We don't support this yet"
+    },
+    {
       "upstreamClassName": "browserContextOptions",
       "className": "BrowserContextOptions",
       "members": [
