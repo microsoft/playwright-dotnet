@@ -29,7 +29,6 @@ using System.Drawing;
 using System.IO;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Input;
 
@@ -1803,5 +1802,17 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
         Task<bool> IsVisibleAsync(string selector, int? timeout = null);
+
+        /// <summary>
+        /// Pauses script execution. Playwright will stop executing the script and wait for the user to either press 'Resume' button
+        /// in the page overlay or to call `playwright.resume()` in the DevTools console.
+        ///
+        /// User can inspect selectors or perform manual steps while paused. Resume will continue running the original script from
+        /// the place it was paused.
+        ///
+        /// > NOTE: This method requires Playwright to be started in a headed mode, with a falsy `headless` value in the <seealso cref="IBrowserType.LaunchAsync(bool?, string[], string, bool?, string, string, bool?, int?, bool?, int?, bool?, string[], Dictionary{string, string}, Dictionary{string, object}, ProxySettings, bool?, bool?, bool?, bool?)"/>.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
+        Task PauseAsync();
     }
 }

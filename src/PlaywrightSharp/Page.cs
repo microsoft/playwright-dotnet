@@ -948,6 +948,9 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task<bool> IsVisibleAsync(string selector, int? timeout = null) => MainFrame.IsVisibleAsync(true, selector, timeout);
 
+        /// <inheritdoc />
+        public Task PauseAsync() => Context.PauseAsync();
+
         internal void OnFrameNavigated(Frame frame)
             => FrameNavigated?.Invoke(this, new FrameEventArgs(frame));
 
