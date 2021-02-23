@@ -47,6 +47,8 @@ jobs:
           dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
       - name: Clean
         run: dotnet clean ./src/PlaywrightSharp.sln --configuration Debug && dotnet nuget locals all --clear
+      - name: Download Drivers
+        run: dotnet run -p ./src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj -- download-drivers --basepath .
       - name: Run tests (!Linux)
         if: ${{ matrix.os != 'ubuntu-latest' }}
         env:
@@ -106,6 +108,8 @@ jobs:
           dotnet-version: 5.0.100
       - name: Clean
         run: dotnet clean ./src/PlaywrightSharp.sln --configuration Debug && dotnet nuget locals all --clear
+      - name: Download Drivers
+        run: dotnet run -p ./src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj -- download-drivers --basepath .
       - name: Run tests (!Linux)
         if: ${{ matrix.os != 'ubuntu-latest' }}
         env:

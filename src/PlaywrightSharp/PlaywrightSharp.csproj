@@ -18,13 +18,12 @@
 		<ReleaseVersion>0.0.0</ReleaseVersion>
 		<BuildFromSource>True</BuildFromSource>
 		<AnalysisMode>AllEnabledByDefault</AnalysisMode>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 		<NoWarn>1701;1702;CS0067</NoWarn>
 	</PropertyGroup>
 	<Import Project="../Common/Dependencies.props" />
 	<Import Project="../Common/SignAssembly.props" />
 	<Import Project="../Common/PackageInfo.props" />
+	<Import Project="build/netstandard2.0/PlaywrightSharp.targets" />
 	<ItemGroup>
 		<PackageReference Include="Esprima" Version="1.0.1270" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
@@ -33,7 +32,6 @@
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
 	</ItemGroup>
-	<Import Project="build/netstandard2.0/PlaywrightSharp.targets" />
 	<ItemGroup>
 		<None Include="runtimes\osx\**" Pack="true" PackagePath="runtimes\osx\native" />
 		<None Include="runtimes\unix\**" Pack="true" PackagePath="runtimes\unix\native" />
@@ -61,4 +59,9 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</ContentWithTargetPath>
 	</ItemGroup>
+	<Target Name="EnsurePrerequisitsRan" BeforeTargets="InstallBrowsers">
+    <Error
+      Text="Playwright prerequisites are missing. Ensure you've ran `dotnet run -p ./src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj -- download-drivers --basepath .`"
+      Condition="!Exists('$(MSBuildProjectDirectory)\runtimes\unix$(NativeFolder)')" />
+  </Target>
 </Project>

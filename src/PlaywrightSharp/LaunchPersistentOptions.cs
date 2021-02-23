@@ -262,6 +262,8 @@ namespace PlaywrightSharp
                 args["recordVideo"] = RecordVideo;
             }
 
+            args["sdkLanguage"] = "csharp";
+
             return args;
         }
     }

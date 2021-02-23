@@ -321,7 +321,7 @@ namespace PlaywrightSharp.Tests
             var coverage = await page.Coverage.StopJSCoverageAsync();
             Assert.Single(coverage);
             Assert.Contains("/jscoverage/simple.html", coverage[0].Url);
-            Assert.Equal(1, coverage[0].Functions.FirstOrDefault(f => f.FunctionName == "foo").Ranges[0].Count);
+            Assert.Equal(1, coverage[0].Functions.Single(f => f.FunctionName == "foo").Ranges[0].Count);
 
             tmp.Dispose();
             await context.DisposeAsync();

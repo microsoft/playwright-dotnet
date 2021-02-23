@@ -2,16 +2,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>netcoreapp3.1;net5.0;net48</TargetFrameworks>
-        <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
         <ReleaseVersion>0.0.0</ReleaseVersion>
-    </PropertyGroup>
-    <Import Project="../Common/SignAssembly.props" />
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-        <DocumentationFile></DocumentationFile>
         <NoWarn>1701;1702</NoWarn>
     </PropertyGroup>
+    <Import Project="../Common/SignAssembly.props" />
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
@@ -33,8 +28,6 @@
     </ItemGroup>
     <ItemGroup>
       <None Remove="xunit.runner.json" />
-    </ItemGroup>
-    <ItemGroup>
       <Content Include="xunit.runner.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>

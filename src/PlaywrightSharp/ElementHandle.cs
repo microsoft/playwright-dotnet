@@ -167,67 +167,67 @@ namespace PlaywrightSharp
             => (await _channel.QuerySelectorAllAsync(selector).ConfigureAwait(false)).Select(e => ((ElementHandleChannel)e).Object);
 
         /// <inheritdoc />
-        public async Task<T> EvalOnSelectorAsync<T>(string selector, string pageFunction)
+        public async Task<T> EvalOnSelectorAsync<T>(string selector, string expression)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
-                script: pageFunction,
-                isFunction: pageFunction.IsJavascriptFunction(),
+                script: expression,
+                isFunction: expression.IsJavascriptFunction(),
                 arg: EvaluateArgument.Undefined).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<JsonElement?> EvalOnSelectorAsync(string selector, string pageFunction)
+        public async Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
-                script: pageFunction,
-                isFunction: pageFunction.IsJavascriptFunction(),
+                script: expression,
+                isFunction: expression.IsJavascriptFunction(),
                 arg: EvaluateArgument.Undefined).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<JsonElement?> EvalOnSelectorAsync(string selector, string pageFunction, object arg)
+        public async Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
-                script: pageFunction,
-                isFunction: pageFunction.IsJavascriptFunction(),
+                script: expression,
+                isFunction: expression.IsJavascriptFunction(),
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<T> EvalOnSelectorAsync<T>(string selector, string pageFunction, object arg)
+        public async Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
-                script: pageFunction,
-                isFunction: pageFunction.IsJavascriptFunction(),
+                script: expression,
+                isFunction: expression.IsJavascriptFunction(),
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<T> EvalOnSelectorAllAsync<T>(string selector, string pageFunction)
+        public async Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
-                script: pageFunction,
-                isFunction: pageFunction.IsJavascriptFunction(),
+                script: expression,
+                isFunction: expression.IsJavascriptFunction(),
                 arg: EvaluateArgument.Undefined).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string pageFunction)
+        public async Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
-                script: pageFunction,
-                isFunction: pageFunction.IsJavascriptFunction(),
+                script: expression,
+                isFunction: expression.IsJavascriptFunction(),
                 arg: EvaluateArgument.Undefined).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string pageFunction, object arg)
+        public async Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression, object arg)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
-                script: pageFunction,
-                isFunction: pageFunction.IsJavascriptFunction(),
+                script: expression,
+                isFunction: expression.IsJavascriptFunction(),
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<T> EvalOnSelectorAllAsync<T>(string selector, string pageFunction, object arg)
+        public async Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
-                script: pageFunction,
-                isFunction: pageFunction.IsJavascriptFunction(),
+                script: expression,
+                isFunction: expression.IsJavascriptFunction(),
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         /// <inheritdoc />

@@ -89,8 +89,6 @@ namespace PlaywrightSharp.Transport
             await tcs.Task.ConfigureAwait(false);
         }
 
-        internal void RemoveObject(string guid) => Objects.TryRemove(guid, out _);
-
         internal Task<JsonElement?> SendMessageToServerAsync(
             string guid,
             string method,
@@ -184,7 +182,7 @@ namespace PlaywrightSharp.Transport
         {
             if (Objects.TryGetValue(guid, out var channel))
             {
-                return channel as T;
+                return (T)channel;
             }
 
             if (IsClosed)
@@ -194,7 +192,7 @@ namespace PlaywrightSharp.Transport
 
             var tcs = new TaskCompletionSource<IChannelOwner>(TaskCreationOptions.RunContinuationsAsynchronously);
             _waitingForObject.TryAdd(guid, tcs);
-            return await tcs.Task.ConfigureAwait(false) as T;
+            return (T)await tcs.Task.ConfigureAwait(false);
         }
 
         internal void OnObjectCreated(string guid, IChannelOwner result)
@@ -481,7 +479,7 @@ namespace PlaywrightSharp.Transport
             string message = error.Message
                 .Replace(
                     "Try re-installing playwright with \"npm install playwright\"",
-                    "Try re-installing the browsers running `playwright-cli.exe install` in windows or `playwright-cli install` in MacOS or Linux.")
+                    "Try re-installing the browsers running `playwright.cmd install` in windows or `./playwright.sh install` in MacOS or Linux.")
                 .Replace(
                     "use DEBUG=pw:api environment variable and rerun",
                     "pass `debug: \"pw:api\"` to LaunchAsync");

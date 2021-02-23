@@ -55,7 +55,7 @@ namespace PlaywrightSharp
 
         internal Page(IChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
         {
-            Context = parent as BrowserContext;
+            Context = (BrowserContext)parent;
 
             _channel = new PageChannel(guid, parent.Connection, this);
 
@@ -390,46 +390,46 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<IJSHandle> WaitForFunctionAsync(
-            string pageFunction,
+            string expression,
             int? timeout = null)
-            => MainFrame.WaitForFunctionAsync(true, pageFunction, timeout, null, null);
+            => MainFrame.WaitForFunctionAsync(true, expression, timeout, null, null);
 
         /// <inheritdoc />
         public Task<IJSHandle> WaitForFunctionAsync(
-            string pageFunction,
+            string expression,
             Polling polling,
             int? timeout = null)
-            => MainFrame.WaitForFunctionAsync(true, pageFunction, timeout, polling, null);
+            => MainFrame.WaitForFunctionAsync(true, expression, timeout, polling, null);
 
         /// <inheritdoc />
         public Task<IJSHandle> WaitForFunctionAsync(
-            string pageFunction,
+            string expression,
             int polling,
             int? timeout = null)
-            => MainFrame.WaitForFunctionAsync(true, pageFunction, timeout, null, polling);
+            => MainFrame.WaitForFunctionAsync(true, expression, timeout, null, polling);
 
         /// <inheritdoc />
         public Task<IJSHandle> WaitForFunctionAsync(
-            string pageFunction,
+            string expression,
             object arg,
             int? timeout = null)
-            => MainFrame.WaitForFunctionAsync(true, pageFunction, arg, timeout, null, null);
+            => MainFrame.WaitForFunctionAsync(true, expression, arg, timeout, null, null);
 
         /// <inheritdoc />
         public Task<IJSHandle> WaitForFunctionAsync(
-            string pageFunction,
+            string expression,
             object arg,
             Polling polling,
             int? timeout = null)
-            => MainFrame.WaitForFunctionAsync(true, pageFunction, arg, timeout, polling, null);
+            => MainFrame.WaitForFunctionAsync(true, expression, arg, timeout, polling, null);
 
         /// <inheritdoc />
         public Task<IJSHandle> WaitForFunctionAsync(
-            string pageFunction,
+            string expression,
             object arg,
             int polling,
             int? timeout = null)
-            => MainFrame.WaitForFunctionAsync(true, pageFunction, arg, timeout, null, polling);
+            => MainFrame.WaitForFunctionAsync(true, expression, arg, timeout, null, polling);
 
         /// <inheritdoc />
         public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<T, bool> predicate = null, int? timeout = null)
@@ -475,34 +475,34 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task<T> EvaluateAsync<T>(string pageFunction) => MainFrame.EvaluateAsync<T>(true, pageFunction);
+        public Task<T> EvaluateAsync<T>(string expression) => MainFrame.EvaluateAsync<T>(true, expression);
 
         /// <inheritdoc />
-        public Task<T> EvaluateAsync<T>(string pageFunction, object arg) => MainFrame.EvaluateAsync<T>(true, pageFunction, arg);
+        public Task<T> EvaluateAsync<T>(string expression, object arg) => MainFrame.EvaluateAsync<T>(true, expression, arg);
 
         /// <inheritdoc />
-        public Task EvalOnSelectorAsync(string selector, string pageFunction) => MainFrame.EvalOnSelectorAsync(true, selector, pageFunction);
+        public Task EvalOnSelectorAsync(string selector, string expression) => MainFrame.EvalOnSelectorAsync(true, selector, expression);
 
         /// <inheritdoc />
-        public Task EvalOnSelectorAsync(string selector, string pageFunction, object arg) => MainFrame.EvalOnSelectorAsync(true, selector, pageFunction, arg);
+        public Task EvalOnSelectorAsync(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAsync(true, selector, expression, arg);
 
         /// <inheritdoc />
-        public Task<T> EvalOnSelectorAsync<T>(string selector, string pageFunction) => MainFrame.EvalOnSelectorAsync<T>(true, selector, pageFunction);
+        public Task<T> EvalOnSelectorAsync<T>(string selector, string expression) => MainFrame.EvalOnSelectorAsync<T>(true, selector, expression);
 
         /// <inheritdoc />
-        public Task<T> EvalOnSelectorAsync<T>(string selector, string pageFunction, object arg) => MainFrame.EvalOnSelectorAsync<T>(true, selector, pageFunction, arg);
+        public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAsync<T>(true, selector, expression, arg);
 
         /// <inheritdoc />
-        public Task EvalOnSelectorAllAsync(string selector, string pageFunction, object arg) => MainFrame.EvalOnSelectorAllAsync(true, selector, pageFunction, arg);
+        public Task EvalOnSelectorAllAsync(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAllAsync(true, selector, expression, arg);
 
         /// <inheritdoc />
-        public Task<T> EvalOnSelectorAllAsync<T>(string selector, string pageFunction, object arg) => MainFrame.EvalOnSelectorAllAsync<T>(true, selector, pageFunction, arg);
+        public Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAllAsync<T>(true, selector, expression, arg);
 
         /// <inheritdoc />
-        public Task EvalOnSelectorAllAsync(string selector, string pageFunction) => MainFrame.EvalOnSelectorAllAsync(true, selector, pageFunction);
+        public Task EvalOnSelectorAllAsync(string selector, string expression) => MainFrame.EvalOnSelectorAllAsync(true, selector, expression);
 
         /// <inheritdoc />
-        public Task<T> EvalOnSelectorAllAsync<T>(string selector, string pageFunction) => MainFrame.EvalOnSelectorAllAsync<T>(true, selector, pageFunction);
+        public Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression) => MainFrame.EvalOnSelectorAllAsync<T>(true, selector, expression);
 
         /// <inheritdoc />
         public Task FillAsync(string selector, string value, int? timeout = null, bool? noWaitAfter = null)
@@ -594,10 +594,10 @@ namespace PlaywrightSharp
         public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForState? state = null, int? timeout = null) => MainFrame.WaitForSelectorAsync(true, selector, state, timeout);
 
         /// <inheritdoc />
-        public Task<JsonElement?> EvaluateAsync(string pageFunction) => MainFrame.EvaluateAsync(true, pageFunction);
+        public Task<JsonElement?> EvaluateAsync(string expression) => MainFrame.EvaluateAsync(true, expression);
 
         /// <inheritdoc />
-        public Task<JsonElement?> EvaluateAsync(string pageFunction, object arg) => MainFrame.EvaluateAsync(true, pageFunction, arg);
+        public Task<JsonElement?> EvaluateAsync(string expression, object arg) => MainFrame.EvaluateAsync(true, expression, arg);
 
         /// <inheritdoc />
         public Task<byte[]> ScreenshotAsync(bool fullPage) => ScreenshotAsync(null, fullPage);
@@ -643,10 +643,10 @@ namespace PlaywrightSharp
         public Task<IEnumerable<IElementHandle>> QuerySelectorAllAsync(string selector) => MainFrame.QuerySelectorAllAsync(true, selector);
 
         /// <inheritdoc />
-        public Task<IJSHandle> EvaluateHandleAsync(string pageFunction) => MainFrame.EvaluateHandleAsync(pageFunction);
+        public Task<IJSHandle> EvaluateHandleAsync(string expression) => MainFrame.EvaluateHandleAsync(expression);
 
         /// <inheritdoc />
-        public Task<IJSHandle> EvaluateHandleAsync(string pageFunction, object arg) => MainFrame.EvaluateHandleAsync(pageFunction, arg);
+        public Task<IJSHandle> EvaluateHandleAsync(string expression, object arg) => MainFrame.EvaluateHandleAsync(expression, arg);
 
         /// <inheritdoc />
         public Task<IElementHandle> AddScriptTagAsync(string url = null, string path = null, string content = null, string type = null)
@@ -948,6 +948,9 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task<bool> IsVisibleAsync(string selector, int? timeout = null) => MainFrame.IsVisibleAsync(true, selector, timeout);
 
+        /// <inheritdoc />
+        public Task PauseAsync() => Context.PauseAsync();
+
         internal void OnFrameNavigated(Frame frame)
             => FrameNavigated?.Invoke(this, new FrameEventArgs(frame));
 
@@ -1026,7 +1029,7 @@ namespace PlaywrightSharp
 
         private void Channel_FrameDetached(object sender, FrameEventArgs e)
         {
-            var frame = e.Frame as Frame;
+            var frame = (Frame)e.Frame;
             _frames.Remove(frame);
             frame.IsDetached = true;
             frame.ParentFrame?.ChildFramesList?.Remove(frame);
@@ -1035,7 +1038,7 @@ namespace PlaywrightSharp
 
         private void Channel_FrameAttached(object sender, FrameEventArgs e)
         {
-            var frame = e.Frame as Frame;
+            var frame = (Frame)e.Frame;
             frame.Page = this;
             _frames.Add(frame);
             frame.ParentFrame?.ChildFramesList?.Add(frame);
