@@ -652,8 +652,9 @@ namespace PlaywrightSharp.Helpers
         /// </summary>
         /// <param name="script">Script to evaluate.</param>
         /// <param name="retry">Whether it should retry by wrapping the code in parenthesis.</param>
+        /// <param name="checkExpression">Checks whether the function could be a function expression.</param>
         /// <returns>Whether the script is a function or not.</returns>
-        public static bool IsJavascriptFunction(this string script, bool retry = true)
+        public static bool IsJavascriptFunction(this string script, bool retry = true, bool checkExpression = false)
         {
             try
             {
@@ -665,7 +666,7 @@ namespace PlaywrightSharp.Helpers
                     return
                         (program.Body[0] is ExpressionStatement expression && (
                             expression.Expression.Type == Nodes.ArrowFunctionExpression ||
-                            expression.Expression.Type == Nodes.FunctionExpression)) ||
+                           (checkExpression && expression.Expression.Type == Nodes.FunctionExpression))) ||
                         program.Body[0] is FunctionDeclaration;
                 }
 
@@ -675,7 +676,7 @@ namespace PlaywrightSharp.Helpers
             {
                 if (retry)
                 {
-                    return IsJavascriptFunction($"({script})", false);
+                    return IsJavascriptFunction($"({script})", false, true);
                 }
 
                 return true;
