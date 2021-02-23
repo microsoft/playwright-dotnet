@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests.Chromium
             await client.SendAsync("Network.enable");
             var events = new List<CDPEventArgs>();
 
-            client.MessageReceived += (sender, e) =>
+            client.MessageReceived += (_, e) =>
             {
                 if (e.Method == "Network.requestWillBeSent")
                 {
@@ -68,7 +68,7 @@ namespace PlaywrightSharp.Tests.Chromium
             // generate a script in page and wait for the event.
             var tcs = new TaskCompletionSource<bool>();
 
-            client.MessageReceived += (sender, e) =>
+            client.MessageReceived += (_, e) =>
             {
                 if (e.Method == "Debugger.scriptParsed" && e.Params?.GetProperty("url").GetString() == "foo.js")
                 {
@@ -145,7 +145,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.NotNull(await session.SendAsync<object>("Browser.getVersion"));
 
             bool gotEvent = false;
-            session.MessageReceived += (sender, e) =>
+            session.MessageReceived += (_, e) =>
             {
                 if (e.Method == "Target.targetCreated")
                 {

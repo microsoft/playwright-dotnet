@@ -152,7 +152,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
 
             var messages = new List<string>();
-            Page.Console += (sender, e) => messages.Add(e.Message.Text);
+            Page.Console += (_, e) => messages.Add(e.Message.Text);
 
             await Context.SetGeolocationAsync(new Geolocation
             {

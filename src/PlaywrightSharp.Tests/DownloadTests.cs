@@ -280,7 +280,7 @@ namespace PlaywrightSharp.Tests
         {
             var downloadPathTcs = new TaskCompletionSource<string>();
             var page = await Browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
-            page.Download += async (sender, e) =>
+            page.Download += async (_, e) =>
             {
                 downloadPathTcs.TrySetResult(await e.Download.GetPathAsync());
             };
@@ -299,7 +299,7 @@ namespace PlaywrightSharp.Tests
         {
             var downloadPathTcs = new TaskCompletionSource<string>();
             var page = await Browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
-            page.Download += async (sender, e) =>
+            page.Download += async (_, e) =>
             {
                 downloadPathTcs.TrySetResult(await e.Download.GetPathAsync());
             };

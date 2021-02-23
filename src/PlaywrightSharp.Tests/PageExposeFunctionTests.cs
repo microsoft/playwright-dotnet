@@ -188,7 +188,7 @@ namespace PlaywrightSharp.Tests
             IJSHandle target = null;
             await Page.ExposeBindingAsync(
                 "logme",
-                (BindingSource source, IJSHandle t) =>
+                (_, t) =>
                 {
                     target = t;
                     return 17;
@@ -209,7 +209,7 @@ namespace PlaywrightSharp.Tests
             IJSHandle target = null;
             await Page.ExposeBindingAsync(
                 "logme",
-                (BindingSource source, IJSHandle t) =>
+                (_, t) =>
                 {
                     target = t;
                     return 17;

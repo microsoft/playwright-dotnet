@@ -5,7 +5,7 @@ namespace PlaywrightSharp.Demo
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static async Task Main()
         {
             using var playwright = await Playwright.CreateAsync();
             var chromium = playwright.Chromium;

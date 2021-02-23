@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.RouteAsync("**/*", (route, request) =>
+            await Page.RouteAsync("**/*", (route, _) =>
             {
                 route.FulfillAsync(
                     status: HttpStatusCode.Created,
@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithStatusCode422()
         {
-            await Page.RouteAsync("**/*", (route, request) =>
+            await Page.RouteAsync("**/*", (route, _) =>
             {
                 route.FulfillAsync(HttpStatusCode.UpgradeRequired, "Yo, page!");
             });
@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Skip = "We need screenshots for this")]
         public async Task ShouldAllowMockingBinaryResponses()
         {
-            await Page.RouteAsync("**/*", (route, request) =>
+            await Page.RouteAsync("**/*", (route, _) =>
             {
                 byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
                 route.FulfillAsync(
@@ -91,7 +91,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Skip = "We need screenshots for this")]
         public async Task ShouldWorkWithFilePath()
         {
-            await Page.RouteAsync("**/*", (route, request) =>
+            await Page.RouteAsync("**/*", (route, _) =>
             {
                 route.FulfillAsync(
                     contentType: "shouldBeIgnored",
@@ -112,7 +112,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldStringifyInterceptedRequestResponseHeaders()
         {
-            await Page.RouteAsync("**/*", (route, request) =>
+            await Page.RouteAsync("**/*", (route, _) =>
             {
                 route.FulfillAsync(
                     status: HttpStatusCode.OK,

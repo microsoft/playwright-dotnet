@@ -129,7 +129,7 @@ namespace PlaywrightSharp.Tests
             var requestResponse = new TaskCompletionSource<bool>();
             string route = "/intercept-this.html";
             await Page.GoToAsync(TestConstants.EmptyPage);
-            Server.SetRoute(route, ctx =>
+            Server.SetRoute(route, _ =>
             {
                 requestResponse.SetResult(true);
                 return requestResponse.Task;

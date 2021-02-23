@@ -101,7 +101,7 @@ namespace PlaywrightSharp.Tests
             IJSHandle target = null;
             await Context.ExposeBindingAsync(
                 "logme",
-                (BindingSource source, IJSHandle t) =>
+                (BindingSource _, IJSHandle t) =>
                 {
                     target = t;
                     return 17;

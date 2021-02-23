@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Chromium
             _connection = parent.Connection;
             _channel = new CDPSessionChannel(guid, parent.Connection, this);
 
-            _channel.CDPEvent += (sender, e) => MessageReceived?.Invoke(this, e);
+            _channel.CDPEvent += (_, e) => MessageReceived?.Invoke(this, e);
         }
 
         /// <inheritdoc/>

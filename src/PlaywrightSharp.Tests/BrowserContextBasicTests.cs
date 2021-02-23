@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
             var popupTargetCompletion = new TaskCompletionSource<IPage>();
-            page.Popup += (sender, e) => popupTargetCompletion.SetResult(e.Page);
+            page.Popup += (_, e) => popupTargetCompletion.SetResult(e.Page);
 
             var (popupTarget, _) = await TaskUtils.WhenAll(
                 popupTargetCompletion.Task,

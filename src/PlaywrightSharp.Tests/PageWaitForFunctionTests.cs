@@ -66,7 +66,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldAvoidSideEffectsAfterTimeout()
         {
             int counter = 0;
-            Page.Console += (sender, e) => ++counter;
+            Page.Console += (_, _) => ++counter;
 
             var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.WaitForFunctionAsync(
                 @"() => {

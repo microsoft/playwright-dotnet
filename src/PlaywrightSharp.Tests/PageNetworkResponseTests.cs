@@ -135,7 +135,7 @@ namespace PlaywrightSharp.Tests
 
             // Setup page to trap response.
             bool requestFinished = false;
-            Page.RequestFinished += (sender, e) => requestFinished = requestFinished || e.Request.Url.Contains("/get");
+            Page.RequestFinished += (_, e) => requestFinished = requestFinished || e.Request.Url.Contains("/get");
             // send request and wait for server response
             var (pageResponse, _) = await TaskUtils.WhenAll(
                 Page.WaitForEventAsync(PageEvent.Response),

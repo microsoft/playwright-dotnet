@@ -49,11 +49,11 @@ namespace PlaywrightSharp.Transport
             _playwrightServerProcess = GetProcess(driverExecutablePath);
             _playwrightServerProcess.StartInfo.Arguments = "run-driver";
             _playwrightServerProcess.Start();
-            _playwrightServerProcess.Exited += (sender, e) => Close("Process exited");
+            _playwrightServerProcess.Exited += (_, _) => Close("Process exited");
             _transport = new StdIOTransport(_playwrightServerProcess, _loggerFactory, scheduler);
             _transport.MessageReceived += Transport_MessageReceived;
-            _transport.LogReceived += (s, e) => debugLogger?.LogInformation(e.Message);
-            _transport.TransportClosed += (sender, e) => Close(e.CloseReason);
+            _transport.LogReceived += (_, e) => debugLogger?.LogInformation(e.Message);
+            _transport.TransportClosed += (_, e) => Close(e.CloseReason);
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
@@ -83,7 +83,7 @@ namespace PlaywrightSharp.Transport
             process.StartInfo.RedirectStandardInput = false;
             process.StartInfo.RedirectStandardError = false;
             process.EnableRaisingEvents = true;
-            process.Exited += (sender, e) => tcs.TrySetResult(true);
+            process.Exited += (_, _) => tcs.TrySetResult(true);
             process.Start();
 
             await tcs.Task.ConfigureAwait(false);

@@ -36,7 +36,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldRejectWhenFrameDetaches()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
-            Server.SetRoute("/empty.html", context => Task.Delay(10000));
+            Server.SetRoute("/empty.html", _ => Task.Delay(10000));
             var waitForRequestTask = Server.WaitForRequest("/empty.html");
             var navigationTask = Page.FirstChildFrame().GoToAsync(TestConstants.EmptyPage);
             await waitForRequestTask;
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldContinueAfterClientRedirect()
         {
-            Server.SetRoute("/frames/script.js", context => Task.Delay(10000));
+            Server.SetRoute("/frames/script.js", _ => Task.Delay(10000));
             string url = TestConstants.ServerUrl + "/frames/child-redirect.html";
             var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.GoToAsync(url, LifecycleEvent.Networkidle, null, 5000));
 

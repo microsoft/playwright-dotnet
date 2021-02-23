@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldFireForNavigationRequests()
         {
             var requests = new List<IRequest>();
-            Page.Request += (sender, e) => requests.Add(e.Request);
+            Page.Request += (_, e) => requests.Add(e.Request);
             await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Single(requests);
         }
@@ -30,7 +30,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldFireForIframes()
         {
             var requests = new List<IRequest>();
-            Page.Request += (sender, e) => requests.Add(e.Request);
+            Page.Request += (_, e) => requests.Add(e.Request);
             await Page.GoToAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             Assert.Equal(2, requests.Count);
@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldFireForFetches()
         {
             var requests = new List<IRequest>();
-            Page.Request += (sender, e) => requests.Add(e.Request);
+            Page.Request += (_, e) => requests.Add(e.Request);
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.EvaluateAsync("fetch('/empty.html')");
             Assert.Equal(2, requests.Count);

@@ -59,7 +59,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldCancelNavigationWhenPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
-            Server.SetRoute("/one-style.css", context => Task.Delay(2000));
+            Server.SetRoute("/one-style.css", _ => Task.Delay(2000));
             var task = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
             await Page.WaitForNavigationAsync(LifecycleEvent.DOMContentLoaded);
 
