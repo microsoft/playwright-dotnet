@@ -73,8 +73,8 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("Not an HTMLElement", exception1.Message);
 
             var handle = await Page.QuerySelectorAsync("svg");
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => handle.GetInnerTextAsync());
-            Assert.Contains("Not an HTMLElement", exception1.Message);
+            var exception2 = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => handle.GetInnerTextAsync());
+            Assert.Contains("Not an HTMLElement", exception2.Message);
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "textContent should work")]
