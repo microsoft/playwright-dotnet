@@ -66,7 +66,7 @@ namespace PlaywrightSharp.Tests
             var requestTask = Server.WaitForRequest("/sleep.zzz", request =>
             {
                 using StreamReader reader = new StreamReader(request.Body);
-                return reader.ReadToEndAsync().GetAwaiter().GetResult();
+                return reader.ReadToEnd();
             });
 
             await TaskUtils.WhenAll(
