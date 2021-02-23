@@ -5,12 +5,12 @@
   so copy the native assemblies to the output directory.
   -->
 	<ItemGroup Condition="Exists('packages.config') OR Exists('$(MSBuildProjectName).packages.config') OR Exists('packages.$(MSBuildProjectName).config')">
-		<Content Include="$(MSBuildThisFileDirectory)\..\..\runtimes\win-x64\native\**" Condition="'$(PlatformTarget)' != 'x86'">
+		<Content Include="$(MSBuildThisFileDirectory)\..\..\Drivers\win-x64\native\**" Condition="'$(PlatformTarget)' != 'x86'">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<Visible>false</Visible>
 			<Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
 		</Content>
-		<Content Include="$(MSBuildThisFileDirectory)\..\..\runtimes\win-x86\native\**" Condition="'$(PlatformTarget)' == 'x86'">
+		<Content Include="$(MSBuildThisFileDirectory)\..\..\Drivers\win-x86\native\**" Condition="'$(PlatformTarget)' == 'x86'">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<Visible>false</Visible>
 			<Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
