@@ -23,7 +23,7 @@ namespace PlaywrightSharp
                 return false;
             }
 
-            var range = obj as CSSCoverageEntryRange;
+            var range = (CSSCoverageEntryRange)obj;
 
             return range.Start == Start &&
                    range.End == End;

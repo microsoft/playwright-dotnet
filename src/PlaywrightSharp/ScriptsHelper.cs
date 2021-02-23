@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,14 +13,9 @@ namespace PlaywrightSharp
 {
     internal static class ScriptsHelper
     {
-        internal static bool IsPrimitiveValue(Type type)
-            => type == typeof(string) ||
-            type == typeof(decimal) ||
-            type == typeof(double) ||
-            type == typeof(bool) ||
-            type == typeof(decimal?) ||
-            type == typeof(double?) ||
-            type == typeof(bool?);
+        private static readonly MethodInfo _parseEvaluateResult = typeof(ScriptsHelper)
+            .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
+            .Single(m => m.Name == nameof(ParseEvaluateResult) && m.IsGenericMethod);
 
         internal static string SerializeScriptCall(string script, object[] args)
         {
@@ -42,11 +36,7 @@ namespace PlaywrightSharp
 
         internal static object ParseEvaluateResult(JsonElement? element, Type t)
         {
-            var parseEvaluateResult = typeof(ScriptsHelper)
-                .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
-                .FirstOrDefault(m => m.Name == "ParseEvaluateResult" && m.GetGenericArguments().Any());
-
-            var genericMethod = parseEvaluateResult.MakeGenericMethod(new[] { t });
+            var genericMethod = _parseEvaluateResult.MakeGenericMethod(t);
             return genericMethod.Invoke(null, new object[] { element });
         }
 

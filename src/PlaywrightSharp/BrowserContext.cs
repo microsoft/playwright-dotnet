@@ -331,6 +331,8 @@ namespace PlaywrightSharp
             return state;
         }
 
+        internal Task PauseAsync() => Channel.PauseAsync();
+
         internal void OnRoute(Route route, Request request)
         {
             foreach (var item in _routes)

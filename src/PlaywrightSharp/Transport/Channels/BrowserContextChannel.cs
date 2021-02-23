@@ -222,5 +222,8 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task<StorageState> GetStorageStateAsync()
             => Connection.SendMessageToServerAsync<StorageState>(Guid, "storageState", null);
+
+        internal Task PauseAsync()
+            => Connection.SendMessageToServerAsync(Guid, "pause", null);
     }
 }

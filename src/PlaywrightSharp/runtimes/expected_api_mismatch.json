@@ -1,4 +1,4 @@
-{
+﻿{
   "entities": [
     {
       "upstreamClassName": "browser",
@@ -153,8 +153,8 @@
           "memberName": "EvalOnSelectorAsync",
           "arguments": [
             {
-              "upstreamArgumentName": "pageFunction",
-              "justification": "We don't support pageFunction as a function"
+              "upstreamArgumentName": "expression",
+              "justification": "We don't support expression as a function"
             }
           ]
         },
@@ -163,8 +163,8 @@
           "memberName": "EvalOnSelectorAllAsync",
           "arguments": [
             {
-              "upstreamArgumentName": "pageFunction",
-              "justification": "We don't support pageFunction as a function"
+              "upstreamArgumentName": "expression",
+              "justification": "We don't support expression as a function"
             }
           ]
         },
@@ -173,8 +173,8 @@
           "memberName": "EvaluateAsync",
           "arguments": [
             {
-              "upstreamArgumentName": "pageFunction",
-              "justification": "We don't support pageFunction as a function"
+              "upstreamArgumentName": "expression",
+              "justification": "We don't support expression as a function"
             }
           ]
         },
@@ -183,8 +183,8 @@
           "memberName": "EvaluateHandleAsync",
           "arguments": [
             {
-              "upstreamArgumentName": "pageFunction",
-              "justification": "We don't support pageFunction as a function"
+              "upstreamArgumentName": "expression",
+              "justification": "We don't support expression as a function"
             }
           ]
         },
@@ -193,8 +193,8 @@
           "memberName": "WaitForFunctionAsync",
           "arguments": [
             {
-              "upstreamArgumentName": "pageFunction",
-              "justification": "We don't support pageFunction as a function"
+              "upstreamArgumentName": "expression",
+              "justification": "We don't support expression as a function"
             }
           ]
         },
@@ -309,8 +309,8 @@
           "memberName": "EvalOnSelectorAsync",
           "arguments": [
             {
-              "upstreamArgumentName": "pageFunction",
-              "justification": "We don't support pageFunction as a function"
+              "upstreamArgumentName": "expression",
+              "justification": "We don't support expression as a function"
             }
           ]
         },
@@ -319,8 +319,8 @@
           "memberName": "EvalOnSelectorAllAsync",
           "arguments": [
             {
-              "upstreamArgumentName": "pageFunction",
-              "justification": "We don't support pageFunction as a function"
+              "upstreamArgumentName": "expression",
+              "justification": "We don't support expression as a function"
             }
           ]
         },
@@ -329,8 +329,8 @@
           "memberName": "EvaluateAsync",
           "arguments": [
             {
-              "upstreamArgumentName": "pageFunction",
-              "justification": "We don't support pageFunction as a function"
+              "upstreamArgumentName": "expression",
+              "justification": "We don't support expression as a function"
             }
           ]
         },
@@ -339,8 +339,8 @@
           "memberName": "WaitForFunctionAsync",
           "arguments": [
             {
-              "upstreamArgumentName": "pageFunction",
-              "justification": "We don't support pageFunction as a function"
+              "upstreamArgumentName": "expression",
+              "justification": "We don't support expression as a function"
             }
           ]
         },
@@ -349,8 +349,8 @@
           "memberName": "EvaluateHandleAsync",
           "arguments": [
             {
-              "upstreamArgumentName": "pageFunction",
-              "justification": "We don't support pageFunction as a function"
+              "upstreamArgumentName": "expression",
+              "justification": "We don't support expression as a function"
             }
           ]
         },
@@ -449,8 +449,8 @@
           "memberName": "EvalOnSelectorAsync",
           "arguments": [
             {
-              "upstreamArgumentName": "pageFunction",
-              "justification": "We don't support pageFunction as a function"
+              "upstreamArgumentName": "expression",
+              "justification": "We don't support expression as a function"
             }
           ]
         },
@@ -459,8 +459,8 @@
           "memberName": "EvalOnSelectorAllAsync",
           "arguments": [
             {
-              "upstreamArgumentName": "pageFunction",
-              "justification": "We don't support pageFunction as a function"
+              "upstreamArgumentName": "expression",
+              "justification": "We don't support expression as a function"
             }
           ]
         },
@@ -555,8 +555,8 @@
           "memberName": "EvaluateAsync",
           "arguments": [
             {
-              "upstreamArgumentName": "pageFunction",
-              "justification": "We don't support pageFunction as a function"
+              "upstreamArgumentName": "expression",
+              "justification": "We don't support expression as a function"
             }
           ]
         },
@@ -565,8 +565,8 @@
           "memberName": "EvaluateHandleAsync",
           "arguments": [
             {
-              "upstreamArgumentName": "pageFunction",
-              "justification": "We don't support pageFunction as a function"
+              "upstreamArgumentName": "expression",
+              "justification": "We don't support expression as a function"
             }
           ]
         }
@@ -581,8 +581,8 @@
           "memberName": "EvaluateAsync",
           "arguments": [
             {
-              "upstreamArgumentName": "pageFunction",
-              "justification": "We don't support pageFunction as a function"
+              "upstreamArgumentName": "expression",
+              "justification": "We don't support expression as a function"
             }
           ]
         },
@@ -591,8 +591,8 @@
           "memberName": "EvaluateHandleAsync",
           "arguments": [
             {
-              "upstreamArgumentName": "pageFunction",
-              "justification": "We don't support pageFunction as a function"
+              "upstreamArgumentName": "expression",
+              "justification": "We don't support expression as a function"
             }
           ]
         }
@@ -697,6 +697,49 @@
     {
       "upstreamClassName": "WebKitBrowser",
       "justification": "We don't need this class"
+    },
+    {
+      "upstreamClassName": "BrowserServer",
+      "justification": "We don't support this yet"
+    },
+    {
+      "className": "WebSocketFrameEventArgs",
+      "members": [
+        {
+          "upstreamMemberName": "binary",
+          "justification": "We are solving it a little bit different in this implementation"
+        },
+        {
+          "upstreamMemberName": "text",
+          "justification": "We are solving it a little bit different in this implementation"
+        }
+      ]
+      "upstreamClassName": "Android",
+      "justification": "We don't support this yet"
+    },
+    {
+      "upstreamClassName": "AndroidDevice",
+      "justification": "We don't support this yet"
+    },
+    {
+      "upstreamClassName": "AndroidInput",
+      "justification": "We don't support this yet"
+    },
+    {
+      "upstreamClassName": "AndroidSocket",
+      "justification": "We don't support this yet"
+    },
+    {
+      "upstreamClassName": "AndroidWebView",
+      "justification": "We don't support this yet"
+    },
+    {
+      "upstreamClassName": "Electron",
+      "justification": "We don't support this yet"
+    },
+    {
+      "upstreamClassName": "ElectronApplication",
+      "justification": "We don't support this yet"
     },
     {
       "upstreamClassName": "BrowserServer",

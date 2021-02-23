@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests
             }");
 
             Assert.Equal("username=John Doe", documentCookie);
-            var cookie = (await page.Context.GetCookiesAsync()).FirstOrDefault();
+            var cookie = (await page.Context.GetCookiesAsync()).Single();
             Assert.Equal("username", cookie.Name);
             Assert.Equal("John Doe", cookie.Value);
             Assert.Equal("localhost", cookie.Domain);
@@ -61,7 +61,7 @@ namespace PlaywrightSharp.Tests
 
             Assert.Equal("username=John Doe", await page.EvaluateAsync<string>(@"() => document.cookie"));
 
-            var cookie = (await page.Context.GetCookiesAsync()).FirstOrDefault();
+            var cookie = (await page.Context.GetCookiesAsync()).Single();
             Assert.Equal("username", cookie.Name);
             Assert.Equal("John Doe", cookie.Value);
             Assert.Equal("localhost", cookie.Domain);
