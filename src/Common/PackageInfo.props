@@ -7,8 +7,8 @@
 		<ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<NoDefaultExcludes>true</NoDefaultExcludes>
-		<Authors>Darío Kondratiuk</Authors>
-		<Owners>Darío Kondratiuk</Owners>
+		<Authors>Darío Kondratiuk, Microsoft</Authors>
+		<Owners>Darío Kondratiuk, Microsoft</Owners>
 		<PackageProjectUrl>https://github.com/microsoft/playwright-sharp</PackageProjectUrl>
 		<PackageTags>headless,chrome,firefox,webkit,playwright</PackageTags>
 		<RepositoryUrl>https://github.com/microsoft/playwright-sharp.git</RepositoryUrl>
