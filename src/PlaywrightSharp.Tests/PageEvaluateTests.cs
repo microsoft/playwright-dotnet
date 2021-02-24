@@ -666,6 +666,14 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(date, result);
         }
 
+        [Fact(Skip = "The driver doesn't support this yet")]
+        public async Task ShouldTreatEcma2020AsFunctions()
+             => Assert.Equal("dario", await Page.EvaluateAsync<string>(
+                 @"() => {
+                    const person = { name: 'dario' };
+                    return person?.name;
+                }"));
+
         [PlaywrightTest("page-evaluate.spec.ts", "should roundtrip regex")]
         [Fact(Skip = "Regex is not native as in javascript")]
         public void ShouldRoundtripRegex()
