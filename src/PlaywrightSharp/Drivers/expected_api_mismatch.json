@@ -1,4 +1,4 @@
-﻿{
+{
   "entities": [
     {
       "upstreamClassName": "browser",
@@ -713,9 +713,7 @@
           "upstreamMemberName": "text",
           "justification": "We are solving it a little bit different in this implementation"
         }
-      ]
-    },
-    {
+      ],
       "upstreamClassName": "Android",
       "justification": "We don't support this yet"
     },

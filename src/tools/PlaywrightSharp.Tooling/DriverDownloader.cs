@@ -134,7 +134,7 @@ namespace PlaywrightSharp.Tooling
 
         private async Task<bool> ExecuteAsync()
         {
-            var destinationDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "PlaywrightSharp", "runtimes"));
+            var destinationDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "PlaywrightSharp", "Drivers"));
             string driverVersion = DriverVersion;
 
             if (!destinationDirectory.Exists)
