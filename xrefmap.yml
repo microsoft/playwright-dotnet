@@ -6382,12 +6382,12 @@ references:
   isSpec: "True"
   fullName: PlaywrightSharp.Helpers.StringExtensions.GlobToRegex
   nameWithType: StringExtensions.GlobToRegex
-- uid: PlaywrightSharp.Helpers.StringExtensions.IsJavascriptFunction(System.String)
-  name: IsJavascriptFunction(String)
-  href: api/PlaywrightSharp.Helpers.StringExtensions.html#PlaywrightSharp_Helpers_StringExtensions_IsJavascriptFunction_System_String_
-  commentId: M:PlaywrightSharp.Helpers.StringExtensions.IsJavascriptFunction(System.String)
-  fullName: PlaywrightSharp.Helpers.StringExtensions.IsJavascriptFunction(System.String)
-  nameWithType: StringExtensions.IsJavascriptFunction(String)
+- uid: PlaywrightSharp.Helpers.StringExtensions.IsJavascriptFunction(System.String,System.Boolean,System.Boolean)
+  name: IsJavascriptFunction(String, Boolean, Boolean)
+  href: api/PlaywrightSharp.Helpers.StringExtensions.html#PlaywrightSharp_Helpers_StringExtensions_IsJavascriptFunction_System_String_System_Boolean_System_Boolean_
+  commentId: M:PlaywrightSharp.Helpers.StringExtensions.IsJavascriptFunction(System.String,System.Boolean,System.Boolean)
+  fullName: PlaywrightSharp.Helpers.StringExtensions.IsJavascriptFunction(System.String, System.Boolean, System.Boolean)
+  nameWithType: StringExtensions.IsJavascriptFunction(String, Boolean, Boolean)
 - uid: PlaywrightSharp.Helpers.StringExtensions.IsJavascriptFunction*
   name: IsJavascriptFunction
   href: api/PlaywrightSharp.Helpers.StringExtensions.html#PlaywrightSharp_Helpers_StringExtensions_IsJavascriptFunction_
@@ -10373,6 +10373,19 @@ references:
   commentId: E:PlaywrightSharp.IPage.PageError
   fullName: PlaywrightSharp.IPage.PageError
   nameWithType: IPage.PageError
+- uid: PlaywrightSharp.IPage.PauseAsync
+  name: PauseAsync()
+  href: api/PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_PauseAsync
+  commentId: M:PlaywrightSharp.IPage.PauseAsync
+  fullName: PlaywrightSharp.IPage.PauseAsync()
+  nameWithType: IPage.PauseAsync()
+- uid: PlaywrightSharp.IPage.PauseAsync*
+  name: PauseAsync
+  href: api/PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_PauseAsync_
+  commentId: Overload:PlaywrightSharp.IPage.PauseAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.IPage.PauseAsync
+  nameWithType: IPage.PauseAsync
 - uid: PlaywrightSharp.IPage.Popup
   name: Popup
   href: api/PlaywrightSharp.IPage.html#PlaywrightSharp_IPage_Popup
@@ -14231,6 +14244,19 @@ references:
   commentId: E:PlaywrightSharp.Page.PageError
   fullName: PlaywrightSharp.Page.PageError
   nameWithType: Page.PageError
+- uid: PlaywrightSharp.Page.PauseAsync
+  name: PauseAsync()
+  href: api/PlaywrightSharp.Page.html#PlaywrightSharp_Page_PauseAsync
+  commentId: M:PlaywrightSharp.Page.PauseAsync
+  fullName: PlaywrightSharp.Page.PauseAsync()
+  nameWithType: Page.PauseAsync()
+- uid: PlaywrightSharp.Page.PauseAsync*
+  name: PauseAsync
+  href: api/PlaywrightSharp.Page.html#PlaywrightSharp_Page_PauseAsync_
+  commentId: Overload:PlaywrightSharp.Page.PauseAsync
+  isSpec: "True"
+  fullName: PlaywrightSharp.Page.PauseAsync
+  nameWithType: Page.PauseAsync
 - uid: PlaywrightSharp.Page.PlaywrightSharp#IPage#Context
   name: IPage.Context
   href: api/PlaywrightSharp.Page.html#PlaywrightSharp_Page_PlaywrightSharp_IPage_Context
