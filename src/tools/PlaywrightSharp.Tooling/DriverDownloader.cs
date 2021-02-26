@@ -60,7 +60,8 @@ namespace PlaywrightSharp.Tooling
         {
             string readmePath = Path.Combine(basePath, "README.md");
             string readmeInDocsPath = Path.Combine(basePath, "docfx_project", "documentation", "index.md");
-            string playwrightVersion = driverVersion;
+            string playwrightVersion = driverVersion.Contains("-") ? driverVersion.Substring(0, driverVersion.IndexOf("-")) : driverVersion;
+
             var regex = new Regex("<!-- GEN:(.*?) -->(.*?)<!-- GEN:stop -->", RegexOptions.Compiled);
 
             string readme = await GetUpstreamReadmeAsync(playwrightVersion).ConfigureAwait(false);
@@ -90,12 +91,7 @@ namespace PlaywrightSharp.Tooling
         private async Task DownloadDriverAsync(DirectoryInfo destinationDirectory, string driverVersion, string platform, string runtime)
         {
             Console.WriteLine("Downloading driver for " + platform);
-            string cdn = "https://playwright.azureedge.net/builds/driver";
-
-            if (driverVersion.Contains("next"))
-            {
-                cdn += "/next";
-            }
+            string cdn = "https://playwright.azureedge.net/builds/driver/next";
 
             using var client = new HttpClient();
             string url = $"{cdn}/playwright-{driverVersion}-{platform}.zip";
