@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests
                 return document.cookie;
             }"));
 
-            var cookie = (await Page.Context.GetCookiesAsync()).FirstOrDefault();
+            var cookie = (await Page.Context.GetCookiesAsync()).Single();
             Assert.Equal("username", cookie.Name);
             Assert.Equal("John Doe", cookie.Value);
             Assert.Equal("localhost", cookie.Domain);
@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests
                   return document.cookie;
             }", date));
 
-            var cookie = (await Page.Context.GetCookiesAsync()).FirstOrDefault();
+            var cookie = (await Page.Context.GetCookiesAsync()).Single();
             Assert.Equal("username", cookie.Name);
             Assert.Equal("John Doe", cookie.Value);
             Assert.Equal("localhost", cookie.Domain);

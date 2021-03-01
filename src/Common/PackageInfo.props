@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
 	<PropertyGroup>
-		<AssemblyVersion>0.180.0</AssemblyVersion>
+		<AssemblyVersion>0.191.1</AssemblyVersion>
 		<PackageVersion>$(AssemblyVersion)</PackageVersion>
-		<DriverVersion>1.8.0</DriverVersion>
+		<DriverVersion>1.9.1-1614225150000</DriverVersion>
 		<ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<NoDefaultExcludes>true</NoDefaultExcludes>
-		<Authors>Darío Kondratiuk</Authors>
-		<Owners>Darío Kondratiuk</Owners>
+		<Authors>Darío Kondratiuk, Microsoft</Authors>
+		<Owners>Darío Kondratiuk, Microsoft</Owners>
 		<PackageProjectUrl>https://github.com/microsoft/playwright-sharp</PackageProjectUrl>
 		<PackageTags>headless,chrome,firefox,webkit,playwright</PackageTags>
 		<RepositoryUrl>https://github.com/microsoft/playwright-sharp.git</RepositoryUrl>

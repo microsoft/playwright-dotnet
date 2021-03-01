@@ -1,3 +1,28 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020 Darío Kondratiuk
+ * Copyright (c) 2020 Meir Blachman
+ * Modifications copyright (c) Microsoft Corporation.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
@@ -88,8 +113,6 @@ namespace PlaywrightSharp.Transport
 
             await tcs.Task.ConfigureAwait(false);
         }
-
-        internal void RemoveObject(string guid) => Objects.TryRemove(guid, out _);
 
         internal Task<JsonElement?> SendMessageToServerAsync(
             string guid,
@@ -184,7 +207,7 @@ namespace PlaywrightSharp.Transport
         {
             if (Objects.TryGetValue(guid, out var channel))
             {
-                return channel as T;
+                return (T)channel;
             }
 
             if (IsClosed)
@@ -194,7 +217,7 @@ namespace PlaywrightSharp.Transport
 
             var tcs = new TaskCompletionSource<IChannelOwner>(TaskCreationOptions.RunContinuationsAsynchronously);
             _waitingForObject.TryAdd(guid, tcs);
-            return await tcs.Task.ConfigureAwait(false) as T;
+            return (T)await tcs.Task.ConfigureAwait(false);
         }
 
         internal void OnObjectCreated(string guid, IChannelOwner result)
@@ -234,45 +257,48 @@ namespace PlaywrightSharp.Transport
                 driversPath = new FileInfo(assembly.Location).Directory.FullName;
             }
 
-            string executableFile = Path.Combine(driversPath, "playwright.cmd");
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            string executableFile = GetPath(driversPath);
+            if (!File.Exists(executableFile))
             {
-                executableFile = Path.Combine(driversPath, "playwright.sh");
-            }
+                // fallback to the bin path
+                executableFile = Path.Combine(
+                    driversPath,
+                    RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "playwright.sh" : "playwright.cmd");
 
-            if (!new FileInfo(executableFile).Exists)
-            {
-                string binPath = executableFile;
-
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (!File.Exists(executableFile))
                 {
-                    if (RuntimeInformation.OSArchitecture == Architecture.X64)
-                    {
-                        executableFile = Path.Combine(driversPath, "runtimes", "win-x64", "native", "playwright.cmd");
-                    }
-                    else
-                    {
-                        executableFile = Path.Combine(driversPath, "runtimes", "win-x86", "native", "playwright.cmd");
-                    }
-                }
-
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    executableFile = Path.Combine(driversPath, "runtimes", "osx", "native", "playwright.sh");
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    executableFile = Path.Combine(driversPath, "runtimes", "unix", "native", "playwright.sh");
-                }
-
-                if (!new FileInfo(executableFile).Exists)
-                {
-                    throw new PlaywrightSharpException($"Driver not found neither at '{executableFile}', nor '{binPath}'");
+                    throw new PlaywrightSharpException($"Driver not found in any of the locations.");
                 }
             }
 
             return executableFile;
+        }
+
+        private static string GetPath(string driversPath)
+        {
+            string platformId;
+            string runnerName;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                platformId = RuntimeInformation.OSArchitecture == Architecture.X64 ? "win-x64" : "win-x86";
+                runnerName = "playwright.cmd";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                runnerName = "playwright.sh";
+                platformId = "osx";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                runnerName = "playwright.sh";
+                platformId = "linux";
+            }
+            else
+            {
+                throw new PlaywrightSharpException("Unknown platform");
+            }
+
+            return Path.Combine(driversPath, ".playwright", platformId, "native", runnerName);
         }
 
         private void Transport_MessageReceived(object sender, MessageReceivedEventArgs e)
@@ -481,7 +507,7 @@ namespace PlaywrightSharp.Transport
             string message = error.Message
                 .Replace(
                     "Try re-installing playwright with \"npm install playwright\"",
-                    "Try re-installing the browsers running `playwright-cli.exe install` in windows or `playwright-cli install` in MacOS or Linux.")
+                    "Try re-installing the browsers running `playwright.cmd install` in windows or `./playwright.sh install` in MacOS or Linux.")
                 .Replace(
                     "use DEBUG=pw:api environment variable and rerun",
                     "pass `debug: \"pw:api\"` to LaunchAsync");

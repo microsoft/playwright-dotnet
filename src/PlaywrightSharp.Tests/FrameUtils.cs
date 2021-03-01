@@ -8,14 +8,14 @@ namespace PlaywrightSharp.Tests
     {
         public static async Task<IFrame> AttachFrameAsync(IPage page, string frameId, string url)
         {
-            var handle = await page.EvaluateHandleAsync(@" async ({frameId, url}) => {
+            var handle = (IElementHandle)await page.EvaluateHandleAsync(@" async ({frameId, url}) => {
               const frame = document.createElement('iframe');
               frame.src = url;
               frame.id = frameId;
               document.body.appendChild(frame);
               await new Promise(x => frame.onload = x);
               return frame
-            }", new { frameId, url }) as IElementHandle;
+            }", new { frameId, url });
             return await handle.GetContentFrameAsync();
         }
 
@@ -41,15 +41,6 @@ namespace PlaywrightSharp.Tests
             }
 
             return result;
-        }
-
-        internal static async Task NavigateFrameAsync(IPage page, string frameId, string url)
-        {
-            await page.EvaluateAsync(@"function navigateFrame(frameId, url) {
-              const frame = document.getElementById(frameId);
-              frame.src = url;
-              return new Promise(x => frame.onload = x);
-            }", new { frameId, url });
         }
     }
 }

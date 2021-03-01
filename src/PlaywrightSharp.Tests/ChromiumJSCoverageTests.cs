@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests
             var coverage = await Page.Coverage.StopJSCoverageAsync();
             Assert.Single(coverage);
             Assert.Contains("/jscoverage/simple.html", coverage[0].Url);
-            Assert.Equal(1, coverage[0].Functions.FirstOrDefault(f => f.FunctionName == "foo").Ranges[0].Count);
+            Assert.Equal(1, coverage[0].Functions.Single(f => f.FunctionName == "foo").Ranges[0].Count);
         }
 
         [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "should report sourceURLs")]
@@ -56,7 +56,7 @@ namespace PlaywrightSharp.Tests
             await Page.Coverage.StartJSCoverageAsync(reportAnonymousScripts: true);
             await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/eval.html");
             var coverage = await Page.Coverage.StopJSCoverageAsync();
-            Assert.Equal("console.log(\"foo\")", coverage.FirstOrDefault(entry => entry.Url == string.Empty).Source);
+            Assert.Equal("console.log(\"foo\")", coverage.Single(entry => entry.Url == string.Empty).Source);
             Assert.Equal(2, coverage.Length);
         }
 

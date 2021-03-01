@@ -148,22 +148,22 @@ namespace PlaywrightSharp
             => AddScriptTagAsync(false, url, path, content, type);
 
         /// <inheritdoc />
-        public Task<T> EvaluateAsync<T>(string pageFunction) => EvaluateAsync<T>(false, pageFunction);
+        public Task<T> EvaluateAsync<T>(string expression) => EvaluateAsync<T>(false, expression);
 
         /// <inheritdoc />
-        public Task<T> EvaluateAsync<T>(string pageFunction, object arg) => EvaluateAsync<T>(false, pageFunction, arg);
+        public Task<T> EvaluateAsync<T>(string expression, object arg) => EvaluateAsync<T>(false, expression, arg);
 
         /// <inheritdoc />
-        public Task<JsonElement?> EvaluateAsync(string pageFunction) => EvaluateAsync(false, pageFunction);
+        public Task<JsonElement?> EvaluateAsync(string expression) => EvaluateAsync(false, expression);
 
         /// <inheritdoc />
-        public Task<JsonElement?> EvaluateAsync(string pageFunction, object arg) => EvaluateAsync(false, pageFunction, arg);
+        public Task<JsonElement?> EvaluateAsync(string expression, object arg) => EvaluateAsync(false, expression, arg);
 
         /// <inheritdoc />
-        public Task<IJSHandle> EvaluateHandleAsync(string pageFunction) => EvaluateHandleAsync(false, pageFunction);
+        public Task<IJSHandle> EvaluateHandleAsync(string expression) => EvaluateHandleAsync(false, expression);
 
         /// <inheritdoc />
-        public Task<IJSHandle> EvaluateHandleAsync(string pageFunction, object arg) => EvaluateHandleAsync(false, pageFunction, arg);
+        public Task<IJSHandle> EvaluateHandleAsync(string expression, object arg) => EvaluateHandleAsync(false, expression, arg);
 
         /// <inheritdoc />
         public Task FillAsync(string selector, string value, int? timeout = null, bool? noWaitAfter = null)
@@ -177,28 +177,28 @@ namespace PlaywrightSharp
             => WaitForSelectorAsync(false, selector, state, timeout);
 
         /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, object arg, int? timeout = null)
-            => WaitForFunctionAsync(false, pageFunction, arg, timeout, null, null);
+        public Task<IJSHandle> WaitForFunctionAsync(string expression, object arg, int? timeout = null)
+            => WaitForFunctionAsync(false, expression, arg, timeout, null, null);
 
         /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, object arg, Polling polling, int? timeout = null)
-            => WaitForFunctionAsync(false, pageFunction, arg, timeout, polling, null);
+        public Task<IJSHandle> WaitForFunctionAsync(string expression, object arg, Polling polling, int? timeout = null)
+            => WaitForFunctionAsync(false, expression, arg, timeout, polling, null);
 
         /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, object arg, int polling, int? timeout = null)
-            => WaitForFunctionAsync(false, pageFunction, arg, timeout, null, polling);
+        public Task<IJSHandle> WaitForFunctionAsync(string expression, object arg, int polling, int? timeout = null)
+            => WaitForFunctionAsync(false, expression, arg, timeout, null, polling);
 
         /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, int? timeout = null)
-            => WaitForFunctionAsync(false, pageFunction, timeout, null, null);
+        public Task<IJSHandle> WaitForFunctionAsync(string expression, int? timeout = null)
+            => WaitForFunctionAsync(false, expression, timeout, null, null);
 
         /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, Polling polling, int? timeout = null)
-            => WaitForFunctionAsync(false, pageFunction, timeout, polling, null);
+        public Task<IJSHandle> WaitForFunctionAsync(string expression, Polling polling, int? timeout = null)
+            => WaitForFunctionAsync(false, expression, timeout, polling, null);
 
         /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(string pageFunction, int polling, int? timeout = null)
-            => WaitForFunctionAsync(false, pageFunction, timeout, null, polling);
+        public Task<IJSHandle> WaitForFunctionAsync(string expression, int polling, int? timeout = null)
+            => WaitForFunctionAsync(false, expression, timeout, null, polling);
 
         /// <inheritdoc />
         public Task<IElementHandle> QuerySelectorAsync(string selector) => QuerySelectorAsync(false, selector);
@@ -207,16 +207,16 @@ namespace PlaywrightSharp
         public Task<IEnumerable<IElementHandle>> QuerySelectorAllAsync(string selector) => QuerySelectorAllAsync(false, selector);
 
         /// <inheritdoc />
-        public Task EvalOnSelectorAllAsync(string selector, string pageFunction, object arg) => EvalOnSelectorAsync(false, selector, pageFunction, arg);
+        public Task EvalOnSelectorAllAsync(string selector, string expression, object arg) => EvalOnSelectorAsync(false, selector, expression, arg);
 
         /// <inheritdoc />
-        public Task<T> EvalOnSelectorAllAsync<T>(string selector, string pageFunction, object arg) => EvalOnSelectorAsync<T>(false, selector, pageFunction, arg);
+        public Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg) => EvalOnSelectorAsync<T>(false, selector, expression, arg);
 
         /// <inheritdoc />
-        public Task EvalOnSelectorAllAsync(string selector, string pageFunction) => EvalOnSelectorAllAsync(false, selector, pageFunction);
+        public Task EvalOnSelectorAllAsync(string selector, string expression) => EvalOnSelectorAllAsync(false, selector, expression);
 
         /// <inheritdoc />
-        public Task<T> EvalOnSelectorAllAsync<T>(string selector, string pageFunction) => EvalOnSelectorAllAsync<T>(false, selector, pageFunction);
+        public Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression) => EvalOnSelectorAllAsync<T>(false, selector, expression);
 
         /// <inheritdoc />
         public Task ClickAsync(
@@ -252,16 +252,16 @@ namespace PlaywrightSharp
             => DblClickAsync(false, selector, delay, button, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task EvalOnSelectorAsync(string selector, string pageFunction, object arg) => EvalOnSelectorAsync(false, selector, pageFunction, arg);
+        public Task EvalOnSelectorAsync(string selector, string expression, object arg) => EvalOnSelectorAsync(false, selector, expression, arg);
 
         /// <inheritdoc />
-        public Task<T> EvalOnSelectorAsync<T>(string selector, string pageFunction, object arg) => EvalOnSelectorAsync<T>(false, selector, pageFunction, arg);
+        public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg) => EvalOnSelectorAsync<T>(false, selector, expression, arg);
 
         /// <inheritdoc />
-        public Task EvalOnSelectorAsync(string selector, string pageFunction) => EvalOnSelectorAsync(false, selector, pageFunction);
+        public Task EvalOnSelectorAsync(string selector, string expression) => EvalOnSelectorAsync(false, selector, expression);
 
         /// <inheritdoc />
-        public Task<T> EvalOnSelectorAsync<T>(string selector, string pageFunction) => EvalOnSelectorAsync<T>(false, selector, pageFunction);
+        public Task<T> EvalOnSelectorAsync<T>(string selector, string expression) => EvalOnSelectorAsync<T>(false, selector, expression);
 
         /// <inheritdoc />
         public Task<IResponse> WaitForNavigationAsync(LifecycleEvent? waitUntil = null, int? timeout = null)
