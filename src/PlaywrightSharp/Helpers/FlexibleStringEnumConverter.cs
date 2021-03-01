@@ -15,7 +15,6 @@ namespace PlaywrightSharp.Helpers
     public class FlexibleStringEnumConverter<T> : JsonConverter<T>
     {
         private readonly Type _enumType = typeof(T);
-        private readonly Dictionary<int, EnumInfo> _rawToTransformed;
         private readonly Dictionary<string, EnumInfo> _transformedToRaw;
         private readonly T _default;
 
@@ -29,7 +28,6 @@ namespace PlaywrightSharp.Helpers
             string[] builtInNames = _enumType.GetEnumNames();
             var builtInValues = _enumType.GetEnumValues();
 
-            _rawToTransformed = new Dictionary<int, EnumInfo>();
             _transformedToRaw = new Dictionary<string, EnumInfo>();
 
             for (int i = 0; i < builtInNames.Length; i++)
@@ -42,7 +40,6 @@ namespace PlaywrightSharp.Helpers
                 var enumMemberAttribute = field.GetCustomAttribute<EnumMemberAttribute>(true);
                 string transformedName = enumMemberAttribute?.Value ?? name;
 
-                _rawToTransformed[rawValue] = new EnumInfo(transformedName, enumValue, rawValue);
                 _transformedToRaw[transformedName] = new EnumInfo(name, enumValue, rawValue);
             }
         }

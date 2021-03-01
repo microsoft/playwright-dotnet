@@ -13,13 +13,11 @@ namespace PlaywrightSharp
     public class JSHandle : ChannelOwnerBase, IChannelOwner<JSHandle>, IJSHandle
     {
         private readonly JSHandleChannel _channel;
-        private readonly JSHandleInitializer _initializer;
 
         internal JSHandle(IChannelOwner parent, string guid, JSHandleInitializer initializer) : base(parent, guid)
         {
             _channel = new JSHandleChannel(guid, parent.Connection, this);
-            _initializer = initializer;
-            Preview = _initializer.Preview;
+            Preview = initializer.Preview;
         }
 
         /// <inheritdoc/>

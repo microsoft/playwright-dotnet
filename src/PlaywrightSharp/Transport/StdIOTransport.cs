@@ -11,7 +11,6 @@ namespace PlaywrightSharp.Transport
     {
         private const int DefaultBufferSize = 1024;  // Byte buffer size
         private readonly Process _process;
-        private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger<StdIOTransport> _logger;
         private readonly CancellationTokenSource _readerCancellationSource = new();
         private readonly List<byte> _data = new();
@@ -20,8 +19,7 @@ namespace PlaywrightSharp.Transport
         internal StdIOTransport(Process process, ILoggerFactory loggerFactory, TransportTaskScheduler scheduler = null)
         {
             _process = process;
-            _loggerFactory = loggerFactory;
-            _logger = _loggerFactory?.CreateLogger<StdIOTransport>();
+            _logger = loggerFactory?.CreateLogger<StdIOTransport>();
             scheduler ??= ScheduleTransportTask;
             process.ErrorDataReceived += (s, e) => LogReceived?.Invoke(this, new LogReceivedEventArgs(e.Data));
             process.BeginErrorReadLine();
