@@ -66,8 +66,10 @@ namespace PlaywrightSharp.Tooling
 
             string readme = await GetUpstreamReadmeAsync(playwrightVersion).ConfigureAwait(false);
             var browserMatches = regex.Matches(readme);
-            File.WriteAllText(readmePath, ReplaceBrowserVersion(File.ReadAllText(readmePath), browserMatches));
-            File.WriteAllText(readmeInDocsPath, ReplaceBrowserVersion(File.ReadAllText(readmeInDocsPath), browserMatches));
+            string readmeText = await File.ReadAllTextAsync(readmePath).ConfigureAwait(false);
+            await File.WriteAllTextAsync(readmePath, ReplaceBrowserVersion(readmeText, browserMatches)).ConfigureAwait(false);
+            string readmeInDicsText = await File.ReadAllTextAsync(readmeInDocsPath).ConfigureAwait(false);
+            await File.WriteAllTextAsync(readmeInDocsPath, ReplaceBrowserVersion(readmeInDicsText, browserMatches)).ConfigureAwait(false);
         }
 
         private static string ReplaceBrowserVersion(string content, MatchCollection browserMatches)
