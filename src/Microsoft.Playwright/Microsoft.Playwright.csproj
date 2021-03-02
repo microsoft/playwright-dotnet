@@ -21,7 +21,14 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <PackageReference Include="Macross.Json.Extensions" Version="1.5.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     <PackageReference Include="System.Text.Json" Version="5.0.1" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Protocol\Channels\" />
+    <Folder Include="Protocol\Models\" />
   </ItemGroup>
 
 </Project>
