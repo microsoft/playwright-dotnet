@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Title>Microsoft.Playwright</Title>
+    <PackageId>Microsoft.Playwright</PackageId>
+    <Summary>A .NET language wrapper around the Playwright library, to automate Chromium, Firefox and WebKit with a single API.</Summary>
+    <Description>Playwright is a single API to automate Chromium, Firefox and Webkit. It enables cross-browser web automation that is ever-green, capable, reliable and fast.</Description>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <DocumentationFile>bin\$(Configuration)\netstandard2.0\Microsoft.Playwright.xml</DocumentationFile>
+    <RunWithWarnings>true</RunWithWarnings>
+    <!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
+    <RootNamespace>Microsoft.Playwright</RootNamespace>
+    <ReleaseVersion>0.0.0</ReleaseVersion>
+    <BuildFromSource>True</BuildFromSource>
+    <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="5.0.1" />
+  </ItemGroup>
+
+</Project>
