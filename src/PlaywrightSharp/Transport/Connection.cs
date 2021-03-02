@@ -291,7 +291,7 @@ namespace PlaywrightSharp.Transport
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 runnerName = "playwright.sh";
-                platformId = "linux";
+                platformId = "unix";
             }
             else
             {
