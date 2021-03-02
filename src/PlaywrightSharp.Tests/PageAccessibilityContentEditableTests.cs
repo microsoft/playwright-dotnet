@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -20,14 +21,15 @@ namespace PlaywrightSharp.Tests
         public async Task PlainTextFieldWithRoleShouldNotHaveChildren()
         {
             await Page.SetContentAsync("<div contenteditable='plaintext-only' role='textbox'>Edit this image:<img src='fakeimage.png' alt='my fake image'></div>");
+            var snapshot = (await Page.Accessibility.SnapshotAsync());
             Assert.Equal(
-                new SerializedAXNode
+                new AccessibilitySnapshotResult
                 {
                     Role = "textbox",
                     Name = "",
-                    ValueString = "Edit this image:"
+                    Value = "Edit this image:"
                 },
-                (await Page.Accessibility.SnapshotAsync()).Children[0]);
+               snapshot.Children.First());
         }
 
         [PlaywrightTest("page-accessibility.spec.ts", "contenteditable", "plain text field without role should not have content")]
@@ -36,9 +38,9 @@ namespace PlaywrightSharp.Tests
         {
             await Page.SetContentAsync(
                 "<div contenteditable='plaintext-only'>Edit this image:<img src='fakeimage.png' alt='my fake image'></div>");
-            var snapshot = await Page.Accessibility.SnapshotAsync();
-            Assert.Equal("generic", snapshot.Children[0].Role);
-            Assert.Equal(string.Empty, snapshot.Children[0].Name);
+            var snapshot = (await Page.Accessibility.SnapshotAsync());
+            Assert.Equal("generic", snapshot.Children.First().Role);
+            Assert.Equal(string.Empty, snapshot.Children.First().Name);
         }
 
         [PlaywrightTest("page-accessibility.spec.ts", "contenteditable", "plain text field with tabindex and without role should not have content")]
@@ -46,7 +48,7 @@ namespace PlaywrightSharp.Tests
         public async Task PlainTextFieldWithTabindexAndWithoutRoleShouldNotHaveContent()
         {
             await Page.SetContentAsync("<div contenteditable=\"plaintext-only\" tabIndex=0>Edit this image:<img src='fakeimage.png' alt='my fake image'></div>");
-            var node = (await Page.Accessibility.SnapshotAsync()).Children[0];
+            var node = (await Page.Accessibility.SnapshotAsync()).Children.First();
             Assert.Equal("generic", node.Role);
             Assert.Empty(node.Name);
         }
@@ -61,36 +63,36 @@ namespace PlaywrightSharp.Tests
                 <img alt='yo' src='fakeimg.png'>
             </div>");
 
-            SerializedAXNode node = null;
+            AccessibilitySnapshotResult node = null;
 
             if (TestConstants.IsFirefox)
             {
-                node = new SerializedAXNode
+                node = new AccessibilitySnapshotResult
                 {
                     Role = "textbox",
                     Name = "my favorite textbox",
-                    ValueString = "this is the inner content yo"
+                    Value = "this is the inner content yo"
                 };
             }
             else if (TestConstants.IsChromium)
             {
-                node = new SerializedAXNode
+                node = new AccessibilitySnapshotResult
                 {
                     Role = "textbox",
                     Name = "my favorite textbox",
-                    ValueString = "this is the inner content "
+                    Value = "this is the inner content "
                 };
             }
             else
             {
-                node = new SerializedAXNode
+                node = new AccessibilitySnapshotResult
                 {
                     Role = "textbox",
                     Name = "my favorite textbox",
-                    ValueString = "this is the inner content  "
+                    Value = "this is the inner content  "
                 };
             }
-            Assert.Equal(node, (await Page.Accessibility.SnapshotAsync()).Children[0]);
+            Assert.Equal(node, (await Page.Accessibility.SnapshotAsync()).Children.First());
         }
 
         [PlaywrightTest("page-accessibility.spec.ts", "contenteditable", "checkbox with and tabIndex and label should not have children")]
@@ -103,13 +105,13 @@ namespace PlaywrightSharp.Tests
                 <img alt='yo' src='fakeimg.png'>
             </div>");
             Assert.Equal(
-                new SerializedAXNode
+                new AccessibilitySnapshotResult
                 {
                     Role = "checkbox",
                     Name = "my favorite checkbox",
-                    Checked = CheckedState.Checked
+                    Checked = MixedState.On
                 },
-                (await Page.Accessibility.SnapshotAsync()).Children[0]);
+                (await Page.Accessibility.SnapshotAsync()).Children.First());
         }
 
         [PlaywrightTest("page-accessibility.spec.ts", "contenteditable", "checkbox without label should not have children")]
@@ -122,27 +124,27 @@ namespace PlaywrightSharp.Tests
                 <img alt='yo' src='fakeimg.png'>
             </div>");
 
-            SerializedAXNode node;
+            AccessibilitySnapshotResult node;
             if (TestConstants.IsFirefox)
             {
-                node = new SerializedAXNode
+                node = new AccessibilitySnapshotResult
                 {
                     Role = "checkbox",
                     Name = "this is the inner content yo",
-                    Checked = CheckedState.Checked
+                    Checked = MixedState.On,
                 };
             }
             else
             {
-                node = new SerializedAXNode
+                node = new AccessibilitySnapshotResult
                 {
                     Role = "checkbox",
                     Name = "this is the inner content yo",
-                    Checked = CheckedState.Checked
+                    Checked = MixedState.On,
                 };
             }
 
-            Assert.Equal(node, (await Page.Accessibility.SnapshotAsync()).Children[0]);
+            Assert.Equal(node, (await Page.Accessibility.SnapshotAsync()).Children.First());
         }
     }
 }

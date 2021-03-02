@@ -1,4 +1,4 @@
-﻿# editorconfig.org
+# editorconfig.org
 
 # top-most EditorConfig file
 root = true
@@ -174,3 +174,6 @@ indent_size = 2
 end_of_line = lf
 [*.{cmd, bat}]
 end_of_line = crlf
+
+[*.generated.cs]
+dotnet_diagnostic.CS1591.severity = none

@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using KellermanSoftware.CompareNetObjects;
 using PlaywrightSharp.Tests.Attributes;
@@ -36,165 +38,165 @@ namespace PlaywrightSharp.Tests
                 <input aria-placeholder='placeholder' value='and a value' aria-describedby='desc' />
             </body>");
 
-            SerializedAXNode nodeToCheck;
+            AccessibilitySnapshotResult nodeToCheck;
 
             if (TestConstants.IsFirefox)
             {
-                nodeToCheck = new SerializedAXNode
+                nodeToCheck = new AccessibilitySnapshotResult
                 {
                     Role = "document",
                     Name = "Accessibility Test",
-                    Children = new SerializedAXNode[]
+                    Children = new AccessibilitySnapshotResult[]
                     {
-                        new SerializedAXNode
+                        new AccessibilitySnapshotResult
                         {
                             Role = "heading",
                             Name = "Inputs",
                             Level = 1
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult{
                             Role = "textbox",
                             Name = "Empty input",
                             Focused = true
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult{
                             Role = "textbox",
                             Name = "readonly input",
                             Readonly = true
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult{
                             Role = "textbox",
                             Name = "disabled input",
                             Disabled= true
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult{
                             Role = "textbox",
                             Name = "Input with whitespace",
-                            ValueString= "  "
+                            Value= "  "
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult{
                             Role = "textbox",
                             Name = string.Empty,
-                            ValueString= "value only"
+                            Value= "value only"
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult{
                             Role = "textbox",
                             Name = string.Empty,
-                            ValueString= "and a value"
+                            Value= "and a value"
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult{
                             Role = "textbox",
                             Name = string.Empty,
-                            ValueString= "and a value",
+                            Value= "and a value",
                             Description= "This is a description!"}
-                    }
+                    }.ToList()
                 };
             }
             else if (TestConstants.IsChromium)
             {
-                nodeToCheck = new SerializedAXNode
+                nodeToCheck = new AccessibilitySnapshotResult
                 {
                     Role = "WebArea",
                     Name = "Accessibility Test",
-                    Children = new SerializedAXNode[]
+                    Children = new AccessibilitySnapshotResult[]
                     {
-                        new SerializedAXNode
+                        new AccessibilitySnapshotResult
                         {
                             Role = "heading",
                             Name = "Inputs",
                             Level = 1
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult{
                             Role = "textbox",
                             Name = "Empty input",
                             Focused = true
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult{
                             Role = "textbox",
                             Name = "readonly input",
                             Readonly = true
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult{
                             Role = "textbox",
                             Name = "disabled input",
                             Disabled= true
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult{
                             Role = "textbox",
                             Name = "Input with whitespace",
-                            ValueString= "  "
+                            Value= "  "
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult{
                             Role = "textbox",
                             Name = "",
-                            ValueString= "value only"
+                            Value= "value only"
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult{
                             Role = "textbox",
                             Name = "placeholder",
-                            ValueString= "and a value"
+                            Value= "and a value"
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult{
                             Role = "textbox",
                             Name = "placeholder",
-                            ValueString= "and a value",
+                            Value= "and a value",
                             Description= "This is a description!"}
-                    }
+                    }.ToList()
                 };
             }
             else
             {
-                nodeToCheck = new SerializedAXNode
+                nodeToCheck = new AccessibilitySnapshotResult
                 {
                     Role = "WebArea",
                     Name = "Accessibility Test",
-                    Children = new SerializedAXNode[]
+                    Children = new AccessibilitySnapshotResult[]
                     {
-                        new SerializedAXNode
+                        new AccessibilitySnapshotResult
                         {
                             Role = "heading",
                             Name = "Inputs",
                             Level = 1
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult {
                             Role = "textbox",
                             Name = "Empty input",
                             Focused = true
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult {
                             Role = "textbox",
                             Name = "readonly input",
                             Readonly = true
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult {
                             Role = "textbox",
                             Name = "disabled input",
-                            Disabled= true
+                            Disabled = true
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult {
                             Role = "textbox",
                             Name = "Input with whitespace",
-                            ValueString= "  "
+                            Value = "  "
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult {
                             Role = "textbox",
                             Name = "",
-                            ValueString= "value only"
+                            Value = "value only"
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult {
                             Role = "textbox",
                             Name = "placeholder",
-                            ValueString= "and a value"
+                            Value = "and a value"
                         },
-                        new SerializedAXNode{
+                        new AccessibilitySnapshotResult {
                             Role = "textbox",
                             Name = "This is a description!",
-                            ValueString= "and a value"}
-                    }
+                            Value = "and a value" }
+                    }.ToList()
                 };
             }
 
-            var snapshot = await Page.Accessibility.SnapshotAsync();
+            var snapshot = (await Page.Accessibility.SnapshotAsync());
 
             CompareLogic compareLogic = new CompareLogic();
             var result = compareLogic.Compare(nodeToCheck, snapshot);
@@ -206,12 +208,12 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkWithRegularRext()
         {
             await Page.SetContentAsync("<div>Hello World</div>");
-            var snapshot = await Page.Accessibility.SnapshotAsync();
-            Assert.Equal(new SerializedAXNode
+            var snapshot = (await Page.Accessibility.SnapshotAsync());
+            Assert.Equal(new AccessibilitySnapshotResult
             {
                 Role = TestConstants.IsFirefox ? "text leaf" : "text",
                 Name = "Hello World",
-            }, snapshot.Children[0]);
+            }, snapshot.Children.First());
         }
 
         [PlaywrightTest("page-accessibility.spec.ts", "roledescription")]
@@ -219,8 +221,8 @@ namespace PlaywrightSharp.Tests
         public async Task RoleDescription()
         {
             await Page.SetContentAsync("<div tabIndex=-1 aria-roledescription=\"foo\">Hi</div>");
-            var snapshot = await Page.Accessibility.SnapshotAsync();
-            Assert.Equal("foo", snapshot.Children[0].RoleDescription);
+            var snapshot = (await Page.Accessibility.SnapshotAsync());
+            Assert.Equal("foo", snapshot.Children.First().Roledescription);
         }
 
         [PlaywrightTest("page-accessibility.spec.ts", "orientation")]
@@ -228,8 +230,8 @@ namespace PlaywrightSharp.Tests
         public async Task Orientation()
         {
             await Page.SetContentAsync("<a href=\"\" role=\"slider\" aria-orientation=\"vertical\">11</a>");
-            var snapshot = await Page.Accessibility.SnapshotAsync();
-            Assert.Equal("vertical", snapshot.Children[0].Orientation);
+            var snapshot = (await Page.Accessibility.SnapshotAsync());
+            Assert.Equal("vertical", snapshot.Children.First().Orientation);
         }
 
         [PlaywrightTest("page-accessibility.spec.ts", "autocomplete")]
@@ -237,8 +239,8 @@ namespace PlaywrightSharp.Tests
         public async Task Autocomplete()
         {
             await Page.SetContentAsync("<div role=\"textbox\" aria-autocomplete=\"list\">hi</div>");
-            var snapshot = await Page.Accessibility.SnapshotAsync();
-            Assert.Equal("list", snapshot.Children[0].AutoComplete);
+            var snapshot = (await Page.Accessibility.SnapshotAsync());
+            Assert.Equal("list", snapshot.Children.First().Autocomplete);
         }
 
         [PlaywrightTest("page-accessibility.spec.ts", "multiselectable")]
@@ -246,8 +248,8 @@ namespace PlaywrightSharp.Tests
         public async Task Multiselectable()
         {
             await Page.SetContentAsync("<div role=\"grid\" tabIndex=-1 aria-multiselectable=true>hey</div>");
-            var snapshot = await Page.Accessibility.SnapshotAsync();
-            Assert.True(snapshot.Children[0].Multiselectable);
+            var snapshot = (await Page.Accessibility.SnapshotAsync());
+            Assert.True(snapshot.Children.First().Multiselectable);
         }
 
         [PlaywrightTest("page-accessibility.spec.ts", "keyshortcuts")]
@@ -255,8 +257,8 @@ namespace PlaywrightSharp.Tests
         public async Task KeyShortcuts()
         {
             await Page.SetContentAsync("<div role=\"grid\" tabIndex=-1 aria-keyshortcuts=\"foo\">hey</div>");
-            var snapshot = await Page.Accessibility.SnapshotAsync();
-            Assert.Equal("foo", snapshot.Children[0].KeyShortcuts);
+            var snapshot = (await Page.Accessibility.SnapshotAsync());
+            Assert.Equal("foo", snapshot.Children.First().Keyshortcuts);
         }
 
         [PlaywrightTest("page-accessibility.spec.ts", "filtering children of leaf nodes")]
@@ -269,21 +271,21 @@ namespace PlaywrightSharp.Tests
                 <div role=""tab"">Tab2</div>
             </div>
             ");
-            var snapshot = await Page.Accessibility.SnapshotAsync();
+            var snapshot = (await Page.Accessibility.SnapshotAsync());
             Assert.Equal(
-                new SerializedAXNode
+                new AccessibilitySnapshotResult
                 {
                     Role = TestConstants.IsFirefox ? "document" : "WebArea",
                     Name = "",
                     Children = new[]
                     {
-                        new SerializedAXNode
+                        new AccessibilitySnapshotResult
                         {
                             Role = "tab",
                             Name = "Tab1",
                             Selected = true
                         },
-                        new SerializedAXNode
+                        new AccessibilitySnapshotResult
                         {
                             Role = "tab",
                             Name = "Tab2",
@@ -302,22 +304,22 @@ namespace PlaywrightSharp.Tests
                 Edit this image: <img src='fakeimage.png' alt='my fake image'>
             </div>");
 
-            SerializedAXNode node;
+            AccessibilitySnapshotResult node;
 
             if (TestConstants.IsFirefox)
             {
-                node = new SerializedAXNode
+                node = new AccessibilitySnapshotResult
                 {
                     Role = "section",
                     Name = "",
-                    Children = new SerializedAXNode[]
+                    Children = new AccessibilitySnapshotResult[]
                     {
-                        new SerializedAXNode
+                        new AccessibilitySnapshotResult
                         {
                             Role = "text leaf",
                             Name = "Edit this image: "
                         },
-                        new SerializedAXNode
+                        new AccessibilitySnapshotResult
                         {
                             Role = "text",
                             Name = "my fake image"
@@ -327,19 +329,19 @@ namespace PlaywrightSharp.Tests
             }
             else
             {
-                node = new SerializedAXNode
+                node = new AccessibilitySnapshotResult
                 {
                     Role = "generic",
                     Name = "",
-                    ValueString = "Edit this image: ",
-                    Children = new SerializedAXNode[]
+                    Value = "Edit this image: ",
+                    Children = new AccessibilitySnapshotResult[]
                     {
-                        new SerializedAXNode
+                        new AccessibilitySnapshotResult
                         {
                             Role = "text",
                             Name = "Edit this image:"
                         },
-                        new SerializedAXNode
+                        new AccessibilitySnapshotResult
                         {
                             Role = "img",
                             Name = "my fake image"
@@ -348,8 +350,8 @@ namespace PlaywrightSharp.Tests
                 };
             }
 
-            var snapshot = await Page.Accessibility.SnapshotAsync();
-            Assert.Equal(node, snapshot.Children[0]);
+            var snapshot = (await Page.Accessibility.SnapshotAsync());
+            Assert.Equal(node, snapshot.Children.First());
         }
 
         [PlaywrightTest("page-accessibility.spec.ts", "rich text editable fields with role should have children")]
@@ -361,18 +363,18 @@ namespace PlaywrightSharp.Tests
                 Edit this image: <img src='fakeimage.png' alt='my fake image'>
             </div>");
 
-            SerializedAXNode node;
+            AccessibilitySnapshotResult node;
 
             if (TestConstants.IsFirefox)
             {
-                node = new SerializedAXNode
+                node = new AccessibilitySnapshotResult
                 {
                     Role = "textbox",
                     Name = "",
-                    ValueString = "Edit this image: my fake image",
-                    Children = new SerializedAXNode[]
+                    Value = "Edit this image: my fake image",
+                    Children = new AccessibilitySnapshotResult[]
                     {
-                        new SerializedAXNode
+                        new AccessibilitySnapshotResult
                         {
                             Role = "text",
                             Name = "my fake image"
@@ -382,19 +384,19 @@ namespace PlaywrightSharp.Tests
             }
             else
             {
-                node = new SerializedAXNode
+                node = new AccessibilitySnapshotResult
                 {
                     Role = "textbox",
                     Name = "",
-                    ValueString = "Edit this image: ",
-                    Children = new SerializedAXNode[]
+                    Value = "Edit this image: ",
+                    Children = new AccessibilitySnapshotResult[]
                     {
-                        new SerializedAXNode
+                        new AccessibilitySnapshotResult
                         {
                             Role = "text",
                             Name = "Edit this image:"
                         },
-                        new SerializedAXNode
+                        new AccessibilitySnapshotResult
                         {
                             Role = "img",
                             Name = "my fake image"
@@ -403,7 +405,7 @@ namespace PlaywrightSharp.Tests
                 };
             }
 
-            Assert.Equal(node, (await Page.Accessibility.SnapshotAsync()).Children[0]);
+            Assert.Equal(node, (await Page.Accessibility.SnapshotAsync()).Children.First());
         }
 
         [PlaywrightTest("page-accessibility.spec.ts", "should work a button")]
@@ -414,12 +416,12 @@ namespace PlaywrightSharp.Tests
             var button = await Page.QuerySelectorAsync("button");
 
             Assert.Equal(
-                new SerializedAXNode
+                new AccessibilitySnapshotResult
                 {
                     Role = "button",
                     Name = "My Button"
                 },
-                await Page.Accessibility.SnapshotAsync(root: button));
+                (await Page.Accessibility.SnapshotAsync(root: button)));
         }
 
         [PlaywrightTest("page-accessibility.spec.ts", "should work an input")]
@@ -430,13 +432,13 @@ namespace PlaywrightSharp.Tests
             var input = await Page.QuerySelectorAsync("input");
 
             Assert.Equal(
-                new SerializedAXNode
+                new AccessibilitySnapshotResult
                 {
                     Role = "textbox",
                     Name = "My Input",
-                    ValueString = "My Value"
+                    Value = "My Value"
                 },
-                await Page.Accessibility.SnapshotAsync(root: input));
+                (await Page.Accessibility.SnapshotAsync(root: input)));
         }
 
         [PlaywrightTest("page-accessibility.spec.ts", "should work on a menu")]
@@ -452,33 +454,33 @@ namespace PlaywrightSharp.Tests
             ");
             var menu = await Page.QuerySelectorAsync("div[role=\"menu\"]");
 
-            var nodeToCheck = new SerializedAXNode
+            var nodeToCheck = new AccessibilitySnapshotResult
             {
                 Role = "menu",
                 Name = "My Menu",
-                Children = new SerializedAXNode[]
+                Children = new AccessibilitySnapshotResult[]
                     {
-                        new SerializedAXNode
+                        new AccessibilitySnapshotResult
                         {
                             Role = "menuitem",
                             Name = "First Item"
                         },
-                        new SerializedAXNode
+                        new AccessibilitySnapshotResult
                         {
                             Role = "menuitem",
                             Name = "Second Item"
                         },
-                        new SerializedAXNode
+                        new AccessibilitySnapshotResult
                         {
                             Role = "menuitem",
                             Name = "Third Item"
                         }
-                    },
+                    }.ToList(),
                 Orientation = TestConstants.IsWebKit ? "vertical" : null
             };
 
             CompareLogic compareLogic = new CompareLogic();
-            var result = compareLogic.Compare(nodeToCheck, await Page.Accessibility.SnapshotAsync(root: menu));
+            var result = compareLogic.Compare(nodeToCheck, (await Page.Accessibility.SnapshotAsync(root: menu)));
             Assert.True(result.AreEqual, result.DifferencesString);
         }
 
@@ -509,11 +511,26 @@ namespace PlaywrightSharp.Tests
             ");
 
             var root = await Page.QuerySelectorAsync("#root");
-            var snapshot = await Page.Accessibility.SnapshotAsync(false, root);
+            var snapshot = (await Page.Accessibility.SnapshotAsync(false, root));
             Assert.Equal("textbox", snapshot.Role);
-            Assert.Contains("hello", snapshot.ValueString.ToString());
-            Assert.Contains("world", snapshot.ValueString.ToString());
+            Assert.Contains("hello", snapshot.Value.ToString());
+            Assert.Contains("world", snapshot.Value.ToString());
             Assert.NotEmpty(snapshot.Children);
+            Func<AccessibilitySnapshotResult, AccessibilitySnapshotResult> findFocusedNode = root =>
+            {
+                var nodes = new System.Collections.Generic.Stack<AccessibilitySnapshotResult>(new[] { root });
+                while (nodes.Count > 0)
+                {
+                    var node = nodes.Pop();
+                    if (node.Focused) return node;
+                    foreach (var innerNode in node.Children)
+                    {
+                        nodes.Push(innerNode);
+                    }
+                }
+
+                return null;
+            };
         }
     }
 }

@@ -1,7 +1,7 @@
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Three-state boolean. See <seealso cref="SerializedAXNode.Checked"/>.
+    /// Three-state boolean.
     /// </summary>
     public enum CheckedState
     {
