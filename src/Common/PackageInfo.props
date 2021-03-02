@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
 	<PropertyGroup>
-		<AssemblyVersion>0.191.1</AssemblyVersion>
+		<AssemblyVersion>0.191.2</AssemblyVersion>
 		<PackageVersion>$(AssemblyVersion)</PackageVersion>
 		<DriverVersion>1.9.1-1614225150000</DriverVersion>
 		<ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
