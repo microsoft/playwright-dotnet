@@ -30,6 +30,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Input;
+using PlaywrightSharp.Transport.Converters;
 using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp.Transport.Channels
@@ -290,7 +291,7 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task<PageChannel> GetOpenerAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "opener", null);
 
-        internal async Task<SerializedAXNode> AccessibilitySnapshotAsync(bool? interestingOnly, IChannel<ElementHandle> root)
+        internal async Task<AccessibilitySnapshotResult> AccessibilitySnapshotAsync(bool? interestingOnly, IChannel<ElementHandle> root)
         {
             var args = new Dictionary<string, object>
             {
@@ -304,7 +305,11 @@ namespace PlaywrightSharp.Transport.Channels
 
             if ((await Connection.SendMessageToServerAsync(Guid, "accessibilitySnapshot", args).ConfigureAwait(false)).Value.TryGetProperty("rootAXNode", out var jsonElement))
             {
-                return jsonElement.ToObject<SerializedAXNode>(Connection.GetDefaultJsonSerializerOptions());
+                var options = Connection.GetDefaultJsonSerializerOptions();
+
+                // TODO: Get rid of the converter GH1253
+                options.Converters.Add(new BooleanToStringConverter());
+                return jsonElement.ToObject<AccessibilitySnapshotResult>(options);
             }
 
             return null;

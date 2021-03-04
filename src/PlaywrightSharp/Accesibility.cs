@@ -12,7 +12,7 @@ namespace PlaywrightSharp
             _channel = channel;
         }
 
-        public Task<SerializedAXNode> SnapshotAsync(bool interestingOnly = true, IElementHandle root = null)
+        public Task<AccessibilitySnapshotResult> SnapshotAsync(bool? interestingOnly = null, IElementHandle root = null)
             => _channel.AccessibilitySnapshotAsync(interestingOnly, (root as ElementHandle)?.ElementChannel);
     }
 }

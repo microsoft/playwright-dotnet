@@ -72,6 +72,7 @@ namespace PlaywrightSharp.Helpers
                 Converters =
                 {
                     new FlexibleStringEnumConverter<ResourceType>(ResourceType.Unknown),
+                    new MixedStateConverter(),
                     new JsonStringEnumMemberConverter(JsonNamingPolicy.CamelCase),
                 },
             };
