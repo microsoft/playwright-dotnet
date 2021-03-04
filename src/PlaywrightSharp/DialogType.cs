@@ -6,27 +6,26 @@ namespace PlaywrightSharp
     /// Dialog type.
     /// </summary>
     /// <seealso cref="IDialog"/>
-    public enum DialogType
+    public static class DialogType
     {
         /// <summary>
         /// Alert dialog.
         /// </summary>
-        Alert,
+        public const string Alert = "alert";
 
         /// <summary>
         /// Prompt dialog.
         /// </summary>
-        Prompt,
+        public const string Prompt = "prompt";
 
         /// <summary>
         /// Confirm dialog.
         /// </summary>
-        Confirm,
+        public const string Confirm = "confirm";
 
         /// <summary>
         /// Before unload dialog.
         /// </summary>
-        [EnumMember(Value = "beforeunload")]
-        BeforeUnload,
+        public const string BeforeUnload = "beforeunload";
     }
 }
