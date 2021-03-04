@@ -210,7 +210,7 @@ namespace PlaywrightSharp.Tests
 
             await Page.EvaluateAsync("() => void 0");
 
-            await Page.Touchscreen.TapAsync(new System.Drawing.Point(40, 60));
+            await Page.Touchscreen.TapAsync(40, 60);
             var touchStartResult = (await touchStartTask)[0];
             var touchEndResult = await touchEndTask;
 

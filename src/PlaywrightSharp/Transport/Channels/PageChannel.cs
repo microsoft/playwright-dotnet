@@ -418,14 +418,14 @@ namespace PlaywrightSharp.Transport.Channels
                     ["clickCount"] = clickCount,
                 });
 
-        internal Task TouchscreenTapAsync(Point point)
+        internal Task TouchscreenTapAsync(float x, float y)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "touchscreenTap",
                 new Dictionary<string, object>
                 {
-                    ["x"] = point.X,
-                    ["y"] = point.Y,
+                    ["x"] = x,
+                    ["y"] = y,
                 });
 
         internal Task SetExtraHTTPHeadersAsync(IDictionary<string, string> headers)
