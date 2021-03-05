@@ -33,7 +33,7 @@ namespace PlaywrightSharp
         IChannel<Dialog> IChannelOwner<Dialog>.Channel => _channel;
 
         /// <inheritdoc/>
-        public Task AcceptAsync(string promptText = null) => _channel.AcceptAsync(promptText ?? string.Empty);
+        public Task AcceptAsync(string promptText) => _channel.AcceptAsync(promptText ?? string.Empty);
 
         /// <inheritdoc/>
         public Task DismissAsync() => _channel.DismissAsync();
