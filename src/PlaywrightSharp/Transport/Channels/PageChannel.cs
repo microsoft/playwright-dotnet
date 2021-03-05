@@ -384,7 +384,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["clickCount"] = clickCount,
                 });
 
-        internal Task MouseMoveAsync(decimal x, decimal y, int? steps)
+        internal Task MouseMoveAsync(float x, float y, int? steps)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "mouseMove",
@@ -405,7 +405,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["clickCount"] = clickCount,
                 });
 
-        internal Task MouseClickAsync(decimal x, decimal y, int delay, MouseButton button, int clickCount)
+        internal Task MouseClickAsync(float x, float y, float delay, MouseButton button, int clickCount)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "mouseClick",
