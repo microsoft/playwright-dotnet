@@ -71,6 +71,29 @@ namespace PlaywrightSharp
             return WaitForPromiseAsync(task, dispose);
         }
 
+        internal (Task Task, Action Dispose) WaitForEvent(object eventSource, string eventName)
+        {
+            var info = eventSource.GetType().GetEvent(eventName) ?? eventSource.GetType().BaseType.GetEvent(eventName);
+            var eventTsc = new TaskCompletionSource<object>();
+
+            void EventHandler(object sender, EventArgs args)
+            {
+                try
+                {
+                    eventTsc.SetResult(null);
+                }
+                catch (Exception e)
+                {
+                    eventTsc.SetException(e);
+                }
+
+                info.RemoveEventHandler(eventSource, (EventHandler)EventHandler);
+            }
+
+            info.AddEventHandler(eventSource, (EventHandler)EventHandler);
+            return (eventTsc.Task, () => info.RemoveEventHandler(eventSource, (EventHandler)EventHandler));
+        }
+
         internal (Task<T> Task, Action Dispose) WaitForEvent<T>(object eventSource, string e, Func<T, bool> predicate)
         {
             var info = eventSource.GetType().GetEvent(e) ?? eventSource.GetType().BaseType.GetEvent(e);
@@ -82,15 +105,19 @@ namespace PlaywrightSharp
                 {
                     if (predicate == null || predicate(e))
                     {
-                        info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler);
                         eventTsc.TrySetResult(e);
+                    }
+                    else
+                    {
+                        return;
                     }
                 }
                 catch (Exception ex)
                 {
-                    info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler);
                     eventTsc.TrySetException(ex);
                 }
+
+                info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler);
             }
 
             info.AddEventHandler(eventSource, (EventHandler<T>)EventHandler);

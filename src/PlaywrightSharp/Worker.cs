@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text.Json;
+using System.Runtime.InteropServices.ComTypes;
+using System.Threading;
 using System.Threading.Tasks;
+using PlaywrightSharp.Contracts.Models;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
@@ -38,7 +37,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc/>
-        public event EventHandler<EventArgs> Close;
+        public event EventHandler Close;
 
         /// <inheritdoc/>
         public string Url => _initializer.Url;
@@ -53,48 +52,35 @@ namespace PlaywrightSharp
 
         internal BrowserContext BrowserContext { get; set; }
 
-        /// <inheritdoc />
-        public async Task<IJSHandle> EvaluateHandleAsync(string expression)
-            => (await _channel.EvaluateExpressionHandleAsync(
-                script: expression,
-                isFunction: expression.IsJavascriptFunction(),
-                arg: EvaluateArgument.Undefined).ConfigureAwait(false))?.Object;
-
-        /// <inheritdoc />
-        public async Task<IJSHandle> EvaluateHandleAsync(string expression, object arg)
-            => (await _channel.EvaluateExpressionHandleAsync(
-                script: expression,
-                isFunction: expression.IsJavascriptFunction(),
-                arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false))?.Object;
-
-        /// <inheritdoc/>
-        public async Task<T> EvaluateAsync<T>(string expression)
-            => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
-                script: expression,
-                isFunction: expression.IsJavascriptFunction(),
-                arg: EvaluateArgument.Undefined).ConfigureAwait(false));
-
-        /// <inheritdoc/>
-        public async Task<JsonElement?> EvaluateAsync(string expression)
-            => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
-                script: expression,
-                isFunction: expression.IsJavascriptFunction(),
-                arg: EvaluateArgument.Undefined).ConfigureAwait(false));
-
-        /// <inheritdoc/>
-        public async Task<JsonElement?> EvaluateAsync(string expression, object arg)
-            => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
-                script: expression,
-                isFunction: expression.IsJavascriptFunction(),
-                arg: arg,
-                serializeArgument: true).ConfigureAwait(false));
-
-        /// <inheritdoc/>
         public async Task<T> EvaluateAsync<T>(string expression, object arg)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
                 script: expression,
                 isFunction: expression.IsJavascriptFunction(),
-                arg: arg,
-                serializeArgument: true).ConfigureAwait(false));
+                arg: TranslateObject(arg)).ConfigureAwait(false));
+
+        public async Task<IJSHandle> EvaluateHandleAsync(string expression, object arg)
+            => (await _channel.EvaluateExpressionHandleAsync(
+                script: expression,
+                isFunction: expression.IsJavascriptFunction(),
+                arg: TranslateObject(arg))
+            .ConfigureAwait(false))?.Object;
+
+        public async Task<IWorker> WaitForCloseAsync(float? timeout)
+        {
+            using var waiter = new Waiter();
+            var waiterResult = waiter.WaitForEvent(this, nameof(Close));
+            await waiterResult.Task.WithTimeout(Convert.ToInt32(timeout ?? 0)).ConfigureAwait(false);
+            return this;
+        }
+
+        private object TranslateObject(object obj)
+        {
+            if (UndefinedEvaluationArgument.Undefined.Equals(obj))
+            {
+                return EvaluateArgument.Undefined;
+            }
+
+            return obj;
+        }
     }
 }
