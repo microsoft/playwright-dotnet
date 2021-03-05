@@ -345,7 +345,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["key"] = key,
                 });
 
-        internal Task TypeAsync(string text, int delay)
+        internal Task TypeAsync(string text, float delay)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "keyboardType",
@@ -355,7 +355,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["delay"] = delay,
                 });
 
-        internal Task PressAsync(string key, int delay)
+        internal Task PressAsync(string key, float delay)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "keyboardPress",
