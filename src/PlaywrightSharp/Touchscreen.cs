@@ -36,6 +36,6 @@ namespace PlaywrightSharp
             _channel = channel;
         }
 
-        public Task TapAsync(Point point) => _channel.TouchscreenTapAsync(point);
+        public Task TapAsync(float x, float y) => _channel.TouchscreenTapAsync(x, y);
     }
 }
