@@ -50,6 +50,11 @@ namespace PlaywrightSharp
 
         internal static EvaluateArgument SerializedArgument(object args)
         {
+            if (args is EvaluateArgument evaluateArgument)
+            {
+                return evaluateArgument;
+            }
+
             var result = new EvaluateArgument();
             var guids = new List<EvaluateArgumentGuidElement>();
 

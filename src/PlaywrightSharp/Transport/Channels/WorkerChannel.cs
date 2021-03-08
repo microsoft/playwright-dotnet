@@ -33,18 +33,17 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["expression"] = script,
                     ["isFunction"] = isFunction,
-                    ["arg"] = arg,
+                    ["arg"] = ScriptsHelper.SerializedArgument(arg),
                 });
 
         internal Task<JsonElement?> EvaluateExpressionAsync(
             string script,
             bool isFunction,
-            object arg,
-            bool serializeArgument = false)
+            object arg)
         {
             JsonSerializerOptions serializerOptions;
 
-            if (serializeArgument)
+            if (!(arg is EvaluateArgument))
             {
                 serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
                 arg = new EvaluateArgument
