@@ -11,10 +11,10 @@ using Xunit.Abstractions;
 namespace PlaywrightSharp.Tests
 {
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class BrowserContectPageEventTests : PlaywrightSharpBrowserBaseTest
+    public class BrowserContextPageEventTests : PlaywrightSharpBrowserBaseTest
     {
         /// <inheritdoc/>
-        public BrowserContectPageEventTests(ITestOutputHelper output) : base(output)
+        public BrowserContextPageEventTests(ITestOutputHelper output) : base(output)
         {
         }
 
