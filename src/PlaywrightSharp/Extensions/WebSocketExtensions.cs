@@ -4,44 +4,15 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Represents websocket connections in the page.
+    /// <see cref="IWebSocket"/> extensions.
     /// </summary>
-    public interface IWebSocket
+    public static class WebSocketExtensions
     {
-        /// <summary>
-        /// Raised when the <see cref="IWebSocket"/> closes.
-        /// </summary>
-        event EventHandler<EventArgs> Close;
-
-        /// <summary>
-        /// Raised when the <see cref="IWebSocket"/> recieves a frame.
-        /// </summary>
-        event EventHandler<WebSocketFrameEventArgs> FrameReceived;
-
-        /// <summary>
-        /// Raised when the <see cref="IWebSocket"/> sends a frame.
-        /// </summary>
-        event EventHandler<WebSocketFrameEventArgs> FrameSent;
-
-        /// <summary>
-        /// Raised when the <see cref="IWebSocket"/> has an error.
-        /// </summary>
-        event EventHandler<WebSocketErrorEventArgs> SocketError;
-
-        /// <summary>
-        /// Contains the URL of the WebSocket.
-        /// </summary>
-        string Url { get; }
-
-        /// <summary>
-        /// Indicates that the web socket has been closed.
-        /// </summary>
-        bool IsClosed { get; }
-
         /// <summary>
         /// Waits for event to fire and passes its value into the predicate function. Resolves when the predicate returns truthy value.
         /// Will throw an Exception if the <see cref="IWebSocket"/> is closed before the event is fired.
         /// </summary>
+        /// <param name="webSocket">WebSocket to act on.</param>
         /// <param name="webSocketEvent">Event to wait for.</param>
         /// <param name="predicate">Receives the event data and resolves when the waiting should resolve.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
@@ -65,7 +36,14 @@ namespace PlaywrightSharp
         /// </code>
         /// </example>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
-        Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> webSocketEvent, Func<T, bool> predicate = null, int? timeout = null)
-            where T : EventArgs;
+        public static Task<T> WaitForEventAsync<T>(this IWebSocket webSocket, PlaywrightEvent<T> webSocketEvent, Func<T, bool> predicate = null, float? timeout = null)
+        {
+            if (webSocket is null)
+            {
+                throw new ArgumentNullException(nameof(webSocket));
+            }
+
+            return ((WebSocket)webSocket).WaitForEventAsync(webSocketEvent, predicate, timeout);
+        }
     }
 }

@@ -15,11 +15,11 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler Close;
 
-        internal event EventHandler<WebSocketFrameEventArgs> FrameSent;
+        internal event EventHandler<IWebSocketFrame> FrameSent;
 
-        internal event EventHandler<WebSocketFrameEventArgs> FrameReceived;
+        internal event EventHandler<IWebSocketFrame> FrameReceived;
 
-        internal event EventHandler<WebSocketErrorEventArgs> SocketError;
+        internal event EventHandler<string> SocketError;
 
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
@@ -31,26 +31,19 @@ namespace PlaywrightSharp.Transport.Channels
                 case "frameSent":
                     FrameSent?.Invoke(
                         this,
-                        new WebSocketFrameEventArgs
-                        {
-                            Payload = serverParams?.GetProperty("data").ToObject<string>(),
-                        });
+                        new WebSocketFrame(
+                            serverParams?.GetProperty("data").ToObject<string>(),
+                            serverParams?.GetProperty("opcode").ToObject<int>() == 2));
                     break;
                 case "frameReceived":
                     FrameReceived?.Invoke(
                         this,
-                        new WebSocketFrameEventArgs
-                        {
-                            Payload = serverParams?.GetProperty("data").ToObject<string>(),
-                        });
+                        new WebSocketFrame(
+                            serverParams?.GetProperty("data").ToObject<string>(),
+                            serverParams?.GetProperty("opcode").ToObject<int>() == 2));
                     break;
                 case "socketError":
-                    SocketError?.Invoke(
-                        this,
-                        new WebSocketErrorEventArgs
-                        {
-                            ErrorMessage = serverParams?.GetProperty("error").ToObject<string>(),
-                        });
+                    SocketError?.Invoke(this, serverParams?.GetProperty("error").ToObject<string>());
                     break;
             }
         }
