@@ -107,12 +107,7 @@ namespace PlaywrightSharp
                 return null;
             }
 
-            if (Headers.TryGetValue("content-type", out string contentType) && string.IsNullOrEmpty(contentType))
-            {
-                return null;
-            }
-
-            if (contentType == "application/x-www-form-urlencoded")
+            if (Headers.TryGetValue("content-type", out string contentType) && contentType == "application/x-www-form-urlencoded")
             {
                 var parsed = HttpUtility.ParseQueryString(PostData);
                 var dictionary = new Dictionary<string, string>();
