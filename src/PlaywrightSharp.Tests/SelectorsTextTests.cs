@@ -113,13 +113,13 @@ namespace PlaywrightSharp.Tests
             Assert.Null(await Page.QuerySelectorAsync("text=\"yA\""));
         }
 
-        [PlaywrightTest("selectors-text.spec.ts", "should search for a substring")]
+        [PlaywrightTest("selectors-text.spec.ts", "should search for a substring without quotes")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldSearchForASubstring()
+        public async Task ShouldSearchForASubstringWithoutQuotes()
         {
             await Page.SetContentAsync("<div>textwithsubstring</div>");
             Assert.Equal("<div>textwithsubstring</div>", await Page.EvalOnSelectorAsync<string>("text=with", "e => e.outerHTML"));
-            Assert.Equal("<div>textwithsubstring</div>", await Page.EvalOnSelectorAsync<string>("text=\"with\"", "e => e.outerHTML"));
+            Assert.Null(await Page.QuerySelectorAsync("text=\"with\""));
         }
 
         [PlaywrightTest("selectors-text.spec.ts", "should skip head, script and style")]
