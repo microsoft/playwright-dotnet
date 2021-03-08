@@ -201,7 +201,7 @@ namespace PlaywrightSharp.TestServer
             return request;
         }
 
-        public Task WaitForRequest(string path) => WaitForRequest(path, request => true);
+        public Task WaitForRequest(string path) => WaitForRequest(path, _ => true);
 
         private static bool Authenticate(string username, string password, HttpContext context)
         {

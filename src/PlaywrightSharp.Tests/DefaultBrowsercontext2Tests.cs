@@ -299,9 +299,9 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireCloseEventForAPersistentContext()
         {
-            var (tmp, context, page) = await LaunchAsync();
+            var (tmp, context, _) = await LaunchAsync();
             bool closed = false;
-            context.Close += (sender, e) => closed = true;
+            context.Close += (_, _) => closed = true;
             await context.CloseAsync();
 
             Assert.True(closed);

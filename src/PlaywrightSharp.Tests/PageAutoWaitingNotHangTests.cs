@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task CallingWindowStopAsync()
         {
-            Server.SetRoute("/empty.html", context => Task.CompletedTask);
+            Server.SetRoute("/empty.html", _ => Task.CompletedTask);
 
             await Page.EvaluateAsync($@"(url) => {{
                 window.location.href = url;
@@ -39,7 +39,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task CallingWindowStop()
         {
-            Server.SetRoute("/empty.html", context => Task.CompletedTask);
+            Server.SetRoute("/empty.html", _ => Task.CompletedTask);
 
             await Page.EvaluateAsync($@"(url) => {{
                 window.location.href = url;
@@ -59,7 +59,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task AssigningLocationToAboutBlankAfterNonAboutBlank()
         {
-            Server.SetRoute("/empty.html", context => Task.CompletedTask);
+            Server.SetRoute("/empty.html", _ => Task.CompletedTask);
 
             await Page.EvaluateAsync($@"(url) => {{
                 window.location.href = '{TestConstants.EmptyPage}';

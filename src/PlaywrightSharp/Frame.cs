@@ -55,7 +55,7 @@ namespace PlaywrightSharp
             ParentFrame = initializer.ParentFrame;
             _loadStates = initializer.LoadStates;
 
-            _channel.LoadState += (sender, e) =>
+            _channel.LoadState += (_, e) =>
             {
                 lock (_loadStates)
                 {
@@ -72,7 +72,7 @@ namespace PlaywrightSharp
                 }
             };
 
-            _channel.Navigated += (sender, e) =>
+            _channel.Navigated += (_, e) =>
             {
                 Url = e.Url;
                 Name = e.Name;

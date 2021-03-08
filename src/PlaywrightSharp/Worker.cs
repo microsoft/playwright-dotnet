@@ -21,7 +21,7 @@ namespace PlaywrightSharp
             _channel = new WorkerChannel(guid, parent.Connection, this);
             _initializer = initializer;
 
-            _channel.Closed += (sender, e) =>
+            _channel.Closed += (_, _) =>
             {
                 if (Page != null)
                 {

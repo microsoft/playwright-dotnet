@@ -200,8 +200,8 @@ namespace PlaywrightSharp.Tests.Chromium
             var requestFrames = new List<IFrame>();
             var finishedFrames = new List<IFrame>();
 
-            _page.Request += (sender, e) => requestFrames.Add(e.Request.Frame);
-            _page.RequestFinished += (sender, e) => finishedFrames.Add(e.Request.Frame);
+            _page.Request += (_, e) => requestFrames.Add(e.Request.Frame);
+            _page.RequestFinished += (_, e) => finishedFrames.Add(e.Request.Frame);
 
             await _page.GoToAsync(TestConstants.ServerUrl + "/empty.html");
             var main = _page.MainFrame;
@@ -318,7 +318,7 @@ namespace PlaywrightSharp.Tests.Chromium
             var browserSession = await ((IChromiumBrowser)browser).NewBrowserCDPSessionAsync();
             var oopifs = new List<JsonElement?>();
 
-            browserSession.MessageReceived += (sender, e) =>
+            browserSession.MessageReceived += (_, e) =>
             {
                 if (e.Method == "Target.targetCreated" && e.Params.Value.GetProperty("targetInfo").GetProperty("type").GetString() == "iframe")
                 {

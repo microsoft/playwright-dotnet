@@ -238,7 +238,7 @@ namespace PlaywrightSharp.Tests
             );
             var popup = await popupTask.Result;
             bool badSecondPopup = false;
-            Page.Popup += (sender, e) => badSecondPopup = true;
+            Page.Popup += (_, _) => badSecondPopup = true;
             await popup.GoToAsync(TestConstants.CrossProcessUrl + "/empty.html");
             Assert.False(badSecondPopup);
         }

@@ -40,7 +40,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWaitForToSucceedNavigationWithRequestFromPreviousNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            Server.SetRoute("/foo.js", (request) => Task.CompletedTask);
+            Server.SetRoute("/foo.js", _ => Task.CompletedTask);
             await Page.SetContentAsync("<script>fetch('foo.js')</script>");
             await NetworkIdleTestAsync(Page.MainFrame, () => Page.GoToAsync(TestConstants.ServerUrl + "/networkidle.html", LifecycleEvent.Networkidle));
         }
@@ -73,7 +73,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWaitForNetworkidleInSetContentWithRequestFromPreviousNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            Server.SetRoute("/foo.js", (request) => Task.CompletedTask);
+            Server.SetRoute("/foo.js", _ => Task.CompletedTask);
             await Page.SetContentAsync("<script>fetch('foo.js')</script>");
             await NetworkIdleTestAsync(
                 Page.MainFrame,

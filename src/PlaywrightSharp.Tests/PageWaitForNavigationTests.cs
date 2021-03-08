@@ -54,7 +54,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkWithBothDomcontentloadedAndLoad()
         {
             var responseCompleted = new TaskCompletionSource<bool>();
-            Server.SetRoute("/one-style.css", context => responseCompleted.Task);
+            Server.SetRoute("/one-style.css", _ => responseCompleted.Task);
 
             var waitForRequestTask = Server.WaitForRequest("/one-style.css");
             var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
@@ -184,12 +184,12 @@ namespace PlaywrightSharp.Tests
             IFrame frame = null;
 
             var frameAttachedTaskSource = new TaskCompletionSource<IFrame>();
-            Page.FrameAttached += (sender, e) =>
+            Page.FrameAttached += (_, e) =>
             {
                 frameAttachedTaskSource.SetResult(e.Frame);
             };
             var frameNavigatedTaskSource = new TaskCompletionSource<bool>();
-            Page.FrameNavigated += (sender, e) =>
+            Page.FrameNavigated += (_, e) =>
             {
                 if (frame != null)
                 {
@@ -204,7 +204,7 @@ namespace PlaywrightSharp.Tests
                 }
             };
 
-            Server.SetRoute("/frames/style.css", (context) => Task.CompletedTask);
+            Server.SetRoute("/frames/style.css", _ => Task.CompletedTask);
             var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
 
             frame = await frameAttachedTaskSource.Task;
@@ -271,7 +271,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             bool resolved = false;
-            var waitTask = Page.WaitForNavigationAsync(new Regex("third\\.html")).ContinueWith(t => resolved = true);
+            var waitTask = Page.WaitForNavigationAsync(new Regex("third\\.html")).ContinueWith(_ => resolved = true);
 
             Assert.False(resolved);
 
@@ -324,7 +324,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
             var frame = Page.Frames[1];
-            Server.SetRoute("/empty.html", r => Task.Delay(6000));
+            Server.SetRoute("/empty.html", _ => Task.Delay(6000));
             var exceptionTask = Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => frame.WaitForNavigationAsync());
 
             try

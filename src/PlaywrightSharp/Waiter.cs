@@ -46,7 +46,7 @@ namespace PlaywrightSharp
 
             var (task, dispose) = WaitForEvent<T>(eventSource, e, predicate);
             RejectOn(
-                task.ContinueWith(t => throw navigationException, _cts.Token, TaskContinuationOptions.RunContinuationsAsynchronously, TaskScheduler.Current),
+                task.ContinueWith(_ => throw navigationException, _cts.Token, TaskContinuationOptions.RunContinuationsAsynchronously, TaskScheduler.Current),
                 dispose);
         }
 

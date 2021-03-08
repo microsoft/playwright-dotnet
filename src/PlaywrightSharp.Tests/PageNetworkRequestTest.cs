@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkForMainFrameNavigationRequests()
         {
             var requests = new List<IRequest>();
-            Page.Request += (sender, e) => requests.Add(e.Request);
+            Page.Request += (_, e) => requests.Add(e.Request);
             await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Single(requests);
             Assert.Equal(Page.MainFrame, requests[0].Frame);
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkForSubframeNavigationRequest()
         {
             var requests = new List<IRequest>();
-            Page.Request += (sender, e) => requests.Add(e.Request);
+            Page.Request += (_, e) => requests.Add(e.Request);
 
             await Page.GoToAsync(TestConstants.EmptyPage);
 
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             var requests = new List<IRequest>();
-            Page.Request += (sender, e) => requests.Add(e.Request);
+            Page.Request += (_, e) => requests.Add(e.Request);
             await Page.EvaluateAsync("fetch('/digits/1.png')");
             Assert.Single(requests.Where(r => !r.Url.Contains("favicon")));
             Assert.Equal(Page.MainFrame, requests[0].Frame);
@@ -82,9 +82,9 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldReturnPostData()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            Server.SetRoute("/post", context => Task.CompletedTask);
+            Server.SetRoute("/post", _ => Task.CompletedTask);
             IRequest request = null;
-            Page.Request += (sender, e) => request = e.Request;
+            Page.Request += (_, e) => request = e.Request;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: JSON.stringify({ foo: 'bar'})})");
             Assert.NotNull(request);
             Assert.Equal("{\"foo\":\"bar\"}", request.PostData);
@@ -95,9 +95,9 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkWithBinaryPostData()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            Server.SetRoute("/post", context => Task.CompletedTask);
+            Server.SetRoute("/post", _ => Task.CompletedTask);
             IRequest request = null;
-            Page.Request += (sender, e) => request = e.Request;
+            Page.Request += (_, e) => request = e.Request;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: new Uint8Array(Array.from(Array(256).keys())) })");
             Assert.NotNull(request);
             byte[] data = request.PostDataBuffer;
@@ -114,10 +114,10 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkWithBinaryPostDataAndInterception()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            Server.SetRoute("/post", context => Task.CompletedTask);
+            Server.SetRoute("/post", _ => Task.CompletedTask);
             await Page.RouteAsync("/post", (route, _) => route.ContinueAsync());
             IRequest request = null;
-            Page.Request += (sender, e) => request = e.Request;
+            Page.Request += (_, e) => request = e.Request;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: new Uint8Array(Array.from(Array(256).keys())) })");
             Assert.NotNull(request);
             byte[] data = request.PostDataBuffer;
@@ -143,9 +143,9 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldParseTheJsonPostData()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            Server.SetRoute("/post", context => Task.CompletedTask);
+            Server.SetRoute("/post", _ => Task.CompletedTask);
             IRequest request = null;
-            Page.Request += (sender, e) => request = e.Request;
+            Page.Request += (_, e) => request = e.Request;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: JSON.stringify({ foo: 'bar'})})");
             Assert.NotNull(request);
             Assert.Equal("bar", request.GetPostDataJson().RootElement.GetProperty("foo").ToString());
@@ -156,9 +156,9 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldParseTheDataIfContentTypeIsApplicationXWwwFormUrlencoded()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            Server.SetRoute("/post", context => Task.CompletedTask);
+            Server.SetRoute("/post", _ => Task.CompletedTask);
             IRequest request = null;
-            Page.Request += (sender, e) => request = e.Request;
+            Page.Request += (_, e) => request = e.Request;
             await Page.SetContentAsync("<form method='POST' action='/post'><input type='text' name='foo' value='bar'><input type='number' name='baz' value='123'><input type='submit'></form>");
             await Page.ClickAsync("input[type=submit]");
 
@@ -195,7 +195,7 @@ namespace PlaywrightSharp.Tests
 
             await Page.GoToAsync(TestConstants.EmptyPage);
             var requests = new List<IRequest>();
-            Page.Request += (sender, e) => requests.Add(e.Request);
+            Page.Request += (_, e) => requests.Add(e.Request);
 
             Assert.Equal(sseMessage, await Page.EvaluateAsync<string>(@"() => {
                 const eventSource = new EventSource('/sse');
@@ -212,7 +212,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldReturnNavigationBit()
         {
             var requests = new Dictionary<string, IRequest>();
-            Page.Request += (sender, e) => requests[e.Request.Url.Split('/').Last()] = e.Request;
+            Page.Request += (_, e) => requests[e.Request.Url.Split('/').Last()] = e.Request;
             Server.SetRedirect("/rrredirect", "/frames/one-frame.html");
             await Page.GoToAsync(TestConstants.ServerUrl + "/rrredirect");
             Assert.True(requests["rrredirect"].IsNavigationRequest);
@@ -227,7 +227,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldReturnNavigationBitWhenNavigatingToImage()
         {
             var requests = new List<IRequest>();
-            Page.Request += (sender, e) => requests.Add(e.Request);
+            Page.Request += (_, e) => requests.Add(e.Request);
             await Page.GoToAsync(TestConstants.ServerUrl + "/pptr.png");
             Assert.True(requests[0].IsNavigationRequest);
         }

@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Tests
         {
             string imgPath = "/img.png";
             // stall for image
-            Server.SetRoute(imgPath, context => Task.Delay(Timeout.Infinite));
+            Server.SetRoute(imgPath, _ => Task.Delay(Timeout.Infinite));
             await Assert.ThrowsAsync<TimeoutException>(() =>
                 Page.SetContentAsync($"<img src=\"{TestConstants.ServerUrl + imgPath}\"></img>", timeout: 1)
             );
@@ -75,7 +75,7 @@ namespace PlaywrightSharp.Tests
             Page.DefaultNavigationTimeout = 1;
             string imgPath = "/img.png";
             // stall for image
-            Server.SetRoute(imgPath, context => Task.Delay(Timeout.Infinite));
+            Server.SetRoute(imgPath, _ => Task.Delay(Timeout.Infinite));
             var exception = await Assert.ThrowsAsync<TimeoutException>(() =>
                 Page.SetContentAsync($"<img src=\"{TestConstants.ServerUrl + imgPath}\"></img>", timeout: 1)
             );
@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests
         {
             string imgPath = "/img.png";
             var imgResponse = new TaskCompletionSource<bool>();
-            Server.SetRoute(imgPath, context => imgResponse.Task);
+            Server.SetRoute(imgPath, _ => imgResponse.Task);
             bool loaded = false;
             var contentTask = Page.SetContentAsync($"<img src=\"{TestConstants.ServerUrl + imgPath}\"></img>").ContinueWith(_ => loaded = true);
             await Server.WaitForRequest(imgPath);

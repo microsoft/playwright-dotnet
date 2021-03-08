@@ -99,7 +99,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains(otherPage, allPages);
 
             var closeEventReceived = new TaskCompletionSource<bool>();
-            otherPage.Close += (sender, e) => closeEventReceived.TrySetResult(true);
+            otherPage.Close += (_, _) => closeEventReceived.TrySetResult(true);
 
             await otherPage.CloseAsync();
             await closeEventReceived.Task.WithTimeout(TestConstants.DefaultTaskTimeout);
@@ -177,10 +177,10 @@ namespace PlaywrightSharp.Tests
             await using var context = await Browser.NewContextAsync();
             var events = new List<string>();
 
-            context.Page += (sender, e) =>
+            context.Page += (_, e) =>
             {
                 events.Add("CREATED: " + e.Page.Url);
-                e.Page.Close += (sender, closeArgs) => events.Add("DESTROYED: " + ((IPage)sender).Url);
+                e.Page.Close += (sender, _) => events.Add("DESTROYED: " + ((IPage)sender).Url);
             };
 
             var page = await context.NewPageAsync();
