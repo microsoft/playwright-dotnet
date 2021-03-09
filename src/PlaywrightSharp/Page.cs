@@ -188,10 +188,10 @@ namespace PlaywrightSharp
         public event EventHandler<EventArgs> DOMContentLoaded;
 
         /// <inheritdoc />
-        public event EventHandler<EventArgs> Close;
+        public event EventHandler Close;
 
         /// <inheritdoc />
-        public event EventHandler<EventArgs> Crash;
+        public event EventHandler Crash;
 
         /// <inheritdoc />
         public event EventHandler<PageErrorEventArgs> PageError;

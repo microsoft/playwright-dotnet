@@ -170,12 +170,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// Raised when the page closes.
         /// </summary>
-        event EventHandler<EventArgs> Close;
+        event EventHandler Close;
 
         /// <summary>
         /// Raised when the page crashes.
         /// </summary>
-        event EventHandler<EventArgs> Crash;
+        event EventHandler Crash;
 
         /// <summary>
         /// Raised when an uncaught exception happens within the page.
