@@ -27,8 +27,8 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Single(requests);
             Assert.Equal(TestConstants.EmptyPage, requests[0].Url);
-            Assert.Equal(ResourceType.Document, requests[0].ResourceType);
-            Assert.Equal(HttpMethod.Get, requests[0].Method);
+            Assert.Equal("document", requests[0].ResourceType, true);
+            Assert.Equal(HttpMethod.Get.Method, requests[0].Method);
             Assert.NotNull(await requests[0].GetResponseAsync());
             Assert.Equal(Page.MainFrame, requests[0].Frame);
             Assert.Equal(TestConstants.EmptyPage, requests[0].Frame.Url);
@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Single(responses);
             Assert.Equal(TestConstants.EmptyPage, responses[0].Url);
-            Assert.Equal(HttpStatusCode.OK, responses[0].Status);
+            Assert.Equal(HttpStatusCode.OK, responses[0].StatusCode);
             Assert.True(responses[0].Ok);
             Assert.NotNull(responses[0].Request);
         }
@@ -69,7 +69,7 @@ namespace PlaywrightSharp.Tests
             Assert.Single(failedRequests);
             Assert.Contains("one-style.css", failedRequests[0].Url);
             Assert.Null(await failedRequests[0].GetResponseAsync());
-            Assert.Equal(ResourceType.StyleSheet, failedRequests[0].ResourceType);
+            Assert.Equal("stylesheet", failedRequests[0].ResourceType, true);
 
             string error = string.Empty;
 
@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests
             var request = response.Request;
             Assert.Equal(TestConstants.EmptyPage, request.Url);
             Assert.NotNull(await request.GetResponseAsync());
-            Assert.Equal(HttpMethod.Get, request.Method);
+            Assert.Equal(HttpMethod.Get.Method, request.Method);
             Assert.Equal(Page.MainFrame, request.Frame);
             Assert.Equal(TestConstants.EmptyPage, request.Frame.Url);
         }
@@ -102,7 +102,7 @@ namespace PlaywrightSharp.Tests
             Page.Request += (_, _) => events.Add("request");
             Page.Response += (_, _) => events.Add("response");
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
-            await response.FinishedAsync();
+            await response.GetFinishedAsync();
             events.Add("requestfinished");
             Assert.Equal(new[] { "request", "response", "requestfinished" }, events);
         }
@@ -119,7 +119,7 @@ namespace PlaywrightSharp.Tests
             Server.SetRedirect("/foo.html", "/empty.html");
             const string FOO_URL = TestConstants.ServerUrl + "/foo.html";
             var response = await Page.GoToAsync(FOO_URL);
-            await response.FinishedAsync();
+            await response.GetFinishedAsync();
             Assert.Equal(new[] {
                 $"GET {FOO_URL}",
                 $"302 {FOO_URL}",

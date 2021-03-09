@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
@@ -30,11 +31,11 @@ namespace PlaywrightSharp.Tests
             await Page.RouteAsync("**/empty.html", (route, request) =>
             {
                 Assert.Contains("empty.html", request.Url);
-                Assert.True(request.Headers.ContainsKey("user-agent"));
-                Assert.Equal(HttpMethod.Get, request.Method);
+                Assert.Contains(request.Headers, x => string.Equals(x.Key, "user-agent"));
+                Assert.Equal(HttpMethod.Get.Method, request.Method);
                 Assert.Null(request.PostData);
                 Assert.True(request.IsNavigationRequest);
-                Assert.Equal(ResourceType.Document, request.ResourceType);
+                Assert.Equal("document", request.ResourceType, true);
                 Assert.Same(request.Frame, Page.MainFrame);
                 Assert.Equal("about:blank", request.Frame.Url);
                 route.ContinueAsync();
@@ -114,7 +115,7 @@ namespace PlaywrightSharp.Tests
             Server.SetRedirect("/rrredirect", "/empty.html");
             await Page.RouteAsync("**/*", (route, _) =>
             {
-                var headers = new Dictionary<string, string>(route.Request.Headers) { ["foo"] = "bar" };
+                var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["foo"] = "bar" };
                 route.ContinueAsync(headers: headers);
             });
             await Page.GoToAsync(TestConstants.ServerUrl + "/rrredirect");
@@ -126,7 +127,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.RouteAsync("**/*", (route, _) =>
             {
-                var headers = new Dictionary<string, string>(route.Request.Headers) { ["foo"] = "bar" };
+                var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["foo"] = "bar" };
                 headers.Remove("origin");
                 route.ContinueAsync(headers: headers);
             });
@@ -151,7 +152,7 @@ namespace PlaywrightSharp.Tests
             });
             await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
             Assert.Contains("/one-style.css", requests[1].Url);
-            Assert.Contains("/one-style.html", requests[1].Headers["referer"]);
+            Assert.Contains("/one-style.html", requests[1].GetHeaderValue("referer"));
         }
 
         [PlaywrightTest("page-route.spec.ts", "should properly return navigation response when URL has cookies")]
@@ -170,7 +171,7 @@ namespace PlaywrightSharp.Tests
             // Setup request interception.
             await Page.RouteAsync("**/*", (route, _) => route.ContinueAsync());
             var response = await Page.ReloadAsync();
-            Assert.Equal(HttpStatusCode.OK, response.Status);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should show custom HTTP headers")]
@@ -183,7 +184,7 @@ namespace PlaywrightSharp.Tests
             });
             await Page.RouteAsync("**/*", (route, request) =>
             {
-                Assert.Equal("bar", request.Headers["foo"]);
+                Assert.Equal("bar", request.GetHeaderValue("foo"));
                 route.ContinueAsync();
             });
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
@@ -213,7 +214,7 @@ namespace PlaywrightSharp.Tests
             await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = TestConstants.EmptyPage });
             await Page.RouteAsync("**/*", (route, request) =>
             {
-                Assert.Equal(TestConstants.EmptyPage, request.Headers["referer"]);
+                Assert.Equal(TestConstants.EmptyPage, request.GetHeaderValue("referer"));
                 route.ContinueAsync();
             });
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
@@ -314,7 +315,7 @@ namespace PlaywrightSharp.Tests
 
             Assert.Contains("non-existing-page.html", requests[0].Url);
             Assert.Single(requests);
-            Assert.Equal(ResourceType.Document, requests[0].ResourceType);
+            Assert.Equal("document", requests[0].ResourceType, true);
             Assert.True(requests[0].IsNavigationRequest);
 
             var chain = new List<IRequest>();
@@ -356,17 +357,17 @@ namespace PlaywrightSharp.Tests
             Server.SetRoute("/four-style.css", context => context.Response.WriteAsync("body {box-sizing: border-box; }"));
 
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
-            Assert.Equal(HttpStatusCode.OK, response.Status);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Contains("one-style.html", response.Url);
 
             Assert.Equal(2, requests.Count);
-            Assert.Equal(ResourceType.Document, requests[0].ResourceType);
+            Assert.Equal("document", requests[0].ResourceType, true);
             Assert.Contains("one-style.html", requests[0].Url);
 
             var request = requests[1];
             foreach (string url in new[] { "/one-style.css", "/two-style.css", "/three-style.css", "/four-style.css" })
             {
-                Assert.Equal(ResourceType.StyleSheet, request.ResourceType);
+                Assert.Equal("stylesheet", request.ResourceType, true);
                 Assert.Contains(url, request.Url);
                 request = request.RedirectedTo;
             }
@@ -451,7 +452,7 @@ namespace PlaywrightSharp.Tests
                 route.ContinueAsync();
             });
             var response = await Page.GoToAsync(TestConstants.EmptyPage + "#hash");
-            Assert.Equal(HttpStatusCode.OK, response.Status);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(TestConstants.EmptyPage, response.Url);
             Assert.Single(requests);
             Assert.Equal(TestConstants.EmptyPage, requests[0].Url);
@@ -465,7 +466,7 @@ namespace PlaywrightSharp.Tests
             // report URL as-is. @see crbug.com/759388
             await Page.RouteAsync("**/*", (route, _) => route.ContinueAsync());
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/some nonexisting page");
-            Assert.Equal(HttpStatusCode.NotFound, response.Status);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with badly encoded server")]
@@ -475,7 +476,7 @@ namespace PlaywrightSharp.Tests
             Server.SetRoute("/malformed?rnd=%911", _ => Task.CompletedTask);
             await Page.RouteAsync("**/*", (route, _) => route.ContinueAsync());
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/malformed?rnd=%911");
-            Assert.Equal(HttpStatusCode.OK, response.Status);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with encoded server - 2")]
@@ -493,7 +494,7 @@ namespace PlaywrightSharp.Tests
             var response = await Page.GoToAsync($"data:text/html,<link rel=\"stylesheet\" href=\"{TestConstants.EmptyPage}/fonts?helvetica|arial\"/>");
             Assert.Null(response);
             Assert.Single(requests);
-            Assert.Equal(HttpStatusCode.NotFound, (await requests[0].GetResponseAsync()).Status);
+            Assert.Equal(HttpStatusCode.NotFound, (await requests[0].GetResponseAsync()).StatusCode);
         }
 
         [PlaywrightTest("page-route.spec.ts", @"should not throw ""Invalid Interception Id"" if the request was cancelled")]

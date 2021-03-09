@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
@@ -32,7 +33,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.RouteAsync("**/*", (route, request) =>
             {
-                var headers = new Dictionary<string, string>(request.Headers) { ["FOO"] = "bar" };
+                var headers = new Dictionary<string, string>(request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["FOO"] = "bar" };
                 route.ContinueAsync(headers: headers);
             });
             await Page.GoToAsync(TestConstants.EmptyPage);

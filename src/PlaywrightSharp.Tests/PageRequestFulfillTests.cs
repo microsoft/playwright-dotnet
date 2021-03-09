@@ -36,8 +36,8 @@ namespace PlaywrightSharp.Tests
                     body: "Yo, page!");
             });
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.Created, response.Status);
-            Assert.Equal("bar", response.Headers["foo"]);
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal("bar", response.GetHeaderValue("foo"));
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }
 
@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests
                 route.FulfillAsync(HttpStatusCode.UpgradeRequired, "Yo, page!");
             });
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.UpgradeRequired, response.Status);
+            Assert.Equal(HttpStatusCode.UpgradeRequired, response.StatusCode);
             Assert.Equal("Upgrade Required", response.StatusText);
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }
@@ -124,8 +124,8 @@ namespace PlaywrightSharp.Tests
             });
 
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.OK, response.Status);
-            Assert.Equal("true", response.Headers["foo"]);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("true", response.GetHeaderValue("foo"));
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }
 
@@ -157,7 +157,7 @@ namespace PlaywrightSharp.Tests
             await Page.RouteAsync(TestConstants.CrossProcessUrl + "/something", (route, request) =>
             {
                 playwrightRequest = request;
-                route.ContinueAsync(headers: request.Headers);
+                route.ContinueAsync(headers: request.Headers.ToDictionary(x => x.Key, x => x.Value));
             });
 
             string textAfterRoute = await Page.EvaluateAsync<string>(@"async url => {
@@ -193,7 +193,7 @@ namespace PlaywrightSharp.Tests
             }", TestConstants.CrossProcessUrl + "/something");
 
             Assert.Equal("done", text);
-            Assert.Equal(TestConstants.ServerUrl, interceptedRequest.Headers["origin"]);
+            Assert.Equal(TestConstants.ServerUrl, interceptedRequest.GetHeaderValue("origin"));
         }
     }
 }

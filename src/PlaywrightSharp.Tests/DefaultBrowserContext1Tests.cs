@@ -265,7 +265,7 @@ namespace PlaywrightSharp.Tests
 
             Server.SetAuth("/playground.html", "user", "pass");
             var response = await page.GoToAsync(TestConstants.ServerUrl + "/playground.html");
-            Assert.Equal(HttpStatusCode.OK, response.Status);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             tmp.Dispose();
             await context.DisposeAsync();

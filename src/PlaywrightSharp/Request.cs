@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Net.Http;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -20,11 +19,12 @@ namespace PlaywrightSharp
 
         internal Request(IChannelOwner parent, string guid, RequestInitializer initializer) : base(parent, guid)
         {
+            // TODO: Consider using a mapper between RequestInitiliazer and this object
             _channel = new RequestChannel(guid, parent.Connection, this);
             _initializer = initializer;
             RedirectedFrom = _initializer.RedirectedFrom?.Object;
             PostDataBuffer = _initializer.PostData != null ? Convert.FromBase64String(_initializer.PostData) : null;
-            Timing = new ResourceTiming();
+            Timing = new RequestTimingResult();
 
             if (RedirectedFrom != null)
             {
@@ -33,10 +33,11 @@ namespace PlaywrightSharp
 
             if (initializer.Headers != null)
             {
-                foreach (var kv in initializer.Headers)
-                {
-                    Headers[kv.Name] = kv.Value;
-                }
+                Headers = initializer.Headers.Select(x => new KeyValuePair<string, string>(x.Name, x.Value)).ToArray();
+            }
+            else
+            {
+                Headers = Array.Empty<KeyValuePair<string, string>>();
             }
         }
 
@@ -46,68 +47,58 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         IChannel<Request> IChannelOwner<Request>.Channel => _channel;
 
-        /// <inheritdoc />
-        public ResourceTiming Timing { get; internal set; }
-
-        /// <inheritdoc />
-        public string Url => _initializer.Url;
-
-        /// <inheritdoc />
-        public HttpMethod Method => _initializer.Method;
-
-        /// <inheritdoc />
-        public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-        /// <inheritdoc />
-        public string PostData => PostDataBuffer == null ? null : Encoding.UTF8.GetString(PostDataBuffer);
-
-        /// <inheritdoc />
-        public byte[] PostDataBuffer { get; }
-
-        /// <inheritdoc />
-        public IFrame Frame => _initializer.Frame;
-
-        /// <inheritdoc />
-        public bool IsNavigationRequest => _initializer.IsNavigationRequest;
-
-        /// <inheritdoc />
-        public ResourceType ResourceType => _initializer.ResourceType;
-
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public string Failure { get; internal set; }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
+        public IFrame Frame => _initializer.Frame;
+
+        /// <inheritdoc/>
+        public IEnumerable<KeyValuePair<string, string>> Headers { get; }
+
+        /// <inheritdoc/>
+        public bool IsNavigationRequest => _initializer.IsNavigationRequest;
+
+        /// <inheritdoc/>
+        public string Method => _initializer.Method.Method;
+
+        /// <inheritdoc/>
+        public string PostData => PostDataBuffer == null ? null : Encoding.UTF8.GetString(PostDataBuffer);
+
+        /// <inheritdoc/>
+        public byte[] PostDataBuffer { get; }
+
+        /// <inheritdoc/>
         public IRequest RedirectedFrom { get; }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public IRequest RedirectedTo { get; internal set; }
+
+        /// <inheritdoc/>
+        public string ResourceType => _initializer.ResourceType;
+
+        /// <inheritdoc/>
+        public RequestTimingResult Timing { get; internal set; }
+
+        /// <inheritdoc/>
+        public string Url => _initializer.Url;
 
         internal Request FinalRequest => RedirectedTo != null ? ((Request)RedirectedTo).FinalRequest : this;
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public async Task<IResponse> GetResponseAsync() => (await _channel.GetResponseAsync().ConfigureAwait(false))?.Object;
 
-        /// <inheritdoc />
-        public JsonDocument GetPostDataJson(JsonDocumentOptions options = default)
-        {
-            string content = GetRequestForJson();
-
-            if (content == null)
-            {
-                return null;
-            }
-
-            return JsonDocument.Parse(content, options);
-        }
-
-        private string GetRequestForJson()
+        /// <inheritdoc/>
+        public JsonDocument GetPayloadAsJson(JsonDocumentOptions documentOptions = default)
         {
             if (PostData == null)
             {
                 return null;
             }
 
-            if (Headers.TryGetValue("content-type", out string contentType) && contentType == "application/x-www-form-urlencoded")
+            string content = PostData;
+
+            if ("application/x-www-form-urlencoded".Equals(this.GetHeaderValue("content-type"), StringComparison.OrdinalIgnoreCase))
             {
                 var parsed = HttpUtility.ParseQueryString(PostData);
                 var dictionary = new Dictionary<string, string>();
@@ -117,10 +108,15 @@ namespace PlaywrightSharp
                     dictionary[key] = parsed[key];
                 }
 
-                return JsonSerializer.Serialize(dictionary);
+                content = JsonSerializer.Serialize(dictionary);
             }
 
-            return PostData;
+            if (content == null)
+            {
+                return null;
+            }
+
+            return JsonDocument.Parse(content, documentOptions);
         }
     }
 }

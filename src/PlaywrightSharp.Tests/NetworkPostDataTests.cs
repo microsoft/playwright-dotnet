@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests
 
             var request = task.Result.Request;
             Assert.Equal(expectedJsonValue, request.PostData);
-            Assert.Equal(value, request.GetPostDataJson().RootElement.GetString());
+            Assert.Equal(value, request.GetPayloadAsJson().RootElement.GetString());
         }
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
@@ -70,7 +70,7 @@ namespace PlaywrightSharp.Tests
             Task.WaitAll(task, actualTask);
 
             var request = task.Result.Request;
-            Assert.Equal(42, request.GetPostDataJson().RootElement.GetProperty("value").GetInt32());
+            Assert.Equal(42, request.GetPayloadAsJson().RootElement.GetProperty("value").GetInt32());
         }
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
@@ -92,7 +92,7 @@ namespace PlaywrightSharp.Tests
             Task.WaitAll(task, actualTask);
 
             var request = task.Result.Request;
-            Assert.ThrowsAny<JsonException>(() => request.GetPostDataJson());
+            Assert.ThrowsAny<JsonException>(() => request.GetPayloadAsJson());
         }
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
@@ -114,7 +114,7 @@ namespace PlaywrightSharp.Tests
             Task.WaitAll(task, actualTask);
 
             var request = task.Result.Request;
-            Assert.Equal(42, request.GetPostDataJson().RootElement.GetProperty("value").GetInt32());
+            Assert.Equal(42, request.GetPayloadAsJson().RootElement.GetProperty("value").GetInt32());
         }
     }
 }

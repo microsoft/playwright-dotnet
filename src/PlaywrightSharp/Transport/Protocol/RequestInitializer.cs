@@ -20,6 +20,6 @@ namespace PlaywrightSharp.Transport.Protocol
 
         public RequestChannel RedirectedFrom { get; set; }
 
-        public ResourceType ResourceType { get; set; }
+        public string ResourceType { get; set; }
     }
 }

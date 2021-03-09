@@ -32,11 +32,11 @@ namespace PlaywrightSharp.Tests
                 intercepted = true;
 
                 Assert.Contains("empty.html", route.Request.Url);
-                Assert.False(string.IsNullOrEmpty(route.Request.Headers["user-agent"]));
-                Assert.Equal(HttpMethod.Get, route.Request.Method);
+                Assert.False(string.IsNullOrEmpty(route.Request.GetHeaderValue("user-agent")));
+                Assert.Equal(HttpMethod.Get.Method, route.Request.Method);
                 Assert.Null(route.Request.PostData);
                 Assert.True(route.Request.IsNavigationRequest);
-                Assert.Equal(ResourceType.Document, route.Request.ResourceType);
+                Assert.Equal("document", route.Request.ResourceType, false);
                 Assert.Same(page.MainFrame, route.Request.Frame);
                 Assert.Equal("about:blank", page.MainFrame.Url);
 

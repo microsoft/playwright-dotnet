@@ -32,6 +32,30 @@ namespace PlaywrightSharp
             }
         }
 
+        /// <inheritdoc />
+        public IFrame Frame => _initializer.Request.Object.Frame;
+
+        /// <inheritdoc />
+        public IEnumerable<KeyValuePair<string, string>> Headers => _headers;
+
+        /// <inheritdoc />
+        public bool Ok => Status is 0 or >= 200 and <= 299;
+
+        /// <inheritdoc />
+        public IRequest Request => _initializer.Request.Object;
+
+        /// <inheritdoc />
+        public int Status => _initializer.Status;
+
+        /// <inheritdoc />
+        public string StatusText => _initializer.StatusText;
+
+        /// <inheritdoc />
+        public string Url => _initializer.Url;
+
+        /// <inheritdoc/>
+        public HttpStatusCode StatusCode => (HttpStatusCode)this.Status;
+
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
 
@@ -39,34 +63,19 @@ namespace PlaywrightSharp
         IChannel<Response> IChannelOwner<Response>.Channel => _channel;
 
         /// <inheritdoc />
-        public HttpStatusCode Status => _initializer.Status;
+        public async Task<byte[]> GetBodyAsync() => Convert.FromBase64String(await _channel.GetBodyAsync().ConfigureAwait(false));
 
         /// <inheritdoc />
-        public string StatusText => _initializer.StatusText;
+        public Task<string> GetFinishedAsync() => _channel.FinishedAsync();
 
         /// <inheritdoc />
-        public IFrame Frame => _initializer.Request.Object.Frame;
-
-        /// <inheritdoc />
-        public string Url => _initializer.Url;
-
-        /// <inheritdoc />
-        public IDictionary<string, string> Headers => _headers;
-
-        /// <inheritdoc />
-        public bool Ok => Status == 0 || ((int)Status >= 200 && (int)Status <= 299);
-
-        /// <inheritdoc />
-        public IRequest Request => _initializer.Request.Object;
-
-        /// <inheritdoc />
-        public async Task<string> GetTextAsync()
+        public async Task<T> GetJsonAsync<T>()
         {
-            byte[] content = await GetBodyAsync().ConfigureAwait(false);
-            return Encoding.UTF8.GetString(content);
+            string content = await GetTextAsync().ConfigureAwait(false);
+            return JsonSerializer.Deserialize<T>(content, _channel.Connection.GetDefaultJsonSerializerOptions());
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public async Task<JsonDocument> GetJsonAsync(JsonDocumentOptions options = default)
         {
             string content = await GetTextAsync().ConfigureAwait(false);
@@ -74,16 +83,10 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public async Task<T> GetJsonAsync<T>(JsonSerializerOptions options = null)
+        public async Task<string> GetTextAsync()
         {
-            string content = await GetTextAsync().ConfigureAwait(false);
-            return JsonSerializer.Deserialize<T>(content, options ?? _channel.Connection.GetDefaultJsonSerializerOptions());
+            byte[] content = await GetBodyAsync().ConfigureAwait(false);
+            return Encoding.UTF8.GetString(content);
         }
-
-        /// <inheritdoc />
-        public async Task<byte[]> GetBodyAsync() => Convert.FromBase64String(await _channel.GetBodyAsync().ConfigureAwait(false));
-
-        /// <inheritdoc />
-        public Task FinishedAsync() => _channel.FinishedAsync();
     }
 }

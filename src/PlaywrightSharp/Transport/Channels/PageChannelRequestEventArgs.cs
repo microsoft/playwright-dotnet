@@ -8,6 +8,6 @@ namespace PlaywrightSharp.Transport.Channels
 
         public string FailureText { get; set; }
 
-        public decimal ResponseEndTiming { get; set; }
+        public float ResponseEndTiming { get; set; }
     }
 }

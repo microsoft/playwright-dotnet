@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldNavigateToEmptyPageWithNetworkIdle()
         {
             var response = await Page.GoToAsync(TestConstants.EmptyPage, LifecycleEvent.Networkidle);
-            Assert.Equal(HttpStatusCode.OK, response.Status);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle to succeed navigation")]
@@ -195,7 +195,7 @@ namespace PlaywrightSharp.Tests
             lastResponseFinished.Stop();
             if (!isSetContent)
             {
-                Assert.Equal(HttpStatusCode.OK, navigationResponse.Status);
+                Assert.Equal(HttpStatusCode.OK, navigationResponse.StatusCode);
             }
         }
     }
