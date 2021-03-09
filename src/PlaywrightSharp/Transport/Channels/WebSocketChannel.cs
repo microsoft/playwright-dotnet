@@ -9,6 +9,8 @@ namespace PlaywrightSharp.Transport.Channels
 {
     internal class WebSocketChannel : Channel<WebSocket>
     {
+        private const int OpcodeBase64 = 2;
+
         public WebSocketChannel(string guid, Connection connection, WebSocket owner) : base(guid, connection, owner)
         {
         }
@@ -33,14 +35,14 @@ namespace PlaywrightSharp.Transport.Channels
                         this,
                         new WebSocketFrame(
                             serverParams?.GetProperty("data").ToObject<string>(),
-                            serverParams?.GetProperty("opcode").ToObject<int>() == 2));
+                            serverParams?.GetProperty("opcode").ToObject<int>() == OpcodeBase64));
                     break;
                 case "frameReceived":
                     FrameReceived?.Invoke(
                         this,
                         new WebSocketFrame(
                             serverParams?.GetProperty("data").ToObject<string>(),
-                            serverParams?.GetProperty("opcode").ToObject<int>() == 2));
+                            serverParams?.GetProperty("opcode").ToObject<int>() == OpcodeBase64));
                     break;
                 case "socketError":
                     SocketError?.Invoke(this, serverParams?.GetProperty("error").ToObject<string>());
