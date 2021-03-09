@@ -3,16 +3,12 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-    /// <summary>
-    /// <see cref="IWebSocket"/> extensions.
-    /// </summary>
-    public static class WebSocketExtensions
+    public partial interface IWebSocket
     {
         /// <summary>
         /// Waits for event to fire and passes its value into the predicate function. Resolves when the predicate returns truthy value.
         /// Will throw an Exception if the <see cref="IWebSocket"/> is closed before the event is fired.
         /// </summary>
-        /// <param name="webSocket">WebSocket to act on.</param>
         /// <param name="webSocketEvent">Event to wait for.</param>
         /// <param name="predicate">Receives the event data and resolves when the waiting should resolve.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
@@ -36,14 +32,6 @@ namespace PlaywrightSharp
         /// </code>
         /// </example>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
-        public static Task<T> WaitForEventAsync<T>(this IWebSocket webSocket, PlaywrightEvent<T> webSocketEvent, Func<T, bool> predicate = null, float? timeout = null)
-        {
-            if (webSocket is null)
-            {
-                throw new ArgumentNullException(nameof(webSocket));
-            }
-
-            return ((WebSocket)webSocket).WaitForEventAsync(webSocketEvent, predicate, timeout);
-        }
+        public Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> webSocketEvent, Func<T, bool> predicate = null, float? timeout = null);
     }
 }

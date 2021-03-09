@@ -58,7 +58,7 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         public bool IsClosed { get; internal set; }
 
-        /// <inheritdoc cref="WebSocketExtensions.WaitForEventAsync{T}(IWebSocket, PlaywrightEvent{T}, Func{T, bool}, float?)"/>
+        /// <inheritdoc/>
         public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> webSocketEvent, Func<T, bool> predicate = null, float? timeout = null)
         {
             if (webSocketEvent == null)
@@ -72,7 +72,7 @@ namespace PlaywrightSharp
 
             if (webSocketEvent.Name != WebSocketEvent.SocketError.Name)
             {
-                waiter.RejectOnEvent<WebSocketErrorEventArgs>(this, WebSocketEvent.SocketError.Name, new PlaywrightSharpException("Socket error"));
+                waiter.RejectOnEvent<string>(this, WebSocketEvent.SocketError.Name, new PlaywrightSharpException("Socket error"));
             }
 
             if (webSocketEvent.Name != WebSocketEvent.Close.Name)
@@ -99,7 +99,7 @@ namespace PlaywrightSharp
 
             if (@event != WebSocketEvent.SocketError.Name)
             {
-                waiter.RejectOnEvent<WebSocketErrorEventArgs>(this, WebSocketEvent.SocketError.Name, new PlaywrightSharpException("Socket error"));
+                waiter.RejectOnEvent<string>(this, WebSocketEvent.SocketError.Name, new PlaywrightSharpException("Socket error"));
             }
 
             if (@event != WebSocketEvent.Close.Name)
