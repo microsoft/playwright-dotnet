@@ -54,7 +54,7 @@ namespace PlaywrightSharp.Tests.Chromium
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             bool serviceWorkerCreated = false;
-            ((IChromiumBrowserContext)Context).ServiceWorker += (sender, e) => serviceWorkerCreated = true;
+            ((IChromiumBrowserContext)Context).ServiceWorker += (_, _) => serviceWorkerCreated = true;
 
             await Page.EvaluateAsync(@"() =>
             {
@@ -72,8 +72,8 @@ namespace PlaywrightSharp.Tests.Chromium
                 Page.GoToAsync(TestConstants.ServerUrl + "/serviceworkers/empty/sw.html"));
 
             var messages = new List<string>();
-            Context.Close += (sender, e) => messages.Add("context");
-            worker.Worker.Close += (sender, e) => messages.Add("worker");
+            Context.Close += (_, _) => messages.Add("context");
+            worker.Worker.Close += (_, _) => messages.Add("worker");
 
             await Context.CloseAsync();
 

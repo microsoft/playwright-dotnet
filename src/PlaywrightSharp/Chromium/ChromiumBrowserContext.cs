@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Chromium
                 }
             }
 
-            Channel.BackgroundPage += (sender, e) =>
+            Channel.BackgroundPage += (_, e) =>
             {
                 var page = e.PageChannel.Object;
                 page.Context = this;
@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Chromium
                 }
             }
 
-            Channel.ServiceWorker += (sender, e) =>
+            Channel.ServiceWorker += (_, e) =>
             {
                 var worker = e.WorkerChannel.Object;
                 ServiceWorkersList.Add(worker);

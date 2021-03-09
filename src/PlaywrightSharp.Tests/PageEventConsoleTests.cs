@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests
         {
             var messages = new List<string>();
 
-            Page.Console += (object sender, ConsoleEventArgs e) => messages.Add(e.Message.Text);
+            Page.Console += (_, e) => messages.Add(e.Message.Text);
             await Page.EvaluateAsync("() => { for (let i = 0; i < 2; ++i ) console.log('hello'); } ");
 
             Assert.Equal(new[] { "hello", "hello" }, messages.ToArray());
@@ -56,7 +56,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkForDifferentConsoleAPICalls()
         {
             var messages = new List<ConsoleMessage>();
-            Page.Console += (sender, e) => messages.Add(e.Message);
+            Page.Console += (_, e) => messages.Add(e.Message);
             // All console events will be reported before `Page.evaluate` is finished.
             await Page.EvaluateAsync(@"() => {
                 // A pair of time/timeEnd generates only one Console API call.

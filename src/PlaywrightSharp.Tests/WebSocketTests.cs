@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests
             {
                 log.Add($"open<{e.WebSocket.Url}>");
                 webSocket = e.WebSocket;
-                webSocket.Close += (_, __) =>
+                webSocket.Close += (_, _) =>
                 {
                     log.Add("close");
                     socketClosedTcs.TrySetResult(true);
@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests
                 e.WebSocket.FrameSent += (_, e) => log.Add($"sent<{e.Text}>");
                 e.WebSocket.FrameReceived += (_, e) => log.Add($"received<{e.Text}>");
 
-                e.WebSocket.Close += (_, __) =>
+                e.WebSocket.Close += (_, _) =>
                 {
                     log.Add("close");
                     socketClosedTcs.TrySetResult(true);
@@ -106,7 +106,7 @@ namespace PlaywrightSharp.Tests
             Page.WebSocket += (_, e) =>
             {
                 e.WebSocket.FrameSent += (_, e) => log.Add(e);
-                e.WebSocket.Close += (_, __) => socketClosedTcs.TrySetResult(true);
+                e.WebSocket.Close += (_, _) => socketClosedTcs.TrySetResult(true);
             };
 
             await Page.EvaluateAsync(@"port => {
@@ -172,7 +172,7 @@ namespace PlaywrightSharp.Tests
             {
                 ws = e.WebSocket;
                 e.WebSocket.SocketError += (_, e) => socketError = e;
-                e.WebSocket.FrameReceived += (_, e) => frameReceivedTcs.TrySetResult(true);
+                e.WebSocket.FrameReceived += (_, _) => frameReceivedTcs.TrySetResult(true);
             };
 
             await TaskUtils.WhenAll(
@@ -195,7 +195,7 @@ namespace PlaywrightSharp.Tests
             Page.WebSocket += (_, e) =>
             {
                 ws = e.WebSocket;
-                e.WebSocket.FrameReceived += (_, e) => frameReceivedTcs.TrySetResult(true);
+                e.WebSocket.FrameReceived += (_, _) => frameReceivedTcs.TrySetResult(true);
             };
 
             await TaskUtils.WhenAll(
@@ -221,7 +221,7 @@ namespace PlaywrightSharp.Tests
             Page.WebSocket += (_, e) =>
             {
                 ws = e.WebSocket;
-                e.WebSocket.FrameReceived += (_, e) => frameReceivedTcs.TrySetResult(true);
+                e.WebSocket.FrameReceived += (_, _) => frameReceivedTcs.TrySetResult(true);
             };
 
             await TaskUtils.WhenAll(

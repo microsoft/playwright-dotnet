@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Transport
             _process = process;
             _logger = loggerFactory?.CreateLogger<StdIOTransport>();
             scheduler ??= ScheduleTransportTask;
-            process.ErrorDataReceived += (s, e) => LogReceived?.Invoke(this, new LogReceivedEventArgs(e.Data));
+            process.ErrorDataReceived += (_, e) => LogReceived?.Invoke(this, new LogReceivedEventArgs(e.Data));
             process.BeginErrorReadLine();
 
             scheduler(GetResponseAsync, _readerCancellationSource.Token);

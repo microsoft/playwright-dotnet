@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.RouteAsync("**/*", (route, request) => route.ContinueAsync());
+            await Page.RouteAsync("**/*", (route, _) => route.ContinueAsync());
             await Page.GoToAsync(TestConstants.EmptyPage);
         }
 
@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldAmendMethodOnMainRequest()
         {
             var methodTask = Server.WaitForRequest("/empty.html", r => r.Method);
-            await Page.RouteAsync("**/*", (route, request) => route.ContinueAsync(HttpMethod.Post));
+            await Page.RouteAsync("**/*", (route, _) => route.ContinueAsync(HttpMethod.Post));
             await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Equal("POST", await methodTask);
         }
@@ -59,7 +59,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldAmendPostData()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.RouteAsync("**/*", (route, request) =>
+            await Page.RouteAsync("**/*", (route, _) =>
             {
                 route.ContinueAsync(postData: "doggo");
             });

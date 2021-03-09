@@ -19,7 +19,7 @@ namespace PlaywrightSharp
         {
             Channel = new BrowserChannel(guid, parent.Connection, this);
             IsConnected = true;
-            Channel.Closed += (sender, e) => DidClose();
+            Channel.Closed += (_, _) => DidClose();
             _initializer = initializer;
         }
 

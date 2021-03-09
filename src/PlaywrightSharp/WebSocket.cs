@@ -23,7 +23,7 @@ namespace PlaywrightSharp
             _channel = new WebSocketChannel(guid, parent.Connection, this);
             _initializer = initializer;
 
-            _channel.Close += (_, e) =>
+            _channel.Close += (_, _) =>
             {
                 IsClosed = true;
                 Close?.Invoke(this, EventArgs.Empty);

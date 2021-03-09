@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Tests
         {
             var requests = new List<IRequest>();
 
-            Page.RequestFinished += (sender, e) => requests.Add(e.Request);
+            Page.RequestFinished += (_, e) => requests.Add(e.Request);
             await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
 
             Assert.Equal(2, requests.Count);
@@ -108,7 +108,7 @@ namespace PlaywrightSharp.Tests
             Server.SetRedirect("/foo.html", "/empty.html");
             var responses = new List<IResponse>();
 
-            Page.Response += (sender, e) => responses.Add(e.Response);
+            Page.Response += (_, e) => responses.Add(e.Response);
             await Page.GoToAsync(TestConstants.ServerUrl + "/foo.html");
 
             // This is different on purpose, promises work different in TS.

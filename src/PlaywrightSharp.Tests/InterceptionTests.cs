@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests
 
             var page = await context.NewPageAsync();
 
-            await page.RouteAsync("**/*", (route, request) => route.ContinueAsync());
+            await page.RouteAsync("**/*", (route, _) => route.ContinueAsync());
             var response = await page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html");
             Assert.Equal(HttpStatusCode.OK, response.Status);
         }

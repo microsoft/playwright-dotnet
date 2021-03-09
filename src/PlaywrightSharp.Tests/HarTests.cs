@@ -93,7 +93,7 @@ namespace PlaywrightSharp.Tests
             var pageEntry = log.Pages.First();
             Assert.Equal("page_0", pageEntry.Id);
             Assert.Equal("Hello", pageEntry.Title);
-            Assert.True(pageEntry.StartedDateTime > DateTime.Now.AddMinutes(-1));
+            Assert.True(pageEntry.StartedDateTime > DateTime.UtcNow.AddMinutes(-1));
             Assert.True(pageEntry.PageTimings.OnContentLoad > 0);
             Assert.True(pageEntry.PageTimings.OnLoad > 0);
         }

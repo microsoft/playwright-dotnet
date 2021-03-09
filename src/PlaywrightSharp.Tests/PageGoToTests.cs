@@ -53,7 +53,7 @@ namespace PlaywrightSharp.Tests
 
             string url = TestConstants.CrossProcessHttpPrefix + "/empty.html";
             IFrame requestFrame = null;
-            Page.Request += (sender, e) =>
+            Page.Request += (_, e) =>
             {
                 if (e.Request.Url == url)
                 {
@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(TestConstants.EmptyPage, Page.Url);
 
             IFrame requestFrame = null;
-            Page.Request += (sender, e) =>
+            Page.Request += (_, e) =>
             {
                 if (e.Request.Url == TestConstants.ServerUrl + "/frames/frame.html")
                 {
@@ -101,7 +101,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(TestConstants.EmptyPage, Page.Url);
 
             IFrame requestFrame = null;
-            Page.Request += (sender, e) =>
+            Page.Request += (_, e) =>
             {
                 if (e.Request.Url == TestConstants.CrossProcessHttpPrefix + "/frames/frame.html")
                 {
@@ -237,9 +237,9 @@ namespace PlaywrightSharp.Tests
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldFailWhenNavigatingToBadSSL()
         {
-            Page.Request += (sender, e) => Assert.NotNull(e.Request);
-            Page.RequestFinished += (sender, e) => Assert.NotNull(e.Request);
-            Page.RequestFailed += (sender, e) => Assert.NotNull(e.Request);
+            Page.Request += (_, e) => Assert.NotNull(e.Request);
+            Page.RequestFinished += (_, e) => Assert.NotNull(e.Request);
+            Page.RequestFailed += (_, e) => Assert.NotNull(e.Request);
 
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await Page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html"));
             TestUtils.AssertSSLError(exception.Message);
@@ -303,7 +303,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingMaximumNavigationTimeout()
         {
-            Server.SetRoute("/empty.html", context => Task.Delay(-1));
+            Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             var exception = await Assert.ThrowsAsync<TimeoutException>(async ()
                 => await Page.GoToAsync(TestConstants.EmptyPage, timeout: 1));
             Assert.Contains("Timeout 1ms exceeded", exception.Message);
@@ -314,7 +314,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingDefaultMaximumNavigationTimeout()
         {
-            Server.SetRoute("/empty.html", context => Task.Delay(-1));
+            Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             Page.Context.DefaultNavigationTimeout = 2;
             Page.DefaultNavigationTimeout = 1;
             var exception = await Assert.ThrowsAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
@@ -326,7 +326,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingBrowserContextNavigationTimeout()
         {
-            Server.SetRoute("/empty.html", context => Task.Delay(-1));
+            Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             Page.Context.DefaultNavigationTimeout = 2;
             var exception = await Assert.ThrowsAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
             Assert.Contains("Timeout 2ms exceeded", exception.Message);
@@ -337,7 +337,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingDefaultMaximumTimeout()
         {
-            Server.SetRoute("/empty.html", context => Task.Delay(-1));
+            Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             Page.Context.DefaultTimeout = 2;
             Page.DefaultTimeout = 1;
             var exception = await Assert.ThrowsAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
@@ -349,7 +349,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingBrowserContextTimeout()
         {
-            Server.SetRoute("/empty.html", context => Task.Delay(-1));
+            Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             Page.Context.DefaultTimeout = 2;
             var exception = await Assert.ThrowsAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
             Assert.Contains("Timeout 2ms exceeded", exception.Message);
@@ -361,7 +361,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldPrioritizeDefaultNavigationTimeoutOverDefaultTimeout()
         {
             // Hang for request to the empty.html
-            Server.SetRoute("/empty.html", context => Task.Delay(-1));
+            Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             Page.DefaultTimeout = 0;
             Page.DefaultNavigationTimeout = 1;
             var exception = await Assert.ThrowsAnyAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
@@ -392,7 +392,7 @@ namespace PlaywrightSharp.Tests
             Task anotherTask = null;
 
             // Hang for request to the empty.html
-            Server.SetRoute("/empty.html", context =>
+            Server.SetRoute("/empty.html", _ =>
             {
                 anotherTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
                 return Task.Delay(-1);
@@ -472,7 +472,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldNavigateToDataURLAndNotFireDataURLRequests()
         {
             var requests = new List<IRequest>();
-            Page.Request += (sender, e) => requests.Add(e.Request);
+            Page.Request += (_, e) => requests.Add(e.Request);
 
             string dataUrl = "data:text/html,<div>yo</div>";
             var response = await Page.GoToAsync(dataUrl);
@@ -485,7 +485,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldNavigateToURLWithHashAndFireRequestsWithoutHash()
         {
             var requests = new List<IRequest>();
-            Page.Request += (sender, e) => requests.Add(e.Request);
+            Page.Request += (_, e) => requests.Add(e.Request);
 
             var response = await Page.GoToAsync(TestConstants.EmptyPage + "#hash");
             Assert.Equal(HttpStatusCode.OK, response.Status);
@@ -586,7 +586,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenCanceledByAnotherNavigation()
         {
-            Server.SetRoute("/one-style.html", context => Task.Delay(10_000));
+            Server.SetRoute("/one-style.html", _ => Task.Delay(10_000));
             var request = Server.WaitForRequest("/one-style.html");
             var failed = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", TestConstants.IsFirefox ? LifecycleEvent.Networkidle : LifecycleEvent.Load);
             await request;

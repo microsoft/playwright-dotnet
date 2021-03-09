@@ -46,7 +46,7 @@ namespace PlaywrightSharp
 
             var (task, dispose) = WaitForEvent<T>(eventSource, e, predicate);
             RejectOn(
-                task.ContinueWith(t => throw navigationException, _cts.Token, TaskContinuationOptions.RunContinuationsAsynchronously, TaskScheduler.Current),
+                task.ContinueWith(_ => throw navigationException, _cts.Token, TaskContinuationOptions.RunContinuationsAsynchronously, TaskScheduler.Current),
                 dispose);
         }
 
@@ -111,15 +111,19 @@ namespace PlaywrightSharp
                 {
                     if (predicate == null || predicate(e))
                     {
-                        info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler);
                         eventTsc.TrySetResult(e);
+                    }
+                    else
+                    {
+                        return;
                     }
                 }
                 catch (Exception ex)
                 {
-                    info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler);
                     eventTsc.TrySetException(ex);
                 }
+
+                info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler);
             }
 
             info.AddEventHandler(eventSource, (EventHandler<T>)EventHandler);

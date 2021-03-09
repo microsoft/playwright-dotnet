@@ -74,7 +74,7 @@ namespace PlaywrightSharp
             _channel.Closed += Channel_Closed;
             _channel.Crashed += Channel_Crashed;
             _channel.Popup += (_, e) => Popup?.Invoke(this, new PopupEventArgs(e.Page));
-            _channel.RequestFailed += (sender, e) =>
+            _channel.RequestFailed += (_, e) =>
             {
                 e.Request.Object.Failure = e.FailureText;
                 e.Request.Object.Timing.ResponseEnd = e.ResponseEndTiming;
@@ -85,25 +85,25 @@ namespace PlaywrightSharp
                 });
             };
 
-            _channel.Request += (sender, e) => Request?.Invoke(this, e);
-            _channel.RequestFinished += (sender, e) =>
+            _channel.Request += (_, e) => Request?.Invoke(this, e);
+            _channel.RequestFinished += (_, e) =>
             {
                 e.Request.Object.Timing.ResponseEnd = e.ResponseEndTiming;
                 RequestFinished?.Invoke(this, new RequestEventArgs { Request = e.Request.Object });
             };
-            _channel.Response += (sender, e) => Response?.Invoke(this, e);
-            _channel.WebSocket += (sender, e) => WebSocket?.Invoke(this, e);
+            _channel.Response += (_, e) => Response?.Invoke(this, e);
+            _channel.WebSocket += (_, e) => WebSocket?.Invoke(this, e);
             _channel.BindingCall += Channel_BindingCall;
             _channel.Route += Channel_Route;
             _channel.FrameAttached += Channel_FrameAttached;
             _channel.FrameDetached += Channel_FrameDetached;
-            _channel.Dialog += (sender, e) => Dialog?.Invoke(this, e);
-            _channel.Console += (sender, e) => Console?.Invoke(this, e);
-            _channel.DOMContentLoaded += (sender, e) => DOMContentLoaded?.Invoke(this, e);
-            _channel.Download += (sender, e) => Download?.Invoke(this, e);
-            _channel.PageError += (sender, e) => PageError?.Invoke(this, e);
-            _channel.Load += (sender, e) => Load?.Invoke(this, e);
-            _channel.Video += (sender, e) =>
+            _channel.Dialog += (_, e) => Dialog?.Invoke(this, e);
+            _channel.Console += (_, e) => Console?.Invoke(this, e);
+            _channel.DOMContentLoaded += (_, e) => DOMContentLoaded?.Invoke(this, e);
+            _channel.Download += (_, e) => Download?.Invoke(this, e);
+            _channel.PageError += (_, e) => PageError?.Invoke(this, e);
+            _channel.Load += (_, e) => Load?.Invoke(this, e);
+            _channel.Video += (_, e) =>
             {
                 if (Video != null)
                 {
@@ -111,8 +111,8 @@ namespace PlaywrightSharp
                 }
             };
 
-            _channel.FileChooser += (sender, e) => _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(this, e.Element.Object, e.IsMultiple));
-            _channel.Worker += (sender, e) =>
+            _channel.FileChooser += (_, e) => _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(this, e.Element.Object, e.IsMultiple));
+            _channel.Worker += (_, e) =>
             {
                 WorkersList.Add(e.WorkerChannel.Object);
                 e.WorkerChannel.Object.Page = this;

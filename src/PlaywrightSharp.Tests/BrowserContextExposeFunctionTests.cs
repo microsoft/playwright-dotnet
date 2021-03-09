@@ -91,7 +91,8 @@ namespace PlaywrightSharp.Tests
 
             args.Clear();
             await page.ReloadAsync();
-            Assert.Equal(new List<object> { "context", "page" }, args);
+            Assert.Contains("context", args);
+            Assert.Contains("page", args);
         }
 
         [PlaywrightTest("browsercontext-expose-function.spec.ts", "exposeBindingHandle should work")]
@@ -101,7 +102,7 @@ namespace PlaywrightSharp.Tests
             IJSHandle target = null;
             await Context.ExposeBindingAsync(
                 "logme",
-                (BindingSource source, IJSHandle t) =>
+                (BindingSource _, IJSHandle t) =>
                 {
                     target = t;
                     return 17;

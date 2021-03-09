@@ -211,7 +211,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkRightAfterFrameNavigated()
         {
             Task<int> frameEvaluation = null;
-            Page.FrameNavigated += (sender, e) =>
+            Page.FrameNavigated += (_, e) =>
             {
                 frameEvaluation = e.Frame.EvaluateAsync<int>("() => 6 * 7");
             };
@@ -225,7 +225,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             Task<int> frameEvaluation = null;
-            Page.FrameNavigated += (sender, e) =>
+            Page.FrameNavigated += (_, e) =>
             {
                 frameEvaluation = e.Frame.EvaluateAsync<int>("() => 6 * 7");
             };

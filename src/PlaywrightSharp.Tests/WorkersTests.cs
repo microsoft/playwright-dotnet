@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
@@ -36,13 +38,13 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldEmitCreatedAndDestroyedEvents()
         {
             var workerCreatedTcs = new TaskCompletionSource<IWorker>();
-            Page.Worker += (sender, e) => workerCreatedTcs.TrySetResult(e.Worker);
+            Page.Worker += (_, e) => workerCreatedTcs.TrySetResult(e.Worker);
 
             var workerObj = await Page.EvaluateHandleAsync("() => new Worker(URL.createObjectURL(new Blob(['1'], {type: 'application/javascript'})))");
             var worker = await workerCreatedTcs.Task;
             var workerThisObj = await worker.EvaluateHandleAsync("() => this");
             var workerDestroyedTcs = new TaskCompletionSource<IWorker>();
-            worker.Close += (sender, e) => workerDestroyedTcs.TrySetResult((IWorker)sender);
+            worker.Close += (sender, _) => workerDestroyedTcs.TrySetResult((IWorker)sender);
             await Page.EvaluateAsync("workerObj => workerObj.terminate()", workerObj);
             Assert.Same(worker, await workerDestroyedTcs.Task);
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => workerThisObj.GetPropertyAsync("self"));
@@ -66,7 +68,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldHaveJSHandlesForConsoleLogs()
         {
             var consoleTcs = new TaskCompletionSource<ConsoleMessage>();
-            Page.Console += (sender, e) => consoleTcs.TrySetResult(e.Message);
+            Page.Console += (_, e) => consoleTcs.TrySetResult(e.Message);
 
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1,2,3,this)'], {type: 'application/javascript'})))");
             var log = await consoleTcs.Task;
@@ -92,7 +94,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldReportErrors()
         {
             var errorTcs = new TaskCompletionSource<string>();
-            Page.PageError += (sender, e) => errorTcs.TrySetResult(e.Message);
+            Page.PageError += (_, e) => errorTcs.TrySetResult(e.Message);
 
             await Page.EvaluateAsync(@"() => new Worker(URL.createObjectURL(new Blob([`
               setTimeout(() => {
@@ -116,11 +118,43 @@ namespace PlaywrightSharp.Tests
 
             Assert.Single(Page.Workers);
             bool destroyed = false;
-            worker.Close += (sender, e) => destroyed = true;
+            worker.Close += (_, _) => destroyed = true;
 
             await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
             Assert.True(destroyed);
             Assert.Empty(Page.Workers);
+        }
+
+        [Fact]
+        public async Task WorkerShouldWaitOnClose()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var workerCreatedTask = Page.WaitForEventAsync(PageEvent.Worker);
+            await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
+            var worker = (await workerCreatedTask).Worker;
+
+            Assert.Single(Page.Workers);
+
+            var t = worker.WaitForCloseAsync();
+            await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
+            await t;
+            Assert.Empty(Page.Workers);
+        }
+
+        [Fact]
+        public async Task WorkerShouldFailOnTimeout()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            var workerCreatedTask = Page.WaitForEventAsync(PageEvent.Worker);
+            await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
+            var worker = (await workerCreatedTask).Worker;
+
+            Assert.Single(Page.Workers);
+
+            var t = worker.WaitForCloseAsync(1);
+            await Task.Delay(100);
+            await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
+            await Assert.ThrowsAsync<TimeoutException>(async () => await t);
         }
 
         [PlaywrightTest("workers.spec.ts", "should clear upon cross-process navigation")]
@@ -134,7 +168,7 @@ namespace PlaywrightSharp.Tests
 
             Assert.Single(Page.Workers);
             bool destroyed = false;
-            worker.Close += (sender, e) => destroyed = true;
+            worker.Close += (_, _) => destroyed = true;
 
             await Page.GoToAsync(TestConstants.CrossProcessUrl + "/empty.html");
             Assert.True(destroyed);
@@ -154,7 +188,7 @@ namespace PlaywrightSharp.Tests
             var requestTask = Page.WaitForRequestAsync(url);
             var responseTask = Page.WaitForResponseAsync(url);
 
-            await worker.Worker.EvaluateAsync("url => fetch(url).then(response => response.text()).then(console.log)", url);
+            await worker.Worker.EvaluateAsync<JsonElement>("url => fetch(url).then(response => response.text()).then(console.log)", url);
 
             await TaskUtils.WhenAll(requestTask, responseTask);
 

@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests.Chromium
 
             var targets = new List<JsonElement?>();
 
-            browserSession.MessageReceived += (sender, e) =>
+            browserSession.MessageReceived += (_, e) =>
             {
                 if (e.Method == "Target.targetCreated" && e.Params.Value.GetProperty("targetInfo").GetProperty("type").GetString() != "browser")
                 {
