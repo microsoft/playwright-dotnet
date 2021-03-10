@@ -46,7 +46,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc/>
-        public event EventHandler<EventArgs> Close;
+        public event EventHandler Close;
 
         /// <inheritdoc/>
         public event EventHandler<PageEventArgs> Page;

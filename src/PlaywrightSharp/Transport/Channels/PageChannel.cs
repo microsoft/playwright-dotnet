@@ -77,7 +77,7 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<FileChooserChannelEventArgs> FileChooser;
 
-        internal event EventHandler<EventArgs> Load;
+        internal event EventHandler Load;
 
         internal event EventHandler<WorkerChannelEventArgs> Worker;
 

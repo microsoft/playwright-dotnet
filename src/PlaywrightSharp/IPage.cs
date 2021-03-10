@@ -160,12 +160,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// Raised when the JavaScript <c>load</c> <see href="https://developer.mozilla.org/en-US/docs/Web/Events/load"/> event is dispatched.
         /// </summary>
-        event EventHandler<EventArgs> Load;
+        event EventHandler Load;
 
         /// <summary>
         /// The JavaScript <c>DOMContentLoaded</c> <see href="https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded"/> event
         /// </summary>
-        event EventHandler<EventArgs> DOMContentLoaded;
+        event EventHandler DOMContentLoaded;
 
         /// <summary>
         /// Raised when the page closes.
