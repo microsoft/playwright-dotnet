@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests
             await Page.RouteAsync("**/empty.html", (route, request) =>
             {
                 Assert.Contains("empty.html", request.Url);
-                Assert.Contains(request.Headers, x => string.Equals(x.Key, "user-agent"));
+                Assert.Contains(request.Headers, x => string.Equals(x.Key, "user-agent", StringComparison.OrdinalIgnoreCase));
                 Assert.Equal(HttpMethod.Get.Method, request.Method);
                 Assert.Null(request.PostData);
                 Assert.True(request.IsNavigationRequest);
