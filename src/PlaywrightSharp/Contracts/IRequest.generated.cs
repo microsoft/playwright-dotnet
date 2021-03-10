@@ -128,9 +128,8 @@ namespace PlaywrightSharp
         /// <summary>
         /// <para>
         /// Contains the request's resource type as it was perceived by the rendering engine.
-        /// ResourceType will be one of the following: <c>document</c>, <c>stylesheet</c>, <c>image</c>,
-        /// <c>media</c>, <c>font</c>, <c>script</c>, <c>texttrack</c>, <c>xhr</c>, <c>fetch</c>,
-        /// <c>eventsource</c>, <c>websocket</c>, <c>manifest</c>, <c>other</c>.
+        /// You can use <see cref="PlaywrightSharp.Contracts.Constants.ResourceTypes" /> to
+        /// access the constants for all the values available as a result of this method.
         /// </para>
         /// </summary>
         string ResourceType { get; }

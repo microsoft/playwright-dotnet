@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using PlaywrightSharp.Contracts.Constants;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
 using Xunit;
@@ -36,7 +37,7 @@ namespace PlaywrightSharp.Tests
                 Assert.Equal(HttpMethod.Get.Method, route.Request.Method);
                 Assert.Null(route.Request.PostData);
                 Assert.True(route.Request.IsNavigationRequest);
-                Assert.Equal("document", route.Request.ResourceType, false);
+                Assert.Equal(ResourceTypes.Document, route.Request.ResourceType, false);
                 Assert.Same(page.MainFrame, route.Request.Frame);
                 Assert.Equal("about:blank", page.MainFrame.Url);
 

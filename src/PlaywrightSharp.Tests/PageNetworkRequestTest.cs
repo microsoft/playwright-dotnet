@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using PlaywrightSharp.Contracts.Constants;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
 using Xunit;
@@ -205,7 +206,7 @@ namespace PlaywrightSharp.Tests
                 });
             }"));
 
-            Assert.Equal("eventsource", requests[0].ResourceType);
+            Assert.Equal(ResourceTypes.EventSource, requests[0].ResourceType);
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should return navigation bit")]

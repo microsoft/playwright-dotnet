@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using PlaywrightSharp.Contracts.Constants;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
@@ -35,7 +36,7 @@ namespace PlaywrightSharp.Tests
                 Assert.Equal(HttpMethod.Get.Method, request.Method);
                 Assert.Null(request.PostData);
                 Assert.True(request.IsNavigationRequest);
-                Assert.Equal("document", request.ResourceType, true);
+                Assert.Equal(ResourceTypes.Document, request.ResourceType, true);
                 Assert.Same(request.Frame, Page.MainFrame);
                 Assert.Equal("about:blank", request.Frame.Url);
                 route.ContinueAsync();
@@ -315,7 +316,7 @@ namespace PlaywrightSharp.Tests
 
             Assert.Contains("non-existing-page.html", requests[0].Url);
             Assert.Single(requests);
-            Assert.Equal("document", requests[0].ResourceType, true);
+            Assert.Equal(ResourceTypes.Document, requests[0].ResourceType, true);
             Assert.True(requests[0].IsNavigationRequest);
 
             var chain = new List<IRequest>();
@@ -361,13 +362,13 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("one-style.html", response.Url);
 
             Assert.Equal(2, requests.Count);
-            Assert.Equal("document", requests[0].ResourceType, true);
+            Assert.Equal(ResourceTypes.Document, requests[0].ResourceType, true);
             Assert.Contains("one-style.html", requests[0].Url);
 
             var request = requests[1];
             foreach (string url in new[] { "/one-style.css", "/two-style.css", "/three-style.css", "/four-style.css" })
             {
-                Assert.Equal("stylesheet", request.ResourceType, true);
+                Assert.Equal(ResourceTypes.Stylesheet, request.ResourceType, true);
                 Assert.Contains(url, request.Url);
                 request = request.RedirectedTo;
             }
