@@ -239,6 +239,12 @@ namespace PlaywrightSharp
                 waiter.RejectOnEvent<EventArgs>(this, ContextEvent.Close.Name, new TargetClosedException("Context closed"));
             }
 
+            if (typeof(T) == typeof(EventArgs))
+            {
+                await waiter.WaitForEventAsync(this, e.Name).ConfigureAwait(false);
+                return default;
+            }
+
             return await waiter.WaitForEventAsync(this, e.Name, predicate).ConfigureAwait(false);
         }
 

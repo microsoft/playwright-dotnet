@@ -454,6 +454,12 @@ namespace PlaywrightSharp
                 waiter.RejectOnEvent<EventArgs>(this, PageEvent.Close.Name, new TargetClosedException("Page closed"));
             }
 
+            if (typeof(T) == typeof(EventArgs))
+            {
+                await waiter.WaitForEventAsync(this, pageEvent.Name).ConfigureAwait(false);
+                return default;
+            }
+
             return await waiter.WaitForEventAsync(this, pageEvent.Name, predicate).ConfigureAwait(false);
         }
 
