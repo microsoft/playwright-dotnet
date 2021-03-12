@@ -29,6 +29,9 @@ namespace PlaywrightSharp
         internal string Preview { get; set; }
 
         /// <inheritdoc />
+        public IElementHandle AsElement => this as IElementHandle;
+
+        /// <inheritdoc />
         public async Task<IJSHandle> EvaluateHandleAsync(string expression)
             => (await _channel.EvaluateExpressionHandleAsync(
                 script: expression,
@@ -77,7 +80,7 @@ namespace PlaywrightSharp
         public async Task<IJSHandle> GetPropertyAsync(string propertyName) => (await _channel.GetPropertyAsync(propertyName).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public async Task<IDictionary<string, IJSHandle>> GetPropertiesAsync()
+        public async Task<Dictionary<string, IJSHandle>> GetPropertiesAsync()
         {
             var result = new Dictionary<string, IJSHandle>();
             var channelResult = await _channel.GetPropertiesAsync().ConfigureAwait(false);
