@@ -24,8 +24,10 @@ namespace PlaywrightSharp.Tests
             // We have to interact with a page so that 'beforeunload' handlers
             // fire.
             await newPage.ClickAsync("body");
+
+            var dialogTask = newPage.WaitForEventAsync(PageEvent.Dialog);
             var pageClosingTask = newPage.CloseAsync(true);
-            var dialog = await newPage.WaitForEventAsync(PageEvent.Dialog).ContinueWith(task => task.Result.Dialog);
+            var dialog = await dialogTask.ContinueWith(task => task.Result.Dialog);
             Assert.Equal(DialogType.BeforeUnload, dialog.Type);
             Assert.Empty(dialog.DefaultValue);
             if (TestConstants.IsChromium)
