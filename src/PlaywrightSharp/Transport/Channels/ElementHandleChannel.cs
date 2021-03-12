@@ -279,13 +279,13 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "dblclick", args);
         }
 
-        internal async Task<Rect> GetBoundingBoxAsync()
+        internal async Task<ElementHandleBoundingBoxResult> GetBoundingBoxAsync()
         {
             var result = (await Connection.SendMessageToServerAsync(Guid, "boundingBox", null).ConfigureAwait(false)).Value;
 
             if (result.TryGetProperty("value", out var value))
             {
-                return value.ToObject<Rect>();
+                return value.ToObject<ElementHandleBoundingBoxResult>();
             }
 
             return null;

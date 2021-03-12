@@ -113,6 +113,11 @@ namespace PlaywrightSharp
         /// this.
         /// </para>
         /// </summary>
+        /// <param name="timeout">
+        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
         /// <param name="force">
         /// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
         /// to <c>false</c>.
@@ -123,12 +128,7 @@ namespace PlaywrightSharp
         /// would only need this option in the exceptional cases such as navigating to inaccessible
         /// pages. Defaults to <c>false</c>.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task CheckAsync(bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+        Task CheckAsync(float? timeout = default, bool? force = default, bool? noWaitAfter = default);
 
         /// <summary>
         /// <para>This method clicks the element by performing the following steps:</para>
@@ -163,20 +163,10 @@ namespace PlaywrightSharp
         /// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
         /// to 0.
         /// </param>
-        /// <param name="force">
-        /// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
-        /// to <c>false</c>.
-        /// </param>
         /// <param name="modifiers">
         /// Modifier keys to press. Ensures that only these modifiers are pressed during the
         /// operation, and then restores current modifiers back. If not specified, currently
         /// pressed modifiers are used.
-        /// </param>
-        /// <param name="noWaitAfter">
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
         /// </param>
         /// <param name="position">
         /// A point to use relative to the top-left corner of element padding box. If not specified,
@@ -187,7 +177,17 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task ClickAsync(MouseButton button = default, int? clickCount = default, float? delay = default, bool? force = default, IEnumerable<KeyboardModifier> modifiers = default, bool? noWaitAfter = default, ElementHandlePosition position = default, float? timeout = default);
+        /// <param name="force">
+        /// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
+        /// to <c>false</c>.
+        /// </param>
+        /// <param name="noWaitAfter">
+        /// Actions that initiate navigations are waiting for these navigations to happen and
+        /// for pages to start loading. You can opt out of waiting via setting this flag. You
+        /// would only need this option in the exceptional cases such as navigating to inaccessible
+        /// pages. Defaults to <c>false</c>.
+        /// </param>
+        Task ClickAsync(MouseButton button = default, int? clickCount = default, float? delay = default, IEnumerable<KeyboardModifier> modifiers = default, ElementHandlePosition position = default, float? timeout = default, bool? force = default, bool? noWaitAfter = default);
 
         /// <summary>
         /// <para>
@@ -236,20 +236,10 @@ namespace PlaywrightSharp
         /// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
         /// to 0.
         /// </param>
-        /// <param name="force">
-        /// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
-        /// to <c>false</c>.
-        /// </param>
         /// <param name="modifiers">
         /// Modifier keys to press. Ensures that only these modifiers are pressed during the
         /// operation, and then restores current modifiers back. If not specified, currently
         /// pressed modifiers are used.
-        /// </param>
-        /// <param name="noWaitAfter">
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
         /// </param>
         /// <param name="position">
         /// A point to use relative to the top-left corner of element padding box. If not specified,
@@ -260,7 +250,17 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task DblclickAsync(MouseButton button = default, float? delay = default, bool? force = default, IEnumerable<KeyboardModifier> modifiers = default, bool? noWaitAfter = default, ElementHandlePosition position = default, float? timeout = default);
+        /// <param name="force">
+        /// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
+        /// to <c>false</c>.
+        /// </param>
+        /// <param name="noWaitAfter">
+        /// Actions that initiate navigations are waiting for these navigations to happen and
+        /// for pages to start loading. You can opt out of waiting via setting this flag. You
+        /// would only need this option in the exceptional cases such as navigating to inaccessible
+        /// pages. Defaults to <c>false</c>.
+        /// </param>
+        Task DblclickAsync(MouseButton button = default, float? delay = default, IEnumerable<KeyboardModifier> modifiers = default, ElementHandlePosition position = default, float? timeout = default, bool? force = default, bool? noWaitAfter = default);
 
         /// <summary>
         /// <para>
@@ -361,18 +361,18 @@ namespace PlaywrightSharp
         /// Value to set for the <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or <c><see cref="contenteditable"
         /// /></c> element.
         /// </param>
+        /// <param name="timeout">
+        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
         /// <param name="noWaitAfter">
         /// Actions that initiate navigations are waiting for these navigations to happen and
         /// for pages to start loading. You can opt out of waiting via setting this flag. You
         /// would only need this option in the exceptional cases such as navigating to inaccessible
         /// pages. Defaults to <c>false</c>.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task FillAsync(string value, bool? noWaitAfter = default, float? timeout = default);
+        Task FillAsync(string value, float? timeout = default, bool? noWaitAfter = default);
 
         /// <summary>
         /// <para>
@@ -413,10 +413,6 @@ namespace PlaywrightSharp
         /// this.
         /// </para>
         /// </summary>
-        /// <param name="force">
-        /// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
-        /// to <c>false</c>.
-        /// </param>
         /// <param name="modifiers">
         /// Modifier keys to press. Ensures that only these modifiers are pressed during the
         /// operation, and then restores current modifiers back. If not specified, currently
@@ -431,7 +427,11 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task HoverAsync(bool? force = default, IEnumerable<KeyboardModifier> modifiers = default, ElementHandlePosition position = default, float? timeout = default);
+        /// <param name="force">
+        /// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
+        /// to <c>false</c>.
+        /// </param>
+        Task HoverAsync(IEnumerable<KeyboardModifier> modifiers = default, ElementHandlePosition position = default, float? timeout = default, bool? force = default);
 
         /// <summary><para>Returns the <c>element.innerHTML</c>.</para></summary>
         Task<string> GetInnerHTMLAsync();
@@ -506,18 +506,18 @@ namespace PlaywrightSharp
         /// Time to wait between <c>keydown</c> and <c>keyup</c> in milliseconds. Defaults to
         /// 0.
         /// </param>
+        /// <param name="timeout">
+        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
         /// <param name="noWaitAfter">
         /// Actions that initiate navigations are waiting for these navigations to happen and
         /// for pages to start loading. You can opt out of waiting via setting this flag. You
         /// would only need this option in the exceptional cases such as navigating to inaccessible
         /// pages. Defaults to <c>false</c>.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task PressAsync(string key, float? delay = default, bool? noWaitAfter = default, float? timeout = default);
+        Task PressAsync(string key, float? delay = default, float? timeout = default, bool? noWaitAfter = default);
 
         /// <summary>
         /// <para>
@@ -564,13 +564,13 @@ namespace PlaywrightSharp
         /// to the disk.
         /// </param>
         /// <param name="quality">The quality of the image, between 0-100. Not applicable to <c>png</c> images.</param>
+        /// <param name="type">Specify screenshot type, defaults to <c>png</c>.</param>
         /// <param name="timeout">
         /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        /// <param name="type">Specify screenshot type, defaults to <c>png</c>.</param>
-        Task<byte[]> ScreenshotAsync(bool? omitBackground = default, string path = default, int? quality = default, float? timeout = default, ScreenshotType type = default);
+        Task<byte[]> ScreenshotAsync(bool? omitBackground = default, string path = default, int? quality = default, ScreenshotType type = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -600,18 +600,18 @@ namespace PlaywrightSharp
         /// </para>
         /// <para>Will wait until all specified options are present in the <c>&lt;select&gt;</c> element.</para>
         /// </summary>
+        /// <param name="timeout">
+        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
         /// <param name="noWaitAfter">
         /// Actions that initiate navigations are waiting for these navigations to happen and
         /// for pages to start loading. You can opt out of waiting via setting this flag. You
         /// would only need this option in the exceptional cases such as navigating to inaccessible
         /// pages. Defaults to <c>false</c>.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(bool? noWaitAfter = default, float? timeout = default);
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(float? timeout = default, bool? noWaitAfter = default);
 
         /// <summary>
         /// <para>
@@ -639,18 +639,18 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="files">
         /// </param>
+        /// <param name="timeout">
+        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
         /// <param name="noWaitAfter">
         /// Actions that initiate navigations are waiting for these navigations to happen and
         /// for pages to start loading. You can opt out of waiting via setting this flag. You
         /// would only need this option in the exceptional cases such as navigating to inaccessible
         /// pages. Defaults to <c>false</c>.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task SetInputFilesAsync(IEnumerable<string> files, bool? noWaitAfter = default, float? timeout = default);
+        Task SetInputFilesAsync(IEnumerable<string> files, float? timeout = default, bool? noWaitAfter = default);
 
         /// <summary>
         /// <para>This method taps the element by performing the following steps:</para>
@@ -685,20 +685,10 @@ namespace PlaywrightSharp
         /// context be set to true.
         /// </para>
         /// </remarks>
-        /// <param name="force">
-        /// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
-        /// to <c>false</c>.
-        /// </param>
         /// <param name="modifiers">
         /// Modifier keys to press. Ensures that only these modifiers are pressed during the
         /// operation, and then restores current modifiers back. If not specified, currently
         /// pressed modifiers are used.
-        /// </param>
-        /// <param name="noWaitAfter">
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
         /// </param>
         /// <param name="position">
         /// A point to use relative to the top-left corner of element padding box. If not specified,
@@ -709,7 +699,17 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task TapAsync(bool? force = default, IEnumerable<KeyboardModifier> modifiers = default, bool? noWaitAfter = default, ElementHandlePosition position = default, float? timeout = default);
+        /// <param name="force">
+        /// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
+        /// to <c>false</c>.
+        /// </param>
+        /// <param name="noWaitAfter">
+        /// Actions that initiate navigations are waiting for these navigations to happen and
+        /// for pages to start loading. You can opt out of waiting via setting this flag. You
+        /// would only need this option in the exceptional cases such as navigating to inaccessible
+        /// pages. Defaults to <c>false</c>.
+        /// </param>
+        Task TapAsync(IEnumerable<KeyboardModifier> modifiers = default, ElementHandlePosition position = default, float? timeout = default, bool? force = default, bool? noWaitAfter = default);
 
         /// <summary><para>Returns the <c>node.textContent</c>.</para></summary>
         Task<string> GetTextContentAsync();
@@ -724,18 +724,18 @@ namespace PlaywrightSharp
         /// </summary>
         /// <param name="text">A text to type into a focused element.</param>
         /// <param name="delay">Time to wait between key presses in milliseconds. Defaults to 0.</param>
+        /// <param name="timeout">
+        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
         /// <param name="noWaitAfter">
         /// Actions that initiate navigations are waiting for these navigations to happen and
         /// for pages to start loading. You can opt out of waiting via setting this flag. You
         /// would only need this option in the exceptional cases such as navigating to inaccessible
         /// pages. Defaults to <c>false</c>.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task TypeAsync(string text, float? delay = default, bool? noWaitAfter = default, float? timeout = default);
+        Task TypeAsync(string text, float? delay = default, float? timeout = default, bool? noWaitAfter = default);
 
         /// <summary>
         /// <para>This method checks the element by performing the following steps:</para>
@@ -766,6 +766,11 @@ namespace PlaywrightSharp
         /// this.
         /// </para>
         /// </summary>
+        /// <param name="timeout">
+        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
         /// <param name="force">
         /// Whether to bypass the <a href="./actionability.md)">actionability</a> checks. Defaults
         /// to <c>false</c>.
@@ -776,12 +781,7 @@ namespace PlaywrightSharp
         /// would only need this option in the exceptional cases such as navigating to inaccessible
         /// pages. Defaults to <c>false</c>.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task UncheckAsync(bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+        Task UncheckAsync(float? timeout = default, bool? force = default, bool? noWaitAfter = default);
 
         /// <summary>
         /// <para>Returns when the element satisfies the <paramref name="state"/>.</para>

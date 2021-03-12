@@ -57,7 +57,7 @@ namespace PlaywrightSharp
         internal IChannel<ElementHandle> ElementChannel => _channel;
 
         /// <inheritdoc />
-        public async Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForState? state = null, float? timeout = null)
+        public async Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForState state = default, float? timeout = null)
             => (await _channel.WaitForSelectorAsync(
                 selector: selector,
                 state: state,
@@ -107,8 +107,8 @@ namespace PlaywrightSharp
             Modifier[] modifiers = null,
             Point? position = null,
             float? timeout = null,
-            bool force = false)
-            => _channel.HoverAsync(modifiers, position, timeout, force);
+            bool? force = false)
+            => _channel.HoverAsync(modifiers, position, timeout, force ?? false);
 
         /// <inheritdoc />
         public Task ScrollIntoViewIfNeededAsync(float? timeout = null) => _channel.ScrollIntoViewIfNeededAsync(timeout);
@@ -127,9 +127,9 @@ namespace PlaywrightSharp
             Modifier[] modifiers = null,
             Point? position = null,
             float? timeout = null,
-            bool force = false,
+            bool? force = false,
             bool? noWaitAfter = null)
-            => _channel.ClickAsync(delay, button, clickCount, modifiers, position, timeout, force, noWaitAfter);
+            => _channel.ClickAsync(delay, button, clickCount, modifiers, position, timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />
         public Task DblClickAsync(
@@ -138,7 +138,7 @@ namespace PlaywrightSharp
             Modifier[] modifiers = null,
             Point? position = null,
             float? timeout = null,
-            bool force = false,
+            bool? force = false,
             bool? noWaitAfter = null)
             => _channel.DblClickAsync(delay, button, modifiers, position, timeout, force, noWaitAfter);
 
@@ -293,16 +293,16 @@ namespace PlaywrightSharp
         public Task<string[]> SelectOptionAsync(params IElementHandle[] values) => SelectOptionAsync(values);
 
         /// <inheritdoc />
-        public Task CheckAsync(float? timeout = null, bool force = false, bool? noWaitAfter = null)
-            => _channel.CheckAsync(timeout, force, noWaitAfter);
+        public Task CheckAsync(float? timeout, bool? force, bool? noWaitAfter)
+            => _channel.CheckAsync(timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />
-        public Task UncheckAsync(float? timeout = null, bool force = false, bool? noWaitAfter = null)
+        public Task UncheckAsync(float? timeout = null, bool? force = false, bool? noWaitAfter = null)
             => _channel.UncheckAsync(timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task TapAsync(Point? position = null, Modifier[] modifiers = null, float? timeout = null, bool force = false, bool? noWaitAfter = null)
-            => _channel.TapAsync(position, modifiers, timeout, force, noWaitAfter);
+        public Task TapAsync(Point? position = null, Modifier[] modifiers = null, float? timeout = null, bool? force = false, bool? noWaitAfter = null)
+            => _channel.TapAsync(position, modifiers, timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />
         public Task<bool> IsCheckedAsync() => _channel.IsCheckedAsync();
