@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - release-*
   pull_request:
     branches:
       - main
+      - release-*
 
 jobs:
   test_net5:
