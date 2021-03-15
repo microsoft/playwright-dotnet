@@ -258,20 +258,23 @@ namespace PlaywrightSharp.Transport
             }
 
             string executableFile = GetPath(driversPath);
-            if (!File.Exists(executableFile))
+            if (File.Exists(executableFile))
             {
-                // fallback to the bin path
-                executableFile = Path.Combine(
-                    driversPath,
-                    RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "playwright.sh" : "playwright.cmd");
-
-                if (!File.Exists(executableFile))
-                {
-                    throw new PlaywrightSharpException($"Driver not found in any of the locations.");
-                }
+                return executableFile;
             }
 
-            return executableFile;
+            string fallbackBinPath = Path.Combine(
+                driversPath,
+                RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "playwright.sh" : "playwright.cmd");
+
+            if (File.Exists(fallbackBinPath))
+            {
+                return fallbackBinPath;
+            }
+
+            throw new PlaywrightSharpException($@"Driver not found in any of the locations. Tried:
+ * {executableFile}
+ * {fallbackBinPath}");
         }
 
         private static string GetPath(string driversPath)
