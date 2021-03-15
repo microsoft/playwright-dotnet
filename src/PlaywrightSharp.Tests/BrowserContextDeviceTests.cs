@@ -10,12 +10,11 @@ namespace PlaywrightSharp.Tests
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class BrowserContextDeviceTests : PlaywrightSharpBrowserBaseTest
     {
-        private readonly BrowserContextOptions _iPhone;
+        private readonly BrowserContextOptions _iPhone = TestConstants.iPhone6;
 
         /// <inheritdoc/>
         public BrowserContextDeviceTests(ITestOutputHelper output) : base(output)
         {
-            _iPhone = Playwright.Devices["iPhone 6"];
         }
 
         [PlaywrightTest("browsercontext-device.spec.ts", "should work")]

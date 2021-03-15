@@ -22,8 +22,6 @@ namespace PlaywrightSharp
         private readonly PlaywrightChannel _channel;
         private readonly Connection _connection;
 
-        private readonly Dictionary<string, DeviceDescriptor> _devices = new Dictionary<string, DeviceDescriptor>();
-
         internal Playwright(IChannelOwner parent, string guid, PlaywrightInitializer initializer, ILoggerFactory loggerFactory)
              : base(parent, guid)
         {
@@ -31,13 +29,7 @@ namespace PlaywrightSharp
             _initializer = initializer;
             _channel = new PlaywrightChannel(guid, parent.Connection, this);
             _loggerFactory = loggerFactory;
-
-            foreach (var entry in initializer.DeviceDescriptors)
-            {
-                _devices[entry.Name] = entry.Descriptor;
-            }
-
-            _ = Selectors.AddChannelAsync(initializer.Selectors.Object);
+            _ = (Selectors as PlaywrightSharp.Selectors).AddChannelAsync(initializer.Selectors.Object);
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
@@ -52,26 +44,26 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         IChannel<Playwright> IChannelOwner<Playwright>.Channel => _channel;
 
-        /// <summary>
-        /// Returns a list of devices to be used with <see cref="IBrowser.NewContextAsync(BrowserContextOptions)"/>.
-        /// </summary>
-        public IReadOnlyDictionary<string, DeviceDescriptor> Devices => _devices;
+        /// <inheritdoc/>
+        public IBrowserType Chromium { get => _initializer.Chromium; set => throw new NotSupportedException(); }
 
         /// <inheritdoc/>
-        public IChromiumBrowserType Chromium => _initializer.Chromium;
+        public IBrowserType Firefox { get => _initializer.Firefox; set => throw new NotSupportedException(); }
 
         /// <inheritdoc/>
-        public IBrowserType Firefox => _initializer.Firefox;
+        public IBrowserType Webkit { get => _initializer.Webkit; set => throw new NotSupportedException(); }
 
         /// <inheritdoc/>
-        public IBrowserType Webkit => _initializer.Webkit;
-
-        /// <inheritdoc/>
-        public Selectors Selectors => Selectors.SharedSelectors;
+        public ISelectors Selectors { get => PlaywrightSharp.Selectors.SharedSelectors; set => throw new NotSupportedException(); }
 
         internal Connection Connection { get; set; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets a <see cref="IBrowserType"/>.
+        /// </summary>
+        /// <param name="browserType"><see cref="IBrowserType"/> name. You can get the names from <see cref="BrowserType"/>.
+        /// e.g.: <see cref="BrowserType.Chromium"/>, <see cref="BrowserType.Firefox"/> or <see cref="BrowserType.Webkit"/>.
+        /// </param>
         public IBrowserType this[string browserType]
             => browserType?.ToLower() switch
             {
