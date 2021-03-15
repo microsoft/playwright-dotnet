@@ -44,7 +44,7 @@ namespace PlaywrightSharp
                 return;
             }
 
-            var (task, dispose) = WaitForEvent<T>(eventSource, e, predicate);
+            var (task, dispose) = typeof(T) == typeof(EventArgs) ? GetWaitForEventTask(eventSource, e) : GetWaitForEventTask<T>(eventSource, e, predicate);
             RejectOn(
                 task.ContinueWith(_ => throw navigationException, _cts.Token, TaskContinuationOptions.RunContinuationsAsynchronously, TaskScheduler.Current),
                 dispose);
@@ -67,11 +67,17 @@ namespace PlaywrightSharp
 
         internal Task<T> WaitForEventAsync<T>(object eventSource, string e, Func<T, bool> predicate)
         {
-            var (task, dispose) = WaitForEvent(eventSource, e, predicate);
+            var (task, dispose) = GetWaitForEventTask(eventSource, e, predicate);
             return WaitForPromiseAsync(task, dispose);
         }
 
-        internal (Task Task, Action Dispose) WaitForEvent(object eventSource, string eventName)
+        internal Task WaitForEventAsync(object eventSource, string e)
+        {
+            var (task, dispose) = GetWaitForEventTask(eventSource, e);
+            return WaitForPromiseAsync(task, dispose);
+        }
+
+        internal (Task Task, Action Dispose) GetWaitForEventTask(object eventSource, string eventName)
         {
             var info = eventSource.GetType().GetEvent(eventName) ?? eventSource.GetType().BaseType.GetEvent(eventName);
             var eventTsc = new TaskCompletionSource<object>();
@@ -94,7 +100,7 @@ namespace PlaywrightSharp
             return (eventTsc.Task, () => info.RemoveEventHandler(eventSource, (EventHandler)EventHandler));
         }
 
-        internal (Task<T> Task, Action Dispose) WaitForEvent<T>(object eventSource, string e, Func<T, bool> predicate)
+        internal (Task<T> Task, Action Dispose) GetWaitForEventTask<T>(object eventSource, string e, Func<T, bool> predicate)
         {
             var info = eventSource.GetType().GetEvent(e) ?? eventSource.GetType().BaseType.GetEvent(e);
 
@@ -132,6 +138,29 @@ namespace PlaywrightSharp
                 dispose?.Invoke();
                 await firstTask.ConfigureAwait(false);
                 return await task.ConfigureAwait(false);
+            }
+            catch (TimeoutException ex)
+            {
+                dispose?.Invoke();
+                Dispose();
+                throw new TimeoutException(ex.Message + FormatLogRecording(_logs), ex);
+            }
+            catch (Exception ex)
+            {
+                dispose?.Invoke();
+                Dispose();
+                throw new PlaywrightSharpException(ex.Message + FormatLogRecording(_logs), ex);
+            }
+        }
+
+        internal async Task WaitForPromiseAsync(Task task, Action dispose = null)
+        {
+            try
+            {
+                var firstTask = await Task.WhenAny(_failures.Prepend(task)).ConfigureAwait(false);
+                dispose?.Invoke();
+                await firstTask.ConfigureAwait(false);
+                await task.ConfigureAwait(false);
             }
             catch (TimeoutException ex)
             {

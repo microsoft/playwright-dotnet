@@ -46,7 +46,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc/>
-        public event EventHandler<EventArgs> Close;
+        public event EventHandler Close;
 
         /// <inheritdoc/>
         public event EventHandler<PageEventArgs> Page;
@@ -237,6 +237,12 @@ namespace PlaywrightSharp
             if (e.Name != ContextEvent.Close.Name)
             {
                 waiter.RejectOnEvent<EventArgs>(this, ContextEvent.Close.Name, new TargetClosedException("Context closed"));
+            }
+
+            if (typeof(T) == typeof(EventArgs))
+            {
+                await waiter.WaitForEventAsync(this, e.Name).ConfigureAwait(false);
+                return default;
             }
 
             return await waiter.WaitForEventAsync(this, e.Name, predicate).ConfigureAwait(false);

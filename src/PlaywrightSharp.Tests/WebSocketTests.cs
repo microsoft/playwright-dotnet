@@ -73,8 +73,8 @@ namespace PlaywrightSharp.Tests
             {
                 log.Add($"open");
 
-                e.WebSocket.FrameSent += (_, e) => log.Add($"sent<{e.Payload}>");
-                e.WebSocket.FrameReceived += (_, e) => log.Add($"received<{e.Payload}>");
+                e.WebSocket.FrameSent += (_, e) => log.Add($"sent<{e.Text}>");
+                e.WebSocket.FrameReceived += (_, e) => log.Add($"received<{e.Text}>");
 
                 e.WebSocket.Close += (_, _) =>
                 {
@@ -101,7 +101,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldEmitBinaryFrameEvents()
         {
             var socketClosedTcs = new TaskCompletionSource<bool>();
-            var log = new List<WebSocketFrameEventArgs>();
+            var log = new List<IWebSocketFrame>();
 
             Page.WebSocket += (_, e) =>
             {
@@ -123,11 +123,11 @@ namespace PlaywrightSharp.Tests
 
 
             await socketClosedTcs.Task.WithTimeout(TestConstants.DefaultTaskTimeout);
-            Assert.Equal("text", log[0].Payload);
+            Assert.Equal("text", log[0].Text);
 
             for (int i = 0; i < 5; i++)
             {
-                Assert.Equal(i, log[1].Payload.AsBinary()[i]);
+                Assert.Equal(i, log[1].Binary[i]);
             }
         }
 
@@ -136,11 +136,11 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldEmitError()
         {
             var socketErrorTcs = new TaskCompletionSource<string>();
-            var log = new List<WebSocketFrameEventArgs>();
+            var log = new List<IWebSocketFrame>();
 
             Page.WebSocket += (_, e) =>
             {
-                e.WebSocket.SocketError += (_, e) => socketErrorTcs.TrySetResult(e.ErrorMessage);
+                e.WebSocket.SocketError += (_, e) => socketErrorTcs.TrySetResult(e);
             };
 
             await Page.EvaluateAsync(@"port => {
@@ -165,7 +165,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldNotHaveStrayErrorEvents()
         {
             var frameReceivedTcs = new TaskCompletionSource<bool>();
-            WebSocketErrorEventArgs socketError = null;
+            string socketError = null;
             IWebSocket ws = null;
 
             Page.WebSocket += (_, e) =>

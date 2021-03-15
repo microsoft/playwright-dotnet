@@ -182,16 +182,16 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public event EventHandler<EventArgs> Load;
+        public event EventHandler Load;
 
         /// <inheritdoc />
-        public event EventHandler<EventArgs> DOMContentLoaded;
+        public event EventHandler DOMContentLoaded;
 
         /// <inheritdoc />
-        public event EventHandler<EventArgs> Close;
+        public event EventHandler Close;
 
         /// <inheritdoc />
-        public event EventHandler<EventArgs> Crash;
+        public event EventHandler Crash;
 
         /// <inheritdoc />
         public event EventHandler<PageErrorEventArgs> PageError;
@@ -452,6 +452,12 @@ namespace PlaywrightSharp
             if (pageEvent.Name != PageEvent.Close.Name)
             {
                 waiter.RejectOnEvent<EventArgs>(this, PageEvent.Close.Name, new TargetClosedException("Page closed"));
+            }
+
+            if (typeof(T) == typeof(EventArgs))
+            {
+                await waiter.WaitForEventAsync(this, pageEvent.Name).ConfigureAwait(false);
+                return default;
             }
 
             return await waiter.WaitForEventAsync(this, pageEvent.Name, predicate).ConfigureAwait(false);

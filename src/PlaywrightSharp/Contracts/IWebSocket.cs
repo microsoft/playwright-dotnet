@@ -3,41 +3,8 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-    /// <summary>
-    /// Represents websocket connections in the page.
-    /// </summary>
-    public interface IWebSocket
+    public partial interface IWebSocket
     {
-        /// <summary>
-        /// Raised when the <see cref="IWebSocket"/> closes.
-        /// </summary>
-        event EventHandler<EventArgs> Close;
-
-        /// <summary>
-        /// Raised when the <see cref="IWebSocket"/> recieves a frame.
-        /// </summary>
-        event EventHandler<WebSocketFrameEventArgs> FrameReceived;
-
-        /// <summary>
-        /// Raised when the <see cref="IWebSocket"/> sends a frame.
-        /// </summary>
-        event EventHandler<WebSocketFrameEventArgs> FrameSent;
-
-        /// <summary>
-        /// Raised when the <see cref="IWebSocket"/> has an error.
-        /// </summary>
-        event EventHandler<WebSocketErrorEventArgs> SocketError;
-
-        /// <summary>
-        /// Contains the URL of the WebSocket.
-        /// </summary>
-        string Url { get; }
-
-        /// <summary>
-        /// Indicates that the web socket has been closed.
-        /// </summary>
-        bool IsClosed { get; }
-
         /// <summary>
         /// Waits for event to fire and passes its value into the predicate function. Resolves when the predicate returns truthy value.
         /// Will throw an Exception if the <see cref="IWebSocket"/> is closed before the event is fired.
@@ -65,7 +32,6 @@ namespace PlaywrightSharp
         /// </code>
         /// </example>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
-        Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> webSocketEvent, Func<T, bool> predicate = null, int? timeout = null)
-            where T : EventArgs;
+        public Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> webSocketEvent, Func<T, bool> predicate = null, float? timeout = null);
     }
 }
