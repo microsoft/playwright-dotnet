@@ -129,7 +129,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldSupportContextOptions()
         {
-            await using var context = await _browser.NewContextAsync(new BrowserContextOptions(Playwright.Devices["iPhone 6"])
+            await using var context = await _browser.NewContextAsync(new BrowserContextOptions(TestConstants.iPhone6)
             {
                 TimezoneId = "America/Jamaica",
                 Locale = "fr-CH",

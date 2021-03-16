@@ -83,7 +83,7 @@ namespace PlaywrightSharp.Tests
         {
             try
             {
-                await playwright.Selectors.RegisterAsync(name, path: path);
+                await playwright.Selectors.RegisterAsync(name, scriptPath: path);
             }
             catch (PlaywrightSharpException ex) when (ex.Message.Contains("has been already registered"))
             {

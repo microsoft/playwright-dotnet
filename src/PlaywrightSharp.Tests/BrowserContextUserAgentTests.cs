@@ -69,7 +69,7 @@ namespace PlaywrightSharp.Tests
                 Assert.DoesNotContain("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
             }
 
-            await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { UserAgent = Playwright.Devices[DeviceDescriptorName.IPhone6].UserAgent }))
+            await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { UserAgent = "iPhone" }))
             {
                 var page = await context.NewPageAsync();
                 await page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");

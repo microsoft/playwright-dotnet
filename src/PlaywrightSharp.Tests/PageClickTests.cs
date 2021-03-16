@@ -306,8 +306,8 @@ namespace PlaywrightSharp.Tests
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
-                Viewport = Playwright.Devices[DeviceDescriptorName.IPhone6].Viewport,
-                HasTouch = Playwright.Devices[DeviceDescriptorName.IPhone6].HasTouch,
+                Viewport = TestConstants.iPhone6.Viewport,
+                HasTouch = TestConstants.iPhone6.HasTouch,
             });
 
             var page = await context.NewPageAsync();
