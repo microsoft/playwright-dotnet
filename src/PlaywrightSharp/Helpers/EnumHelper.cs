@@ -31,5 +31,13 @@ namespace PlaywrightSharp.Helpers
 
             return enumValues[value];
         }
+
+        public static TEnum EnsureDefaultValue<TEnum>(this TEnum value, TEnum defaultValue)
+            where TEnum : Enum =>
+            value switch
+            {
+                0 => default,
+                _ => value,
+            };
     }
 }

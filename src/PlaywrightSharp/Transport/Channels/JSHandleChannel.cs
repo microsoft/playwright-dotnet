@@ -12,7 +12,7 @@ namespace PlaywrightSharp.Transport.Channels
         {
         }
 
-        internal Task<JsonElement?> EvaluateExpressionAsync(string script, bool isFunction, EvaluateArgument arg)
+        internal Task<JsonElement?> EvaluateExpressionAsync(string script, bool isFunction, object arg)
             => Connection.SendMessageToServerAsync<JsonElement?>(
                 Guid,
                 "evaluateExpression",
@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["expression"] = script,
                     ["isFunction"] = isFunction,
-                    ["arg"] = arg,
+                    ["arg"] = ScriptsHelper.SerializedArgument(arg),
                 });
 
         internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, bool isFunction, object arg)
@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Transport.Channels
                 {
                     ["expression"] = script,
                     ["isFunction"] = isFunction,
-                    ["arg"] = arg,
+                    ["arg"] = ScriptsHelper.SerializedArgument(arg),
                 });
 
         internal Task<JsonElement> GetJsonValueAsync() => Connection.SendMessageToServerAsync<JsonElement>(Guid, "jsonValue", null);

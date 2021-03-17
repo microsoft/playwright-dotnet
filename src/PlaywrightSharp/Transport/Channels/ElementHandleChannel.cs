@@ -54,7 +54,7 @@ namespace PlaywrightSharp.Transport.Channels
             }
         }
 
-        internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForState? state, float? timeout)
+        internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout)
         {
             var args = new Dictionary<string, object>
             {
@@ -110,21 +110,17 @@ namespace PlaywrightSharp.Transport.Channels
                     ["selector"] = selector,
                 });
 
-        internal async Task<string> ScreenshotAsync(string path, bool omitBackground, ScreenshotFormat? type, int? quality, float? timeout)
+        internal async Task<string> ScreenshotAsync(string path, bool omitBackground, ScreenshotType type, int? quality, float? timeout)
         {
             var args = new Dictionary<string, object>
             {
                 ["omitBackground"] = omitBackground,
+                ["type"] = type,
             };
 
             if (path != null)
             {
                 args["path"] = path;
-            }
-
-            if (type != null)
-            {
-                args["type"] = type;
             }
 
             if (timeout != null)
@@ -140,7 +136,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").ToString();
         }
 
-        internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, bool isFunction, EvaluateArgument arg)
+        internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, bool isFunction, object arg)
             => Connection.SendMessageToServerAsync<JsonElement?>(
                 Guid,
                 "evalOnSelector",
@@ -149,10 +145,10 @@ namespace PlaywrightSharp.Transport.Channels
                     ["selector"] = selector,
                     ["expression"] = script,
                     ["isFunction"] = isFunction,
-                    ["arg"] = arg,
+                    ["arg"] = ScriptsHelper.SerializedArgument(arg),
                 });
 
-        internal Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, bool isFunction, EvaluateArgument arg)
+        internal Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, bool isFunction, object arg)
             => Connection.SendMessageToServerAsync<JsonElement?>(
                 Guid,
                 "evalOnSelectorAll",
@@ -161,7 +157,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["selector"] = selector,
                     ["expression"] = script,
                     ["isFunction"] = isFunction,
-                    ["arg"] = arg,
+                    ["arg"] = ScriptsHelper.SerializedArgument(arg),
                 });
 
         internal Task<FrameChannel> GetContentFrameAsync() => Connection.SendMessageToServerAsync<FrameChannel>(Guid, "contentFrame", null);
@@ -169,8 +165,8 @@ namespace PlaywrightSharp.Transport.Channels
         internal Task<FrameChannel> GetOwnerFrameAsync() => Connection.SendMessageToServerAsync<FrameChannel>(Guid, "ownerFrame", null);
 
         internal Task HoverAsync(
-            Modifier[] modifiers = null,
-            Point? position = null,
+            IEnumerable<KeyboardModifier> modifiers = null,
+            ElementHandlePosition position = null,
             float? timeout = null,
             bool force = false)
         {
@@ -200,11 +196,11 @@ namespace PlaywrightSharp.Transport.Channels
         internal Task FocusAsync() => Connection.SendMessageToServerAsync(Guid, "focus", null);
 
         internal Task ClickAsync(
-            int delay,
+            float delay,
             MouseButton button,
             int clickCount,
-            Modifier[] modifiers,
-            Point? position,
+            IEnumerable<KeyboardModifier> modifiers,
+            ElementHandlePosition position,
             float? timeout,
             bool force,
             bool? noWaitAfter)
@@ -240,11 +236,11 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "click", args);
         }
 
-        internal Task DblClickAsync(
-            int delay,
+        internal Task DblclickAsync(
+            float delay,
             MouseButton button,
-            Modifier[] modifiers,
-            Point? position,
+            IEnumerable<KeyboardModifier> modifiers,
+            ElementHandlePosition position,
             float? timeout,
             bool force,
             bool? noWaitAfter)
@@ -303,7 +299,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "scrollIntoViewIfNeeded", args);
         }
 
-        internal Task FillAsync(string value, float? timeout, bool? noWaitAfter)
+        internal Task FillAsync(string value, bool? noWaitAfter, float? timeout)
         {
             var args = new Dictionary<string, object>
             {
@@ -323,7 +319,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "fill", args);
         }
 
-        internal Task DispatchEventAsync(string type, object eventInit, float? timeout)
+        internal Task DispatchEventAsync(string type, object eventInit)
         {
             var args = new Dictionary<string, object>
             {
@@ -331,19 +327,19 @@ namespace PlaywrightSharp.Transport.Channels
                 ["eventInit"] = eventInit,
             };
 
-            if (timeout != null)
-            {
-                args["timeout"] = timeout;
-            }
-
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "dispatchEvent", args);
         }
 
-        internal Task SetInputFilesAsync(FilePayload[] files, float? timeout, bool? noWaitAfter)
+        internal Task SetInputFilesAsync(IEnumerable<ElementHandleFiles> files, bool? noWaitAfter, float? timeout)
         {
             var args = new Dictionary<string, object>
             {
-                ["files"] = files,
+                ["files"] = files.Select(f => new
+                {
+                    f.Name,
+                    Buffer = Convert.ToBase64String(f.Buffer),
+                    f.MimeType,
+                }),
             };
 
             if (timeout != null)
@@ -359,56 +355,24 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<string>(Guid, "setInputFiles", args);
         }
 
-        internal async Task<string> GetAttributeAsync(string name, float? timeout)
+        internal async Task<string> GetAttributeAsync(string name)
         {
             var args = new Dictionary<string, object>
             {
                 ["name"] = name,
             };
 
-            if (timeout != null)
-            {
-                args["timeout"] = timeout;
-            }
-
             return (await Connection.SendMessageToServerAsync(Guid, "getAttribute", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal async Task<string> GetInnerHtmlAsync(float? timeout)
-        {
-            var args = new Dictionary<string, object>();
+        internal async Task<string> GetInnerHTMLAsync()
+            => (await Connection.SendMessageToServerAsync(Guid, "innerHTML").ConfigureAwait(false))?.GetProperty("value").ToString();
 
-            if (timeout != null)
-            {
-                args["timeout"] = timeout;
-            }
+        internal async Task<string> GetInnerTextAsync()
+            => (await Connection.SendMessageToServerAsync(Guid, "innerText").ConfigureAwait(false))?.GetProperty("value").ToString();
 
-            return (await Connection.SendMessageToServerAsync(Guid, "innerHTML", args).ConfigureAwait(false))?.GetProperty("value").ToString();
-        }
-
-        internal async Task<string> GetInnerTextAsync(float? timeout)
-        {
-            var args = new Dictionary<string, object>();
-
-            if (timeout != null)
-            {
-                args["timeout"] = timeout;
-            }
-
-            return (await Connection.SendMessageToServerAsync(Guid, "innerText", args).ConfigureAwait(false))?.GetProperty("value").ToString();
-        }
-
-        internal async Task<string> GetTextContentAsync(float? timeout)
-        {
-            var args = new Dictionary<string, object>();
-
-            if (timeout != null)
-            {
-                args["timeout"] = timeout;
-            }
-
-            return (await Connection.SendMessageToServerAsync(Guid, "textContent", args).ConfigureAwait(false))?.GetProperty("value").ToString();
-        }
+        internal async Task<string> GetTextContentAsync()
+            => (await Connection.SendMessageToServerAsync(Guid, "textContent").ConfigureAwait(false))?.GetProperty("value").ToString();
 
         internal Task SelectTextAsync(float? timeout)
         {
@@ -422,7 +386,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "selectText", args);
         }
 
-        internal async Task<string[]> SelectOptionAsync(object values, float? timeout = null, bool? noWaitAfter = null)
+        internal async Task<IReadOnlyCollection<string>> SelectOptionAsync(object values, bool? noWaitAfter = null, float? timeout = null)
         {
             var args = new Dictionary<string, object>();
 
@@ -448,25 +412,25 @@ namespace PlaywrightSharp.Transport.Channels
                 args["noWaitAter"] = noWaitAfter;
             }
 
-            return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();
+            return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<List<string>>().AsReadOnly();
         }
 
-        internal async Task<bool> IsVisibleAsync()
+        internal async Task<bool> GetIsVisibleAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "isVisible", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
-        internal async Task<bool> IsHiddenAsync()
+        internal async Task<bool> GetIsHiddenAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "isHidden", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
-        internal async Task<bool> IsEnabledAsync()
+        internal async Task<bool> GetIsEnabledAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "isEnabled", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
-        internal async Task<bool> IsEditableAsync()
+        internal async Task<bool> GetIsEditableAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "isEditable", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
-        internal async Task<bool> IsDisabledAsync()
+        internal async Task<bool> GetIsDisabledAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "isDisabled", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
-        internal async Task<bool> IsCheckedAsync()
+        internal async Task<bool> GetIsCheckedAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "isChecked", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
         internal Task CheckAsync(float? timeout, bool force, bool? noWaitAfter)
@@ -511,7 +475,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "uncheck", args);
         }
 
-        internal Task TypeAsync(string text, int delay, float? timeout, bool? noWaitAfter)
+        internal Task TypeAsync(string text, float delay, float? timeout, bool? noWaitAfter)
         {
             var args = new Dictionary<string, object>
             {
@@ -532,7 +496,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "type", args);
         }
 
-        internal Task PressAsync(string key, int delay, float? timeout, bool? noWaitAfter)
+        internal Task PressAsync(string key, float delay, float? timeout, bool? noWaitAfter)
         {
             var args = new Dictionary<string, object>
             {
@@ -553,7 +517,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "press", args);
         }
 
-        internal Task TapAsync(Point? position = null, Modifier[] modifiers = null, float? timeout = null, bool force = false, bool? noWaitAfter = null)
+        internal Task TapAsync(ElementHandlePosition position = null, IEnumerable<KeyboardModifier> modifiers = null, float? timeout = null, bool force = false, bool? noWaitAfter = null)
         {
             var args = new Dictionary<string, object>
             {
@@ -565,12 +529,12 @@ namespace PlaywrightSharp.Transport.Channels
                 args["noWaitAfter"] = noWaitAfter;
             }
 
-            if (position.HasValue)
+            if (position != null)
             {
                 args["position"] = new Dictionary<string, object>
                 {
-                    ["x"] = position.Value.X,
-                    ["y"] = position.Value.Y,
+                    ["x"] = position.X,
+                    ["y"] = position.Y,
                 };
             }
 

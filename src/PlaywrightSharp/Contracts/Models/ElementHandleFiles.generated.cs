@@ -46,25 +46,18 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-    /// <summary>
-    /// Result of calling <see cref="IElementHandle.BoundingBoxAsync"/>.
-    /// </summary>
-    public partial class ElementHandleBoundingBoxResult
+    public partial class ElementHandleFiles
     {
-        /// <summary><para>the x coordinate of the element in pixels.</para></summary>
-        [JsonPropertyName("x")]
-        public float X { get; set; }
+        /// <summary><para>File name</para></summary>
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
 
-        /// <summary><para>the y coordinate of the element in pixels.</para></summary>
-        [JsonPropertyName("y")]
-        public float Y { get; set; }
+        /// <summary><para>File type</para></summary>
+        [JsonPropertyName("mimeType")]
+        public string MimeType { get; set; }
 
-        /// <summary><para>the width of the element in pixels.</para></summary>
-        [JsonPropertyName("width")]
-        public float Width { get; set; }
-
-        /// <summary><para>the height of the element in pixels.</para></summary>
-        [JsonPropertyName("height")]
-        public float Height { get; set; }
+        /// <summary><para>File content</para></summary>
+        [JsonPropertyName("buffer")]
+        public byte[] Buffer { get; set; }
     }
 }

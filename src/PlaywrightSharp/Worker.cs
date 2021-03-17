@@ -56,13 +56,13 @@ namespace PlaywrightSharp
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
                 script: expression,
                 isFunction: expression.IsJavascriptFunction(),
-                arg: TranslateObject(arg)).ConfigureAwait(false));
+                arg: arg.ToEvaluateArgument()).ConfigureAwait(false));
 
         public async Task<IJSHandle> EvaluateHandleAsync(string expression, object arg)
             => (await _channel.EvaluateExpressionHandleAsync(
                 script: expression,
                 isFunction: expression.IsJavascriptFunction(),
-                arg: TranslateObject(arg))
+                arg: arg.ToEvaluateArgument())
             .ConfigureAwait(false))?.Object;
 
         public async Task<IWorker> WaitForCloseAsync(float? timeout)
@@ -71,16 +71,6 @@ namespace PlaywrightSharp
             var waiterResult = waiter.GetWaitForEventTask(this, nameof(Close));
             await waiterResult.Task.WithTimeout(Convert.ToInt32(timeout ?? 0)).ConfigureAwait(false);
             return this;
-        }
-
-        private object TranslateObject(object obj)
-        {
-            if (UndefinedEvaluationArgument.Undefined.Equals(obj))
-            {
-                return EvaluateArgument.Undefined;
-            }
-
-            return obj;
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -48,7 +49,7 @@ namespace PlaywrightSharp
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
         public Task SetFilesAsync(string file, int? timeout = null, bool? noWaitAfter = null)
-            => Element.SetInputFilesAsync(file, timeout, noWaitAfter);
+            => Element.SetInputFilesAsync(file, noWaitAfter, timeout);
 
         /// <summary>
         /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="files"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
@@ -60,7 +61,7 @@ namespace PlaywrightSharp
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
         public Task SetFilesAsync(string[] files, int? timeout = null, bool? noWaitAfter = null)
-            => Element.SetInputFilesAsync(files, timeout, noWaitAfter);
+            => Element.SetInputFilesAsync(files, noWaitAfter, timeout);
 
         /// <summary>
         /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="file"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
@@ -71,8 +72,8 @@ namespace PlaywrightSharp
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        public Task SetFilesAsync(FilePayload file, int? timeout = null, bool? noWaitAfter = null)
-            => Element.SetInputFilesAsync(file, timeout, noWaitAfter);
+        public Task SetFilesAsync(ElementHandleFiles file, int? timeout = null, bool? noWaitAfter = null)
+            => Element.SetInputFilesAsync(file, noWaitAfter, timeout);
 
         /// <summary>
         /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="files"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
@@ -83,7 +84,7 @@ namespace PlaywrightSharp
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        public Task SetFilesAsync(FilePayload[] files, int? timeout = null, bool? noWaitAfter = null)
-            => Element.SetInputFilesAsync(files, timeout, noWaitAfter);
+        public Task SetFilesAsync(IEnumerable<ElementHandleFiles> files, int? timeout = null, bool? noWaitAfter = null)
+            => Element.SetInputFilesAsync(files, noWaitAfter, timeout);
     }
 }

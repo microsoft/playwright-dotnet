@@ -280,7 +280,7 @@ namespace PlaywrightSharp.Transport.Channels
         internal async Task<string> GetTitleAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "title", null).ConfigureAwait(false))?.GetProperty("value").ToString();
 
-        internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForState? state, int? timeout, bool isPage)
+        internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, int? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -800,12 +800,17 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "innerText", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task SetInputFilesAsync(string selector, FilePayload[] files, int? timeout, bool? noWaitAfter, bool isPage)
+        internal Task SetInputFilesAsync(string selector, IEnumerable<ElementHandleFiles> files, int? timeout, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
                 ["selector"] = selector,
-                ["files"] = files,
+                ["files"] = files.Select(f => new
+                {
+                    f.Name,
+                    Buffer = Convert.ToBase64String(f.Buffer),
+                    f.MimeType,
+                }),
                 ["isPage"] = isPage,
             };
 
