@@ -23,8 +23,8 @@ namespace PlaywrightSharp
         /// <summary>
         /// Initializes a new instance of the <see cref="BrowserContextOptions"/> class.
         /// </summary>
-        /// <param name="device">Device used to hydrate initial values.</param>
-        public BrowserContextOptions(DeviceDescriptor device) => device?.HydrateBrowserContextOptions(this);
+        /// <param name="options">Device used to hydrate initial values.</param>
+        public BrowserContextOptions(BrowserContextOptions options) => options?.CopyFrom(this);
 
         /// <summary>
         /// Sets a consistent viewport for each page. Defaults to an 800x600 viewport. null disables the default viewport.
@@ -272,6 +272,17 @@ namespace PlaywrightSharp
             args["sdkLanguage"] = "csharp";
 
             return args;
+        }
+
+        private BrowserContextOptions CopyFrom(BrowserContextOptions options)
+        {
+            options.UserAgent = UserAgent;
+            options.Viewport = Viewport;
+            options.HasTouch = HasTouch;
+            options.IsMobile = IsMobile;
+            options.DeviceScaleFactor = DeviceScaleFactor;
+
+            return options;
         }
     }
 }

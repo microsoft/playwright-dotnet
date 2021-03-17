@@ -48,7 +48,7 @@ namespace PlaywrightSharp.Tests
             });
 
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Contains("bar", response.Headers["foo"]);
+            Assert.Contains("bar", response.GetHeaderValues("foo"));
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should return json")]
@@ -98,7 +98,7 @@ namespace PlaywrightSharp.Tests
         {
             Server.EnableGzip("/simple.json");
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/simple.json");
-            Assert.Equal("gzip", response.Headers["content-encoding"]);
+            Assert.Equal("gzip", response.GetHeaderValue("content-encoding"));
             Assert.Equal("{\"foo\": \"bar\"}", (await response.GetTextAsync()).Trim());
         }
 
@@ -111,7 +111,7 @@ namespace PlaywrightSharp.Tests
             var redirectedFrom = response.Request.RedirectedFrom;
             Assert.NotNull(redirectedFrom);
             var redirected = await redirectedFrom.GetResponseAsync();
-            Assert.Equal(HttpStatusCode.Redirect, redirected.Status);
+            Assert.Equal(HttpStatusCode.Redirect, redirected.StatusCode);
 
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async () => await redirected.GetTextAsync());
             Assert.Contains("Response body is unavailable for redirect responses", exception.Message);
@@ -145,7 +145,7 @@ namespace PlaywrightSharp.Tests
 
             Assert.NotNull(serverResponse);
             Assert.NotNull(pageResponse);
-            Assert.Equal(HttpStatusCode.OK, pageResponse.Response.Status);
+            Assert.Equal(HttpStatusCode.OK, pageResponse.Response.StatusCode);
             Assert.False(requestFinished);
 
             var responseText = pageResponse.Response.GetTextAsync();

@@ -10,14 +10,12 @@ namespace PlaywrightSharp.Tests
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class BrowserContextViewportMobileTests : PlaywrightSharpBrowserBaseTest
     {
-        private readonly BrowserContextOptions _iPhone;
-        private readonly BrowserContextOptions _iPhoneLandscape;
+        private readonly BrowserContextOptions _iPhone = TestConstants.iPhone6;
+        private readonly BrowserContextOptions _iPhoneLandscape = TestConstants.iPhone6Landscape;
 
         /// <inheritdoc/>
         public BrowserContextViewportMobileTests(ITestOutputHelper output) : base(output)
         {
-            _iPhone = Playwright.Devices["iPhone 6"];
-            _iPhoneLandscape = Playwright.Devices["iPhone 6 landscape"];
         }
 
         [PlaywrightTest("browsercontext-viewport-mobile.spec.ts", "should support mobile emulation")]

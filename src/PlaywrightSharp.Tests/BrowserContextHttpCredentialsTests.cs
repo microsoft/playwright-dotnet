@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
             var response = await page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.Unauthorized, response.Status);
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with setHTTPCredentials")]
@@ -34,14 +34,14 @@ namespace PlaywrightSharp.Tests
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
             var response = await page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.Unauthorized, response.Status);
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
             await context.SetHttpCredentialsAsync(new Credentials
             {
                 Username = "user",
                 Password = "pass"
             });
             response = await page.ReloadAsync();
-            Assert.Equal(HttpStatusCode.OK, response.Status);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with correct credentials")]
@@ -61,7 +61,7 @@ namespace PlaywrightSharp.Tests
 
             var page = await context.NewPageAsync();
             var response = await page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.OK, response.Status);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should fail if wrong credentials")]
@@ -81,7 +81,7 @@ namespace PlaywrightSharp.Tests
 
             var page = await context.NewPageAsync();
             var response = await page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.Unauthorized, response.Status);
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should return resource body")]
@@ -100,7 +100,7 @@ namespace PlaywrightSharp.Tests
 
             var page = await context.NewPageAsync();
             var response = await page.GoToAsync(TestConstants.ServerUrl + "/playground.html");
-            Assert.Equal(HttpStatusCode.OK, response.Status);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("Playground", await page.GetTitleAsync());
             Assert.Contains("Playground", await response.GetTextAsync());
         }

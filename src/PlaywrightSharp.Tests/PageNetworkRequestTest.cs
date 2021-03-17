@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using PlaywrightSharp.Contracts.Constants;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
 using Xunit;
@@ -60,15 +61,16 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldReturnHeaders()
         {
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Contains(
-                TestConstants.Product switch
-                {
-                    TestConstants.ChromiumProduct => "Chrome",
-                    TestConstants.FirefoxProduct => "Firefox",
-                    TestConstants.WebkitProduct => "WebKit",
-                    _ => "None"
-                },
-                response.Request.Headers["user-agent"]);
+
+            string expected = TestConstants.Product switch
+            {
+                TestConstants.ChromiumProduct => "Chrome",
+                TestConstants.FirefoxProduct => "Firefox",
+                TestConstants.WebkitProduct => "WebKit",
+                _ => "None"
+            };
+
+            Assert.Contains(response.Request.GetHeaderValues("user-agent"), (f) => f.Contains(expected));
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "Request.headers", "should get the same headers as the server")]
@@ -148,7 +150,7 @@ namespace PlaywrightSharp.Tests
             Page.Request += (_, e) => request = e.Request;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: JSON.stringify({ foo: 'bar'})})");
             Assert.NotNull(request);
-            Assert.Equal("bar", request.GetPostDataJson().RootElement.GetProperty("foo").ToString());
+            Assert.Equal("bar", request.GetPayloadAsJson().RootElement.GetProperty("foo").ToString());
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should parse the data if content-type is application/x-www-form-urlencoded")]
@@ -163,7 +165,7 @@ namespace PlaywrightSharp.Tests
             await Page.ClickAsync("input[type=submit]");
 
             Assert.NotNull(request);
-            var element = request.GetPostDataJson().RootElement;
+            var element = request.GetPayloadAsJson().RootElement;
             Assert.Equal("bar", element.GetProperty("foo").ToString());
             Assert.Equal("123", element.GetProperty("baz").ToString());
         }
@@ -173,7 +175,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldBeUndefinedWhenThereIsNoPostData2()
         {
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Null(response.Request.GetPostDataJson());
+            Assert.Null(response.Request.GetPayloadAsJson());
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should return event source")]
@@ -204,7 +206,7 @@ namespace PlaywrightSharp.Tests
                 });
             }"));
 
-            Assert.Equal(ResourceType.EventSource, requests[0].ResourceType);
+            Assert.Equal(ResourceTypes.EventSource, requests[0].ResourceType);
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should return navigation bit")]

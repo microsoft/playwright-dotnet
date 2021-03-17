@@ -63,5 +63,23 @@ namespace PlaywrightSharp.Tests
             "        http://localhost:<PORT>/frames/frame.html (dos)",
             "    http://localhost:<PORT>/frames/frame.html (aframe)"
         };
+
+        internal static readonly BrowserContextOptions iPhone6 = new BrowserContextOptions()
+        {
+            UserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1",
+            Viewport = new ViewportSize() { Height = 667, Width = 375 },
+            DeviceScaleFactor = 2,
+            IsMobile = true,
+            HasTouch = true,
+        };
+
+        internal static readonly BrowserContextOptions iPhone6Landscape = new BrowserContextOptions()
+        {
+            UserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1",
+            Viewport = new ViewportSize() { Height = 375, Width = 667 },
+            DeviceScaleFactor = 2,
+            IsMobile = true,
+            HasTouch = true,
+        };
     }
 }

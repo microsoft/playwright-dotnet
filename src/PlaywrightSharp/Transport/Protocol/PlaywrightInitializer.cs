@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Transport.Channels;
 
@@ -11,8 +10,6 @@ namespace PlaywrightSharp.Transport.Protocol
         public BrowserType Webkit { get; set; }
 
         public BrowserType Firefox { get; set; }
-
-        public IEnumerable<DeviceDescriptorEntry> DeviceDescriptors { get; set; }
 
         public SelectorsChannel Selectors { get; set; }
     }

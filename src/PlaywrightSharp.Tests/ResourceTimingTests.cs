@@ -112,7 +112,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.ServerUrl + "/foo.html");
 
             // This is different on purpose, promises work different in TS.
-            await responses[1].FinishedAsync();
+            await responses[1].GetFinishedAsync();
 
             Assert.Equal(2, responses.Count);
             Assert.Equal(TestConstants.ServerUrl + "/foo.html", responses[0].Url);
@@ -141,6 +141,6 @@ namespace PlaywrightSharp.Tests
             Assert.True(timing2.ResponseEnd < 10000);
         }
 
-        private bool VerifyTimingValue(decimal value, decimal previous) => value == -1 || value > 0 && value >= previous;
+        private bool VerifyTimingValue(float value, float previous) => value == -1 || value > 0 && value >= previous;
     }
 }

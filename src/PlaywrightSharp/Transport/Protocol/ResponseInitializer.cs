@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using System.Net;
 using PlaywrightSharp.Transport.Channels;
 
 namespace PlaywrightSharp.Transport.Protocol
 {
     internal class ResponseInitializer
     {
-        public HttpStatusCode Status { get; set; }
+        public int Status { get; set; }
 
         public string Url { get; set; }
 
@@ -16,6 +15,6 @@ namespace PlaywrightSharp.Transport.Protocol
 
         public RequestChannel Request { get; set; }
 
-        public ResourceTiming Timing { get; set; }
+        public RequestTimingResult Timing { get; set; }
     }
 }
