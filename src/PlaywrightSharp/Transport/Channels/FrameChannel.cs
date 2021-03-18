@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -473,7 +473,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "click", args);
         }
 
-        internal Task DblClickAsync(
+        internal Task DblclickAsync(
             string selector,
             int delay,
             MouseButton button,
@@ -720,7 +720,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "getAttribute", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal async Task<string> GetInnerHtmlAsync(string selector, int? timeout, bool isPage)
+        internal async Task<string> GetInnerHTMLAsync(string selector, int? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -879,7 +879,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "tap", args);
         }
 
-        internal async Task<bool> IsCheckedAsync(string selector, int? timeout, bool isPage)
+        internal async Task<bool> GetIsCheckedAsync(string selector, int? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -895,7 +895,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "isChecked", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
         }
 
-        internal async Task<bool> IsDisabledAsync(string selector, int? timeout, bool isPage)
+        internal async Task<bool> GetIsDisabledAsync(string selector, int? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -911,7 +911,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "isDisabled", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
         }
 
-        internal async Task<bool> IsEditableAsync(string selector, int? timeout, bool isPage)
+        internal async Task<bool> GetIsEditableAsync(string selector, int? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -927,7 +927,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "isEditable", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
         }
 
-        internal async Task<bool> IsEnabledAsync(string selector, int? timeout, bool isPage)
+        internal async Task<bool> GetIsEnabledAsync(string selector, int? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -943,7 +943,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "isEnabled", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
         }
 
-        internal async Task<bool> IsHiddenAsync(string selector, int? timeout, bool isPage)
+        internal async Task<bool> GetIsHiddenAsync(string selector, int? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -959,7 +959,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "isHidden", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
         }
 
-        internal async Task<bool> IsVisibleAsync(string selector, int? timeout, bool isPage)
+        internal async Task<bool> GetIsVisibleAsync(string selector, int? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {

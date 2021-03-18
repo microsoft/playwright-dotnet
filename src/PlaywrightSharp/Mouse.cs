@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport.Channels;
 

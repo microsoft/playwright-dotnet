@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(13)");
             var box = await elementHandle.GetBoundingBoxAsync();
-            Assert.Equal(new Rect(x: 100, y: 50, width: 50, height: 50), box);
+            Assert.Equal(new ElementHandleBoundingBoxResult(x: 100, y: 50, width: 50, height: 50), box);
         }
 
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should handle nested frames")]
@@ -37,7 +37,7 @@ namespace PlaywrightSharp.Tests
             var nestedFrame = Page.Frames.First(frame => frame.Name == "dos");
             var elementHandle = await nestedFrame.QuerySelectorAsync("div");
             var box = await elementHandle.GetBoundingBoxAsync();
-            Assert.Equal(new Rect(x: 24, y: 224, width: 268, height: 18), box);
+            Assert.Equal(new ElementHandleBoundingBoxResult(x: 24, y: 224, width: 268, height: 18), box);
         }
 
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should return null for invisible elements")]
@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Tests
             var elementHandle = await Page.QuerySelectorAsync("div");
             await Page.EvaluateAsync("element => element.style.height = '200px'", elementHandle);
             var box = await elementHandle.GetBoundingBoxAsync();
-            Assert.Equal(new Rect(x: 8, y: 8, width: 100, height: 200), box);
+            Assert.Equal(new ElementHandleBoundingBoxResult(x: 8, y: 8, width: 100, height: 200), box);
         }
 
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should work with SVG nodes")]
@@ -71,7 +71,7 @@ namespace PlaywrightSharp.Tests
                   </svg>");
             var element = await Page.QuerySelectorAsync("#therect");
             var pwBoundingBox = await element.GetBoundingBoxAsync();
-            var webBoundingBox = await Page.EvaluateAsync<Rect>(@"e => {
+            var webBoundingBox = await Page.EvaluateAsync<ElementHandleBoundingBoxResult>(@"e => {
                     const rect = e.getBoundingClientRect();
                     return { x: rect.x, y: rect.y, width: rect.width, height: rect.height};
                 }", element);
@@ -130,7 +130,7 @@ namespace PlaywrightSharp.Tests
 
             var handle = await Page.QuerySelectorAsync("span");
             var box = await handle.GetBoundingBoxAsync();
-            var webBoundingBox = await Page.EvaluateAsync<Rect>(@"e => {
+            var webBoundingBox = await Page.EvaluateAsync<ElementHandleBoundingBoxResult>(@"e => {
                     const rect = e.getBoundingClientRect();
                     return { x: rect.x, y: rect.y, width: rect.width, height: rect.height};
                 }", handle);

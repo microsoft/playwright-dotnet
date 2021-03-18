@@ -142,16 +142,16 @@ namespace PlaywrightSharp
             => _channel.DblclickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), modifiers, position, timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(string file, bool? noWaitAfter, float? timeout)
-            => SetInputFilesAsync(new[] { file }, noWaitAfter, timeout);
+        public Task SetInputFilesAsync(string files, bool? noWaitAfter, float? timeout)
+            => SetInputFilesAsync(new[] { files }, noWaitAfter, timeout);
 
         /// <inheritdoc />
         public Task SetInputFilesAsync(IEnumerable<string> files, bool? noWaitAfter, float? timeout)
             => _channel.SetInputFilesAsync(files.Select(f => f.ToElementHandleFile()).ToArray(), noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(ElementHandleFiles file, bool? noWaitAfter, float? timeout)
-            => SetInputFilesAsync(new[] { file }, noWaitAfter, timeout);
+        public Task SetInputFilesAsync(ElementHandleFiles files, bool? noWaitAfter, float? timeout)
+            => SetInputFilesAsync(new[] { files }, noWaitAfter, timeout);
 
         /// <inheritdoc />
         public Task SetInputFilesAsync(IEnumerable<ElementHandleFiles> files, bool? noWaitAfter, float? timeout)
@@ -164,6 +164,14 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public async Task<IReadOnlyCollection<IElementHandle>> QuerySelectorAllAsync(string selector)
             => (await _channel.QuerySelectorAllAsync(selector).ConfigureAwait(false)).Select(e => ((ElementHandleChannel)e).Object).ToList().AsReadOnly();
+
+        /// <inheritdoc />
+        public async Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg)
+            => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAsync(
+                selector: selector,
+                script: expression,
+                isFunction: expression.IsJavascriptFunction(),
+                arg: arg.ToEvaluateArgument()).ConfigureAwait(false));
 
         /// <inheritdoc />
         public async Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg)

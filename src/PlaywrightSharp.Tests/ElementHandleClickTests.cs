@@ -112,7 +112,7 @@ namespace PlaywrightSharp.Tests
             }");
 
             var button = await Page.QuerySelectorAsync("button");
-            await button.DblClickAsync();
+            await button.DblclickAsync();
 
             Assert.True(await Page.EvaluateAsync<bool>("double"));
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("() => result"));
