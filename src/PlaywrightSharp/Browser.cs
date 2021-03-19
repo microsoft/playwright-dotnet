@@ -8,6 +8,10 @@ using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
+    public partial interface IBrowser : IAsyncDisposable
+    {
+    }
+
     /// <inheritdoc cref="IBrowser"/>
     public class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
     {
@@ -33,17 +37,17 @@ namespace PlaywrightSharp
         IChannel<Browser> IChannelOwner<Browser>.Channel => Channel;
 
         /// <inheritdoc/>
+        public IReadOnlyCollection<IBrowserContext> Contexts => BrowserContextsList.ToArray();
+
+        /// <inheritdoc/>
         public bool IsConnected { get; private set; }
 
         /// <inheritdoc/>
         public string Version => _initializer.Version;
 
-        /// <inheritdoc/>
-        public IBrowserContext[] Contexts => BrowserContextsList.ToArray();
+        internal BrowserChannel Channel { get; }
 
         internal List<BrowserContext> BrowserContextsList { get; } = new List<BrowserContext>();
-
-        internal BrowserChannel Channel { get; }
 
         /// <inheritdoc/>
         public async Task CloseAsync()
@@ -56,6 +60,100 @@ namespace PlaywrightSharp
 
             await _closedTcs.Task.ConfigureAwait(false);
         }
+
+        /// <inheritdoc/>
+        public async Task<IBrowserContext> NewContextAsync(
+            bool? acceptDownloads = null,
+            bool? bypassCSP = null,
+            ColorScheme colorScheme = ColorScheme.Undefined,
+            float? deviceScaleFactor = null,
+            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null,
+            Geolocation geolocation = null,
+            bool? hasTouch = null,
+            HttpCredentials httpCredentials = null,
+            bool? ignoreHTTPSErrors = null,
+            bool? isMobile = null,
+            bool? javaScriptEnabled = null,
+            string locale = null,
+            bool? offline = null,
+            IEnumerable<string> permissions = null,
+            Proxy proxy = null,
+            bool? recordHarOmitContent = null,
+            string recordHarPath = null,
+            string recordVideoDir = null,
+            RecordVideoSize recordVideoSize = null,
+            string storageState = null,
+            string storageStatePath = null,
+            string timezoneId = null,
+            string userAgent = null)
+        {
+            var context = (await Channel.NewContextAsync(
+                acceptDownloads,
+                bypassCSP,
+                colorScheme,
+                deviceScaleFactor,
+                extraHTTPHeaders,
+                geolocation,
+                hasTouch,
+                httpCredentials,
+                ignoreHTTPSErrors,
+                isMobile,
+                javaScriptEnabled,
+                locale,
+                offline,
+                permissions,
+                proxy,
+                recordHarOmitContent,
+                recordHarPath,
+                recordVideoDir,
+                recordVideoSize,
+                storageState,
+                storageStatePath,
+                timezoneId,
+                userAgent).ConfigureAwait(false)).Object;
+
+            BrowserContextsList.Add(context);
+            return context;
+        }
+
+        /// <inheritdoc/>
+        public Task<IPage> NewPageAsync(
+            bool? acceptDownloads = null,
+            bool? bypassCSP = null,
+            ColorScheme colorScheme = ColorScheme.Undefined,
+            float? deviceScaleFactor = null,
+            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null,
+            Geolocation geolocation = null,
+            bool? hasTouch = null,
+            HttpCredentials httpCredentials = null,
+            bool? ignoreHTTPSErrors = null,
+            bool? isMobile = null,
+            bool? javaScriptEnabled = null,
+            string locale = null,
+            bool? offline = null,
+            IEnumerable<string> permissions = null,
+            Proxy proxy = null,
+            bool? recordHarOmitContent = null,
+            string recordHarPath = null,
+            string recordVideoDir = null,
+            RecordVideoSize recordVideoSize = null,
+            string storageState = null,
+            string storageStatePath = null,
+            string timezoneId = null,
+            string userAgent = null) => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
+
+        private void DidClose()
+        {
+            IsConnected = false;
+            _isClosedOrClosing = true;
+            Disconnected?.Invoke(this, EventArgs.Empty);
+            _closedTcs.TrySetResult(true);
+        }
+
+        /*
 
         /// <inheritdoc/>
         public Task<IBrowserContext> NewContextAsync(
@@ -281,6 +379,6 @@ namespace PlaywrightSharp
             _isClosedOrClosing = true;
             Disconnected?.Invoke(this, EventArgs.Empty);
             _closedTcs.TrySetResult(true);
-        }
+        }*/
     }
 }
