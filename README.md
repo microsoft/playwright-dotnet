@@ -12,6 +12,12 @@ PlaywrightSharp is a .Net library to automate [Chromium](https://www.chromium.or
 
 Headless execution is supported for all browsers on all platforms.
 
+# Installation
+Install PlaywrightSharp package from NuGet in Visual Studio or from the CLI in your project root directory:
+```
+dotnet add package PlaywrightSharp --version 0.192.0
+```
+
 # Usage 
 
 ```cs
