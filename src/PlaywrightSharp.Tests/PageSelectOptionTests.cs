@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldSelectSingleOptionByValue()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
-            await Page.SelectOptionAsync("select", new SelectOption { Value = "blue" });
+            await Page.SelectOptionAsync("select", new ElementHandleValues { Value = "blue" });
             Assert.Equal(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
             Assert.Equal(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldSelectSingleOptionByLabel()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
-            await Page.SelectOptionAsync("select", new SelectOption { Label = "Indigo" });
+            await Page.SelectOptionAsync("select", new ElementHandleValues { Label = "Indigo" });
             Assert.Equal(new[] { "indigo" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
             Assert.Equal(new[] { "indigo" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldSelectSingleOptionByIndex()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
-            await Page.SelectOptionAsync("select", new SelectOption { Index = 2 });
+            await Page.SelectOptionAsync("select", new ElementHandleValues { Index = 2 });
             Assert.Equal(new[] { "brown" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
             Assert.Equal(new[] { "brown" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
@@ -72,7 +72,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldSelectSingleOptionByMultipleAttributes()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
-            await Page.SelectOptionAsync("select", new SelectOption { Value = "green", Label = "Green" });
+            await Page.SelectOptionAsync("select", new ElementHandleValues { Value = "green", Label = "Green" });
             Assert.Equal(new[] { "green" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
             Assert.Equal(new[] { "green" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
@@ -83,7 +83,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
             await Page.EvalOnSelectorAsync("select", "s => s.value = undefined");
-            await Assert.ThrowsAsync<TimeoutException>(() => Page.SelectOptionAsync("select", new SelectOption { Value = "green", Label = "Brown" }));
+            await Assert.ThrowsAsync<TimeoutException>(() => Page.SelectOptionAsync("select", new ElementHandleValues { Value = "green", Label = "Brown" }));
             Assert.Empty(await Page.EvaluateAsync<string>("() => document.querySelector('select').value"));
         }
 
@@ -127,7 +127,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
             await Page.EvaluateAsync("() => makeMultiple()");
-            await Page.SelectOptionAsync("select", new SelectOption { Value = "blue" }, new SelectOption { Label = "Green" }, new SelectOption { Index = 4 });
+            await Page.SelectOptionAsync("select", new ElementHandleValues { Value = "blue" }, new ElementHandleValues { Label = "Green" }, new ElementHandleValues { Index = 4 });
             Assert.Equal(new[] { "blue", "gray", "green" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
             Assert.Equal(new[] { "blue", "gray", "green" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }

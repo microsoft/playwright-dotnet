@@ -34,9 +34,9 @@ namespace PlaywrightSharp.Helpers
 
         public static TEnum EnsureDefaultValue<TEnum>(this TEnum value, TEnum defaultValue)
             where TEnum : Enum =>
-            value switch
+            Convert.ToInt32(value) switch
             {
-                0 => default,
+                0 => defaultValue,
                 _ => value,
             };
     }

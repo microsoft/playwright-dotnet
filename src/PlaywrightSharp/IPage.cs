@@ -1759,7 +1759,7 @@ namespace PlaywrightSharp
         Task<bool> GetIsCheckedAsync(string selector, int? timeout = null);
 
         /// <summary>
-        /// Returns whether the element is disabled, the opposite of <see cref="IsEnabledAsync"/>.
+        /// Returns whether the element is disabled, the opposite of <see cref="GetIsEnabledAsync"/>.
         /// </summary>
         /// <param name="selector">A selector to search for an element. If there are multiple elements satisfying the selector, the first will be picked.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
@@ -1786,7 +1786,7 @@ namespace PlaywrightSharp
         Task<bool> GetIsEnabledAsync(string selector, int? timeout = null);
 
         /// <summary>
-        /// Returns whether the element is hidden, the opposite of <see cref="IsVisibleAsync"/>.
+        /// Returns whether the element is hidden, the opposite of <see cref="GetIsVisibleAsync"/>.
         /// </summary>
         /// <param name="selector">A selector to search for an element. If there are multiple elements satisfying the selector, the first will be picked.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.

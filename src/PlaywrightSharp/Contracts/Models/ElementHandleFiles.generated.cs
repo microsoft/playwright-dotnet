@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -46,18 +46,18 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-    public partial class ElementHandleFiles
-    {
-        /// <summary><para>File name</para></summary>
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
-
-        /// <summary><para>File type</para></summary>
-        [JsonPropertyName("mimeType")]
-        public string MimeType { get; set; }
-
-        /// <summary><para>File content</para></summary>
-        [JsonPropertyName("buffer")]
-        public byte[] Buffer { get; set; }
-    }
+	public partial class ElementHandleFiles
+	{
+		/// <summary><para>File name</para></summary>
+		[JsonPropertyName("name")]
+		public string Name { get; set; }
+	
+		/// <summary><para>File type</para></summary>
+		[JsonPropertyName("mimeType")]
+		public string MimeType { get; set; }
+	
+		/// <summary><para>File content</para></summary>
+		[JsonPropertyName("buffer")]
+		public byte[] Buffer { get; set; }
+	}
 }

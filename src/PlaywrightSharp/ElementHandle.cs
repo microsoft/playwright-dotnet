@@ -128,7 +128,7 @@ namespace PlaywrightSharp
             bool? force,
             bool? noWaitAfter,
             float? timeout)
-            => _channel.ClickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 0, modifiers, position, timeout, force ?? false, noWaitAfter);
+            => _channel.ClickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />
         public Task DblclickAsync(

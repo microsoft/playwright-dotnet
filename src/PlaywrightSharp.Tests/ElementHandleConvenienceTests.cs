@@ -245,14 +245,14 @@ namespace PlaywrightSharp.Tests
             await Page.SetContentAsync(@"<input id=input1 disabled><textarea></textarea><input id=input2>");
             await Page.EvalOnSelectorAsync("textarea", "t => t.readOnly = true");
             var input1 = await Page.QuerySelectorAsync("#input1");
-            Assert.False(await input1.IsEditableAsync());
-            Assert.False(await Page.IsEditableAsync("#input1"));
+            Assert.False(await input1.GetIsEditableAsync());
+            Assert.False(await Page.GetIsEditableAsync("#input1"));
             var input2 = await Page.QuerySelectorAsync("#input2");
-            Assert.True(await input2.IsEditableAsync());
-            Assert.True(await Page.IsEditableAsync("#input2"));
+            Assert.True(await input2.GetIsEditableAsync());
+            Assert.True(await Page.GetIsEditableAsync("#input2"));
             var textarea = await Page.QuerySelectorAsync("textarea");
-            Assert.False(await textarea.IsEditableAsync());
-            Assert.False(await Page.IsEditableAsync("textarea"));
+            Assert.False(await textarea.GetIsEditableAsync());
+            Assert.False(await Page.GetIsEditableAsync("textarea"));
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "isChecked should work")]
@@ -261,12 +261,12 @@ namespace PlaywrightSharp.Tests
         {
             await Page.SetContentAsync(@"<input type='checkbox' checked><div>Not a checkbox</div>");
             var handle = await Page.QuerySelectorAsync("input");
-            Assert.True(await handle.IsCheckedAsync());
-            Assert.True(await Page.IsCheckedAsync("input"));
+            Assert.True(await handle.GetIsCheckedAsync());
+            Assert.True(await Page.GetIsCheckedAsync("input"));
             await handle.EvaluateAsync("input => input.checked = false");
-            Assert.False(await handle.IsCheckedAsync());
-            Assert.False(await Page.IsCheckedAsync("input"));
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.IsCheckedAsync("div"));
+            Assert.False(await handle.GetIsCheckedAsync());
+            Assert.False(await Page.GetIsCheckedAsync("input"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.GetIsCheckedAsync("div"));
             Assert.Contains("Not a checkbox or radio button", exception.Message);
         }
     }

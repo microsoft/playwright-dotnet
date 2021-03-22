@@ -242,7 +242,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
             byte[] screenshot = await Page.ScreenshotAsync(
                 omitBackground: true,
-                type: ScreenshotFormat.Jpeg);
+                type: ScreenshotType.Jpeg);
             Assert.True(ScreenshotHelper.PixelMatch("white.jpg", screenshot));
         }
 
