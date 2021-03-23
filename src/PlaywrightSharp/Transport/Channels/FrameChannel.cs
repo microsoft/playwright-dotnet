@@ -27,10 +27,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Input;
 using PlaywrightSharp.Transport.Converters;
 
 namespace PlaywrightSharp.Transport.Channels
@@ -67,7 +65,7 @@ namespace PlaywrightSharp.Transport.Channels
             }
         }
 
-        internal Task<ResponseChannel> GoToAsync(string url, int? timeout, LifecycleEvent? waitUntil, string referer, bool isPage)
+        internal Task<ResponseChannel> GoToAsync(string url, float? timeout, LifecycleEvent? waitUntil, string referer, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -140,7 +138,7 @@ namespace PlaywrightSharp.Transport.Channels
             bool isFunction,
             object arg,
             bool isPage,
-            int? timeout,
+            float? timeout,
             int? polling,
             bool serializeArgument = false)
         {
@@ -280,7 +278,7 @@ namespace PlaywrightSharp.Transport.Channels
         internal async Task<string> GetTitleAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "title", null).ConfigureAwait(false))?.GetProperty("value").ToString();
 
-        internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, int? timeout, bool isPage)
+        internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -359,7 +357,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "addStyleTag", args);
         }
 
-        internal Task<ResponseChannel> WaitForNavigationAsync(LifecycleEvent? waitUntil, string url, int? timeout, bool isPage)
+        internal Task<ResponseChannel> WaitForNavigationAsync(LifecycleEvent? waitUntil, string url, float? timeout, bool isPage)
         {
             var param = new Dictionary<string, object>
             {
@@ -384,7 +382,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "waitForNavigation", param);
         }
 
-        internal Task WaitForLoadStateAsync(LifecycleEvent? state, int? timeout, bool isPage)
+        internal Task WaitForLoadStateAsync(LifecycleEvent? state, float? timeout, bool isPage)
         {
             var param = new Dictionary<string, object>
             {
@@ -407,7 +405,7 @@ namespace PlaywrightSharp.Transport.Channels
                 param);
         }
 
-        internal Task SetContentAsync(string html, int? timeout, LifecycleEvent? waitUntil, bool isPage)
+        internal Task SetContentAsync(string html, float? timeout, LifecycleEvent? waitUntil, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -433,9 +431,9 @@ namespace PlaywrightSharp.Transport.Channels
             int delay,
             MouseButton button,
             int clickCount,
-            Modifier[] modifiers,
+            IEnumerable<KeyboardModifier> modifiers,
             Point? position,
-            int? timeout,
+            float? timeout,
             bool force,
             bool? noWaitAfter,
             bool isPage)
@@ -475,11 +473,10 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task DblclickAsync(
             string selector,
-            int delay,
+            float delay,
             MouseButton button,
-            Modifier[] modifiers,
-            Point? position,
-            int? timeout,
+            IEnumerable<KeyboardModifier> modifiers,
+            float? timeout,
             bool force,
             bool? noWaitAfter,
             bool isPage)
@@ -508,11 +505,6 @@ namespace PlaywrightSharp.Transport.Channels
                 args["noWaitAfter"] = noWaitAfter;
             }
 
-            if (position != null)
-            {
-                args["position"] = position;
-            }
-
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "dblclick", args);
         }
 
@@ -536,7 +528,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isPage"] = isPage,
                 });
 
-        internal Task FillAsync(string selector, string value, int? timeout, bool? noWaitAfter, bool isPage)
+        internal Task FillAsync(string selector, string value, float? timeout, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -558,7 +550,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "fill", args);
         }
 
-        internal Task CheckAsync(string selector, int? timeout, bool force, bool? noWaitAfter, bool isPage)
+        internal Task CheckAsync(string selector, float? timeout, bool force, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -580,7 +572,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "check", args);
         }
 
-        internal Task UncheckAsync(string selector, int? timeout, bool force, bool? noWaitAfter, bool isPage)
+        internal Task UncheckAsync(string selector, float? timeout, bool force, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -602,7 +594,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "uncheck", args);
         }
 
-        internal Task DispatchEventAsync(string selector, string type, object eventInit, int? timeout, bool isPage)
+        internal Task DispatchEventAsync(string selector, string type, object eventInit, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -620,7 +612,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "dispatchEvent", args);
         }
 
-        internal Task HoverAsync(string selector, Point? position, Modifier[] modifiers, bool force, int? timeout, bool isPage)
+        internal Task HoverAsync(string selector, Point? position, IEnumerable<KeyboardModifier> modifiers, bool force, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -647,7 +639,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "hover", args);
         }
 
-        internal Task<string[]> PressAsync(string selector, string text, int delay, int? timeout, bool? noWaitAfter, bool isPage)
+        internal Task<string[]> PressAsync(string selector, string text, int delay, float? timeout, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -670,7 +662,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<string[]>(Guid, "press", args);
         }
 
-        internal async Task<string[]> SelectOptionAsync(string selector, object values, int? timeout, bool? noWaitAfter, bool isPage)
+        internal async Task<string[]> SelectOptionAsync(string selector, object values, float? timeout, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -703,7 +695,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();
         }
 
-        internal async Task<string> GetAttributeAsync(string selector, string name, int? timeout, bool isPage)
+        internal async Task<string> GetAttributeAsync(string selector, string name, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -720,7 +712,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "getAttribute", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal async Task<string> GetInnerHTMLAsync(string selector, int? timeout, bool isPage)
+        internal async Task<string> GetInnerHTMLAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -736,7 +728,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "innerHTML", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task TypeAsync(string selector, string text, int? delay, int? timeout, bool? noWaitAfter, bool isPage)
+        internal Task TypeAsync(string selector, string text, int? delay, float? timeout, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -768,7 +760,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isPage"] = isPage,
                 }).ConfigureAwait(false))?.GetProperty("value").ToString();
 
-        internal Task FocusAsync(string selector, int? timeout, bool isPage)
+        internal Task FocusAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -784,7 +776,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "focus", args);
         }
 
-        internal async Task<string> GetInnerTextAsync(string selector, int? timeout, bool isPage)
+        internal async Task<string> GetInnerTextAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -800,7 +792,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "innerText", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task SetInputFilesAsync(string selector, IEnumerable<ElementHandleFiles> files, int? timeout, bool? noWaitAfter, bool isPage)
+        internal Task SetInputFilesAsync(string selector, IEnumerable<ElementHandleFiles> files, float? timeout, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -827,7 +819,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<string>(Guid, "setInputFiles", args);
         }
 
-        internal async Task<string> GetTextContentAsync(string selector, int? timeout, bool isPage)
+        internal async Task<string> GetTextContentAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -843,7 +835,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "textContent", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task TapAsync(string selector, Modifier[] modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null, bool isPage = false)
+        internal Task TapAsync(string selector, IEnumerable<KeyboardModifier> modifiers = null, Point? position = null, float? timeout = null, bool force = false, bool? noWaitAfter = null, bool isPage = false)
         {
             var args = new Dictionary<string, object>
             {
@@ -879,7 +871,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "tap", args);
         }
 
-        internal async Task<bool> GetIsCheckedAsync(string selector, int? timeout, bool isPage)
+        internal async Task<bool> GetIsCheckedAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -895,7 +887,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "isChecked", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
         }
 
-        internal async Task<bool> GetIsDisabledAsync(string selector, int? timeout, bool isPage)
+        internal async Task<bool> GetIsDisabledAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -911,7 +903,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "isDisabled", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
         }
 
-        internal async Task<bool> GetIsEditableAsync(string selector, int? timeout, bool isPage)
+        internal async Task<bool> GetIsEditableAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -927,7 +919,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "isEditable", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
         }
 
-        internal async Task<bool> GetIsEnabledAsync(string selector, int? timeout, bool isPage)
+        internal async Task<bool> GetIsEnabledAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -943,7 +935,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "isEnabled", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
         }
 
-        internal async Task<bool> GetIsHiddenAsync(string selector, int? timeout, bool isPage)
+        internal async Task<bool> GetIsHiddenAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -959,7 +951,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "isHidden", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
         }
 
-        internal async Task<bool> GetIsVisibleAsync(string selector, int? timeout, bool isPage)
+        internal async Task<bool> GetIsVisibleAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {

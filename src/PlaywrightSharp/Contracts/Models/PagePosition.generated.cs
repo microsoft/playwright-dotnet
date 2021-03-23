@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -46,45 +46,14 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-    /// <summary>
-    /// <para>
-    /// <see cref="IDialog"/> objects are dispatched by page via the <see cref="IPage.Dialog"/>
-    /// event.
-    /// </para>
-    /// <para>An example of using <c>Dialog</c> class:</para>
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Dialogs are dismissed automatically, unless there is a <see cref="IPage.Dialog"/>
-    /// listener. When listener is present, it **must** either <see cref="IDialog.AcceptAsync"/>
-    /// or <see cref="IDialog.DismissAsync"/> the dialog - otherwise the page will <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop#never_blocking">freeze</a>
-    /// waiting for the dialog, and actions like click will never finish.
-    /// </para>
-    /// </remarks>
-    public partial interface IDialog
-    {
-        /// <summary><para>Returns when the dialog has been accepted.</para></summary>
-        /// <param name="promptText">
-        /// A text to enter in prompt. Does not cause any effects if the dialog's <c>type</c>
-        /// is not prompt. Optional.
-        /// </param>
-        Task AcceptAsync(string promptText = default);
-
-        /// <summary><para>If dialog is prompt, returns default prompt value. Otherwise, returns empty string.</para></summary>
-        string DefaultValue { get; }
-
-        /// <summary><para>Returns when the dialog has been dismissed.</para></summary>
-        Task DismissAsync();
-
-        /// <summary><para>A message displayed in the dialog.</para></summary>
-        string Message { get; }
-
-        /// <summary>
-        /// <para>
-        /// Returns dialog's type, can be one of <c>alert</c>, <c>beforeunload</c>, <c>confirm</c>
-        /// or <c>prompt</c>.
-        /// </para>
-        /// </summary>
-        string Type { get; }
-    }
+	public partial class PagePosition
+	{
+		/// <summary><para></para></summary>
+		[JsonPropertyName("x")]
+		public float X { get; set; }
+	
+		/// <summary><para></para></summary>
+		[JsonPropertyName("y")]
+		public float Y { get; set; }
+	}
 }

@@ -32,7 +32,6 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Input;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
@@ -60,7 +59,7 @@ namespace PlaywrightSharp
                     if (e.Add.HasValue)
                     {
                         _loadStates.Add(e.Add.Value);
-                        LoadState?.Invoke(this, new LoadStateEventArgs { LifecycleEvent = e.Add.Value });
+                        LoadState?.Invoke(this, new LoadStateEventArgs { WaitUntilState = e.Add.Value });
                     }
 
                     if (e.Remove.HasValue)
@@ -100,7 +99,7 @@ namespace PlaywrightSharp
         IChannel<Frame> IChannelOwner<Frame>.Channel => _channel;
 
         /// <inheritdoc />
-        public IFrame[] ChildFrames => ChildFramesList.ToArray();
+        public IReadOnlyCollection<IFrame> ChildFrames => ChildFramesList;
 
         /// <inheritdoc />
         public string Name { get; internal set; }
@@ -130,11 +129,11 @@ namespace PlaywrightSharp
         public Task<string> GetTitleAsync() => _channel.GetTitleAsync();
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, LifecycleEvent? waitUntil = null, string referer = null, int? timeout = null)
+        public Task<IResponse> GoToAsync(string url, float? timeout, WaitUntilState waitUntil, string referer)
             => GoToAsync(false, url, waitUntil, referer, timeout);
 
         /// <inheritdoc />
-        public Task SetContentAsync(string html, LifecycleEvent? waitUntil = null, int? timeout = null) => SetContentAsync(false, html, waitUntil, timeout);
+        public Task SetContentAsync(string html, WaitUntilState? waitUntil, float? timeout) => SetContentAsync(false, html, waitUntil, timeout);
 
         /// <inheritdoc />
         public Task<string> GetContentAsync() => GetContentAsync(false);
@@ -162,38 +161,38 @@ namespace PlaywrightSharp
         public Task<IJSHandle> EvaluateHandleAsync(string expression, object arg) => EvaluateHandleAsync(false, expression, arg);
 
         /// <inheritdoc />
-        public Task FillAsync(string selector, string value, int? timeout = null, bool? noWaitAfter = null)
+        public Task FillAsync(string selector, string value, float? timeout, bool? noWaitAfter = null)
             => FillAsync(false, selector, value, timeout, noWaitAfter);
 
         /// <inheritdoc />
         public Task WaitForTimeoutAsync(int timeout) => Task.Delay(timeout);
 
         /// <inheritdoc />
-        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorState? state = null, int? timeout = null)
+        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorState? state = null, float? timeout)
             => WaitForSelectorAsync(false, selector, state, timeout);
 
         /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(string expression, object arg, int? timeout = null)
+        public Task<IJSHandle> WaitForFunctionAsync(string expression, object arg, float? timeout)
             => WaitForFunctionAsync(false, expression, arg, timeout, null, null);
 
         /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(string expression, object arg, Polling polling, int? timeout = null)
+        public Task<IJSHandle> WaitForFunctionAsync(string expression, object arg, Polling polling, float? timeout)
             => WaitForFunctionAsync(false, expression, arg, timeout, polling, null);
 
         /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(string expression, object arg, int polling, int? timeout = null)
+        public Task<IJSHandle> WaitForFunctionAsync(string expression, object arg, int polling, float? timeout)
             => WaitForFunctionAsync(false, expression, arg, timeout, null, polling);
 
         /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(string expression, int? timeout = null)
+        public Task<IJSHandle> WaitForFunctionAsync(string expression, float? timeout)
             => WaitForFunctionAsync(false, expression, timeout, null, null);
 
         /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(string expression, Polling polling, int? timeout = null)
+        public Task<IJSHandle> WaitForFunctionAsync(string expression, Polling polling, float? timeout)
             => WaitForFunctionAsync(false, expression, timeout, polling, null);
 
         /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(string expression, int polling, int? timeout = null)
+        public Task<IJSHandle> WaitForFunctionAsync(string expression, int polling, float? timeout)
             => WaitForFunctionAsync(false, expression, timeout, null, polling);
 
         /// <inheritdoc />
@@ -222,30 +221,29 @@ namespace PlaywrightSharp
             int clickCount = 1,
             Modifier[] modifiers = null,
             Point? position = null,
-            int? timeout = null,
+            float? timeout,
             bool force = false,
             bool? noWaitAfter = null)
             => ClickAsync(false, selector, delay, button, clickCount, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task CheckAsync(string selector, int? timeout = null, bool force = false, bool? noWaitAfter = null)
-            => CheckAsync(false, selector, timeout, force, noWaitAfter);
+        public Task CheckAsync(string selector, bool? force, bool? noWaitAfter, float? timeout)
+            => CheckAsync(false, selector, force, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task UncheckAsync(string selector, int? timeout = null, bool force = false, bool? noWaitAfter = null)
-            => UncheckAsync(false, selector, timeout, force, noWaitAfter);
+        public Task UncheckAsync(string selector, bool? force, bool? noWaitAfter, float? timeout)
+            => UncheckAsync(false, selector, force, noWaitAfter, timeout);
 
         /// <inheritdoc />
         public Task DblclickAsync(
             string selector,
-            int delay = 0,
-            MouseButton button = MouseButton.Left,
-            Modifier[] modifiers = null,
-            Point? position = null,
-            int? timeout = null,
-            bool force = false,
-            bool? noWaitAfter = null)
-            => DblclickAsync(false, selector, delay, button, modifiers, position, timeout, force, noWaitAfter);
+            MouseButton button,
+            float? delay,
+            IEnumerable<KeyboardModifier> modifiers,
+            bool force,
+            bool? noWaitAfter,
+            float? timeout)
+            => DblclickAsync(false, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), modifiers, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
         public Task EvalOnSelectorAsync(string selector, string expression, object arg) => EvalOnSelectorAsync(false, selector, expression, arg);
@@ -260,38 +258,38 @@ namespace PlaywrightSharp
         public Task<T> EvalOnSelectorAsync<T>(string selector, string expression) => EvalOnSelectorAsync<T>(false, selector, expression);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent? waitUntil = null, int? timeout = null)
+        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent? waitUntil = null, float? timeout)
             => WaitForNavigationAsync(waitUntil: waitUntil, url: null, regex: null, match: null, timeout: timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(string url, LifecycleEvent? waitUntil = null, int? timeout = null)
+        public Task<IResponse> WaitForNavigationAsync(string url, WaitUntilState? waitUntil = null, float? timeout)
             => WaitForNavigationAsync(waitUntil: waitUntil, url: url, regex: null, match: null, timeout: timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(Regex url, LifecycleEvent? waitUntil = null, int? timeout = null)
+        public Task<IResponse> WaitForNavigationAsync(Regex url, WaitUntilState? waitUntil = null, float? timeout)
             => WaitForNavigationAsync(waitUntil: waitUntil, url: null, regex: url, match: null, timeout: timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(Func<string, bool> url, LifecycleEvent? waitUntil = null, int? timeout = null)
+        public Task<IResponse> WaitForNavigationAsync(Func<string, bool> url, WaitUntilState? waitUntil = null, float? timeout)
             => WaitForNavigationAsync(waitUntil: waitUntil, url: null, regex: null, match: url, timeout: timeout);
 
         /// <inheritdoc />
-        public Task FocusAsync(string selector, int? timeout = null) => FocusAsync(false, selector, timeout);
+        public Task FocusAsync(string selector, float? timeout) => FocusAsync(false, selector, timeout);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(string selector, string file, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetInputFilesAsync(string selector, string file, float? timeout, bool? noWaitAfter = null)
             => SetInputFilesAsync(selector, new[] { file }, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(string selector, string[] files, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetInputFilesAsync(string selector, string[] files, float? timeout, bool? noWaitAfter = null)
             => SetInputFilesAsync(false, selector, files, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(string selector, ElementHandleFiles file, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetInputFilesAsync(string selector, ElementHandleFiles file, float? timeout, bool? noWaitAfter = null)
             => SetInputFilesAsync(selector, new[] { file }, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(string selector, ElementHandleFiles[] files, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetInputFilesAsync(string selector, ElementHandleFiles[] files, float? timeout, bool? noWaitAfter = null)
             => SetInputFilesAsync(false, selector, files, timeout, noWaitAfter);
 
         /// <inheritdoc />
@@ -300,10 +298,10 @@ namespace PlaywrightSharp
             Point? position = null,
             Modifier[] modifiers = null,
             bool force = false,
-            int? timeout = null) => HoverAsync(false, selector, position, modifiers, force, timeout);
+            float? timeout) => HoverAsync(false, selector, position, modifiers, force, timeout);
 
         /// <inheritdoc />
-        public Task TypeAsync(string selector, string text, int delay = 0, int? timeout = null, bool? noWaitAfter = null)
+        public Task TypeAsync(string selector, string text, int delay = 0, float? timeout, bool? noWaitAfter = null)
             => TypeAsync(false, selector, text, delay, timeout, noWaitAfter);
 
         /// <inheritdoc />
@@ -311,31 +309,31 @@ namespace PlaywrightSharp
             => AddStyleTagAsync(false, url, path, content);
 
         /// <inheritdoc />
-        public Task PressAsync(string selector, string key, int delay = 0, int? timeout = null, bool? noWaitAfter = null)
+        public Task PressAsync(string selector, string key, int delay = 0, float? timeout, bool? noWaitAfter = null)
             => PressAsync(false, selector, key, delay, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, int? timeout = null, bool? noWaitAfter = null)
+        public Task<string[]> SelectOptionAsync(string selector, float? timeout, bool? noWaitAfter = null)
             => SelectOptionAsync(false, selector, null, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, string value, int? timeout = null, bool? noWaitAfter = null)
+        public Task<string[]> SelectOptionAsync(string selector, string value, float? timeout, bool? noWaitAfter = null)
             => SelectOptionAsync(selector, new[] { value }, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, ElementHandleValues value, int? timeout = null, bool? noWaitAfter = null)
+        public Task<string[]> SelectOptionAsync(string selector, ElementHandleValues value, float? timeout, bool? noWaitAfter = null)
             => SelectOptionAsync(selector, new[] { value }, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, IElementHandle value, int? timeout = null, bool? noWaitAfter = null)
+        public Task<string[]> SelectOptionAsync(string selector, IElementHandle value, float? timeout, bool? noWaitAfter = null)
             => SelectOptionAsync(selector, new[] { value }, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, string[] values, int? timeout = null, bool? noWaitAfter = null)
+        public Task<string[]> SelectOptionAsync(string selector, string[] values, float? timeout, bool? noWaitAfter = null)
             => SelectOptionAsync(false, selector, values.Cast<object>().Select(v => v == null ? v : new { value = v }).ToArray(), timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, ElementHandleValues[] values, int? timeout = null, bool? noWaitAfter = null)
+        public Task<string[]> SelectOptionAsync(string selector, ElementHandleValues[] values, float? timeout, bool? noWaitAfter = null)
         {
             if (values == null)
             {
@@ -346,7 +344,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, IElementHandle[] values, int? timeout = null, bool? noWaitAfter = null)
+        public Task<string[]> SelectOptionAsync(string selector, IElementHandle[] values, float? timeout, bool? noWaitAfter = null)
         {
             if (values == null)
             {
@@ -366,7 +364,7 @@ namespace PlaywrightSharp
         public Task<string[]> SelectOptionAsync(string selector, params IElementHandle[] values) => SelectOptionAsync(selector, values, null, null);
 
         /// <inheritdoc />
-        public async Task WaitForLoadStateAsync(LifecycleEvent state = LifecycleEvent.Load, int? timeout = null)
+        public async Task WaitForLoadStateAsync(LifecycleEvent state = WaitUntilState.Load, float? timeout)
         {
             Task<LoadStateEventArgs> task;
             Waiter waiter = null;
@@ -397,58 +395,58 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task DispatchEventAsync(string selector, string type, object eventInit = null, int? timeout = null)
+        public Task DispatchEventAsync(string selector, string type, object eventInit = null, float? timeout)
             => DispatchEventAsync(false, selector, type, eventInit, timeout);
 
         /// <inheritdoc />
-        public Task<string> GetAttributeAsync(string selector, string name, int? timeout = null)
+        public Task<string> GetAttributeAsync(string selector, string name, float? timeout)
             => GetAttributeAsync(false, selector, name, timeout);
 
         /// <inheritdoc />
-        public Task<string> GetInnerHTMLAsync(string selector, int? timeout = null)
+        public Task<string> GetInnerHTMLAsync(string selector, float? timeout)
             => GetInnerHTMLAsync(false, selector, timeout);
 
         /// <inheritdoc />
-        public Task<string> GetInnerTextAsync(string selector, int? timeout = null)
+        public Task<string> GetInnerTextAsync(string selector, float? timeout)
             => GetInnerTextAsync(false, selector, timeout);
 
         /// <inheritdoc />
-        public Task<string> GetTextContentAsync(string selector, int? timeout = null)
+        public Task<string> GetTextContentAsync(string selector, float? timeout)
             => GetTextContentAsync(false, selector, timeout);
 
         /// <inheritdoc />
-        public Task TapAsync(string selector, Modifier[] modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)
+        public Task TapAsync(string selector, Modifier[] modifiers = null, Point? position = null, bool? force, bool? noWaitAfter, float? timeout)
             => TapAsync(false, selector, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task<bool> GetIsCheckedAsync(string selector, int? timeout = null) => GetIsCheckedAsync(false, selector, timeout);
+        public Task<bool> GetIsCheckedAsync(string selector, float? timeout) => GetIsCheckedAsync(false, selector, timeout);
 
         /// <inheritdoc />
-        public Task<bool> GetIsDisabledAsync(string selector, int? timeout = null) => GetIsDisabledAsync(false, selector, timeout);
+        public Task<bool> GetIsDisabledAsync(string selector, float? timeout) => GetIsDisabledAsync(false, selector, timeout);
 
         /// <inheritdoc />
-        public Task<bool> GetIsEditableAsync(string selector, int? timeout = null) => GetIsEditableAsync(false, selector, timeout);
+        public Task<bool> GetIsEditableAsync(string selector, float? timeout) => GetIsEditableAsync(false, selector, timeout);
 
         /// <inheritdoc />
-        public Task<bool> GetIsEnabledAsync(string selector, int? timeout = null) => GetIsEnabledAsync(false, selector, timeout);
+        public Task<bool> GetIsEnabledAsync(string selector, float? timeout) => GetIsEnabledAsync(false, selector, timeout);
 
         /// <inheritdoc />
-        public Task<bool> GetIsHiddenAsync(string selector, int? timeout = null) => GetIsHiddenAsync(false, selector, timeout);
+        public Task<bool> GetIsHiddenAsync(string selector, float? timeout) => GetIsHiddenAsync(false, selector, timeout);
 
         /// <inheritdoc />
-        public Task<bool> GetIsVisibleAsync(string selector, int? timeout = null) => GetIsVisibleAsync(false, selector, timeout);
+        public Task<bool> GetIsVisibleAsync(string selector, float? timeout) => GetIsVisibleAsync(false, selector, timeout);
 
-        internal Task TapAsync(bool isPageCall, string selector, Modifier[] modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)
+        internal Task TapAsync(bool isPageCall, string selector, Modifier[] modifiers = null, Point? position = null, bool? force, bool? noWaitAfter, float? timeout)
             => _channel.TapAsync(selector, modifiers, position, timeout, force, noWaitAfter, isPageCall);
 
         internal async Task<IResponse> WaitForNavigationAsync(
-            LifecycleEvent? waitUntil = null,
+            WaitUntilState? waitUntil = null,
             string url = null,
             Regex regex = null,
             Func<string, bool> match = null,
-            int? timeout = null)
+            float? timeout)
         {
-            waitUntil ??= LifecycleEvent.Load;
+            waitUntil ??= WaitUntilState.Load;
             var waiter = SetupNavigationWaiter(timeout);
             string toUrl = !string.IsNullOrEmpty(url) ? $" to \"{url}\"" : string.Empty;
 
@@ -500,31 +498,31 @@ namespace PlaywrightSharp
 
         internal Task<string> GetContentAsync(bool isPageCall) => _channel.GetContentAsync(isPageCall);
 
-        internal Task FocusAsync(bool isPageCall, string selector, int? timeout = null)
+        internal Task FocusAsync(bool isPageCall, string selector, float? timeout)
             => _channel.FocusAsync(selector, timeout, isPageCall);
 
-        internal Task TypeAsync(bool isPageCall, string selector, string text, int delay, int? timeout, bool? noWaitAfter)
+        internal Task TypeAsync(bool isPageCall, string selector, string text, int delay, float? timeout, bool? noWaitAfter)
             => _channel.TypeAsync(selector, text, delay, timeout, noWaitAfter, isPageCall);
 
-        internal Task<string> GetAttributeAsync(bool isPageCall, string selector, string name, int? timeout = null)
+        internal Task<string> GetAttributeAsync(bool isPageCall, string selector, string name, float? timeout)
             => _channel.GetAttributeAsync(selector, name, timeout, isPageCall);
 
-        internal Task<string> GetInnerHTMLAsync(bool isPageCall, string selector, int? timeout = null)
+        internal Task<string> GetInnerHTMLAsync(bool isPageCall, string selector, float? timeout)
             => _channel.GetInnerHTMLAsync(selector, timeout, isPageCall);
 
-        internal Task<string> GetInnerTextAsync(bool isPageCall, string selector, int? timeout = null)
+        internal Task<string> GetInnerTextAsync(bool isPageCall, string selector, float? timeout)
             => _channel.GetInnerTextAsync(selector, timeout, isPageCall);
 
-        internal Task<string> GetTextContentAsync(bool isPageCall, string selector, int? timeout = null)
+        internal Task<string> GetTextContentAsync(bool isPageCall, string selector, float? timeout)
             => _channel.GetTextContentAsync(selector, timeout, isPageCall);
 
-        internal Task HoverAsync(bool isPageCall, string selector, Point? position, Modifier[] modifiers, bool force, int? timeout)
+        internal Task HoverAsync(bool isPageCall, string selector, Point? position, Modifier[] modifiers, bool force, float? timeout)
             => _channel.HoverAsync(selector, position, modifiers, force, timeout, isPageCall);
 
-        internal Task<string[]> PressAsync(bool isPageCall, string selector, string key, int delay, int? timeout, bool? noWaitAfter)
+        internal Task<string[]> PressAsync(bool isPageCall, string selector, string key, int delay, float? timeout, bool? noWaitAfter)
             => _channel.PressAsync(selector, key, delay, timeout, noWaitAfter, isPageCall);
 
-        internal Task<string[]> SelectOptionAsync(bool isPageCall, string selector, object[] values, int? timeout, bool? noWaitAfter)
+        internal Task<string[]> SelectOptionAsync(bool isPageCall, string selector, object[] values, float? timeout, bool? noWaitAfter)
         {
             if (values != null)
             {
@@ -540,7 +538,7 @@ namespace PlaywrightSharp
             return _channel.SelectOptionAsync(selector, values, timeout, noWaitAfter, isPageCall);
         }
 
-        internal Task DispatchEventAsync(bool isPageCall, string selector, string type, object eventInit = null, int? timeout = null)
+        internal Task DispatchEventAsync(bool isPageCall, string selector, string type, object eventInit = null, float? timeout)
             => _channel.DispatchEventAsync(
                     selector,
                     type,
@@ -548,7 +546,7 @@ namespace PlaywrightSharp
                     timeout,
                     isPageCall);
 
-        internal Task FillAsync(bool isPageCall, string selector, string value, int? timeout = null, bool? noWaitAfter = null)
+        internal Task FillAsync(bool isPageCall, string selector, string value, float? timeout, bool? noWaitAfter = null)
             => _channel.FillAsync(selector, value, timeout, noWaitAfter, isPageCall);
 
         internal async Task<IElementHandle> AddScriptTagAsync(bool isPageCall, string url, string path, string content, string type)
@@ -573,10 +571,10 @@ namespace PlaywrightSharp
             return (await _channel.AddStyleTagAsync(url, path, content, isPageCall).ConfigureAwait(false)).Object;
         }
 
-        internal Task SetInputFilesAsync(bool isPageCall, string selector, string[] files, int? timeout = null, bool? noWaitAfter = null)
+        internal Task SetInputFilesAsync(bool isPageCall, string selector, string[] files, float? timeout, bool? noWaitAfter = null)
             => _channel.SetInputFilesAsync(selector, files.Select(f => f.ToElementHandleFile()).ToArray(), timeout, noWaitAfter, isPageCall);
 
-        internal Task SetInputFilesAsync(bool isPageCall, string selector, IEnumerable<ElementHandleFiles> files, int? timeout = null, bool? noWaitAfter = null)
+        internal Task SetInputFilesAsync(bool isPageCall, string selector, IEnumerable<ElementHandleFiles> files, float? timeout, bool? noWaitAfter = null)
             => _channel.SetInputFilesAsync(selector, files, timeout, noWaitAfter, isPageCall);
 
         internal Task ClickAsync(
@@ -587,7 +585,7 @@ namespace PlaywrightSharp
             int clickCount = 1,
             Modifier[] modifiers = null,
             Point? position = null,
-            int? timeout = null,
+            float? timeout,
             bool force = false,
             bool? noWaitAfter = null)
             => _channel.ClickAsync(selector, delay, button, clickCount, modifiers, position, timeout, force, noWaitAfter, isPageCall);
@@ -595,22 +593,21 @@ namespace PlaywrightSharp
         internal Task DblclickAsync(
             bool isPageCall,
             string selector,
-            int delay = 0,
-            MouseButton button = MouseButton.Left,
-            Modifier[] modifiers = null,
-            Point? position = null,
-            int? timeout = null,
-            bool force = false,
-            bool? noWaitAfter = null)
-            => _channel.DblclickAsync(selector, delay, button, modifiers, position, timeout, force, noWaitAfter, isPageCall);
+            float delay,
+            MouseButton button,
+            IEnumerable<KeyboardModifier> modifiers,
+            float? timeout,
+            bool force,
+            bool? noWaitAfter)
+            => _channel.DblclickAsync(selector, delay, button, modifiers, timeout, force, noWaitAfter, isPageCall);
 
-        internal Task CheckAsync(bool isPageCall, string selector, int? timeout = null, bool force = false, bool? noWaitAfter = null)
-            => _channel.CheckAsync(selector, timeout, force, noWaitAfter, isPageCall);
+        internal Task CheckAsync(bool isPageCall, string selector, bool? force, bool? noWaitAfter, float? timeout)
+            => _channel.CheckAsync(selector, timeout, force ?? false, noWaitAfter, isPageCall);
 
-        internal Task UncheckAsync(bool isPageCall, string selector, int? timeout = null, bool force = false, bool? noWaitAfter = null)
-            => _channel.UncheckAsync(selector, timeout, force, noWaitAfter, isPageCall);
+        internal Task UncheckAsync(bool isPageCall, string selector, bool? force, bool? noWaitAfter, float? timeout)
+            => _channel.UncheckAsync(selector, timeout, force ?? false, noWaitAfter, isPageCall);
 
-        internal Task SetContentAsync(bool isPageCall, string html, LifecycleEvent? waitUntil, int? timeout)
+        internal Task SetContentAsync(bool isPageCall, string html, WaitUntilState? waitUntil, float? timeout)
             => _channel.SetContentAsync(html, timeout, waitUntil, isPageCall);
 
         internal async Task<IElementHandle> QuerySelectorAsync(bool isPageCall, string selector)
@@ -619,7 +616,7 @@ namespace PlaywrightSharp
         internal async Task<IEnumerable<IElementHandle>> QuerySelectorAllAsync(bool isPageCall, string selector)
             => (await _channel.QuerySelectorAllAsync(selector, isPageCall).ConfigureAwait(false)).Select(c => ((ElementHandleChannel)c).Object);
 
-        internal async Task<IJSHandle> WaitForFunctionAsync(bool isPageCall, string expression, int? timeout, Polling? polling, int? pollingInterval)
+        internal async Task<IJSHandle> WaitForFunctionAsync(bool isPageCall, string expression, float? timeout, Polling? polling, int? pollingInterval)
              => (await _channel.WaitForFunctionAsync(
                 expression: expression,
                 isFunction: expression.IsJavascriptFunction(),
@@ -628,7 +625,7 @@ namespace PlaywrightSharp
                 timeout: timeout,
                 polling: polling != null ? null : pollingInterval).ConfigureAwait(false)).Object;
 
-        internal async Task<IJSHandle> WaitForFunctionAsync(bool isPageCall, string expression, object args, int? timeout, Polling? polling, int? pollingInterval)
+        internal async Task<IJSHandle> WaitForFunctionAsync(bool isPageCall, string expression, object args, float? timeout, Polling? polling, int? pollingInterval)
              => (await _channel.WaitForFunctionAsync(
                 expression: expression,
                 isFunction: expression.IsJavascriptFunction(),
@@ -637,7 +634,7 @@ namespace PlaywrightSharp
                 timeout: timeout,
                 polling: polling != null ? null : pollingInterval).ConfigureAwait(false)).Object;
 
-        internal async Task<IElementHandle> WaitForSelectorAsync(bool isPageCall, string selector, WaitForSelectorState? state, int? timeout)
+        internal async Task<IElementHandle> WaitForSelectorAsync(bool isPageCall, string selector, WaitForSelectorState? state, float? timeout)
             => (await _channel.WaitForSelectorAsync(
                 selector: selector,
                 state: state,
@@ -753,28 +750,28 @@ namespace PlaywrightSharp
                 arg: ScriptsHelper.SerializedArgument(args),
                 isPage: isPageCall).ConfigureAwait(false));
 
-        internal async Task<IResponse> GoToAsync(bool isPage, string url, LifecycleEvent? waitUntil, string referer, int? timeout)
+        internal async Task<IResponse> GoToAsync(bool isPage, string url, WaitUntilState? waitUntil, string referer, float? timeout)
             => (await _channel.GoToAsync(url, timeout, waitUntil, referer, isPage).ConfigureAwait(false))?.Object;
 
-        internal Task<bool> GetIsCheckedAsync(bool isPageCall, string selector, int? timeout = null)
+        internal Task<bool> GetIsCheckedAsync(bool isPageCall, string selector, float? timeout)
             => _channel.GetIsCheckedAsync(selector, timeout, isPageCall);
 
-        internal Task<bool> GetIsDisabledAsync(bool isPageCall, string selector, int? timeout = null)
+        internal Task<bool> GetIsDisabledAsync(bool isPageCall, string selector, float? timeout)
             => _channel.GetIsDisabledAsync(selector, timeout, isPageCall);
 
-        internal Task<bool> GetIsEditableAsync(bool isPageCall, string selector, int? timeout = null)
+        internal Task<bool> GetIsEditableAsync(bool isPageCall, string selector, float? timeout)
             => _channel.GetIsEditableAsync(selector, timeout, isPageCall);
 
-        internal Task<bool> GetIsEnabledAsync(bool isPageCall, string selector, int? timeout = null)
+        internal Task<bool> GetIsEnabledAsync(bool isPageCall, string selector, float? timeout)
             => _channel.GetIsEnabledAsync(selector, timeout, isPageCall);
 
-        internal Task<bool> GetIsHiddenAsync(bool isPageCall, string selector, int? timeout = null)
+        internal Task<bool> GetIsHiddenAsync(bool isPageCall, string selector, float? timeout)
             => _channel.GetIsHiddenAsync(selector, timeout, isPageCall);
 
-        internal Task<bool> GetIsVisibleAsync(bool isPageCall, string selector, int? timeout = null)
+        internal Task<bool> GetIsVisibleAsync(bool isPageCall, string selector, float? timeout)
             => _channel.GetIsVisibleAsync(selector, timeout, isPageCall);
 
-        private Waiter SetupNavigationWaiter(int? timeout)
+        private Waiter SetupNavigationWaiter(float? timeout)
         {
             var waiter = new Waiter();
             waiter.RejectOnEvent<EventArgs>(Page, PageEvent.Close.Name, new NavigationException("Navigation failed because page was closed!"));

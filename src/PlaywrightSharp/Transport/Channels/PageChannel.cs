@@ -24,12 +24,10 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Input;
 using PlaywrightSharp.Transport.Converters;
 using PlaywrightSharp.Transport.Protocol;
 
