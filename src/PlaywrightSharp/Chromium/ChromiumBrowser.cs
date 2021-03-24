@@ -32,6 +32,7 @@ namespace PlaywrightSharp.Chromium
         /// <inheritdoc/>
         public async Task<ICDPSession> NewBrowserCDPSessionAsync() => (await Channel.NewBrowserCDPSessionAsync().ConfigureAwait(false)).Object;
 
+        /*
         /// <inheritdoc/>
         public new async Task<IChromiumBrowserContext> NewContextAsync(
             ViewportSize viewport,
@@ -128,6 +129,6 @@ namespace PlaywrightSharp.Chromium
 
         /// <inheritdoc/>
         public new async Task<IChromiumBrowserContext> NewContextAsync(BrowserContextOptions options)
-            => await base.NewContextAsync(options).ConfigureAwait(false) as IChromiumBrowserContext;
+            => await base.NewContextAsync(options).ConfigureAwait(false) as IChromiumBrowserContext;*/
     }
 }

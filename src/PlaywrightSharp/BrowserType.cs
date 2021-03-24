@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
@@ -47,232 +46,120 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public string Name => _initializer.Name;
 
-        /// <inheritdoc />
-        public Task<IBrowser> LaunchAsync(
-            bool? headless = null,
-            string[] args = null,
-            string userDataDir = null,
-            bool? devtools = null,
-            string executablePath = null,
-            string downloadsPath = null,
-            bool? ignoreHTTPSErrors = null,
-            int? timeout = null,
-            bool? dumpIO = null,
-            int? slowMo = null,
-            bool? ignoreAllDefaultArgs = null,
-            string[] ignoreDefaultArgs = null,
-            Dictionary<string, string> env = null,
-            Dictionary<string, object> firefoxUserPrefs = null,
-            ProxySettings proxy = null,
+        /// <inheritdoc/>
+        public async Task<IBrowser> LaunchAsync(
+            IEnumerable<string> args = null,
+            string channel = null,
             bool? chromiumSandbox = null,
-            bool? handleSIGINT = null,
-            bool? handleSIGTERM = null,
-            bool? handleSIGHUP = null)
-            => LaunchAsync(new LaunchOptions
-            {
-                Headless = headless,
-                Args = args,
-                UserDataDir = userDataDir,
-                Devtools = devtools,
-                ExecutablePath = executablePath,
-                DownloadsPath = downloadsPath,
-                IgnoreHTTPSErrors = ignoreHTTPSErrors,
-                Timeout = timeout,
-                DumpIO = dumpIO,
-                SlowMo = slowMo,
-                IgnoreAllDefaultArgs = ignoreAllDefaultArgs,
-                IgnoreDefaultArgs = ignoreDefaultArgs,
-                Env = env,
-                FirefoxUserPrefs = firefoxUserPrefs,
-                Proxy = proxy,
-                ChromiumSandbox = chromiumSandbox,
-                HandleSIGHUP = handleSIGHUP,
-                HandleSIGINT = handleSIGINT,
-                HandleSIGTERM = handleSIGTERM,
-            });
-
-        /// <inheritdoc />
-        public async Task<IBrowser> LaunchAsync(LaunchOptions options = null)
-        {
-            if (!string.IsNullOrEmpty(options?.UserDataDir))
-            {
-                throw new ArgumentException("UserDataDir option is not supported in LaunchAsync. Use LaunchPersistentContextAsync instead");
-            }
-
-            return (await _channel.LaunchAsync(options ?? new LaunchOptions()).ConfigureAwait(false)).Object;
-        }
-
-        /// <inheritdoc />
-        public Task<IBrowserContext> LaunchPersistentContextAsync(
-            string userDataDir,
-            ViewportSize viewport,
-            bool? headless = null,
-            string[] args = null,
             bool? devtools = null,
-            string executablePath = null,
             string downloadsPath = null,
-            bool? ignoreHTTPSErrors = null,
-            int? timeout = null,
-            bool? dumpIO = null,
-            int? slowMo = null,
-            bool? ignoreAllDefaultArgs = null,
-            string[] ignoreDefaultArgs = null,
-            Dictionary<string, string> env = null,
-            ProxySettings proxy = null,
-            string userAgent = null,
-            bool? bypassCSP = null,
-            bool? javaScriptEnabled = null,
-            string timezoneId = null,
-            Geolocation geolocation = null,
-            ContextPermission[] permissions = null,
-            bool? isMobile = null,
-            bool? offline = null,
-            decimal? deviceScaleFactor = null,
-            Credentials httpCredentials = null,
-            bool? hasTouch = null,
-            bool? acceptDownloads = null,
-            ColorScheme? colorScheme = null,
-            string locale = null,
-            Dictionary<string, string> extraHTTPHeaders = null,
-            bool? chromiumSandbox = null,
-            bool? handleSIGINT = null,
-            bool? handleSIGTERM = null,
+            IEnumerable<KeyValuePair<string, string>> env = null,
+            string executablePath = null,
+            IEnumerable<KeyValuePair<string, object>> firefoxUserPrefs = null,
             bool? handleSIGHUP = null,
-            RecordHarOptions recordHar = null,
-            RecordVideoOptions recordVideo = null)
-            => LaunchPersistentContextAsync(
-                userDataDir,
-                new LaunchPersistentOptions
-                {
-                    Headless = headless,
-                    Args = args,
-                    UserDataDir = userDataDir,
-                    Devtools = devtools,
-                    ExecutablePath = executablePath,
-                    DownloadsPath = downloadsPath,
-                    IgnoreHTTPSErrors = ignoreHTTPSErrors,
-                    Timeout = timeout,
-                    DumpIO = dumpIO,
-                    SlowMo = slowMo,
-                    IgnoreAllDefaultArgs = ignoreAllDefaultArgs,
-                    IgnoreDefaultArgs = ignoreDefaultArgs,
-                    Env = env,
-                    Proxy = proxy,
-                    Viewport = viewport,
-                    UserAgent = userAgent,
-                    BypassCSP = bypassCSP,
-                    JavaScriptEnabled = javaScriptEnabled,
-                    TimezoneId = timezoneId,
-                    Geolocation = geolocation,
-                    Permissions = permissions,
-                    IsMobile = isMobile,
-                    Offline = offline,
-                    DeviceScaleFactor = deviceScaleFactor,
-                    HttpCredentials = httpCredentials,
-                    HasTouch = hasTouch,
-                    AcceptDownloads = acceptDownloads,
-                    ColorScheme = colorScheme,
-                    Locale = locale,
-                    ExtraHTTPHeaders = extraHTTPHeaders,
-                    ChromiumSandbox = chromiumSandbox,
-                    HandleSIGHUP = handleSIGHUP,
-                    HandleSIGINT = handleSIGINT,
-                    HandleSIGTERM = handleSIGTERM,
-                    RecordHar = recordHar,
-                    RecordVideo = recordVideo,
-                });
-
-        /// <inheritdoc />
-        public Task<IBrowserContext> LaunchPersistentContextAsync(
-            string userDataDir,
-            bool? headless = null,
-            string[] args = null,
-            bool? devtools = null,
-            string executablePath = null,
-            string downloadsPath = null,
-            bool? ignoreHTTPSErrors = null,
-            int? timeout = null,
-            bool? dumpIO = null,
-            int? slowMo = null,
-            bool? ignoreAllDefaultArgs = null,
-            string[] ignoreDefaultArgs = null,
-            Dictionary<string, string> env = null,
-            ProxySettings proxy = null,
-            string userAgent = null,
-            bool? bypassCSP = null,
-            bool? javaScriptEnabled = null,
-            string timezoneId = null,
-            Geolocation geolocation = null,
-            ContextPermission[] permissions = null,
-            bool? isMobile = null,
-            bool? offline = null,
-            decimal? deviceScaleFactor = null,
-            Credentials httpCredentials = null,
-            bool? hasTouch = null,
-            bool? acceptDownloads = null,
-            ColorScheme? colorScheme = null,
-            string locale = null,
-            Dictionary<string, string> extraHTTPHeaders = null,
-            bool? chromiumSandbox = null,
             bool? handleSIGINT = null,
             bool? handleSIGTERM = null,
+            bool? headless = null,
+            bool? ignoreAllDefaultArgs = null,
+            IEnumerable<string> ignoreDefaultArgs = null,
+            Proxy proxy = null,
+            float? slowMo = null,
+            float? timeout = null)
+            => (await _channel.LaunchAsync(
+                args,
+                channel,
+                chromiumSandbox,
+                devtools,
+                downloadsPath,
+                env,
+                executablePath,
+                firefoxUserPrefs,
+                handleSIGHUP,
+                handleSIGINT,
+                handleSIGTERM,
+                headless,
+                ignoreAllDefaultArgs,
+                ignoreDefaultArgs,
+                proxy,
+                slowMo,
+                timeout).ConfigureAwait(false)).Object;
+
+        /// <inheritdoc/>
+        public async Task<IBrowserContext> LaunchPersistentContextAsync(
+            string userDataDir,
+            bool? acceptDownloads = null,
+            IEnumerable<string> args = null,
+            bool? bypassCSP = null,
+            string channel = null,
+            bool? chromiumSandbox = null,
+            ColorScheme colorScheme = ColorScheme.Undefined,
+            float? deviceScaleFactor = null,
+            bool? devtools = null,
+            string downloadsPath = null,
+            IEnumerable<KeyValuePair<string, string>> env = null,
+            string executablePath = null,
+            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null,
+            Geolocation geolocation = null,
             bool? handleSIGHUP = null,
-            RecordHarOptions recordHar = null,
-            RecordVideoOptions recordVideo = null)
-            => LaunchPersistentContextAsync(
+            bool? handleSIGINT = null,
+            bool? handleSIGTERM = null,
+            bool? hasTouch = null,
+            bool? headless = null,
+            HttpCredentials httpCredentials = null,
+            bool? ignoreAllDefaultArgs = null,
+            IEnumerable<string> ignoreDefaultArgs = null,
+            bool? ignoreHTTPSErrors = null,
+            bool? isMobile = null,
+            bool? javaScriptEnabled = null,
+            string locale = null,
+            bool? offline = null,
+            IEnumerable<string> permissions = null,
+            Proxy proxy = null,
+            bool? recordHarOmitContent = null,
+            string recordHarPath = null,
+            string recordVideoDir = null,
+            RecordVideoSize recordVideoSize = null,
+            float? slowMo = null,
+            float? timeout = null,
+            string timezoneId = null,
+            string userAgent = null) =>
+            (await _channel.LaunchPersistentContextAsync(
                 userDataDir,
-                new LaunchPersistentOptions
-                {
-                    Headless = headless,
-                    Args = args,
-                    UserDataDir = userDataDir,
-                    Devtools = devtools,
-                    ExecutablePath = executablePath,
-                    DownloadsPath = downloadsPath,
-                    IgnoreHTTPSErrors = ignoreHTTPSErrors,
-                    Timeout = timeout,
-                    DumpIO = dumpIO,
-                    SlowMo = slowMo,
-                    IgnoreAllDefaultArgs = ignoreAllDefaultArgs,
-                    IgnoreDefaultArgs = ignoreDefaultArgs,
-                    Env = env,
-                    Proxy = proxy,
-                    UserAgent = userAgent,
-                    BypassCSP = bypassCSP,
-                    JavaScriptEnabled = javaScriptEnabled,
-                    TimezoneId = timezoneId,
-                    Geolocation = geolocation,
-                    Permissions = permissions,
-                    IsMobile = isMobile,
-                    Offline = offline,
-                    DeviceScaleFactor = deviceScaleFactor,
-                    HttpCredentials = httpCredentials,
-                    HasTouch = hasTouch,
-                    AcceptDownloads = acceptDownloads,
-                    ColorScheme = colorScheme,
-                    Locale = locale,
-                    ExtraHTTPHeaders = extraHTTPHeaders,
-                    ChromiumSandbox = chromiumSandbox,
-                    HandleSIGHUP = handleSIGHUP,
-                    HandleSIGINT = handleSIGINT,
-                    HandleSIGTERM = handleSIGTERM,
-                    RecordHar = recordHar,
-                    RecordVideo = recordVideo,
-                });
-
-        /// <inheritdoc />
-        public Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchOptions options)
-        {
-            if (options?.FirefoxUserPrefs != null)
-            {
-                throw new ArgumentException($"{nameof(LaunchOptions.FirefoxUserPrefs)} option is not supported in LaunchPersistentContextAsync.");
-            }
-
-            return LaunchPersistentContextAsync(userDataDir, options?.ToPersistentOptions() ?? new LaunchPersistentOptions());
-        }
-
-        /// <inheritdoc />
-        public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options)
-            => (await _channel.LaunchPersistentContextAsync(userDataDir, options ?? new LaunchPersistentOptions()).ConfigureAwait(false)).Object;
+                acceptDownloads,
+                args,
+                bypassCSP,
+                channel,
+                chromiumSandbox,
+                colorScheme,
+                deviceScaleFactor,
+                devtools,
+                downloadsPath,
+                env,
+                executablePath,
+                extraHTTPHeaders,
+                geolocation,
+                handleSIGHUP,
+                handleSIGINT,
+                handleSIGTERM,
+                hasTouch,
+                headless,
+                httpCredentials,
+                ignoreAllDefaultArgs,
+                ignoreDefaultArgs,
+                ignoreHTTPSErrors,
+                isMobile,
+                javaScriptEnabled,
+                locale,
+                offline,
+                permissions,
+                proxy,
+                recordHarOmitContent,
+                recordHarPath,
+                recordVideoDir,
+                recordVideoSize,
+                slowMo,
+                timeout,
+                timezoneId,
+                userAgent).ConfigureAwait(false)).Object;
     }
 }

@@ -1129,6 +1129,8 @@ namespace PlaywrightSharp
         /// <returns>A <see cref="Task"/> that completes when the headers are set.</returns>
         Task SetExtraHTTPHeadersAsync(Dictionary<string, string> headers);
 
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning disable CS1580 // Invalid type for parameter in XML comment cref attribute
         /// <summary>
         /// In the case of multiple pages in a single browser, each page can have its own viewport size.
         /// However, <see cref="IBrowser.NewContextAsync(BrowserContextOptions)"/> allows to set viewport size (and more) for all pages in the context at once.
@@ -1147,6 +1149,8 @@ namespace PlaywrightSharp
         /// <param name="viewportSize">Viewport to set.</param>
         /// <returns>A <see cref="Task"/> that completes when the viewport is set.</returns>
         Task SetViewportSizeAsync(ViewportSize viewportSize);
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning restore CS1580 // Invalid type for parameter in XML comment cref attribute
 
         /// <summary>
         /// The method runs <c>document.querySelector</c> within the page. If no element matches the selector, the return value resolve to <c>null</c>.
@@ -1803,6 +1807,7 @@ namespace PlaywrightSharp
         /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
         Task<bool> IsVisibleAsync(string selector, int? timeout = null);
 
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
         /// <summary>
         /// Pauses script execution. Playwright will stop executing the script and wait for the user to either press 'Resume' button
         /// in the page overlay or to call `playwright.resume()` in the DevTools console.
@@ -1810,9 +1815,10 @@ namespace PlaywrightSharp
         /// User can inspect selectors or perform manual steps while paused. Resume will continue running the original script from
         /// the place it was paused.
         ///
-        /// > NOTE: This method requires Playwright to be started in a headed mode, with a falsy `headless` value in the <seealso cref="IBrowserType.LaunchAsync(bool?, string[], string, bool?, string, string, bool?, int?, bool?, int?, bool?, string[], Dictionary{string, string}, Dictionary{string, object}, ProxySettings, bool?, bool?, bool?, bool?)"/>.
+        /// > NOTE: This method requires Playwright to be started in a headed mode, with a falsy `headless` value in the <seealso cref="IBrowserType.LaunchAsync(bool?, string[], string, bool?, string, string, bool?, int?, bool?, int?, bool?, string[], Dictionary{string, string}, Dictionary{string, object}, Proxy, bool?, bool?, bool?, bool?)"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
         Task PauseAsync();
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
     }
 }

@@ -112,6 +112,9 @@ namespace PlaywrightSharp
                 timezoneId,
                 userAgent).ConfigureAwait(false)).Object;
 
+            // TODO: this might be a useful thing to rethink down the line
+            context.VideoPath = recordVideoDir;
+
             BrowserContextsList.Add(context);
             return context;
         }

@@ -13,6 +13,7 @@ namespace PlaywrightSharp.Chromium
         {
         }
 
+        /*
         /// <inheritdoc/>
         public new async Task<IChromiumBrowser> LaunchAsync(LaunchOptions options)
             => await base.LaunchAsync(options).ConfigureAwait(false) as IChromiumBrowser;
@@ -216,5 +217,6 @@ namespace PlaywrightSharp.Chromium
         /// <inheritdoc/>
         public new async Task<IChromiumBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options)
             => await base.LaunchPersistentContextAsync(userDataDir, options).ConfigureAwait(false) as IChromiumBrowserContext;
+        */
     }
 }

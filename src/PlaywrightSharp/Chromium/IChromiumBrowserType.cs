@@ -7,6 +7,7 @@ namespace PlaywrightSharp.Chromium
     /// <inheritdoc cref="IBrowserType"/>
     public interface IChromiumBrowserType : IBrowserType
     {
+        /*
         /// <inheritdoc cref="IBrowserType.LaunchAsync(LaunchOptions)"/>
         new Task<IChromiumBrowser> LaunchAsync(LaunchOptions options);
 
@@ -114,5 +115,6 @@ namespace PlaywrightSharp.Chromium
 
         /// <inheritdoc cref="IBrowserType.LaunchPersistentContextAsync(string, LaunchPersistentOptions)"/>
         new Task<IChromiumBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options);
+        */
     }
 }

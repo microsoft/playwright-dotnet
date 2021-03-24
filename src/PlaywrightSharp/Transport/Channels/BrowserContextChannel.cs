@@ -134,7 +134,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["enabled"] = enabled,
                 });
 
-        internal Task SetHttpCredentialsAsync(Credentials credentials)
+        internal Task SetHttpCredentialsAsync(HttpCredentials credentials)
             => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "setHTTPCredentials",

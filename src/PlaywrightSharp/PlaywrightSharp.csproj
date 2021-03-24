@@ -55,13 +55,37 @@
     </DriverFiles>
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="__TRASH\BrowserContextOptions.cs" />
+    <Compile Remove="__TRASH\ColorScheme.cs" />
+    <Compile Remove="__TRASH\Credentials.cs" />
+    <Compile Remove="__TRASH\Geolocation.cs" />
+    <Compile Remove="__TRASH\IBrowserType.cs" />
+    <Compile Remove="__TRASH\LaunchOptions.cs" />
+    <Compile Remove="__TRASH\LaunchOptionsBase.cs" />
+    <Compile Remove="__TRASH\LaunchPersistentOptions.cs" />
+    <Compile Remove="__TRASH\ProxySettings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="__TRASH\LaunchOptions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="__TRASH\BrowserContextOptions.cs" />
+    <None Include="__TRASH\ColorScheme.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <ContentWithTargetPath Include="@(DriverFiles)" TargetPath="%(RecursiveDir)%(Filename)%(Extension)">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </ContentWithTargetPath>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="__TRASH\Credentials.cs" />
+    <None Include="__TRASH\Geolocation.cs" />
+    <None Include="__TRASH\IBrowserType.cs" />
+    <None Include="__TRASH\LaunchOptionsBase.cs" />
+    <None Include="__TRASH\LaunchPersistentOptions.cs" />
+    <None Include="__TRASH\ProxySettings.cs" />
+  </ItemGroup>
   <Target Name="EnsurePrerequisitsRan" BeforeTargets="InstallBrowsers">
-    <Error
-      Text="Playwright prerequisites are missing. Ensure you've ran `dotnet run -p ./src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj -- download-drivers --basepath .`"
-      Condition="!Exists('$(MSBuildProjectDirectory)\Drivers\unix$(NativeFolder)')" />
+    <Error Text="Playwright prerequisites are missing. Ensure you've ran `dotnet run -p ./src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj -- download-drivers --basepath .`" Condition="!Exists('$(MSBuildProjectDirectory)\Drivers\unix$(NativeFolder)')" />
   </Target>
 </Project>

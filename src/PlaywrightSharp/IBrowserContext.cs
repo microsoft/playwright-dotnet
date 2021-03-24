@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning disable CS1580 // Invalid type for parameter in XML comment cref attribute
     /// <summary>
     /// BrowserContexts provide a way to operate multiple independent browser sessions.
     /// If a <see cref="IPage"/> opens another page, e.g.with a window.open call, the popup will belong to the parent page's browser context.
@@ -135,7 +137,7 @@ namespace PlaywrightSharp
         /// <param name="longitude">Longitude between -180 and 180.</param>
         /// <param name="accuracy">Optional non-negative accuracy value.</param>
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
-        Task SetGeolocationAsync(decimal latitude, decimal longitude, decimal accuracy = 0);
+        Task SetGeolocationAsync(float latitude, float longitude, float accuracy = 0);
 
         /// <summary>
         /// Sets the page's geolocation.
@@ -398,7 +400,7 @@ namespace PlaywrightSharp
         /// <remarks>
         /// To disable authentication, pass <c>null</c>.
         /// </remarks>
-        Task SetHttpCredentialsAsync(Credentials httpCredentials);
+        Task SetHttpCredentialsAsync(HttpCredentials httpCredentials);
 
         /// <summary>
         /// Routing provides the capability to modify network requests that are made by any page in the browser context.
@@ -473,4 +475,6 @@ namespace PlaywrightSharp
         /// <returns>The storage state model.</returns>
         Task<StorageState> GetStorageStateAsync(string path = null);
     }
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning restore CS1580 // Invalid type for parameter in XML comment cref attribute
 }
