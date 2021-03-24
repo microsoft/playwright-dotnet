@@ -539,7 +539,7 @@ namespace PlaywrightSharp
         public Task HoverAsync(
             string selector,
             Point? position = null,
-            Modifier[] modifiers = null,
+            IEnumerable<KeyboardModifier> modifiers = null,
             bool force = false,
             int? timeout = null) => MainFrame.HoverAsync(true, selector, position, modifiers, force, timeout);
 
@@ -666,7 +666,7 @@ namespace PlaywrightSharp
             int delay = 0,
             MouseButton button = MouseButton.Left,
             int clickCount = 1,
-            Modifier[] modifiers = null,
+            IEnumerable<KeyboardModifier> modifiers = null,
             Point? position = null,
             int? timeout = null,
             bool force = false,
@@ -678,7 +678,7 @@ namespace PlaywrightSharp
             string selector,
             int delay = 0,
             MouseButton button = MouseButton.Left,
-            Modifier[] modifiers = null,
+            IEnumerable<KeyboardModifier> modifiers = null,
             Point? position = null,
             int? timeout = null,
             bool force = false,
@@ -931,7 +931,7 @@ namespace PlaywrightSharp
              => MainFrame.GetTextContentAsync(true, selector, timeout);
 
         /// <inheritdoc />
-        public Task TapAsync(string selector, Modifier[] modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)
+        public Task TapAsync(string selector, IEnumerable<KeyboardModifier> modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)
             => MainFrame.TapAsync(true, selector, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />

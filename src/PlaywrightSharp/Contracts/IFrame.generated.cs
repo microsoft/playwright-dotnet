@@ -233,7 +233,7 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task ClickAsync(string selector, MouseButton button = default, int? clickCount = default, float? delay = default, FramePosition position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+        Task ClickAsync(string selector, MouseButton button = default, int? clickCount = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
 
         /// <summary><para>Gets the full HTML contents of the frame, including the doctype.</para></summary>
         Task<string> GetContentAsync();
@@ -310,7 +310,7 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task DblclickAsync(string selector, MouseButton button = default, float? delay = default, FramePosition position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+        Task DblclickAsync(string selector, MouseButton button = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -596,7 +596,7 @@ namespace PlaywrightSharp
         /// Referer header value. If provided it will take preference over the referer header
         /// value set by <see cref="IPage.SetExtraHttpHeadersAsync"/>.
         /// </param>
-        Task<IResponse> GotoAsync(string url, float? timeout = default, WaitUntilState waitUntil = default, string referer = default);
+        Task<IResponse> GoToAsync(string url, float? timeout = default, WaitUntilState waitUntil = default, string referer = default);
 
         /// <summary>
         /// <para>
@@ -652,7 +652,7 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task HoverAsync(string selector, FramePosition position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, float? timeout = default);
+        Task HoverAsync(string selector, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, float? timeout = default);
 
         /// <summary><para>Returns <c>element.innerHTML</c>.</para></summary>
         /// <param name="selector">
@@ -1029,7 +1029,7 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task TapAsync(string selector, FramePosition position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? noWaitAfter = default, bool? force = default, float? timeout = default);
+        Task TapAsync(string selector, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? noWaitAfter = default, bool? force = default, float? timeout = default);
 
         /// <summary><para>Returns <c>element.textContent</c>.</para></summary>
         /// <param name="selector">

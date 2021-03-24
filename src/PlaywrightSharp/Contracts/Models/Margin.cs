@@ -3,31 +3,8 @@ using System.Collections.Generic;
 
 namespace PlaywrightSharp
 {
-    /// <summary>
-    /// Margin options used in <see cref="IPage.GetPdfAsync(string, decimal, bool, string, string, bool, bool, string, PaperFormat?, string, string, Margin, bool)"/>.
-    /// </summary>
-    public class Margin : IEquatable<Margin>
+    public partial class Margin : IEquatable<Margin>
     {
-        /// <summary>
-        /// Top margin, accepts values labeled with units.
-        /// </summary>
-        public string Top { get; set; }
-
-        /// <summary>
-        /// Left margin, accepts values labeled with units.
-        /// </summary>
-        public string Left { get; set; }
-
-        /// <summary>
-        /// Bottom margin, accepts values labeled with units.
-        /// </summary>
-        public string Bottom { get; set; }
-
-        /// <summary>
-        /// Right margin, accepts values labeled with units.
-        /// </summary>
-        public string Right { get; set; }
-
         /// <inheritdoc cref="IEquatable{T}"/>
         public static bool operator ==(Margin left, Margin right)
             => EqualityComparer<Margin>.Default.Equals(left, right);

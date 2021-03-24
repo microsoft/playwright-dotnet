@@ -730,12 +730,12 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.ClickAsync("button", modifiers: new[] { Modifier.Shift });
             Assert.True(await Page.EvaluateAsync<bool>("shiftKey"));
-            await Page.ClickAsync("button", modifiers: new Modifier[] { });
+            await Page.ClickAsync("button", modifiers: new IEnumerable<KeyboardModifier> { });
             Assert.False(await Page.EvaluateAsync<bool>("shiftKey"));
 
             await Page.Keyboard.DownAsync("Shift");
 
-            await Page.ClickAsync("button", modifiers: new Modifier[] { });
+            await Page.ClickAsync("button", modifiers: new IEnumerable<KeyboardModifier> { });
             Assert.False(await Page.EvaluateAsync<bool>("shiftKey"));
 
             await Page.ClickAsync("button");

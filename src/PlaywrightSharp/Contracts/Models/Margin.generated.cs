@@ -46,14 +46,22 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-	public partial class PagePosition
+	public partial class Margin
 	{
-		/// <summary><para></para></summary>
-		[JsonPropertyName("x")]
-		public float X { get; set; }
+		/// <summary><para>Top margin, accepts values labeled with units. Defaults to <c>0</c>.</para></summary>
+		[JsonPropertyName("top")]
+		public string Top { get; set; }
 	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("y")]
-		public float Y { get; set; }
+		/// <summary><para>Right margin, accepts values labeled with units. Defaults to <c>0</c>.</para></summary>
+		[JsonPropertyName("right")]
+		public string Right { get; set; }
+	
+		/// <summary><para>Bottom margin, accepts values labeled with units. Defaults to <c>0</c>.</para></summary>
+		[JsonPropertyName("bottom")]
+		public string Bottom { get; set; }
+	
+		/// <summary><para>Left margin, accepts values labeled with units. Defaults to <c>0</c>.</para></summary>
+		[JsonPropertyName("left")]
+		public string Left { get; set; }
 	}
 }

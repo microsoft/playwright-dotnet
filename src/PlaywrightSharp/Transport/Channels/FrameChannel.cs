@@ -65,7 +65,7 @@ namespace PlaywrightSharp.Transport.Channels
             }
         }
 
-        internal Task<ResponseChannel> GoToAsync(string url, float? timeout, LifecycleEvent? waitUntil, string referer, bool isPage)
+        internal Task<ResponseChannel> GoToAsync(string url, float? timeout, LoadState? waitUntil, string referer, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -357,7 +357,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "addStyleTag", args);
         }
 
-        internal Task<ResponseChannel> WaitForNavigationAsync(LifecycleEvent? waitUntil, string url, float? timeout, bool isPage)
+        internal Task<ResponseChannel> WaitForNavigationAsync(LoadState? waitUntil, string url, float? timeout, bool isPage)
         {
             var param = new Dictionary<string, object>
             {
@@ -382,7 +382,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "waitForNavigation", param);
         }
 
-        internal Task WaitForLoadStateAsync(LifecycleEvent? state, float? timeout, bool isPage)
+        internal Task WaitForLoadStateAsync(LoadState? state, float? timeout, bool isPage)
         {
             var param = new Dictionary<string, object>
             {
@@ -405,7 +405,7 @@ namespace PlaywrightSharp.Transport.Channels
                 param);
         }
 
-        internal Task SetContentAsync(string html, float? timeout, LifecycleEvent? waitUntil, bool isPage)
+        internal Task SetContentAsync(string html, float? timeout, WaitUntilState waitUntil, bool isPage)
         {
             var args = new Dictionary<string, object>
             {

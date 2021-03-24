@@ -46,14 +46,22 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-	public partial class FramePosition
+	public partial class Clip
 	{
-		/// <summary><para></para></summary>
+		/// <summary><para>x-coordinate of top-left corner of clip area</para></summary>
 		[JsonPropertyName("x")]
 		public float X { get; set; }
 	
-		/// <summary><para></para></summary>
+		/// <summary><para>y-coordinate of top-left corner of clip area</para></summary>
 		[JsonPropertyName("y")]
 		public float Y { get; set; }
+	
+		/// <summary><para>width of clipping area</para></summary>
+		[JsonPropertyName("width")]
+		public float Width { get; set; }
+	
+		/// <summary><para>height of clipping area</para></summary>
+		[JsonPropertyName("height")]
+		public float Height { get; set; }
 	}
 }

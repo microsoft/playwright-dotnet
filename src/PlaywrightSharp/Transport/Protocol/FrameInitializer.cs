@@ -10,6 +10,6 @@ namespace PlaywrightSharp.Transport.Protocol
 
         public Frame ParentFrame { get; set; }
 
-        public List<LifecycleEvent> LoadStates { get; set; }
+        public List<LoadState> LoadStates { get; set; }
     }
 }
