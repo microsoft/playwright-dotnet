@@ -25,12 +25,15 @@
 using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CommandLine;
+using PlaywrightSharp.Xunit;
 
 namespace PlaywrightSharp.Tooling
 {
@@ -39,9 +42,16 @@ namespace PlaywrightSharp.Tooling
     {
         private static readonly TextInfo _textInfo = CultureInfo.InvariantCulture.TextInfo;
 
-        public static void FindTestsInFile(string path, Action<string> callback)
+        public static void FindTestsInFile(string path, Action<string, string> callback)
         {
-            var rx = new Regex(@"it\(\'(.*)\',");
+            var keywords1 = new string[] { "it" };
+            var keywords2 = new string[] { "describe" };
+            var keywords = keywords1.Concat(keywords2);
+            var rx = new Regex(@"^( *).*\b(" + string.Join("|", keywords) + @")\b.*[(](?:[']([^']+)[']|[""]([^""]+)[""])", RegexOptions.Multiline);
+
+            var stack = new Stack<(int Indent, string Func, string Name)>();
+            stack.Push((-1, null, null));
+
             foreach (string line in File.ReadAllLines(path))
             {
                 var m = rx.Match(line);
@@ -50,9 +60,31 @@ namespace PlaywrightSharp.Tooling
                     continue;
                 }
 
-                // keep in mind, group 0 is the entire match, but
-                // first (and only group), should give us the describe value
-                callback(m.Groups[1].Value);
+                // keep in mind, group 0 is the entire match
+                var indent = m.Groups[1].Value.Length;
+                var func = m.Groups[2].Value;
+                var name = m.Groups[3].Value ?? m.Groups[4].Value;
+
+                while (indent <= stack.Peek().Indent)
+                {
+                    stack.Pop();
+                }
+
+                stack.Push((indent, func, name));
+                var branch = stack.ToArray();
+
+                if (keywords1.Contains(branch.First().Func))
+                {
+                    var testName = branch.First().Name;
+                    string describe = null;
+
+                    if (branch.Length >= 2 && keywords2.Contains(branch[1].Func))
+                    {
+                        describe = branch[1].Name;
+                    }
+
+                    callback(describe, testName);
+                }
             }
         }
 
@@ -77,7 +109,7 @@ namespace PlaywrightSharp.Tooling
             string name = _textInfo.ToTitleCase(fileInfo.Name.Substring(0, dotSeparator)) + "Tests";
             var targetClass = GenerateClass(options.Namespace, name, fileInfo.Name);
 
-            FindTestsInFile(options.SpecFile, (name) => AddTest(targetClass, name, fileInfo.Name));
+            FindTestsInFile(options.SpecFile, (describe, testName) => AddTest(targetClass, new PlaywrightTestAttribute(fileInfo.Name, describe, testName)));
 
             using CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
             CodeGeneratorOptions codegenOptions = new CodeGeneratorOptions()
@@ -141,10 +173,10 @@ namespace PlaywrightSharp.Tooling
             return targetUnit;
         }
 
-        private static void AddTest(CodeCompileUnit @class, string testDescribe, string testOrigin)
+        private static void AddTest(CodeCompileUnit @class, PlaywrightTestAttribute test)
         {
             // make name out of the describe, and we should ignore any whitespaces, hyphens, etc.
-            string name = CleanName(testDescribe);
+            string name = CleanName(test.TestName);
 
             Console.WriteLine($"Adding {name}");
 
@@ -157,8 +189,15 @@ namespace PlaywrightSharp.Tooling
 
             @class.Namespaces[1].Types[0].Members.Add(method);
 
-            method.Comments.Add(new CodeCommentStatement($"<playwright-file>{testOrigin}</playwright-file>", true));
-            method.Comments.Add(new CodeCommentStatement($"<playwright-it>{testDescribe}</playwright-it>", true));
+            method.Comments.Add(new CodeCommentStatement($"<playwright-file>{test.FileName}</playwright-file>", true));
+
+            if (test.Describe != null)
+            {
+                method.Comments.Add(new CodeCommentStatement($"<playwright-describe>{test.Describe}</playwright-describe>", true));
+            }
+
+            method.Comments.Add(new CodeCommentStatement($"<playwright-it>{test.TestName}</playwright-it>", true));
+
             method.CustomAttributes.Add(new CodeAttributeDeclaration(
                 "Fact",
                 new CodeAttributeArgument[]
