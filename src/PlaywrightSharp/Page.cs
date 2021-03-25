@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -538,7 +538,7 @@ namespace PlaywrightSharp
         /// <inheritdoc />
         public Task HoverAsync(
             string selector,
-            Point? position = null,
+            Position position = null,
             IEnumerable<KeyboardModifier> modifiers = null,
             bool force = false,
             int? timeout = null) => MainFrame.HoverAsync(true, selector, position, modifiers, force, timeout);
@@ -667,23 +667,23 @@ namespace PlaywrightSharp
             MouseButton button = MouseButton.Left,
             int clickCount = 1,
             IEnumerable<KeyboardModifier> modifiers = null,
-            Point? position = null,
+            Position position = null,
             int? timeout = null,
             bool force = false,
             bool? noWaitAfter = null)
             => MainFrame.ClickAsync(true, selector, delay, button, clickCount, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task DblclickAsync(
+        public Task DblClickAsync(
             string selector,
             int delay = 0,
             MouseButton button = MouseButton.Left,
             IEnumerable<KeyboardModifier> modifiers = null,
-            Point? position = null,
+            Position position = null,
             int? timeout = null,
             bool force = false,
             bool? noWaitAfter = null)
-            => MainFrame.DblclickAsync(true, selector, delay, button, modifiers, position, timeout, force, noWaitAfter);
+            => MainFrame.DblClickAsync(true, selector, delay, button, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
         public async Task<IResponse> GoBackAsync(int? timeout = null, LifecycleEvent? waitUntil = null)
@@ -931,7 +931,7 @@ namespace PlaywrightSharp
              => MainFrame.GetTextContentAsync(true, selector, timeout);
 
         /// <inheritdoc />
-        public Task TapAsync(string selector, IEnumerable<KeyboardModifier> modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)
+        public Task TapAsync(string selector, IEnumerable<KeyboardModifier> modifiers = null, Position position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)
             => MainFrame.TapAsync(true, selector, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />

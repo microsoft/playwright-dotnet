@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -234,7 +234,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "click", args);
         }
 
-        internal Task DblclickAsync(
+        internal Task DblClickAsync(
             float delay,
             MouseButton button,
             IEnumerable<KeyboardModifier> modifiers,

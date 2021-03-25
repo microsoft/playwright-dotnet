@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -340,7 +340,7 @@ namespace PlaywrightSharp.Tests
                });
             }");
             var button = await Page.QuerySelectorAsync("button");
-            await button.DblclickAsync();
+            await button.DblClickAsync();
             Assert.True(await Page.EvaluateAsync<bool>("double"));
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("result"));
         }

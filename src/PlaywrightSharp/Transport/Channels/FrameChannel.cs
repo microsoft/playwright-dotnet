@@ -139,7 +139,7 @@ namespace PlaywrightSharp.Transport.Channels
             object arg,
             bool isPage,
             float? timeout,
-            int? polling,
+            float? polling,
             bool serializeArgument = false)
         {
             JsonSerializerOptions serializerOptions;
@@ -411,6 +411,7 @@ namespace PlaywrightSharp.Transport.Channels
             {
                 ["html"] = html,
                 ["isPage"] = isPage,
+                ["waitUntil"] = waitUntil,
             };
 
             if (timeout != null)
@@ -418,21 +419,16 @@ namespace PlaywrightSharp.Transport.Channels
                 args["timeout"] = timeout;
             }
 
-            if (waitUntil != null)
-            {
-                args["waitUntil"] = waitUntil;
-            }
-
             return Connection.SendMessageToServerAsync(Guid, "setContent", args);
         }
 
         internal Task ClickAsync(
             string selector,
-            int delay,
+            float delay,
             MouseButton button,
             int clickCount,
             IEnumerable<KeyboardModifier> modifiers,
-            Point? position,
+            Position position,
             float? timeout,
             bool force,
             bool? noWaitAfter,
@@ -471,10 +467,11 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "click", args);
         }
 
-        internal Task DblclickAsync(
+        internal Task DblClickAsync(
             string selector,
             float delay,
             MouseButton button,
+            Position position,
             IEnumerable<KeyboardModifier> modifiers,
             float? timeout,
             bool force,
@@ -493,6 +490,11 @@ namespace PlaywrightSharp.Transport.Channels
             if (modifiers != null)
             {
                 args["modifiers"] = modifiers?.Select(m => m.ToValueString());
+            }
+
+            if (position != null)
+            {
+                args["position"] = position;
             }
 
             if (timeout != null)
@@ -612,7 +614,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "dispatchEvent", args);
         }
 
-        internal Task HoverAsync(string selector, Point? position, IEnumerable<KeyboardModifier> modifiers, bool force, float? timeout, bool isPage)
+        internal Task HoverAsync(string selector, Position position, IEnumerable<KeyboardModifier> modifiers, bool force, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -835,7 +837,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "textContent", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task TapAsync(string selector, IEnumerable<KeyboardModifier> modifiers = null, Point? position = null, float? timeout = null, bool force = false, bool? noWaitAfter = null, bool isPage = false)
+        internal Task TapAsync(string selector, IEnumerable<KeyboardModifier> modifiers = null, Position position = null, float? timeout = null, bool force = false, bool? noWaitAfter = null, bool isPage = false)
         {
             var args = new Dictionary<string, object>
             {
@@ -859,12 +861,12 @@ namespace PlaywrightSharp.Transport.Channels
                 args["timeout"] = timeout;
             }
 
-            if (position.HasValue)
+            if (position != null)
             {
                 args["position"] = new Dictionary<string, object>
                 {
-                    ["x"] = position.Value.X,
-                    ["y"] = position.Value.Y,
+                    ["x"] = position.X,
+                    ["y"] = position.Y,
                 };
             }
 

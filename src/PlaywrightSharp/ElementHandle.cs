@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -128,7 +128,7 @@ namespace PlaywrightSharp
             => _channel.ClickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />
-        public Task DblclickAsync(
+        public Task DblClickAsync(
             MouseButton button,
             float? delay,
             ElementHandlePosition position,
@@ -136,7 +136,7 @@ namespace PlaywrightSharp
             bool? force,
             bool? noWaitAfter,
             float? timeout)
-            => _channel.DblclickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), modifiers, position, timeout, force ?? false, noWaitAfter);
+            => _channel.DblClickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), modifiers, position, timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />
         public Task SetInputFilesAsync(string files, bool? noWaitAfter, float? timeout)

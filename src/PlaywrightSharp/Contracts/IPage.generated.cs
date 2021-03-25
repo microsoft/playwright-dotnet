@@ -1,4 +1,4 @@
-﻿/*
+/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -475,7 +475,7 @@ namespace PlaywrightSharp
 		/// this method rejects with a <see cref="ITimeoutError"/>. Passing zero timeout disables
 		/// this.
 		/// </para>
-		/// <para>Shortcut for main frame's <see cref="IFrame.DblclickAsync"/>.</para>
+		/// <para>Shortcut for main frame's <see cref="IFrame.DblClickAsync"/>.</para>
 		/// </summary>
 		/// <remarks>
 		/// <para>
@@ -517,7 +517,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task DblclickAsync(string selector, MouseButton button = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+		Task DblClickAsync(string selector, MouseButton button = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
 	
 		/// <summary>
 		/// <para>

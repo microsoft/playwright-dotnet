@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
 using Xunit;
@@ -112,7 +112,7 @@ namespace PlaywrightSharp.Tests
             }");
 
             var button = await Page.QuerySelectorAsync("button");
-            await button.DblclickAsync();
+            await button.DblClickAsync();
 
             Assert.True(await Page.EvaluateAsync<bool>("double"));
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("() => result"));
