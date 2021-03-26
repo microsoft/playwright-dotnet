@@ -46,18 +46,18 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-	public partial class ElementHandleValues
+	public partial class SetInputFilesFile
 	{
-		/// <summary><para>Matches by <c>option.value</c>. Optional.</para></summary>
-		[JsonPropertyName("value")]
-		public string Value { get; set; }
+		/// <summary><para>File name</para></summary>
+		[JsonPropertyName("name")]
+		public string Name { get; set; }
 	
-		/// <summary><para>Matches by <c>option.label</c>. Optional.</para></summary>
-		[JsonPropertyName("label")]
-		public string Label { get; set; }
+		/// <summary><para>File type</para></summary>
+		[JsonPropertyName("mimeType")]
+		public string MimeType { get; set; }
 	
-		/// <summary><para>Matches by the index. Optional.</para></summary>
-		[JsonPropertyName("index")]
-		public int? Index { get; set; }
+		/// <summary><para>File content</para></summary>
+		[JsonPropertyName("buffer")]
+		public byte[] Buffer { get; set; }
 	}
 }

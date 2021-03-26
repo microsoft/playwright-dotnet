@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -153,7 +153,7 @@ namespace PlaywrightSharp
         event EventHandler<FrameEventArgs> FrameNavigated;
 
         /// <summary>
-        /// Raised when a file chooser is supposed to appear, such as after clicking the <c>&lt;input type=file&gt;</c>`. Playwright can respond to it via setting the input files using <see cref="IElementHandle.SetInputFilesAsync(IEnumerable{ElementHandleFiles}, bool?, float?)"/>.
+        /// Raised when a file chooser is supposed to appear, such as after clicking the <c>&lt;input type=file&gt;</c>`. Playwright can respond to it via setting the input files using <see cref="IElementHandle.SetInputFilesAsync(IEnumerable{SetInputFilesFile}, bool?, float?)"/>.
         /// </summary>
         event EventHandler<FileChooserEventArgs> FileChooser;
 
@@ -845,7 +845,7 @@ namespace PlaywrightSharp
         /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        Task SetInputFilesAsync(string selector, ElementHandleFiles files, int? timeout = null, bool? noWaitAfter = null);
+        Task SetInputFilesAsync(string selector, SetInputFilesFile files, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
         /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="files"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
@@ -861,7 +861,7 @@ namespace PlaywrightSharp
         /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        Task SetInputFilesAsync(string selector, ElementHandleFiles[] files, int? timeout = null, bool? noWaitAfter = null);
+        Task SetInputFilesAsync(string selector, SetInputFilesFile[] files, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/> and focuses it.
@@ -927,7 +927,7 @@ namespace PlaywrightSharp
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
         /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectOptionAsync(string selector, ElementHandleValues values, int? timeout = null, bool? noWaitAfter = null);
+        Task<string[]> SelectOptionAsync(string selector, SelectOptionValue values, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -971,7 +971,7 @@ namespace PlaywrightSharp
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
         /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectOptionAsync(string selector, ElementHandleValues[] values, int? timeout = null, bool? noWaitAfter = null);
+        Task<string[]> SelectOptionAsync(string selector, SelectOptionValue[] values, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -1006,7 +1006,7 @@ namespace PlaywrightSharp
         /// <param name="values">Values of options to select. If the <![CDATA[<select>]]> has the multiple attribute,
         /// all values are considered, otherwise only the first one is taken into account.</param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<string[]> SelectOptionAsync(string selector, params ElementHandleValues[] values);
+        Task<string[]> SelectOptionAsync(string selector, params SelectOptionValue[] values);
 
         /// <summary>
         /// Triggers a change and input event once all the provided options have been selected.
@@ -1283,7 +1283,7 @@ namespace PlaywrightSharp
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.
         /// You can opt out of waiting via setting this flag. You would only need this option in the exceptional cases such as navigating to inaccessible pages. Defaults to false.</param>
         /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> is successfully double clicked.</returns>
-        Task DblclickAsync(
+        Task DblClickAsync(
             string selector,
             int delay = 0,
             MouseButton button = MouseButton.Left,

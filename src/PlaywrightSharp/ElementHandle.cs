@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -103,7 +103,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task HoverAsync(
-            ElementHandlePosition position,
+            Position position,
             IEnumerable<KeyboardModifier> modifiers,
             bool? force,
             float? timeout)
@@ -123,7 +123,7 @@ namespace PlaywrightSharp
             MouseButton button,
             int? clickCount,
             float? delay,
-            ElementHandlePosition position,
+            Position position,
             IEnumerable<KeyboardModifier> modifiers,
             bool? force,
             bool? noWaitAfter,
@@ -131,15 +131,15 @@ namespace PlaywrightSharp
             => _channel.ClickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />
-        public Task DblclickAsync(
+        public Task DblClickAsync(
             MouseButton button,
             float? delay,
-            ElementHandlePosition position,
+            Position position,
             IEnumerable<KeyboardModifier> modifiers,
             bool? force,
             bool? noWaitAfter,
             float? timeout)
-            => _channel.DblclickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), modifiers, position, timeout, force ?? false, noWaitAfter);
+            => _channel.DblClickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), modifiers, position, timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />
         public Task SetInputFilesAsync(string files, bool? noWaitAfter, float? timeout)
@@ -150,11 +150,11 @@ namespace PlaywrightSharp
             => _channel.SetInputFilesAsync(files.Select(f => f.ToElementHandleFile()).ToArray(), noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(ElementHandleFiles files, bool? noWaitAfter, float? timeout)
+        public Task SetInputFilesAsync(SetInputFilesFile files, bool? noWaitAfter, float? timeout)
             => SetInputFilesAsync(new[] { files }, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(IEnumerable<ElementHandleFiles> files, bool? noWaitAfter, float? timeout)
+        public Task SetInputFilesAsync(IEnumerable<SetInputFilesFile> files, bool? noWaitAfter, float? timeout)
             => _channel.SetInputFilesAsync(files, noWaitAfter, timeout);
 
         /// <inheritdoc />
@@ -230,18 +230,18 @@ namespace PlaywrightSharp
             => _channel.SelectOptionAsync(values.Cast<ElementHandle>(), noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(ElementHandleValues values, bool? noWaitAfter, float? timeout)
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(SelectOptionValue values, bool? noWaitAfter, float? timeout)
             => SelectOptionAsync(new[] { values }, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<ElementHandleValues> values, bool? noWaitAfter, float? timeout)
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, bool? noWaitAfter, float? timeout)
             => _channel.SelectOptionAsync(values, noWaitAfter, timeout);
 
         /// <inheritdoc />
         public Task<IReadOnlyCollection<string>> SelectOptionAsync(params string[] values) => SelectOptionAsync(values);
 
         /// <inheritdoc />
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(params ElementHandleValues[] values) => SelectOptionAsync(values);
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(params SelectOptionValue[] values) => SelectOptionAsync(values);
 
         /// <inheritdoc />
         public Task<IReadOnlyCollection<string>> SelectOptionAsync(params IElementHandle[] values) => SelectOptionAsync(values);
@@ -255,7 +255,7 @@ namespace PlaywrightSharp
             => _channel.UncheckAsync(timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task TapAsync(ElementHandlePosition position, IEnumerable<KeyboardModifier> modifiers, bool? force, bool? noWaitAfter, float? timeout)
+        public Task TapAsync(Position position, IEnumerable<KeyboardModifier> modifiers, bool? force, bool? noWaitAfter, float? timeout)
             => _channel.TapAsync(position, modifiers, timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />

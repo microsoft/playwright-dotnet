@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -523,11 +523,11 @@ namespace PlaywrightSharp
             => MainFrame.SetInputFilesAsync(true, selector, files, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(string selector, ElementHandleFiles files, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetInputFilesAsync(string selector, SetInputFilesFile files, int? timeout = null, bool? noWaitAfter = null)
             => SetInputFilesAsync(selector, new[] { files }, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(string selector, ElementHandleFiles[] files, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetInputFilesAsync(string selector, SetInputFilesFile[] files, int? timeout = null, bool? noWaitAfter = null)
             => MainFrame.SetInputFilesAsync(true, selector, files, timeout, noWaitAfter);
 
         /// <inheritdoc />
@@ -558,7 +558,7 @@ namespace PlaywrightSharp
             => SelectOptionAsync(selector, new[] { values }, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, ElementHandleValues values, int? timeout = null, bool? noWaitAfter = null)
+        public Task<string[]> SelectOptionAsync(string selector, SelectOptionValue values, int? timeout = null, bool? noWaitAfter = null)
             => SelectOptionAsync(selector, new[] { values }, timeout, noWaitAfter);
 
         /// <inheritdoc />
@@ -570,7 +570,7 @@ namespace PlaywrightSharp
             => MainFrame.SelectOptionAsync(true, selector, values.Cast<object>().Select(v => v == null ? v : new { value = v }).ToArray(), timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, ElementHandleValues[] values, int? timeout = null, bool? noWaitAfter = null)
+        public Task<string[]> SelectOptionAsync(string selector, SelectOptionValue[] values, int? timeout = null, bool? noWaitAfter = null)
         {
             if (values == null)
             {
@@ -588,7 +588,7 @@ namespace PlaywrightSharp
         public Task<string[]> SelectOptionAsync(string selector, params string[] values) => SelectOptionAsync(selector, values, null, null);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, params ElementHandleValues[] values) => SelectOptionAsync(selector, values, null, null);
+        public Task<string[]> SelectOptionAsync(string selector, params SelectOptionValue[] values) => SelectOptionAsync(selector, values, null, null);
 
         /// <inheritdoc />
         public Task<string[]> SelectOptionAsync(string selector, params IElementHandle[] values) => SelectOptionAsync(selector, values, null, null);
@@ -676,7 +676,7 @@ namespace PlaywrightSharp
             => MainFrame.ClickAsync(true, selector, delay, button, clickCount, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task DblclickAsync(
+        public Task DblClickAsync(
             string selector,
             int delay = 0,
             MouseButton button = MouseButton.Left,
@@ -685,7 +685,7 @@ namespace PlaywrightSharp
             int? timeout = null,
             bool force = false,
             bool? noWaitAfter = null)
-            => MainFrame.DblclickAsync(true, selector, delay, button, modifiers, position, timeout, force, noWaitAfter);
+            => MainFrame.DblClickAsync(true, selector, delay, button, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
         public async Task<IResponse> GoBackAsync(int? timeout = null, LifecycleEvent? waitUntil = null)

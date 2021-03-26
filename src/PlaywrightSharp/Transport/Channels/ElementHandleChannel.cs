@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -166,7 +166,7 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task HoverAsync(
             IEnumerable<KeyboardModifier> modifiers = null,
-            ElementHandlePosition position = null,
+            Position position = null,
             float? timeout = null,
             bool force = false)
         {
@@ -200,7 +200,7 @@ namespace PlaywrightSharp.Transport.Channels
             MouseButton button,
             int clickCount,
             IEnumerable<KeyboardModifier> modifiers,
-            ElementHandlePosition position,
+            Position position,
             float? timeout,
             bool force,
             bool? noWaitAfter)
@@ -236,11 +236,11 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "click", args);
         }
 
-        internal Task DblclickAsync(
+        internal Task DblClickAsync(
             float delay,
             MouseButton button,
             IEnumerable<KeyboardModifier> modifiers,
-            ElementHandlePosition position,
+            Position position,
             float? timeout,
             bool force,
             bool? noWaitAfter)
@@ -330,7 +330,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "dispatchEvent", args);
         }
 
-        internal Task SetInputFilesAsync(IEnumerable<ElementHandleFiles> files, bool? noWaitAfter, float? timeout)
+        internal Task SetInputFilesAsync(IEnumerable<SetInputFilesFile> files, bool? noWaitAfter, float? timeout)
         {
             var args = new Dictionary<string, object>
             {
@@ -517,7 +517,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "press", args);
         }
 
-        internal Task TapAsync(ElementHandlePosition position = null, IEnumerable<KeyboardModifier> modifiers = null, float? timeout = null, bool force = false, bool? noWaitAfter = null)
+        internal Task TapAsync(Position position = null, IEnumerable<KeyboardModifier> modifiers = null, float? timeout = null, bool force = false, bool? noWaitAfter = null)
         {
             var args = new Dictionary<string, object>
             {

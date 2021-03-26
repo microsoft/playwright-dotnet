@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -236,7 +236,7 @@ namespace PlaywrightSharp
             => UncheckAsync(false, selector, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task DblclickAsync(
+        public Task DblClickAsync(
             string selector,
             int delay = 0,
             MouseButton button = MouseButton.Left,
@@ -245,7 +245,7 @@ namespace PlaywrightSharp
             int? timeout = null,
             bool force = false,
             bool? noWaitAfter = null)
-            => DblclickAsync(false, selector, delay, button, modifiers, position, timeout, force, noWaitAfter);
+            => DblClickAsync(false, selector, delay, button, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
         public Task EvalOnSelectorAsync(string selector, string expression, object arg) => EvalOnSelectorAsync(false, selector, expression, arg);
@@ -287,11 +287,11 @@ namespace PlaywrightSharp
             => SetInputFilesAsync(false, selector, files, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(string selector, ElementHandleFiles file, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetInputFilesAsync(string selector, SetInputFilesFile file, int? timeout = null, bool? noWaitAfter = null)
             => SetInputFilesAsync(selector, new[] { file }, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(string selector, ElementHandleFiles[] files, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetInputFilesAsync(string selector, SetInputFilesFile[] files, int? timeout = null, bool? noWaitAfter = null)
             => SetInputFilesAsync(false, selector, files, timeout, noWaitAfter);
 
         /// <inheritdoc />
@@ -323,7 +323,7 @@ namespace PlaywrightSharp
             => SelectOptionAsync(selector, new[] { value }, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, ElementHandleValues value, int? timeout = null, bool? noWaitAfter = null)
+        public Task<string[]> SelectOptionAsync(string selector, SelectOptionValue value, int? timeout = null, bool? noWaitAfter = null)
             => SelectOptionAsync(selector, new[] { value }, timeout, noWaitAfter);
 
         /// <inheritdoc />
@@ -335,7 +335,7 @@ namespace PlaywrightSharp
             => SelectOptionAsync(false, selector, values.Cast<object>().Select(v => v == null ? v : new { value = v }).ToArray(), timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, ElementHandleValues[] values, int? timeout = null, bool? noWaitAfter = null)
+        public Task<string[]> SelectOptionAsync(string selector, SelectOptionValue[] values, int? timeout = null, bool? noWaitAfter = null)
         {
             if (values == null)
             {
@@ -360,7 +360,7 @@ namespace PlaywrightSharp
         public Task<string[]> SelectOptionAsync(string selector, params string[] values) => SelectOptionAsync(selector, values, null, null);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, params ElementHandleValues[] values) => SelectOptionAsync(selector, values, null, null);
+        public Task<string[]> SelectOptionAsync(string selector, params SelectOptionValue[] values) => SelectOptionAsync(selector, values, null, null);
 
         /// <inheritdoc />
         public Task<string[]> SelectOptionAsync(string selector, params IElementHandle[] values) => SelectOptionAsync(selector, values, null, null);
@@ -576,7 +576,7 @@ namespace PlaywrightSharp
         internal Task SetInputFilesAsync(bool isPageCall, string selector, string[] files, int? timeout = null, bool? noWaitAfter = null)
             => _channel.SetInputFilesAsync(selector, files.Select(f => f.ToElementHandleFile()).ToArray(), timeout, noWaitAfter, isPageCall);
 
-        internal Task SetInputFilesAsync(bool isPageCall, string selector, IEnumerable<ElementHandleFiles> files, int? timeout = null, bool? noWaitAfter = null)
+        internal Task SetInputFilesAsync(bool isPageCall, string selector, IEnumerable<SetInputFilesFile> files, int? timeout = null, bool? noWaitAfter = null)
             => _channel.SetInputFilesAsync(selector, files, timeout, noWaitAfter, isPageCall);
 
         internal Task ClickAsync(
@@ -592,7 +592,7 @@ namespace PlaywrightSharp
             bool? noWaitAfter = null)
             => _channel.ClickAsync(selector, delay, button, clickCount, modifiers, position, timeout, force, noWaitAfter, isPageCall);
 
-        internal Task DblclickAsync(
+        internal Task DblClickAsync(
             bool isPageCall,
             string selector,
             int delay = 0,
@@ -602,7 +602,7 @@ namespace PlaywrightSharp
             int? timeout = null,
             bool force = false,
             bool? noWaitAfter = null)
-            => _channel.DblclickAsync(selector, delay, button, modifiers, position, timeout, force, noWaitAfter, isPageCall);
+            => _channel.DblClickAsync(selector, delay, button, modifiers, position, timeout, force, noWaitAfter, isPageCall);
 
         internal Task CheckAsync(bool isPageCall, string selector, int? timeout = null, bool force = false, bool? noWaitAfter = null)
             => _channel.CheckAsync(selector, timeout, force, noWaitAfter, isPageCall);

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -791,11 +791,11 @@ namespace PlaywrightSharp.Helpers
         internal static string MimeType(this string file)
             => _mappings.TryGetValue(new FileInfo(file).Extension, out string mime) ? mime : "application/octet-stream";
 
-        internal static ElementHandleFiles ToElementHandleFile(this string file)
+        internal static SetInputFilesFile ToElementHandleFile(this string file)
         {
             var fileInfo = new FileInfo(file);
 
-            return new ElementHandleFiles
+            return new SetInputFilesFile
             {
                 Name = fileInfo.Name,
                 Buffer = File.ReadAllBytes(file),

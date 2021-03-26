@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport.Channels;
 
@@ -16,7 +16,7 @@ namespace PlaywrightSharp
         public Task ClickAsync(float x, float y, MouseButton button, int? clickCount, float? delay)
             => _channel.MouseClickAsync(x, y, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1);
 
-        public Task DblclickAsync(float x, float y, MouseButton button, float? delay)
+        public Task DblClickAsync(float x, float y, MouseButton button, float? delay)
             => _channel.MouseClickAsync(x, y, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), 2);
 
         public Task DownAsync(MouseButton button, int? clickCount)

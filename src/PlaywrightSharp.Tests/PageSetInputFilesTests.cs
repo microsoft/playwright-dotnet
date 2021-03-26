@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.SetContentAsync("<input type=file>");
 
-            await Page.SetInputFilesAsync("input", new ElementHandleFiles
+            await Page.SetInputFilesAsync("input", new SetInputFilesFile
             {
                 Name = "test.txt",
                 MimeType = "text/plain",
