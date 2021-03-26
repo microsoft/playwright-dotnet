@@ -73,7 +73,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains(response.Request.GetHeaderValues("user-agent"), (f) => f.Contains(expected));
         }
 
-        [PlaywrightTest("page-network-request.spec.ts", "Request.headers", "should get the same headers as the server")]
+        [PlaywrightTest("page-network-request.spec.ts", "should get the same headers as the server")]
         [Fact(Skip = "We don't need to test this")]
         public void ShouldGetTheSameHeadersAsTheServer()
         {
@@ -224,7 +224,7 @@ namespace PlaywrightSharp.Tests
             Assert.False(requests["style.css"].IsNavigationRequest);
         }
 
-        [PlaywrightTest("page-network-request.spec.ts", "Request.isNavigationRequest", "should return navigation bit when navigating to image")]
+        [PlaywrightTest("page-network-request.spec.ts", "should return navigation bit when navigating to image")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNavigationBitWhenNavigatingToImage()
         {

@@ -238,7 +238,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains(second, context.Pages);
         }
 
-        [PlaywrightTest("browsercontext-basic.spec.ts", "BrowserContext.pages()", "should close all belonging pages once closing context")]
+        [PlaywrightTest("browsercontext-basic.spec.ts", "should close all belonging pages once closing context")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCloseAllBelongingPagesOnceClosingContext()
         {

@@ -16,7 +16,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("permissions.spec.ts", "should be prompt by default")]
+        [PlaywrightTest("permissions.spec.ts", "permissions", "should be prompt by default")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldBePromptByDefault()
         {
@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("prompt", await GetPermissionAsync(Page, "geolocation"));
         }
 
-        [PlaywrightTest("permissions.spec.ts", "should deny permission when not listed")]
+        [PlaywrightTest("permissions.spec.ts", "permissions", "should deny permission when not listed")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldDenyPermissionWhenNotListed()
         {
@@ -33,11 +33,11 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("denied", await GetPermissionAsync(Page, "geolocation"));
         }
 
-        [PlaywrightTest("permissions.spec.ts", "should fail when bad permission is given")]
+        [PlaywrightTest("permissions.spec.ts", "permissions", "should fail when bad permission is given")]
         [Fact(Skip = "We don't need this test")]
         public void ShouldFailWhenBadPermissionIsGiven() { }
 
-        [PlaywrightTest("permissions.spec.ts", "should grant geolocation permission when listed")]
+        [PlaywrightTest("permissions.spec.ts", "permissions", "should grant geolocation permission when listed")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldGrantGeolocationPermissionWhenListed()
         {
@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("granted", await GetPermissionAsync(Page, "geolocation"));
         }
 
-        [PlaywrightTest("permissions.spec.ts", "should grant notifications permission when listed")]
+        [PlaywrightTest("permissions.spec.ts", "permissions", "should grant notifications permission when listed")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldGrantNotificationsPermissionWhenListed()
         {
@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("granted", await GetPermissionAsync(Page, "notifications"));
         }
 
-        [PlaywrightTest("permissions.spec.ts", "should accumulate when adding")]
+        [PlaywrightTest("permissions.spec.ts", "permissions", "should accumulate when adding")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldAccumulateWhenAdding()
         {
@@ -66,7 +66,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("granted", await GetPermissionAsync(Page, "notifications"));
         }
 
-        [PlaywrightTest("permissions.spec.ts", "should clear permissions")]
+        [PlaywrightTest("permissions.spec.ts", "permissions", "should clear permissions")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldClearPermissions()
         {
@@ -80,7 +80,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("granted", await GetPermissionAsync(Page, "notifications"));
         }
 
-        [PlaywrightTest("permissions.spec.ts", "should grant permission when listed for all domains")]
+        [PlaywrightTest("permissions.spec.ts", "permissions", "should grant permission when listed for all domains")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldGrantPermissionWhenListedForAllDomains()
         {
@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("granted", await GetPermissionAsync(Page, "geolocation"));
         }
 
-        [PlaywrightTest("permissions.spec.ts", "should grant permission when creating context")]
+        [PlaywrightTest("permissions.spec.ts", "permissions", "should grant permission when creating context")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldGrantPermissionWhenCreatingContext()
         {
@@ -103,7 +103,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("granted", await GetPermissionAsync(page, "geolocation"));
         }
 
-        [PlaywrightTest("permissions.spec.ts", "should reset permissions")]
+        [PlaywrightTest("permissions.spec.ts", "permissions", "should reset permissions")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldResetPermissions()
         {
@@ -114,7 +114,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("prompt", await GetPermissionAsync(Page, "geolocation"));
         }
 
-        [PlaywrightTest("permissions.spec.ts", "should trigger permission onchange")]
+        [PlaywrightTest("permissions.spec.ts", "permissions", "should trigger permission onchange")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldTriggerPermissionOnchange()
         {
@@ -141,7 +141,7 @@ namespace PlaywrightSharp.Tests
                 await Page.EvaluateAsync<string[]>("window.events"));
         }
 
-        [PlaywrightTest("permissions.spec.ts", "should trigger permission onchange")]
+        [PlaywrightTest("permissions.spec.ts", "permissions", "should isolate permissions between browser contexts")]
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldIsolatePermissionsBetweenBrowserContexts()
         {
@@ -165,7 +165,7 @@ namespace PlaywrightSharp.Tests
         }
 
 
-        [PlaywrightTest("permissions.spec.ts", "should support clipboard read")]
+        [PlaywrightTest("permissions.spec.ts", "permissions", "should support clipboard read")]
         [Fact(Skip = "Skipped in Playwright")]
         public void ShouldSupportClipboardRead()
         {

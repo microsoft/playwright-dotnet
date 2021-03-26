@@ -170,7 +170,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
         }
 
-        [PlaywrightTest("page-goto.spec.ts", "should work with subframes return 204")]
+        [PlaywrightTest("page-goto.spec.ts", "should work with subframes return 204 with domcontentloaded")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenServerReturns204()
         {
@@ -310,7 +310,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
         }
 
-        [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding maximum navigation timeout")]
+        [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding default maximum navigation timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingDefaultMaximumNavigationTimeout()
         {

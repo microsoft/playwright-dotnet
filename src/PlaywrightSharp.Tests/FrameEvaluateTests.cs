@@ -154,7 +154,7 @@ namespace PlaywrightSharp.Tests
             Assert.NotNull(await Page.Frames[1].QuerySelectorAsync("DIV"));
         }
 
-        [PlaywrightTest("frame-evaluate.spec.ts", "should work in iframes that failed initial navigation")]
+        [PlaywrightTest("frame-evaluate.spec.ts", "should work in iframes that interrupted initial javascript url navigation")]
         [SkipBrowserAndPlatformFact(skipChromium: true, skipFirefox: true)]
         public async Task ShouldWorkInIframesThatInterruptedInitialJavascriptUrlNavigation()
         {

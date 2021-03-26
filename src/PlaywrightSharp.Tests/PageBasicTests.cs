@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains(nameof(PageBasicTests), exception.StackTrace);
         }
 
-        [PlaywrightTest("page-basic.spec.ts", "Page.press should work")]
+        [PlaywrightTest("page-basic.spec.ts", "page.press should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PagePressShouldWork()
         {
@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("a", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
         }
 
-        [PlaywrightTest("page-basic.spec.ts", "Frame.press should work")]
+        [PlaywrightTest("page-basic.spec.ts", "frame.press should work")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task FramePressShouldWork()
         {

@@ -223,7 +223,7 @@ namespace PlaywrightSharp.Tests
                 }", TestConstants.ServerUrl + "/one-style.html"));
         }
 
-        [PlaywrightTest("browsercontext-expose-function.spec.ts", "should throw for duplicate registrations")]
+        [PlaywrightTest("page-expose-function.spec.ts", "should throw for duplicate registrations")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForDuplicateRegistrations()
         {

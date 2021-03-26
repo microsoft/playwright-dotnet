@@ -17,7 +17,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("browsercontext-device.spec.ts", "should work")]
+        [PlaywrightTest("browsercontext-device.spec.ts", "device", "should work")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWork()
         {
@@ -29,7 +29,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
         }
 
-        [PlaywrightTest("browsercontext-device.spec.ts", "should support clicking")]
+        [PlaywrightTest("browsercontext-device.spec.ts", "device", "should support clicking")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldSupportClicking()
         {
@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("Clicked", await page.EvaluateAsync<string>("() => result"));
         }
 
-        [PlaywrightTest("browsercontext-device.spec.ts", "should scroll to click")]
+        [PlaywrightTest("browsercontext-device.spec.ts", "device", "should scroll to click")]
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldScrollToClick()
         {

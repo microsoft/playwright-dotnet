@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Skip = "We don't need to test signals")]
         public void ShouldCloseTheBrowserOnSIGINTAndSIGTERM() { }
 
-        [PlaywrightTest("fixtures.spec.ts", "should report browser close signal")]
+        [PlaywrightTest("fixtures.spec.ts", "caller file path")]
         [Fact(Skip = "We don't need to test stacktrace")]
         public void CallerFilePath() { }
     }

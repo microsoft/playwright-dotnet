@@ -53,7 +53,7 @@ namespace PlaywrightSharp.Tests
             Assert.Empty(node.Name);
         }
 
-        [PlaywrightTest("page-accessibility.spec.ts", "contenteditable", "non editable textbox with role and tabIndex and label should not have children")]
+        [PlaywrightTest("page-accessibility.spec.ts", "non editable textbox with role and tabIndex and label should not have children")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task NonEditableTextboxWithRoleAndTabIndexAndLabelShouldNotHaveChildren()
         {
@@ -95,7 +95,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(node, (await Page.Accessibility.SnapshotAsync()).Children.First());
         }
 
-        [PlaywrightTest("page-accessibility.spec.ts", "contenteditable", "checkbox with and tabIndex and label should not have children")]
+        [PlaywrightTest("page-accessibility.spec.ts", "checkbox with and tabIndex and label should not have children")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task CheckboxWithAndTabIndexAndLabelShouldNotHaveChildren()
         {
@@ -114,7 +114,7 @@ namespace PlaywrightSharp.Tests
                 (await Page.Accessibility.SnapshotAsync()).Children.First());
         }
 
-        [PlaywrightTest("page-accessibility.spec.ts", "contenteditable", "checkbox without label should not have children")]
+        [PlaywrightTest("page-accessibility.spec.ts", "checkbox without label should not have children")]
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
         public async Task CheckboxWithoutLabelShouldNotHaveChildren()
         {

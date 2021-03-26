@@ -14,7 +14,7 @@ namespace PlaywrightSharp.Tests
         {
         }
 
-        [PlaywrightTest("page-drag.spec.ts", "should work")]
+        [PlaywrightTest("page-drag.spec.ts", "Drag and drop", "should work")]
         [Fact(Skip = "Skipped in Playwright")]
         public async Task ShouldWork()
         {
