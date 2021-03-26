@@ -893,6 +893,12 @@ namespace PlaywrightSharp
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
+        /// <param name="values">
+        /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
+        /// all matching options are selected, otherwise only the first option matching one
+        /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+        /// Option is considered matching if all specified properties match.
+        /// </param>
         /// <param name="noWaitAfter">
         /// Actions that initiate navigations are waiting for these navigations to happen and
         /// for pages to start loading. You can opt out of waiting via setting this flag. You
@@ -904,7 +910,7 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, bool? noWaitAfter = default, float? timeout = default);
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, bool? noWaitAfter = default, float? timeout = default);
 
         /// <param name="html">HTML markup to assign to the page.</param>
         /// <param name="timeout">
@@ -961,7 +967,7 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task SetInputFilesAsync(string selector, IEnumerable<string> files, bool? noWaitAfter = default, float? timeout = default);
+        Task SetInputFilesAsync(string selector, IEnumerable<SetInputFilesFile> files, bool? noWaitAfter = default, float? timeout = default);
 
         /// <summary>
         /// <para>

@@ -641,7 +641,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "hover", args);
         }
 
-        internal Task<string[]> PressAsync(string selector, string text, int delay, float? timeout, bool? noWaitAfter, bool isPage)
+        internal Task<string[]> PressAsync(string selector, string text, float delay, float? timeout, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -730,7 +730,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "innerHTML", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task TypeAsync(string selector, string text, int? delay, float? timeout, bool? noWaitAfter, bool isPage)
+        internal Task TypeAsync(string selector, string text, float? delay, float? timeout, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -794,7 +794,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "innerText", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task SetInputFilesAsync(string selector, IEnumerable<SetInputFilesFile> files, int? timeout, bool? noWaitAfter, bool isPage)
+        internal Task SetInputFilesAsync(string selector, IEnumerable<SetInputFilesFile> files, float? timeout, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
