@@ -1,4 +1,4 @@
-﻿/*
+/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -188,7 +188,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task ClickAsync(MouseButton button = default, int? clickCount = default, float? delay = default, ElementHandlePosition position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+		Task ClickAsync(MouseButton button = default, int? clickCount = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
 	
 		/// <summary>
 		/// <para>
@@ -261,7 +261,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task DblClickAsync(MouseButton button = default, float? delay = default, ElementHandlePosition position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+		Task DblClickAsync(MouseButton button = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
 	
 		/// <summary>
 		/// <para>
@@ -432,7 +432,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task HoverAsync(ElementHandlePosition position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, float? timeout = default);
+		Task HoverAsync(Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, float? timeout = default);
 	
 		/// <summary><para>Returns the <c>element.innerHTML</c>.</para></summary>
 		Task<string> GetInnerHTMLAsync();
@@ -618,7 +618,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<ElementHandleValues> values, bool? noWaitAfter = default, float? timeout = default);
+		Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, bool? noWaitAfter = default, float? timeout = default);
 	
 		/// <summary>
 		/// <para>
@@ -657,7 +657,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task SetInputFilesAsync(IEnumerable<ElementHandleFiles> files, bool? noWaitAfter = default, float? timeout = default);
+		Task SetInputFilesAsync(IEnumerable<SetInputFilesFile> files, bool? noWaitAfter = default, float? timeout = default);
 	
 		/// <summary>
 		/// <para>This method taps the element by performing the following steps:</para>
@@ -716,7 +716,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task TapAsync(ElementHandlePosition position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+		Task TapAsync(Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
 	
 		/// <summary><para>Returns the <c>node.textContent</c>.</para></summary>
 		Task<string> GetTextContentAsync();

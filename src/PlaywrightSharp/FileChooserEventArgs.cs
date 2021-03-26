@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -72,7 +72,7 @@ namespace PlaywrightSharp
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        public Task SetFilesAsync(ElementHandleFiles file, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetFilesAsync(SetInputFilesFile file, int? timeout = null, bool? noWaitAfter = null)
             => Element.SetInputFilesAsync(file, noWaitAfter, timeout);
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace PlaywrightSharp
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        public Task SetFilesAsync(IEnumerable<ElementHandleFiles> files, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetFilesAsync(IEnumerable<SetInputFilesFile> files, int? timeout = null, bool? noWaitAfter = null)
             => Element.SetInputFilesAsync(files, noWaitAfter, timeout);
     }
 }

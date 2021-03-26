@@ -1,4 +1,4 @@
-﻿/*
+/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -46,14 +46,14 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-	public partial class Position
-	{
-		/// <summary><para></para></summary>
-		[JsonPropertyName("x")]
-		public float X { get; set; }
-	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("y")]
-		public float Y { get; set; }
-	}
+    public partial class Position
+    {
+        /// <summary><para></para></summary>
+        [JsonPropertyName("x")]
+        public float X { get; set; }
+
+        /// <summary><para></para></summary>
+        [JsonPropertyName("y")]
+        public float Y { get; set; }
+    }
 }

@@ -794,7 +794,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "innerText", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task SetInputFilesAsync(string selector, IEnumerable<ElementHandleFiles> files, float? timeout, bool? noWaitAfter, bool isPage)
+        internal Task SetInputFilesAsync(string selector, IEnumerable<SetInputFilesFile> files, int? timeout, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
