@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -144,14 +144,14 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task SetInputFilesAsync(IEnumerable<string> files, bool? noWaitAfter, float? timeout)
-            => _channel.SetInputFilesAsync(files.Select(f => f.ToElementHandleFile()).ToArray(), noWaitAfter, timeout);
+            => _channel.SetInputFilesAsync(files.Select(f => f.ToFilePayload()).ToArray(), noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(SetInputFilesFile files, bool? noWaitAfter, float? timeout)
+        public Task SetInputFilesAsync(FilePayload files, bool? noWaitAfter, float? timeout)
             => SetInputFilesAsync(new[] { files }, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(IEnumerable<SetInputFilesFile> files, bool? noWaitAfter, float? timeout)
+        public Task SetInputFilesAsync(IEnumerable<FilePayload> files, bool? noWaitAfter, float? timeout)
             => _channel.SetInputFilesAsync(files, noWaitAfter, timeout);
 
         /// <inheritdoc />
@@ -256,22 +256,22 @@ namespace PlaywrightSharp
             => _channel.TapAsync(position, modifiers, timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />
-        public Task<bool> GetIsCheckedAsync() => _channel.GetIsCheckedAsync();
+        public Task<bool> IsCheckedAsync() => _channel.IsCheckedAsync();
 
         /// <inheritdoc />
-        public Task<bool> GetIsDisabledAsync() => _channel.GetIsDisabledAsync();
+        public Task<bool> IsDisabledAsync() => _channel.IsDisabledAsync();
 
         /// <inheritdoc />
-        public Task<bool> GetIsEditableAsync() => _channel.GetIsEditableAsync();
+        public Task<bool> IsEditableAsync() => _channel.IsEditableAsync();
 
         /// <inheritdoc />
-        public Task<bool> GetIsEnabledAsync() => _channel.GetIsEnabledAsync();
+        public Task<bool> IsEnabledAsync() => _channel.IsEnabledAsync();
 
         /// <inheritdoc />
-        public Task<bool> GetIsHiddenAsync() => _channel.GetIsHiddenAsync();
+        public Task<bool> IsHiddenAsync() => _channel.IsHiddenAsync();
 
         /// <inheritdoc />
-        public Task<bool> GetIsVisibleAsync() => _channel.GetIsVisibleAsync();
+        public Task<bool> IsVisibleAsync() => _channel.IsVisibleAsync();
 
         internal static ScreenshotType DetermineScreenshotType(string path)
         {

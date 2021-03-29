@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -328,7 +328,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "dispatchEvent", args);
         }
 
-        internal Task SetInputFilesAsync(IEnumerable<SetInputFilesFile> files, bool? noWaitAfter, float? timeout)
+        internal Task SetInputFilesAsync(IEnumerable<FilePayload> files, bool? noWaitAfter, float? timeout)
         {
             var args = new Dictionary<string, object>
             {
@@ -413,22 +413,22 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<List<string>>().AsReadOnly();
         }
 
-        internal async Task<bool> GetIsVisibleAsync()
+        internal async Task<bool> IsVisibleAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "isVisible", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
-        internal async Task<bool> GetIsHiddenAsync()
+        internal async Task<bool> IsHiddenAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "isHidden", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
-        internal async Task<bool> GetIsEnabledAsync()
+        internal async Task<bool> IsEnabledAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "isEnabled", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
-        internal async Task<bool> GetIsEditableAsync()
+        internal async Task<bool> IsEditableAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "isEditable", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
-        internal async Task<bool> GetIsDisabledAsync()
+        internal async Task<bool> IsDisabledAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "isDisabled", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
-        internal async Task<bool> GetIsCheckedAsync()
+        internal async Task<bool> IsCheckedAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "isChecked", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
         internal Task CheckAsync(float? timeout, bool force, bool? noWaitAfter)

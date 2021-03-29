@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -72,7 +72,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.SetContentAsync("<input type=file>");
             var chooserTsc = new TaskCompletionSource<IElementHandle>();
-            void EventHandler(object sender, FileChooserEventArgs e)
+            void EventHandler(object sender, FileChooser e)
             {
                 chooserTsc.SetResult(e.Element);
                 Page.FileChooser -= EventHandler;

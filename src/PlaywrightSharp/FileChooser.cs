@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -8,15 +8,15 @@ namespace PlaywrightSharp
     /// <summary>
     /// see <see cref="IPage.FileChooser"/> arguments.
     /// </summary>
-    public class FileChooserEventArgs : EventArgs
+    public class FileChooser : IFileChooser
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileChooserEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="FileChooser"/> class.
         /// </summary>
         /// <param name="page">The page this file chooser belongs to.</param>
         /// <param name="element">The input element.</param>
         /// <param name="multiple">The multiple option.</param>
-        public FileChooserEventArgs(IPage page, IElementHandle element, bool multiple)
+        public FileChooser(IPage page, IElementHandle element, bool multiple)
         {
             Page = page;
             Element = element;
@@ -48,7 +48,7 @@ namespace PlaywrightSharp
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        public Task SetFilesAsync(string file, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetFilesAsync(string file, float? timeout, bool? noWaitAfter)
             => Element.SetInputFilesAsync(file, noWaitAfter, timeout);
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace PlaywrightSharp
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        public Task SetFilesAsync(string[] files, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetFilesAsync(IEnumerable<string> files, float? timeout, bool? noWaitAfter)
             => Element.SetInputFilesAsync(files, noWaitAfter, timeout);
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace PlaywrightSharp
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        public Task SetFilesAsync(SetInputFilesFile file, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetFilesAsync(FilePayload file, float? timeout, bool? noWaitAfter)
             => Element.SetInputFilesAsync(file, noWaitAfter, timeout);
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace PlaywrightSharp
         /// The default value can be changed by using <seealso cref="IPage.DefaultTimeout"/> method.</param>
         /// <param name="noWaitAfter">Actions that initiate navigations are waiting for these navigations to happen and for pages to start loading.</param>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        public Task SetFilesAsync(IEnumerable<SetInputFilesFile> files, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetFilesAsync(IEnumerable<FilePayload> files, float? timeout, bool? noWaitAfter)
             => Element.SetInputFilesAsync(files, noWaitAfter, timeout);
     }
 }

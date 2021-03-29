@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -65,7 +65,7 @@ namespace PlaywrightSharp.Transport.Channels
             }
         }
 
-        internal Task<ResponseChannel> GoToAsync(string url, float? timeout, LoadState? waitUntil, string referer, bool isPage)
+        internal Task<ResponseChannel> GoToAsync(string url, float? timeout, WaitUntilState? waitUntil, string referer, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -794,7 +794,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "innerText", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task SetInputFilesAsync(string selector, IEnumerable<SetInputFilesFile> files, float? timeout, bool? noWaitAfter, bool isPage)
+        internal Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, float? timeout, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -873,7 +873,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "tap", args);
         }
 
-        internal async Task<bool> GetIsCheckedAsync(string selector, float? timeout, bool isPage)
+        internal async Task<bool> IsCheckedAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -889,7 +889,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "isChecked", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
         }
 
-        internal async Task<bool> GetIsDisabledAsync(string selector, float? timeout, bool isPage)
+        internal async Task<bool> IsDisabledAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -905,7 +905,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "isDisabled", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
         }
 
-        internal async Task<bool> GetIsEditableAsync(string selector, float? timeout, bool isPage)
+        internal async Task<bool> IsEditableAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -921,7 +921,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "isEditable", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
         }
 
-        internal async Task<bool> GetIsEnabledAsync(string selector, float? timeout, bool isPage)
+        internal async Task<bool> IsEnabledAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -937,7 +937,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "isEnabled", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
         }
 
-        internal async Task<bool> GetIsHiddenAsync(string selector, float? timeout, bool isPage)
+        internal async Task<bool> IsHiddenAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -953,7 +953,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "isHidden", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
         }
 
-        internal async Task<bool> GetIsVisibleAsync(string selector, float? timeout, bool isPage)
+        internal async Task<bool> IsVisibleAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {

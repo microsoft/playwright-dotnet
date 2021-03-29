@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -6,14 +6,14 @@ namespace PlaywrightSharp
 {
     public partial interface IElementHandle
     {
-        /// <inheritdoc cref="SetInputFilesAsync(IEnumerable{SetInputFilesFile}, bool?, float?)"/>
+        /// <inheritdoc cref="SetInputFilesAsync(IEnumerable{FilePayload}, bool?, float?)"/>
         Task SetInputFilesAsync(string files, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SetInputFilesAsync(IEnumerable{SetInputFilesFile}, bool?, float?)"/>
+        /// <inheritdoc cref="SetInputFilesAsync(IEnumerable{FilePayload}, bool?, float?)"/>
         Task SetInputFilesAsync(IEnumerable<string> files, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SetInputFilesAsync(IEnumerable{SetInputFilesFile}, bool?, float?)"/>
-        Task SetInputFilesAsync(SetInputFilesFile files, bool? noWaitAfter = default, float? timeout = default);
+        /// <inheritdoc cref="SetInputFilesAsync(IEnumerable{FilePayload}, bool?, float?)"/>
+        Task SetInputFilesAsync(FilePayload files, bool? noWaitAfter = default, float? timeout = default);
 
         /// <inheritdoc cref="SelectOptionAsync(IEnumerable{SelectOptionValue}, bool?, float?)" />
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string values, bool? noWaitAfter = default, float? timeout = default);

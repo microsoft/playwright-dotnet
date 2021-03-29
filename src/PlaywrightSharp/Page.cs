@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -47,7 +47,7 @@ namespace PlaywrightSharp
         private readonly object _fileChooserEventLock = new();
 
         private List<RouteSetting> _routes = new();
-        private EventHandler<FileChooserEventArgs> _fileChooserEventHandler;
+        private EventHandler<IFileChooser> _fileChooserEventHandler;
         private bool _fileChooserIntercepted;
         private IVideo _video;
 
@@ -71,23 +71,19 @@ namespace PlaywrightSharp
 
             _channel.Closed += Channel_Closed;
             _channel.Crashed += Channel_Crashed;
-            _channel.Popup += (_, e) => Popup?.Invoke(this, new PopupEventArgs(e.Page));
+            _channel.Popup += (_, e) => Popup?.Invoke(this, e.Page);
             _channel.RequestFailed += (_, e) =>
             {
                 e.Request.Object.Failure = e.FailureText;
                 e.Request.Object.Timing.ResponseEnd = e.ResponseEndTiming;
-                RequestFailed?.Invoke(this, new RequestFailedEventArgs
-                {
-                    Request = e.Request.Object,
-                    FailureText = e.FailureText,
-                });
+                RequestFailed?.Invoke(this, e.Request.Object);
             };
 
             _channel.Request += (_, e) => Request?.Invoke(this, e);
             _channel.RequestFinished += (_, e) =>
             {
                 e.Request.Object.Timing.ResponseEnd = e.ResponseEndTiming;
-                RequestFinished?.Invoke(this, new RequestEventArgs { Request = e.Request.Object });
+                RequestFinished?.Invoke(this, e.Request.Object);
             };
             _channel.Response += (_, e) => Response?.Invoke(this, e);
             _channel.WebSocket += (_, e) => WebSocket?.Invoke(this, e);
@@ -109,7 +105,7 @@ namespace PlaywrightSharp
                 }
             };
 
-            _channel.FileChooser += (_, e) => _fileChooserEventHandler?.Invoke(this, new FileChooserEventArgs(this, e.Element.Object, e.IsMultiple));
+            _channel.FileChooser += (_, e) => _fileChooserEventHandler?.Invoke(this, new FileChooser(this, e.Element.Object, e.IsMultiple));
             _channel.Worker += (_, e) =>
             {
                 WorkersList.Add(e.WorkerChannel.Object);
@@ -119,40 +115,40 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public event EventHandler<ConsoleEventArgs> Console;
+        public event EventHandler<IConsoleMessage> Console;
 
         /// <inheritdoc />
-        public event EventHandler<PopupEventArgs> Popup;
+        public event EventHandler<IPage> Popup;
 
         /// <inheritdoc />
-        public event EventHandler<RequestEventArgs> Request;
+        public event EventHandler<IRequest> Request;
 
         /// <inheritdoc />
-        public event EventHandler<WebSocketEventArgs> WebSocket;
+        public event EventHandler<IWebSocket> WebSocket;
 
         /// <inheritdoc />
-        public event EventHandler<ResponseEventArgs> Response;
+        public event EventHandler<IResponse> Response;
 
         /// <inheritdoc />
-        public event EventHandler<RequestEventArgs> RequestFinished;
+        public event EventHandler<IRequest> RequestFinished;
 
         /// <inheritdoc />
-        public event EventHandler<RequestFailedEventArgs> RequestFailed;
+        public event EventHandler<IRequest> RequestFailed;
 
         /// <inheritdoc />
-        public event EventHandler<DialogEventArgs> Dialog;
+        public event EventHandler<IDialog> Dialog;
 
         /// <inheritdoc />
-        public event EventHandler<FrameEventArgs> FrameAttached;
+        public event EventHandler<IFrame> FrameAttached;
 
         /// <inheritdoc />
-        public event EventHandler<FrameEventArgs> FrameDetached;
+        public event EventHandler<IFrame> FrameDetached;
 
         /// <inheritdoc />
-        public event EventHandler<FrameEventArgs> FrameNavigated;
+        public event EventHandler<IFrame> FrameNavigated;
 
         /// <inheritdoc />
-        public event EventHandler<FileChooserEventArgs> FileChooser
+        public event EventHandler<IFileChooser> FileChooser
         {
             add
             {
@@ -192,13 +188,13 @@ namespace PlaywrightSharp
         public event EventHandler Crash;
 
         /// <inheritdoc />
-        public event EventHandler<PageErrorEventArgs> PageError;
+        public event EventHandler<string> PageError;
 
         /// <inheritdoc />
-        public event EventHandler<WorkerEventArgs> Worker;
+        public event EventHandler<IWorker> Worker;
 
         /// <inheritdoc />
-        public event EventHandler<DownloadEventArgs> Download;
+        public event EventHandler<IDownload> Download;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
@@ -243,7 +239,7 @@ namespace PlaywrightSharp
         public ITouchscreen Touchscreen { get; }
 
         /// <inheritdoc/>
-        public int DefaultTimeout
+        public float DefaultTimeout
         {
             get
             {
@@ -258,7 +254,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc/>
-        public int DefaultNavigationTimeout
+        public float DefaultNavigationTimeout
         {
             get
             {
@@ -521,11 +517,11 @@ namespace PlaywrightSharp
             => MainFrame.SetInputFilesAsync(true, selector, files, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(string selector, SetInputFilesFile files, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetInputFilesAsync(string selector, FilePayloadfiles, int? timeout = null, bool? noWaitAfter = null)
             => SetInputFilesAsync(selector, new[] { files }, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(string selector, SetInputFilesFile[] files, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetInputFilesAsync(string selector, FileP[] files, int? timeout = null, bool? noWaitAfter = null)
             => MainFrame.SetInputFilesAsync(true, selector, files, timeout, noWaitAfter);
 
         /// <inheritdoc />
@@ -935,22 +931,22 @@ namespace PlaywrightSharp
             => MainFrame.TapAsync(true, selector, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task<bool> GetIsCheckedAsync(string selector, int? timeout = null) => MainFrame.GetIsCheckedAsync(true, selector, timeout);
+        public Task<bool> IsCheckedAsync(string selector, int? timeout = null) => MainFrame.IsCheckedAsync(true, selector, timeout);
 
         /// <inheritdoc />
-        public Task<bool> GetIsDisabledAsync(string selector, int? timeout = null) => MainFrame.GetIsDisabledAsync(true, selector, timeout);
+        public Task<bool> IsDisabledAsync(string selector, int? timeout = null) => MainFrame.IsDisabledAsync(true, selector, timeout);
 
         /// <inheritdoc />
-        public Task<bool> GetIsEditableAsync(string selector, int? timeout = null) => MainFrame.GetIsEditableAsync(true, selector, timeout);
+        public Task<bool> IsEditableAsync(string selector, int? timeout = null) => MainFrame.IsEditableAsync(true, selector, timeout);
 
         /// <inheritdoc />
-        public Task<bool> GetIsEnabledAsync(string selector, int? timeout = null) => MainFrame.GetIsEnabledAsync(true, selector, timeout);
+        public Task<bool> IsEnabledAsync(string selector, int? timeout = null) => MainFrame.IsEnabledAsync(true, selector, timeout);
 
         /// <inheritdoc />
-        public Task<bool> GetIsHiddenAsync(string selector, int? timeout = null) => MainFrame.GetIsHiddenAsync(true, selector, timeout);
+        public Task<bool> IsHiddenAsync(string selector, int? timeout = null) => MainFrame.IsHiddenAsync(true, selector, timeout);
 
         /// <inheritdoc />
-        public Task<bool> GetIsVisibleAsync(string selector, int? timeout = null) => MainFrame.GetIsVisibleAsync(true, selector, timeout);
+        public Task<bool> IsVisibleAsync(string selector, int? timeout = null) => MainFrame.IsVisibleAsync(true, selector, timeout);
 
         /// <inheritdoc />
         public Task PauseAsync() => Context.PauseAsync();

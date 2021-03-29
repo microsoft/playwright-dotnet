@@ -8,7 +8,6 @@ namespace PlaywrightSharp
 {
     public partial interface IFrame
     {
-
         /// <summary>
         /// <para>Returns the return value of <paramref name="expression"/>.</para>
         /// <para>
@@ -290,40 +289,64 @@ namespace PlaywrightSharp
         /// </returns>
         Task<IResponse> WaitForNavigationAsync(Func<string, bool> urlFunc, WaitUntilState waitUntil = default, float? timeout = default);
 
-        /// <inheritdoc cref="SetInputFilesAsync(string, IEnumerable{SetInputFilesFile}, bool?, float?)"/>
+        /// <inheritdoc cref="SetInputFilesAsync(string, IEnumerable{FilePayload}, bool?, float?)"/>
         Task SetInputFilesAsync(string selector, string files, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SetInputFilesAsync(string, IEnumerable{SetInputFilesFile}, bool?, float?)"/>
+        /// <inheritdoc cref="SetInputFilesAsync(string, IEnumerable{FilePayload}, bool?, float?)"/>
         Task SetInputFilesAsync(string selector, IEnumerable<string> files, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SetInputFilesAsync(string, IEnumerable{SetInputFilesFile}, bool?, float?)"/>
-        Task SetInputFilesAsync(string selector, SetInputFilesFile files, bool? noWaitAfter = default, float? timeout = default);
+        /// <inheritdoc cref="SetInputFilesAsync(string, IEnumerable{FilePayload}, bool?, float?)"/>
+        Task SetInputFilesAsync(string selector, FilePayload files, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SetInputFilesAsync(string, IEnumerable{SetInputFilesFile}, bool?, float?)" />
+        /// <inheritdoc cref="SelectOptionAsync(string, IEnumerable{SelectOptionValue}, bool?, float?)" />
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string values, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SetInputFilesAsync(string, IEnumerable{SetInputFilesFile}, bool?, float?)" />
+        /// <inheritdoc cref="SelectOptionAsync(string, IEnumerable{SelectOptionValue}, bool?, float?)" />
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<string> values, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SetInputFilesAsync(string, IEnumerable{SetInputFilesFile}, bool?, float?)" />
+        /// <summary>
+        /// <para>Returns the array of option values that have been successfully selected.</para>
+        /// <para>
+        /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
+        /// been selected. If there's no <c>&lt;select&gt;</c> element matching <paramref name="selector"/>,
+        /// the method throws an error.
+        /// </para>
+        /// <para>Will wait until all specified options are present in the <c>&lt;select&gt;</c> element.</para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="noWaitAfter">
+        /// Actions that initiate navigations are waiting for these navigations to happen and
+        /// for pages to start loading. You can opt out of waiting via setting this flag. You
+        /// would only need this option in the exceptional cases such as navigating to inaccessible
+        /// pages. Defaults to <c>false</c>.
+        /// </param>
+        /// <param name="timeout">
+        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SetInputFilesAsync(string, IEnumerable{SetInputFilesFile}, bool?, float?)" />
+        /// <inheritdoc cref="SelectOptionAsync(string, IEnumerable{SelectOptionValue}, bool?, float?)" />
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IElementHandle values, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SetInputFilesAsync(string, IEnumerable{SetInputFilesFile}, bool?, float?)" />
+        /// <inheritdoc cref="SelectOptionAsync(string, IEnumerable{SelectOptionValue}, bool?, float?)" />
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SetInputFilesAsync(string, IEnumerable{SetInputFilesFile}, bool?, float?)" />
+        /// <inheritdoc cref="SelectOptionAsync(string, IEnumerable{SelectOptionValue}, bool?, float?)" />
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SetInputFilesAsync(string, IEnumerable{SetInputFilesFile}, bool?, float?)" />
+        /// <inheritdoc cref="SelectOptionAsync(string, IEnumerable{SelectOptionValue}, bool?, float?)" />
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, params string[] values);
 
-        /// <inheritdoc cref="SetInputFilesAsync(string, IEnumerable{SetInputFilesFile}, bool?, float?)" />
+        /// <inheritdoc cref="SelectOptionAsync(string, IEnumerable{SelectOptionValue}, bool?, float?)" />
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, params SelectOptionValue[] values);
 
-        /// <inheritdoc cref="SetInputFilesAsync(string, IEnumerable{SetInputFilesFile}, bool?, float?)" />
+        /// <inheritdoc cref="SelectOptionAsync(string, IEnumerable{SelectOptionValue}, bool?, float?)" />
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, params IElementHandle[] values);
     }
 }
