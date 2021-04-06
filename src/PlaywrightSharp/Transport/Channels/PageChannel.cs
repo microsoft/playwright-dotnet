@@ -61,15 +61,15 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<RouteEventArgs> Route;
 
-        internal event EventHandler<FrameEventArgs> FrameAttached;
+        internal event EventHandler<IFrame> FrameAttached;
 
-        internal event EventHandler<FrameEventArgs> FrameDetached;
+        internal event EventHandler<IFrame> FrameDetached;
 
-        internal event EventHandler<DialogEventArgs> Dialog;
+        internal event EventHandler<IDialog> Dialog;
 
-        internal event EventHandler<ConsoleEventArgs> Console;
+        internal event EventHandler<IConsoleMessage> Console;
 
-        internal event EventHandler<DownloadEventArgs> Download;
+        internal event EventHandler<IDownload> Download;
 
         internal event EventHandler<PageErrorEventArgs> PageError;
 
@@ -127,16 +127,16 @@ namespace PlaywrightSharp.Transport.Channels
                     FileChooser?.Invoke(this, serverParams?.ToObject<FileChooserChannelEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "frameAttached":
-                    FrameAttached?.Invoke(this, new FrameEventArgs(serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.GetDefaultJsonSerializerOptions()).Object));
+                    FrameAttached?.Invoke(this, serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "frameDetached":
-                    FrameDetached?.Invoke(this, new FrameEventArgs(serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.GetDefaultJsonSerializerOptions()).Object));
+                    FrameDetached?.Invoke(this, serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "dialog":
-                    Dialog?.Invoke(this, new DialogEventArgs(serverParams?.GetProperty("dialog").ToObject<DialogChannel>(Connection.GetDefaultJsonSerializerOptions()).Object));
+                    Dialog?.Invoke(this, serverParams?.GetProperty("dialog").ToObject<DialogChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "console":
-                    Console?.Invoke(this, new ConsoleEventArgs(serverParams?.GetProperty("message").ToObject<ConsoleMessage>(Connection.GetDefaultJsonSerializerOptions())));
+                    Console?.Invoke(this, serverParams?.GetProperty("message").ToObject<ConsoleMessage>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "request":
                     Request?.Invoke(this, new RequestEventArgs { Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
@@ -154,7 +154,7 @@ namespace PlaywrightSharp.Transport.Channels
                     WebSocket?.Invoke(this, new WebSocketEventArgs { WebSocket = serverParams?.GetProperty("webSocket").ToObject<WebSocketChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
                     break;
                 case "download":
-                    Download?.Invoke(this, new DownloadEventArgs() { Download = serverParams?.GetProperty("download").ToObject<DownloadChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
+                    Download?.Invoke(this, serverParams?.GetProperty("download").ToObject<DownloadChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "video":
                     Video?.Invoke(this, new VideoEventArgs() { RelativePath = serverParams?.GetProperty("relativePath").ToString() });
@@ -227,7 +227,7 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task BringToFrontAsync() => Connection.SendMessageToServerAsync(Guid, "bringToFront");
 
-        internal Task<ResponseChannel> GoBackAsync(int? timeout, LifecycleEvent? waitUntil)
+        internal Task<ResponseChannel> GoBackAsync(int? timeout, WaitUntilState? waitUntil)
         {
             var args = new Dictionary<string, object>();
 
@@ -244,7 +244,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "goBack", args);
         }
 
-        internal Task<ResponseChannel> GoForwardAsync(int? timeout, LifecycleEvent? waitUntil)
+        internal Task<ResponseChannel> GoForwardAsync(int? timeout, WaitUntilState? waitUntil)
         {
             var args = new Dictionary<string, object>();
 
@@ -261,7 +261,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "goForward", args);
         }
 
-        internal Task<ResponseChannel> ReloadAsync(int? timeout, LifecycleEvent? waitUntil)
+        internal Task<ResponseChannel> ReloadAsync(int? timeout, WaitUntilState? waitUntil)
         {
             var args = new Dictionary<string, object>();
 

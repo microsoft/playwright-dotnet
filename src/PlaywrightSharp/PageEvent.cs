@@ -35,12 +35,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Download"/>.
         /// </summary>
-        public static PlaywrightEvent<DownloadEventArgs> Download { get; } = new PlaywrightEvent<DownloadEventArgs>() { Name = "Download" };
+        public static PlaywrightEvent<IDownload> Download { get; } = new PlaywrightEvent<IDownload>() { Name = "Download" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Console"/>.
         /// </summary>
-        public static PlaywrightEvent<ConsoleEventArgs> Console { get; } = new PlaywrightEvent<ConsoleEventArgs>() { Name = "Console" };
+        public static PlaywrightEvent<IConsoleMessage> Console { get; } = new PlaywrightEvent<IConsoleMessage>() { Name = "Console" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Popup"/>.
@@ -50,12 +50,12 @@ namespace PlaywrightSharp
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.FrameNavigated"/>.
         /// </summary>
-        public static PlaywrightEvent<FrameEventArgs> FrameNavigated { get; } = new PlaywrightEvent<FrameEventArgs>() { Name = "FrameNavigated" };
+        public static PlaywrightEvent<IFrame> FrameNavigated { get; } = new PlaywrightEvent<IFrame>() { Name = "FrameNavigated" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.FrameDetached"/>.
         /// </summary>
-        public static PlaywrightEvent<FrameEventArgs> FrameDetached { get; } = new PlaywrightEvent<FrameEventArgs>() { Name = "FrameDetached" };
+        public static PlaywrightEvent<IFrame> FrameDetached { get; } = new PlaywrightEvent<IFrame>() { Name = "FrameDetached" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Worker"/>.
@@ -65,7 +65,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Dialog"/>.
         /// </summary>
-        public static PlaywrightEvent<DialogEventArgs> Dialog { get; } = new PlaywrightEvent<DialogEventArgs>() { Name = "Dialog" };
+        public static PlaywrightEvent<IDownload> Dialog { get; } = new PlaywrightEvent<IDownload>() { Name = "Dialog" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.FileChooser"/>.

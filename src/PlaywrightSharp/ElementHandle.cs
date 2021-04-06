@@ -96,7 +96,7 @@ namespace PlaywrightSharp
         public Task FillAsync(string value, bool? noWaitAfter, float? timeout) => _channel.FillAsync(value, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public async Task<IFrame> GetContentFrameAsync() => (await _channel.GetContentFrameAsync().ConfigureAwait(false))?.Object;
+        public async Task<IFrame> ContentFrameAsync() => (await _channel.GetContentFrameAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
         public Task HoverAsync(
@@ -110,10 +110,10 @@ namespace PlaywrightSharp
         public Task ScrollIntoViewIfNeededAsync(float? timeout) => _channel.ScrollIntoViewIfNeededAsync(timeout);
 
         /// <inheritdoc />
-        public async Task<IFrame> GetOwnerFrameAsync() => (await _channel.GetOwnerFrameAsync().ConfigureAwait(false)).Object;
+        public async Task<IFrame> OwnerFrameAsync() => (await _channel.GetOwnerFrameAsync().ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
-        public Task<ElementHandleBoundingBoxResult> GetBoundingBoxAsync() => _channel.GetBoundingBoxAsync();
+        public Task<ElementHandleBoundingBoxResult> BoundingBoxAsync() => _channel.GetBoundingBoxAsync();
 
         /// <inheritdoc />
         public Task ClickAsync(
@@ -199,13 +199,13 @@ namespace PlaywrightSharp
         public Task<string> GetAttributeAsync(string name) => _channel.GetAttributeAsync(name);
 
         /// <inheritdoc />
-        public Task<string> GetInnerHTMLAsync() => _channel.GetInnerHTMLAsync();
+        public Task<string> InnerHTMLAsync() => _channel.GetInnerHTMLAsync();
 
         /// <inheritdoc />
-        public Task<string> GetInnerTextAsync() => _channel.GetInnerTextAsync();
+        public Task<string> InnerTextAsync() => _channel.GetInnerTextAsync();
 
         /// <inheritdoc />
-        public Task<string> GetTextContentAsync() => _channel.GetTextContentAsync();
+        public Task<string> TextContentAsync() => _channel.GetTextContentAsync();
 
         /// <inheritdoc />
         public Task SelectTextAsync(float? timeout) => _channel.SelectTextAsync(timeout);

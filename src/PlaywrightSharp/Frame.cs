@@ -25,7 +25,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -116,11 +115,11 @@ namespace PlaywrightSharp
         internal List<Frame> ChildFramesList { get; } = new List<Frame>();
 
         /// <inheritdoc />
-        public async Task<IElementHandle> GetFrameElementAsync()
+        public async Task<IElementHandle> FrameElementAsync()
             => (await _channel.GetFrameElementAsync().ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
-        public Task<string> GetTitleAsync() => _channel.GetTitleAsync();
+        public Task<string> TitleAsync() => _channel.GetTitleAsync();
 
         /// <inheritdoc />
         public Task<IResponse> GoToAsync(string url, float? timeout, WaitUntilState waitUntil, string referer)
@@ -131,7 +130,7 @@ namespace PlaywrightSharp
             => SetContentAsync(false, html, waitUntil.EnsureDefaultValue(WaitUntilState.Load), timeout);
 
         /// <inheritdoc />
-        public Task<string> GetContentAsync() => GetContentAsync(false);
+        public Task<string> ContentAsync() => GetContentAsync(false);
 
         /// <inheritdoc />
         public Task<IElementHandle> AddScriptTagAsync(string url = null, string path = null, string content = null, string type = null)
@@ -423,15 +422,15 @@ namespace PlaywrightSharp
             => GetAttributeAsync(false, selector, name, timeout);
 
         /// <inheritdoc />
-        public Task<string> GetInnerHTMLAsync(string selector, float? timeout)
+        public Task<string> InnerHTMLAsync(string selector, float? timeout)
             => GetInnerHTMLAsync(false, selector, timeout);
 
         /// <inheritdoc />
-        public Task<string> GetInnerTextAsync(string selector, float? timeout)
+        public Task<string> InnerTextAsync(string selector, float? timeout)
             => GetInnerTextAsync(false, selector, timeout);
 
         /// <inheritdoc />
-        public Task<string> GetTextContentAsync(string selector, float? timeout)
+        public Task<string> TextContentAsync(string selector, float? timeout)
             => GetTextContentAsync(false, selector, timeout);
 
         /// <inheritdoc />
@@ -455,6 +454,9 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<bool> IsVisibleAsync(string selector, float? timeout) => IsVisibleAsync(false, selector, timeout);
+
+        /// <inheritdoc />
+        public Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined) => throw new NotImplementedException();
 
         internal Task TapAsync(bool isPageCall, string selector, IEnumerable<KeyboardModifier> modifiers, Position position, bool? force, bool? noWaitAfter, float? timeout)
             => _channel.TapAsync(selector, modifiers, position, timeout, force ?? false, noWaitAfter, isPageCall);
@@ -731,11 +733,11 @@ namespace PlaywrightSharp
             var waiter = new Waiter();
             waiter.RejectOnEvent<EventArgs>(Page, PageEvent.Close.Name, new NavigationException("Navigation failed because page was closed!"));
             waiter.RejectOnEvent<EventArgs>(Page, PageEvent.Crash.Name, new NavigationException("Navigation failed because page was crashed!"));
-            waiter.RejectOnEvent<FrameEventArgs>(
+            waiter.RejectOnEvent<IFrame>(
                 Page,
                 "FrameDetached",
                 new NavigationException("Navigating frame was detached!"),
-                e => e.Frame == this);
+                e => e == this);
             timeout ??= Page?.DefaultNavigationTimeout ?? Playwright.DefaultTimeout;
             waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout {timeout}ms exceeded.");
 

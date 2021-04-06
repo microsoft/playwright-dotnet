@@ -4,8 +4,8 @@ namespace PlaywrightSharp.Transport.Channels
 {
     internal class FrameChannelLoadStateEventArgs : EventArgs
     {
-        public LifecycleEvent? Add { get; set; }
+        public LoadState? Add { get; set; }
 
-        public LifecycleEvent? Remove { get; set; }
+        public LoadState? Remove { get; set; }
     }
 }

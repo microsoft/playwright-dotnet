@@ -10,7 +10,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// ConsoleMessage is part of <see cref="ConsoleEventArgs"/> used by <see cref="IPage.Console"/>.
     /// </summary>
-    public class ConsoleMessage : ChannelOwnerBase, IChannelOwner<ConsoleMessage>
+    public class ConsoleMessage : ChannelOwnerBase, IChannelOwner<ConsoleMessage>, IConsoleMessage
     {
         private readonly ConsoleMessageChannel _channel;
         private readonly ConsoleMessageInitializer _initializer;
@@ -35,7 +35,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Gets the arguments.
         /// </summary>
-        public IEnumerable<IJSHandle> Args => _initializer.Args.Select(a => ((JSHandleChannel)a).Object);
+        public IReadOnlyCollection<IJSHandle> Args => _initializer.Args.Select(a => ((JSHandleChannel)a).Object).ToList().AsReadOnly();
 
         /// <summary>
         /// Gets the location.

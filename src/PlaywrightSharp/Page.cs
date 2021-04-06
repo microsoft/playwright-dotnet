@@ -313,7 +313,7 @@ namespace PlaywrightSharp
         public IFrame GetFrame(Func<string, bool> url) => Frames.FirstOrDefault(f => url(f.Url));
 
         /// <inheritdoc />
-        public Task<string> GetTitleAsync() => MainFrame.GetTitleAsync();
+        public Task<string> GetTitleAsync() => MainFrame.TitleAsync();
 
         /// <inheritdoc />
         public Task BringToFrontAsync() => _channel.BringToFrontAsync();
@@ -342,23 +342,23 @@ namespace PlaywrightSharp
             });
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, LifecycleEvent? waitUntil = null, string referer = null, int? timeout = null)
+        public Task<IResponse> GoToAsync(string url, WaitUntilState? waitUntil = null, string referer = null, int? timeout = null)
             => MainFrame.GoToAsync(true, url, waitUntil, referer, timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(LifecycleEvent? waitUntil = null, int? timeout = null)
+        public Task<IResponse> WaitForNavigationAsync(WaitUntilState? waitUntil = null, int? timeout = null)
              => MainFrame.WaitForNavigationAsync(waitUntil: waitUntil, url: null, regex: null, match: null, timeout: timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(string url, LifecycleEvent? waitUntil = null, int? timeout = null)
+        public Task<IResponse> WaitForNavigationAsync(string url, WaitUntilState? waitUntil = null, int? timeout = null)
             => MainFrame.WaitForNavigationAsync(waitUntil: null, url: url, regex: null, match: null, timeout: timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(Regex url, LifecycleEvent? waitUntil = null, int? timeout = null)
+        public Task<IResponse> WaitForNavigationAsync(Regex url, WaitUntilState? waitUntil = null, int? timeout = null)
             => MainFrame.WaitForNavigationAsync(waitUntil: null, url: null, regex: url, match: null, timeout: timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(Func<string, bool> url, LifecycleEvent? waitUntil = null, int? timeout = null)
+        public Task<IResponse> WaitForNavigationAsync(Func<string, bool> url, WaitUntilState? waitUntil = null, int? timeout = null)
             => MainFrame.WaitForNavigationAsync(waitUntil: null, url: null, regex: null, match: url, timeout: timeout);
 
         /// <inheritdoc />
@@ -517,11 +517,11 @@ namespace PlaywrightSharp
             => MainFrame.SetInputFilesAsync(true, selector, files, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(string selector, FilePayloadfiles, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetInputFilesAsync(string selector, FilePayload files, int? timeout = null, bool? noWaitAfter = null)
             => SetInputFilesAsync(selector, new[] { files }, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(string selector, FileP[] files, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetInputFilesAsync(string selector, FilePayload[] files, int? timeout = null, bool? noWaitAfter = null)
             => MainFrame.SetInputFilesAsync(true, selector, files, timeout, noWaitAfter);
 
         /// <inheritdoc />
@@ -628,7 +628,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task SetContentAsync(string html, LifecycleEvent? waitUntil = null, int? timeout = null) => MainFrame.SetContentAsync(true, html, waitUntil, timeout);
+        public Task SetContentAsync(string html, WaitUntilState? waitUntil = null, int? timeout = null) => MainFrame.SetContentAsync(true, html, waitUntil, timeout);
 
         /// <inheritdoc />
         public Task<string> GetContentAsync() => MainFrame.GetContentAsync(true);
@@ -682,15 +682,15 @@ namespace PlaywrightSharp
             => MainFrame.DblClickAsync(true, selector, delay, button, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public async Task<IResponse> GoBackAsync(int? timeout = null, LifecycleEvent? waitUntil = null)
+        public async Task<IResponse> GoBackAsync(int? timeout = null, WaitUntilState? waitUntil = null)
             => (await _channel.GoBackAsync(timeout, waitUntil).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public async Task<IResponse> GoForwardAsync(int? timeout = null, LifecycleEvent? waitUntil = null)
+        public async Task<IResponse> GoForwardAsync(int? timeout = null, WaitUntilState? waitUntil = null)
             => (await _channel.GoForwardAsync(timeout, waitUntil).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public async Task<IResponse> ReloadAsync(int? timeout = null, LifecycleEvent? waitUntil = null)
+        public async Task<IResponse> ReloadAsync(int? timeout = null, WaitUntilState? waitUntil = null)
             => (await _channel.ReloadAsync(timeout, waitUntil).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc/>
@@ -884,7 +884,7 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task WaitForLoadStateAsync(LifecycleEvent state = LifecycleEvent.Load, int? timeout = null)
+        public Task WaitForLoadStateAsync(WaitUntilState state = WaitUntilState.Load, int? timeout = null)
             => MainFrame.WaitForLoadStateAsync(state, timeout);
 
         /// <inheritdoc />
@@ -1027,22 +1027,22 @@ namespace PlaywrightSharp
             Context.OnRoute(e.Route, e.Request);
         }
 
-        private void Channel_FrameDetached(object sender, FrameEventArgs e)
+        private void Channel_FrameDetached(object sender, IFrame args)
         {
-            var frame = (Frame)e.Frame;
+            var frame = (Frame)args;
             _frames.Remove(frame);
             frame.IsDetached = true;
             frame.ParentFrame?.ChildFramesList?.Remove(frame);
-            FrameDetached?.Invoke(this, e);
+            FrameDetached?.Invoke(this, args);
         }
 
-        private void Channel_FrameAttached(object sender, FrameEventArgs e)
+        private void Channel_FrameAttached(object sender, IFrame args)
         {
-            var frame = (Frame)e.Frame;
+            var frame = (Frame)args;
             frame.Page = this;
             _frames.Add(frame);
             frame.ParentFrame?.ChildFramesList?.Add(frame);
-            FrameAttached?.Invoke(this, e);
+            FrameAttached?.Invoke(this, args);
         }
 
         private void RejectPendingOperations(bool isCrash)

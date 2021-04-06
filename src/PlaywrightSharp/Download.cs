@@ -13,7 +13,7 @@ namespace PlaywrightSharp
     /// All the downloaded files belonging to the browser context are deleted when the browser context is closed.All downloaded files are deleted when the browser closes.
     /// Download event is emitted once the download starts.
     /// </summary>
-    public class Download : ChannelOwnerBase, IChannelOwner<Download>
+    public class Download : ChannelOwnerBase, IChannelOwner<Download>, IDownload
     {
         private readonly Connection _connection;
         private readonly DownloadChannel _channel;
