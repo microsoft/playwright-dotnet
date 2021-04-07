@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests
             })");
             var properties = await aHandle.GetPropertiesAsync();
             Assert.True(properties.TryGetValue("foo", out var foo));
-            Assert.Equal("bar", await foo.GetJsonValueAsync<string>());
+            Assert.Equal("bar", await foo.JsonValueAsync<string>());
         }
 
         [PlaywrightTest("jshandle-properties.spec.ts", "should return empty map for non-objects")]
@@ -58,8 +58,8 @@ namespace PlaywrightSharp.Tests
                 return new B();
             }");
             var properties = await aHandle.GetPropertiesAsync();
-            Assert.Equal("1", await properties["a"].GetJsonValueAsync<string>());
-            Assert.Equal("2", await properties["b"].GetJsonValueAsync<string>());
+            Assert.Equal("1", await properties["a"].JsonValueAsync<string>());
+            Assert.Equal("2", await properties["b"].JsonValueAsync<string>());
         }
 
         [PlaywrightTest("jshandle-properties.spec.ts", "should work")]
@@ -72,7 +72,7 @@ namespace PlaywrightSharp.Tests
                 three: 3
             })");
             var twoHandle = await aHandle.GetPropertyAsync("two");
-            Assert.Equal(2, await twoHandle.GetJsonValueAsync<int>());
+            Assert.Equal(2, await twoHandle.JsonValueAsync<int>());
         }
 
         [PlaywrightTest("jshandle-properties.spec.ts", "should work with undefined, null, and empty")]
@@ -84,11 +84,11 @@ namespace PlaywrightSharp.Tests
                 null: null,
             })");
             var undefinedHandle = await aHandle.GetPropertyAsync("undefined");
-            Assert.Null(await undefinedHandle.GetJsonValueAsync<string>());
+            Assert.Null(await undefinedHandle.JsonValueAsync<string>());
             var nullHandle = await aHandle.GetPropertyAsync("null");
-            Assert.Null(await nullHandle.GetJsonValueAsync<string>());
+            Assert.Null(await nullHandle.JsonValueAsync<string>());
             var emptyHandle = await aHandle.GetPropertyAsync("emptyHandle");
-            Assert.Null(await emptyHandle.GetJsonValueAsync<string>());
+            Assert.Null(await emptyHandle.JsonValueAsync<string>());
         }
 
         [PlaywrightTest("jshandle-properties.spec.ts", "should work with unserializable values")]
@@ -103,13 +103,13 @@ namespace PlaywrightSharp.Tests
             })");
 
             var infinityHandle = await aHandle.GetPropertyAsync("infinity");
-            Assert.Equal(double.PositiveInfinity, await infinityHandle.GetJsonValueAsync<double>());
+            Assert.Equal(double.PositiveInfinity, await infinityHandle.JsonValueAsync<double>());
             var ninfinityHandle = await aHandle.GetPropertyAsync("nInfinity");
-            Assert.Equal(double.NegativeInfinity, await ninfinityHandle.GetJsonValueAsync<double>());
+            Assert.Equal(double.NegativeInfinity, await ninfinityHandle.JsonValueAsync<double>());
             var nanHandle = await aHandle.GetPropertyAsync("nan");
-            Assert.Equal(double.NaN, await nanHandle.GetJsonValueAsync<double>());
+            Assert.Equal(double.NaN, await nanHandle.JsonValueAsync<double>());
             var nzeroHandle = await aHandle.GetPropertyAsync("nzero");
-            Assert.True((await nzeroHandle.GetJsonValueAsync<double>()).IsNegativeZero());
+            Assert.True((await nzeroHandle.JsonValueAsync<double>()).IsNegativeZero());
         }
     }
 }

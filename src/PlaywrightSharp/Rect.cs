@@ -3,7 +3,7 @@ using System;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Bounding box data returned by <see cref="IElementHandle.GetBoundingBoxAsync"/>.
+    /// Bounding box data.
     /// </summary>
     public class Rect : IEquatable<Rect>
     {

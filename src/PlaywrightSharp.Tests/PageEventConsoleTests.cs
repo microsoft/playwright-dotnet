@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -34,9 +34,9 @@ namespace PlaywrightSharp.Tests
 
             Assert.Equal("hello 5 JSHandle@object", message.Text);
             Assert.Equal("log", message.Type);
-            Assert.Equal("hello", await message.Args.ElementAt(0).GetJsonValueAsync<string>());
-            Assert.Equal(5, await message.Args.ElementAt(1).GetJsonValueAsync<int>());
-            Assert.Equal("bar", (await message.Args.ElementAt(2).GetJsonValueAsync<JsonElement>()).GetProperty("foo").GetString());
+            Assert.Equal("hello", await message.Args.ElementAt(0).JsonValueAsync<string>());
+            Assert.Equal(5, await message.Args.ElementAt(1).JsonValueAsync<int>());
+            Assert.Equal("bar", (await message.Args.ElementAt(2).JsonValueAsync<JsonElement>()).GetProperty("foo").GetString());
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should emit same log twice")]

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -523,11 +523,11 @@ namespace PlaywrightSharp
             => MainFrame.SetInputFilesAsync(true, selector, files, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(string selector, SetInputFilesFile files, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetInputFilesAsync(string selector, FilePayload files, int? timeout = null, bool? noWaitAfter = null)
             => SetInputFilesAsync(selector, new[] { files }, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(string selector, SetInputFilesFile[] files, int? timeout = null, bool? noWaitAfter = null)
+        public Task SetInputFilesAsync(string selector, FilePayload[] files, int? timeout = null, bool? noWaitAfter = null)
             => MainFrame.SetInputFilesAsync(true, selector, files, timeout, noWaitAfter);
 
         /// <inheritdoc />
@@ -929,30 +929,30 @@ namespace PlaywrightSharp
              => MainFrame.GetInnerTextAsync(true, selector, timeout);
 
         /// <inheritdoc />
-        public Task<string> GetTextContentAsync(string selector, int? timeout = null)
-             => MainFrame.GetTextContentAsync(true, selector, timeout);
+        public Task<string> TextContentAsync(string selector, int? timeout = null)
+             => MainFrame.TextContentAsync(true, selector, timeout);
 
         /// <inheritdoc />
         public Task TapAsync(string selector, Modifier[] modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)
             => MainFrame.TapAsync(true, selector, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task<bool> GetIsCheckedAsync(string selector, int? timeout = null) => MainFrame.GetIsCheckedAsync(true, selector, timeout);
+        public Task<bool> IsCheckedAsync(string selector, int? timeout = null) => MainFrame.IsCheckedAsync(true, selector, timeout);
 
         /// <inheritdoc />
-        public Task<bool> GetIsDisabledAsync(string selector, int? timeout = null) => MainFrame.GetIsDisabledAsync(true, selector, timeout);
+        public Task<bool> IsDisabledAsync(string selector, int? timeout = null) => MainFrame.IsDisabledAsync(true, selector, timeout);
 
         /// <inheritdoc />
-        public Task<bool> GetIsEditableAsync(string selector, int? timeout = null) => MainFrame.GetIsEditableAsync(true, selector, timeout);
+        public Task<bool> IsEditableAsync(string selector, int? timeout = null) => MainFrame.IsEditableAsync(true, selector, timeout);
 
         /// <inheritdoc />
-        public Task<bool> GetIsEnabledAsync(string selector, int? timeout = null) => MainFrame.GetIsEnabledAsync(true, selector, timeout);
+        public Task<bool> IsEnabledAsync(string selector, int? timeout = null) => MainFrame.IsEnabledAsync(true, selector, timeout);
 
         /// <inheritdoc />
-        public Task<bool> GetIsHiddenAsync(string selector, int? timeout = null) => MainFrame.GetIsHiddenAsync(true, selector, timeout);
+        public Task<bool> IsHiddenAsync(string selector, int? timeout = null) => MainFrame.IsHiddenAsync(true, selector, timeout);
 
         /// <inheritdoc />
-        public Task<bool> GetIsVisibleAsync(string selector, int? timeout = null) => MainFrame.GetIsVisibleAsync(true, selector, timeout);
+        public Task<bool> IsVisibleAsync(string selector, int? timeout = null) => MainFrame.IsVisibleAsync(true, selector, timeout);
 
         /// <inheritdoc />
         public Task PauseAsync() => Context.PauseAsync();

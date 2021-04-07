@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
@@ -116,7 +116,7 @@ namespace PlaywrightSharp.Tests
             await frame.EvaluateAsync(AddElement, "div");
             var eHandle = await watchdog;
             var property = await eHandle.GetPropertyAsync("tagName");
-            string tagName = await property.GetJsonValueAsync<string>();
+            string tagName = await property.JsonValueAsync<string>();
             Assert.Equal("DIV", tagName);
         }
 
@@ -243,7 +243,7 @@ namespace PlaywrightSharp.Tests
             await otherFrame.EvaluateAsync(AddElement, "div");
             await Page.EvaluateAsync(AddElement, "div");
             var eHandle = await watchdog;
-            Assert.Equal(Page.MainFrame, await eHandle.GetOwnerFrameAsync());
+            Assert.Equal(Page.MainFrame, await eHandle.OwnerFrameAsync());
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should run in specified frame")]
@@ -258,7 +258,7 @@ namespace PlaywrightSharp.Tests
             await frame1.EvaluateAsync(AddElement, "div");
             await frame2.EvaluateAsync(AddElement, "div");
             var eHandle = await waitForSelectorPromise;
-            Assert.Equal(frame2, await eHandle.GetOwnerFrameAsync());
+            Assert.Equal(frame2, await eHandle.OwnerFrameAsync());
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should throw when frame is detached")]

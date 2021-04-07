@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
@@ -56,7 +56,7 @@ namespace PlaywrightSharp.Tests
                 }
                 return Date.now() - window.__startTime;
             }", polling: polling);
-            int value = (await timeDelta.GetJsonValueAsync<int>());
+            int value = (await timeDelta.JsonValueAsync<int>());
 
             Assert.True(value >= polling);
         }
@@ -161,7 +161,7 @@ namespace PlaywrightSharp.Tests
         [PlaywrightTest("page-wait-for-function.spec.ts", "should return the success value as a JSHandle")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnTheSuccessValueAsAJSHandle()
-            => Assert.Equal(5, await (await Page.WaitForFunctionAsync("() => 5")).GetJsonValueAsync<int>());
+            => Assert.Equal(5, await (await Page.WaitForFunctionAsync("() => 5")).JsonValueAsync<int>());
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should return the window as a success value")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
@@ -256,7 +256,7 @@ namespace PlaywrightSharp.Tests
                 (() => true)()
             ");
 
-            Assert.True(await result.GetJsonValueAsync<bool>());
+            Assert.True(await result.JsonValueAsync<bool>());
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should wait for predicate with arguments")]

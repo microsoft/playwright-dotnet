@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWork()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => ({ foo: 'bar'})");
-            var json = await aHandle.GetJsonValueAsync<JsonElement>();
+            var json = await aHandle.JsonValueAsync<JsonElement>();
             Assert.Equal("bar", json.GetProperty("foo").GetString());
         }
 
@@ -30,7 +30,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkWithDates()
         {
             var dateHandle = await Page.EvaluateHandleAsync("() => new Date('2017-09-26T00:00:00.000Z')");
-            var json = await dateHandle.GetJsonValueAsync<DateTime>();
+            var json = await dateHandle.JsonValueAsync<DateTime>();
             Assert.Equal(2017, json.Year);
         }
 
@@ -39,7 +39,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldThrowForCircularObjects()
         {
             var windowHandle = await Page.EvaluateHandleAsync("window");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => windowHandle.GetJsonValueAsync<object>());
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => windowHandle.JsonValueAsync<object>());
             Assert.Contains("Argument is a circular structure", exception.Message);
         }
     }

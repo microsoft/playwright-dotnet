@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
 using Xunit;
@@ -43,7 +43,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
             var frame = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             var handle = await frame.GetFrameElementAsync();
-            var contentFrame = await handle.GetContentFrameAsync();
+            var contentFrame = await handle.ContentFrameAsync();
 
             Assert.Same(contentFrame, frame);
         }

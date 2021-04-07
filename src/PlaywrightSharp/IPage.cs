@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -153,7 +153,7 @@ namespace PlaywrightSharp
         event EventHandler<FrameEventArgs> FrameNavigated;
 
         /// <summary>
-        /// Raised when a file chooser is supposed to appear, such as after clicking the <c>&lt;input type=file&gt;</c>`. Playwright can respond to it via setting the input files using <see cref="IElementHandle.SetInputFilesAsync(IEnumerable{SetInputFilesFile}, bool?, float?)"/>.
+        /// Raised when a file chooser is supposed to appear, such as after clicking the <c>&lt;input type=file&gt;</c>`. Playwright can respond to it via setting the input files using <see cref="IElementHandle.SetInputFilesAsync(IEnumerable{FilePayload}, bool?, float?)"/>.
         /// </summary>
         event EventHandler<FileChooserEventArgs> FileChooser;
 
@@ -845,7 +845,7 @@ namespace PlaywrightSharp
         /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        Task SetInputFilesAsync(string selector, SetInputFilesFile files, int? timeout = null, bool? noWaitAfter = null);
+        Task SetInputFilesAsync(string selector, FilePayload files, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
         /// Sets the value of the file input to these file paths or files. If some of the  <paramref name="files"/> are relative paths, then they are resolved relative to the <see cref="Directory.GetCurrentDirectory"/>.
@@ -861,7 +861,7 @@ namespace PlaywrightSharp
         /// This method expects <see cref="IElementHandle"/> to point to an <see href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input"/>.
         /// </remarks>
         /// <returns>A <see cref="Task"/> that completes when the files are successfully set.</returns>
-        Task SetInputFilesAsync(string selector, SetInputFilesFile[] files, int? timeout = null, bool? noWaitAfter = null);
+        Task SetInputFilesAsync(string selector, FilePayload[] files, int? timeout = null, bool? noWaitAfter = null);
 
         /// <summary>
         /// Fetches an element with <paramref name="selector"/> and focuses it.
@@ -881,7 +881,7 @@ namespace PlaywrightSharp
         /// <param name="force">Whether to bypass the actionability checks. Defaults to false.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
-        /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> GetIs successfully hovered.</returns>
+        /// <returns>A <see cref="Task"/> that completes when the element matching <paramref name="selector"/> Is successfully hovered.</returns>
         Task HoverAsync(
             string selector,
             Point? position = null,
@@ -1738,7 +1738,7 @@ namespace PlaywrightSharp
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the attribute was evaluated (or timeout), yielding the textContent of the element.</returns>
-        Task<string> GetTextContentAsync(string selector, int? timeout = null);
+        Task<string> TextContentAsync(string selector, int? timeout = null);
 
         /// <summary>
         /// Brings page to front (activates tab).
@@ -1756,16 +1756,16 @@ namespace PlaywrightSharp
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
-        Task<bool> GetIsCheckedAsync(string selector, int? timeout = null);
+        Task<bool> IsCheckedAsync(string selector, int? timeout = null);
 
         /// <summary>
-        /// Returns whether the element is disabled, the opposite of <see cref="GetIsEnabledAsync"/>.
+        /// Returns whether the element is disabled, the opposite of <see cref="IsEnabledAsync"/>.
         /// </summary>
         /// <param name="selector">A selector to search for an element. If there are multiple elements satisfying the selector, the first will be picked.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
-        Task<bool> GetIsDisabledAsync(string selector, int? timeout = null);
+        Task<bool> IsDisabledAsync(string selector, int? timeout = null);
 
         /// <summary>
         /// Returns whether the element is editable.
@@ -1774,7 +1774,7 @@ namespace PlaywrightSharp
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
-        Task<bool> GetIsEditableAsync(string selector, int? timeout = null);
+        Task<bool> IsEditableAsync(string selector, int? timeout = null);
 
         /// <summary>
         /// Returns whether the element is enabled.
@@ -1783,16 +1783,16 @@ namespace PlaywrightSharp
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
-        Task<bool> GetIsEnabledAsync(string selector, int? timeout = null);
+        Task<bool> IsEnabledAsync(string selector, int? timeout = null);
 
         /// <summary>
-        /// Returns whether the element is hidden, the opposite of <see cref="GetIsVisibleAsync"/>.
+        /// Returns whether the element is hidden, the opposite of <see cref="IsVisibleAsync"/>.
         /// </summary>
         /// <param name="selector">A selector to search for an element. If there are multiple elements satisfying the selector, the first will be picked.</param>
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
-        Task<bool> GetIsHiddenAsync(string selector, int? timeout = null);
+        Task<bool> IsHiddenAsync(string selector, int? timeout = null);
 
         /// <summary>
         /// Returns whether the element is visible.
@@ -1801,7 +1801,7 @@ namespace PlaywrightSharp
         /// <param name="timeout">Maximum time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/> or <see cref="IPage.DefaultTimeout"/>.</param>
         /// <returns>A <see cref="Task"/> that completes when the message is processed by the browser.</returns>
-        Task<bool> GetIsVisibleAsync(string selector, int? timeout = null);
+        Task<bool> IsVisibleAsync(string selector, int? timeout = null);
 
         /// <summary>
         /// Pauses script execution. Playwright will stop executing the script and wait for the user to either press 'Resume' button

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
@@ -419,7 +419,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldBeAbleToThrowATrickyError()
         {
             var windowHandle = await Page.EvaluateHandleAsync("() => window");
-            var exceptionText = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => windowHandle.GetJsonValueAsync<object>());
+            var exceptionText = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => windowHandle.JsonValueAsync<object>());
             var error = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.EvaluateAsync<JsonElement>(@"errorText => {
                 throw new Error(errorText);
             }", exceptionText.Message));
@@ -685,7 +685,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldJsonValueDate()
         {
             var resultHandle = await Page.EvaluateHandleAsync(@"() => ({ date: new Date('2020-05-27T01:31:38.506Z') })");
-            dynamic result = await resultHandle.GetJsonValueAsync<ExpandoObject>();
+            dynamic result = await resultHandle.JsonValueAsync<ExpandoObject>();
             Assert.Equal(new DateTime(2020, 05, 27, 1, 31, 38, 506), result.date);
         }
 

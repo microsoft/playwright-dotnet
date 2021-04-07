@@ -46,7 +46,7 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-	public partial class SetInputFilesFile
+	public partial class FilePayload
 	{
 		/// <summary><para>File name</para></summary>
 		[JsonPropertyName("name")]

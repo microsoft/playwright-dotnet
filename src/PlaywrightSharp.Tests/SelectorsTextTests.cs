@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
 using Xunit;
@@ -223,7 +223,7 @@ namespace PlaywrightSharp.Tests
             ");
 
             var handle = await task;
-            Assert.Equal("Hello from light", await handle.GetTextContentAsync());
+            Assert.Equal("Hello from light", await handle.TextContentAsync());
         }
     }
 }

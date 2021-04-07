@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Threading.Tasks;
@@ -112,7 +112,7 @@ namespace PlaywrightSharp.Tests
             }");
 
             await Page.Keyboard.InsertTextAsync("hello world");
-            Assert.Equal(new[] { "input" }, await events.GetJsonValueAsync<string[]>());
+            Assert.Equal(new[] { "input" }, await events.JsonValueAsync<string[]>());
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should report shiftKey")]
@@ -388,7 +388,7 @@ namespace PlaywrightSharp.Tests
             async Task TestEnterKeyAsync(string key, string expectedKey, string expectedCode)
             {
                 await Page.Keyboard.PressAsync(key);
-                dynamic lastEvent = await lastEventHandle.GetJsonValueAsync<ExpandoObject>();
+                dynamic lastEvent = await lastEventHandle.JsonValueAsync<ExpandoObject>();
                 Assert.Equal(expectedKey, lastEvent.key);
                 Assert.Equal(expectedCode, lastEvent.code);
 
@@ -475,7 +475,7 @@ namespace PlaywrightSharp.Tests
         {
             var lastEventHandle = await CaptureLastKeydownAsync(Page);
             await Page.Keyboard.PressAsync("Meta");
-            dynamic result = await lastEventHandle.GetJsonValueAsync<ExpandoObject>();
+            dynamic result = await lastEventHandle.JsonValueAsync<ExpandoObject>();
             string key = result.key;
             string code = result.code;
             bool metaKey = result.metaKey;
@@ -516,7 +516,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.CrossProcessUrl + "/empty.html");
             var lastEventHandle = await CaptureLastKeydownAsync(Page);
             await Page.Keyboard.PressAsync("a");
-            dynamic result = await lastEventHandle.GetJsonValueAsync<ExpandoObject>();
+            dynamic result = await lastEventHandle.JsonValueAsync<ExpandoObject>();
             Assert.Equal("a", result.key);
         }
 
