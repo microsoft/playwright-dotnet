@@ -47,27 +47,20 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// <para>
-	/// <see cref="IConsoleMessage"/> objects are dispatched by page via the <see cref="IPage.Console"/>
-	/// event.
-	/// </para>
+	/// Result of calling <see cref="ICoverage.StopCSSCoverageAsync"/>.
 	/// </summary>
-	public partial interface IConsoleMessage
+	public partial class CoverageStopCSSCoverageResult
 	{
-		IReadOnlyCollection<IJSHandle> Args { get; }
+		/// <summary><para>StyleSheet URL</para></summary>
+		[JsonPropertyName("url")]
+		public string Url { get; set; }
 	
-		ConsoleMessageLocationResult Location { get; }
+		/// <summary><para>StyleSheet content, if available.</para></summary>
+		[JsonPropertyName("text")]
+		public string Text { get; set; }
 	
-		string Text { get; }
-	
-		/// <summary>
-		/// <para>
-		/// One of the following values: <c>'log'</c>, <c>'debug'</c>, <c>'info'</c>, <c>'error'</c>,
-		/// <c>'warning'</c>, <c>'dir'</c>, <c>'dirxml'</c>, <c>'table'</c>, <c>'trace'</c>,
-		/// <c>'clear'</c>, <c>'startGroup'</c>, <c>'startGroupCollapsed'</c>, <c>'endGroup'</c>,
-		/// <c>'assert'</c>, <c>'profile'</c>, <c>'profileEnd'</c>, <c>'count'</c>, <c>'timeEnd'</c>.
-		/// </para>
-		/// </summary>
-		string Type { get; }
+		/// <summary><para>StyleSheet ranges that were used. Ranges are sorted and non-overlapping.</para></summary>
+		[JsonPropertyName("ranges")]
+		public IEnumerable<Range> Ranges { get; set; }
 	}
 }

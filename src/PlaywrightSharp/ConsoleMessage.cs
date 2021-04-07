@@ -27,24 +27,16 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         IChannel<ConsoleMessage> IChannelOwner<ConsoleMessage>.Channel => _channel;
 
-        /// <summary>
-        /// Gets the ConsoleMessage type.
-        /// </summary>
+        /// <inheritdoc />
         public string Type => _initializer.Type;
 
-        /// <summary>
-        /// Gets the arguments.
-        /// </summary>
+        /// <inheritdoc />
         public IReadOnlyCollection<IJSHandle> Args => _initializer.Args.Select(a => ((JSHandleChannel)a).Object).ToList().AsReadOnly();
 
-        /// <summary>
-        /// Gets the location.
-        /// </summary>
-        public ConsoleMessageLocation Location => _initializer.Location;
+        /// <inheritdoc />
+        public ConsoleMessageLocationResult Location => _initializer.Location;
 
-        /// <summary>
-        /// Gets the console text.
-        /// </summary>
+        /// <inheritdoc />
         public string Text => _initializer.Text;
     }
 }

@@ -446,6 +446,16 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
+		/// Browser-specific Coverage implementation. See <see cref="ICoverage"/>(#class-coverage)
+		/// for more details.
+		/// </para>
+		/// </summary>
+		/// <remarks><para>Only available for Chromium atm.</para></remarks>
+		[JsonPropertyName("coverage")]
+		public ICoverage Coverage { get; set; }
+	
+		/// <summary>
+		/// <para>
 		/// This method double clicks an element matching <paramref name="selector"/> by performing
 		/// the following steps:
 		/// </para>

@@ -497,11 +497,11 @@ namespace PlaywrightSharp.Transport.Channels
                     ["reportAnonymousScripts"] = reportAnonymousScripts,
                 });
 
-        internal async Task<CSSCoverageEntry[]> StopCSSCoverageAsync()
-            => (await Connection.SendMessageToServerAsync(Guid, "crStopCSSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<CSSCoverageEntry[]>();
+        internal async Task<CoverageStopCSSCoverageResult[]> StopCSSCoverageAsync()
+            => (await Connection.SendMessageToServerAsync(Guid, "crStopCSSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<CoverageStopCSSCoverageResult[]>();
 
-        internal async Task<JSCoverageEntry[]> StopJSCoverageAsync()
-            => (await Connection.SendMessageToServerAsync(Guid, "crStopJSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<JSCoverageEntry[]>();
+        internal async Task<CoverageStopJSCoverageResult[]> StopJSCoverageAsync()
+            => (await Connection.SendMessageToServerAsync(Guid, "crStopJSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<CoverageStopJSCoverageResult[]>();
 
         internal async Task<string> GetPdfAsync(
             decimal scale,

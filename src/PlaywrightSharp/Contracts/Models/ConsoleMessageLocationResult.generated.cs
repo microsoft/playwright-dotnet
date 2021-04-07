@@ -47,27 +47,20 @@ using System.Threading.Tasks;
 namespace PlaywrightSharp
 {
     /// <summary>
-	/// <para>
-	/// <see cref="IConsoleMessage"/> objects are dispatched by page via the <see cref="IPage.Console"/>
-	/// event.
-	/// </para>
+	/// Result of calling <see cref="IConsoleMessage.Location"/>.
 	/// </summary>
-	public partial interface IConsoleMessage
+	public partial class ConsoleMessageLocationResult
 	{
-		IReadOnlyCollection<IJSHandle> Args { get; }
+		/// <summary><para>URL of the resource.</para></summary>
+		[JsonPropertyName("url")]
+		public string Url { get; set; }
 	
-		ConsoleMessageLocationResult Location { get; }
+		/// <summary><para>0-based line number in the resource.</para></summary>
+		[JsonPropertyName("lineNumber")]
+		public int LineNumber { get; set; }
 	
-		string Text { get; }
-	
-		/// <summary>
-		/// <para>
-		/// One of the following values: <c>'log'</c>, <c>'debug'</c>, <c>'info'</c>, <c>'error'</c>,
-		/// <c>'warning'</c>, <c>'dir'</c>, <c>'dirxml'</c>, <c>'table'</c>, <c>'trace'</c>,
-		/// <c>'clear'</c>, <c>'startGroup'</c>, <c>'startGroupCollapsed'</c>, <c>'endGroup'</c>,
-		/// <c>'assert'</c>, <c>'profile'</c>, <c>'profileEnd'</c>, <c>'count'</c>, <c>'timeEnd'</c>.
-		/// </para>
-		/// </summary>
-		string Type { get; }
+		/// <summary><para>0-based column number in the resource.</para></summary>
+		[JsonPropertyName("columnNumber")]
+		public int ColumnNumber { get; set; }
 	}
 }
