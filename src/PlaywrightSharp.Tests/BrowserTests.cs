@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCreateNewPage()
         {
-            var browser = await Playwright[TestConstants.Product].LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            var browser = await Playwright[TestConstants.Product].LaunchDefaultAsync();
             var page1 = await browser.NewPageAsync();
             Assert.Single(browser.Contexts);
 

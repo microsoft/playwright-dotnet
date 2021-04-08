@@ -67,12 +67,6 @@ namespace PlaywrightSharp.Tests.BaseTests
             HttpsServer.Reset();
         }
 
-        internal async Task<IPage> NewPageAsync(IBrowser browser, BrowserContextOptions options = null)
-        {
-            await using var context = await browser.NewContextAsync(options);
-            return await context.NewPageAsync();
-        }
-
         /// <inheritdoc/>
         public virtual void Dispose()
         {

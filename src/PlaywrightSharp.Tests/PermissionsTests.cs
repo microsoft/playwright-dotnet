@@ -29,7 +29,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldDenyPermissionWhenNotListed()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Context.GrantPermissionsAsync(Array.Empty<ContextPermission>(), TestConstants.EmptyPage);
+            await Context.GrantPermissionsAsync(Array.Empty<string>(), TestConstants.EmptyPage);
             Assert.Equal("denied", await GetPermissionAsync(Page, "geolocation"));
         }
 
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldGrantGeolocationPermissionWhenListed()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Context.GrantPermissionsAsync(ContextPermission.Geolocation);
+            await Context.GrantPermissionsAsync(ContextPermissions.Geolocation);
             Assert.Equal("granted", await GetPermissionAsync(Page, "geolocation"));
         }
 
@@ -51,7 +51,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldGrantNotificationsPermissionWhenListed()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Context.GrantPermissionsAsync(ContextPermission.Notifications);
+            await Context.GrantPermissionsAsync(ContextPermissions.Notifications);
             Assert.Equal("granted", await GetPermissionAsync(Page, "notifications"));
         }
 
@@ -60,8 +60,8 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldAccumulateWhenAdding()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Context.GrantPermissionsAsync(ContextPermission.Geolocation);
-            await Context.GrantPermissionsAsync(ContextPermission.Notifications);
+            await Context.GrantPermissionsAsync(ContextPermissions.Geolocation);
+            await Context.GrantPermissionsAsync(ContextPermissions.Notifications);
             Assert.Equal("granted", await GetPermissionAsync(Page, "geolocation"));
             Assert.Equal("granted", await GetPermissionAsync(Page, "notifications"));
         }
@@ -71,10 +71,10 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldClearPermissions()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Context.GrantPermissionsAsync(ContextPermission.Geolocation);
+            await Context.GrantPermissionsAsync(ContextPermissions.Geolocation);
             Assert.Equal("granted", await GetPermissionAsync(Page, "geolocation"));
             await Context.ClearPermissionsAsync();
-            await Context.GrantPermissionsAsync(ContextPermission.Notifications);
+            await Context.GrantPermissionsAsync(ContextPermissions.Notifications);
             Assert.Equal("granted", await GetPermissionAsync(Page, "notifications"));
             Assert.NotEqual("granted", await GetPermissionAsync(Page, "geolocation"));
             Assert.Equal("granted", await GetPermissionAsync(Page, "notifications"));
@@ -85,7 +85,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldGrantPermissionWhenListedForAllDomains()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Context.GrantPermissionsAsync(ContextPermission.Geolocation);
+            await Context.GrantPermissionsAsync(ContextPermissions.Geolocation);
             Assert.Equal("granted", await GetPermissionAsync(Page, "geolocation"));
         }
 
@@ -95,7 +95,7 @@ namespace PlaywrightSharp.Tests
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
-                Permissions = new[] { ContextPermission.Geolocation },
+                Permissions = new[] { ContextPermissions.Geolocation },
             });
 
             var page = await context.NewPageAsync();
@@ -108,7 +108,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldResetPermissions()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Context.GrantPermissionsAsync(ContextPermission.Geolocation, TestConstants.EmptyPage);
+            await Context.GrantPermissionsAsync(ContextPermissions.Geolocation, TestConstants.EmptyPage);
             Assert.Equal("granted", await GetPermissionAsync(Page, "geolocation"));
             await Context.ClearPermissionsAsync();
             Assert.Equal("prompt", await GetPermissionAsync(Page, "geolocation"));
@@ -129,9 +129,9 @@ namespace PlaywrightSharp.Tests
                 });
             }");
             Assert.Equal(new[] { "prompt" }, await Page.EvaluateAsync<string[]>("window.events"));
-            await Context.GrantPermissionsAsync(Array.Empty<ContextPermission>(), TestConstants.EmptyPage);
+            await Context.GrantPermissionsAsync(Array.Empty<string>(), TestConstants.EmptyPage);
             Assert.Equal(new[] { "prompt", "denied" }, await Page.EvaluateAsync<string[]>("window.events"));
-            await Context.GrantPermissionsAsync(ContextPermission.Geolocation, TestConstants.EmptyPage);
+            await Context.GrantPermissionsAsync(ContextPermissions.Geolocation, TestConstants.EmptyPage);
             Assert.Equal(
                 new[] { "prompt", "denied", "granted" },
                 await Page.EvaluateAsync<string[]>("window.events"));
@@ -152,8 +152,8 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("prompt", await GetPermissionAsync(Page, "geolocation"));
             Assert.Equal("prompt", await GetPermissionAsync(otherPage, "geolocation"));
 
-            await Context.GrantPermissionsAsync(Array.Empty<ContextPermission>(), TestConstants.EmptyPage);
-            await otherContext.GrantPermissionsAsync(ContextPermission.Geolocation, TestConstants.EmptyPage);
+            await Context.GrantPermissionsAsync(Array.Empty<string>(), TestConstants.EmptyPage);
+            await otherContext.GrantPermissionsAsync(ContextPermissions.Geolocation, TestConstants.EmptyPage);
             Assert.Equal("denied", await GetPermissionAsync(Page, "geolocation"));
             Assert.Equal("granted", await GetPermissionAsync(otherPage, "geolocation"));
 

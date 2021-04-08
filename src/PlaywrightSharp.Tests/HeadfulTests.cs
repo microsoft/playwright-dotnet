@@ -73,7 +73,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotCrashWhenCreatingSecondContext()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
+            await using var browser = await BrowserType.LaunchDefaultHeadful();
 
             await using (var browserContext = await browser.NewContextAsync())
             {
@@ -90,7 +90,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickBackgroundTab()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
+            await using var browser = await BrowserType.LaunchDefaultHeadful();
             var page = await browser.NewPageAsync();
             await page.SetContentAsync($"<button>Hello</button><a target=_blank href=\"{TestConstants.EmptyPage}\">empty.html</a>");
             await page.ClickAsync("a");
@@ -101,7 +101,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCloseBrowserAfterContextMenuWasTriggered()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
+            await using var browser = await BrowserType.LaunchDefaultHeadful();
             var page = await browser.NewPageAsync();
             await page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             await page.ClickAsync("body", button: MouseButton.Right);
@@ -111,7 +111,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotBlockThirdPartyCookies()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
+            await using var browser = await BrowserType.LaunchDefaultHeadful();
             var page = await browser.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
 
@@ -158,7 +158,7 @@ namespace PlaywrightSharp.Tests
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldNotOverrideViewportSizeWhenPassedNull()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
+            await using var browser = await BrowserType.LaunchDefaultHeadful();
             var context = await browser.NewContextAsync(new BrowserContextOptions { Viewport = null });
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
@@ -180,7 +180,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PageBringToFrontShouldWork()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
+            await using var browser = await BrowserType.LaunchDefaultHeadful();
             var context = await browser.NewContextAsync(new BrowserContextOptions { Viewport = null });
             var page1 = await context.NewPageAsync();
             await page1.SetContentAsync("Page1");

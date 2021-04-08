@@ -143,10 +143,10 @@ namespace PlaywrightSharp
         public Task ClearCookiesAsync() => Channel.ClearCookiesAsync();
 
         /// <inheritdoc />
-        public Task GrantPermissionsAsync(ContextPermission[] permissions, string origin = null) => Channel.GrantPermissionsAsync(permissions, origin);
+        public Task GrantPermissionsAsync(string[] permissions, string origin = null) => Channel.GrantPermissionsAsync(permissions, origin);
 
         /// <inheritdoc />
-        public Task GrantPermissionsAsync(ContextPermission permission, string origin = null) => GrantPermissionsAsync(new[] { permission }, origin);
+        public Task GrantPermissionsAsync(string permission, string origin = null) => GrantPermissionsAsync(new[] { permission }, origin);
 
         /// <inheritdoc />
         public Task SetGeolocationAsync(float latitude, float longitude, float accuracy = 0)

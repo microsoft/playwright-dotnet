@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectAllPromisesWhenBrowserIsClosed()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var browser = await BrowserType.LaunchDefaultAsync();
             var page = await (await browser.NewContextAsync()).NewPageAsync();
             var neverResolves = page.EvaluateHandleAsync("() => new Promise(r => {})");
             await browser.CloseAsync();
@@ -125,7 +125,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireCloseEventForAllContexts()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var browser = await BrowserType.LaunchDefaultAsync();
             var context = await browser.NewContextAsync();
             var closeTask = new TaskCompletionSource<bool>();
 
@@ -138,7 +138,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeCallableTwice()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var browser = await BrowserType.LaunchDefaultAsync();
             await TaskUtils.WhenAll(browser.CloseAsync(), browser.CloseAsync());
             await browser.CloseAsync();
         }

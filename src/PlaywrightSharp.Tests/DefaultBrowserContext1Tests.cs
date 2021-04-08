@@ -256,7 +256,7 @@ namespace PlaywrightSharp.Tests
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
             {
-                HttpCredentials = new Credentials
+                HttpCredentials = new HttpCredentials
                 {
                     Username = "user",
                     Password = "pass",
@@ -295,9 +295,9 @@ namespace PlaywrightSharp.Tests
         private async Task<(TempDirectory tmp, IBrowserContext context, IPage page)> LaunchAsync(BrowserContextOptions options = null)
         {
             var tmp = new TempDirectory();
-            var context = await BrowserType.LaunchPersistentContextAsync(
+            var context = await BrowserType.LaunchDefaultPersistentContext(
                 tmp.Path,
-                TestConstants.GetDefaultBrowserOptions().ToPersistentOptions() + (options ?? new BrowserContextOptions()));
+                options: options);
             var page = context.Pages.First();
 
             return (tmp, context, page);

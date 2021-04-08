@@ -120,7 +120,7 @@ namespace PlaywrightSharp
         /// <param name="permissions">An array of permissions to grant.</param>
         /// <param name="origin">The origin to grant permissions to, e.g. "https://example.com".</param>
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
-        Task GrantPermissionsAsync(ContextPermission[] permissions, string origin = null);
+        Task GrantPermissionsAsync(string[] permissions, string origin = null);
 
         /// <summary>
         /// Grants permissions to an URL.
@@ -128,7 +128,7 @@ namespace PlaywrightSharp
         /// <param name="permission">Permission to grant.</param>
         /// <param name="origin">The origin to grant permissions to, e.g. "https://example.com".</param>
         /// <returns>A <see cref="Task"/> that completes when the message was confirmed by the browser.</returns>
-        Task GrantPermissionsAsync(ContextPermission permission, string origin = null);
+        Task GrantPermissionsAsync(string permission, string origin = null);
 
         /// <summary>
         /// Sets the page's geolocation.

@@ -283,7 +283,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldReportGoogleComFrameWithHeadful()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
+            await using var browser = await BrowserType.LaunchDefaultHeadful();
             var page = await browser.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
             await page.RouteAsync("**/*", (route, _) => route.FulfillAsync(body: "YO, GOOGLE.COM"));

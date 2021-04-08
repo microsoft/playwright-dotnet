@@ -173,7 +173,7 @@ namespace PlaywrightSharp.Transport.Channels
                 },
                 true);
 
-        internal Task GrantPermissionsAsync(ContextPermission[] permissions, string origin)
+        internal Task GrantPermissionsAsync(string[] permissions, string origin)
         {
             var args = new Dictionary<string, object>
             {

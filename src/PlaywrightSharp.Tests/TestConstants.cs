@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using PlaywrightSharp.Tests.Helpers;
 
 namespace PlaywrightSharp.Tests
 {
@@ -31,6 +33,83 @@ namespace PlaywrightSharp.Tests
         public static readonly string EmptyPage = $"{ServerUrl}/empty.html";
         public const string CrossProcessUrl = ServerIpUrl;
 
+        internal static Task<IBrowserContext> LaunchDefaultPersistentContext(
+            this IBrowserType browserType,
+            string userDataDir,
+            string[] args = null,
+            BrowserContextOptions options = null,
+            bool? headless = null)
+        {
+            options ??= new BrowserContextOptions();
+            return browserType.LaunchPersistentContextAsync(
+                userDataDir: userDataDir,
+                acceptDownloads: options.AcceptDownloads,
+                args: args,
+                options.BypassCSP,
+                channel: null,
+                chromiumSandbox: null,
+                options.ColorScheme,
+                options.DeviceScaleFactor,
+                devtools: null,
+                downloadsPath: null,
+                env: null,
+                executablePath: null,
+                extraHTTPHeaders: options.ExtraHTTPHeaders,
+                geolocation: options.Geolocation,
+                handleSIGHUP: null,
+                handleSIGINT: null,
+                handleSIGTERM: null,
+                hasTouch: options.HasTouch,
+                headless: headless,
+                httpCredentials: options.HttpCredentials,
+                ignoreAllDefaultArgs: null,
+                ignoreHTTPSErrors: options.IgnoreHTTPSErrors,
+                isMobile: options.IsMobile,
+                javaScriptEnabled: options.JavaScriptEnabled,
+                locale: options.Locale,
+                offline: options.Offline,
+                permissions: options.Permissions,
+                proxy: options.Proxy,
+                recordHarOmitContent: null,
+                recordHarPath: null,
+                recordVideoDir: null,
+                recordVideoSize: null,
+                slowMo: null,
+                timeout: null,
+                timezoneId: options.TimezoneId,
+                userAgent: options.UserAgent
+                );
+        }
+
+        internal static Task<IBrowser> LaunchDefaultAsync(
+            this IBrowserType browserType,
+            BrowserContextOptions options = null,
+            string downloadsPath = null)
+        {
+            options ??= new BrowserContextOptions();
+            return browserType.LaunchAsync(
+                    downloadsPath: downloadsPath,
+                    slowMo: Convert.ToInt32(Environment.GetEnvironmentVariable("SLOW_MO")),
+                    headless: Convert.ToBoolean(Environment.GetEnvironmentVariable("HEADLESS") ?? "true"),
+                    timeout: 0
+                );
+        }
+
+        internal static Task<IBrowser> LaunchDefaultHeadful(
+           this IBrowserType browserType,
+           BrowserContextOptions options = null,
+           string downloadsPath = null)
+        {
+            options ??= new BrowserContextOptions();
+            return browserType.LaunchAsync(
+                    downloadsPath: downloadsPath,
+                    slowMo: Convert.ToInt32(Environment.GetEnvironmentVariable("SLOW_MO")),
+                    headless: false,
+                    timeout: 0
+                );
+        }
+
+        /*
         internal static LaunchOptions GetDefaultBrowserOptions()
             => new LaunchOptions
             {
@@ -44,7 +123,7 @@ namespace PlaywrightSharp.Tests
             var options = GetDefaultBrowserOptions();
             options.Headless = false;
             return options;
-        }
+        }*/
 
         public static string FileToUpload => TestUtils.GetWebServerFile("file-to-upload.txt");
 

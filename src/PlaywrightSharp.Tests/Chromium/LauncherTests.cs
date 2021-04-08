@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldNotCreatePagesAutomatically()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var browser = await BrowserType.LaunchDefaultAsync();
             var browserSession = await ((IChromiumBrowser)browser).NewBrowserCDPSessionAsync();
 
             var targets = new List<JsonElement?>();

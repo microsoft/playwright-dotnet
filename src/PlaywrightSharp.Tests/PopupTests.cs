@@ -108,7 +108,7 @@ namespace PlaywrightSharp.Tests
             Server.SetAuth("/title.html", "user", "pass");
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
-                HttpCredentials = new Credentials() { Username = "user", Password = "pass" },
+                HttpCredentials = new HttpCredentials() { Username = "user", Password = "pass" },
             });
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);

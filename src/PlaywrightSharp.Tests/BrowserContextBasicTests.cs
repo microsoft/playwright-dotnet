@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCreateNewContext()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var browser = await BrowserType.LaunchDefaultAsync();
             Assert.Empty(browser.Contexts);
             await using var context = await browser.NewContextAsync();
             Assert.Single(browser.Contexts);
@@ -58,7 +58,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldIsolateLocalStorageAndCookies()
         {
             // Create two incognito contexts.
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var browser = await BrowserType.LaunchDefaultAsync();
             var context1 = await browser.NewContextAsync();
             var context2 = await browser.NewContextAsync();
             Assert.Empty(context1.Pages);

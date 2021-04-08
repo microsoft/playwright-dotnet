@@ -148,6 +148,36 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
 
+        /// <inheritdoc/>
+        public Task<IBrowserContext> NewContextAsync(BrowserContextOptions options)
+        {
+            options ??= new BrowserContextOptions();
+            return NewContextAsync(
+                options.AcceptDownloads,
+                options.BypassCSP,
+                options.ColorScheme,
+                options.DeviceScaleFactor,
+                options.ExtraHTTPHeaders,
+                options.Geolocation,
+                options.HasTouch,
+                options.HttpCredentials,
+                options.IgnoreHTTPSErrors,
+                options.IsMobile,
+                options.JavaScriptEnabled,
+                options.Locale,
+                options.Offline,
+                options.Permissions,
+                options.Proxy,
+                null,
+                null,
+                null,
+                null,
+                options.StorageState,
+                options.StorageStatePath,
+                options.TimezoneId,
+                options.UserAgent);
+        }
+
         private void DidClose()
         {
             IsConnected = false;
