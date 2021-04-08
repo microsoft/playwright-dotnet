@@ -46,12 +46,14 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-	public enum Media
+	public enum ColorScheme
 	{
 		Undefined = 0,
-		[EnumMember(Value = "screen")]
-		Screen,
-		[EnumMember(Value = "print")]
-		Print,
+		[EnumMember(Value = "light")]
+		Light,
+		[EnumMember(Value = "dark")]
+		Dark,
+		[EnumMember(Value = "no-preference")]
+		NoPreference,
 	}
 }

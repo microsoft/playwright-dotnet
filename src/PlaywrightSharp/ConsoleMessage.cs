@@ -34,7 +34,7 @@ namespace PlaywrightSharp
         public IReadOnlyCollection<IJSHandle> Args => _initializer.Args.Select(a => ((JSHandleChannel)a).Object).ToList().AsReadOnly();
 
         /// <inheritdoc />
-        public ConsoleMessageLocationResult Location => _initializer.Location;
+        public string Location => _initializer.Location;
 
         /// <inheritdoc />
         public string Text => _initializer.Text;

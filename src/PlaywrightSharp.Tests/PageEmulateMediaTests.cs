@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
@@ -131,13 +131,13 @@ namespace PlaywrightSharp.Tests
         {
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
-            await Page.EmulateMediaAsync(MediaType.Print);
+            await Page.EmulateMediaAsync(Media.Print);
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
             await Page.EmulateMediaAsync();
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
-            await Page.EmulateMediaAsync(MediaType.Null);
+            await Page.EmulateMediaAsync(Media.Null);
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
         }

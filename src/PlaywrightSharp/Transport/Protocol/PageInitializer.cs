@@ -6,7 +6,7 @@ namespace PlaywrightSharp.Transport.Protocol
     {
         public FrameChannel MainFrame { get; set; }
 
-        public ViewportSize ViewportSize { get; set; }
+        public PageViewportSizeResult ViewportSize { get; set; }
 
         public bool IsClosed { get; set; }
     }

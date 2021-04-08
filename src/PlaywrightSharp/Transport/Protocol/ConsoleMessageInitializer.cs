@@ -9,7 +9,7 @@ namespace PlaywrightSharp.Transport.Protocol
 
         public IEnumerable<ChannelBase> Args { get; set; }
 
-        public ConsoleMessageLocationResult Location { get; set; }
+        public ConsoleMessageLocation Location { get; set; }
 
         public string Text { get; set; }
     }
