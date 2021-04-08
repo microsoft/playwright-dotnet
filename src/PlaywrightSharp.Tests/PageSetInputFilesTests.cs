@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.SetContentAsync("<input type=file>");
 
-            await Page.SetInputFilesAsync("input", new SetInputFilesFile
+            await Page.SetInputFilesAsync("input", new FilePayload
             {
                 Name = "test.txt",
                 MimeType = "text/plain",

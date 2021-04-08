@@ -200,7 +200,7 @@ namespace PlaywrightSharp.Tests
             await frame.EvaluateAsync("() => document.querySelector('div').appendChild(document.createElement('span'))");
             var eHandle = await watchdog;
             var tagProperty = await eHandle.GetPropertyAsync("tagName");
-            string tagName = await tagProperty.GetJsonValueAsync<string>();
+            string tagName = await tagProperty.JsonValueAsync<string>();
             Assert.Equal("SPAN", tagName);
         }
 
@@ -257,7 +257,7 @@ namespace PlaywrightSharp.Tests
             await frame1.EvaluateAsync(AddElement, "div");
             await frame2.EvaluateAsync(AddElement, "div");
             var eHandle = await waitForXPathPromise;
-            Assert.Equal(frame2, await eHandle.GetOwnerFrameAsync());
+            Assert.Equal(frame2, await eHandle.OwnerFrameAsync());
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should throw when frame is detached xpath")]

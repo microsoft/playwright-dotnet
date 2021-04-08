@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Tests
             await page.GoToAsync(TestConstants.ServerUrl + "/input/scrollable.html");
             var element = await page.QuerySelectorAsync("#button-91");
             await element.ClickAsync();
-            Assert.Equal("clicked", await element.GetTextContentAsync());
+            Assert.Equal("clicked", await element.TextContentAsync());
         }
     }
 }

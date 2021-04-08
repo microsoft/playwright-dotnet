@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["arg"] = ScriptsHelper.SerializedArgument(arg),
                 });
 
-        internal Task<JsonElement> GetJsonValueAsync() => Connection.SendMessageToServerAsync<JsonElement>(Guid, "jsonValue", null);
+        internal Task<JsonElement> JsonValueAsync() => Connection.SendMessageToServerAsync<JsonElement>(Guid, "jsonValue", null);
 
         internal Task DisposeAsync() => Connection.SendMessageToServerAsync(Guid, "dispose", null);
 

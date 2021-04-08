@@ -16,7 +16,7 @@ namespace PlaywrightSharp.Tests
               await new Promise(x => frame.onload = x);
               return frame
             }", new { frameId, url });
-            return await handle.GetContentFrameAsync();
+            return await handle.ContentFrameAsync();
         }
 
         public static async Task DetachFrameAsync(IPage page, string frameId)

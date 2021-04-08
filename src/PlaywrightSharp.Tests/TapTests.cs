@@ -60,7 +60,7 @@ namespace PlaywrightSharp.Tests
             var handle = await TrackEventsAsync("#b");
             await Page.TapAsync("#b");
 
-            string[] result = await handle.GetJsonValueAsync<string[]>();
+            string[] result = await handle.JsonValueAsync<string[]>();
 
             Assert.Equal(result, new string[]
             {
@@ -87,7 +87,7 @@ namespace PlaywrightSharp.Tests
             var handle = await TrackEventsAsync("div");
             await Page.TapAsync("div");
 
-            string[] result = await handle.GetJsonValueAsync<string[]>();
+            string[] result = await handle.JsonValueAsync<string[]>();
 
             Assert.Equal(result, new string[]
             {
@@ -111,7 +111,7 @@ namespace PlaywrightSharp.Tests
             var handle = await TrackEventsAsync("div");
             await Page.TapAsync("div");
 
-            string[] result = await handle.GetJsonValueAsync<string[]>();
+            string[] result = await handle.JsonValueAsync<string[]>();
 
             Assert.Equal(result, new string[]
             {
@@ -245,7 +245,7 @@ namespace PlaywrightSharp.Tests
 
             await tapTask;
 
-            Assert.Equal("clicked", await div.GetTextContentAsync());
+            Assert.Equal("clicked", await div.TextContentAsync());
         }
 
         private async Task<IJSHandle> TrackEventsAsync(string selector)

@@ -158,9 +158,9 @@ namespace PlaywrightSharp.Transport.Channels
                     ["arg"] = ScriptsHelper.SerializedArgument(arg),
                 });
 
-        internal Task<FrameChannel> GetContentFrameAsync() => Connection.SendMessageToServerAsync<FrameChannel>(Guid, "contentFrame", null);
+        internal Task<FrameChannel> ContentFrameAsync() => Connection.SendMessageToServerAsync<FrameChannel>(Guid, "contentFrame", null);
 
-        internal Task<FrameChannel> GetOwnerFrameAsync() => Connection.SendMessageToServerAsync<FrameChannel>(Guid, "ownerFrame", null);
+        internal Task<FrameChannel> OwnerFrameAsync() => Connection.SendMessageToServerAsync<FrameChannel>(Guid, "ownerFrame", null);
 
         internal Task HoverAsync(
             IEnumerable<KeyboardModifier> modifiers = null,
@@ -273,7 +273,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "dblclick", args);
         }
 
-        internal async Task<ElementHandleBoundingBoxResult> GetBoundingBoxAsync()
+        internal async Task<ElementHandleBoundingBoxResult> BoundingBoxAsync()
         {
             var result = (await Connection.SendMessageToServerAsync(Guid, "boundingBox", null).ConfigureAwait(false)).Value;
 
@@ -369,7 +369,7 @@ namespace PlaywrightSharp.Transport.Channels
         internal async Task<string> GetInnerTextAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "innerText").ConfigureAwait(false))?.GetProperty("value").ToString();
 
-        internal async Task<string> GetTextContentAsync()
+        internal async Task<string> TextContentAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "textContent").ConfigureAwait(false))?.GetProperty("value").ToString();
 
         internal Task SelectTextAsync(float? timeout)

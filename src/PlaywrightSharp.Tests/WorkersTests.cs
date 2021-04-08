@@ -74,7 +74,7 @@ namespace PlaywrightSharp.Tests
             var log = await consoleTcs.Task;
             Assert.Equal("1 2 3 JSHandle@object", log.Text);
             Assert.Equal(4, log.Args.Count());
-            string json = await (await log.Args.ElementAt(3).GetPropertyAsync("origin")).GetJsonValueAsync<string>();
+            string json = await (await log.Args.ElementAt(3).GetPropertyAsync("origin")).JsonValueAsync<string>();
             Assert.Equal("null", json);
         }
 
