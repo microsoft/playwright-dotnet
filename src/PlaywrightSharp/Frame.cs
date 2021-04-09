@@ -122,7 +122,7 @@ namespace PlaywrightSharp
         public Task<string> TitleAsync() => _channel.GetTitleAsync();
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, float? timeout, WaitUntilState waitUntil, string referer)
+        public Task<IResponse> GoToAsync(string url, WaitUntilState waitUntil, float? timeout, string referer)
             => GoToAsync(false, url, waitUntil, referer, timeout);
 
         /// <inheritdoc />
@@ -215,27 +215,27 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<IResponse> WaitForNavigationAsync(WaitUntilState waitUntil, float? timeout)
-            => WaitForNavigationAsync(timeout, null, null, null, waitUntil);
+            => WaitForNavigationAsync(null, null, null, waitUntil, timeout);
 
         /// <inheritdoc />
         public Task<IResponse> WaitForNavigationAsync(string urlString, WaitUntilState waitUntil, float? timeout)
-            => WaitForNavigationAsync(timeout, urlString, null, null, waitUntil);
+            => WaitForNavigationAsync(urlString, null, null, waitUntil, timeout);
 
         /// <inheritdoc />
         public Task<IResponse> WaitForNavigationAsync(Regex urlRegex, WaitUntilState waitUntil, float? timeout)
-            => WaitForNavigationAsync(timeout, null, urlRegex, null, waitUntil);
+            => WaitForNavigationAsync(null, urlRegex, null, waitUntil, timeout);
 
         /// <inheritdoc />
         public Task<IResponse> WaitForNavigationAsync(Func<string, bool> urlFunc, WaitUntilState waitUntil, float? timeout)
-            => WaitForNavigationAsync(timeout, null, null, urlFunc, waitUntil);
+            => WaitForNavigationAsync(null, null, urlFunc, waitUntil, timeout);
 
         /// <inheritdoc />
         public async Task<IResponse> WaitForNavigationAsync(
-            float? timeout,
             string urlString,
             Regex urlRegex,
             Func<string, bool> urlFunc,
-            WaitUntilState waitUntil)
+            WaitUntilState waitUntil,
+            float? timeout)
         {
             waitUntil = waitUntil.EnsureDefaultValue(WaitUntilState.Load);
             var waiter = SetupNavigationWaiter(timeout);

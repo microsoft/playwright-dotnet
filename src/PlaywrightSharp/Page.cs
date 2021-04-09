@@ -365,88 +365,77 @@ namespace PlaywrightSharp
             => MainFrame.GoToAsync(true, url, waitUntil.EnsureDefaultValue(WaitUntilState.Load), referer, timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(WaitUntilState? waitUntil, float? timeout)
-             => MainFrame.WaitForNavigationAsync(waitUntil: waitUntil, url: null, regex: null, match: null, timeout: timeout);
+        public Task<IResponse> WaitForNavigationAsync(WaitUntilState waitUntil, float? timeout)
+             => MainFrame.WaitForNavigationAsync(waitUntil: waitUntil, urlString: null, urlRegex: null, urlFunc: null, timeout: timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(string url, WaitUntilState? waitUntil, float? timeout)
-            => MainFrame.WaitForNavigationAsync(waitUntil: null, url: url, regex: null, match: null, timeout: timeout);
+        public Task<IResponse> WaitForNavigationAsync(string url, WaitUntilState waitUntil, float? timeout)
+            => MainFrame.WaitForNavigationAsync(waitUntil: default, urlString: url, urlRegex: null, urlFunc: null, timeout: timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(Regex url, WaitUntilState? waitUntil, float? timeout)
-            => MainFrame.WaitForNavigationAsync(waitUntil: null, url: null, regex: url, match: null, timeout: timeout);
+        public Task<IResponse> WaitForNavigationAsync(Regex url, WaitUntilState waitUntil, float? timeout)
+            => MainFrame.WaitForNavigationAsync(waitUntil: default, urlString: null, urlRegex: url, urlFunc: null, timeout: timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(Func<string, bool> url, WaitUntilState? waitUntil, float? timeout)
-            => MainFrame.WaitForNavigationAsync(waitUntil: null, url: null, regex: null, match: url, timeout: timeout);
+        public Task<IResponse> WaitForNavigationAsync(Func<string, bool> url, WaitUntilState waitUntil, float? timeout)
+            => MainFrame.WaitForNavigationAsync(waitUntil: default, urlString: null, urlRegex: null, urlFunc: url, timeout: timeout);
 
         /// <inheritdoc />
-        public async Task<IRequest> WaitForRequestAsync(string url, float? timeout)
+        public Task<IResponse> WaitForNavigationAsync(
+            string urlString,
+            Regex urlRegex,
+            Func<string, bool> urlFunc,
+            WaitUntilState waitUntil,
+            float? timeout)
+            => MainFrame.WaitForNavigationAsync(urlString, urlRegex, urlFunc, waitUntil, timeout);
+
+        /// <inheritdoc />
+        public async Task<IRequest> WaitForRequestAsync(string url, float? timeout = default)
         {
-            var result = await WaitForEventAsync(PageEvent.Request, e => e.Request.Url.Equals(url, StringComparison.Ordinal), timeout).ConfigureAwait(false);
+            var result = await WaitForEventAsync(PageEvent.Request, e => e.Url.Equals(url, StringComparison.Ordinal), timeout).ConfigureAwait(false);
+            return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<IRequest> WaitForRequestAsync(Regex url, float? timeout = default)
+        {
+            var result = await WaitForEventAsync(PageEvent.Request, e => url.IsMatch(e.Url), timeout).ConfigureAwait(false);
+            return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> predicate, float? timeout = default)
+        {
+            var result = await WaitForEventAsync(PageEvent.Request, e => predicate(e), timeout).ConfigureAwait(false);
             return result.Request;
         }
 
         /// <inheritdoc />
-        public async Task<IRequest> WaitForRequestAsync(Regex url, float? timeout)
+        public Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, Regex urlOrPredicateRegex, Func<IRequest, bool> urlOrPredicateFunc, float? timeout = default)
         {
-            var result = await WaitForEventAsync(PageEvent.Request, e => url.IsMatch(e.Request.Url), timeout).ConfigureAwait(false);
-            return result.Request;
+            if (string.IsNullOrEmpty(urlOrPredicateString))
+            {
+                return WaitForRequestAsync(urlOrPredicateString);
+            }
+
+            if (urlOrPredicateRegex != null)
+            {
+                return WaitForRequestAsync(urlOrPredicateRegex);
+            }
+
+            return WaitForRequestAsync(urlOrPredicateFunc);
         }
-
-        /// <inheritdoc />
-        public async Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> predicate, float? timeout)
-        {
-            var result = await WaitForEventAsync(PageEvent.Request, e => predicate(e.Request), timeout).ConfigureAwait(false);
-            return result.Request;
-        }
-
-        /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(
-            string expression,
-            float? timeout)
-            => MainFrame.WaitForFunctionAsync(true, expression, timeout, null, null);
-
-        /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(
-            string expression,
-            Polling polling,
-            float? timeout)
-            => MainFrame.WaitForFunctionAsync(true, expression, timeout, polling, null);
-
-        /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(
-            string expression,
-            int polling,
-            float? timeout)
-            => MainFrame.WaitForFunctionAsync(true, expression, timeout, null, polling);
 
         /// <inheritdoc />
         public Task<IJSHandle> WaitForFunctionAsync(
             string expression,
             object arg,
+            float? polling,
             float? timeout)
-            => MainFrame.WaitForFunctionAsync(true, expression, arg, timeout, null, null);
-
-        /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(
-            string expression,
-            object arg,
-            Polling polling,
-            float? timeout)
-            => MainFrame.WaitForFunctionAsync(true, expression, arg, timeout, polling, null);
-
-        /// <inheritdoc />
-        public Task<IJSHandle> WaitForFunctionAsync(
-            string expression,
-            object arg,
-            int polling,
-            float? timeout)
-            => MainFrame.WaitForFunctionAsync(true, expression, arg, timeout, null, polling);
+            => MainFrame.WaitForFunctionAsync(true, expression, arg, polling, timeout);
 
         /// <inheritdoc />
         public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<T, bool> predicate, float? timeout)
-            where T : EventArgs
         {
             if (pageEvent == null)
             {
@@ -455,7 +444,7 @@ namespace PlaywrightSharp
 
             timeout ??= TimeoutSettings.Timeout;
             using var waiter = new Waiter();
-            waiter.RejectOnTimeout(timeout, $"Timeout while waiting for event \"{typeof(T)}\"");
+            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{typeof(T)}\"");
 
             if (pageEvent.Name != PageEvent.Crash.Name)
             {
@@ -467,13 +456,18 @@ namespace PlaywrightSharp
                 waiter.RejectOnEvent<EventArgs>(this, PageEvent.Close.Name, new TargetClosedException("Page closed"));
             }
 
-            if (typeof(T) == typeof(EventArgs))
+            return await waiter.WaitForEventAsync(this, pageEvent.Name, predicate).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        public async Task<object> WaitForEventAsync(string @event, float? timeout = default)
+        {
+            if (@event == null || PageEvent.Events.TryGetValue(@event, out var pageEvent))
             {
-                await waiter.WaitForEventAsync(this, pageEvent.Name).ConfigureAwait(false);
-                return default;
+                throw new ArgumentException("Page event is required", nameof(@event));
             }
 
-            return await waiter.WaitForEventAsync(this, pageEvent.Name, predicate).ConfigureAwait(false);
+            return await WaitForEventAsync(pageEvent, timeout: timeout).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -903,18 +897,15 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task WaitForLoadStateAsync(WaitUntilState state = WaitUntilState.Load, float? timeout)
+        public Task WaitForLoadStateAsync(LoadState state, float? timeout)
             => MainFrame.WaitForLoadStateAsync(state, timeout);
+
 
         /// <inheritdoc />
         public Task SetViewportSizeAsync(int width, int height)
-            => SetViewportSizeAsync(new ViewportSize { Width = width, Height = height });
-
-        /// <inheritdoc />
-        public Task SetViewportSizeAsync(ViewportSize viewportSize)
         {
-            ViewportSize = viewportSize;
-            return _channel.SetViewportSizeAsync(viewportSize);
+            ViewportSize = new PageViewportSizeResult { Width = width, Height = height };
+            return _channel.SetViewportSizeAsync(ViewportSize);
         }
 
         /// <inheritdoc />

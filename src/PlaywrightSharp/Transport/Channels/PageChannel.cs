@@ -43,15 +43,15 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler Crashed;
 
-        internal event EventHandler<RequestEventArgs> Request;
+        internal event EventHandler<IRequest> Request;
 
         internal event EventHandler<PageChannelRequestEventArgs> RequestFinished;
 
         internal event EventHandler<PageChannelRequestEventArgs> RequestFailed;
 
-        internal event EventHandler<ResponseEventArgs> Response;
+        internal event EventHandler<IResponse> Response;
 
-        internal event EventHandler<WebSocketEventArgs> WebSocket;
+        internal event EventHandler<IWebSocket> WebSocket;
 
         internal event EventHandler DOMContentLoaded;
 
@@ -139,7 +139,7 @@ namespace PlaywrightSharp.Transport.Channels
                     Console?.Invoke(this, serverParams?.GetProperty("message").ToObject<ConsoleMessage>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "request":
-                    Request?.Invoke(this, new RequestEventArgs { Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
+                    Request?.Invoke(this, serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "requestFinished":
                     RequestFinished?.Invoke(this, serverParams?.ToObject<PageChannelRequestEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
@@ -148,10 +148,10 @@ namespace PlaywrightSharp.Transport.Channels
                     RequestFailed?.Invoke(this, serverParams?.ToObject<PageChannelRequestEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "response":
-                    Response?.Invoke(this, new ResponseEventArgs { Response = serverParams?.GetProperty("response").ToObject<ResponseChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
+                    Response?.Invoke(this, serverParams?.GetProperty("response").ToObject<ResponseChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "webSocket":
-                    WebSocket?.Invoke(this, new WebSocketEventArgs { WebSocket = serverParams?.GetProperty("webSocket").ToObject<WebSocketChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
+                    WebSocket?.Invoke(this, serverParams?.GetProperty("webSocket").ToObject<WebSocketChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "download":
                     Download?.Invoke(this, serverParams?.GetProperty("download").ToObject<DownloadChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
@@ -313,7 +313,7 @@ namespace PlaywrightSharp.Transport.Channels
             return null;
         }
 
-        internal Task SetViewportSizeAsync(ViewportSize viewport)
+        internal Task SetViewportSizeAsync(PageViewportSizeResult viewport)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "setViewportSize",
@@ -496,12 +496,6 @@ namespace PlaywrightSharp.Transport.Channels
                     ["resetOnNavigation"] = resetOnNavigation,
                     ["reportAnonymousScripts"] = reportAnonymousScripts,
                 });
-
-        internal async Task<CoverageStopCSSCoverageResult[]> StopCSSCoverageAsync()
-            => (await Connection.SendMessageToServerAsync(Guid, "crStopCSSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<CoverageStopCSSCoverageResult[]>();
-
-        internal async Task<CoverageStopJSCoverageResult[]> StopJSCoverageAsync()
-            => (await Connection.SendMessageToServerAsync(Guid, "crStopJSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<CoverageStopJSCoverageResult[]>();
 
         internal async Task<string> GetPdfAsync(
             decimal scale,

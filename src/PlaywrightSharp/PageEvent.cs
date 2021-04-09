@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace PlaywrightSharp
 {
@@ -10,27 +11,27 @@ namespace PlaywrightSharp
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Request"/>.
         /// </summary>
-        public static PlaywrightEvent<RequestEventArgs> Request { get; } = new PlaywrightEvent<RequestEventArgs>() { Name = "Request" };
+        public static PlaywrightEvent<IRequest> Request { get; } = new PlaywrightEvent<IRequest>() { Name = "Request" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.RequestFinished"/>.
         /// </summary>
-        public static PlaywrightEvent<RequestEventArgs> RequestFinished { get; } = new PlaywrightEvent<RequestEventArgs>() { Name = "RequestFinished" };
+        public static PlaywrightEvent<IRequest> RequestFinished { get; } = new PlaywrightEvent<IRequest>() { Name = "RequestFinished" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Crash"/>.
         /// </summary>
-        public static PlaywrightEvent<EventArgs> Crash { get; } = new PlaywrightEvent<EventArgs>() { Name = "Crash" };
+        public static PlaywrightEvent<IPage> Crash { get; } = new PlaywrightEvent<IPage>() { Name = "Crash" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Close"/>.
         /// </summary>
-        public static PlaywrightEvent<EventArgs> Close { get; } = new PlaywrightEvent<EventArgs>() { Name = "Close" };
+        public static PlaywrightEvent<IPage> Close { get; } = new PlaywrightEvent<IPage>() { Name = "Close" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Response"/>.
         /// </summary>
-        public static PlaywrightEvent<ResponseEventArgs> Response { get; } = new PlaywrightEvent<ResponseEventArgs>() { Name = "Response" };
+        public static PlaywrightEvent<IResponse> Response { get; } = new PlaywrightEvent<IResponse>() { Name = "Response" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Download"/>.
@@ -45,7 +46,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Popup"/>.
         /// </summary>
-        public static PlaywrightEvent<PopupEventArgs> Popup { get; } = new PlaywrightEvent<PopupEventArgs>() { Name = "Popup" };
+        public static PlaywrightEvent<IPage> Popup { get; } = new PlaywrightEvent<IPage>() { Name = "Popup" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.FrameNavigated"/>.
@@ -60,7 +61,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Worker"/>.
         /// </summary>
-        public static PlaywrightEvent<WorkerEventArgs> Worker { get; } = new PlaywrightEvent<WorkerEventArgs>() { Name = "Worker" };
+        public static PlaywrightEvent<IWorker> Worker { get; } = new PlaywrightEvent<IWorker>() { Name = "Worker" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Dialog"/>.
@@ -75,21 +76,42 @@ namespace PlaywrightSharp
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.PageError"/>.
         /// </summary>
-        public static PlaywrightEvent<PageErrorEventArgs> PageError { get; } = new PlaywrightEvent<PageErrorEventArgs>() { Name = "PageError" };
+        public static PlaywrightEvent<string> PageError { get; } = new PlaywrightEvent<string>() { Name = "PageError" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Load"/>.
         /// </summary>
-        public static PlaywrightEvent<EventArgs> Load { get; } = new PlaywrightEvent<EventArgs>() { Name = "Load" };
+        public static PlaywrightEvent<IPage> Load { get; } = new PlaywrightEvent<IPage>() { Name = "Load" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.DOMContentLoaded"/>.
         /// </summary>
-        public static PlaywrightEvent<EventArgs> DOMContentLoaded { get; } = new PlaywrightEvent<EventArgs>() { Name = "DOMContentLoaded" };
+        public static PlaywrightEvent<IPage> DOMContentLoaded { get; } = new PlaywrightEvent<IPage>() { Name = "DOMContentLoaded" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.WebSocket"/>.
         /// </summary>
-        public static PlaywrightEvent<WebSocketEventArgs> WebSocket { get; } = new PlaywrightEvent<WebSocketEventArgs>() { Name = "WebSocket" };
+        public static PlaywrightEvent<IWebSocket> WebSocket { get; } = new PlaywrightEvent<IWebSocket>() { Name = "WebSocket" };
+
+        internal static Dictionary<string, IEvent> Events { get; } = new Dictionary<string, IEvent>(StringComparer.InvariantCultureIgnoreCase)
+        {
+            ["Request"] = new PlaywrightEvent<IRequest>() { Name = "Request" },
+            ["RequestFinished"] = new PlaywrightEvent<IRequest>() { Name = "RequestFinished" },
+            ["Crash"] = new PlaywrightEvent<IPage>() { Name = "Crash" },
+            ["Close"] = new PlaywrightEvent<IPage>() { Name = "Close" },
+            ["Response"] = new PlaywrightEvent<IResponse>() { Name = "Response" },
+            ["Download"] = new PlaywrightEvent<IDownload>() { Name = "Download" },
+            ["Console"] = new PlaywrightEvent<IConsoleMessage>() { Name = "Console" },
+            ["Popup"] = new PlaywrightEvent<IPage>() { Name = "Popup" },
+            ["FrameNavigated"] = new PlaywrightEvent<IFrame>() { Name = "FrameNavigated" },
+            ["FrameDetached"] = new PlaywrightEvent<IFrame>() { Name = "FrameDetached" },
+            ["Worker"] = new PlaywrightEvent<IWorker>() { Name = "Worker" },
+            ["Dialog"] = new PlaywrightEvent<IDialog>() { Name = "Dialog" },
+            ["FileChooser"] = new PlaywrightEvent<IFileChooser>() { Name = "FileChooser" },
+            ["PageError"] = new PlaywrightEvent<string>() { Name = "PageError" },
+            ["Load"] = new PlaywrightEvent<IPage>() { Name = "Load" },
+            ["DOMContentLoaded"] = new PlaywrightEvent<IPage>() { Name = "DOMContentLoaded" },
+            ["WebSocket"] = new PlaywrightEvent<IWebSocket>() { Name = "WebSocket" },
+        };
     }
 }

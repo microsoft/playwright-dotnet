@@ -2,10 +2,7 @@ using System;
 
 namespace PlaywrightSharp
 {
-    /// <summary>
-    /// Page error event arguments.
-    /// </summary>
-    public class PageErrorEventArgs : EventArgs
+    internal class PageErrorEventArgs
     {
         private string _message;
 
