@@ -43,12 +43,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldCaptureStaticPage()
         {
             using var tempDirectory = new TempDirectory();
-            var context = await Browser.NewContextAsync(
-                recordVideo: new RecordVideoOptions
-                {
-                    Dir = tempDirectory.Path,
-                    Size = new ViewportSize { Width = 100, Height = 100 },
-                });
+            var context = await Browser.NewContextAsync(recordVideoDir: tempDirectory.Path, recordVideoSize: new RecordVideoSize() { Height = 100, Width = 100 });
 
             var page = await context.NewPageAsync();
             await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
@@ -63,12 +58,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldExposeVideoPath()
         {
             using var tempDirectory = new TempDirectory();
-            var context = await Browser.NewContextAsync(
-                recordVideo: new RecordVideoOptions
-                {
-                    Dir = tempDirectory.Path,
-                    Size = new ViewportSize { Width = 100, Height = 100 }
-                });
+            var context = await Browser.NewContextAsync(recordVideoDir: tempDirectory.Path, recordVideoSize: new RecordVideoSize() { Height = 100, Width = 100 });
 
             var page = await context.NewPageAsync();
             await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
@@ -84,12 +74,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldExposeVideoPathBlankPage()
         {
             using var tempDirectory = new TempDirectory();
-            var context = await Browser.NewContextAsync(
-                recordVideo: new RecordVideoOptions
-                {
-                    Dir = tempDirectory.Path,
-                    Size = new ViewportSize { Width = 100, Height = 100 }
-                });
+            var context = await Browser.NewContextAsync(recordVideoDir: tempDirectory.Path, recordVideoSize: new RecordVideoSize() { Height = 100, Width = 100 });
 
             var page = await context.NewPageAsync();
             string path = await page.Video.GetPathAsync();
@@ -147,14 +132,7 @@ namespace PlaywrightSharp.Tests
         {
             using var userDirectory = new TempDirectory();
             using var tempDirectory = new TempDirectory();
-            var context = await BrowserType.LaunchPersistentContextAsync(
-                userDirectory.Path,
-                recordVideo: new RecordVideoOptions
-                {
-                    Dir = tempDirectory.Path,
-                    Size = new ViewportSize { Width = 100, Height = 100 }
-                });
-
+            var context = await BrowserType.LaunchPersistentContextAsync(userDirectory.Path, recordVideoDir: tempDirectory.Path, recordVideoSize: new RecordVideoSize() { Height = 100, Width = 100 });
 
             var page = await context.NewPageAsync();
             await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");

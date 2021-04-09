@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests
             Assert.Single(browser.Contexts);
 
             var page2 = await browser.NewPageAsync();
-            Assert.Equal(2, browser.Contexts.Length);
+            Assert.Equal(2, browser.Contexts.Count);
 
             await page1.CloseAsync();
             Assert.Single(browser.Contexts);

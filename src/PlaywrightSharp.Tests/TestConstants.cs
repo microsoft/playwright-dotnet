@@ -84,10 +84,12 @@ namespace PlaywrightSharp.Tests
         internal static Task<IBrowser> LaunchDefaultAsync(
             this IBrowserType browserType,
             BrowserContextOptions options = null,
-            string downloadsPath = null)
+            string downloadsPath = null,
+            string[] args = null)
         {
             options ??= new BrowserContextOptions();
             return browserType.LaunchAsync(
+                    args: args,
                     downloadsPath: downloadsPath,
                     slowMo: Convert.ToInt32(Environment.GetEnvironmentVariable("SLOW_MO")),
                     headless: Convert.ToBoolean(Environment.GetEnvironmentVariable("HEADLESS") ?? "true"),

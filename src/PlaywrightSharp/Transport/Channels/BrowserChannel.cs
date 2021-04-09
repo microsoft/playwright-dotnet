@@ -168,6 +168,8 @@ namespace PlaywrightSharp.Transport.Channels
                 args.Add("userAgent", userAgent);
             }
 
+            args["sdkLanguage"] = "csharp";
+
             return Connection.SendMessageToServerAsync<BrowserContextChannel>(
                 Guid,
                 "newContext",

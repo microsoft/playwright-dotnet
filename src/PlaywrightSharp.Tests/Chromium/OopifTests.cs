@@ -304,9 +304,7 @@ namespace PlaywrightSharp.Tests.Chromium
         /// <inheritdoc/>
         public async Task InitializeAsync()
         {
-            var options = TestConstants.GetDefaultBrowserOptions();
-            options.Args = new[] { "--site-per-process" };
-            _browser = await BrowserType.LaunchAsync(options);
+            _browser = await BrowserType.LaunchDefaultAsync(args: new[] { "--site-per-process" });
             _page = await _browser.NewPageAsync();
         }
 

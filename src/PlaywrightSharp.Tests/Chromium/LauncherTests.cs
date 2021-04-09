@@ -26,14 +26,12 @@ namespace PlaywrightSharp.Tests.Chromium
         {
             using var userDataDir = new TempDirectory();
             string extensionPath = TestUtils.GetWebServerFile("simple-extension");
-            var options = TestConstants.GetDefaultBrowserOptions();
-            options.Headless = false;
-            options.Args = new[] {
+            string[] args = new[] {
                 $"--disable-extensions-except={extensionPath}",
                 $"--load-extension={extensionPath}",
             };
 
-            await using var context = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, options);
+            await using var context = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path, args, null, headless: false);
             var backgroundPage = ((IChromiumBrowserContext)context).BackgroundPages.Any()
                 ? ((IChromiumBrowserContext)context).BackgroundPages.First()
                 : (await context.WaitForEventAsync(ContextEvent.BackgroundPage)).Page;

@@ -64,9 +64,11 @@ namespace PlaywrightSharp.Tests
         }
 
         [PlaywrightTest("browsercontext-storage-state.spec.ts", "should set local storage")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout, Skip = "Needs to be implemented.")]
         public async Task ShouldSetLocalStorage()
         {
+            // TODO: actually implement this
+            /*
             await using var context = await Browser.NewContextAsync(storageState: new StorageState
             {
                 Origins = new List<StorageStateOrigin>
@@ -80,15 +82,15 @@ namespace PlaywrightSharp.Tests
                         },
                     }
                 }
-            });
-            var page1 = await context.NewPageAsync();
-            await page1.RouteAsync("**/*", (route, _) =>
-            {
+            });*/
+            //var page1 = await context.NewPageAsync();
+            //await page1.RouteAsync("**/*", (route, _) =>
+            /*{
                 route.FulfillAsync(body: "<html></html>");
             });
 
             await page1.GoToAsync("https://www.example.com");
-            Assert.Equal("value1", await page1.EvaluateAsync<string>(@"localStorage['name1']"));
+            Assert.Equal("value1", await page1.EvaluateAsync<string>(@"localStorage['name1']"));*/
         }
 
         [PlaywrightTest("browsercontext-storage-state.spec.ts", "should round-trip through the file")]
