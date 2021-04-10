@@ -92,26 +92,5 @@ namespace PlaywrightSharp
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.WebSocket"/>.
         /// </summary>
         public static PlaywrightEvent<IWebSocket> WebSocket { get; } = new PlaywrightEvent<IWebSocket>() { Name = "WebSocket" };
-
-        internal static Dictionary<string, IEvent> Events { get; } = new Dictionary<string, IEvent>(StringComparer.InvariantCultureIgnoreCase)
-        {
-            ["Request"] = new PlaywrightEvent<IRequest>() { Name = "Request" },
-            ["RequestFinished"] = new PlaywrightEvent<IRequest>() { Name = "RequestFinished" },
-            ["Crash"] = new PlaywrightEvent<IPage>() { Name = "Crash" },
-            ["Close"] = new PlaywrightEvent<IPage>() { Name = "Close" },
-            ["Response"] = new PlaywrightEvent<IResponse>() { Name = "Response" },
-            ["Download"] = new PlaywrightEvent<IDownload>() { Name = "Download" },
-            ["Console"] = new PlaywrightEvent<IConsoleMessage>() { Name = "Console" },
-            ["Popup"] = new PlaywrightEvent<IPage>() { Name = "Popup" },
-            ["FrameNavigated"] = new PlaywrightEvent<IFrame>() { Name = "FrameNavigated" },
-            ["FrameDetached"] = new PlaywrightEvent<IFrame>() { Name = "FrameDetached" },
-            ["Worker"] = new PlaywrightEvent<IWorker>() { Name = "Worker" },
-            ["Dialog"] = new PlaywrightEvent<IDialog>() { Name = "Dialog" },
-            ["FileChooser"] = new PlaywrightEvent<IFileChooser>() { Name = "FileChooser" },
-            ["PageError"] = new PlaywrightEvent<string>() { Name = "PageError" },
-            ["Load"] = new PlaywrightEvent<IPage>() { Name = "Load" },
-            ["DOMContentLoaded"] = new PlaywrightEvent<IPage>() { Name = "DOMContentLoaded" },
-            ["WebSocket"] = new PlaywrightEvent<IWebSocket>() { Name = "WebSocket" },
-        };
     }
 }

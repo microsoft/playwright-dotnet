@@ -438,7 +438,7 @@ namespace PlaywrightSharp.Transport.Channels
         internal async Task<string> ScreenshotAsync(
             string path,
             bool fullPage,
-            Rect clip,
+            Clip clip,
             bool omitBackground,
             ScreenshotType? type,
             int? quality,

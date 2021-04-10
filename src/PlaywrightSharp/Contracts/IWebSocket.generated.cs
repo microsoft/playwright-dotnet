@@ -44,80 +44,80 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.Playwright
+namespace PlaywrightSharp
 {
-	/// <summary><para>The <see cref="IWebSocket"/> class represents websocket connections in the page.</para></summary>
-	public partial interface IWebSocket
-	{
-		/// <summary><para>Fired when the websocket closes.</para></summary>
-		event EventHandler<IWebSocket> Close;
-	
-		/// <summary><para>Fired when the websocket receives a frame.</para></summary>
-		event EventHandler<IWebSocketFrame> FrameReceived;
-	
-		/// <summary><para>Fired when the websocket sends a frame.</para></summary>
-		event EventHandler<IWebSocketFrame> FrameSent;
-	
-		/// <summary><para>Fired when the websocket has an error.</para></summary>
-		event EventHandler<String> SocketError;
-	
-		/// <summary><para>Indicates that the web socket has been closed.</para></summary>
-		bool IsClosed { get; }
-	
-		/// <summary><para>Contains the URL of the WebSocket.</para></summary>
-		string Url { get; }
-	
-		/// <summary>
-		/// <para>
-		/// Waits for event to fire and passes its value into the predicate function. Returns
-		/// when the predicate returns truthy value. Will throw an error if the webSocket is
-		/// closed before the event is fired. Returns the event data value.
-		/// </para>
-		/// </summary>
-		/// <param name="event">Event name, same one would pass into <c>webSocket.on(event)</c>.</param>
-		/// <param name="timeout">
-		/// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
-		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
-		/// </param>
-		Task<object> WaitForEventAsync(string @event, float? timeout = default);
-	
-		/// <summary>
-		/// <para>
-		/// Performs action and waits for a frame to be sent. If predicate is provided, it passes
-		/// <see cref="IWebSocketFrame"/> value into the <c>predicate</c> function and waits
-		/// for <c>predicate(webSocketFrame)</c> to return a truthy value. Will throw an error
-		/// if the WebSocket or Page is closed before the frame is received.
-		/// </para>
-		/// </summary>
-		/// <param name="predicate">
-		/// Receives the <see cref="IWebSocketFrame"/> object and resolves to truthy value when
-		/// the waiting should resolve.
-		/// </param>
-		/// <param name="timeout">
-		/// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
-		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
-		/// </param>
-		Task<IWebSocketFrame> WaitForFrameReceivedAsync(Func<IWebSocketFrame, bool> predicate = default, float? timeout = default);
-	
-		/// <summary>
-		/// <para>
-		/// Performs action and waits for a frame to be sent. If predicate is provided, it passes
-		/// <see cref="IWebSocketFrame"/> value into the <c>predicate</c> function and waits
-		/// for <c>predicate(webSocketFrame)</c> to return a truthy value. Will throw an error
-		/// if the WebSocket or Page is closed before the frame is sent.
-		/// </para>
-		/// </summary>
-		/// <param name="predicate">
-		/// Receives the <see cref="IWebSocketFrame"/> object and resolves to truthy value when
-		/// the waiting should resolve.
-		/// </param>
-		/// <param name="timeout">
-		/// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
-		/// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
-		/// </param>
-		Task<IWebSocketFrame> WaitForFrameSentAsync(Func<IWebSocketFrame, bool> predicate = default, float? timeout = default);
-	}
+    /// <summary><para>The <see cref="IWebSocket"/> class represents websocket connections in the page.</para></summary>
+    public partial interface IWebSocket
+    {
+        /// <summary><para>Fired when the websocket closes.</para></summary>
+        event EventHandler<IWebSocket> Close;
+
+        /// <summary><para>Fired when the websocket receives a frame.</para></summary>
+        event EventHandler<IWebSocketFrame> FrameReceived;
+
+        /// <summary><para>Fired when the websocket sends a frame.</para></summary>
+        event EventHandler<IWebSocketFrame> FrameSent;
+
+        /// <summary><para>Fired when the websocket has an error.</para></summary>
+        event EventHandler<String> SocketError;
+
+        /// <summary><para>Indicates that the web socket has been closed.</para></summary>
+        bool IsClosed { get; }
+
+        /// <summary><para>Contains the URL of the WebSocket.</para></summary>
+        string Url { get; }
+
+        /// <summary>
+        /// <para>
+        /// Waits for event to fire and passes its value into the predicate function. Returns
+        /// when the predicate returns truthy value. Will throw an error if the webSocket is
+        /// closed before the event is fired. Returns the event data value.
+        /// </para>
+        /// </summary>
+        /// <param name="event">Event name, same one would pass into <c>webSocket.on(event)</c>.</param>
+        /// <param name="timeout">
+        /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
+        /// </param>
+        Task<object> WaitForEventAsync(string @event, float? timeout = default);
+
+        /// <summary>
+        /// <para>
+        /// Performs action and waits for a frame to be sent. If predicate is provided, it passes
+        /// <see cref="IWebSocketFrame"/> value into the <c>predicate</c> function and waits
+        /// for <c>predicate(webSocketFrame)</c> to return a truthy value. Will throw an error
+        /// if the WebSocket or Page is closed before the frame is received.
+        /// </para>
+        /// </summary>
+        /// <param name="predicate">
+        /// Receives the <see cref="IWebSocketFrame"/> object and resolves to truthy value when
+        /// the waiting should resolve.
+        /// </param>
+        /// <param name="timeout">
+        /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
+        /// </param>
+        Task<IWebSocketFrame> WaitForFrameReceivedAsync(Func<IWebSocketFrame, bool> predicate = default, float? timeout = default);
+
+        /// <summary>
+        /// <para>
+        /// Performs action and waits for a frame to be sent. If predicate is provided, it passes
+        /// <see cref="IWebSocketFrame"/> value into the <c>predicate</c> function and waits
+        /// for <c>predicate(webSocketFrame)</c> to return a truthy value. Will throw an error
+        /// if the WebSocket or Page is closed before the frame is sent.
+        /// </para>
+        /// </summary>
+        /// <param name="predicate">
+        /// Receives the <see cref="IWebSocketFrame"/> object and resolves to truthy value when
+        /// the waiting should resolve.
+        /// </param>
+        /// <param name="timeout">
+        /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
+        /// </param>
+        Task<IWebSocketFrame> WaitForFrameSentAsync(Func<IWebSocketFrame, bool> predicate = default, float? timeout = default);
+    }
 }

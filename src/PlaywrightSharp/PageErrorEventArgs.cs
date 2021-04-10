@@ -29,5 +29,17 @@ namespace PlaywrightSharp
         /// Error stack.
         /// </summary>
         public string Stack { get; set; }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            string result = $"{Name}: {Message}";
+            if (!string.IsNullOrEmpty(Stack))
+            {
+                result += $"\n{result}";
+            }
+
+            return result;
+        }
     }
 }

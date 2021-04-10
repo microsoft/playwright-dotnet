@@ -353,6 +353,35 @@ namespace PlaywrightSharp
         /// the method throws an error.
         /// </para>
         /// <para>Will wait until all specified options are present in the <c>&lt;select&gt;</c> element.</para>
+        /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/></para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to search for element. If there are multiple elements satisfying the
+        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="noWaitAfter">
+        /// Actions that initiate navigations are waiting for these navigations to happen and
+        /// for pages to start loading. You can opt out of waiting via setting this flag. You
+        /// would only need this option in the exceptional cases such as navigating to inaccessible
+        /// pages. Defaults to <c>false</c>.
+        /// </param>
+        /// <param name="timeout">
+        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
+        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, bool? noWaitAfter = default, float? timeout = default);
+
+        /// <summary>
+        /// <para>Returns the array of option values that have been successfully selected.</para>
+        /// <para>
+        /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
+        /// been selected. If there's no <c>&lt;select&gt;</c> element matching <paramref name="selector"/>,
+        /// the method throws an error.
+        /// </para>
+        /// <para>Will wait until all specified options are present in the <c>&lt;select&gt;</c> element.</para>
         /// </summary>
         /// <param name="selector">
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
