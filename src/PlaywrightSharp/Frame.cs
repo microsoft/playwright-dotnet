@@ -130,7 +130,7 @@ namespace PlaywrightSharp
             => SetContentAsync(false, html, waitUntil.EnsureDefaultValue(WaitUntilState.Load), timeout);
 
         /// <inheritdoc />
-        public Task<string> ContentAsync() => GetContentAsync(false);
+        public Task<string> ContentAsync() => ContentAsync(false);
 
         /// <inheritdoc />
         public Task<IElementHandle> AddScriptTagAsync(string url = null, string path = null, string content = null, string type = null)
@@ -461,7 +461,7 @@ namespace PlaywrightSharp
         internal Task TapAsync(bool isPageCall, string selector, IEnumerable<KeyboardModifier> modifiers, Position position, bool? force, bool? noWaitAfter, float? timeout)
             => _channel.TapAsync(selector, modifiers, position, timeout, force ?? false, noWaitAfter, isPageCall);
 
-        internal Task<string> GetContentAsync(bool isPageCall) => _channel.GetContentAsync(isPageCall);
+        internal Task<string> ContentAsync(bool isPageCall) => _channel.GetContentAsync(isPageCall);
 
         internal Task FocusAsync(bool isPageCall, string selector, float? timeout)
             => _channel.FocusAsync(selector, timeout, isPageCall);

@@ -636,22 +636,22 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task SetContentAsync(string html, WaitUntilState? waitUntil, float? timeout) => MainFrame.SetContentAsync(true, html, waitUntil, timeout);
+        public Task SetContentAsync(string html, float? timeout, WaitUntilState waitUntil)
+            => MainFrame.SetContentAsync(true, html, waitUntil.EnsureDefaultValue(WaitUntilState.Load), timeout);
 
         /// <inheritdoc />
-        public Task<string> GetContentAsync() => MainFrame.GetContentAsync(true);
+        public Task<string> ContentAsync() => MainFrame.ContentAsync(true);
 
         /// <inheritdoc />
-        public Task SetExtraHTTPHeadersAsync(Dictionary<string, string> headers) => _channel.SetExtraHTTPHeadersAsync(headers);
+        public Task SetExtraHttpHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
+            => _channel.SetExtraHTTPHeadersAsync(headers);
 
         /// <inheritdoc />
         public Task<IElementHandle> QuerySelectorAsync(string selector) => MainFrame.QuerySelectorAsync(true, selector);
 
         /// <inheritdoc />
-        public Task<IEnumerable<IElementHandle>> QuerySelectorAllAsync(string selector) => MainFrame.QuerySelectorAllAsync(true, selector);
-
-        /// <inheritdoc />
-        public Task<IJSHandle> EvaluateHandleAsync(string expression) => MainFrame.EvaluateHandleAsync(expression);
+        public Task<IReadOnlyCollection<IElementHandle>> QuerySelectorAllAsync(string selector)
+            => MainFrame.QuerySelectorAllAsync(true, selector);
 
         /// <inheritdoc />
         public Task<IJSHandle> EvaluateHandleAsync(string expression, object arg) => MainFrame.EvaluateHandleAsync(expression, arg);
@@ -690,16 +690,16 @@ namespace PlaywrightSharp
             => MainFrame.DblClickAsync(true, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), position, modifiers, timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />
-        public async Task<IResponse> GoBackAsync(float? timeout, WaitUntilState? waitUntil)
-            => (await _channel.GoBackAsync(timeout, waitUntil).ConfigureAwait(false))?.Object;
+        public async Task<IResponse> GoBackAsync(WaitUntilState waitUntil, float? timeout)
+            => (await _channel.GoBackAsync(timeout, waitUntil.EnsureDefaultValue(WaitUntilState.Load)).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public async Task<IResponse> GoForwardAsync(float? timeout, WaitUntilState? waitUntil)
-            => (await _channel.GoForwardAsync(timeout, waitUntil).ConfigureAwait(false))?.Object;
+        public async Task<IResponse> GoForwardAsync(WaitUntilState waitUntil, float? timeout)
+            => (await _channel.GoForwardAsync(timeout, waitUntil.EnsureDefaultValue(WaitUntilState.Load)).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public async Task<IResponse> ReloadAsync(float? timeout, WaitUntilState? waitUntil)
-            => (await _channel.ReloadAsync(timeout, waitUntil).ConfigureAwait(false))?.Object;
+        public async Task<IResponse> ReloadAsync(WaitUntilState waitUntil, float? timeout)
+            => (await _channel.ReloadAsync(timeout, waitUntil.EnsureDefaultValue(WaitUntilState.Load)).ConfigureAwait(false))?.Object;
 
         /// <inheritdoc/>
         public Task ExposeBindingAsync(string name, Action<BindingSource> callback)

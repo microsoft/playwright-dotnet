@@ -466,5 +466,33 @@ namespace PlaywrightSharp
         /// <typeparam name = "T" > Resulting event args.</typeparam>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
         Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<T, bool> predicate = default, float? timeout = default);
+
+        /// <summary>
+        /// <para>
+        /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+        /// of every frame in this page. When called, the function executes <paramref name="callback"/>
+        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
+        /// it will be awaited.
+        /// </para>
+        /// <para>
+        /// The first argument of the <paramref name="callback"/> function contains information
+        /// about the caller: <c>{ browserContext: BrowserContext, page: Page, frame: Frame
+        /// }</c>.
+        /// </para>
+        /// <para>See <see cref="IBrowserContext.ExposeBindingAsync"/> for the context-wide version.</para>
+        /// <para>An example of exposing page URL to all frames in a page:</para>
+        /// <para>An example of passing an element handle:</para>
+        /// </summary>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
+        /// <param name="handle">
+        /// Whether to pass the argument as a handle, instead of passing by value. When passing
+        /// a handle, only one argument is supported. When passing by value, multiple arguments
+        /// are supported.
+        /// </param>
+        /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
+        Task ExposeBindingAsync(string name, Action<BindingSource> callback);
     }
 }

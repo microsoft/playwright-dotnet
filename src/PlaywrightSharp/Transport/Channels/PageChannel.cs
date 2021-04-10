@@ -227,7 +227,7 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task BringToFrontAsync() => Connection.SendMessageToServerAsync(Guid, "bringToFront");
 
-        internal Task<ResponseChannel> GoBackAsync(int? timeout, WaitUntilState? waitUntil)
+        internal Task<ResponseChannel> GoBackAsync(float? timeout, WaitUntilState? waitUntil)
         {
             var args = new Dictionary<string, object>();
 
@@ -244,7 +244,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "goBack", args);
         }
 
-        internal Task<ResponseChannel> GoForwardAsync(int? timeout, WaitUntilState? waitUntil)
+        internal Task<ResponseChannel> GoForwardAsync(float? timeout, WaitUntilState? waitUntil)
         {
             var args = new Dictionary<string, object>();
 
@@ -261,7 +261,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "goForward", args);
         }
 
-        internal Task<ResponseChannel> ReloadAsync(int? timeout, WaitUntilState? waitUntil)
+        internal Task<ResponseChannel> ReloadAsync(float? timeout, WaitUntilState? waitUntil)
         {
             var args = new Dictionary<string, object>();
 
@@ -426,7 +426,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["y"] = y,
                 });
 
-        internal Task SetExtraHTTPHeadersAsync(IDictionary<string, string> headers)
+        internal Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "setExtraHTTPHeaders",
@@ -442,7 +442,7 @@ namespace PlaywrightSharp.Transport.Channels
             bool omitBackground,
             ScreenshotType? type,
             int? quality,
-            int? timeout)
+            float? timeout)
         {
             var args = new Dictionary<string, object>
             {
