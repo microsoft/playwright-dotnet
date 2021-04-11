@@ -353,38 +353,11 @@ namespace PlaywrightSharp
         /// the method throws an error.
         /// </para>
         /// <para>Will wait until all specified options are present in the <c>&lt;select&gt;</c> element.</para>
-        /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/></para>
+        /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
         /// </summary>
         /// <param name="selector">
         /// A selector to search for element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
-        /// </param>
-        /// <param name="noWaitAfter">
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, bool? noWaitAfter = default, float? timeout = default);
-
-        /// <summary>
-        /// <para>Returns the array of option values that have been successfully selected.</para>
-        /// <para>
-        /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
-        /// been selected. If there's no <c>&lt;select&gt;</c> element matching <paramref name="selector"/>,
-        /// the method throws an error.
-        /// </para>
-        /// <para>Will wait until all specified options are present in the <c>&lt;select&gt;</c> element.</para>
-        /// </summary>
-        /// <param name="selector">
-        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
         /// <param name="noWaitAfter">
@@ -482,17 +455,350 @@ namespace PlaywrightSharp
         /// </para>
         /// <para>See <see cref="IBrowserContext.ExposeBindingAsync"/> for the context-wide version.</para>
         /// <para>An example of exposing page URL to all frames in a page:</para>
-        /// <para>An example of passing an element handle:</para>
+        /// <para>An example of passing an element handle.</para>
         /// </summary>
         /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
-        /// <param name="handle">
         /// Whether to pass the argument as a handle, instead of passing by value. When passing
         /// a handle, only one argument is supported. When passing by value, multiple arguments
         /// are supported.
-        /// </param>
         /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
         Task ExposeBindingAsync(string name, Action<BindingSource> callback);
+
+        /// <summary>
+        /// <para>
+        /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+        /// of every frame in this page. When called, the function executes <paramref name="callback"/>
+        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
+        /// it will be awaited.
+        /// </para>
+        /// <para>
+        /// The first argument of the <paramref name="callback"/> function contains information
+        /// about the caller: <c>{ browserContext: BrowserContext, page: Page, frame: Frame
+        /// }</c>.
+        /// </para>
+        /// <para>See <see cref="IBrowserContext.ExposeBindingAsync"/> for the context-wide version.</para>
+        /// <para>An example of exposing page URL to all frames in a page:</para>
+        /// <para>An example of passing an element handle.</para>
+        /// </summary>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
+        /// Whether to pass the argument as a handle, instead of passing by value. When passing
+        /// a handle, only one argument is supported. When passing by value, multiple arguments
+        /// are supported.
+        /// <typeparam name="T">The parameter of <paramref name="callback"/>.</typeparam>
+        /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
+        Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback);
+
+        /// <summary>
+        /// <para>
+        /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+        /// of every frame in this page. When called, the function executes <paramref name="callback"/>
+        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
+        /// it will be awaited.
+        /// </para>
+        /// <para>
+        /// The first argument of the <paramref name="callback"/> function contains information
+        /// about the caller: <c>{ browserContext: BrowserContext, page: Page, frame: Frame
+        /// }</c>.
+        /// </para>
+        /// <para>See <see cref="IBrowserContext.ExposeBindingAsync"/> for the context-wide version.</para>
+        /// <para>An example of exposing page URL to all frames in a page:</para>
+        /// <para>An example of passing an element handle.</para>
+        /// </summary>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
+        /// Whether to pass the argument as a handle, instead of passing by value. When passing
+        /// a handle, only one argument is supported. When passing by value, multiple arguments
+        /// are supported.
+        /// <typeparam name="TResult">The result of <paramref name="callback"/>.</typeparam>
+        /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
+        Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback);
+
+        /// <summary>
+        /// <para>
+        /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+        /// of every frame in this page. When called, the function executes <paramref name="callback"/>
+        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
+        /// it will be awaited.
+        /// </para>
+        /// <para>
+        /// The first argument of the <paramref name="callback"/> function contains information
+        /// about the caller: <c>{ browserContext: BrowserContext, page: Page, frame: Frame
+        /// }</c>.
+        /// </para>
+        /// <para>See <see cref="IBrowserContext.ExposeBindingAsync"/> for the context-wide version.</para>
+        /// <para>An example of exposing page URL to all frames in a page:</para>
+        /// <para>An example of passing an element handle.</para>
+        /// </summary>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
+        /// Whether to pass the argument as a handle, instead of passing by value. When passing
+        /// a handle, only one argument is supported. When passing by value, multiple arguments
+        /// are supported.
+        /// <typeparam name="TResult">The result of <paramref name="callback"/>.</typeparam>
+        /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
+        Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback);
+
+        /// <summary>
+        /// <para>
+        /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+        /// of every frame in this page. When called, the function executes <paramref name="callback"/>
+        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
+        /// it will be awaited.
+        /// </para>
+        /// <para>
+        /// The first argument of the <paramref name="callback"/> function contains information
+        /// about the caller: <c>{ browserContext: BrowserContext, page: Page, frame: Frame
+        /// }</c>.
+        /// </para>
+        /// <para>See <see cref="IBrowserContext.ExposeBindingAsync"/> for the context-wide version.</para>
+        /// <para>An example of exposing page URL to all frames in a page:</para>
+        /// <para>An example of passing an element handle.</para>
+        /// </summary>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
+        /// Whether to pass the argument as a handle, instead of passing by value. When passing
+        /// a handle, only one argument is supported. When passing by value, multiple arguments
+        /// are supported.
+        /// <typeparam name="T">The parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="TResult">The result of <paramref name="callback"/>.</typeparam>
+        /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
+        Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback);
+
+        /// <summary>
+        /// <para>
+        /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+        /// of every frame in this page. When called, the function executes <paramref name="callback"/>
+        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
+        /// it will be awaited.
+        /// </para>
+        /// <para>
+        /// The first argument of the <paramref name="callback"/> function contains information
+        /// about the caller: <c>{ browserContext: BrowserContext, page: Page, frame: Frame
+        /// }</c>.
+        /// </para>
+        /// <para>See <see cref="IBrowserContext.ExposeBindingAsync"/> for the context-wide version.</para>
+        /// <para>An example of exposing page URL to all frames in a page:</para>
+        /// <para>An example of passing an element handle.</para>
+        /// </summary>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
+        /// Whether to pass the argument as a handle, instead of passing by value. When passing
+        /// a handle, only one argument is supported. When passing by value, multiple arguments
+        /// are supported.
+        /// <typeparam name="T1">The first parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="T2">The second parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="TResult">The result of <paramref name="callback"/>.</typeparam>
+        /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
+        Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback);
+
+        /// <summary>
+        /// <para>
+        /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+        /// of every frame in this page. When called, the function executes <paramref name="callback"/>
+        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
+        /// it will be awaited.
+        /// </para>
+        /// <para>
+        /// The first argument of the <paramref name="callback"/> function contains information
+        /// about the caller: <c>{ browserContext: BrowserContext, page: Page, frame: Frame
+        /// }</c>.
+        /// </para>
+        /// <para>See <see cref="IBrowserContext.ExposeBindingAsync"/> for the context-wide version.</para>
+        /// <para>An example of exposing page URL to all frames in a page:</para>
+        /// <para>An example of passing an element handle.</para>
+        /// </summary>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
+        /// Whether to pass the argument as a handle, instead of passing by value. When passing
+        /// a handle, only one argument is supported. When passing by value, multiple arguments
+        /// are supported.
+        /// <typeparam name="T1">The first parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="T2">The second parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="T3">The third parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="TResult">The result of <paramref name="callback"/>.</typeparam>
+        /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
+        Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback);
+
+        /// <summary>
+        /// <para>
+        /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+        /// of every frame in this page. When called, the function executes <paramref name="callback"/>
+        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
+        /// it will be awaited.
+        /// </para>
+        /// <para>
+        /// The first argument of the <paramref name="callback"/> function contains information
+        /// about the caller: <c>{ browserContext: BrowserContext, page: Page, frame: Frame
+        /// }</c>.
+        /// </para>
+        /// <para>See <see cref="IBrowserContext.ExposeBindingAsync"/> for the context-wide version.</para>
+        /// <para>An example of exposing page URL to all frames in a page:</para>
+        /// <para>An example of passing an element handle.</para>
+        /// </summary>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
+        /// Whether to pass the argument as a handle, instead of passing by value. When passing
+        /// a handle, only one argument is supported. When passing by value, multiple arguments
+        /// are supported.
+        /// <typeparam name="T1">The first parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="T2">The second parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="T3">The third parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="T4">The fourth parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="TResult">The result of <paramref name="callback"/>.</typeparam>
+        /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
+        Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback);
+
+        /// <summary>
+        /// <para>
+        /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+        /// of every frame in the page. When called, the function executes <paramref name="callback"/>
+        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// name="callback"/>.
+        /// </para>
+        /// <para>If the <paramref name="callback"/> returns a <see cref="Promise"/>, it will be awaited.</para>
+        /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
+        /// <para>An example of adding an <c>sha1</c> function to the page.</para>
+        /// </summary>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
+        /// Whether to pass the argument as a handle, instead of passing by value. When passing
+        /// a handle, only one argument is supported. When passing by value, multiple arguments
+        /// are supported.
+        /// <typeparam name="T">The result of <paramref name="callback"/>.</typeparam>
+        /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
+        Task ExposeFunctionAsync<T>(string name, Action<T> callback);
+
+        /// <summary>
+        /// <para>
+        /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+        /// of every frame in the page. When called, the function executes <paramref name="callback"/>
+        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// name="callback"/>.
+        /// </para>
+        /// <para>If the <paramref name="callback"/> returns a <see cref="Promise"/>, it will be awaited.</para>
+        /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
+        /// <para>An example of adding an <c>sha1</c> function to the page.</para>
+        /// </summary>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
+        /// Whether to pass the argument as a handle, instead of passing by value. When passing
+        /// a handle, only one argument is supported. When passing by value, multiple arguments
+        /// are supported.
+        /// <typeparam name="TResult">The result of <paramref name="callback"/>.</typeparam>
+        /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
+        Task ExposeFunctionAsync<TResult>(string name, Func<TResult> callback);
+
+        /// <summary>
+        /// <para>
+        /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+        /// of every frame in the page. When called, the function executes <paramref name="callback"/>
+        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// name="callback"/>.
+        /// </para>
+        /// <para>If the <paramref name="callback"/> returns a <see cref="Promise"/>, it will be awaited.</para>
+        /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
+        /// <para>An example of adding an <c>sha1</c> function to the page.</para>
+        /// </summary>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
+        /// Whether to pass the argument as a handle, instead of passing by value. When passing
+        /// a handle, only one argument is supported. When passing by value, multiple arguments
+        /// are supported.
+        /// <typeparam name="T">The parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="TResult">The result of <paramref name="callback"/>.</typeparam>
+        /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
+        Task ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> callback);
+
+        /// <summary>
+        /// <para>
+        /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+        /// of every frame in the page. When called, the function executes <paramref name="callback"/>
+        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// name="callback"/>.
+        /// </para>
+        /// <para>If the <paramref name="callback"/> returns a <see cref="Promise"/>, it will be awaited.</para>
+        /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
+        /// <para>An example of adding an <c>sha1</c> function to the page.</para>
+        /// </summary>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
+        /// Whether to pass the argument as a handle, instead of passing by value. When passing
+        /// a handle, only one argument is supported. When passing by value, multiple arguments
+        /// are supported.
+        /// <typeparam name="T1">The first parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="T2">The second parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="TResult">The result of <paramref name="callback"/>.</typeparam>
+        /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
+        Task ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> callback);
+
+        /// <summary>
+        /// <para>
+        /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+        /// of every frame in the page. When called, the function executes <paramref name="callback"/>
+        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// name="callback"/>.
+        /// </para>
+        /// <para>If the <paramref name="callback"/> returns a <see cref="Promise"/>, it will be awaited.</para>
+        /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
+        /// <para>An example of adding an <c>sha1</c> function to the page.</para>
+        /// </summary>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
+        /// Whether to pass the argument as a handle, instead of passing by value. When passing
+        /// a handle, only one argument is supported. When passing by value, multiple arguments
+        /// are supported.
+        /// <typeparam name="T1">The first parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="T2">The second parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="T3">The third parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="TResult">The result of <paramref name="callback"/>.</typeparam>
+        /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
+        Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> callback);
+
+        /// <summary>
+        /// <para>
+        /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
+        /// of every frame in the page. When called, the function executes <paramref name="callback"/>
+        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// name="callback"/>.
+        /// </para>
+        /// <para>If the <paramref name="callback"/> returns a <see cref="Promise"/>, it will be awaited.</para>
+        /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
+        /// <para>An example of adding an <c>sha1</c> function to the page.</para>
+        /// </summary>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <param name="name">Name of the function on the window object.</param>
+        /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
+        /// Whether to pass the argument as a handle, instead of passing by value. When passing
+        /// a handle, only one argument is supported. When passing by value, multiple arguments
+        /// are supported.
+        /// <typeparam name="T1">The first parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="T2">The second parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="T3">The third parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="T4">The fourth parameter of <paramref name="callback"/>.</typeparam>
+        /// <typeparam name="TResult">The result of <paramref name="callback"/>.</typeparam>
+        /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
+        Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback);
     }
 }
