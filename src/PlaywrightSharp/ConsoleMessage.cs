@@ -8,7 +8,7 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// ConsoleMessage is part of <see cref="ConsoleEventArgs"/> used by <see cref="IPage.Console"/>.
+    /// Used by <see cref="IPage.Console"/>.
     /// </summary>
     public class ConsoleMessage : ChannelOwnerBase, IChannelOwner<ConsoleMessage>, IConsoleMessage
     {
@@ -34,7 +34,7 @@ namespace PlaywrightSharp
         public IReadOnlyCollection<IJSHandle> Args => _initializer.Args.Select(a => ((JSHandleChannel)a).Object).ToList().AsReadOnly();
 
         /// <inheritdoc />
-        public string Location => _initializer.Location;
+        public string Location => _initializer.Location.ToString();
 
         /// <inheritdoc />
         public string Text => _initializer.Text;

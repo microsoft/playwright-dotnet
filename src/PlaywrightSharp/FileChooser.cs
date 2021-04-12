@@ -34,7 +34,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task SetFilesAsync(string files, bool? noWaitAfter, float? timeout)
-            => Element.SetInputFilesAsync(file, noWaitAfter, timeout);
+            => Element.SetInputFilesAsync(files, noWaitAfter, timeout);
 
         /// <inheritdoc />
         public Task SetFilesAsync(IEnumerable<string> files, bool? noWaitAfter, float? timeout)
@@ -42,7 +42,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task SetFilesAsync(FilePayload files, bool? noWaitAfter, float? timeout)
-            => Element.SetInputFilesAsync(file, noWaitAfter, timeout);
+            => Element.SetInputFilesAsync(files, noWaitAfter, timeout);
 
         /// <inheritdoc />
         public Task SetFilesAsync(IEnumerable<FilePayload> files, bool? noWaitAfter, float? timeout)

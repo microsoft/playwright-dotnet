@@ -11,6 +11,6 @@ namespace PlaywrightSharp
 
         public Func<string, bool> Function { get; set; }
 
-        public Action<Route, IRequest> Handler { get; set; }
+        public Action<IRoute, IRequest> Handler { get; set; }
     }
 }

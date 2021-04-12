@@ -291,16 +291,16 @@ namespace PlaywrightSharp
         public Task FocusAsync(string selector, float? timeout) => FocusAsync(false, selector, timeout);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(string selector, string file, bool? noWaitAfter, float? timeout)
-            => SetInputFilesAsync(selector, new[] { file }, noWaitAfter, timeout);
+        public Task SetInputFilesAsync(string selector, string files, bool? noWaitAfter, float? timeout)
+            => SetInputFilesAsync(selector, new[] { files }, noWaitAfter, timeout);
 
         /// <inheritdoc />
         public Task SetInputFilesAsync(string selector, IEnumerable<string> files, bool? noWaitAfter, float? timeout)
             => SetInputFilesAsync(false, selector, files, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task SetInputFilesAsync(string selector, FilePayload file, bool? noWaitAfter, float? timeout)
-            => SetInputFilesAsync(selector, new[] { file }, noWaitAfter, timeout);
+        public Task SetInputFilesAsync(string selector, FilePayload files, bool? noWaitAfter, float? timeout)
+            => SetInputFilesAsync(selector, new[] { files }, noWaitAfter, timeout);
 
         /// <inheritdoc />
         public Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, bool? noWaitAfter, float? timeout)
@@ -332,8 +332,8 @@ namespace PlaywrightSharp
             => SelectOptionAsync(false, selector, null, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string value, bool? noWaitAfter, float? timeout)
-            => SelectOptionAsync(selector, new[] { value }, noWaitAfter, timeout);
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string values, bool? noWaitAfter, float? timeout)
+            => SelectOptionAsync(selector, new[] { values }, noWaitAfter, timeout);
 
         /// <inheritdoc />
         public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, bool? noWaitAfter, float? timeout)

@@ -53,7 +53,7 @@ namespace PlaywrightSharp
                 arg: arg.ToEvaluateArgument()).ConfigureAwait(false));
 
         /// <inheritdoc />
-        public async Task<T> JsonValueAsync<T>() => ScriptsHelper.ParseEvaluateResult<T>(await _channel.GetJsonValueAsync().ConfigureAwait(false));
+        public async Task<T> JsonValueAsync<T>() => ScriptsHelper.ParseEvaluateResult<T>(await _channel.JsonValueAsync().ConfigureAwait(false));
 
         /// <inheritdoc />
         public async Task<IJSHandle> GetPropertyAsync(string propertyName) => (await _channel.GetPropertyAsync(propertyName).ConfigureAwait(false))?.Object;

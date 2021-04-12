@@ -68,7 +68,7 @@ namespace PlaywrightSharp
         public async Task<IWorker> WaitForCloseAsync(float? timeout)
         {
             using var waiter = new Waiter();
-            var waiterResult = waiter.GetWaitForEventTask(this, nameof(Close));
+            var waiterResult = waiter.GetWaitForEventTask<IWorker>(this, nameof(Close), null);
             await waiterResult.Task.WithTimeout(Convert.ToInt32(timeout ?? 0)).ConfigureAwait(false);
             return this;
         }

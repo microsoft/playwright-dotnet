@@ -498,14 +498,14 @@ namespace PlaywrightSharp.Transport.Channels
                 });
 
         internal async Task<string> GetPdfAsync(
-            decimal scale,
+            float scale,
             bool displayHeaderFooter,
             string headerTemplate,
             string footerTemplate,
             bool printBackground,
             bool landscape,
             string pageRanges,
-            PaperFormat? format,
+            string format,
             string width,
             string height,
             Margin margin,

@@ -407,7 +407,7 @@ namespace PlaywrightSharp
         /// <param name="url">A glob pattern to match while routing.</param>
         /// <param name="handler">Handler function to route the request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task RouteAsync(string url, Action<Route, IRequest> handler);
+        Task RouteAsync(string url, Action<IRoute, IRequest> handler);
 
         /// <summary>
         /// Routing provides the capability to modify network requests that are made by a page.
@@ -416,7 +416,7 @@ namespace PlaywrightSharp
         /// <param name="url">A regex to match while routing.</param>
         /// <param name="handler">Handler function to route the request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task RouteAsync(Regex url, Action<Route, IRequest> handler);
+        Task RouteAsync(Regex url, Action<IRoute, IRequest> handler);
 
         /// <summary>
         /// Routing provides the capability to modify network requests that are made by a page.
@@ -425,31 +425,31 @@ namespace PlaywrightSharp
         /// <param name="url">A fucntion that evaluate the URL match.</param>
         /// <param name="handler">Handler function to route the request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task RouteAsync(Func<string, bool> url, Action<Route, IRequest> handler);
+        Task RouteAsync(Func<string, bool> url, Action<IRoute, IRequest> handler);
 
         /// <summary>
-        /// Removes a route created with <see cref="IBrowserContext.RouteAsync(string, Action{Route, IRequest})"/>. When handler is not specified, removes all routes for the url.
+        /// Removes a route created with <see cref="IBrowserContext.RouteAsync(string, Action{IRoute, IRequest})"/>. When handler is not specified, removes all routes for the url.
         /// </summary>
         /// <param name="url">A glob pattern used to match while routing.</param>
         /// <param name="handler">Handler function used to route a request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task UnrouteAsync(string url, Action<Route, IRequest> handler = null);
+        Task UnrouteAsync(string url, Action<IRoute, IRequest> handler = null);
 
         /// <summary>
-        /// Removes a route created with <see cref="IBrowserContext.RouteAsync(string, Action{Route, IRequest})"/>. When handler is not specified, removes all routes for the url.
+        /// Removes a route created with <see cref="IBrowserContext.RouteAsync(string, Action{IRoute, IRequest})"/>. When handler is not specified, removes all routes for the url.
         /// </summary>
         /// <param name="url">A glob pattern used to match while routing.</param>
         /// <param name="handler">Handler function used to route a request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task UnrouteAsync(Regex url, Action<Route, IRequest> handler = null);
+        Task UnrouteAsync(Regex url, Action<IRoute, IRequest> handler = null);
 
         /// <summary>
-        /// Removes a route created with <see cref="IBrowserContext.RouteAsync(string, Action{Route, IRequest})"/>. When handler is not specified, removes all routes for the url.
+        /// Removes a route created with <see cref="IBrowserContext.RouteAsync(string, Action{IRoute, IRequest})"/>. When handler is not specified, removes all routes for the url.
         /// </summary>
         /// <param name="url">A function used to match while routing.</param>
         /// <param name="handler">Handler function used to route a request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task UnrouteAsync(Func<string, bool> url, Action<Route, IRequest> handler = null);
+        Task UnrouteAsync(Func<string, bool> url, Action<IRoute, IRequest> handler = null);
 
         /// <summary>
         /// Set offline mode for the context.

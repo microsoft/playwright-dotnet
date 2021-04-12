@@ -96,7 +96,7 @@ namespace PlaywrightSharp
         public Task FillAsync(string value, bool? noWaitAfter, float? timeout) => _channel.FillAsync(value, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public async Task<IFrame> ContentFrameAsync() => (await _channel.GetContentFrameAsync().ConfigureAwait(false))?.Object;
+        public async Task<IFrame> ContentFrameAsync() => (await _channel.ContentFrameAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
         public Task HoverAsync(
@@ -110,10 +110,10 @@ namespace PlaywrightSharp
         public Task ScrollIntoViewIfNeededAsync(float? timeout) => _channel.ScrollIntoViewIfNeededAsync(timeout);
 
         /// <inheritdoc />
-        public async Task<IFrame> OwnerFrameAsync() => (await _channel.GetOwnerFrameAsync().ConfigureAwait(false)).Object;
+        public async Task<IFrame> OwnerFrameAsync() => (await _channel.OwnerFrameAsync().ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
-        public Task<ElementHandleBoundingBoxResult> BoundingBoxAsync() => _channel.GetBoundingBoxAsync();
+        public Task<ElementHandleBoundingBoxResult> BoundingBoxAsync() => _channel.BoundingBoxAsync();
 
         /// <inheritdoc />
         public Task ClickAsync(
@@ -205,7 +205,7 @@ namespace PlaywrightSharp
         public Task<string> InnerTextAsync() => _channel.GetInnerTextAsync();
 
         /// <inheritdoc />
-        public Task<string> TextContentAsync() => _channel.GetTextContentAsync();
+        public Task<string> TextContentAsync() => _channel.TextContentAsync();
 
         /// <inheritdoc />
         public Task SelectTextAsync(float? timeout) => _channel.SelectTextAsync(timeout);

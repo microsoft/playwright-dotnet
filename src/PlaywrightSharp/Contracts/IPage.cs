@@ -353,7 +353,7 @@ namespace PlaywrightSharp
         /// the method throws an error.
         /// </para>
         /// <para>Will wait until all specified options are present in the <c>&lt;select&gt;</c> element.</para>
-        /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
+        /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync(string, bool?, float?)"/>.</para>
         /// </summary>
         /// <param name="selector">
         /// A selector to search for element. If there are multiple elements satisfying the
@@ -457,7 +457,7 @@ namespace PlaywrightSharp
         /// <para>An example of exposing page URL to all frames in a page:</para>
         /// <para>An example of passing an element handle.</para>
         /// </summary>
-        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync(string, Action, bool?)"/> survive navigations.</para></remarks>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
         /// Whether to pass the argument as a handle, instead of passing by value. When passing
@@ -483,7 +483,7 @@ namespace PlaywrightSharp
         /// <para>An example of exposing page URL to all frames in a page:</para>
         /// <para>An example of passing an element handle.</para>
         /// </summary>
-        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync(string, Action, bool?)"/> survive navigations.</para></remarks>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
         /// Whether to pass the argument as a handle, instead of passing by value. When passing
@@ -510,7 +510,7 @@ namespace PlaywrightSharp
         /// <para>An example of exposing page URL to all frames in a page:</para>
         /// <para>An example of passing an element handle.</para>
         /// </summary>
-        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync(string, Action, bool?)"/> survive navigations.</para></remarks>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
         /// Whether to pass the argument as a handle, instead of passing by value. When passing
@@ -537,7 +537,7 @@ namespace PlaywrightSharp
         /// <para>An example of exposing page URL to all frames in a page:</para>
         /// <para>An example of passing an element handle.</para>
         /// </summary>
-        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync(string, Action, bool?)"/> survive navigations.</para></remarks>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
         /// Whether to pass the argument as a handle, instead of passing by value. When passing
@@ -564,7 +564,7 @@ namespace PlaywrightSharp
         /// <para>An example of exposing page URL to all frames in a page:</para>
         /// <para>An example of passing an element handle.</para>
         /// </summary>
-        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync(string, Action, bool?)"/> survive navigations.</para></remarks>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
         /// Whether to pass the argument as a handle, instead of passing by value. When passing
@@ -592,7 +592,7 @@ namespace PlaywrightSharp
         /// <para>An example of exposing page URL to all frames in a page:</para>
         /// <para>An example of passing an element handle.</para>
         /// </summary>
-        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync(string, Action, bool?)"/> survive navigations.</para></remarks>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
         /// Whether to pass the argument as a handle, instead of passing by value. When passing
@@ -621,7 +621,7 @@ namespace PlaywrightSharp
         /// <para>An example of exposing page URL to all frames in a page:</para>
         /// <para>An example of passing an element handle.</para>
         /// </summary>
-        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync(string, Action, bool?)"/> survive navigations.</para></remarks>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
         /// Whether to pass the argument as a handle, instead of passing by value. When passing
@@ -651,7 +651,7 @@ namespace PlaywrightSharp
         /// <para>An example of exposing page URL to all frames in a page:</para>
         /// <para>An example of passing an element handle.</para>
         /// </summary>
-        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync(string, Action, bool?)"/> survive navigations.</para></remarks>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
         /// Whether to pass the argument as a handle, instead of passing by value. When passing
@@ -676,7 +676,7 @@ namespace PlaywrightSharp
         /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
         /// <para>An example of adding an <c>sha1</c> function to the page.</para>
         /// </summary>
-        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync(string, Action, bool?)"/> survive navigations.</para></remarks>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
         /// Whether to pass the argument as a handle, instead of passing by value. When passing
@@ -697,7 +697,7 @@ namespace PlaywrightSharp
         /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
         /// <para>An example of adding an <c>sha1</c> function to the page.</para>
         /// </summary>
-        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync(string, Action, bool?)"/> survive navigations.</para></remarks>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
         /// Whether to pass the argument as a handle, instead of passing by value. When passing
@@ -718,7 +718,7 @@ namespace PlaywrightSharp
         /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
         /// <para>An example of adding an <c>sha1</c> function to the page.</para>
         /// </summary>
-        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync(string, Action, bool?)"/> survive navigations.</para></remarks>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
         /// Whether to pass the argument as a handle, instead of passing by value. When passing
@@ -740,7 +740,7 @@ namespace PlaywrightSharp
         /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
         /// <para>An example of adding an <c>sha1</c> function to the page.</para>
         /// </summary>
-        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync(string, Action, bool?)"/> survive navigations.</para></remarks>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
         /// Whether to pass the argument as a handle, instead of passing by value. When passing
@@ -763,7 +763,7 @@ namespace PlaywrightSharp
         /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
         /// <para>An example of adding an <c>sha1</c> function to the page.</para>
         /// </summary>
-        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync(string, Action, bool?)"/> survive navigations.</para></remarks>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
         /// Whether to pass the argument as a handle, instead of passing by value. When passing
@@ -787,7 +787,7 @@ namespace PlaywrightSharp
         /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
         /// <para>An example of adding an <c>sha1</c> function to the page.</para>
         /// </summary>
-        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+        /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync(string, Action, bool?)"/> survive navigations.</para></remarks>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
         /// Whether to pass the argument as a handle, instead of passing by value. When passing
@@ -800,5 +800,155 @@ namespace PlaywrightSharp
         /// <typeparam name="TResult">The result of <paramref name="callback"/>.</typeparam>
         /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
         Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback);
+
+        /// <summary><para>Returns the matched response.</para></summary>
+        /// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="timeout">
+        /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
+        /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
+        /// <returns>A <see cref="Task"/> that completes when a matching response is received, yielding the response being waited for.</returns>
+        Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, float? timeout = default);
+
+        /// <summary><para>Returns the matched response.</para></summary>
+        /// <param name="urlOrPredicateRegex">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="timeout">
+        /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
+        /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
+        /// <returns>A <see cref="Task"/> that completes when a matching response is received, yielding the response being waited for.</returns>
+        Task<IResponse> WaitForResponseAsync(Regex urlOrPredicateRegex, float? timeout = default);
+
+        /// <summary><para>Returns the matched response.</para></summary>
+        /// <param name="urlOrPredicateFunc">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="timeout">
+        /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
+        /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
+        /// <returns>A <see cref="Task"/> that completes when a matching response is received, yielding the response being waited for.</returns>
+        Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicateFunc, float? timeout = default);
+
+        /// <summary>
+        /// <para>Routing provides the capability to modify network requests that are made by a page.</para>
+        /// <para>
+        /// Once routing is enabled, every request matching the url pattern will stall unless
+        /// it's continued, fulfilled or aborted.
+        /// </para>
+        /// <para>An example of a naive handler that aborts all image requests:</para>
+        /// <para>or the same snippet using a regex pattern instead:</para>
+        /// <para>
+        /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync(Func{string, bool}, Action{IRoute, IRequest})"/>)
+        /// when request matches both handlers.
+        /// </para>
+        /// <para>To remove a route with its handler you can use <see cref="IPage.UncheckAsync(string, bool?, bool?, float?)"/>.</para>
+        /// </summary>
+        /// <remarks>
+        /// <para>The handler will only be called for the first url if the response is a redirect.</para>
+        /// <para>Enabling routing disables http cache.</para>
+        /// </remarks>
+        /// <param name="urlString">
+        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+        /// while routing.
+        /// </param>
+        /// <param name="handler">handler function to route the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task RouteAsync(string urlString, Action<IRoute, IRequest> handler);
+
+        /// <summary>
+        /// <para>Routing provides the capability to modify network requests that are made by a page.</para>
+        /// <para>
+        /// Once routing is enabled, every request matching the url pattern will stall unless
+        /// it's continued, fulfilled or aborted.
+        /// </para>
+        /// <para>An example of a naive handler that aborts all image requests:</para>
+        /// <para>or the same snippet using a regex pattern instead:</para>
+        /// <para>
+        /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync(Func{string, bool}, Action{IRoute, IRequest})"/>)
+        /// when request matches both handlers.
+        /// </para>
+        /// <para>To remove a route with its handler you can use <see cref="IPage.UnrouteAsync(Func{string, bool}, Action{IRoute, IRequest})"/>.</para>
+        /// </summary>
+        /// <remarks>
+        /// <para>The handler will only be called for the first url if the response is a redirect.</para>
+        /// <para>Enabling routing disables http cache.</para>
+        /// </remarks>
+        /// <param name="urlRegex">
+        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+        /// while routing.
+        /// </param>
+        /// <param name="handler">handler function to route the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task RouteAsync(Regex urlRegex, Action<IRoute, IRequest> handler);
+
+        /// <summary>
+        /// <para>Routing provides the capability to modify network requests that are made by a page.</para>
+        /// <para>
+        /// Once routing is enabled, every request matching the url pattern will stall unless
+        /// it's continued, fulfilled or aborted.
+        /// </para>
+        /// <para>An example of a naive handler that aborts all image requests:</para>
+        /// <para>or the same snippet using a regex pattern instead:</para>
+        /// <para>
+        /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync(Func{string, bool}, Action{IRoute, IRequest})"/>)
+        /// when request matches both handlers.
+        /// </para>
+        /// <para>To remove a route with its handler you can use <see cref="IPage.UnrouteAsync(Func{string, bool}, Action{IRoute, IRequest})"/>.</para>
+        /// </summary>
+        /// <remarks>
+        /// <para>The handler will only be called for the first url if the response is a redirect.</para>
+        /// <para>Enabling routing disables http cache.</para>
+        /// </remarks>
+        /// <param name="urlFunc">
+        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+        /// while routing.
+        /// </param>
+        /// <param name="handler">handler function to route the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task RouteAsync(Func<string, bool> urlFunc, Action<IRoute, IRequest> handler);
+
+        /// <summary>
+        /// <para>
+        /// Removes a route created with <see cref="IPage.RouteAsync(Func{string, bool}, Action{IRoute, IRequest})"/>. When <paramref name="handler"/>
+        /// is not specified, removes all routes for the <paramref name="url"/>.
+        /// </para>
+        /// </summary>
+        /// <param name="urlString">
+        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+        /// while routing.
+        /// </param>
+        /// <param name="handler">Optional handler function to route the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task UnrouteAsync(string urlString, Action<IRoute, IRequest> handler = default);
+
+        /// <summary>
+        /// <para>
+        /// Removes a route created with <see cref="IPage.RouteAsync(Func{string, bool}, Action{IRoute, IRequest})"/>. When <paramref name="handler"/>
+        /// is not specified, removes all routes for the <paramref name="url"/>.
+        /// </para>
+        /// </summary>
+        /// <param name="urlRegex">
+        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+        /// while routing.
+        /// </param>
+        /// <param name="handler">Optional handler function to route the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task UnrouteAsync(Regex urlRegex, Action<IRoute, IRequest> handler = default);
+
+        /// <summary>
+        /// <para>
+        /// Removes a route created with <see cref="IPage.RouteAsync(Func{string, bool}, Action{IRoute, IRequest})"/>. When <paramref name="handler"/>
+        /// is not specified, removes all routes for the <paramref name="url"/>.
+        /// </para>
+        /// </summary>
+        /// <param name="urlFunc">
+        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+        /// while routing.
+        /// </param>
+        /// <param name="handler">Optional handler function to route the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
+        Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute, IRequest> handler = default);
     }
 }

@@ -71,7 +71,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.FileChooser"/>.
         /// </summary>
-        public static PlaywrightEvent<FileChooser> FileChooser { get; } = new PlaywrightEvent<FileChooser>() { Name = "FileChooser" };
+        public static PlaywrightEvent<IFileChooser> FileChooser { get; } = new PlaywrightEvent<IFileChooser>() { Name = "FileChooser" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.PageError"/>.

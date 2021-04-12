@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace PlaywrightSharp
 {
+    /// <summary>
+    /// Margin options used in <see cref="IPage.PdfAsync(string, float?, bool?, string, string, bool?, bool?, string, string, string, string, Margin, bool?)"/>.
+    /// </summary>
     public partial class Margin : IEquatable<Margin>
     {
         /// <inheritdoc cref="IEquatable{T}"/>
