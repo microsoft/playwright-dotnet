@@ -223,7 +223,7 @@ namespace PlaywrightSharp.Tests
             ");
 
             var handle = await task;
-            Assert.Equal("Hello from light", await handle.GetTextContentAsync());
+            Assert.Equal("Hello from light", await handle.TextContentAsync());
         }
     }
 }

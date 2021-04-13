@@ -558,7 +558,7 @@ namespace PlaywrightSharp
             => SelectOptionAsync(selector, new[] { values }, timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, SelectOption values, int? timeout = null, bool? noWaitAfter = null)
+        public Task<string[]> SelectOptionAsync(string selector, SelectOptionValue values, int? timeout = null, bool? noWaitAfter = null)
             => SelectOptionAsync(selector, new[] { values }, timeout, noWaitAfter);
 
         /// <inheritdoc />
@@ -570,7 +570,7 @@ namespace PlaywrightSharp
             => MainFrame.SelectOptionAsync(true, selector, values.Cast<object>().Select(v => v == null ? v : new { value = v }).ToArray(), timeout, noWaitAfter);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, SelectOption[] values, int? timeout = null, bool? noWaitAfter = null)
+        public Task<string[]> SelectOptionAsync(string selector, SelectOptionValue[] values, int? timeout = null, bool? noWaitAfter = null)
         {
             if (values == null)
             {
@@ -588,7 +588,7 @@ namespace PlaywrightSharp
         public Task<string[]> SelectOptionAsync(string selector, params string[] values) => SelectOptionAsync(selector, values, null, null);
 
         /// <inheritdoc />
-        public Task<string[]> SelectOptionAsync(string selector, params SelectOption[] values) => SelectOptionAsync(selector, values, null, null);
+        public Task<string[]> SelectOptionAsync(string selector, params SelectOptionValue[] values) => SelectOptionAsync(selector, values, null, null);
 
         /// <inheritdoc />
         public Task<string[]> SelectOptionAsync(string selector, params IElementHandle[] values) => SelectOptionAsync(selector, values, null, null);
@@ -597,7 +597,7 @@ namespace PlaywrightSharp
         public Task WaitForTimeoutAsync(int timeout) => Task.Delay(timeout);
 
         /// <inheritdoc />
-        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForState? state = null, int? timeout = null) => MainFrame.WaitForSelectorAsync(true, selector, state, timeout);
+        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorState? state = null, int? timeout = null) => MainFrame.WaitForSelectorAsync(true, selector, state, timeout);
 
         /// <inheritdoc />
         public Task<JsonElement?> EvaluateAsync(string expression) => MainFrame.EvaluateAsync(true, expression);
@@ -617,7 +617,7 @@ namespace PlaywrightSharp
             bool fullPage = false,
             Rect clip = null,
             bool omitBackground = false,
-            ScreenshotFormat? type = null,
+            ScreenshotType? type = null,
             int? quality = null,
             int? timeout = null)
         {
@@ -921,16 +921,16 @@ namespace PlaywrightSharp
              => MainFrame.GetAttributeAsync(true, selector, name, timeout);
 
         /// <inheritdoc />
-        public Task<string> GetInnerHtmlAsync(string selector, int? timeout = null)
-             => MainFrame.GetInnerHtmlAsync(true, selector, timeout);
+        public Task<string> GetInnerHTMLAsync(string selector, int? timeout = null)
+             => MainFrame.GetInnerHTMLAsync(true, selector, timeout);
 
         /// <inheritdoc />
         public Task<string> GetInnerTextAsync(string selector, int? timeout = null)
              => MainFrame.GetInnerTextAsync(true, selector, timeout);
 
         /// <inheritdoc />
-        public Task<string> GetTextContentAsync(string selector, int? timeout = null)
-             => MainFrame.GetTextContentAsync(true, selector, timeout);
+        public Task<string> TextContentAsync(string selector, int? timeout = null)
+             => MainFrame.TextContentAsync(true, selector, timeout);
 
         /// <inheritdoc />
         public Task TapAsync(string selector, Modifier[] modifiers = null, Point? position = null, int? timeout = null, bool force = false, bool? noWaitAfter = null)

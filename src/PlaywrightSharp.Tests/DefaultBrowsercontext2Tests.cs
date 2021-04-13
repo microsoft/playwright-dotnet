@@ -354,8 +354,8 @@ namespace PlaywrightSharp.Tests
 
             await TestUtils.RegisterEngineAsync(Playwright, "defaultContextCSS", defaultContextCSS);
             await page.SetContentAsync("<div>hello</div>");
-            Assert.Equal("hello", await page.GetInnerHtmlAsync("css=div"));
-            Assert.Equal("hello", await page.GetInnerHtmlAsync("defaultContextCSS=div"));
+            Assert.Equal("hello", await page.GetInnerHTMLAsync("css=div"));
+            Assert.Equal("hello", await page.GetInnerHTMLAsync("defaultContextCSS=div"));
 
             tmp.Dispose();
             await context.DisposeAsync();

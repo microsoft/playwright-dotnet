@@ -791,14 +791,14 @@ namespace PlaywrightSharp.Helpers
         internal static string MimeType(this string file)
             => _mappings.TryGetValue(new FileInfo(file).Extension, out string mime) ? mime : "application/octet-stream";
 
-        internal static FilePayload ToFilePayload(this string file)
+        internal static FilePayload ToElementHandleFile(this string file)
         {
             var fileInfo = new FileInfo(file);
 
             return new FilePayload
             {
                 Name = fileInfo.Name,
-                Buffer = Convert.ToBase64String(File.ReadAllBytes(file)),
+                Buffer = File.ReadAllBytes(file),
                 MimeType = file.MimeType(),
             };
         }

@@ -442,7 +442,7 @@ namespace PlaywrightSharp.Transport.Channels
             bool fullPage,
             Rect clip,
             bool omitBackground,
-            ScreenshotFormat? type,
+            ScreenshotType? type,
             int? quality,
             int? timeout)
         {

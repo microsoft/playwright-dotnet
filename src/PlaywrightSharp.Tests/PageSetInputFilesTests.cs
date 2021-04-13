@@ -59,7 +59,7 @@ namespace PlaywrightSharp.Tests
             {
                 Name = "test.txt",
                 MimeType = "text/plain",
-                Buffer = Convert.ToBase64String(Encoding.UTF8.GetBytes("this is a test"))
+                Buffer = Encoding.UTF8.GetBytes("this is a test"),
             });
 
             Assert.Equal(1, await Page.EvalOnSelectorAsync<int>("input", "e => e.files.length"));

@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             var frame = Page.Frames[1];
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document.body");
-            Assert.Equal(frame, await elementHandle.GetOwnerFrameAsync());
+            Assert.Equal(frame, await elementHandle.OwnerFrameAsync());
         }
 
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for cross-process iframes")]
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.CrossProcessUrl + "/empty.html");
             var frame = Page.Frames[1];
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document.body");
-            Assert.Equal(frame, await elementHandle.GetOwnerFrameAsync());
+            Assert.Equal(frame, await elementHandle.OwnerFrameAsync());
         }
 
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for document")]
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             var frame = Page.Frames[1];
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document");
-            Assert.Equal(frame, await elementHandle.GetOwnerFrameAsync());
+            Assert.Equal(frame, await elementHandle.OwnerFrameAsync());
         }
 
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for iframe elements")]
@@ -56,7 +56,7 @@ namespace PlaywrightSharp.Tests
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             var frame = Page.MainFrame;
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document.querySelector('#frame1')");
-            Assert.Equal(frame, await elementHandle.GetOwnerFrameAsync());
+            Assert.Equal(frame, await elementHandle.OwnerFrameAsync());
         }
 
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for cross-frame evaluations")]
@@ -67,7 +67,7 @@ namespace PlaywrightSharp.Tests
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             var frame = Page.MainFrame;
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document.querySelector('#frame1').contentWindow.document.body");
-            Assert.Equal(frame.ChildFrames[0], await elementHandle.GetOwnerFrameAsync());
+            Assert.Equal(frame.ChildFrames[0], await elementHandle.OwnerFrameAsync());
         }
 
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for detached elements")]
@@ -80,12 +80,12 @@ namespace PlaywrightSharp.Tests
                     document.body.appendChild(div);
                     return div;
                 }");
-            Assert.Equal(Page.MainFrame, await divHandle.GetOwnerFrameAsync());
+            Assert.Equal(Page.MainFrame, await divHandle.OwnerFrameAsync());
             await Page.EvaluateAsync(@"() => {
                     var div = document.querySelector('div');
                     document.body.removeChild(div);
                 }");
-            Assert.Equal(Page.MainFrame, await divHandle.GetOwnerFrameAsync());
+            Assert.Equal(Page.MainFrame, await divHandle.OwnerFrameAsync());
         }
 
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for adopted elements")]
@@ -103,13 +103,13 @@ namespace PlaywrightSharp.Tests
                     document.body.appendChild(div);
                     return div;
                 }");
-            Assert.Equal(Page.MainFrame, await divHandle.GetOwnerFrameAsync());
+            Assert.Equal(Page.MainFrame, await divHandle.OwnerFrameAsync());
             await popup.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
             await Page.EvaluateAsync(@"() => {
                     var div = document.querySelector('div');
                     window.__popup.document.body.appendChild(div);
                 }");
-            Assert.Same(popup.Page.MainFrame, await divHandle.GetOwnerFrameAsync());
+            Assert.Same(popup.Page.MainFrame, await divHandle.OwnerFrameAsync());
         }
     }
 }

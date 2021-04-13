@@ -49,8 +49,8 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
             var handle = await Page.QuerySelectorAsync("#outer");
 
-            Assert.Equal("<div id=\"inner\">Text,\nmore text</div>", await handle.GetInnerHtmlAsync());
-            Assert.Equal("<div id=\"inner\">Text,\nmore text</div>", await Page.GetInnerHtmlAsync("#outer"));
+            Assert.Equal("<div id=\"inner\">Text,\nmore text</div>", await handle.InnerHTMLAsync());
+            Assert.Equal("<div id=\"inner\">Text,\nmore text</div>", await Page.GetInnerHTMLAsync("#outer"));
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "innerText should work")]
@@ -60,7 +60,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
             var handle = await Page.QuerySelectorAsync("#inner");
 
-            Assert.Equal("Text, more text", await handle.GetInnerTextAsync());
+            Assert.Equal("Text, more text", await handle.InnerTextAsync());
             Assert.Equal("Text, more text", await Page.GetInnerTextAsync("#inner"));
         }
 
@@ -73,7 +73,7 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("Not an HTMLElement", exception1.Message);
 
             var handle = await Page.QuerySelectorAsync("svg");
-            var exception2 = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => handle.GetInnerTextAsync());
+            var exception2 = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => handle.InnerTextAsync());
             Assert.Contains("Not an HTMLElement", exception1.Message);
         }
 
@@ -84,8 +84,8 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
             var handle = await Page.QuerySelectorAsync("#outer");
 
-            Assert.Equal("Text,\nmore text", await handle.GetTextContentAsync());
-            Assert.Equal("Text,\nmore text", await Page.GetTextContentAsync("#outer"));
+            Assert.Equal("Text,\nmore text", await handle.TextContentAsync());
+            Assert.Equal("Text,\nmore text", await Page.TextContentAsync("#outer"));
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "textContent should be atomic")]
@@ -110,7 +110,7 @@ namespace PlaywrightSharp.Tests
 
             await TestUtils.RegisterEngineAsync(Playwright, "textContent", createDummySelector);
             await Page.SetContentAsync("<div>Hello</div>");
-            string tc = await Page.GetTextContentAsync("textContent=div");
+            string tc = await Page.TextContentAsync("textContent=div");
             Assert.Equal("Hello", tc);
             Assert.Equal("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').textContent"));
         }
@@ -164,7 +164,7 @@ namespace PlaywrightSharp.Tests
 
             await TestUtils.RegisterEngineAsync(Playwright, "innerHtml", createDummySelector);
             await Page.SetContentAsync("<div>Hello</div>");
-            string tc = await Page.GetInnerHtmlAsync("innerHtml=div");
+            string tc = await Page.GetInnerHTMLAsync("innerHtml=div");
             Assert.Equal("Hello", tc);
             Assert.Equal("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').textContent"));
         }

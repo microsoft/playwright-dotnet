@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -96,7 +96,7 @@ namespace PlaywrightSharp
 		/// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
 		/// to 0.
 		/// </param>
-		Task DblclickAsync(float x, float y, MouseButton button = default, float? delay = null);
+		Task DblClickAsync(float x, float y, MouseButton button = default, float? delay = null);
 	
 		/// <summary><para>Dispatches a <c>mousedown</c> event.</para></summary>
 		/// <param name="button">Defaults to <c>left</c>.</param>
