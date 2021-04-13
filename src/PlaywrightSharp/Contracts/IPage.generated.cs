@@ -331,6 +331,10 @@ namespace PlaywrightSharp
 		/// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
 		/// for more details.
 		/// </param>
+		/// <param name="position">
+		/// A point to use relative to the top-left corner of element padding box. If not specified,
+		/// uses some visible point of the element.
+		/// </param>
 		/// <param name="force">
 		/// Whether to bypass the <a href="./actionability.md">actionability</a> checks. Defaults
 		/// to <c>false</c>.
@@ -346,7 +350,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task CheckAsync(string selector, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+		Task CheckAsync(string selector, Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
 	
 		/// <summary>
 		/// <para>
@@ -1404,7 +1408,7 @@ namespace PlaywrightSharp
 		/// while routing.
 		/// </param>
 		/// <param name="handler">handler function to route the request.</param>
-		Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute, IRequest> handler);
+		Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler);
 	
 		/// <summary><para>Returns the buffer with the captured screenshot.</para></summary>
 		/// <param name="path">
@@ -1744,6 +1748,10 @@ namespace PlaywrightSharp
 		/// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
 		/// for more details.
 		/// </param>
+		/// <param name="position">
+		/// A point to use relative to the top-left corner of element padding box. If not specified,
+		/// uses some visible point of the element.
+		/// </param>
 		/// <param name="force">
 		/// Whether to bypass the <a href="./actionability.md">actionability</a> checks. Defaults
 		/// to <c>false</c>.
@@ -1759,7 +1767,7 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task UncheckAsync(string selector, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+		Task UncheckAsync(string selector, Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
 	
 		/// <summary>
 		/// <para>
@@ -1780,7 +1788,7 @@ namespace PlaywrightSharp
 		/// while routing.
 		/// </param>
 		/// <param name="handler">Optional handler function to route the request.</param>
-		Task UnrouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute, IRequest> handler = default);
+		Task UnrouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler = default);
 	
 		/// <summary><para>Shortcut for main frame's <see cref="IFrame.Url"/>.</para></summary>
 		string Url { get; }
@@ -1800,9 +1808,9 @@ namespace PlaywrightSharp
 	
 		/// <summary>
 		/// <para>
-		/// Performs action and waits for a <see cref="ConoleMessage"/> to be logged by in the
-		/// page. If predicate is provided, it passes <see cref="IConsoleMessage"/> value into
-		/// the <c>predicate</c> function and waits for <c>predicate(message)</c> to return
+		/// Performs action and waits for a <see cref="IConsoleMessage"/> to be logged by in
+		/// the page. If predicate is provided, it passes <see cref="IConsoleMessage"/> value
+		/// into the <c>predicate</c> function and waits for <c>predicate(message)</c> to return
 		/// a truthy value. Will throw an error if the page is closed before the console event
 		/// is fired.
 		/// </para>

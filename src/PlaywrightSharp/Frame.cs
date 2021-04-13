@@ -187,12 +187,12 @@ namespace PlaywrightSharp
             => ClickAsync(false, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task CheckAsync(string selector, bool? force, bool? noWaitAfter, float? timeout)
-            => CheckAsync(false, selector, force, noWaitAfter, timeout);
+        public Task CheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout)
+            => CheckAsync(false, selector, position, force, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task UncheckAsync(string selector, bool? force, bool? noWaitAfter, float? timeout)
-            => UncheckAsync(false, selector, force, noWaitAfter, timeout);
+        public Task UncheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout)
+            => UncheckAsync(false, selector, position, force, noWaitAfter, timeout);
 
         /// <inheritdoc />
         public Task DblClickAsync(
@@ -567,11 +567,11 @@ namespace PlaywrightSharp
             bool? noWaitAfter)
             => _channel.DblClickAsync(selector, delay, button, position, modifiers, timeout, force, noWaitAfter, isPageCall);
 
-        internal Task CheckAsync(bool isPageCall, string selector, bool? force, bool? noWaitAfter, float? timeout)
-            => _channel.CheckAsync(selector, timeout, force ?? false, noWaitAfter, isPageCall);
+        internal Task CheckAsync(bool isPageCall, string selector, Position position, bool? force, bool? noWaitAfter, float? timeout)
+            => _channel.CheckAsync(selector, position, timeout, force ?? false, noWaitAfter, isPageCall);
 
-        internal Task UncheckAsync(bool isPageCall, string selector, bool? force, bool? noWaitAfter, float? timeout)
-            => _channel.UncheckAsync(selector, timeout, force ?? false, noWaitAfter, isPageCall);
+        internal Task UncheckAsync(bool isPageCall, string selector, Position position, bool? force, bool? noWaitAfter, float? timeout)
+            => _channel.UncheckAsync(selector, position, timeout, force ?? false, noWaitAfter, isPageCall);
 
         internal Task SetContentAsync(bool isPageCall, string html, WaitUntilState waitUntil, float? timeout)
             => _channel.SetContentAsync(html, timeout, waitUntil, isPageCall);

@@ -244,12 +244,12 @@ namespace PlaywrightSharp
         public Task<IReadOnlyCollection<string>> SelectOptionAsync(params IElementHandle[] values) => SelectOptionAsync(values);
 
         /// <inheritdoc />
-        public Task CheckAsync(bool? force, bool? noWaitAfter, float? timeout)
-            => _channel.CheckAsync(timeout, force ?? false, noWaitAfter);
+        public Task CheckAsync(Position position, bool? force, bool? noWaitAfter, float? timeout)
+            => _channel.CheckAsync(position, timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />
-        public Task UncheckAsync(bool? force, bool? noWaitAfter, float? timeout)
-            => _channel.UncheckAsync(timeout, force, noWaitAfter);
+        public Task UncheckAsync(Position position, bool? force, bool? noWaitAfter, float? timeout)
+            => _channel.UncheckAsync(position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
         public Task TapAsync(Position position, IEnumerable<KeyboardModifier> modifiers, bool? force, bool? noWaitAfter, float? timeout)

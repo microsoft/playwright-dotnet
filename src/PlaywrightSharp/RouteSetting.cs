@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 
 namespace PlaywrightSharp
@@ -11,6 +11,6 @@ namespace PlaywrightSharp
 
         public Func<string, bool> Function { get; set; }
 
-        public Action<IRoute, IRequest> Handler { get; set; }
+        public Action<IRoute> Handler { get; set; }
     }
 }

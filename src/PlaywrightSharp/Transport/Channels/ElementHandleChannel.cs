@@ -431,12 +431,17 @@ namespace PlaywrightSharp.Transport.Channels
         internal async Task<bool> IsCheckedAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "isChecked", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
-        internal Task CheckAsync(float? timeout, bool force, bool? noWaitAfter)
+        internal Task CheckAsync(Position position, float? timeout, bool force, bool? noWaitAfter)
         {
             var args = new Dictionary<string, object>
             {
                 ["force"] = force,
             };
+
+            if (position != null)
+            {
+                args["position"] = position;
+            }
 
             if (timeout != null)
             {
@@ -451,13 +456,18 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "check", args);
         }
 
-        internal Task UncheckAsync(float? timeout, bool? force, bool? noWaitAfter)
+        internal Task UncheckAsync(Position position, float? timeout, bool? force, bool? noWaitAfter)
         {
             var args = new Dictionary<string, object>();
 
             if (force != null)
             {
                 args["force"] = force;
+            }
+
+            if (position != null)
+            {
+                args["position"] = position;
             }
 
             if (timeout != null)

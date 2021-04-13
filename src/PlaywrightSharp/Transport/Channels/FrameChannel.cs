@@ -552,7 +552,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "fill", args);
         }
 
-        internal Task CheckAsync(string selector, float? timeout, bool force, bool? noWaitAfter, bool isPage)
+        internal Task CheckAsync(string selector, Position position, float? timeout, bool force, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -560,6 +560,11 @@ namespace PlaywrightSharp.Transport.Channels
                 ["force"] = force,
                 ["isPage"] = isPage,
             };
+
+            if (position != null)
+            {
+                args["position"] = position;
+            }
 
             if (noWaitAfter != null)
             {
@@ -574,7 +579,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "check", args);
         }
 
-        internal Task UncheckAsync(string selector, float? timeout, bool force, bool? noWaitAfter, bool isPage)
+        internal Task UncheckAsync(string selector, Position position, float? timeout, bool force, bool? noWaitAfter, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -582,6 +587,11 @@ namespace PlaywrightSharp.Transport.Channels
                 ["force"] = force,
                 ["isPage"] = isPage,
             };
+
+            if (position != null)
+            {
+                args["position"] = position;
+            }
 
             if (noWaitAfter != null)
             {

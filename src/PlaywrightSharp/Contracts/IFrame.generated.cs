@@ -148,6 +148,10 @@ namespace PlaywrightSharp
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
+        /// <param name="position">
+        /// A point to use relative to the top-left corner of element padding box. If not specified,
+        /// uses some visible point of the element.
+        /// </param>
         /// <param name="force">
         /// Whether to bypass the <a href="./actionability.md">actionability</a> checks. Defaults
         /// to <c>false</c>.
@@ -163,7 +167,7 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task CheckAsync(string selector, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+        Task CheckAsync(string selector, Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
 
         IReadOnlyCollection<IFrame> ChildFrames { get; }
 
@@ -1119,6 +1123,10 @@ namespace PlaywrightSharp
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
+        /// <param name="position">
+        /// A point to use relative to the top-left corner of element padding box. If not specified,
+        /// uses some visible point of the element.
+        /// </param>
         /// <param name="force">
         /// Whether to bypass the <a href="./actionability.md">actionability</a> checks. Defaults
         /// to <c>false</c>.
@@ -1134,7 +1142,7 @@ namespace PlaywrightSharp
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task UncheckAsync(string selector, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+        Task UncheckAsync(string selector, Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
 
         /// <summary><para>Returns frame's url.</para></summary>
         string Url { get; }

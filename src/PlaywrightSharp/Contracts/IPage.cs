@@ -840,7 +840,7 @@ namespace PlaywrightSharp
         /// <para>An example of a naive handler that aborts all image requests:</para>
         /// <para>or the same snippet using a regex pattern instead:</para>
         /// <para>
-        /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync(Func{string, bool}, Action{IRoute, IRequest})"/>)
+        /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync(Func{string, bool}, Action{IRoute})"/>)
         /// when request matches both handlers.
         /// </para>
         /// <para>To remove a route with its handler you can use <see cref="IPage.UncheckAsync(string, bool?, bool?, float?)"/>.</para>
@@ -855,7 +855,7 @@ namespace PlaywrightSharp
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task RouteAsync(string urlString, Action<IRoute, IRequest> handler);
+        Task RouteAsync(string urlString, Action<IRoute> handler);
 
         /// <summary>
         /// <para>Routing provides the capability to modify network requests that are made by a page.</para>
@@ -866,10 +866,10 @@ namespace PlaywrightSharp
         /// <para>An example of a naive handler that aborts all image requests:</para>
         /// <para>or the same snippet using a regex pattern instead:</para>
         /// <para>
-        /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync(Func{string, bool}, Action{IRoute, IRequest})"/>)
+        /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync(Func{string, bool}, Action{IRoute})"/>)
         /// when request matches both handlers.
         /// </para>
-        /// <para>To remove a route with its handler you can use <see cref="IPage.UnrouteAsync(Func{string, bool}, Action{IRoute, IRequest})"/>.</para>
+        /// <para>To remove a route with its handler you can use <see cref="IPage.UnrouteAsync(Func{string, bool}, Action{IRoute})"/>.</para>
         /// </summary>
         /// <remarks>
         /// <para>The handler will only be called for the first url if the response is a redirect.</para>
@@ -881,7 +881,7 @@ namespace PlaywrightSharp
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task RouteAsync(Regex urlRegex, Action<IRoute, IRequest> handler);
+        Task RouteAsync(Regex urlRegex, Action<IRoute> handler);
 
         /// <summary>
         /// <para>Routing provides the capability to modify network requests that are made by a page.</para>
@@ -892,10 +892,10 @@ namespace PlaywrightSharp
         /// <para>An example of a naive handler that aborts all image requests:</para>
         /// <para>or the same snippet using a regex pattern instead:</para>
         /// <para>
-        /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync(Func{string, bool}, Action{IRoute, IRequest})"/>)
+        /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync(Func{string, bool}, Action{IRoute})"/>)
         /// when request matches both handlers.
         /// </para>
-        /// <para>To remove a route with its handler you can use <see cref="IPage.UnrouteAsync(Func{string, bool}, Action{IRoute, IRequest})"/>.</para>
+        /// <para>To remove a route with its handler you can use <see cref="IPage.UnrouteAsync(Func{string, bool}, Action{IRoute})"/>.</para>
         /// </summary>
         /// <remarks>
         /// <para>The handler will only be called for the first url if the response is a redirect.</para>
@@ -907,11 +907,11 @@ namespace PlaywrightSharp
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task RouteAsync(Func<string, bool> urlFunc, Action<IRoute, IRequest> handler);
+        Task RouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler);
 
         /// <summary>
         /// <para>
-        /// Removes a route created with <see cref="IPage.RouteAsync(Func{string, bool}, Action{IRoute, IRequest})"/>. When <paramref name="handler"/>
+        /// Removes a route created with <see cref="IPage.RouteAsync(Func{string, bool}, Action{IRoute})"/>. When <paramref name="handler"/>
         /// is not specified, removes all routes for the <paramref name="url"/>.
         /// </para>
         /// </summary>
@@ -921,11 +921,11 @@ namespace PlaywrightSharp
         /// </param>
         /// <param name="handler">Optional handler function to route the request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task UnrouteAsync(string urlString, Action<IRoute, IRequest> handler = default);
+        Task UnrouteAsync(string urlString, Action<IRoute> handler = default);
 
         /// <summary>
         /// <para>
-        /// Removes a route created with <see cref="IPage.RouteAsync(Func{string, bool}, Action{IRoute, IRequest})"/>. When <paramref name="handler"/>
+        /// Removes a route created with <see cref="IPage.RouteAsync(Func{string, bool}, Action{IRoute})"/>. When <paramref name="handler"/>
         /// is not specified, removes all routes for the <paramref name="url"/>.
         /// </para>
         /// </summary>
@@ -935,11 +935,11 @@ namespace PlaywrightSharp
         /// </param>
         /// <param name="handler">Optional handler function to route the request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task UnrouteAsync(Regex urlRegex, Action<IRoute, IRequest> handler = default);
+        Task UnrouteAsync(Regex urlRegex, Action<IRoute> handler = default);
 
         /// <summary>
         /// <para>
-        /// Removes a route created with <see cref="IPage.RouteAsync(Func{string, bool}, Action{IRoute, IRequest})"/>. When <paramref name="handler"/>
+        /// Removes a route created with <see cref="IPage.RouteAsync(Func{string, bool}, Action{IRoute})"/>. When <paramref name="handler"/>
         /// is not specified, removes all routes for the <paramref name="url"/>.
         /// </para>
         /// </summary>
@@ -949,6 +949,6 @@ namespace PlaywrightSharp
         /// </param>
         /// <param name="handler">Optional handler function to route the request.</param>
         /// <returns>A <see cref="Task"/> that completes when the registration was completed.</returns>
-        Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute, IRequest> handler = default);
+        Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler = default);
     }
 }

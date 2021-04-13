@@ -884,7 +884,7 @@ namespace PlaywrightSharp
             => _channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(ScriptsHelper.EvaluationScript(script, scriptPath)));
 
         /// <inheritdoc />
-        public Task RouteAsync(string urlString, Action<IRoute, IRequest> handler)
+        public Task RouteAsync(string urlString, Action<IRoute> handler)
             => RouteAsync(
                 new RouteSetting
                 {
@@ -893,7 +893,7 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task RouteAsync(Regex urlRegex, Action<IRoute, IRequest> handler)
+        public Task RouteAsync(Regex urlRegex, Action<IRoute> handler)
             => RouteAsync(
                 new RouteSetting
                 {
@@ -902,7 +902,7 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task RouteAsync(Func<string, bool> urlFunc, Action<IRoute, IRequest> handler)
+        public Task RouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler)
             => RouteAsync(
                 new RouteSetting
                 {
@@ -911,7 +911,7 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute, IRequest> handler)
+        public Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler)
         {
             if (string.IsNullOrEmpty(urlString))
             {
@@ -927,7 +927,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task UnrouteAsync(string urlString, Action<IRoute, IRequest> handler)
+        public Task UnrouteAsync(string urlString, Action<IRoute> handler)
             => UnrouteAsync(
                 new RouteSetting
                 {
@@ -936,7 +936,7 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task UnrouteAsync(Regex urlString, Action<IRoute, IRequest> handler)
+        public Task UnrouteAsync(Regex urlString, Action<IRoute> handler)
             => UnrouteAsync(
                 new RouteSetting
                 {
@@ -945,7 +945,7 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute, IRequest> handler)
+        public Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler)
             => UnrouteAsync(
                 new RouteSetting
                 {
@@ -954,7 +954,7 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task UnrouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute, IRequest> handler)
+        public Task UnrouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler)
         {
             if (string.IsNullOrEmpty(urlString))
             {
@@ -981,12 +981,12 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task CheckAsync(string selector, bool? force, bool? noWaitAfter, float? timeout)
-            => MainFrame.CheckAsync(true, selector, force, noWaitAfter, timeout);
+        public Task CheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout)
+            => MainFrame.CheckAsync(true, selector, position, force, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task UncheckAsync(string selector, bool? force, bool? noWaitAfter, float? timeout)
-            => MainFrame.UncheckAsync(true, selector, force, noWaitAfter, timeout);
+        public Task UncheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout)
+            => MainFrame.UncheckAsync(true, selector, position, force, noWaitAfter, timeout);
 
         /// <inheritdoc />
         public Task DispatchEventAsync(string selector, string type, object eventInit, float? timeout)
@@ -1101,7 +1101,7 @@ namespace PlaywrightSharp
                     (route.Regex?.IsMatch(e.Request.Url) == true) ||
                     (route.Function?.Invoke(e.Request.Url) == true))
                 {
-                    route.Handler(e.Route, e.Request);
+                    route.Handler(e.Route);
                     return;
                 }
             }
