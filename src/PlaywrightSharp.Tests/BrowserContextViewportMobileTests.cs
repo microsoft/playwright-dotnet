@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Tests
 
             await page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
             Assert.Equal(375, await page.EvaluateAsync<int>("window.innerWidth"));
-            await page.SetViewportSizeAsync(new ViewportSize { Width = 400, Height = 300 });
+            await page.SetViewportSizeAsync(400, 300);
             Assert.Equal(400, await page.EvaluateAsync<int>("window.innerWidth"));
         }
 
@@ -118,7 +118,7 @@ namespace PlaywrightSharp.Tests
             await page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
             Assert.Equal(0, await page.EvaluateAsync<int?>("() => window.orientation"));
 
-            await page.SetViewportSizeAsync(new ViewportSize { Width = 400, Height = 300 });
+            await page.SetViewportSizeAsync(400, 300);
             Assert.Equal(90, await page.EvaluateAsync<int?>("() => window.orientation"));
         }
 
@@ -143,22 +143,14 @@ namespace PlaywrightSharp.Tests
             }");
 
             var event1Task = page.WaitForEventAsync(PageEvent.Console);
-            await page.SetViewportSizeAsync(new ViewportSize
-            {
-                Width = 400,
-                Height = 300,
-            });
+            await page.SetViewportSizeAsync(400, 300);
             var event1 = await event1Task;
-            Assert.Equal("1", event1.Message.Text);
+            Assert.Equal("1", event1.Text);
 
             var event2Task = page.WaitForEventAsync(PageEvent.Console);
-            await page.SetViewportSizeAsync(new ViewportSize
-            {
-                Width = 300,
-                Height = 400,
-            });
+            await page.SetViewportSizeAsync(300, 400);
             var event2 = await event2Task;
-            Assert.Equal("2", event2.Message.Text);
+            Assert.Equal("2", event2.Text);
         }
 
         [PlaywrightTest("browsercontext-viewport-mobile.spec.ts", "default mobile viewports to 980 width")]

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -87,7 +87,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldHavePages()
         {
             await _page.GoToAsync("data:text/html,<title>Hello</title>");
-            await _page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+            await _page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             var log = await GetLogAsync();
             Assert.Single(log.Pages);
             var pageEntry = log.Pages.First();
@@ -112,7 +112,7 @@ namespace PlaywrightSharp.Tests
 
             await TaskUtils.WhenAll(
                 page.GoToAsync("data:text/html,<title>Hello</title>"),
-                page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded));
+                page.WaitForLoadStateAsync(LoadState.DOMContentLoaded));
 
             await context.CloseAsync();
 

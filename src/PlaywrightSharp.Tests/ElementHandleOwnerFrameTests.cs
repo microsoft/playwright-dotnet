@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
@@ -104,7 +104,7 @@ namespace PlaywrightSharp.Tests
                     return div;
                 }");
             Assert.Equal(Page.MainFrame, await divHandle.OwnerFrameAsync());
-            await popup.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+            await popup.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             await Page.EvaluateAsync(@"() => {
                     var div = document.querySelector('div');
                     window.__popup.document.body.appendChild(div);

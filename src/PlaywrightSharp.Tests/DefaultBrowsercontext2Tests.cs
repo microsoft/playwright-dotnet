@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -317,7 +317,7 @@ namespace PlaywrightSharp.Tests
             var (tmp, context, page) = await LaunchAsync();
 
             await page.Coverage.StartJSCoverageAsync();
-            await page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/simple.html", LifecycleEvent.Networkidle);
+            await page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/simple.html", LoadState.Networkidle);
             var coverage = await page.Coverage.StopJSCoverageAsync();
             Assert.Single(coverage);
             Assert.Contains("/jscoverage/simple.html", coverage[0].Url);

@@ -1,4 +1,4 @@
-using System.Dynamic;
+﻿using System.Dynamic;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -141,7 +141,7 @@ namespace PlaywrightSharp.Tests
             await Page.SetContentAsync(
                 @"<meta http-equiv=""Content-Security-Policy"" content=""script-src 'none';"">
                  <iframe src='javascript:""""'></iframe>",
-                LifecycleEvent.DOMContentLoaded);
+                LoadState.DOMContentLoaded);
 
             await Page.EvaluateAsync(@"() => {
                 const iframe = document.querySelector('iframe');

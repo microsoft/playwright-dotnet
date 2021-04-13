@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldEmitCreatedAndDestroyedEvents()
         {
             var workerCreatedTcs = new TaskCompletionSource<IWorker>();
-            Page.Worker += (_, e) => workerCreatedTcs.TrySetResult(e.Worker);
+            Page.Worker += (_, e) => workerCreatedTcs.TrySetResult(e);
 
             var workerObj = await Page.EvaluateHandleAsync("() => new Worker(URL.createObjectURL(new Blob(['1'], {type: 'application/javascript'})))");
             var worker = await workerCreatedTcs.Task;
@@ -60,15 +60,15 @@ namespace PlaywrightSharp.Tests
                 Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], {type: 'application/javascript'})))")
             );
 
-            Assert.Equal("1", message.Message.Text);
+            Assert.Equal("1", message.Text);
         }
 
         [PlaywrightTest("workers.spec.ts", "should have JSHandles for console logs")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveJSHandlesForConsoleLogs()
         {
-            var consoleTcs = new TaskCompletionSource<ConsoleMessage>();
-            Page.Console += (_, e) => consoleTcs.TrySetResult(e.Message);
+            var consoleTcs = new TaskCompletionSource<IConsoleMessage>();
+            Page.Console += (_, e) => consoleTcs.TrySetResult(e);
 
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1,2,3,this)'], {type: 'application/javascript'})))");
             var log = await consoleTcs.Task;
@@ -86,7 +86,7 @@ namespace PlaywrightSharp.Tests
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], {type: 'application/javascript'})))");
 
             await workerCreatedTask;
-            Assert.Equal(2, await workerCreatedTask.Result.Worker.EvaluateAsync<int>("1+1"));
+            Assert.Equal(2, await workerCreatedTask.Result.EvaluateAsync<int>("1+1"));
         }
 
         [PlaywrightTest("workers.spec.ts", "should report errors")]
@@ -94,7 +94,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldReportErrors()
         {
             var errorTcs = new TaskCompletionSource<string>();
-            Page.PageError += (_, e) => errorTcs.TrySetResult(e.Message);
+            Page.PageError += (_, e) => errorTcs.TrySetResult(e);
 
             await Page.EvaluateAsync(@"() => new Worker(URL.createObjectURL(new Blob([`
               setTimeout(() => {
@@ -114,7 +114,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
             var workerCreatedTask = Page.WaitForEventAsync(PageEvent.Worker);
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
-            var worker = (await workerCreatedTask).Worker;
+            var worker = await workerCreatedTask;
 
             Assert.Single(Page.Workers);
             bool destroyed = false;
@@ -131,7 +131,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
             var workerCreatedTask = Page.WaitForEventAsync(PageEvent.Worker);
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
-            var worker = (await workerCreatedTask).Worker;
+            var worker = await workerCreatedTask;
 
             Assert.Single(Page.Workers);
 
@@ -147,7 +147,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
             var workerCreatedTask = Page.WaitForEventAsync(PageEvent.Worker);
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
-            var worker = (await workerCreatedTask).Worker;
+            var worker = await workerCreatedTask;
 
             Assert.Single(Page.Workers);
 
@@ -164,7 +164,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
             var workerCreatedTask = Page.WaitForEventAsync(PageEvent.Worker);
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
-            var worker = (await workerCreatedTask).Worker;
+            var worker = await workerCreatedTask;
 
             Assert.Single(Page.Workers);
             bool destroyed = false;
@@ -188,7 +188,7 @@ namespace PlaywrightSharp.Tests
             var requestTask = Page.WaitForRequestAsync(url);
             var responseTask = Page.WaitForResponseAsync(url);
 
-            await worker.Worker.EvaluateAsync<JsonElement>("url => fetch(url).then(response => response.text()).then(console.log)", url);
+            await worker.EvaluateAsync<JsonElement>("url => fetch(url).then(response => response.text()).then(console.log)", url);
 
             await TaskUtils.WhenAll(requestTask, responseTask);
 

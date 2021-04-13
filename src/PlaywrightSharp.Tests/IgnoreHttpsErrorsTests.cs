@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Http;
@@ -70,7 +70,7 @@ namespace PlaywrightSharp.Tests
             });
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { IgnoreHTTPSErrors = true });
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.HttpsPrefix + "/mixedcontent.html", LifecycleEvent.DOMContentLoaded);
+            await page.GoToAsync(TestConstants.HttpsPrefix + "/mixedcontent.html", LoadState.DOMContentLoaded);
             Assert.Equal(2, page.Frames.Length);
             Assert.Equal(3, await page.MainFrame.EvaluateAsync<int>("1 + 2"));
             Assert.Equal(5, await page.FirstChildFrame().EvaluateAsync<int>("2 + 3"));

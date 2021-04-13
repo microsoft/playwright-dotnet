@@ -66,7 +66,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Dialog"/>.
         /// </summary>
-        public static PlaywrightEvent<IDownload> Dialog { get; } = new PlaywrightEvent<IDownload>() { Name = "Dialog" };
+        public static PlaywrightEvent<IDialog> Dialog { get; } = new PlaywrightEvent<IDialog>() { Name = "Dialog" };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.FileChooser"/>.

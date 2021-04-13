@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
@@ -29,7 +29,7 @@ namespace PlaywrightSharp.Tests
             var popupTask = context.WaitForEventAsync(ContextEvent.Page);
             await TaskUtils.WhenAll(popupTask, page.ClickAsync("a"));
 
-            await popupTask.Result.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+            await popupTask.Result.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             string userAgent = await popupTask.Result.Page.EvaluateAsync<string>("() => window.initialUserAgent");
             await requestTcs.Task;
 
@@ -118,7 +118,7 @@ namespace PlaywrightSharp.Tests
                 popup,
                 page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.ServerUrl + "/title.html"));
 
-            await popup.Result.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+            await popup.Result.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             Assert.Equal("Woof-Woof", await popup.Result.Page.GetTitleAsync());
         }
 

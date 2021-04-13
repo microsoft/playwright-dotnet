@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
@@ -31,7 +31,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDomcontentloaded()
         {
-            await Page.SetContentAsync("<div>hello</div>", LifecycleEvent.DOMContentLoaded);
+            await Page.SetContentAsync("<div>hello</div>", LoadState.DOMContentLoaded);
             string result = await Page.GetContentAsync();
             Assert.Equal(_expectedOutput, result);
         }

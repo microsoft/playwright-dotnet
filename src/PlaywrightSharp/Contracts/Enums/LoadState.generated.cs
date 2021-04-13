@@ -52,8 +52,8 @@ namespace PlaywrightSharp
         [EnumMember(Value = "load")]
         Load,
         [EnumMember(Value = "domcontentloaded")]
-        Domcontentloaded,
+        DOMContentLoaded,
         [EnumMember(Value = "networkidle")]
-        Networkidle,
+        NetworkIdle,
     }
 }

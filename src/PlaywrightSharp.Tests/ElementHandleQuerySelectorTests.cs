@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
@@ -60,7 +60,7 @@ namespace PlaywrightSharp.Tests
             Assert.NotNull(divHandle);
             Assert.Equal("hello", await divHandle.EvalOnSelectorAsync<string>("span", "e => e.textContent"));
 
-            await popup.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+            await popup.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             await Page.EvaluateAsync(@"() => {
               const div = document.querySelector('div');
               window.__popup.document.body.appendChild(div);

@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Tests
             await using var context = await Browser.NewContextAsync();
             IPage page = null;
 
-            await context.RouteAsync("**/empty.html", (route, _) =>
+            await context.RouteAsync("**/empty.html", (route) =>
             {
                 intercepted = true;
 
@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests
                 Assert.Same(page.MainFrame, route.Request.Frame);
                 Assert.Equal("about:blank", page.MainFrame.Url);
 
-                route.ContinueAsync();
+                route.ResumeAsync();
             });
 
             page = await context.NewPageAsync();
@@ -58,29 +58,29 @@ namespace PlaywrightSharp.Tests
             var page = await context.NewPageAsync();
             var intercepted = new List<int>();
 
-            Action<Route, IRequest> handler1 = (route, _) =>
+            Action<IRoute> handler1 = (route) =>
             {
                 intercepted.Add(1);
-                route.ContinueAsync();
+                route.ResumeAsync();
             };
 
             await context.RouteAsync("**/empty.html", handler1);
-            await context.RouteAsync("**/empty.html", (route, _) =>
+            await context.RouteAsync("**/empty.html", (route) =>
             {
                 intercepted.Add(2);
-                route.ContinueAsync();
+                route.ResumeAsync();
             });
 
-            await context.RouteAsync("**/empty.html", (route, _) =>
+            await context.RouteAsync("**/empty.html", (route) =>
             {
                 intercepted.Add(3);
-                route.ContinueAsync();
+                route.ResumeAsync();
             });
 
-            await context.RouteAsync("**/*", (route, _) =>
+            await context.RouteAsync("**/*", (route) =>
             {
                 intercepted.Add(4);
-                route.ContinueAsync();
+                route.ResumeAsync();
             });
 
             await page.GoToAsync(TestConstants.EmptyPage);
@@ -102,7 +102,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldYieldToPageRoute()
         {
             await using var context = await Browser.NewContextAsync();
-            await context.RouteAsync("**/empty.html", (route, _) =>
+            await context.RouteAsync("**/empty.html", (route) =>
             {
                 route.FulfillAsync(HttpStatusCode.OK, "context");
             });

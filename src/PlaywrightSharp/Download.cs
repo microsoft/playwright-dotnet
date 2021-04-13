@@ -51,13 +51,13 @@ namespace PlaywrightSharp
         /// Returns path to the downloaded file in case of successful download.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the download file path is resolved, yielding the path.</returns>
-        public Task<string> GetPathAsync() => _channel.GetPathAsync();
+        public Task<string> PathAsync() => _channel.GetPathAsync();
 
         /// <summary>
         /// Returns download error if any.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when failure is resolved, yielding the faulire.</returns>
-        public Task<string> GetFailureAsync() => _channel.GetFailureAsync();
+        public Task<string> FailureAsync() => _channel.GetFailureAsync();
 
         /// <summary>
         /// Deletes the downloaded file.
@@ -78,7 +78,7 @@ namespace PlaywrightSharp
         /// <returns>A <see cref="Task"/> that completes when the stream is created, yielding the stream.</returns>
         public async Task<Stream> CreateReadStreamAsync()
         {
-            string fileName = await GetPathAsync().ConfigureAwait(false);
+            string fileName = await PathAsync().ConfigureAwait(false);
             return string.IsNullOrEmpty(fileName) ? null : new FileStream(fileName, FileMode.Open);
         }
     }

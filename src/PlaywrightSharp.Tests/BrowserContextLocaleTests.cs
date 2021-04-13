@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
@@ -119,7 +119,7 @@ namespace PlaywrightSharp.Tests
                 page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.ServerUrl + "/formatted-number.html"));
 
             var popup = popupTask.Result.Page;
-            await popup.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+            await popup.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             Assert.Equal("1 000 000,5", await popup.EvaluateAsync<string>("() => window.result"));
         }
 
@@ -141,7 +141,7 @@ namespace PlaywrightSharp.Tests
                 page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.ServerUrl + "/formatted-number.html"));
 
             var popup = popupTask.Result.Page;
-            await popup.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+            await popup.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             Assert.Equal("fr-CH", await popup.EvaluateAsync<string>("() => window.initialNavigatorLanguage"));
         }
     }

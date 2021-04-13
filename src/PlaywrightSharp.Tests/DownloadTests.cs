@@ -1,8 +1,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Input;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
@@ -45,7 +43,7 @@ namespace PlaywrightSharp.Tests
                 downloadTask,
                 Page.ClickAsync("a"));
 
-            var download = downloadTask.Result.Download;
+            var download = downloadTask.Result;
             Assert.Equal($"{TestConstants.ServerUrl}/downloadWithFilename", download.Url);
             Assert.Equal("file.txt", download.SuggestedFilename);
 
@@ -66,7 +64,7 @@ namespace PlaywrightSharp.Tests
                 downloadTask,
                 page.ClickAsync("a"));
 
-            var download = downloadTask.Result.Download;
+            var download = downloadTask.Result;
             string path = await download.GetPathAsync();
 
             Assert.True(new FileInfo(path).Exists);
@@ -87,7 +85,7 @@ namespace PlaywrightSharp.Tests
 
             using var tmpDir = new TempDirectory();
             string userPath = Path.Combine(tmpDir.Path, "download.txt");
-            var download = downloadTask.Result.Download;
+            var download = downloadTask.Result;
             await download.SaveAsAsync(userPath);
 
             Assert.True(new FileInfo(userPath).Exists);
@@ -109,7 +107,7 @@ namespace PlaywrightSharp.Tests
 
             using var tmpDir = new TempDirectory();
             string userPath = Path.Combine(tmpDir.Path, "download.txt");
-            var download = downloadTask.Result.Download;
+            var download = downloadTask.Result;
             await download.SaveAsAsync(userPath);
 
             Assert.True(new FileInfo(userPath).Exists);
@@ -136,7 +134,7 @@ namespace PlaywrightSharp.Tests
 
             using var tmpDir = new TempDirectory();
             string userPath = Path.Combine(tmpDir.Path, "download.txt");
-            var download = downloadTask.Result.Download;
+            var download = downloadTask.Result;
             await download.SaveAsAsync(userPath);
             Assert.True(new FileInfo(userPath).Exists);
             Assert.Equal("Hello world", File.ReadAllText(userPath));
@@ -163,7 +161,7 @@ namespace PlaywrightSharp.Tests
 
             using var tmpDir = new TempDirectory();
             string userPath = Path.Combine(tmpDir.Path, "download.txt");
-            var download = downloadTask.Result.Download;
+            var download = downloadTask.Result;
             await download.SaveAsAsync(userPath);
             Assert.Single(new DirectoryInfo(tmpDir.Path).GetFiles());
             await download.SaveAsAsync(userPath);
@@ -186,7 +184,7 @@ namespace PlaywrightSharp.Tests
 
             using var tmpDir = new TempDirectory();
             string userPath = Path.Combine(tmpDir.Path, "these", "are", "directories", "download.txt");
-            var download = downloadTask.Result.Download;
+            var download = downloadTask.Result;
             await download.SaveAsAsync(userPath);
             Assert.True(new FileInfo(userPath).Exists);
             Assert.Equal("Hello world", File.ReadAllText(userPath));
@@ -214,7 +212,7 @@ namespace PlaywrightSharp.Tests
 
             using var tmpDir = new TempDirectory();
             string userPath = Path.Combine(tmpDir.Path, "download.txt");
-            var download = downloadTask.Result.Download;
+            var download = downloadTask.Result;
 
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => download.SaveAsAsync(userPath));
             Assert.Contains("Pass { acceptDownloads: true } when you are creating your browser context", exception.Message);
@@ -234,7 +232,7 @@ namespace PlaywrightSharp.Tests
 
             using var tmpDir = new TempDirectory();
             string userPath = Path.Combine(tmpDir.Path, "download.txt");
-            var download = downloadTask.Result.Download;
+            var download = downloadTask.Result;
             await download.DeleteAsync();
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => download.SaveAsAsync(userPath));
             Assert.Contains("Download already deleted. Save before deleting.", exception.Message);
@@ -265,7 +263,7 @@ namespace PlaywrightSharp.Tests
                 downloadTask,
                 page.ClickAsync("a"));
 
-            var download = downloadTask.Result.Download;
+            var download = downloadTask.Result;
             Assert.Equal("file.txt", download.SuggestedFilename);
             string path = await download.GetPathAsync();
 
@@ -328,9 +326,9 @@ namespace PlaywrightSharp.Tests
 
             await TaskUtils.WhenAll(
                 downloadTask,
-                page.ClickAsync("a", modifiers: new[] { Modifier.Alt }));
+                page.ClickAsync("a", modifiers: new[] { KeyboardModifier.Alt }));
 
-            var download = downloadTask.Result.Download;
+            var download = downloadTask.Result;
             string path = await download.GetPathAsync();
 
             Assert.True(new FileInfo(path).Exists);
@@ -349,7 +347,7 @@ namespace PlaywrightSharp.Tests
                 downloadTask,
                 page.ClickAsync("a"));
 
-            var download = downloadTask.Result.Download;
+            var download = downloadTask.Result;
             string path = await download.GetPathAsync();
 
             Assert.True(new FileInfo(path).Exists);
@@ -368,7 +366,7 @@ namespace PlaywrightSharp.Tests
                 downloadTask,
                 page.ClickAsync("a"));
 
-            var download = downloadTask.Result.Download;
+            var download = downloadTask.Result;
             string path = await download.GetPathAsync();
 
             Assert.True(new FileInfo(path).Exists);
@@ -389,7 +387,7 @@ namespace PlaywrightSharp.Tests
                 downloadTask,
                 page.ClickAsync("a"));
 
-            var download = downloadTask.Result.Download;
+            var download = downloadTask.Result;
             using var stream = await download.CreateReadStreamAsync();
             Assert.Equal("Hello world", await new StreamReader(stream).ReadToEndAsync());
 
@@ -414,8 +412,8 @@ namespace PlaywrightSharp.Tests
                 download2Task,
                 page.ClickAsync("a"));
 
-            string path1 = await download1Task.Result.Download.GetPathAsync();
-            string path2 = await download2Task.Result.Download.GetPathAsync();
+            string path1 = await download1Task.Result.GetPathAsync();
+            string path2 = await download2Task.Result.GetPathAsync();
             Assert.True(new FileInfo(path1).Exists);
             Assert.True(new FileInfo(path2).Exists);
             await page.Context.CloseAsync();
@@ -442,8 +440,8 @@ namespace PlaywrightSharp.Tests
                 download2Task,
                 page.ClickAsync("a"));
 
-            string path1 = await download1Task.Result.Download.GetPathAsync();
-            string path2 = await download2Task.Result.Download.GetPathAsync();
+            string path1 = await download1Task.Result.GetPathAsync();
+            string path2 = await download2Task.Result.GetPathAsync();
             Assert.True(new FileInfo(path1).Exists);
             Assert.True(new FileInfo(path2).Exists);
             await browser.CloseAsync();

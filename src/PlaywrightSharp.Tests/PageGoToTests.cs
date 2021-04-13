@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -200,7 +200,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateToEmptyPageWithDOMContentLoaded()
         {
-            var response = await Page.GoToAsync(TestConstants.EmptyPage, LifecycleEvent.DOMContentLoaded);
+            var response = await Page.GoToAsync(TestConstants.EmptyPage, LoadState.DOMContentLoaded);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
@@ -381,7 +381,7 @@ namespace PlaywrightSharp.Tests
             }
             Page.Load += OnLoad;
 
-            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", LifecycleEvent.Load, null, 0);
+            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", LoadState.Load, null, 0);
             Assert.True(loaded);
         }
 
@@ -588,7 +588,7 @@ namespace PlaywrightSharp.Tests
         {
             Server.SetRoute("/one-style.html", _ => Task.Delay(10_000));
             var request = Server.WaitForRequest("/one-style.html");
-            var failed = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", TestConstants.IsFirefox ? LifecycleEvent.Networkidle : LifecycleEvent.Load);
+            var failed = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", TestConstants.IsFirefox ? LoadState.Networkidle : LoadState.Load);
             await request;
             await Page.GoToAsync(TestConstants.EmptyPage);
 

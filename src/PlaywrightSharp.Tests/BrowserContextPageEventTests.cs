@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Input;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
@@ -43,7 +42,7 @@ namespace PlaywrightSharp.Tests
                 context.WaitForEventAsync(ContextEvent.Page),
                 page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
 
-            await otherPage.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+            await otherPage.Page.WaitForLoadStateAsync(LoadState.Domcontentloaded);
             Assert.Equal(TestConstants.EmptyPage, otherPage.Page.Url);
         }
 
@@ -58,7 +57,7 @@ namespace PlaywrightSharp.Tests
                 context.WaitForEventAsync(ContextEvent.Page),
                 page.EvaluateAsync("url => window.open(url)", "about:blank"));
 
-            await otherPage.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+            await otherPage.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             Assert.Equal("about:blank", otherPage.Page.Url);
         }
 
@@ -73,7 +72,7 @@ namespace PlaywrightSharp.Tests
                 context.WaitForEventAsync(ContextEvent.Page),
                 page.EvaluateAsync("() => window.open()"));
 
-            await otherPage.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+            await otherPage.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             Assert.Equal("about:blank", otherPage.Page.Url);
         }
 
@@ -148,7 +147,7 @@ namespace PlaywrightSharp.Tests
 
             var newPage = pageCreatedTask.Result.Page;
 
-            await newPage.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+            await newPage.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             Assert.Equal(TestConstants.ServerUrl + "/one-style.html", newPage.Url);
         }
 
@@ -172,7 +171,7 @@ namespace PlaywrightSharp.Tests
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should fire page lifecycle events")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldFirePageLifecycleEvents()
+        public async Task ShouldFirePageLoadStates()
         {
             await using var context = await Browser.NewContextAsync();
             var events = new List<string>();

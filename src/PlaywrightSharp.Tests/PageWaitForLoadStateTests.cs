@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,8 +49,8 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldRespectTimeout()
         {
             Server.SetRoute("/one-style.css", _ => Task.Delay(Timeout.Infinite));
-            await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", LifecycleEvent.DOMContentLoaded);
-            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.WaitForLoadStateAsync(LifecycleEvent.Load, 1));
+            await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", LoadState.DOMContentLoaded);
+            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.WaitForLoadStateAsync(LoadState.Load, 1));
             Assert.Contains("Timeout 1ms exceeded", exception.Message);
         }
 
@@ -86,7 +86,7 @@ namespace PlaywrightSharp.Tests
 
             var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
             await waitForRequestTask;
-            await Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+            await Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             responseTask.TrySetResult(true);
             await navigationTask;
         }
@@ -132,7 +132,7 @@ namespace PlaywrightSharp.Tests
                 await route.ContinueAsync();
             });
 
-            await frame.GoToAsync(TestConstants.ServerUrl + "/one-style.html", LifecycleEvent.DOMContentLoaded);
+            await frame.GoToAsync(TestConstants.ServerUrl + "/one-style.html", LoadState.DOMContentLoaded);
 
             await routeReachedTask.Task;
             var loadTask = frame.WaitForLoadStateAsync();

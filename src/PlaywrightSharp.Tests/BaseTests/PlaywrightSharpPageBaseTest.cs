@@ -59,7 +59,7 @@ namespace PlaywrightSharp.Tests.BaseTests
         {
             var wrapper = new TaskCompletionSource<bool>();
 
-            void errorEvent(object sender, EventArgs e)
+            void errorEvent(object sender, IPage e)
             {
                 wrapper.SetResult(true);
                 Page.Crash -= errorEvent;

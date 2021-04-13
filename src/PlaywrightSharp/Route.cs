@@ -44,6 +44,16 @@ namespace PlaywrightSharp
             string contentType = null,
             IEnumerable<KeyValuePair<string, string>> headers = null,
             string path = null,
+            HttpStatusCode? status = null)
+            => FulfillAsync(body, bodyBytes, contentType, headers, path, (int?)status);
+
+        /// <inheritdoc/>
+        public Task FulfillAsync(
+            string body = null,
+            byte[] bodyBytes = null,
+            string contentType = null,
+            IEnumerable<KeyValuePair<string, string>> headers = null,
+            string path = null,
             int? status = null)
         {
             var normalized = NormalizeFulfillParameters(status, headers, contentType, body, bodyBytes, path);

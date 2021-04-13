@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -215,7 +215,7 @@ namespace PlaywrightSharp.Tests.Chromium
 
             Assert.Equal(2, _page.Frames.Length);
             var child = main.ChildFrames[0];
-            await child.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+            await child.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
 
             await child.EvaluateAsync(@"url => {
               const iframe = document.createElement('iframe');
@@ -226,7 +226,7 @@ namespace PlaywrightSharp.Tests.Chromium
 
             Assert.Equal(3, _page.Frames.Length);
             var grandChild = child.ChildFrames[0];
-            await grandChild.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+            await grandChild.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
 
             Assert.Equal(2, await CountOOPIFsASync(_browser));
             Assert.Equal(main, requestFrames[0]);

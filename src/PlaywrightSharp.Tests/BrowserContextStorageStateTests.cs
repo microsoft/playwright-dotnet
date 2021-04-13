@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldCaptureLocalStorage()
         {
             var page1 = await Context.NewPageAsync();
-            await page1.RouteAsync("**/*", (route, _) =>
+            await page1.RouteAsync("**/*", (route) =>
             {
                 route.FulfillAsync(body: "<html></html>");
             });
@@ -82,7 +82,7 @@ namespace PlaywrightSharp.Tests
                 }
             });
             var page1 = await context.NewPageAsync();
-            await page1.RouteAsync("**/*", (route, _) =>
+            await page1.RouteAsync("**/*", (route) =>
             {
                 route.FulfillAsync(body: "<html></html>");
             });
@@ -96,7 +96,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldRoundTripThroughTheFile()
         {
             var page1 = await Context.NewPageAsync();
-            await page1.RouteAsync("**/*", (route, _) =>
+            await page1.RouteAsync("**/*", (route) =>
             {
                 route.FulfillAsync(body: "<html></html>");
             });
@@ -114,7 +114,7 @@ namespace PlaywrightSharp.Tests
 
             await using var context = await Browser.NewContextAsync(storageStatePath: path);
             var page2 = await context.NewPageAsync();
-            await page1.RouteAsync("**/*", (route, _) =>
+            await page1.RouteAsync("**/*", (route) =>
             {
                 route.FulfillAsync(body: "<html></html>");
             });

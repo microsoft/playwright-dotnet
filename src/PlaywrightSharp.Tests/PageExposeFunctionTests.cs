@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
@@ -216,7 +216,7 @@ namespace PlaywrightSharp.Tests
                 });
 
             await TaskUtils.WhenAll(
-                Page.WaitForNavigationAsync(LifecycleEvent.Load),
+                Page.WaitForNavigationAsync(LoadState.Load),
                 Page.EvaluateAsync(@"async url => {
                     window['logme']({ foo: 42 });
                     window.location.href = url;
