@@ -21,10 +21,10 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            ConsoleMessage message = null;
-            void EventHandler(object sender, ConsoleEventArgs e)
+            IConsoleMessage message = null;
+            void EventHandler(object sender, IConsoleMessage e)
             {
-                message = e.Message;
+                message = e;
                 Page.Console -= EventHandler;
             }
             Page.Console += EventHandler;
@@ -55,8 +55,8 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForDifferentConsoleAPICalls()
         {
-            var messages = new List<ConsoleMessage>();
-            Page.Console += (_, e) => messages.Add(e.Message);
+            var messages = new List<IConsoleMessage>();
+            Page.Console += (_, e) => messages.Add(e);
             // All console events will be reported before `Page.evaluate` is finished.
             await Page.EvaluateAsync(@"() => {
                 // A pair of time/timeEnd generates only one Console API call.
@@ -85,9 +85,9 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldNotFailForWindowObject()
         {
             ConsoleMessage message = null;
-            void EventHandler(object sender, ConsoleEventArgs e)
+            void EventHandler(object sender, IConsoleMessage e)
             {
-                message = e.Message;
+                message = e;
                 Page.Console -= EventHandler;
             }
             Page.Console += EventHandler;
@@ -107,8 +107,8 @@ namespace PlaywrightSharp.Tests
                 Page.WaitForEventAsync(PageEvent.Console),
                 Page.EvaluateAsync("async url => fetch(url).catch (e => { })", TestConstants.EmptyPage)
             );
-            Assert.Contains("Access-Control-Allow-Origin", messageEvent.Message.Text);
-            Assert.Equal("error", messageEvent.Message.Type);
+            Assert.Contains("Access-Control-Allow-Origin", messageEvent.Text);
+            Assert.Equal("error", messageEvent.Type);
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should have location for console API calls")]
@@ -120,16 +120,9 @@ namespace PlaywrightSharp.Tests
                 Page.WaitForEventAsync(PageEvent.Console),
                 Page.GoToAsync(TestConstants.ServerUrl + "/consolelog.html")
             );
-            Assert.Equal("yellow", messageEvent.Message.Text);
-            Assert.Equal("log", messageEvent.Message.Type);
-            var location = messageEvent.Message.Location;
-            // Engines have different column notion.
-            location.ColumnNumber = null;
-            Assert.Equal(new ConsoleMessageLocation
-            {
-                URL = TestConstants.ServerUrl + "/consolelog.html",
-                LineNumber = 7
-            }, location);
+            Assert.Equal("yellow", messageEvent.Text);
+            Assert.Equal("log", messageEvent.Type);
+            string location = messageEvent.Location;
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should not throw when there are console messages in detached iframes")]
@@ -155,7 +148,7 @@ namespace PlaywrightSharp.Tests
                     frame.remove();
                 }"));
             // 4. Connect to the popup and make sure it doesn't throw.
-            Assert.Equal(2, await popup.Page.EvaluateAsync<int>("1 + 1"));
+            Assert.Equal(2, await popup.EvaluateAsync<int>("1 + 1"));
         }
     }
 }
