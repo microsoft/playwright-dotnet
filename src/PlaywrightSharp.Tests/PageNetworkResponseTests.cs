@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -135,7 +135,7 @@ namespace PlaywrightSharp.Tests
 
             // Setup page to trap response.
             bool requestFinished = false;
-            Page.RequestFinished += (_, e) => requestFinished = requestFinished || e.Request.Url.Contains("/get");
+            Page.RequestFinished += (_, e) => requestFinished = requestFinished || e.Url.Contains("/get");
             // send request and wait for server response
             var (pageResponse, _) = await TaskUtils.WhenAll(
                 Page.WaitForEventAsync(PageEvent.Response),

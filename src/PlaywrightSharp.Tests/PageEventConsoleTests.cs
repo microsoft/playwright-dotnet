@@ -84,7 +84,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotFailForWindowObject()
         {
-            ConsoleMessage message = null;
+            IConsoleMessage message = null;
             void EventHandler(object sender, IConsoleMessage e)
             {
                 message = e;

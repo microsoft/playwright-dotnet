@@ -58,12 +58,12 @@ namespace PlaywrightSharp.Tests
 
             var waitForRequestTask = Server.WaitForRequest("/one-style.css");
             var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
-            var domContentLoadedTask = Page.WaitForNavigationAsync(LoadState.DOMContentLoaded);
+            var domContentLoadedTask = Page.WaitForNavigationAsync(WaitUntilState.DOMContentLoaded);
 
             bool bothFired = false;
             var bothFiredTask = TaskUtils.WhenAll(
                 domContentLoadedTask,
-                Page.WaitForNavigationAsync(LoadState.Load)).ContinueWith(_ => bothFired = true);
+                Page.WaitForNavigationAsync(WaitUntilState.Load)).ContinueWith(_ => bothFired = true);
 
             await waitForRequestTask.WithTimeout(TestConstants.DefaultTaskTimeout);
             await domContentLoadedTask.WithTimeout(TestConstants.DefaultTaskTimeout);
@@ -291,7 +291,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkForCrossProcessNavigations()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var waitTask = Page.WaitForNavigationAsync(LoadState.DOMContentLoaded);
+            var waitTask = Page.WaitForNavigationAsync(WaitUntilState.DOMContentLoaded);
 
             string url = TestConstants.CrossProcessHttpPrefix + "/empty.html";
             var gotoTask = Page.GoToAsync(url);

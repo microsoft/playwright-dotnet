@@ -114,7 +114,7 @@ namespace PlaywrightSharp.Tests
         {
             var events = new List<string>();
             Page.Request += (_, e) => events.Add($"{e.Method} {e.Url}");
-            Page.Response += (_, e) => events.Add($"{(int)e.Response.Status} {e.Url}");
+            Page.Response += (_, e) => events.Add($"{(int)e.Status} {e.Url}");
             Page.RequestFinished += (_, e) => events.Add($"DONE {e.Url}");
             Page.RequestFailed += (_, e) => events.Add($"FAIL {e.Url}");
             Server.SetRedirect("/foo.html", "/empty.html");

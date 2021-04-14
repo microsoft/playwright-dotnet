@@ -88,10 +88,10 @@ namespace PlaywrightSharp.Tests
             }");
 
             var popup = await popupTask;
-            var dialog = await popup.Page.WaitForEventAsync(PageEvent.Dialog);
+            var dialog = await popup.WaitForEventAsync(PageEvent.Dialog);
 
-            Assert.Equal("hello", dialog.Dialog.Message);
-            await dialog.Dialog.DismissAsync();
+            Assert.Equal("hello", dialog.Message);
+            await dialog.DismissAsync();
             await evaluateTask;
         }
 

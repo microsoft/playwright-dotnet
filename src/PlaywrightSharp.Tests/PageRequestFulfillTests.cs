@@ -69,7 +69,7 @@ namespace PlaywrightSharp.Tests
                 byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
                 route.FulfillAsync(
                     contentType: "image/png",
-                    bodyContent: imageBuffer);
+                    bodyBytes: imageBuffer);
             });
             await Page.EvaluateAsync(@"PREFIX => {
                 const img = document.createElement('img');
@@ -154,10 +154,10 @@ namespace PlaywrightSharp.Tests
 
             IRequest playwrightRequest = null;
 
-            await Page.RouteAsync(TestConstants.CrossProcessUrl + "/something", (route, request) =>
+            await Page.RouteAsync(TestConstants.CrossProcessUrl + "/something", (route) =>
             {
-                playwrightRequest = request;
-                route.ResumeAsync(headers: request.Headers.ToDictionary(x => x.Key, x => x.Value));
+                playwrightRequest = route.Request;
+                route.ResumeAsync(headers: route.Request.Headers.ToDictionary(x => x.Key, x => x.Value));
             });
 
             string textAfterRoute = await Page.EvaluateAsync<string>(@"async url => {
@@ -178,9 +178,9 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
             IRequest interceptedRequest = null;
 
-            await Page.RouteAsync(TestConstants.CrossProcessUrl + "/something", (route, request) =>
+            await Page.RouteAsync(TestConstants.CrossProcessUrl + "/something", (route) =>
             {
-                interceptedRequest = request;
+                interceptedRequest = route.Request;
                 route.FulfillAsync(
                     headers: new Dictionary<string, string> { ["Access-Control-Allow-Origin"] = "*" },
                     contentType: "text/plain",

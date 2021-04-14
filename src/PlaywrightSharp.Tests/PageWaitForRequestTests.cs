@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkWithPredicate()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var task = Page.WaitForEventAsync(PageEvent.Request, e => e.Request.Url == TestConstants.ServerUrl + "/digits/2.png");
+            var task = Page.WaitForEventAsync(PageEvent.Request, e => e.Url == TestConstants.ServerUrl + "/digits/2.png");
             var (requestEvent, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync<string>(@"() => {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,7 +46,7 @@ namespace PlaywrightSharp.Tests
         {
             var requests = new List<IRequest>();
 
-            Page.RequestFinished += (_, e) => requests.Add(e.Request);
+            Page.RequestFinished += (_, e) => requests.Add(e);
             await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
 
             Assert.Equal(2, requests.Count);

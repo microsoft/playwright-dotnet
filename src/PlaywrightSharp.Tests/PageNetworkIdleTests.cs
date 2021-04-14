@@ -26,14 +26,14 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateToEmptyPageWithNetworkIdle()
         {
-            var response = await Page.GoToAsync(TestConstants.EmptyPage, LoadState.Networkidle);
+            var response = await Page.GoToAsync(TestConstants.EmptyPage, WaitUntilState.NetworkIdle);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle to succeed navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public Task ShouldWaitForNetworkidleToSucceedNavigation()
-            => NetworkIdleTestAsync(Page.MainFrame, () => Page.GoToAsync(TestConstants.ServerUrl + "/networkidle.html", LoadState.Networkidle));
+        public Task ShouldWaitForNetworkIdleToSucceedNavigation()
+            => NetworkIdleTestAsync(Page.MainFrame, () => Page.GoToAsync(TestConstants.ServerUrl + "/networkidle.html", WaitUntilState.NetworkIdle));
 
         [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle to succeed navigation with request from previous navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
             Server.SetRoute("/foo.js", _ => Task.CompletedTask);
             await Page.SetContentAsync("<script>fetch('foo.js')</script>");
-            await NetworkIdleTestAsync(Page.MainFrame, () => Page.GoToAsync(TestConstants.ServerUrl + "/networkidle.html", LoadState.Networkidle));
+            await NetworkIdleTestAsync(Page.MainFrame, () => Page.GoToAsync(TestConstants.ServerUrl + "/networkidle.html", WaitUntilState.NetworkIdle));
         }
 
         [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle in waitForNavigation")]
@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests
                 Page.MainFrame,
                 () =>
                 {
-                    var task = Page.WaitForNavigationAsync(LoadState.Networkidle);
+                    var task = Page.WaitForNavigationAsync(WaitUntilState.NetworkIdle);
                     Page.GoToAsync(TestConstants.ServerUrl + "/networkidle.html");
                     return task;
                 });
@@ -64,32 +64,32 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
             await NetworkIdleTestAsync(
                 Page.MainFrame,
-                () => Page.SetContentAsync("<script src='networkidle.js'></script>", LoadState.Networkidle),
+                () => Page.SetContentAsync("<script src='networkidle.js'></script>", waitUntil: WaitUntilState.NetworkIdle),
                 true);
         }
 
         [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle in setContent with request from previous navigation")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldWaitForNetworkidleInSetContentWithRequestFromPreviousNavigation()
+        public async Task ShouldWaitForNetworkIdleInSetContentWithRequestFromPreviousNavigation()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             Server.SetRoute("/foo.js", _ => Task.CompletedTask);
             await Page.SetContentAsync("<script>fetch('foo.js')</script>");
             await NetworkIdleTestAsync(
                 Page.MainFrame,
-                () => Page.SetContentAsync("<script src='networkidle.js'></script>", LoadState.Networkidle),
+                () => Page.SetContentAsync("<script src='networkidle.js'></script>", waitUntil: WaitUntilState.NetworkIdle),
                 true);
         }
 
         [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle when navigating iframe")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldWaitForNetworkidleWhenNavigatingIframe()
+        public async Task ShouldWaitForNetworkIdleWhenNavigatingIframe()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
             var frame = Page.FirstChildFrame();
             await NetworkIdleTestAsync(
                 frame,
-                () => frame.GoToAsync(TestConstants.ServerUrl + "/networkidle.html", LoadState.Networkidle));
+                () => frame.GoToAsync(TestConstants.ServerUrl + "/networkidle.html", WaitUntilState.NetworkIdle));
         }
 
         [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle in setContent from the child frame")]
@@ -99,7 +99,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
             await NetworkIdleTestAsync(
                 Page.MainFrame,
-                () => Page.SetContentAsync("<iframe src='networkidle.html'></iframe>", LoadState.Networkidle),
+                () => Page.SetContentAsync("<iframe src='networkidle.html'></iframe>", waitUntil: WaitUntilState.NetworkIdle),
                 true);
         }
 
@@ -108,11 +108,11 @@ namespace PlaywrightSharp.Tests
         public Task ShouldWaitForFromTheChildFrame()
             => NetworkIdleTestAsync(
                 Page.MainFrame,
-                () => Page.GoToAsync(TestConstants.ServerUrl + "/networkidle-frame.html", LoadState.Networkidle));
+                () => Page.GoToAsync(TestConstants.ServerUrl + "/networkidle-frame.html", WaitUntilState.NetworkIdle));
 
         [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle from the popup")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldWaitForNetworkidleFromThePopup()
+        public async Task ShouldWaitForNetworkIdleFromThePopup()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync(@"
@@ -129,7 +129,7 @@ namespace PlaywrightSharp.Tests
                     Page.WaitForEventAsync(PageEvent.Popup),
                     Page.ClickAsync("#box" + i));
 
-                await popup.Page.WaitForLoadStateAsync(LoadState.Networkidle);
+                await popup.WaitForLoadStateAsync(LoadState.NetworkIdle);
             }
         }
 
@@ -159,7 +159,7 @@ namespace PlaywrightSharp.Tests
             Server.SetRoute("/fetch-request-b.js", RequestDelegate);
             var secondFetchResourceRequested = Server.WaitForRequest("/fetch-request-b.js");
 
-            var waitForLoadTask = isSetContent ? Task.CompletedTask : frame.WaitForNavigationAsync(LoadState.Load);
+            var waitForLoadTask = isSetContent ? Task.CompletedTask : frame.WaitForNavigationAsync(WaitUntilState.Load);
 
             var actionTask = action();
 

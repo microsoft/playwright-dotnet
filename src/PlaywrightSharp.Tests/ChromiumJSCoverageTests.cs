@@ -22,7 +22,7 @@ namespace PlaywrightSharp.Tests
         {
             /*
             await Page.Coverage.StartJSCoverageAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/simple.html", LoadState.Networkidle);
+            await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/simple.html", LoadState.NetworkIdle);
             var coverage = await Page.Coverage.StopJSCoverageAsync();
             Assert.Single(coverage);
             Assert.Contains("/jscoverage/simple.html", coverage[0].Url);

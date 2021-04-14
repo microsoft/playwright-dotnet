@@ -246,7 +246,7 @@ namespace PlaywrightSharp.Tests
             });
 
             IRequest failedRequest = null;
-            Page.RequestFailed += (_, e) => failedRequest = e.Request;
+            Page.RequestFailed += (_, e) => failedRequest = e;
             await Page.GoToAsync(TestConstants.EmptyPage).ContinueWith(_ => { });
             Assert.NotNull(failedRequest);
             if (TestConstants.IsWebKit)

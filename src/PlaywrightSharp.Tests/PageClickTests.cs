@@ -405,11 +405,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldClickTheButtonWithFixedPositionInsideAnIframe()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.SetViewportSizeAsync(new ViewportSize
-            {
-                Width = 500,
-                Height = 500
-            });
+            await Page.SetViewportSizeAsync(500, 500);
             await Page.SetContentAsync("<div style=\"width:100px;height:2000px\">spacer</div>");
             await FrameUtils.AttachFrameAsync(Page, "button-test", TestConstants.ServerUrl + "/input/button.html");
             var frame = Page.FirstChildFrame();
@@ -448,7 +444,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '8px'");
-            await Page.ClickAsync("button", position: new Point { X = 20, Y = 10 });
+            await Page.ClickAsync("button", position: new Position { X = 20, Y = 10 });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
             Assert.Equal(TestConstants.IsWebKit ? 20 + 8 : 20, await Page.EvaluateAsync<int>("offsetX"));
@@ -462,7 +458,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '2em'");
             await Page.EvalOnSelectorAsync("button", "button => button.style.fontSize = '12px'");
-            await Page.ClickAsync("button", position: new Point { X = 20, Y = 10 });
+            await Page.ClickAsync("button", position: new Position { X = 20, Y = 10 });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
             Assert.Equal(TestConstants.IsWebKit ? 12 * 2 + 20 : 20, await Page.EvaluateAsync<int>("offsetX"));
@@ -476,7 +472,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '8px'");
             await Page.EvalOnSelectorAsync("button", "button => button.style.height = button.style.width = '2000px'");
-            await Page.ClickAsync("button", position: new Point { X = 1900, Y = 1910 });
+            await Page.ClickAsync("button", position: new Position { X = 1900, Y = 1910 });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
             Assert.Equal(TestConstants.IsWebKit ? 1900 + 8 : 1900, await Page.EvaluateAsync<int>("offsetX"));
@@ -500,7 +496,7 @@ namespace PlaywrightSharp.Tests
                 button.style.borderWidth = '8px';
             }");
 
-            await Page.ClickAsync("button", position: new Point { X = 1900, Y = 1910 });
+            await Page.ClickAsync("button", position: new Position { X = 1900, Y = 1910 });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
             Assert.Equal(TestConstants.IsWebKit ? 1900 + 8 : 1900, await Page.EvaluateAsync<int>("offsetX"));
@@ -529,7 +525,7 @@ namespace PlaywrightSharp.Tests
                 document.body.style.margin = '0';
             }");
 
-            await page.ClickAsync("button", position: new Point { X = 20, Y = 10 });
+            await page.ClickAsync("button", position: new Position { X = 20, Y = 10 });
             Assert.Equal("Clicked", await page.EvaluateAsync<string>("window.result"));
 
             var point = TestConstants.Product switch
@@ -727,14 +723,14 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldUpdateModifiersCorrectly()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.ClickAsync("button", modifiers: new[] { Modifier.Shift });
+            await Page.ClickAsync("button", modifiers: new[] { KeyboardModifier.Shift });
             Assert.True(await Page.EvaluateAsync<bool>("shiftKey"));
-            await Page.ClickAsync("button", modifiers: new IEnumerable<KeyboardModifier> { });
+            await Page.ClickAsync("button", modifiers: Array.Empty<KeyboardModifier>());
             Assert.False(await Page.EvaluateAsync<bool>("shiftKey"));
 
             await Page.Keyboard.DownAsync("Shift");
 
-            await Page.ClickAsync("button", modifiers: new IEnumerable<KeyboardModifier> { });
+            await Page.ClickAsync("button", modifiers: Array.Empty<KeyboardModifier>());
             Assert.False(await Page.EvaluateAsync<bool>("shiftKey"));
 
             await Page.ClickAsync("button");

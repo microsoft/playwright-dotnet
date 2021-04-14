@@ -26,11 +26,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.SetViewportSizeAsync(new ViewportSize
-            {
-                Width = 500,
-                Height = 500
-            });
+            await Page.SetViewportSizeAsync(500, 500);
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             byte[] screenshot = await Page.ScreenshotAsync();
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-sanity.png", screenshot));
@@ -40,11 +36,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClipRect()
         {
-            await Page.SetViewportSizeAsync(new ViewportSize
-            {
-                Width = 500,
-                Height = 500
-            });
+            await Page.SetViewportSizeAsync(500, 500);
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             byte[] screenshot = await Page.ScreenshotAsync(
                 new Rect
