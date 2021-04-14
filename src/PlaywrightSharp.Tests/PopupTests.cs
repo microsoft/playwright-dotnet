@@ -29,8 +29,8 @@ namespace PlaywrightSharp.Tests
             var popupTask = context.WaitForEventAsync(ContextEvent.Page);
             await TaskUtils.WhenAll(popupTask, page.ClickAsync("a"));
 
-            await popupTask.Result.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-            string userAgent = await popupTask.Result.Page.EvaluateAsync<string>("() => window.initialUserAgent");
+            await popupTask.Result.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+            string userAgent = await popupTask.Result.EvaluateAsync<string>("() => window.initialUserAgent");
             await requestTcs.Task;
 
             Assert.Equal("hey", userAgent);
@@ -118,8 +118,8 @@ namespace PlaywrightSharp.Tests
                 popup,
                 page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.ServerUrl + "/title.html"));
 
-            await popup.Result.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-            Assert.Equal("Woof-Woof", await popup.Result.Page.TitleAsync());
+            await popup.Result.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+            Assert.Equal("Woof-Woof", await popup.Result.TitleAsync());
         }
 
         [PlaywrightTest("popup.spec.ts", "should inherit touch support from browser context")]
@@ -243,9 +243,9 @@ namespace PlaywrightSharp.Tests
                 popup,
                 page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.CrossProcessUrl + "/title.html"));
 
-            Assert.Equal(123, await popup.Result.Page.EvaluateAsync<int>("injected"));
-            await popup.Result.Page.ReloadAsync();
-            Assert.Equal(123, await popup.Result.Page.EvaluateAsync<int>("injected"));
+            Assert.Equal(123, await popup.Result.EvaluateAsync<int>("injected"));
+            await popup.Result.ReloadAsync();
+            Assert.Equal(123, await popup.Result.EvaluateAsync<int>("injected"));
         }
 
         [PlaywrightTest("popup.spec.ts", "should expose function from browser context")]

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Tests.Attributes;
@@ -145,7 +145,7 @@ namespace PlaywrightSharp.Tests
                 page.EvaluateAsync("url => window.open(url)", TestConstants.ServerUrl + "/one-style.html"),
                 Server.WaitForRequest("/one-style.css"));
 
-            var newPage = pageCreatedTask.Result.Page;
+            var newPage = pageCreatedTask.Result;
 
             await newPage.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             Assert.Equal(TestConstants.ServerUrl + "/one-style.html", newPage.Url);
@@ -209,7 +209,7 @@ namespace PlaywrightSharp.Tests
               popupEventTask,
               page.ClickAsync("a", modifiers: new[] { KeyboardModifier.Shift }));
 
-            Assert.Null(await popupEventTask.Result.Page.OpenerAsync());
+            Assert.Null(await popupEventTask.Result.OpenerAsync());
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should report when a new page is created and closed")]
@@ -228,7 +228,7 @@ namespace PlaywrightSharp.Tests
               popupEventTask,
               page.ClickAsync("a", modifiers: new[] { TestConstants.IsMacOSX ? KeyboardModifier.Meta : KeyboardModifier.Control }));
 
-            Assert.Null(await popupEventTask.Result.Page.OpenerAsync());
+            Assert.Null(await popupEventTask.Result.OpenerAsync());
         }
     }
 }
