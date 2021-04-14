@@ -108,7 +108,7 @@ namespace PlaywrightSharp.Tests
             });
 
             var page = await context.NewPageAsync();
-            await page.RouteAsync("**/empty.html", (route, _) =>
+            await page.RouteAsync("**/empty.html", (route) =>
             {
                 route.FulfillAsync(HttpStatusCode.OK, "page");
             });
@@ -122,13 +122,13 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldFallBackToContextRoute()
         {
             await using var context = await Browser.NewContextAsync();
-            await context.RouteAsync("**/empty.html", (route, _) =>
+            await context.RouteAsync("**/empty.html", (route) =>
             {
                 route.FulfillAsync(HttpStatusCode.OK, "context");
             });
 
             var page = await context.NewPageAsync();
-            await page.RouteAsync("**/non-empty.html", (route, _) =>
+            await page.RouteAsync("**/non-empty.html", (route) =>
             {
                 route.FulfillAsync(HttpStatusCode.OK, "page");
             });

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -116,10 +116,10 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public async Task<IElementHandle> FrameElementAsync()
-            => (await _channel.GetFrameElementAsync().ConfigureAwait(false)).Object;
+            => (await _channel.FrameElementAsync().ConfigureAwait(false)).Object;
 
         /// <inheritdoc />
-        public Task<string> TitleAsync() => _channel.GetTitleAsync();
+        public Task<string> TitleAsync() => _channel.TitleAsync();
 
         /// <inheritdoc />
         public Task<IResponse> GoToAsync(string url, WaitUntilState waitUntil, float? timeout, string referer)
@@ -423,11 +423,11 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<string> InnerHTMLAsync(string selector, float? timeout)
-            => GetInnerHTMLAsync(false, selector, timeout);
+            => InnerHTMLAsync(false, selector, timeout);
 
         /// <inheritdoc />
         public Task<string> InnerTextAsync(string selector, float? timeout)
-            => GetInnerTextAsync(false, selector, timeout);
+            => InnerTextAsync(false, selector, timeout);
 
         /// <inheritdoc />
         public Task<string> TextContentAsync(string selector, float? timeout)
@@ -472,11 +472,11 @@ namespace PlaywrightSharp
         internal Task<string> GetAttributeAsync(bool isPageCall, string selector, string name, float? timeout)
             => _channel.GetAttributeAsync(selector, name, timeout, isPageCall);
 
-        internal Task<string> GetInnerHTMLAsync(bool isPageCall, string selector, float? timeout)
-            => _channel.GetInnerHTMLAsync(selector, timeout, isPageCall);
+        internal Task<string> InnerHTMLAsync(bool isPageCall, string selector, float? timeout)
+            => _channel.InnerHTMLAsync(selector, timeout, isPageCall);
 
-        internal Task<string> GetInnerTextAsync(bool isPageCall, string selector, float? timeout)
-            => _channel.GetInnerTextAsync(selector, timeout, isPageCall);
+        internal Task<string> InnerTextAsync(bool isPageCall, string selector, float? timeout)
+            => _channel.InnerTextAsync(selector, timeout, isPageCall);
 
         internal Task<string> GetTextContentAsync(bool isPageCall, string selector, float? timeout)
             => _channel.GetTextContentAsync(selector, timeout, isPageCall);

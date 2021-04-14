@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests
                 WriteIndented = true
             });
 
-            var request = task.Result.Request;
+            var request = task.Result;
             Assert.Equal(expectedJsonValue, request.PostData);
             Assert.Equal(value, request.GetPayloadAsJson().RootElement.GetString());
         }
@@ -69,7 +69,7 @@ namespace PlaywrightSharp.Tests
 
             Task.WaitAll(task, actualTask);
 
-            var request = task.Result.Request;
+            var request = task.Result;
             Assert.Equal(42, request.GetPayloadAsJson().RootElement.GetProperty("value").GetInt32());
         }
 
@@ -91,7 +91,7 @@ namespace PlaywrightSharp.Tests
 
             Task.WaitAll(task, actualTask);
 
-            var request = task.Result.Request;
+            var request = task.Result;
             Assert.ThrowsAny<JsonException>(() => request.GetPayloadAsJson());
         }
 
@@ -113,7 +113,7 @@ namespace PlaywrightSharp.Tests
 
             Task.WaitAll(task, actualTask);
 
-            var request = task.Result.Request;
+            var request = task.Result;
             Assert.Equal(42, request.GetPayloadAsJson().RootElement.GetProperty("value").GetInt32());
         }
     }

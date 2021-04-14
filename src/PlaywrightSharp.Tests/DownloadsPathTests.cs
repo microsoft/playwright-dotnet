@@ -32,11 +32,11 @@ namespace PlaywrightSharp.Tests
                 downloadTask,
                 page.ClickAsync("a"));
 
-            var download = downloadTask.Result.Download;
+            var download = downloadTask.Result;
             Assert.Equal($"{TestConstants.ServerUrl}/download", download.Url);
             Assert.Equal("file.txt", download.SuggestedFilename);
 
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => download.GetPathAsync());
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => download.PathAsync());
 
             await page.CloseAsync();
             await _browser.CloseAsync();
@@ -55,8 +55,8 @@ namespace PlaywrightSharp.Tests
                 downloadTask,
                 page.ClickAsync("a"));
 
-            var download = downloadTask.Result.Download;
-            string path = await download.GetPathAsync();
+            var download = downloadTask.Result;
+            string path = await download.PathAsync();
             Assert.True(new FileInfo(path).Exists);
             await page.CloseAsync();
             Assert.False(new FileInfo(path).Exists);
@@ -74,8 +74,8 @@ namespace PlaywrightSharp.Tests
                 downloadTask,
                 page.ClickAsync("a"));
 
-            var download = downloadTask.Result.Download;
-            string path = await download.GetPathAsync();
+            var download = downloadTask.Result;
+            string path = await download.PathAsync();
             Assert.StartsWith(_tmp.Path, path);
             await page.CloseAsync();
         }

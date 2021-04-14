@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) 2020 Darío Kondratiuk
@@ -287,7 +287,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["enabled"] = enabled,
                 });
 
-        internal Task<PageChannel> GetOpenerAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "opener", null);
+        internal Task<PageChannel> OpenerAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "opener", null);
 
         internal async Task<AccessibilitySnapshotResult> AccessibilitySnapshotAsync(bool? interestingOnly, IChannel<ElementHandle> root)
         {

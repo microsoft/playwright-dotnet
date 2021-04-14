@@ -229,7 +229,7 @@ namespace PlaywrightSharp.Tests
                 page.WaitForEventAsync(PageEvent.Worker),
                 page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], {type: 'application/javascript'})))"));
 
-            Assert.Equal("10\u00A0000,2", await worker.Worker.EvaluateAsync<string>("() => (10000.20).toLocaleString()"));
+            Assert.Equal("10\u00A0000,2", await worker.EvaluateAsync<string>("() => (10000.20).toLocaleString()"));
         }
     }
 }

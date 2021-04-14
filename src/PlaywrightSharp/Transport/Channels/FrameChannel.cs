@@ -273,9 +273,9 @@ namespace PlaywrightSharp.Transport.Channels
                     ["isPage"] = isPage,
                 });
 
-        internal Task<ElementHandleChannel> GetFrameElementAsync() => Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "frameElement", null);
+        internal Task<ElementHandleChannel> FrameElementAsync() => Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "frameElement", null);
 
-        internal async Task<string> GetTitleAsync()
+        internal async Task<string> TitleAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "title", null).ConfigureAwait(false))?.GetProperty("value").ToString();
 
         internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout, bool isPage)
@@ -724,7 +724,7 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "getAttribute", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal async Task<string> GetInnerHTMLAsync(string selector, float? timeout, bool isPage)
+        internal async Task<string> InnerHTMLAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {
@@ -788,7 +788,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "focus", args);
         }
 
-        internal async Task<string> GetInnerTextAsync(string selector, float? timeout, bool isPage)
+        internal async Task<string> InnerTextAsync(string selector, float? timeout, bool isPage)
         {
             var args = new Dictionary<string, object>
             {

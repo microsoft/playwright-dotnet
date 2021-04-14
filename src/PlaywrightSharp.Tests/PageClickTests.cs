@@ -147,7 +147,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/offscreenbuttons.html");
             var messages = new List<string>();
-            Page.Console += (_, e) => messages.Add(e.Message.Text);
+            Page.Console += (_, e) => messages.Add(e.Text);
 
             for (int i = 0; i < 11; ++i)
             {

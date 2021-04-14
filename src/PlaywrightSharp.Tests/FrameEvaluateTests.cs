@@ -1,4 +1,5 @@
 ﻿using System.Dynamic;
+using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -22,11 +23,11 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
-            Assert.Equal(2, Page.Frames.Length);
-            await Page.Frames[0].EvaluateAsync("() => window.FOO = 'foo'");
-            await Page.Frames[1].EvaluateAsync("() => window.FOO = 'bar'");
-            Assert.Equal("foo", await Page.Frames[0].EvaluateAsync<string>("() => window.FOO"));
-            Assert.Equal("bar", await Page.Frames[1].EvaluateAsync<string>("() => window.FOO"));
+            Assert.Equal(2, Page.Frames.Count);
+            await Page.Frames.First().EvaluateAsync("() => window.FOO = 'foo'");
+            await Page.Frames.ElementAt(1).EvaluateAsync("() => window.FOO = 'bar'");
+            Assert.Equal("foo", await Page.Frames.First().EvaluateAsync<string>("() => window.FOO"));
+            Assert.Equal("bar", await Page.Frames.ElementAt(1).EvaluateAsync<string>("() => window.FOO"));
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should have correct execution contexts")]
@@ -34,9 +35,9 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldHaveCorrectExecutionContexts()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
-            Assert.Equal(2, Page.Frames.Length);
-            Assert.Empty(await Page.Frames[0].EvaluateAsync<string>("() => document.body.textContent.trim()"));
-            Assert.Equal("Hi, I'm frame", await Page.Frames[1].EvaluateAsync<string>("() => document.body.textContent.trim()"));
+            Assert.Equal(2, Page.Frames.Count);
+            Assert.Empty(await Page.Frames.First().EvaluateAsync<string>("() => document.body.textContent.trim()"));
+            Assert.Equal("Hi, I'm frame", await Page.Frames.ElementAt(1).EvaluateAsync<string>("() => document.body.textContent.trim()"));
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should dispose context on navigation")]
@@ -73,7 +74,7 @@ namespace PlaywrightSharp.Tests
                 iframe.contentWindow.__foo = foo;
                 return foo;
             }");
-            var childFrame = Page.MainFrame.ChildFrames[0];
+            var childFrame = Page.MainFrame.ChildFrames.First();
             dynamic childResult = await childFrame.EvaluateAsync<ExpandoObject>("() => window.__foo");
             Assert.Equal("baz", childResult.bar);
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => childFrame.EvaluateAsync<string>("foo => foo.bar", handle));
@@ -85,7 +86,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldAllowCrossFrameElementHandles()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
-            var bodyHandle = await Page.MainFrame.ChildFrames[0].QuerySelectorAsync("body");
+            var bodyHandle = await Page.MainFrame.ChildFrames.First().QuerySelectorAsync("body");
             string result = await Page.EvaluateAsync<string>("body => body.innerHTML", bodyHandle);
             Assert.Equal("<div>Hi, I\'m frame</div>", result.Trim());
         }
@@ -117,18 +118,18 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
-            Assert.Equal(2, Page.Frames.Length);
+            Assert.Equal(2, Page.Frames.Count);
             var frames = Page.Frames;
-            Assert.NotSame(frames[0], frames[1]);
+            Assert.NotSame(frames.First(), frames.ElementAt(1));
 
             await TaskUtils.WhenAll(
-                frames[0].EvaluateAsync("() => window.a = 1"),
-                frames[1].EvaluateAsync("() => window.a = 2")
+                frames.First().EvaluateAsync("() => window.a = 1"),
+                frames.ElementAt(1).EvaluateAsync("() => window.a = 2")
             );
 
             var (result1, result2) = await TaskUtils.WhenAll(
-                frames[0].EvaluateAsync<int>("() => window.a"),
-                frames[1].EvaluateAsync<int>("() => window.a")
+                frames.First().EvaluateAsync<int>("() => window.a"),
+                frames.ElementAt(1).EvaluateAsync<int>("() => window.a")
             );
             Assert.Equal(1, result1);
             Assert.Equal(2, result2);
@@ -141,7 +142,7 @@ namespace PlaywrightSharp.Tests
             await Page.SetContentAsync(
                 @"<meta http-equiv=""Content-Security-Policy"" content=""script-src 'none';"">
                  <iframe src='javascript:""""'></iframe>",
-                LoadState.DOMContentLoaded);
+                waitUntil: WaitUntilState.DOMContentLoaded);
 
             await Page.EvaluateAsync(@"() => {
                 const iframe = document.querySelector('iframe');
@@ -149,9 +150,9 @@ namespace PlaywrightSharp.Tests
                 iframe.contentDocument.body.appendChild(div);
             }");
 
-            Assert.Equal("about:blank", Page.Frames[1].Url);
-            Assert.Equal("about:blank", await Page.Frames[1].EvaluateAsync<string>("() => window.location.href"));
-            Assert.NotNull(await Page.Frames[1].QuerySelectorAsync("DIV"));
+            Assert.Equal("about:blank", Page.Frames.ElementAt(1).Url);
+            Assert.Equal("about:blank", await Page.Frames.ElementAt(1).EvaluateAsync<string>("() => window.location.href"));
+            Assert.NotNull(await Page.Frames.ElementAt(1).QuerySelectorAsync("DIV"));
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should work in iframes that failed initial navigation")]
@@ -169,8 +170,8 @@ namespace PlaywrightSharp.Tests
                 iframe.contentDocument.close();
             }");
 
-            Assert.Equal(TestConstants.EmptyPage, await Page.Frames[1].EvaluateAsync<string>("() => window.location.href"));
-            Assert.NotNull(await Page.Frames[1].QuerySelectorAsync("DIV"));
+            Assert.Equal(TestConstants.EmptyPage, await Page.Frames.ElementAt(1).EvaluateAsync<string>("() => window.location.href"));
+            Assert.NotNull(await Page.Frames.ElementAt(1).QuerySelectorAsync("DIV"));
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "evaluateHandle should work")]

@@ -28,8 +28,8 @@ namespace PlaywrightSharp.Tests.Chromium
         {
             _page = await _browser.NewPageAsync();
             await _page.GoToAsync(TestConstants.ServerUrl + "/dynamic-oopif.html");
-            Assert.Equal(2, _page.Frames.Length);
-            Assert.Equal(TestConstants.CrossProcessHttpPrefix + "/grid.html", await _page.Frames[1].EvaluateAsync<string>("() => '' + location.href"));
+            Assert.Equal(2, _page.Frames.Count);
+            Assert.Equal(TestConstants.CrossProcessHttpPrefix + "/grid.html", await _page.Frames.ElementAt(1).EvaluateAsync<string>("() => '' + location.href"));
         }
 
         [PlaywrightTest("chromium/oopif.spec.ts", "oopif", "should handle oopif detach")]
@@ -39,14 +39,14 @@ namespace PlaywrightSharp.Tests.Chromium
             await _page.GoToAsync(TestConstants.ServerUrl + "/dynamic-oopif.html");
             Assert.Equal(1, await CountOOPIFsASync(_browser));
             Assert.Equal(2, _page.Frames.Count());
-            var frame = _page.Frames[1];
+            var frame = _page.Frames.ElementAt(1);
             Assert.Equal(TestConstants.CrossProcessHttpPrefix + "/grid.html", await frame.EvaluateAsync<string>("() => '' + location.href"));
 
             var (frameDetached, _) = await TaskUtils.WhenAll(
                 _page.WaitForEventAsync(PageEvent.FrameDetached),
                 _page.EvaluateAsync<string>("() => document.querySelector('iframe').remove()"));
 
-            Assert.Equal(frame, frameDetached.Frame);
+            Assert.Equal(frame, frameDetached);
         }
 
         [PlaywrightTest("chromium/oopif.spec.ts", "oopif", "should handle remote -> local -> remote transitions")]
@@ -56,20 +56,20 @@ namespace PlaywrightSharp.Tests.Chromium
             await _page.GoToAsync(TestConstants.ServerUrl + "/dynamic-oopif.html");
             Assert.Equal(2, _page.Frames.Count());
             Assert.Equal(1, await CountOOPIFsASync(_browser));
-            Assert.Equal(TestConstants.CrossProcessHttpPrefix + "/grid.html", await _page.Frames[1].EvaluateAsync<string>("() => '' + location.href"));
+            Assert.Equal(TestConstants.CrossProcessHttpPrefix + "/grid.html", await _page.Frames.ElementAt(1).EvaluateAsync<string>("() => '' + location.href"));
 
             await TaskUtils.WhenAll(
-                _page.Frames[1].WaitForNavigationAsync(),
+                _page.Frames.ElementAt(1).WaitForNavigationAsync(),
                 _page.EvaluateAsync<string>("() => goLocal()"));
 
-            Assert.Equal(TestConstants.ServerUrl + "/grid.html", await _page.Frames[1].EvaluateAsync<string>("() => '' + location.href"));
+            Assert.Equal(TestConstants.ServerUrl + "/grid.html", await _page.Frames.ElementAt(1).EvaluateAsync<string>("() => '' + location.href"));
             Assert.Equal(0, await CountOOPIFsASync(_browser));
 
             await TaskUtils.WhenAll(
-                _page.Frames[1].WaitForNavigationAsync(),
+                _page.Frames.ElementAt(1).WaitForNavigationAsync(),
                 _page.EvaluateAsync<string>("() => goRemote()"));
 
-            Assert.Equal(TestConstants.CrossProcessHttpPrefix + "/grid.html", await _page.Frames[1].EvaluateAsync<string>("() => '' + location.href"));
+            Assert.Equal(TestConstants.CrossProcessHttpPrefix + "/grid.html", await _page.Frames.ElementAt(1).EvaluateAsync<string>("() => '' + location.href"));
             Assert.Equal(1, await CountOOPIFsASync(_browser));
         }
 
@@ -87,7 +87,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal(2, _page.Frames.Count());
             Assert.Equal(1, await CountOOPIFsASync(_browser));
 
-            var oopif = _page.Frames[1];
+            var oopif = _page.Frames.ElementAt(1);
             await _page.ExposeFunctionAsync("mul", (int a, int b) => a * b);
 
             int result = await oopif.EvaluateAsync<int>(@"async function() {
@@ -105,7 +105,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal(2, _page.Frames.Count());
             Assert.Equal(1, await CountOOPIFsASync(_browser));
 
-            var oopif = _page.Frames[1];
+            var oopif = _page.Frames.ElementAt(1);
             Assert.False(await oopif.EvaluateAsync<bool?>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
             await _page.EmulateMediaAsync(ColorScheme.Dark);
             Assert.True(await oopif.EvaluateAsync<bool?>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
@@ -119,7 +119,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal(2, _page.Frames.Count());
             Assert.Equal(1, await CountOOPIFsASync(_browser));
 
-            var oopif = _page.Frames[1];
+            var oopif = _page.Frames.ElementAt(1);
             Assert.True(await oopif.EvaluateAsync<bool?>("() => navigator.onLine"));
             await _page.Context.SetOfflineAsync(true);
             Assert.False(await oopif.EvaluateAsync<bool?>("() => navigator.onLine"));
@@ -144,7 +144,7 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal(2, page.Frames.Count());
             Assert.Equal(1, await CountOOPIFsASync(_browser));
 
-            var oopif = page.Frames[1];
+            var oopif = page.Frames.ElementAt(1);
             Assert.True(await oopif.EvaluateAsync<bool?>("() => 'ontouchstart' in window"));
             Assert.Equal(
                 "Sat Nov 19 2016 13:12:34 GMT-0500 (heure normale de l’Est nord-américain)",
@@ -161,10 +161,10 @@ namespace PlaywrightSharp.Tests.Chromium
         {
             bool intercepted = false;
 
-            await _page.RouteAsync("**/digits/0.png", (route, _) =>
+            await _page.RouteAsync("**/digits/0.png", (route) =>
             {
                 intercepted = true;
-                route.ContinueAsync();
+                route.ResumeAsync();
             });
 
             await _page.GoToAsync(TestConstants.ServerUrl + "/dynamic-oopif.html");
@@ -188,7 +188,7 @@ namespace PlaywrightSharp.Tests.Chromium
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldLoadOopififramesWithSubresourcesAndRoute()
         {
-            await _page.RouteAsync("**/*", (route, _) => route.ContinueAsync());
+            await _page.RouteAsync("**/*", (route) => route.ResumeAsync());
             await _page.GoToAsync(TestConstants.ServerUrl + "/dynamic-oopif.html");
             Assert.Equal(1, await CountOOPIFsASync(_browser));
         }
@@ -200,8 +200,8 @@ namespace PlaywrightSharp.Tests.Chromium
             var requestFrames = new List<IFrame>();
             var finishedFrames = new List<IFrame>();
 
-            _page.Request += (_, e) => requestFrames.Add(e.Request.Frame);
-            _page.RequestFinished += (_, e) => finishedFrames.Add(e.Request.Frame);
+            _page.Request += (_, e) => requestFrames.Add(e.Frame);
+            _page.RequestFinished += (_, e) => finishedFrames.Add(e.Frame);
 
             await _page.GoToAsync(TestConstants.ServerUrl + "/empty.html");
             var main = _page.MainFrame;
@@ -213,8 +213,8 @@ namespace PlaywrightSharp.Tests.Chromium
               return new Promise(f => iframe.onload = f);
             }", TestConstants.CrossProcessUrl + "/empty.html");
 
-            Assert.Equal(2, _page.Frames.Length);
-            var child = main.ChildFrames[0];
+            Assert.Equal(2, _page.Frames.Count);
+            var child = main.ChildFrames.First();
             await child.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
 
             await child.EvaluateAsync(@"url => {
@@ -224,15 +224,15 @@ namespace PlaywrightSharp.Tests.Chromium
               return new Promise(f => iframe.onload = f);
             }", TestConstants.ServerUrl + "/empty.html");
 
-            Assert.Equal(3, _page.Frames.Length);
-            var grandChild = child.ChildFrames[0];
+            Assert.Equal(3, _page.Frames.Count);
+            var grandChild = child.ChildFrames.First();
             await grandChild.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
 
             Assert.Equal(2, await CountOOPIFsASync(_browser));
             Assert.Equal(main, requestFrames[0]);
             Assert.Equal(main, finishedFrames[0]);
-            Assert.Equal(child, requestFrames[1]);
-            Assert.Equal(child, finishedFrames[1]);
+            Assert.Equal(child, requestFrames.ElementAt(1));
+            Assert.Equal(child, finishedFrames.ElementAt(1));
             Assert.Equal(grandChild, requestFrames[2]);
             Assert.Equal(grandChild, finishedFrames[2]);
         }
@@ -247,10 +247,10 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal(1, await CountOOPIFsASync(_browser));
             Assert.Equal(2, _page.Frames.Count());
 
-            Assert.Equal(4, await _page.Frames[0].EvaluateAsync<int>("() => inc(3)"));
-            Assert.Equal(5, await _page.Frames[1].EvaluateAsync<int>("() => inc(4)"));
-            Assert.Equal(2, await _page.Frames[0].EvaluateAsync<int>("() => dec(3)"));
-            Assert.Equal(3, await _page.Frames[1].EvaluateAsync<int>("() => dec(4)"));
+            Assert.Equal(4, await _page.Frames.First().EvaluateAsync<int>("() => inc(3)"));
+            Assert.Equal(5, await _page.Frames.ElementAt(1).EvaluateAsync<int>("() => inc(4)"));
+            Assert.Equal(2, await _page.Frames.First().EvaluateAsync<int>("() => dec(3)"));
+            Assert.Equal(3, await _page.Frames.ElementAt(1).EvaluateAsync<int>("() => dec(4)"));
         }
 
         [PlaywrightTest("chromium/oopif.spec.ts", "oopif", "should support addInitScript")]
@@ -263,10 +263,10 @@ namespace PlaywrightSharp.Tests.Chromium
             Assert.Equal(1, await CountOOPIFsASync(_browser));
             Assert.Equal(2, _page.Frames.Count());
 
-            Assert.Equal(42, await _page.Frames[0].EvaluateAsync<int>("() => window.foo"));
-            Assert.Equal(42, await _page.Frames[1].EvaluateAsync<int>("() => window.foo"));
-            Assert.Equal(17, await _page.Frames[0].EvaluateAsync<int>("() => window.bar"));
-            Assert.Equal(17, await _page.Frames[1].EvaluateAsync<int>("() => window.bar"));
+            Assert.Equal(42, await _page.Frames.First().EvaluateAsync<int>("() => window.foo"));
+            Assert.Equal(42, await _page.Frames.ElementAt(1).EvaluateAsync<int>("() => window.foo"));
+            Assert.Equal(17, await _page.Frames.First().EvaluateAsync<int>("() => window.bar"));
+            Assert.Equal(17, await _page.Frames.ElementAt(1).EvaluateAsync<int>("() => window.bar"));
         }
 
         [PlaywrightTest("chromium/oopif.spec.ts", "oopif", "should click a button when it overlays oopif")]
@@ -286,7 +286,7 @@ namespace PlaywrightSharp.Tests.Chromium
             await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
             var page = await browser.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
-            await page.RouteAsync("**/*", (route, _) => route.FulfillAsync(body: "YO, GOOGLE.COM"));
+            await page.RouteAsync("**/*", (route) => route.FulfillAsync(body: "YO, GOOGLE.COM"));
 
             await page.EvaluateAsync(@"() => {
               const frame = document.createElement('iframe');

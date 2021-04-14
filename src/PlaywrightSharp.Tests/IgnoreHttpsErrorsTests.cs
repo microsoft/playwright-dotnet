@@ -70,8 +70,8 @@ namespace PlaywrightSharp.Tests
             });
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { IgnoreHTTPSErrors = true });
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.HttpsPrefix + "/mixedcontent.html", LoadState.DOMContentLoaded);
-            Assert.Equal(2, page.Frames.Length);
+            await page.GoToAsync(TestConstants.HttpsPrefix + "/mixedcontent.html", WaitUntilState.DOMContentLoaded);
+            Assert.Equal(2, page.Frames.Count);
             Assert.Equal(3, await page.MainFrame.EvaluateAsync<int>("1 + 2"));
             Assert.Equal(5, await page.FirstChildFrame().EvaluateAsync<int>("2 + 3"));
         }

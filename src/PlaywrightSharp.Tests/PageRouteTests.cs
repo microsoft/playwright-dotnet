@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -39,7 +39,7 @@ namespace PlaywrightSharp.Tests
                 Assert.Equal(ResourceTypes.Document, request.ResourceType, true);
                 Assert.Same(request.Frame, Page.MainFrame);
                 Assert.Equal("about:blank", request.Frame.Url);
-                route.ContinueAsync();
+                route.ResumeAsync();
                 intercepted = true;
             });
 
@@ -53,29 +53,29 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldUnroute()
         {
             var intercepted = new List<int>();
-            Action<Route, IRequest> handler1 = (route, _) =>
+            Action<Route, IRequest> handler1 = (route) =>
             {
                 intercepted.Add(1);
-                route.ContinueAsync();
+                route.ResumeAsync();
             };
 
             await Page.RouteAsync("**/empty.html", handler1);
-            await Page.RouteAsync("**/empty.html", (route, _) =>
+            await Page.RouteAsync("**/empty.html", (route) =>
             {
                 intercepted.Add(2);
-                route.ContinueAsync();
+                route.ResumeAsync();
             });
 
-            await Page.RouteAsync("**/empty.html", (route, _) =>
+            await Page.RouteAsync("**/empty.html", (route) =>
             {
                 intercepted.Add(3);
-                route.ContinueAsync();
+                route.ResumeAsync();
             });
 
-            await Page.RouteAsync("**/*", (route, _) =>
+            await Page.RouteAsync("**/*", (route) =>
             {
                 intercepted.Add(4);
-                route.ContinueAsync();
+                route.ResumeAsync();
             });
 
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
@@ -98,7 +98,7 @@ namespace PlaywrightSharp.Tests
         {
             Server.SetRedirect("/rredirect", "/empty.html");
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.RouteAsync("**/*", (route, _) => route.ContinueAsync());
+            await Page.RouteAsync("**/*", (route) => route.ResumeAsync());
             await Page.SetContentAsync(@"
                 <form action='/rredirect' method='post'>
                     <input type=""hidden"" id=""foo"" name=""foo"" value=""FOOBAR"">
@@ -114,10 +114,10 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkWhenHeaderManipulationHeadersWithRedirect()
         {
             Server.SetRedirect("/rrredirect", "/empty.html");
-            await Page.RouteAsync("**/*", (route, _) =>
+            await Page.RouteAsync("**/*", (route) =>
             {
                 var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["foo"] = "bar" };
-                route.ContinueAsync(headers: headers);
+                route.ResumeAsync(headers: headers);
             });
             await Page.GoToAsync(TestConstants.ServerUrl + "/rrredirect");
         }
@@ -126,11 +126,11 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToRemoveHeaders()
         {
-            await Page.RouteAsync("**/*", (route, _) =>
+            await Page.RouteAsync("**/*", (route) =>
             {
                 var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["foo"] = "bar" };
                 headers.Remove("origin");
-                route.ContinueAsync(headers: headers);
+                route.ResumeAsync(headers: headers);
             });
 
             var originRequestHeader = Server.WaitForRequest("/empty.html", request => request.Headers["origin"]);
@@ -149,7 +149,7 @@ namespace PlaywrightSharp.Tests
             await Page.RouteAsync("**/*", (route, request) =>
             {
                 requests.Add(request);
-                route.ContinueAsync();
+                route.ResumeAsync();
             });
             await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
             Assert.Contains("/one-style.css", requests[1].Url);
@@ -170,7 +170,7 @@ namespace PlaywrightSharp.Tests
             });
 
             // Setup request interception.
-            await Page.RouteAsync("**/*", (route, _) => route.ContinueAsync());
+            await Page.RouteAsync("**/*", (route) => route.ResumeAsync());
             var response = await Page.ReloadAsync();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
@@ -186,7 +186,7 @@ namespace PlaywrightSharp.Tests
             await Page.RouteAsync("**/*", (route, request) =>
             {
                 Assert.Equal("bar", request.GetHeaderValue("foo"));
-                route.ContinueAsync();
+                route.ResumeAsync();
             });
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.True(response.Ok);
@@ -198,7 +198,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             Server.SetRedirect("/logo.png", "/pptr.png");
-            await Page.RouteAsync("**/*", (route, _) => route.ContinueAsync());
+            await Page.RouteAsync("**/*", (route) => route.ResumeAsync());
             int status = await Page.EvaluateAsync<int>(@"async () => {
                 var request = new XMLHttpRequest();
                 request.open('GET', '/logo.png', false);  // `false` makes the request synchronous
@@ -216,7 +216,7 @@ namespace PlaywrightSharp.Tests
             await Page.RouteAsync("**/*", (route, request) =>
             {
                 Assert.Equal(TestConstants.EmptyPage, request.GetHeaderValue("referer"));
-                route.ContinueAsync();
+                route.ResumeAsync();
             });
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.True(response.Ok);
@@ -226,7 +226,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbortable()
         {
-            await Page.RouteAsync(new Regex("\\.css"), (route, _) => route.AbortAsync());
+            await Page.RouteAsync(new Regex("\\.css"), (route) => route.AbortAsync());
 
             int failedRequests = 0;
             Page.RequestFailed += (_, _) => ++failedRequests;
@@ -240,7 +240,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbortableWithCustomErrorCodes()
         {
-            await Page.RouteAsync("**/*", (route, _) =>
+            await Page.RouteAsync("**/*", (route) =>
             {
                 route.AbortAsync(RequestAbortErrorCode.InternetDisconnected);
             });
@@ -268,7 +268,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldSendReferer()
         {
             await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = "http://google.com/" });
-            await Page.RouteAsync("**/*", (route, _) => route.ContinueAsync());
+            await Page.RouteAsync("**/*", (route) => route.ResumeAsync());
             var requestTask = Server.WaitForRequest("/grid.html", request => request.Headers["referer"]);
             await TaskUtils.WhenAll(
                 requestTask,
@@ -281,7 +281,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailNavigationWhenAbortingMainResource()
         {
-            await Page.RouteAsync("**/*", (route, _) => route.AbortAsync());
+            await Page.RouteAsync("**/*", (route) => route.AbortAsync());
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.GoToAsync(TestConstants.EmptyPage));
             Assert.NotNull(exception);
             if (TestConstants.IsWebKit)
@@ -305,7 +305,7 @@ namespace PlaywrightSharp.Tests
             var requests = new List<IRequest>();
             await Page.RouteAsync("**/*", (route, request) =>
             {
-                route.ContinueAsync();
+                route.ResumeAsync();
                 requests.Add(request);
             });
             Server.SetRedirect("/non-existing-page.html", "/non-existing-page-2.html");
@@ -349,7 +349,7 @@ namespace PlaywrightSharp.Tests
             var requests = new List<IRequest>();
             await Page.RouteAsync("**/*", (route, request) =>
             {
-                route.ContinueAsync();
+                route.ResumeAsync();
                 requests.Add(request);
             });
             Server.SetRedirect("/one-style.css", "/two-style.css");
@@ -394,7 +394,7 @@ namespace PlaywrightSharp.Tests
                 }
                 else
                 {
-                    _ = route.ContinueAsync();
+                    _ = route.ResumeAsync();
                 }
                 spinner = !spinner;
             });
@@ -416,7 +416,7 @@ namespace PlaywrightSharp.Tests
             await Page.RouteAsync("**/*", (route, request) =>
             {
                 requests.Add(request);
-                route.ContinueAsync();
+                route.ResumeAsync();
             });
             string dataURL = "data:text/html,<div>yo</div>";
             var response = await Page.GoToAsync(dataURL);
@@ -434,7 +434,7 @@ namespace PlaywrightSharp.Tests
             await Page.RouteAsync("**/*", (route, request) =>
             {
                 requests.Add(request);
-                route.ContinueAsync();
+                route.ResumeAsync();
             });
             string dataURL = "data:text/html,<div>yo</div>";
             string text = await Page.EvaluateAsync<string>("url => fetch(url).then(r => r.text())", dataURL);
@@ -450,7 +450,7 @@ namespace PlaywrightSharp.Tests
             await Page.RouteAsync("**/*", (route, request) =>
             {
                 requests.Add(request);
-                route.ContinueAsync();
+                route.ResumeAsync();
             });
             var response = await Page.GoToAsync(TestConstants.EmptyPage + "#hash");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -465,7 +465,7 @@ namespace PlaywrightSharp.Tests
         {
             // The requestWillBeSent will report encoded URL, whereas interception will
             // report URL as-is. @see crbug.com/759388
-            await Page.RouteAsync("**/*", (route, _) => route.ContinueAsync());
+            await Page.RouteAsync("**/*", (route) => route.ResumeAsync());
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/some nonexisting page");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -475,7 +475,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkWithBadlyEncodedServer()
         {
             Server.SetRoute("/malformed?rnd=%911", _ => Task.CompletedTask);
-            await Page.RouteAsync("**/*", (route, _) => route.ContinueAsync());
+            await Page.RouteAsync("**/*", (route) => route.ResumeAsync());
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/malformed?rnd=%911");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
@@ -489,7 +489,7 @@ namespace PlaywrightSharp.Tests
             var requests = new List<IRequest>();
             await Page.RouteAsync("**/*", (route, request) =>
             {
-                route.ContinueAsync();
+                route.ResumeAsync();
                 requests.Add(request);
             });
             var response = await Page.GoToAsync($"data:text/html,<link rel=\"stylesheet\" href=\"{TestConstants.EmptyPage}/fonts?helvetica|arial\"/>");
@@ -510,7 +510,7 @@ namespace PlaywrightSharp.Tests
             await Page.WaitForEventAsync(PageEvent.Request);
             // Delete frame to cause request to be canceled.
             await Page.EvalOnSelectorAsync("iframe", "frame => frame.remove()");
-            await route.ContinueAsync();
+            await route.ResumeAsync();
         }
 
         [PlaywrightTest("page-route.spec.ts", "should intercept main resource during cross-process navigation")]
@@ -526,7 +526,7 @@ namespace PlaywrightSharp.Tests
                     intercepted = true;
                 }
 
-                route.ContinueAsync();
+                route.ResumeAsync();
             });
             var response = await Page.GoToAsync(TestConstants.CrossProcessHttpPrefix + "/empty.html");
             Assert.True(response.Ok);
@@ -543,7 +543,7 @@ namespace PlaywrightSharp.Tests
             {
                 if (request.Url != TestConstants.ServerUrl + "/redirect_this")
                 {
-                    route.ContinueAsync();
+                    route.ResumeAsync();
                     return;
                 }
 

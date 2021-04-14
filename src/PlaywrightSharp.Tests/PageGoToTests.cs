@@ -33,7 +33,7 @@ namespace PlaywrightSharp.Tests
             string fileurl = new Uri(TestUtils.GetWebServerFile(Path.Combine("frames", "two-frames.html"))).AbsoluteUri;
             await Page.GoToAsync(fileurl);
             Assert.Equal(fileurl.ToLower(), Page.Url.ToLower());
-            Assert.Equal(3, Page.Frames.Length);
+            Assert.Equal(3, Page.Frames.Count);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should use http for no protocol")]
@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests
             Assert.Same(Page.MainFrame, response.Frame);
             Assert.Equal(TestConstants.ServerUrl + "/frames/one-frame.html", response.Url);
 
-            Assert.Equal(2, Page.Frames.Length);
+            Assert.Equal(2, Page.Frames.Count);
             Assert.Same(Page.FirstChildFrame(), requestFrame);
         }
 
@@ -114,7 +114,7 @@ namespace PlaywrightSharp.Tests
             Assert.Same(Page.MainFrame, response.Frame);
             Assert.Equal(TestConstants.CrossProcessHttpPrefix + "/frames/one-frame.html", response.Url);
 
-            Assert.Equal(2, Page.Frames.Length);
+            Assert.Equal(2, Page.Frames.Count);
             Assert.Same(Page.FirstChildFrame(), requestFrame);
         }
 

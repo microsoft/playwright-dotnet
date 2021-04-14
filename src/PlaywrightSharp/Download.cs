@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -51,7 +51,7 @@ namespace PlaywrightSharp
         /// Returns path to the downloaded file in case of successful download.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the download file path is resolved, yielding the path.</returns>
-        public Task<string> PathAsync() => _channel.GetPathAsync();
+        public Task<string> PathAsync() => _channel.PathAsync();
 
         /// <summary>
         /// Returns download error if any.

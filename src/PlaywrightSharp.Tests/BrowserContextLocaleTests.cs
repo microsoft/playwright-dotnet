@@ -118,7 +118,7 @@ namespace PlaywrightSharp.Tests
                 popupTask,
                 page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.ServerUrl + "/formatted-number.html"));
 
-            var popup = popupTask.Result.Page;
+            var popup = popupTask.Result;
             await popup.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             Assert.Equal("1 000 000,5", await popup.EvaluateAsync<string>("() => window.result"));
         }
@@ -140,7 +140,7 @@ namespace PlaywrightSharp.Tests
                 popupTask,
                 page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.ServerUrl + "/formatted-number.html"));
 
-            var popup = popupTask.Result.Page;
+            var popup = popupTask.Result;
             await popup.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             Assert.Equal("fr-CH", await popup.EvaluateAsync<string>("() => window.initialNavigatorLanguage"));
         }

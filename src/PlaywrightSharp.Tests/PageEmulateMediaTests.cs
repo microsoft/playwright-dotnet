@@ -39,7 +39,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
 
-            await Page.EmulateMediaAsync(colorScheme: null);
+            await Page.EmulateMediaAsync(colorScheme: ColorScheme.Undefined);
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
         }
@@ -120,7 +120,7 @@ namespace PlaywrightSharp.Tests
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(page, "frame1", TestConstants.CrossProcessHttpPrefix + "/empty.html");
-            var frame = page.Frames[1];
+            var frame = Page.Frames.ElementAt(1);
 
             Assert.True(await frame.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
         }

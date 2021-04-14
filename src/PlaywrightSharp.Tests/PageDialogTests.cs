@@ -21,11 +21,11 @@ namespace PlaywrightSharp.Tests
         {
             Page.Dialog += async (_, e) =>
             {
-                Assert.Equal(DialogType.Alert, e.Dialog.Type);
-                Assert.Equal(string.Empty, e.Dialog.DefaultValue);
-                Assert.Equal("yo", e.Dialog.Message);
+                Assert.Equal(DialogType.Alert, e.Type);
+                Assert.Equal(string.Empty, e.DefaultValue);
+                Assert.Equal("yo", e.Message);
 
-                await e.Dialog.AcceptAsync();
+                await e.AcceptAsync();
             };
 
             await Page.EvaluateAsync("alert('yo');");
@@ -37,11 +37,11 @@ namespace PlaywrightSharp.Tests
         {
             Page.Dialog += async (_, e) =>
             {
-                Assert.Equal(DialogType.Prompt, e.Dialog.Type);
-                Assert.Equal("yes.", e.Dialog.DefaultValue);
-                Assert.Equal("question?", e.Dialog.Message);
+                Assert.Equal(DialogType.Prompt, e.Type);
+                Assert.Equal("yes.", e.DefaultValue);
+                Assert.Equal("question?", e.Message);
 
-                await e.Dialog.AcceptAsync("answer!");
+                await e.AcceptAsync("answer!");
             };
 
             string result = await Page.EvaluateAsync<string>("prompt('question?', 'yes.')");
@@ -54,7 +54,7 @@ namespace PlaywrightSharp.Tests
         {
             Page.Dialog += async (_, e) =>
             {
-                await e.Dialog.DismissAsync();
+                await e.DismissAsync();
             };
 
             string result = await Page.EvaluateAsync<string>("prompt('question?')");
@@ -67,7 +67,7 @@ namespace PlaywrightSharp.Tests
         {
             Page.Dialog += async (_, e) =>
             {
-                await e.Dialog.AcceptAsync();
+                await e.AcceptAsync();
             };
 
             bool result = await Page.EvaluateAsync<bool>("confirm('boolean?')");
@@ -80,7 +80,7 @@ namespace PlaywrightSharp.Tests
         {
             Page.Dialog += async (_, e) =>
             {
-                await e.Dialog.DismissAsync();
+                await e.DismissAsync();
             };
 
             bool result = await Page.EvaluateAsync<bool>("prompt('boolean?')");
@@ -93,7 +93,7 @@ namespace PlaywrightSharp.Tests
         {
             Page.Dialog += async (_, e) =>
             {
-                await e.Dialog.DismissAsync();
+                await e.DismissAsync();
             };
 
             bool result = await Page.EvaluateAsync<bool>("prompt('boolean?')");

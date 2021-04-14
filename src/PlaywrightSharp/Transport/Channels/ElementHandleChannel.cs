@@ -363,10 +363,10 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "getAttribute", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal async Task<string> GetInnerHTMLAsync()
+        internal async Task<string> InnerHTMLAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "innerHTML").ConfigureAwait(false))?.GetProperty("value").ToString();
 
-        internal async Task<string> GetInnerTextAsync()
+        internal async Task<string> InnerTextAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "innerText").ConfigureAwait(false))?.GetProperty("value").ToString();
 
         internal async Task<string> TextContentAsync()

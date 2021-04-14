@@ -48,9 +48,9 @@ namespace PlaywrightSharp.Tests
             await page.SetContentAsync("<a target=_blank rel=noopener href=\"empty.html\">link</a>");
             bool intercepted = false;
 
-            await context.RouteAsync("**/empty.html", (route, _) =>
+            await context.RouteAsync("**/empty.html", (route) =>
             {
-                route.ContinueAsync();
+                route.ResumeAsync();
                 intercepted = true;
             });
 
@@ -119,7 +119,7 @@ namespace PlaywrightSharp.Tests
                 page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.ServerUrl + "/title.html"));
 
             await popup.Result.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-            Assert.Equal("Woof-Woof", await popup.Result.Page.GetTitleAsync());
+            Assert.Equal("Woof-Woof", await popup.Result.Page.TitleAsync());
         }
 
         [PlaywrightTest("popup.spec.ts", "should inherit touch support from browser context")]
@@ -197,9 +197,9 @@ namespace PlaywrightSharp.Tests
 
             bool intercepted = false;
 
-            await context.RouteAsync("**/empty.html", (route, _) =>
+            await context.RouteAsync("**/empty.html", (route) =>
             {
-                route.ContinueAsync();
+                route.ResumeAsync();
                 intercepted = true;
             });
 

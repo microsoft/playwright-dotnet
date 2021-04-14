@@ -152,7 +152,7 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
 
             var messages = new List<string>();
-            Page.Console += (_, e) => messages.Add(e.Message.Text);
+            Page.Console += (_, e) => messages.Add(e.Text);
 
             await Context.SetGeolocationAsync(new Geolocation
             {
@@ -168,15 +168,15 @@ namespace PlaywrightSharp.Tests
             }");
 
             await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Console, e => e.Message.Text.Contains("lat=0 lng=10")),
+                Page.WaitForEventAsync(PageEvent.Console, e => e.Text.Contains("lat=0 lng=10")),
                 Context.SetGeolocationAsync(new Geolocation { Latitude = 0, Longitude = 10 }));
 
             await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Console, e => e.Message.Text.Contains("lat=20 lng=30")),
+                Page.WaitForEventAsync(PageEvent.Console, e => e.Text.Contains("lat=20 lng=30")),
                 Context.SetGeolocationAsync(new Geolocation { Latitude = 20, Longitude = 30 }));
 
             await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Console, e => e.Message.Text.Contains("lat=40 lng=50")),
+                Page.WaitForEventAsync(PageEvent.Console, e => e.Text.Contains("lat=40 lng=50")),
                 Context.SetGeolocationAsync(new Geolocation { Latitude = 40, Longitude = 50 }));
 
             string allMessages = string.Join("|", messages);
@@ -202,8 +202,8 @@ namespace PlaywrightSharp.Tests
                 popupTask,
                 Page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.ServerUrl + "/geolocation.html"));
 
-            await popupTask.Result.Page.WaitForLoadStateAsync();
-            var geolocation = await popupTask.Result.Page.EvaluateAsync<Geolocation>("() => window.geolocationPromise");
+            await popupTask.Result.WaitForLoadStateAsync();
+            var geolocation = await popupTask.Result.EvaluateAsync<Geolocation>("() => window.geolocationPromise");
             Assert.Equal(10, geolocation.Longitude);
             Assert.Equal(10, geolocation.Longitude);
         }

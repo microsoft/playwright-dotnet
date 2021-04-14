@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Helpers;
@@ -72,7 +72,7 @@ namespace PlaywrightSharp.Tests
 
             var page = await context.NewPageAsync();
             await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
-            string path = await page.Video.GetPathAsync();
+            string path = await page.Video.PathAsync();
             Assert.Contains(tempDirectory.Path, path);
             await context.CloseAsync();
 
@@ -92,7 +92,7 @@ namespace PlaywrightSharp.Tests
                 });
 
             var page = await context.NewPageAsync();
-            string path = await page.Video.GetPathAsync();
+            string path = await page.Video.PathAsync();
             Assert.Contains(tempDirectory.Path, path);
             await context.CloseAsync();
 

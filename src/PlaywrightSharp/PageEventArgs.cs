@@ -10,6 +10,6 @@ namespace PlaywrightSharp
         /// <summary>
         /// Page created.
         /// </summary>
-        public Page Page { get; internal set; }
+        public IPage Page { get; internal set; }
     }
 }

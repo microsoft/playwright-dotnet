@@ -39,12 +39,12 @@ namespace PlaywrightSharp
 
         /// <inheritdoc/>
         public Task FulfillAsync(
+            HttpStatusCode status,
             string body = null,
             byte[] bodyBytes = null,
             string contentType = null,
             IEnumerable<KeyValuePair<string, string>> headers = null,
-            string path = null,
-            HttpStatusCode? status = null)
+            string path = null)
             => FulfillAsync(body, bodyBytes, contentType, headers, path, (int?)status);
 
         /// <inheritdoc/>

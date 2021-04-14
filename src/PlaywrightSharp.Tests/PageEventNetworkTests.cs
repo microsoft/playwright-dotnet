@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests
         public async Task PageEventsRequest()
         {
             var requests = new List<IRequest>();
-            Page.Request += (_, e) => requests.Add(e.Request);
+            Page.Request += (_, e) => requests.Add(e);
             await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Single(requests);
             Assert.Equal(TestConstants.EmptyPage, requests[0].Url);
@@ -40,7 +40,7 @@ namespace PlaywrightSharp.Tests
         public async Task PageEventsResponse()
         {
             var responses = new List<IResponse>();
-            Page.Response += (_, e) => responses.Add(e.Response);
+            Page.Response += (_, e) => responses.Add(e);
             await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Single(responses);
             Assert.Equal(TestConstants.EmptyPage, responses[0].Url);
@@ -63,7 +63,7 @@ namespace PlaywrightSharp.Tests
             });
             var failedRequests = new List<IRequest>();
 
-            Page.RequestFailed += (_, e) => failedRequests.Add(e.Request);
+            Page.RequestFailed += (_, e) => failedRequests.Add(e);
 
             await Page.GoToAsync($"http://localhost:{port}/one-style.html");
 
@@ -113,10 +113,10 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldSupportRedirects()
         {
             var events = new List<string>();
-            Page.Request += (_, e) => events.Add($"{e.Request.Method} {e.Request.Url}");
-            Page.Response += (_, e) => events.Add($"{(int)e.Response.Status} {e.Response.Url}");
-            Page.RequestFinished += (_, e) => events.Add($"DONE {e.Request.Url}");
-            Page.RequestFailed += (_, e) => events.Add($"FAIL {e.Request.Url}");
+            Page.Request += (_, e) => events.Add($"{e.Method} {e.Url}");
+            Page.Response += (_, e) => events.Add($"{(int)e.Response.Status} {e.Url}");
+            Page.RequestFinished += (_, e) => events.Add($"DONE {e.Url}");
+            Page.RequestFailed += (_, e) => events.Add($"FAIL {e.Url}");
             Server.SetRedirect("/foo.html", "/empty.html");
             const string FOO_URL = TestConstants.ServerUrl + "/foo.html";
             var response = await Page.GoToAsync(FOO_URL);

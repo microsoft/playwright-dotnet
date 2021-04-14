@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests
 
             var page = await context.NewPageAsync();
 
-            await page.RouteAsync("**/*", (route, _) => route.ContinueAsync());
+            await page.RouteAsync("**/*", (route) => route.ResumeAsync());
             var response = await page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
@@ -63,10 +63,10 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkWithNavigation()
         {
             var requests = new Dictionary<string, IRequest>();
-            await Page.RouteAsync("**/*", (route, request) =>
+            await Page.RouteAsync("**/*", (route) =>
             {
-                requests.Add(request.Url.Split('/').Last(), request);
-                route.ContinueAsync();
+                requests.Add(route.Request.Url.Split('/').Last(), route.Request);
+                route.ResumeAsync();
             });
 
             Server.SetRedirect("/rrredirect", "/frames/one-frame.html");
@@ -93,7 +93,7 @@ namespace PlaywrightSharp.Tests
             string swResponse = await Page.EvaluateAsync<string>("() => fetchDummy('foo')");
             Assert.Equal("responseFromServiceWorker:foo", swResponse);
 
-            await Page.RouteAsync("**/foo", (route, _) =>
+            await Page.RouteAsync("**/foo", (route) =>
             {
                 int slash = route.Request.Url.LastIndexOf("/");
                 string name = route.Request.Url.Substring(slash + 1);

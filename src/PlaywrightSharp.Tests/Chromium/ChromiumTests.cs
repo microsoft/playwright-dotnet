@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PlaywrightSharp.Chromium;
@@ -98,7 +98,7 @@ namespace PlaywrightSharp.Tests.Chromium
                 return context.Response.WriteAsync("console.log(1);");
             });
 
-            await Page.RouteAsync("*", (route, _) => route.ContinueAsync());
+            await Page.RouteAsync("*", (route) => route.ResumeAsync());
 
             await Page.GoToAsync(TestConstants.ServerUrl + "/intervention");
 

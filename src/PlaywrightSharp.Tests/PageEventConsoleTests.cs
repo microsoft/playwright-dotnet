@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests
         {
             var messages = new List<string>();
 
-            Page.Console += (_, e) => messages.Add(e.Message.Text);
+            Page.Console += (_, e) => messages.Add(e.Text);
             await Page.EvaluateAsync("() => { for (let i = 0; i < 2; ++i ) console.log('hello'); } ");
 
             Assert.Equal(new[] { "hello", "hello" }, messages.ToArray());

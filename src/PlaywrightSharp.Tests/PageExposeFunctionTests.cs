@@ -136,7 +136,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.ExposeFunctionAsync("compute", (int a, int b) => Task.FromResult(a * b));
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/nested-frames.html");
-            var frame = Page.Frames[1];
+            var frame = Page.Frames.ElementAt(1);
             int result = await frame.EvaluateAsync<int>(@"async function() {
                 return await compute(3, 5);
             }");
@@ -149,7 +149,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/nested-frames.html");
             await Page.ExposeFunctionAsync("compute", (int a, int b) => Task.FromResult(a * b));
-            var frame = Page.Frames[1];
+            var frame = Page.Frames.ElementAt(1);
             int result = await frame.EvaluateAsync<int>(@"async function() {
                 return await compute(3, 5);
             }");

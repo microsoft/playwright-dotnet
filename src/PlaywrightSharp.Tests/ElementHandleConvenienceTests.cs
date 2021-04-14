@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests
             var handle = await Page.QuerySelectorAsync("#outer");
 
             Assert.Equal("<div id=\"inner\">Text,\nmore text</div>", await handle.InnerHTMLAsync());
-            Assert.Equal("<div id=\"inner\">Text,\nmore text</div>", await Page.GetInnerHTMLAsync("#outer"));
+            Assert.Equal("<div id=\"inner\">Text,\nmore text</div>", await Page.InnerHTMLAsync("#outer"));
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "innerText should work")]
@@ -61,7 +61,7 @@ namespace PlaywrightSharp.Tests
             var handle = await Page.QuerySelectorAsync("#inner");
 
             Assert.Equal("Text, more text", await handle.InnerTextAsync());
-            Assert.Equal("Text, more text", await Page.GetInnerTextAsync("#inner"));
+            Assert.Equal("Text, more text", await Page.InnerTextAsync("#inner"));
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "'innerText should throw")]
@@ -69,7 +69,7 @@ namespace PlaywrightSharp.Tests
         public async Task InnerTextShouldThrow()
         {
             await Page.SetContentAsync("<svg>text</svg>");
-            var exception1 = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.GetInnerTextAsync("svg"));
+            var exception1 = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.InnerTextAsync("svg"));
             Assert.Contains("Not an HTMLElement", exception1.Message);
 
             var handle = await Page.QuerySelectorAsync("svg");
@@ -137,7 +137,7 @@ namespace PlaywrightSharp.Tests
 
             await TestUtils.RegisterEngineAsync(Playwright, "innerText", createDummySelector);
             await Page.SetContentAsync("<div>Hello</div>");
-            string tc = await Page.GetInnerTextAsync("innerText=div");
+            string tc = await Page.InnerTextAsync("innerText=div");
             Assert.Equal("Hello", tc);
             Assert.Equal("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').textContent"));
         }
@@ -164,7 +164,7 @@ namespace PlaywrightSharp.Tests
 
             await TestUtils.RegisterEngineAsync(Playwright, "innerHtml", createDummySelector);
             await Page.SetContentAsync("<div>Hello</div>");
-            string tc = await Page.GetInnerHTMLAsync("innerHtml=div");
+            string tc = await Page.InnerHTMLAsync("innerHtml=div");
             Assert.Equal("Hello", tc);
             Assert.Equal("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').textContent"));
         }

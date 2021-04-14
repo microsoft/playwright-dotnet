@@ -121,15 +121,15 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkForFrame()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
-            var frame = Page.Frames[1];
+            var frame = Page.Frames.ElementAt(1);
 
             TaskCompletionSource<bool> requestTask = new TaskCompletionSource<bool>();
             TaskCompletionSource<bool> routeReachedTask = new TaskCompletionSource<bool>();
-            await Page.RouteAsync(TestConstants.ServerUrl + "/one-style.css", async (route, _) =>
+            await Page.RouteAsync(TestConstants.ServerUrl + "/one-style.css", async (route) =>
             {
                 routeReachedTask.TrySetResult(true);
                 await requestTask.Task;
-                await route.ContinueAsync();
+                await route.ResumeAsync();
             });
 
             await frame.GoToAsync(TestConstants.ServerUrl + "/one-style.html", LoadState.DOMContentLoaded);

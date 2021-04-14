@@ -307,7 +307,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkOnFrame()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
-            var frame = Page.Frames[1];
+            var frame = Page.Frames.ElementAt(1);
             var (response, _) = await TaskUtils.WhenAll(
                 frame.WaitForNavigationAsync(),
                 frame.EvaluateAsync("url => window.location.href = url", TestConstants.ServerUrl + "/grid.html")
@@ -323,7 +323,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldFailWhenFrameDetaches()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
-            var frame = Page.Frames[1];
+            var frame = Page.Frames.ElementAt(1);
             Server.SetRoute("/empty.html", _ => Task.Delay(6000));
             var exceptionTask = Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => frame.WaitForNavigationAsync());
 

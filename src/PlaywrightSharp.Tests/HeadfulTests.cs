@@ -124,7 +124,7 @@ namespace PlaywrightSharp.Tests
                 return promise;
             }", TestConstants.CrossProcessUrl + "/grid.html");
 
-            string documentCookie = await page.Frames[1].EvaluateAsync<string>(@"() => {
+            string documentCookie = await page.Frames.ElementAt(1).EvaluateAsync<string>(@"() => {
                 document.cookie = 'username=John Doe';
                 return document.cookie;
             }");
@@ -170,7 +170,7 @@ namespace PlaywrightSharp.Tests
                     win.resizeTo(500, 450);
                 }"));
 
-            var popup = popupTask.Result.Page;
+            var popup = popupTask.Result;
             await popup.WaitForLoadStateAsync();
             await popup.WaitForFunctionAsync("() => window.outerWidth === 500 && window.outerHeight === 450");
         }

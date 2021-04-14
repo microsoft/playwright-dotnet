@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.RouteAsync("**/*", (route, _) =>
+            await Page.RouteAsync("**/*", (route) =>
             {
                 route.FulfillAsync(
                     status: HttpStatusCode.Created,
@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithStatusCode422()
         {
-            await Page.RouteAsync("**/*", (route, _) =>
+            await Page.RouteAsync("**/*", (route) =>
             {
                 route.FulfillAsync(HttpStatusCode.UpgradeRequired, "Yo, page!");
             });
@@ -64,7 +64,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Skip = "We need screenshots for this")]
         public async Task ShouldAllowMockingBinaryResponses()
         {
-            await Page.RouteAsync("**/*", (route, _) =>
+            await Page.RouteAsync("**/*", (route) =>
             {
                 byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
                 route.FulfillAsync(
@@ -91,7 +91,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Skip = "We need screenshots for this")]
         public async Task ShouldWorkWithFilePath()
         {
-            await Page.RouteAsync("**/*", (route, _) =>
+            await Page.RouteAsync("**/*", (route) =>
             {
                 route.FulfillAsync(
                     contentType: "shouldBeIgnored",
@@ -112,7 +112,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldStringifyInterceptedRequestResponseHeaders()
         {
-            await Page.RouteAsync("**/*", (route, _) =>
+            await Page.RouteAsync("**/*", (route) =>
             {
                 route.FulfillAsync(
                     status: HttpStatusCode.OK,
@@ -157,7 +157,7 @@ namespace PlaywrightSharp.Tests
             await Page.RouteAsync(TestConstants.CrossProcessUrl + "/something", (route, request) =>
             {
                 playwrightRequest = request;
-                route.ContinueAsync(headers: request.Headers.ToDictionary(x => x.Key, x => x.Value));
+                route.ResumeAsync(headers: request.Headers.ToDictionary(x => x.Key, x => x.Value));
             });
 
             string textAfterRoute = await Page.EvaluateAsync<string>(@"async url => {

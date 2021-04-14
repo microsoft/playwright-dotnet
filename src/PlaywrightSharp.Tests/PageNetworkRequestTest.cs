@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -117,7 +117,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             Server.SetRoute("/post", _ => Task.CompletedTask);
-            await Page.RouteAsync("/post", (route, _) => route.ContinueAsync());
+            await Page.RouteAsync("/post", (route) => route.ResumeAsync());
             IRequest request = null;
             Page.Request += (_, e) => request = e.Request;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: new Uint8Array(Array.from(Array(256).keys())) })");

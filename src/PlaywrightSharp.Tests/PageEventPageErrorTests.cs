@@ -25,8 +25,8 @@ namespace PlaywrightSharp.Tests
                 Page.GoToAsync(TestConstants.ServerUrl + "/error.html")
             );
 
-            Assert.Equal("Error", error.Name);
-            Assert.Equal("Fancy error!", error.Message);
+            Assert.Contains("Error", error);
+            Assert.Contains("Fancy error!", error);
             string stack = await Page.EvaluateAsync<string>("() => window.e.stack");
 
             if (TestConstants.IsWebKit)
@@ -34,7 +34,7 @@ namespace PlaywrightSharp.Tests
                 stack = stack.Replace("14:25", "15:19");
             }
 
-            Assert.Equal(stack, error.Stack);
+            Assert.Contains(stack, error);
         }
 
         [PlaywrightTest("page-event-pageerror.spec.ts", "should contain sourceURL")]
@@ -45,7 +45,7 @@ namespace PlaywrightSharp.Tests
                 Page.WaitForEventAsync(PageEvent.PageError),
                 Page.GoToAsync(TestConstants.ServerUrl + "/error.html"));
 
-            Assert.Contains("myscript.js", error.Stack);
+            Assert.Contains("myscript.js", error);
         }
 
         [PlaywrightTest("page-event-pageerror.spec.ts", "should handle odd values")]
@@ -66,7 +66,7 @@ namespace PlaywrightSharp.Tests
                     Page.WaitForEventAsync(PageEvent.PageError),
                     Page.EvaluateAsync<JsonElement>("value => setTimeout(() => { throw value; }, 0)", kv[0]));
 
-                Assert.Contains(TestConstants.IsFirefox ? "uncaught exception: " + kv[1].ToString() : kv[1].ToString(), error.Message);
+                Assert.Contains(TestConstants.IsFirefox ? "uncaught exception: " + kv[1].ToString() : kv[1].ToString(), error);
             }
         }
 
@@ -78,7 +78,7 @@ namespace PlaywrightSharp.Tests
                 Page.WaitForEventAsync(PageEvent.PageError),
                 Page.EvaluateAsync<JsonElement>("value => setTimeout(() => { throw {}; }, 0)", 0));
 
-            Assert.Contains(TestConstants.IsChromium ? "Object" : "[object Object]", error.Message);
+            Assert.Contains(TestConstants.IsChromium ? "Object" : "[object Object]", error);
         }
 
         [PlaywrightTest("page-event-pageerror.spec.ts", "should handle window")]
@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests
                 Page.WaitForEventAsync(PageEvent.PageError),
                 Page.EvaluateAsync<JsonElement>("value => setTimeout(() => { throw window ; }, 0)", 0));
 
-            Assert.Contains(TestConstants.IsChromium ? "Window" : "[object Window]", error.Message);
+            Assert.Contains(TestConstants.IsChromium ? "Window" : "[object Window]", error);
         }
     }
 }

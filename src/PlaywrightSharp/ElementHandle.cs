@@ -199,10 +199,10 @@ namespace PlaywrightSharp
         public Task<string> GetAttributeAsync(string name) => _channel.GetAttributeAsync(name);
 
         /// <inheritdoc />
-        public Task<string> InnerHTMLAsync() => _channel.GetInnerHTMLAsync();
+        public Task<string> InnerHTMLAsync() => _channel.InnerHTMLAsync();
 
         /// <inheritdoc />
-        public Task<string> InnerTextAsync() => _channel.GetInnerTextAsync();
+        public Task<string> InnerTextAsync() => _channel.InnerTextAsync();
 
         /// <inheritdoc />
         public Task<string> TextContentAsync() => _channel.TextContentAsync();

@@ -355,7 +355,7 @@ namespace PlaywrightSharp
         public Task BringToFrontAsync() => _channel.BringToFrontAsync();
 
         /// <inheritdoc />
-        public async Task<IPage> OpenerAsync() => (await _channel.GetOpenerAsync().ConfigureAwait(false))?.Object;
+        public async Task<IPage> OpenerAsync() => (await _channel.OpenerAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
         public Task EmulateMediaAsync()
@@ -998,11 +998,11 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<string> InnerHTMLAsync(string selector, float? timeout)
-             => MainFrame.GetInnerHTMLAsync(true, selector, timeout);
+             => MainFrame.InnerHTMLAsync(true, selector, timeout);
 
         /// <inheritdoc />
         public Task<string> InnerTextAsync(string selector, float? timeout)
-             => MainFrame.GetInnerTextAsync(true, selector, timeout);
+             => MainFrame.InnerTextAsync(true, selector, timeout);
 
         /// <inheritdoc />
         public Task<string> TextContentAsync(string selector, float? timeout)

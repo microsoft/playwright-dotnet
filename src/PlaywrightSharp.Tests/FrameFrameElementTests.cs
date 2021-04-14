@@ -24,9 +24,9 @@ namespace PlaywrightSharp.Tests
             var frame3 = await FrameUtils.AttachFrameAsync(Page, "frame3", TestConstants.EmptyPage);
 
             var frame1handle1 = await Page.QuerySelectorAsync("#frame1");
-            var frame1handle2 = await frame1.GetFrameElementAsync();
+            var frame1handle2 = await frame1.FrameElementAsync();
             var frame3handle1 = await Page.QuerySelectorAsync("#frame3");
-            var frame3handle2 = await frame3.GetFrameElementAsync();
+            var frame3handle2 = await frame3.FrameElementAsync();
 
             Assert.True(await frame1handle1.EvaluateAsync<bool>("(a, b) => a === b", frame1handle2));
             Assert.True(await frame3handle1.EvaluateAsync<bool>("(a, b) => a === b", frame3handle2));
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             var frame = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
-            var handle = await frame.GetFrameElementAsync();
+            var handle = await frame.FrameElementAsync();
             var contentFrame = await handle.ContentFrameAsync();
 
             Assert.Same(contentFrame, frame);
@@ -56,7 +56,7 @@ namespace PlaywrightSharp.Tests
             var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             await Page.EvalOnSelectorAsync("#frame1", "e => e.remove()");
 
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => frame1.GetFrameElementAsync());
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => frame1.FrameElementAsync());
 
             Assert.Equal("Frame has been detached.", exception.Message);
         }
