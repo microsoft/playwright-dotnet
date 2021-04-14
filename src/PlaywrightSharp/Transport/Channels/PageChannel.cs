@@ -426,7 +426,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["y"] = y,
                 });
 
-        internal Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
+        internal Task SetExtraHttpHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "setExtraHTTPHeaders",
@@ -497,7 +497,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["reportAnonymousScripts"] = reportAnonymousScripts,
                 });
 
-        internal async Task<string> GetPdfAsync(
+        internal async Task<string> PdfAsync(
             float scale,
             bool displayHeaderFooter,
             string headerTemplate,

@@ -72,7 +72,7 @@ namespace PlaywrightSharp.Tests
 
             var page = await context.NewPageAsync();
             await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
-            string path = await page.Video.PathAsync();
+            string path = await page.Video.GetPathAsync();
             Assert.Contains(tempDirectory.Path, path);
             await context.CloseAsync();
 
@@ -92,7 +92,7 @@ namespace PlaywrightSharp.Tests
                 });
 
             var page = await context.NewPageAsync();
-            string path = await page.Video.PathAsync();
+            string path = await page.Video.GetPathAsync();
             Assert.Contains(tempDirectory.Path, path);
             await context.CloseAsync();
 

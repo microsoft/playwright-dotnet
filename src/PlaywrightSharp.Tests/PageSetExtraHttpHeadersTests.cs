@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
+            await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string>
             {
                 ["Foo"] = "Bar"
             });
@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkWithRedirects()
         {
             Server.SetRedirect("/foo.html", "/empty.html");
-            await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
+            await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string>
             {
                 ["Foo"] = "Bar"
             });
@@ -75,7 +75,7 @@ namespace PlaywrightSharp.Tests
             });
             var page = await context.NewPageAsync();
 
-            await page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
+            await page.SetExtraHttpHeadersAsync(new Dictionary<string, string>
             {
                 ["Foo"] = "Bar"
             });

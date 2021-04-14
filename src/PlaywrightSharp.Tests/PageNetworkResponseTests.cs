@@ -145,10 +145,10 @@ namespace PlaywrightSharp.Tests
 
             Assert.NotNull(serverResponse);
             Assert.NotNull(pageResponse);
-            Assert.Equal(HttpStatusCode.OK, pageResponse.Response.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, pageResponse.StatusCode);
             Assert.False(requestFinished);
 
-            var responseText = pageResponse.Response.GetTextAsync();
+            var responseText = pageResponse.GetTextAsync();
             // Write part of the response and wait for it to be flushed.
             await serverResponse.WriteAsync("wor");
             // Finish response.

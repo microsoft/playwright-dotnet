@@ -214,7 +214,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldReturnNavigationBit()
         {
             var requests = new Dictionary<string, IRequest>();
-            Page.Request += (_, e) => requests[e.Request.Url.Split('/').Last()] = e;
+            Page.Request += (_, e) => requests[e.Url.Split('/').Last()] = e;
             Server.SetRedirect("/rrredirect", "/frames/one-frame.html");
             await Page.GoToAsync(TestConstants.ServerUrl + "/rrredirect");
             Assert.True(requests["rrredirect"].IsNavigationRequest);

@@ -1349,6 +1349,6 @@ namespace PlaywrightSharp
         /// </description></item>
         /// </list>
         /// </param>
-        Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, float? timeout = default, WaitUntilState waitUntil = default);
+        Task WaitForURLAsync(string urlString = default, Regex urlRegex = default, Func<string, bool> urlFunc = default, float? timeout = default, WaitUntilState waitUntil = default);
     }
 }

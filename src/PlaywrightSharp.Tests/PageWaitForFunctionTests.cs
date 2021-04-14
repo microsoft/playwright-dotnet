@@ -55,7 +55,7 @@ namespace PlaywrightSharp.Tests
                     return false;
                 }
                 return Date.now() - window.__startTime;
-            }", polling: polling);
+            }", pollingInterval: polling);
             int value = (await timeDelta.JsonValueAsync<int>());
 
             Assert.True(value >= polling);
@@ -73,7 +73,7 @@ namespace PlaywrightSharp.Tests
                   window.counter = (window.counter || 0) + 1;
                   console.log(window.counter);
                 }",
-                polling: 1,
+                pollingInterval: 1,
                 timeout: 1000));
 
             int savedCounter = counter;
@@ -90,14 +90,16 @@ namespace PlaywrightSharp.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should poll on raf")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldPollOnRaf()
+        [Fact(Skip = "We don't support raf")]
+        public void ShouldPollOnRaf()
         {
+            /*
             var watchdog = Page.WaitForFunctionAsync(
                 "() => window.__FOO === 'hit'",
                 polling: Polling.Raf);
             await Page.EvaluateAsync("window.__FOO = 'hit'");
             await watchdog;
+            */
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should fail with predicate throwing on first call")]
@@ -130,9 +132,10 @@ namespace PlaywrightSharp.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should work with strict CSP policy")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldWorkWithStrictCSPPolicy()
+        [Fact(Skip = "We don't support raf")]
+        public void ShouldWorkWithStrictCSPPolicy()
         {
+            /*
             Server.SetCSP("/empty.html", "script-src " + TestConstants.ServerUrl);
             await Page.GoToAsync(TestConstants.EmptyPage);
             await TaskUtils.WhenAll(
@@ -140,6 +143,7 @@ namespace PlaywrightSharp.Tests
                     "() => window.__FOO === 'hit'",
                     polling: Polling.Raf),
                 Page.EvaluateAsync("window.__FOO = 'hit'"));
+            */
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should throw on bad polling value")]
@@ -212,7 +216,7 @@ namespace PlaywrightSharp.Tests
                     window.__counter = (window.__counter || 0) + 1;
                     return window.__injected;
                 }",
-                polling: 10,
+                pollingInterval: 10,
                 timeout: 0);
             await Page.WaitForFunctionAsync("() => window.__counter > 10");
             await Page.EvaluateAsync("window.__injected = true");

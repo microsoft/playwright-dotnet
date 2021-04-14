@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Tests
                 Page.WaitForEventAsync(PageEvent.RequestFinished),
                 Page.GoToAsync(TestConstants.EmptyPage));
 
-            var timing = request.Request.Timing;
+            var timing = request.Timing;
             Assert.True(timing.DomainLookupStart >= -1);
             Assert.True(timing.DomainLookupEnd >= timing.DomainLookupStart);
             Assert.True(timing.ConnectStart >= timing.DomainLookupEnd);
@@ -84,7 +84,7 @@ namespace PlaywrightSharp.Tests
                 page.WaitForEventAsync(PageEvent.RequestFinished),
                 page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html"));
 
-            var timing = request.Request.Timing;
+            var timing = request.Timing;
             if (!(TestConstants.IsWebKit && TestConstants.IsMacOSX))
             {
                 Assert.True(timing.DomainLookupStart >= 0);
@@ -108,7 +108,7 @@ namespace PlaywrightSharp.Tests
             Server.SetRedirect("/foo.html", "/empty.html");
             var responses = new List<IResponse>();
 
-            Page.Response += (_, e) => responses.Add(e.Response);
+            Page.Response += (_, e) => responses.Add(e);
             await Page.GoToAsync(TestConstants.ServerUrl + "/foo.html");
 
             // This is different on purpose, promises work different in TS.

@@ -218,10 +218,6 @@ namespace PlaywrightSharp
             => WaitForNavigationAsync(null, null, null, waitUntil, timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(string urlString, WaitUntilState waitUntil, float? timeout)
-            => WaitForNavigationAsync(urlString, null, null, waitUntil, timeout);
-
-        /// <inheritdoc />
         public Task<IResponse> WaitForNavigationAsync(Regex urlRegex, WaitUntilState waitUntil, float? timeout)
             => WaitForNavigationAsync(null, urlRegex, null, waitUntil, timeout);
 
@@ -461,7 +457,7 @@ namespace PlaywrightSharp
         internal Task TapAsync(bool isPageCall, string selector, IEnumerable<KeyboardModifier> modifiers, Position position, bool? force, bool? noWaitAfter, float? timeout)
             => _channel.TapAsync(selector, modifiers, position, timeout, force ?? false, noWaitAfter, isPageCall);
 
-        internal Task<string> ContentAsync(bool isPageCall) => _channel.GetContentAsync(isPageCall);
+        internal Task<string> ContentAsync(bool isPageCall) => _channel.ContentAsync(isPageCall);
 
         internal Task FocusAsync(bool isPageCall, string selector, float? timeout)
             => _channel.FocusAsync(selector, timeout, isPageCall);

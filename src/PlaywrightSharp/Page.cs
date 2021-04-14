@@ -385,10 +385,6 @@ namespace PlaywrightSharp
              => MainFrame.WaitForNavigationAsync(urlString: null, urlRegex: null, urlFunc: null, waitUntil: waitUntil, timeout: timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(string urlString, WaitUntilState waitUntil, float? timeout)
-            => MainFrame.WaitForNavigationAsync(urlString: urlString, urlRegex: null, urlFunc: null, waitUntil: default, timeout: timeout);
-
-        /// <inheritdoc />
         public Task<IResponse> WaitForNavigationAsync(Regex urlRegex, WaitUntilState waitUntil, float? timeout)
             => MainFrame.WaitForNavigationAsync(urlString: null, urlRegex: urlRegex, urlFunc: null, waitUntil: default, timeout: timeout);
 
@@ -410,51 +406,47 @@ namespace PlaywrightSharp
             => MainFrame.WaitForNavigationAsync(urlString, urlRegex, urlFunc, waitUntil, timeout);
 
         /// <inheritdoc />
-        public Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, float? timeout = default)
-            => WaitForEventAsync(PageEvent.Request, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
+        public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicateRegex, float? timeout)
+            => WaitForEventAsync(PageEvent.Request, e => urlOrPredicateRegex.IsMatch(e.Url), timeout);
 
         /// <inheritdoc />
-        public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicateString, float? timeout = default)
-            => WaitForEventAsync(PageEvent.Request, e => urlOrPredicateString.IsMatch(e.Url), timeout);
+        public Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicateFunc, float? timeout)
+            => WaitForEventAsync(PageEvent.Request, e => urlOrPredicateFunc(e), timeout);
 
         /// <inheritdoc />
-        public Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicateString, float? timeout = default)
-            => WaitForEventAsync(PageEvent.Request, e => urlOrPredicateString(e), timeout);
-
-        /// <inheritdoc />
-        public Task<IPage> WaitForCloseAsync(float? timeout = default)
+        public Task<IPage> WaitForCloseAsync(float? timeout)
             => WaitForEventAsync(PageEvent.Close, null, timeout);
 
         /// <inheritdoc />
-        public Task<IConsoleMessage> WaitForConsoleMessageAsync(Func<IConsoleMessage, bool> predicate, float? timeout = default)
+        public Task<IConsoleMessage> WaitForConsoleMessageAsync(Func<IConsoleMessage, bool> predicate, float? timeout)
             => WaitForEventAsync(PageEvent.Console, predicate, timeout);
 
         /// <inheritdoc />
-        public Task<IFileChooser> WaitForFileChooserAsync(Func<IFileChooser, bool> predicate, float? timeout = default)
+        public Task<IFileChooser> WaitForFileChooserAsync(Func<IFileChooser, bool> predicate, float? timeout)
             => WaitForEventAsync(PageEvent.FileChooser, predicate, timeout);
 
         /// <inheritdoc />
-        public Task<IPage> WaitForPopupAsync(Func<IPage, bool> predicate, float? timeout = default)
+        public Task<IPage> WaitForPopupAsync(Func<IPage, bool> predicate, float? timeout)
             => WaitForEventAsync(PageEvent.Popup, predicate, timeout);
 
         /// <inheritdoc />
-        public Task<IDownload> WaitForDownloadAsync(Func<IDownload, bool> predicate, float? timeout = default)
+        public Task<IDownload> WaitForDownloadAsync(Func<IDownload, bool> predicate, float? timeout)
             => WaitForEventAsync(PageEvent.Download, predicate, timeout);
 
         /// <inheritdoc />
-        public Task<IWebSocket> WaitForWebSocketAsync(Func<IWebSocket, bool> predicate, float? timeout = default)
+        public Task<IWebSocket> WaitForWebSocketAsync(Func<IWebSocket, bool> predicate, float? timeout)
             => WaitForEventAsync(PageEvent.WebSocket, predicate, timeout);
 
         /// <inheritdoc />
-        public Task<IWorker> WaitForWorkerAsync(Func<IWorker, bool> predicate, float? timeout = default)
+        public Task<IWorker> WaitForWorkerAsync(Func<IWorker, bool> predicate, float? timeout)
             => WaitForEventAsync(PageEvent.Worker, predicate, timeout);
 
         /// <inheritdoc />
-        public Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, Regex urlOrPredicateRegex, Func<IRequest, bool> urlOrPredicateFunc, float? timeout = default)
+        public Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, Regex urlOrPredicateRegex, Func<IRequest, bool> urlOrPredicateFunc, float? timeout)
         {
             if (string.IsNullOrEmpty(urlOrPredicateString))
             {
-                return WaitForRequestAsync(urlOrPredicateString, timeout);
+                return WaitForEventAsync(PageEvent.Request, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
             }
 
             if (urlOrPredicateRegex != null)
@@ -499,7 +491,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public async Task<object> WaitForEventAsync(string @event, float? timeout = default)
+        public async Task<object> WaitForEventAsync(string @event, float? timeout)
         {
             if (string.IsNullOrEmpty(@event))
             {
@@ -686,7 +678,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task SetExtraHttpHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
-            => _channel.SetExtraHTTPHeadersAsync(headers);
+            => _channel.SetExtraHttpHeadersAsync(headers);
 
         /// <inheritdoc />
         public Task<IElementHandle> QuerySelectorAsync(string selector) => MainFrame.QuerySelectorAsync(true, selector);
@@ -808,10 +800,6 @@ namespace PlaywrightSharp
             => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => callback(t1, t2, t3, t4));
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, float? timeout)
-            => WaitForEventAsync(PageEvent.Response, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
-
-        /// <inheritdoc />
         public Task<IResponse> WaitForResponseAsync(Regex urlOrPredicateRegex, float? timeout)
             => WaitForEventAsync(PageEvent.Response, e => urlOrPredicateRegex.IsMatch(e.Url), timeout);
 
@@ -820,11 +808,11 @@ namespace PlaywrightSharp
             => WaitForEventAsync(PageEvent.Response, e => urlOrPredicateFunc(e), timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, Regex urlOrPredicateRegex, Func<IResponse, bool> urlOrPredicateFunc, float? timeout = default)
+        public Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, Regex urlOrPredicateRegex, Func<IResponse, bool> urlOrPredicateFunc, float? timeout)
         {
             if (string.IsNullOrEmpty(urlOrPredicateString))
             {
-                return WaitForResponseAsync(urlOrPredicateString, timeout);
+                return WaitForEventAsync(PageEvent.Response, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
             }
 
             if (urlOrPredicateRegex != null)
@@ -856,7 +844,7 @@ namespace PlaywrightSharp
                 throw new NotSupportedException("This browser doesn't support this action.");
             }
 
-            byte[] result = Convert.FromBase64String(await _channel.GetPdfAsync(
+            byte[] result = Convert.FromBase64String(await _channel.PdfAsync(
                 scale ?? 1,
                 displayHeaderFooter ?? false,
                 headerTemplate,

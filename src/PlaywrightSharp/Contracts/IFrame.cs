@@ -154,57 +154,6 @@ namespace PlaywrightSharp
         /// API</a> to change the URL is considered a navigation.
         /// </para>
         /// </remarks>
-        /// <param name="urlString">
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while waiting for the navigation.
-        /// </param>
-        /// <param name="waitUntil">
-        /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
-        /// <list type="bullet">
-        /// <item><description>
-        /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
-        /// event is fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
-        /// fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'networkidle'</c> - consider operation to be finished when there are no network
-        /// connections for at least <c>500</c> ms.
-        /// </description></item>
-        /// </list>
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        /// <returns>Task which resolves to the main resource response.
-        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
-        /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
-        /// </returns>
-        Task<IResponse> WaitForNavigationAsync(string urlString, WaitUntilState waitUntil = default, float? timeout = default);
-
-        /// <summary>
-        /// <para>
-        /// Waits for the frame navigation and returns the main resource response. In case of
-        /// multiple redirects, the navigation will resolve with the response of the last redirect.
-        /// In case of navigation to a different anchor or navigation due to History API usage,
-        /// the navigation will resolve with <c>null</c>.
-        /// </para>
-        /// <para>
-        /// This method waits for the frame to navigate to a new URL. It is useful for when
-        /// you run code which will indirectly cause the frame to navigate. Consider this example.
-        /// </para>
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// Usage of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API">History
-        /// API</a> to change the URL is considered a navigation.
-        /// </para>
-        /// </remarks>
         /// <param name="urlRegex">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation.

@@ -763,7 +763,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "type", args);
         }
 
-        internal async Task<string> GetContentAsync(bool isPage)
+        internal async Task<string> ContentAsync(bool isPage)
             => (await Connection.SendMessageToServerAsync(
                 Guid,
                 "content",

@@ -195,57 +195,6 @@ namespace PlaywrightSharp
         /// API</a> to change the URL is considered a navigation.
         /// </para>
         /// </remarks>
-        /// <param name="urlString">
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while waiting for the navigation.
-        /// </param>
-        /// <param name="waitUntil">
-        /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
-        /// <list type="bullet">
-        /// <item><description>
-        /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
-        /// event is fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
-        /// fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'networkidle'</c> - consider operation to be finished when there are no network
-        /// connections for at least <c>500</c> ms.
-        /// </description></item>
-        /// </list>
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        /// <returns>Task which resolves to the main resource response.
-        /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
-        /// In case of navigation to a different anchor or navigation due to History API usage, the navigation will resolve with `null`.
-        /// </returns>
-        Task<IResponse> WaitForNavigationAsync(string urlString, WaitUntilState waitUntil = default, float? timeout = default);
-
-        /// <summary>
-        /// <para>
-        /// Waits for the frame navigation and returns the main resource response. In case of
-        /// multiple redirects, the navigation will resolve with the response of the last redirect.
-        /// In case of navigation to a different anchor or navigation due to History API usage,
-        /// the navigation will resolve with <c>null</c>.
-        /// </para>
-        /// <para>
-        /// This method waits for the frame to navigate to a new URL. It is useful for when
-        /// you run code which will indirectly cause the frame to navigate. Consider this example.
-        /// </para>
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// Usage of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API">History
-        /// API</a> to change the URL is considered a navigation.
-        /// </para>
-        /// </remarks>
         /// <param name="urlRegex">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation.
@@ -391,16 +340,6 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="SelectOptionAsync(string, IEnumerable{SelectOptionValue}, bool?, float?)" />
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, params IElementHandle[] values);
-
-        /// <summary><para>Waits for the matching request and returns it.</para></summary>
-        /// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
-        /// <param name="timeout">
-        /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
-        /// the timeout. The default value can be changed by using the <see cref="IPage.SetDefaultTimeout"/>
-        /// method.
-        /// </param>
-        /// <returns>A <see cref="Task"/> that completes when the request was made (or timeout), yielding the matching <see cref="IRequest"/>.</returns>
-        Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, float? timeout = default);
 
         /// <summary><para>Waits for the matching request and returns it.</para></summary>
         /// <param name="urlOrPredicateRegex">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
@@ -800,16 +739,6 @@ namespace PlaywrightSharp
         /// <typeparam name="TResult">The result of <paramref name="callback"/>.</typeparam>
         /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
         Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback);
-
-        /// <summary><para>Returns the matched response.</para></summary>
-        /// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
-        /// <param name="timeout">
-        /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
-        /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        /// <returns>A <see cref="Task"/> that completes when a matching response is received, yielding the response being waited for.</returns>
-        Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, float? timeout = default);
 
         /// <summary><para>Returns the matched response.</para></summary>
         /// <param name="urlOrPredicateRegex">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>

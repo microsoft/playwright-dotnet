@@ -49,7 +49,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldRespectTimeout()
         {
             Server.SetRoute("/one-style.css", _ => Task.Delay(Timeout.Infinite));
-            await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", LoadState.DOMContentLoaded);
+            await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", WaitUntilState.DOMContentLoaded);
             var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.WaitForLoadStateAsync(LoadState.Load, 1));
             Assert.Contains("Timeout 1ms exceeded", exception.Message);
         }
@@ -132,7 +132,7 @@ namespace PlaywrightSharp.Tests
                 await route.ResumeAsync();
             });
 
-            await frame.GoToAsync(TestConstants.ServerUrl + "/one-style.html", LoadState.DOMContentLoaded);
+            await frame.GoToAsync(TestConstants.ServerUrl + "/one-style.html", WaitUntilState.DOMContentLoaded);
 
             await routeReachedTask.Task;
             var loadTask = frame.WaitForLoadStateAsync();

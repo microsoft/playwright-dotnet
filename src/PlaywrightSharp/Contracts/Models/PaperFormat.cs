@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace PlaywrightSharp
@@ -6,7 +6,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// Paper format.
     /// </summary>
-    /// <seealso cref="IPage.GetPdfAsync(string, decimal, bool, string, string, bool, bool, string, PaperFormat?, string, string, Margin, bool)"/>
+    /// <seealso cref="IPage.PdfAsync(string, decimal, bool, string, string, bool, bool, string, PaperFormat?, string, string, Margin, bool)"/>
     public static class PaperFormat
     {
         /// <summary>

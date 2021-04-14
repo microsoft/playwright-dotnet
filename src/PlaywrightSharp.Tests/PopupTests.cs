@@ -29,8 +29,8 @@ namespace PlaywrightSharp.Tests
             var popupTask = context.WaitForEventAsync(ContextEvent.Page);
             await TaskUtils.WhenAll(popupTask, page.ClickAsync("a"));
 
-            await popupTask.Result.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-            string userAgent = await popupTask.Result.EvaluateAsync<string>("() => window.initialUserAgent");
+            await popupTask.Result.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+            string userAgent = await popupTask.Result.Page.EvaluateAsync<string>("() => window.initialUserAgent");
             await requestTcs.Task;
 
             Assert.Equal("hey", userAgent);
@@ -179,9 +179,9 @@ namespace PlaywrightSharp.Tests
                 }"),
                 page.WaitForEventAsync(PageEvent.Popup));
 
-            await popup.Page.SetViewportSizeAsync(new ViewportSize { Width = 500, Height = 400 });
-            await popup.Page.WaitForLoadStateAsync();
-            var resized = await popup.Page.EvaluateAsync<ViewportSize>(@"() => ({ width: window.innerWidth, height: window.innerHeight })");
+            await popup.SetViewportSizeAsync(500, 400);
+            await popup.WaitForLoadStateAsync();
+            var resized = await popup.EvaluateAsync<ViewportSize>(@"() => ({ width: window.innerWidth, height: window.innerHeight })");
 
             Assert.Equal(new ViewportSize { Width = 600, Height = 300 }, size);
             Assert.Equal(new ViewportSize { Width = 500, Height = 400 }, resized);
