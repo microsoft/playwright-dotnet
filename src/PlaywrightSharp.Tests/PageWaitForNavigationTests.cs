@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -186,14 +187,14 @@ namespace PlaywrightSharp.Tests
             var frameAttachedTaskSource = new TaskCompletionSource<IFrame>();
             Page.FrameAttached += (_, e) =>
             {
-                frameAttachedTaskSource.SetResult(e.Frame);
+                frameAttachedTaskSource.SetResult(e);
             };
             var frameNavigatedTaskSource = new TaskCompletionSource<bool>();
             Page.FrameNavigated += (_, e) =>
             {
                 if (frame != null)
                 {
-                    if (e.Frame == frame)
+                    if (e == frame)
                     {
                         frameNavigatedTaskSource.TrySetResult(true);
                     }

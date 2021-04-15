@@ -121,7 +121,7 @@ namespace PlaywrightSharp.Tests
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(page, "frame1", TestConstants.CrossProcessHttpPrefix + "/empty.html");
-            var frame = Page.Frames.ElementAt(1);
+            var frame = page.Frames.ElementAt(1);
 
             Assert.True(await frame.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
         }

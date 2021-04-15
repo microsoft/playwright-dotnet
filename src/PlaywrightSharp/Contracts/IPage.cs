@@ -342,6 +342,16 @@ namespace PlaywrightSharp
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, params IElementHandle[] values);
 
         /// <summary><para>Waits for the matching request and returns it.</para></summary>
+        /// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+        /// <param name="timeout">
+        /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
+        /// the timeout. The default value can be changed by using the <see cref="IPage.SetDefaultTimeout"/>
+        /// method.
+        /// </param>
+        /// <returns>A <see cref="Task"/> that completes when the request was made (or timeout), yielding the matching <see cref="IRequest"/>.</returns>
+        Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, float? timeout = default);
+
+        /// <summary><para>Waits for the matching request and returns it.</para></summary>
         /// <param name="urlOrPredicateRegex">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
         /// <param name="timeout">
         /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
@@ -739,6 +749,16 @@ namespace PlaywrightSharp
         /// <typeparam name="TResult">The result of <paramref name="callback"/>.</typeparam>
         /// <returns>A <see cref="Task"/> that completes when function is registered.</returns>
         Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback);
+
+        /// <summary><para>Returns the matched response.</para></summary>
+        /// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="timeout">
+        /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
+        /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
+        /// <returns>A <see cref="Task"/> that completes when a matching response is received, yielding the response being waited for.</returns>
+        Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, float? timeout = default);
 
         /// <summary><para>Returns the matched response.</para></summary>
         /// <param name="urlOrPredicateRegex">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>

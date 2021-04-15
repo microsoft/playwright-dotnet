@@ -28,7 +28,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Raised when Browser context gets closed.
         /// </summary>
-        event EventHandler Close;
+        event EventHandler<EventArgs> Close;
 
         /// <summary>
         /// Raised when a new page is created in the Browser context.

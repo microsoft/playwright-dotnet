@@ -250,7 +250,7 @@ namespace PlaywrightSharp
         /// </remarks>
         /// <param name="script">Script to be evaluated in all pages in the browser context.</param>
         /// <param name="scriptPath">Instead of specifying <paramref name="script"/>, gives the file name to load from.</param>
-        Task AddInitScriptAsync(string script = null = default, string scriptPath = null = default);
+        Task AddInitScriptAsync(string script = null, string scriptPath = null);
 
         /// <summary>
         /// <para>
@@ -797,7 +797,7 @@ namespace PlaywrightSharp
         /// A glob pattern, regex pattern or predicate receiving frame's <c>url</c> as a <see
         /// cref="URL"/> object.
         /// </param>
-        IFrame FrameByUrl(string urlString = default, Regex urlRegex = default, Func<string, bool> urlFunc = default);
+        IFrame FrameByUrl(string urlString, Regex urlRegex, Func<string, bool> urlFunc);
 
         /// <summary><para>An array of all frames attached to the page.</para></summary>
         IReadOnlyCollection<IFrame> Frames { get; }
@@ -1408,7 +1408,7 @@ namespace PlaywrightSharp
         /// while routing.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
-        Task RouteAsync(string urlString = default, Regex urlRegex = default, Func<string, bool> urlFunc = default, Action<IRoute> handler);
+        Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler);
 
         /// <summary><para>Returns the buffer with the captured screenshot.</para></summary>
         /// <param name="path">
@@ -1788,7 +1788,7 @@ namespace PlaywrightSharp
         /// while routing.
         /// </param>
         /// <param name="handler">Optional handler function to route the request.</param>
-        Task UnrouteAsync(string urlString = default, Regex urlRegex = default, Func<string, bool> urlFunc = default, Action<IRoute> handler = default);
+        Task UnrouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler = default);
 
         /// <summary><para>Shortcut for main frame's <see cref="IFrame.Url"/>.</para></summary>
         string Url { get; }
@@ -2028,7 +2028,7 @@ namespace PlaywrightSharp
         /// the timeout. The default value can be changed by using the <see cref="IPage.SetDefaultTimeout"/>
         /// method.
         /// </param>
-        Task<IRequest> WaitForRequestAsync(string urlOrPredicateString = default, Regex urlOrPredicateRegex = default, Func<IRequest, bool> urlOrPredicateFunc = default, float? timeout = default);
+        Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, Regex urlOrPredicateRegex, Func<IRequest, bool> urlOrPredicateFunc, float? timeout = default);
 
         /// <summary><para>Returns the matched response.</para></summary>
         /// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
@@ -2039,7 +2039,7 @@ namespace PlaywrightSharp
         /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task<IResponse> WaitForResponseAsync(string urlOrPredicateString = default, Regex urlOrPredicateRegex = default, Func<IResponse, bool> urlOrPredicateFunc = default, float? timeout = default);
+        Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, Regex urlOrPredicateRegex, Func<IResponse, bool> urlOrPredicateFunc, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2134,7 +2134,7 @@ namespace PlaywrightSharp
         /// </description></item>
         /// </list>
         /// </param>
-        Task WaitForURLAsync(string urlString = default, Regex urlRegex = default, Func<string, bool> urlFunc = default, float? timeout = default, WaitUntilState waitUntil = default);
+        Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, float? timeout = default, WaitUntilState waitUntil = default);
 
         /// <summary>
         /// <para>

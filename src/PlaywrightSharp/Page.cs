@@ -365,15 +365,15 @@ namespace PlaywrightSharp
         public Task EmulateMediaAsync(ColorScheme colorScheme)
             => _channel.EmulateMediaAsync(new Dictionary<string, object>
             {
-                ["colorScheme"] = colorScheme == ColorScheme.Undefined ? colorScheme : "null",
+                ["colorScheme"] = colorScheme == ColorScheme.Undefined ? "null" : colorScheme,
             });
 
         /// <inheritdoc />
         public Task EmulateMediaAsync(Media media, ColorScheme colorScheme)
             => _channel.EmulateMediaAsync(new Dictionary<string, object>
             {
-                ["media"] = media == Media.Undefined ? media : "null",
-                ["colorScheme"] = colorScheme == ColorScheme.Undefined ? colorScheme : "null",
+                ["media"] = media == Media.Undefined ? "null" : media,
+                ["colorScheme"] = colorScheme == ColorScheme.Undefined ? "null" : colorScheme,
             });
 
         /// <inheritdoc />
@@ -406,12 +406,32 @@ namespace PlaywrightSharp
             => MainFrame.WaitForNavigationAsync(urlString, urlRegex, urlFunc, waitUntil, timeout);
 
         /// <inheritdoc />
+        public Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, float? timeout)
+            => WaitForEventAsync(PageEvent.Request, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
+
+        /// <inheritdoc />
         public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicateRegex, float? timeout)
             => WaitForEventAsync(PageEvent.Request, e => urlOrPredicateRegex.IsMatch(e.Url), timeout);
 
         /// <inheritdoc />
         public Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicateFunc, float? timeout)
             => WaitForEventAsync(PageEvent.Request, e => urlOrPredicateFunc(e), timeout);
+
+        /// <inheritdoc />
+        public Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, Regex urlOrPredicateRegex, Func<IRequest, bool> urlOrPredicateFunc, float? timeout)
+        {
+            if (string.IsNullOrEmpty(urlOrPredicateString))
+            {
+                return WaitForRequestAsync(urlOrPredicateString, timeout);
+            }
+
+            if (urlOrPredicateRegex != null)
+            {
+                return WaitForRequestAsync(urlOrPredicateRegex, timeout);
+            }
+
+            return WaitForRequestAsync(urlOrPredicateFunc, timeout);
+        }
 
         /// <inheritdoc />
         public Task<IPage> WaitForCloseAsync(float? timeout)
@@ -442,22 +462,6 @@ namespace PlaywrightSharp
             => WaitForEventAsync(PageEvent.Worker, predicate, timeout);
 
         /// <inheritdoc />
-        public Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, Regex urlOrPredicateRegex, Func<IRequest, bool> urlOrPredicateFunc, float? timeout)
-        {
-            if (string.IsNullOrEmpty(urlOrPredicateString))
-            {
-                return WaitForEventAsync(PageEvent.Request, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
-            }
-
-            if (urlOrPredicateRegex != null)
-            {
-                return WaitForRequestAsync(urlOrPredicateRegex, timeout);
-            }
-
-            return WaitForRequestAsync(urlOrPredicateFunc, timeout);
-        }
-
-        /// <inheritdoc />
         public Task<IJSHandle> WaitForFunctionAsync(
             string expression,
             object arg,
@@ -479,12 +483,12 @@ namespace PlaywrightSharp
 
             if (pageEvent.Name != PageEvent.Crash.Name)
             {
-                waiter.RejectOnEvent<EventArgs>(this, PageEvent.Crash.Name, new TargetClosedException("Page crashed"));
+                waiter.RejectOnEvent<IPage>(this, PageEvent.Crash.Name, new TargetClosedException("Page crashed"));
             }
 
             if (pageEvent.Name != PageEvent.Close.Name)
             {
-                waiter.RejectOnEvent<EventArgs>(this, PageEvent.Close.Name, new TargetClosedException("Page closed"));
+                waiter.RejectOnEvent<IPage>(this, PageEvent.Close.Name, new TargetClosedException("Page closed"));
             }
 
             return await waiter.WaitForEventAsync(this, pageEvent.Name, predicate).ConfigureAwait(false);
@@ -800,6 +804,10 @@ namespace PlaywrightSharp
             => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => callback(t1, t2, t3, t4));
 
         /// <inheritdoc />
+        public Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, float? timeout)
+            => WaitForEventAsync(PageEvent.Response, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
+
+        /// <inheritdoc />
         public Task<IResponse> WaitForResponseAsync(Regex urlOrPredicateRegex, float? timeout)
             => WaitForEventAsync(PageEvent.Response, e => urlOrPredicateRegex.IsMatch(e.Url), timeout);
 
@@ -812,7 +820,7 @@ namespace PlaywrightSharp
         {
             if (string.IsNullOrEmpty(urlOrPredicateString))
             {
-                return WaitForEventAsync(PageEvent.Response, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
+                return WaitForResponseAsync(urlOrPredicateString, timeout);
             }
 
             if (urlOrPredicateRegex != null)

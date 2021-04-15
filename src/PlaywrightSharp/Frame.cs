@@ -81,9 +81,15 @@ namespace PlaywrightSharp
             };
         }
 
-        internal event EventHandler<FrameNavigatedEventArgs> Navigated;
+        /// <summary>
+        /// Raised when a navigation is received.
+        /// </summary>
+        public event EventHandler<FrameNavigatedEventArgs> Navigated;
 
-        internal event EventHandler<LoadState> LoadState;
+        /// <summary>
+        /// Raised when a new LoadState was added.
+        /// </summary>
+        public event EventHandler<LoadState> LoadState;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
@@ -123,7 +129,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<IResponse> GoToAsync(string url, WaitUntilState waitUntil, float? timeout, string referer)
-            => GoToAsync(false, url, waitUntil, referer, timeout);
+            => GoToAsync(false, url, waitUntil.EnsureDefaultValue(WaitUntilState.Load), referer, timeout);
 
         /// <inheritdoc />
         public Task SetContentAsync(string html, float? timeout, WaitUntilState waitUntil)
@@ -727,8 +733,8 @@ namespace PlaywrightSharp
         private Waiter SetupNavigationWaiter(float? timeout)
         {
             var waiter = new Waiter();
-            waiter.RejectOnEvent<EventArgs>(Page, PageEvent.Close.Name, new NavigationException("Navigation failed because page was closed!"));
-            waiter.RejectOnEvent<EventArgs>(Page, PageEvent.Crash.Name, new NavigationException("Navigation failed because page was crashed!"));
+            waiter.RejectOnEvent<IPage>(Page, PageEvent.Close.Name, new NavigationException("Navigation failed because page was closed!"));
+            waiter.RejectOnEvent<IPage>(Page, PageEvent.Crash.Name, new NavigationException("Navigation failed because page was crashed!"));
             waiter.RejectOnEvent<IFrame>(
                 Page,
                 "FrameDetached",
