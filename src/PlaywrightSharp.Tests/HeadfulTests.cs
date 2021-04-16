@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Tests
         {
             using var tempDir = new TempDirectory();
             await using var browserContext = await BrowserType.LaunchDefaultPersistentContext(tempDir.Path, headless: false);
-            
+
             string[] pages = browserContext.Pages.Select(page => page.Url).ToArray();
             Assert.Equal(new[] { "about:blank" }, pages);
         }
@@ -157,7 +157,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldNotOverrideViewportSizeWhenPassedNull()
         {
             await using var browser = await BrowserType.LaunchDefaultHeadful();
-            var context = await browser.NewContextAsync(new BrowserContextOptions { Viewport = null });
+            var context = await browser.NewContextAsync(new BrowserContextOptions { Viewport = ViewportSize.NoViewport });
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
             var popupTask = page.WaitForEventAsync(PageEvent.Popup);
@@ -179,7 +179,7 @@ namespace PlaywrightSharp.Tests
         public async Task PageBringToFrontShouldWork()
         {
             await using var browser = await BrowserType.LaunchDefaultHeadful();
-            var context = await browser.NewContextAsync(new BrowserContextOptions { Viewport = null });
+            var context = await browser.NewContextAsync(new BrowserContextOptions { Viewport = ViewportSize.NoViewport });
             var page1 = await context.NewPageAsync();
             await page1.SetContentAsync("Page1");
             var page2 = await context.NewPageAsync();

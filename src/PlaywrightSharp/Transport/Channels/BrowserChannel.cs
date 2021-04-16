@@ -49,7 +49,8 @@ namespace PlaywrightSharp.Transport.Channels
             string storageState = null,
             string storageStatePath = null,
             string timezoneId = null,
-            string userAgent = null)
+            string userAgent = null,
+            ViewportSize viewportSize = default)
         {
             var args = new Dictionary<string, object>();
 
@@ -128,14 +129,13 @@ namespace PlaywrightSharp.Transport.Channels
                 args.Add("proxy", proxy);
             }
 
-            if (recordHarOmitContent.HasValue)
-            {
-                args.Add("recordHarOmitContent", recordHarOmitContent.Value);
-            }
-
             if (!string.IsNullOrEmpty(recordHarPath))
             {
-                args.Add("recordHarPath", recordHarPath);
+                args.Add("recordHar", new
+                {
+                    Path = recordHarPath,
+                    OmitContent = recordHarOmitContent,
+                });
             }
 
             if (!string.IsNullOrEmpty(recordVideoDir)
@@ -166,6 +166,15 @@ namespace PlaywrightSharp.Transport.Channels
             if (!string.IsNullOrEmpty(userAgent))
             {
                 args.Add("userAgent", userAgent);
+            }
+
+            if (ViewportSize.NoViewport.Equals(viewportSize))
+            {
+                args.Add("noDefaultViewport", true);
+            }
+            else if (viewportSize != null && !ViewportSize.Default.Equals(viewportSize))
+            {
+                args.Add("viewport", viewportSize);
             }
 
             args["sdkLanguage"] = "csharp";

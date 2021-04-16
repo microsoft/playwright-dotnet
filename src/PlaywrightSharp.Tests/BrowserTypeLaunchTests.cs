@@ -142,20 +142,6 @@ namespace PlaywrightSharp.Tests
         /// <summary>
         /// PuppeteerSharp test. It's not in upstream
         /// </summary>
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldValidateFirefoxUserPrefs()
-        {
-            var prefs = new Dictionary<string, object>
-            {
-                ["Foo"] = "Var"
-            };
-
-            await Assert.ThrowsAsync<ArgumentException>(() => BrowserType.LaunchAsync(firefoxUserPrefs: prefs));
-        }
-
-        /// <summary>
-        /// PuppeteerSharp test. It's not in upstream
-        /// </summary>
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWorkWithIgnoreDefaultArgs()
         {

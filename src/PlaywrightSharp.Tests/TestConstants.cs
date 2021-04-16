@@ -45,11 +45,11 @@ namespace PlaywrightSharp.Tests
                 userDataDir: userDataDir,
                 acceptDownloads: options.AcceptDownloads,
                 args: args,
-                options.BypassCSP,
-                channel: null,
+                bypassCSP: options.BypassCSP,
+                channel: BrowserChannel.Undefined,
                 chromiumSandbox: null,
-                options.ColorScheme,
-                options.DeviceScaleFactor,
+                colorScheme: options.ColorScheme,
+                deviceScaleFactor: options.DeviceScaleFactor,
                 devtools: null,
                 downloadsPath: null,
                 env: null,
@@ -77,7 +77,8 @@ namespace PlaywrightSharp.Tests
                 slowMo: null,
                 timeout: null,
                 timezoneId: options.TimezoneId,
-                userAgent: options.UserAgent
+                userAgent: options.UserAgent,
+                viewportSize: options.Viewport
                 );
         }
 

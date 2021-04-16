@@ -29,7 +29,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Sets a consistent viewport for each page. Defaults to an 800x600 viewport. null disables the default viewport.
         /// </summary>
-        public ViewportSize Viewport { get; set; } = ViewportSize.None;
+        public ViewportSize Viewport { get; set; } = ViewportSize.Default;
 
         /// <summary>
         /// Specific user agent to use in this context.

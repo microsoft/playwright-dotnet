@@ -321,7 +321,7 @@ namespace PlaywrightSharp.Tests
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
-                Viewport = null
+                Viewport = ViewportSize.NoViewport
             });
             var page = await context.NewPageAsync();
             await page.SetContentAsync("<div style='height: 10000px; background: red'></div>");
@@ -345,7 +345,7 @@ namespace PlaywrightSharp.Tests
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
-                Viewport = null
+                Viewport = ViewportSize.NoViewport
             });
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
@@ -395,7 +395,7 @@ namespace PlaywrightSharp.Tests
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
-                Viewport = null,
+                Viewport = ViewportSize.NoViewport,
             });
             var page = await context.NewPageAsync();
 

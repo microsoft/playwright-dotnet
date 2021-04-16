@@ -21,14 +21,14 @@ namespace PlaywrightSharp
 
         internal Browser(IChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
         {
-            Channel = new BrowserChannel(guid, parent.Connection, this);
+            Channel = new PlaywrightSharp.Transport.Channels.BrowserChannel(guid, parent.Connection, this);
             IsConnected = true;
             Channel.Closed += (_, _) => DidClose();
             _initializer = initializer;
         }
 
         /// <inheritdoc/>
-        public event EventHandler Disconnected;
+        public event EventHandler<IBrowser> Disconnected;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => Channel;
@@ -45,7 +45,7 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         public string Version => _initializer.Version;
 
-        internal BrowserChannel Channel { get; }
+        internal PlaywrightSharp.Transport.Channels.BrowserChannel Channel { get; }
 
         internal List<BrowserContext> BrowserContextsList { get; } = new List<BrowserContext>();
 
@@ -63,29 +63,31 @@ namespace PlaywrightSharp
 
         /// <inheritdoc/>
         public async Task<IBrowserContext> NewContextAsync(
-            bool? acceptDownloads = null,
-            bool? bypassCSP = null,
-            ColorScheme colorScheme = ColorScheme.Undefined,
-            float? deviceScaleFactor = null,
-            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null,
-            Geolocation geolocation = null,
-            bool? hasTouch = null,
-            HttpCredentials httpCredentials = null,
-            bool? ignoreHTTPSErrors = null,
-            bool? isMobile = null,
-            bool? javaScriptEnabled = null,
-            string locale = null,
-            bool? offline = null,
-            IEnumerable<string> permissions = null,
-            Proxy proxy = null,
-            bool? recordHarOmitContent = null,
-            string recordHarPath = null,
-            string recordVideoDir = null,
-            RecordVideoSize recordVideoSize = null,
-            string storageState = null,
-            string storageStatePath = null,
-            string timezoneId = null,
-            string userAgent = null)
+            bool? acceptDownloads = default,
+            bool? bypassCSP = default,
+            ColorScheme colorScheme = default,
+            float? deviceScaleFactor = default,
+            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = default,
+            Geolocation geolocation = default,
+            bool? hasTouch = default,
+            HttpCredentials httpCredentials = default,
+            bool? ignoreHTTPSErrors = default,
+            bool? isMobile = default,
+            bool? javaScriptEnabled = default,
+            string locale = default,
+            bool? offline = default,
+            IEnumerable<string> permissions = default,
+            Proxy proxy = default,
+            bool? recordHarOmitContent = default,
+            string recordHarPath = default,
+            string recordVideoDir = default,
+            RecordVideoSize recordVideoSize = default,
+            ScreenSize screenSize = default,
+            string storageState = default,
+            string storageStatePath = default,
+            string timezoneId = default,
+            string userAgent = default,
+            ViewportSize viewportSize = default)
         {
             var context = (await Channel.NewContextAsync(
                 acceptDownloads,
@@ -110,7 +112,8 @@ namespace PlaywrightSharp
                 storageState,
                 storageStatePath,
                 timezoneId,
-                userAgent).ConfigureAwait(false)).Object;
+                userAgent,
+                viewportSize).ConfigureAwait(false)).Object;
 
             // TODO: this might be a useful thing to rethink down the line
             context.VideoPath = recordVideoDir;
@@ -120,30 +123,64 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc/>
-        public Task<IPage> NewPageAsync(
-            bool? acceptDownloads = null,
-            bool? bypassCSP = null,
-            ColorScheme colorScheme = ColorScheme.Undefined,
-            float? deviceScaleFactor = null,
-            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null,
-            Geolocation geolocation = null,
-            bool? hasTouch = null,
-            HttpCredentials httpCredentials = null,
-            bool? ignoreHTTPSErrors = null,
-            bool? isMobile = null,
-            bool? javaScriptEnabled = null,
-            string locale = null,
-            bool? offline = null,
-            IEnumerable<string> permissions = null,
-            Proxy proxy = null,
-            bool? recordHarOmitContent = null,
-            string recordHarPath = null,
-            string recordVideoDir = null,
-            RecordVideoSize recordVideoSize = null,
-            string storageState = null,
-            string storageStatePath = null,
-            string timezoneId = null,
-            string userAgent = null) => throw new NotImplementedException();
+        public async Task<IPage> NewPageAsync(
+            bool? acceptDownloads = default,
+            bool? bypassCSP = default,
+            ColorScheme colorScheme = default,
+            float? deviceScaleFactor = default,
+            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = default,
+            Geolocation geolocation = default,
+            bool? hasTouch = default,
+            HttpCredentials httpCredentials = default,
+            bool? ignoreHTTPSErrors = default,
+            bool? isMobile = default,
+            bool? javaScriptEnabled = default,
+            string locale = default,
+            bool? offline = default,
+            IEnumerable<string> permissions = default,
+            Proxy proxy = default,
+            bool? recordHarOmitContent = default,
+            string recordHarPath = default,
+            string recordVideoDir = default,
+            RecordVideoSize recordVideoSize = default,
+            ScreenSize screenSize = default,
+            string storageState = default,
+            string storageStatePath = default,
+            string timezoneId = default,
+            string userAgent = default,
+            ViewportSize viewportSize = default)
+        {
+            var context = (BrowserContext)await NewContextAsync(
+                acceptDownloads,
+                bypassCSP,
+                colorScheme,
+                deviceScaleFactor,
+                extraHTTPHeaders,
+                geolocation,
+                hasTouch,
+                httpCredentials,
+                ignoreHTTPSErrors,
+                isMobile,
+                javaScriptEnabled,
+                locale,
+                offline,
+                permissions,
+                proxy,
+                recordHarOmitContent,
+                recordHarPath,
+                recordVideoDir,
+                recordVideoSize,
+                screenSize,
+                storageState,
+                storageStatePath,
+                timezoneId,
+                userAgent,
+                viewportSize).ConfigureAwait(false);
+            var page = (Page)await context.NewPageAsync().ConfigureAwait(false);
+            page.OwnedContext = context;
+            context.OwnerPage = page;
+            return page;
+        }
 
         /// <inheritdoc/>
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
@@ -172,17 +209,19 @@ namespace PlaywrightSharp
                 null,
                 null,
                 null,
+                screenSize: null,
                 options.StorageState,
                 options.StorageStatePath,
                 options.TimezoneId,
-                options.UserAgent);
+                options.UserAgent,
+                options.Viewport);
         }
 
         private void DidClose()
         {
             IsConnected = false;
             _isClosedOrClosing = true;
-            Disconnected?.Invoke(this, EventArgs.Empty);
+            Disconnected?.Invoke(this, this);
             _closedTcs.TrySetResult(true);
         }
 

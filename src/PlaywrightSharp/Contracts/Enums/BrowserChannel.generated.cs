@@ -46,33 +46,24 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-	public partial class Proxy
+	public enum BrowserChannel
 	{
-		/// <summary>
-		/// <para>
-		/// Proxy to be used for all requests. HTTP and SOCKS proxies are supported, for example
-		/// <c>http://myproxy.com:3128</c> or <c>socks5://myproxy.com:3128</c>. Short form <c>myproxy.com:3128</c>
-		/// is considered an HTTP proxy.
-		/// </para>
-		/// </summary>
-		[JsonPropertyName("server")]
-		public string Server { get; set; }
-	
-		/// <summary>
-		/// <para>
-		/// Optional coma-separated domains to bypass proxy, for example <c>".com, chromium.org,
-		/// .domain.com"</c>.
-		/// </para>
-		/// </summary>
-		[JsonPropertyName("bypass")]
-		public string Bypass { get; set; }
-	
-		/// <summary><para>Optional username to use if HTTP proxy requires authentication.</para></summary>
-		[JsonPropertyName("username")]
-		public string Username { get; set; }
-	
-		/// <summary><para>Optional password to use if HTTP proxy requires authentication.</para></summary>
-		[JsonPropertyName("password")]
-		public string Password { get; set; }
+		Undefined = 0,
+		[EnumMember(Value = "chrome")]
+		Chrome,
+		[EnumMember(Value = "chrome-beta")]
+		ChromeBeta,
+		[EnumMember(Value = "chrome-dev")]
+		ChromeDev,
+		[EnumMember(Value = "chrome-canary")]
+		ChromeCanary,
+		[EnumMember(Value = "msedge")]
+		Msedge,
+		[EnumMember(Value = "msedge-beta")]
+		MsedgeBeta,
+		[EnumMember(Value = "msedge-dev")]
+		MsedgeDev,
+		[EnumMember(Value = "msedge-canary")]
+		MsedgeCanary,
 	}
 }

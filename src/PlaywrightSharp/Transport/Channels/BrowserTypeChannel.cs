@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using PlaywrightSharp.Helpers;
 
 namespace PlaywrightSharp.Transport.Channels
 {
@@ -11,27 +13,27 @@ namespace PlaywrightSharp.Transport.Channels
         }
 
         public Task<BrowserChannel> LaunchAsync(
-            IEnumerable<string> passedArguments = null,
-            string channel = null,
-            bool? chromiumSandbox = null,
-            bool? devtools = null,
-            string downloadsPath = null,
-            IEnumerable<KeyValuePair<string, string>> env = null,
-            string executablePath = null,
-            IEnumerable<KeyValuePair<string, object>> firefoxUserPrefs = null,
-            bool? handleSIGHUP = null,
-            bool? handleSIGINT = null,
-            bool? handleSIGTERM = null,
-            bool? headless = null,
-            bool? ignoreAllDefaultArgs = null,
-            IEnumerable<string> ignoreDefaultArgs = null,
-            Proxy proxy = null,
-            float? slowMo = null,
-            float? timeout = null)
+            bool? headless = default,
+            global::PlaywrightSharp.BrowserChannel channel = default,
+            string executablePath = default,
+            IEnumerable<string> passedArguments = default,
+            Proxy proxy = default,
+            string downloadsPath = default,
+            bool? chromiumSandbox = default,
+            IEnumerable<KeyValuePair<string, object>> firefoxUserPrefs = default,
+            bool? handleSIGINT = default,
+            bool? handleSIGTERM = default,
+            bool? handleSIGHUP = default,
+            float? timeout = default,
+            IEnumerable<KeyValuePair<string, string>> env = default,
+            bool? devtools = default,
+            float? slowMo = default,
+            IEnumerable<string> ignoreDefaultArgs = default,
+            bool? ignoreAllDefaultArgs = default)
         {
             var args = new Dictionary<string, object>();
 
-            if (!string.IsNullOrEmpty(channel))
+            if (channel != global::PlaywrightSharp.BrowserChannel.Undefined)
             {
                 args.Add("channel", channel);
             }
@@ -83,7 +85,7 @@ namespace PlaywrightSharp.Transport.Channels
 
             if (env != null)
             {
-                args.Add("env", env);
+                args.Add("env", env.Remap());
             }
 
             if (proxy != null)
@@ -125,48 +127,248 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task<BrowserContextChannel> LaunchPersistentContextAsync(
             string userDataDir,
-            bool? acceptDownloads = null,
-            IEnumerable<string> args = null,
-            bool? bypassCSP = null,
-            string channel = null,
-            bool? chromiumSandbox = null,
-            ColorScheme colorScheme = ColorScheme.Undefined,
-            float? deviceScaleFactor = null,
-            bool? devtools = null,
-            string downloadsPath = null,
-            IEnumerable<KeyValuePair<string, string>> env = null,
-            string executablePath = null,
-            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null,
-            Geolocation geolocation = null,
-            bool? handleSIGHUP = null,
-            bool? handleSIGINT = null,
-            bool? handleSIGTERM = null,
-            bool? hasTouch = null,
-            bool? headless = null,
-            HttpCredentials httpCredentials = null,
-            bool? ignoreAllDefaultArgs = null,
-            IEnumerable<string> ignoreDefaultArgs = null,
-            bool? ignoreHTTPSErrors = null,
-            bool? isMobile = null,
-            bool? javaScriptEnabled = null,
-            string locale = null,
-            bool? offline = null,
-            IEnumerable<string> permissions = null,
-            Proxy proxy = null,
-            bool? recordHarOmitContent = null,
-            string recordHarPath = null,
-            string recordVideoDir = null,
-            RecordVideoSize recordVideoSize = null,
-            float? slowMo = null,
-            float? timeout = null,
-            string timezoneId = null,
-            string userAgent = null)
+            bool? headless = default,
+            PlaywrightSharp.BrowserChannel channel = default,
+            string executablePath = default,
+            IEnumerable<string> args = default,
+            Proxy proxy = default,
+            string downloadsPath = default,
+            bool? chromiumSandbox = default,
+            bool? handleSIGINT = default,
+            bool? handleSIGTERM = default,
+            bool? handleSIGHUP = default,
+            float? timeout = default,
+            IEnumerable<KeyValuePair<string, string>> env = default,
+            bool? devtools = default,
+            float? slowMo = default,
+            bool? acceptDownloads = default,
+            bool? ignoreHTTPSErrors = default,
+            bool? bypassCSP = default,
+            ViewportSize viewportSize = default,
+            ScreenSize screenSize = default,
+            string userAgent = default,
+            float? deviceScaleFactor = default,
+            bool? isMobile = default,
+            bool? hasTouch = default,
+            bool? javaScriptEnabled = default,
+            string timezoneId = default,
+            Geolocation geolocation = default,
+            string locale = default,
+            IEnumerable<string> permissions = default,
+            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = default,
+            bool? offline = default,
+            HttpCredentials httpCredentials = default,
+            ColorScheme colorScheme = default,
+            string recordHarPath = default,
+            bool? recordHarOmitContent = default,
+            string recordVideoDir = default,
+            RecordVideoSize recordVideoSize = default,
+            IEnumerable<string> ignoreDefaultArgs = default,
+            bool? ignoreAllDefaultArgs = default)
         {
-            /*
-            var args = options.ToChannelDictionary();
-            args["userDataDir"] = userDataDir;*/
+            var channelArgs = new Dictionary<string, object>();
 
-            return Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "launchPersistentContext", args, false);
+            if (!string.IsNullOrEmpty(userDataDir))
+            {
+                channelArgs.Add("userDataDir", userDataDir);
+            }
+
+            if (headless.HasValue)
+            {
+                channelArgs.Add("headless", headless);
+            }
+
+            if (channel != PlaywrightSharp.BrowserChannel.Undefined)
+            {
+                channelArgs.Add("channel", channel);
+            }
+
+            if (!string.IsNullOrEmpty(executablePath))
+            {
+                channelArgs.Add("executablePath", executablePath);
+            }
+
+            if (args?.Any() == true)
+            {
+                channelArgs.Add("args", args);
+            }
+
+            if (!string.IsNullOrEmpty(downloadsPath))
+            {
+                channelArgs.Add("downloadsPath", downloadsPath);
+            }
+
+            if (proxy != null)
+            {
+                channelArgs.Add("proxy", proxy);
+            }
+
+            if (chromiumSandbox.HasValue)
+            {
+                channelArgs.Add("chromiumSandbox", chromiumSandbox);
+            }
+
+            if (handleSIGINT.HasValue)
+            {
+                channelArgs.Add("handleSIGINT", handleSIGINT);
+            }
+
+            if (handleSIGTERM.HasValue)
+            {
+                channelArgs.Add("handleSIGTERM", handleSIGTERM);
+            }
+
+            if (handleSIGHUP.HasValue)
+            {
+                channelArgs.Add("handleSIGHUP", handleSIGHUP);
+            }
+
+            if (timeout.HasValue)
+            {
+                channelArgs.Add("timeout", timeout);
+            }
+
+            if (env?.Any() == true)
+            {
+                channelArgs.Add("env", env.Remap());
+            }
+
+            if (devtools.HasValue)
+            {
+                channelArgs.Add("devtools", devtools);
+            }
+
+            if (slowMo.HasValue)
+            {
+                channelArgs.Add("slowMo", slowMo);
+            }
+
+            if (acceptDownloads.HasValue)
+            {
+                channelArgs.Add("acceptDownloads", acceptDownloads);
+            }
+
+            if (ignoreHTTPSErrors.HasValue)
+            {
+                channelArgs.Add("ignoreHTTPSErrors", ignoreHTTPSErrors);
+            }
+
+            if (bypassCSP.HasValue)
+            {
+                channelArgs.Add("bypassCSP", bypassCSP);
+            }
+
+            if (ViewportSize.NoViewport.Equals(viewportSize))
+            {
+                channelArgs.Add("noDefaultViewport", true);
+            }
+            else if (viewportSize != null && !ViewportSize.Default.Equals(viewportSize))
+            {
+                channelArgs.Add("viewport", viewportSize);
+            }
+
+            if (screenSize != default)
+            {
+                channelArgs.Add("screensize", screenSize);
+            }
+
+            if (!string.IsNullOrEmpty(userAgent))
+            {
+                channelArgs.Add("userAgent", userAgent);
+            }
+
+            if (deviceScaleFactor.HasValue)
+            {
+                channelArgs.Add("deviceScaleFactor", deviceScaleFactor);
+            }
+
+            if (isMobile.HasValue)
+            {
+                channelArgs.Add("isMobile", isMobile);
+            }
+
+            if (hasTouch.HasValue)
+            {
+                channelArgs.Add("hasTouch", hasTouch);
+            }
+
+            if (javaScriptEnabled.HasValue)
+            {
+                channelArgs.Add("javaScriptEnabled", javaScriptEnabled);
+            }
+
+            if (!string.IsNullOrEmpty(timezoneId))
+            {
+                channelArgs.Add("timezoneId", timezoneId);
+            }
+
+            if (geolocation != default)
+            {
+                channelArgs.Add("geolocation", geolocation);
+            }
+
+            if (!string.IsNullOrEmpty(locale))
+            {
+                channelArgs.Add("locale", locale);
+            }
+
+            if (permissions != null && permissions.Any())
+            {
+                channelArgs.Add("permissions", permissions);
+            }
+
+            if (extraHTTPHeaders != null && extraHTTPHeaders.Any())
+            {
+                channelArgs.Add("extraHTTPHeaders", extraHTTPHeaders.Remap());
+            }
+
+            if (offline.HasValue)
+            {
+                channelArgs.Add("offline", offline);
+            }
+
+            if (httpCredentials != default)
+            {
+                channelArgs.Add("httpCredentials", httpCredentials);
+            }
+
+            if (colorScheme != ColorScheme.Undefined)
+            {
+                channelArgs.Add("colorScheme", colorScheme);
+            }
+
+            if (!string.IsNullOrEmpty(recordHarPath))
+            {
+                channelArgs.Add("recordHar", new
+                {
+                    Path = recordHarPath,
+                    OmitContent = recordHarOmitContent.GetValueOrDefault(false),
+                });
+            }
+
+            if (!string.IsNullOrEmpty(recordVideoDir)
+                 && recordVideoDir != null)
+            {
+                channelArgs.Add("recordVideo", new Dictionary<string, object>()
+                {
+                    { "dir", recordVideoDir },
+                    { "size", recordVideoSize },
+                });
+            }
+
+            if (ignoreDefaultArgs != null && ignoreDefaultArgs.Any())
+            {
+                channelArgs.Add("ignoreDefaultArgs", ignoreDefaultArgs);
+            }
+
+            if (ignoreAllDefaultArgs.HasValue)
+            {
+                channelArgs.Add("ignoreAllDefaultArgs", ignoreAllDefaultArgs);
+            }
+
+            channelArgs.Add("sdkLanguage", "csharp");
+
+            return Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "launchPersistentContext", channelArgs, false);
         }
     }
 }

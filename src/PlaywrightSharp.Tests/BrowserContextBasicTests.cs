@@ -150,11 +150,11 @@ namespace PlaywrightSharp.Tests
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should not allow deviceScaleFactor with null viewport")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldNotAllowDeviceScaleFactorWithNullViewport()
+        public async Task ShouldNotAllowDeviceScaleFactorWithViewportDisabled()
         {
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Browser.NewContextAsync(new BrowserContextOptions
             {
-                Viewport = null,
+                Viewport = ViewportSize.NoViewport,
                 DeviceScaleFactor = 3,
             }));
             Assert.Equal("\"deviceScaleFactor\" option is not supported with null \"viewport\"", exception.Message);
@@ -162,11 +162,11 @@ namespace PlaywrightSharp.Tests
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should not allow isMobile with null viewport")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldNotAllowIsMobileWithNullViewport()
+        public async Task ShouldNotAllowIsMobileWithViewportDisabled()
         {
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Browser.NewContextAsync(new BrowserContextOptions
             {
-                Viewport = null,
+                Viewport = ViewportSize.NoViewport,
                 IsMobile = true,
             }));
             Assert.Equal("\"isMobile\" option is not supported with null \"viewport\"", exception.Message);
