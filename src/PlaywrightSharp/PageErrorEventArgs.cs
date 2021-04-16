@@ -36,7 +36,7 @@ namespace PlaywrightSharp
             string result = $"{Name}: {Message}";
             if (!string.IsNullOrEmpty(Stack))
             {
-                result += $"\n{result}";
+                result += $"\n{Stack}";
             }
 
             return result;

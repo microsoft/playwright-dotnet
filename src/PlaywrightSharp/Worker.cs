@@ -32,12 +32,12 @@ namespace PlaywrightSharp
                     BrowserContext.ServiceWorkersList.Remove(this);
                 }
 
-                Close?.Invoke(this, EventArgs.Empty);
+                Close?.Invoke(this, this);
             };
         }
 
         /// <inheritdoc/>
-        public event EventHandler Close;
+        public event EventHandler<IWorker> Close;
 
         /// <inheritdoc/>
         public string Url => _initializer.Url;

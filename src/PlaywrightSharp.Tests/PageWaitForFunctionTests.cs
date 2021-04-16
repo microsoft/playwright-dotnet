@@ -157,7 +157,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldThrowNegativePollingInterval()
         {
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
-                => Page.WaitForFunctionAsync("() => !!document.body", -10));
+                => Page.WaitForFunctionAsync("() => !!document.body", pollingInterval: -10));
 
             Assert.Contains("Cannot poll with non-positive interval", exception.Message);
         }

@@ -77,10 +77,10 @@ namespace PlaywrightSharp
 
             if (webSocketEvent.Name != WebSocketEvent.Close.Name)
             {
-                waiter.RejectOnEvent<EventArgs>(this, WebSocketEvent.Close.Name, new PlaywrightSharpException("Socket closed"));
+                waiter.RejectOnEvent<IWebSocket>(this, WebSocketEvent.Close.Name, new PlaywrightSharpException("Socket closed"));
             }
 
-            waiter.RejectOnEvent<EventArgs>(_page, PageEvent.Close.Name, new TargetClosedException("Page closed"));
+            waiter.RejectOnEvent<IPage>(_page, PageEvent.Close.Name, new TargetClosedException("Page closed"));
 
             return await waiter.WaitForEventAsync(this, webSocketEvent.Name, predicate).ConfigureAwait(false);
         }

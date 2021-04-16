@@ -20,7 +20,7 @@ namespace PlaywrightSharp.Transport.Channels
                 "abort",
                 new Dictionary<string, object>
                 {
-                    ["errorCode"] = errorCode,
+                    ["errorCode"] = string.IsNullOrEmpty(errorCode) ? RequestAbortErrorCode.Failed : errorCode,
                 });
 
         public Task FulfillAsync(NormalizedFulfillResponse response)
