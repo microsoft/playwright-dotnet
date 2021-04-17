@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using PlaywrightSharp.Transport.Protocol;
@@ -92,7 +92,7 @@ namespace PlaywrightSharp
 
         /// <summary>
         /// Enables HAR recording for all pages into recordHar.path file. If not specified, the HAR is not recorded.
-        /// Make sure to await <see cref="IPage.CloseAsync(bool)"/> for the HAR to be saved.
+        /// Make sure to await <see cref="IPage.CloseAsync(bool?)"/> for the HAR to be saved.
         /// You can use <see cref="Har.HarResult"/> to deserialize the generated JSON file.
         /// </summary>
         public RecordHarOptions RecordHar { get; set; }

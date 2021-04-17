@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -10,24 +10,21 @@ namespace PlaywrightSharp
     {
         /// <summary><para>Returns frame with matching URL.</para></summary>
         /// <param name="urlString">
-        /// A glob pattern, regex pattern or predicate receiving frame's <c>url</c> as a <see
-        /// cref="URL"/> object.
+        /// A glob pattern, regex pattern or predicate receiving frame's <c>url</c> as a URL object.
         /// </param>
         /// <returns>Matching frame.</returns>
         IFrame FrameByUrl(string urlString);
 
         /// <summary><para>Returns frame with matching URL.</para></summary>
         /// <param name="urlRegex">
-        /// A glob pattern, regex pattern or predicate receiving frame's <c>url</c> as a <see
-        /// cref="URL"/> object.
+        /// A glob pattern, regex pattern or predicate receiving frame's <c>url</c> as a URL object.
         /// </param>
         /// <returns>Matching frame.</returns>
         IFrame FrameByUrl(Regex urlRegex);
 
         /// <summary><para>Returns frame with matching URL.</para></summary>
         /// <param name="urlFunc">
-        /// A glob pattern, regex pattern or predicate receiving frame's <c>url</c> as a <see
-        /// cref="URL"/> object.
+        /// A glob pattern, regex pattern or predicate receiving frame's <c>url</c> as a URL object.
         /// </param>
         /// <returns>Matching frame.</returns>
         IFrame FrameByUrl(Func<string, bool> urlFunc);
@@ -53,12 +50,12 @@ namespace PlaywrightSharp
         /// <para>Returns the return value of <paramref name="expression"/>.</para>
         /// <para>
         /// If the function passed to the <see cref="IFrame.EvaluateAsync"/> returns a <see
-        /// cref="Promise"/>, then <see cref="IFrame.EvaluateAsync"/> would wait for the promise
+        /// cref="Task"/>, then <see cref="IFrame.EvaluateAsync"/> would wait for the promise
         /// to resolve and return its value.
         /// </para>
         /// <para>
         /// If the function passed to the <see cref="IFrame.EvaluateAsync"/> returns a non-<see
-        /// cref="Serializable"/> value, then <see cref="IFrame.EvaluateAsync"/> returns <c>undefined</c>.
+        /// cref="Task"/> value, then <see cref="IFrame.EvaluateAsync"/> returns <c>undefined</c>.
         /// Playwright also supports transferring some additional values that are not serializable
         /// by <c>JSON</c>: <c>-0</c>, <c>NaN</c>, <c>Infinity</c>, <c>-Infinity</c>.
         /// </para>
@@ -85,7 +82,7 @@ namespace PlaywrightSharp
         /// See <a href="./selectors.md">Working with selectors</a> for more details.
         /// </para>
         /// <para>
-        /// If <paramref name="expression"/> returns a <see cref="Promise"/>, then <see cref="IFrame.EvalOnSelectorAllAsync"/>
+        /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IFrame.EvalOnSelectorAllAsync"/>
         /// would wait for the promise to resolve and return its value.
         /// </para>
         /// <para>Examples.</para>
@@ -112,7 +109,7 @@ namespace PlaywrightSharp
         /// throws an error.
         /// </para>
         /// <para>
-        /// If <paramref name="expression"/> returns a <see cref="Promise"/>, then <see cref="IFrame.EvalOnSelectorAsync"/>
+        /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IFrame.EvalOnSelectorAsync"/>
         /// would wait for the promise to resolve and return its value.
         /// </para>
         /// <para>Examples.</para>
@@ -167,9 +164,9 @@ namespace PlaywrightSharp
         /// </param>
         /// <param name="timeout">
         /// Maximum operation time in mi3lliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.DefaultNavigationTimeout"/>,
+        /// <see cref="IBrowserContext.DefaultTimeout"/>, <see cref="IPage.DefaultNavigationTimeout"/>
+        /// or <see cref="IPage.DefaultTimeout"/> methods.
         /// </param>
         /// <returns>Task which resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
@@ -196,7 +193,7 @@ namespace PlaywrightSharp
         /// </para>
         /// </remarks>
         /// <param name="urlRegex">
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+        /// A glob pattern, regex pattern or predicate receiving URL to match
         /// while waiting for the navigation.
         /// </param>
         /// <param name="waitUntil">
@@ -218,9 +215,9 @@ namespace PlaywrightSharp
         /// </param>
         /// <param name="timeout">
         /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.DefaultNavigationTimeout"/>,
+        /// <see cref="IBrowserContext.DefaultTimeout"/>, <see cref="IPage.DefaultNavigationTimeout"/>
+        /// or <see cref="IPage.DefaultTimeout"/> methods.
         /// </param>
         /// <returns>Task which resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
@@ -247,7 +244,7 @@ namespace PlaywrightSharp
         /// </para>
         /// </remarks>
         /// <param name="urlFunc">
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+        /// A glob pattern, regex pattern or predicate receiving URL to match
         /// while waiting for the navigation.
         /// </param>
         /// <param name="waitUntil">
@@ -269,9 +266,9 @@ namespace PlaywrightSharp
         /// </param>
         /// <param name="timeout">
         /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.DefaultNavigationTimeout"/>,
+        /// <see cref="IBrowserContext.DefaultTimeout"/>, <see cref="IPage.DefaultNavigationTimeout"/>
+        /// or <see cref="IPage.DefaultTimeout"/> methods.
         /// </param>
         /// <returns>Task which resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
@@ -317,8 +314,8 @@ namespace PlaywrightSharp
         /// </param>
         /// <param name="timeout">
         /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/>
+        /// or <see cref="IPage.DefaultTimeout"/> methods.
         /// </param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, bool? noWaitAfter = default, float? timeout = default);
@@ -345,7 +342,7 @@ namespace PlaywrightSharp
         /// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
         /// <param name="timeout">
         /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
-        /// the timeout. The default value can be changed by using the <see cref="IPage.SetDefaultTimeout"/>
+        /// the timeout. The default value can be changed by using the <see cref="IPage.DefaultTimeout"/>
         /// method.
         /// </param>
         /// <returns>A <see cref="Task"/> that completes when the request was made (or timeout), yielding the matching <see cref="IRequest"/>.</returns>
@@ -355,7 +352,7 @@ namespace PlaywrightSharp
         /// <param name="urlOrPredicateRegex">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
         /// <param name="timeout">
         /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
-        /// the timeout. The default value can be changed by using the <see cref="IPage.SetDefaultTimeout"/>
+        /// the timeout. The default value can be changed by using the <see cref="IPage.DefaultTimeout"/>
         /// method.
         /// </param>
         /// <returns>A <see cref="Task"/> that completes when the request was made (or timeout), yielding the matching <see cref="IRequest"/>.</returns>
@@ -365,7 +362,7 @@ namespace PlaywrightSharp
         /// <param name="urlOrPredicateFunc">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
         /// <param name="timeout">
         /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
-        /// the timeout. The default value can be changed by using the <see cref="IPage.SetDefaultTimeout"/>
+        /// the timeout. The default value can be changed by using the <see cref="IPage.DefaultTimeout"/>
         /// method.
         /// </param>
         /// <returns>A <see cref="Task"/> that completes when the request was made (or timeout), yielding the matching <see cref="IRequest"/>.</returns>
@@ -383,7 +380,7 @@ namespace PlaywrightSharp
         /// <param name="timeout">
         /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
         /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
+        /// <see cref="IBrowserContext.DefaultTimeout"/>.
         /// </param>
         /// <typeparam name = "T" > Resulting event args.</typeparam>
         /// <returns>A <see cref="Task"/> that completes when the predicate returns truthy value. Yielding the information of the event.</returns>
@@ -393,8 +390,8 @@ namespace PlaywrightSharp
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in this page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
-        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
+        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Task"/>,
         /// it will be awaited.
         /// </para>
         /// <para>
@@ -419,8 +416,8 @@ namespace PlaywrightSharp
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in this page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
-        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
+        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Task"/>,
         /// it will be awaited.
         /// </para>
         /// <para>
@@ -446,8 +443,8 @@ namespace PlaywrightSharp
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in this page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
-        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
+        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Task"/>,
         /// it will be awaited.
         /// </para>
         /// <para>
@@ -473,8 +470,8 @@ namespace PlaywrightSharp
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in this page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
-        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
+        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Task"/>,
         /// it will be awaited.
         /// </para>
         /// <para>
@@ -500,8 +497,8 @@ namespace PlaywrightSharp
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in this page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
-        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
+        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Task"/>,
         /// it will be awaited.
         /// </para>
         /// <para>
@@ -528,8 +525,8 @@ namespace PlaywrightSharp
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in this page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
-        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
+        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Task"/>,
         /// it will be awaited.
         /// </para>
         /// <para>
@@ -557,8 +554,8 @@ namespace PlaywrightSharp
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in this page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
-        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
+        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Task"/>,
         /// it will be awaited.
         /// </para>
         /// <para>
@@ -587,8 +584,8 @@ namespace PlaywrightSharp
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in this page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
-        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
+        /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Task"/>,
         /// it will be awaited.
         /// </para>
         /// <para>
@@ -618,10 +615,10 @@ namespace PlaywrightSharp
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in the page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
         /// name="callback"/>.
         /// </para>
-        /// <para>If the <paramref name="callback"/> returns a <see cref="Promise"/>, it will be awaited.</para>
+        /// <para>If the <paramref name="callback"/> returns a <see cref="Task"/>, it will be awaited.</para>
         /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
         /// <para>An example of adding an <c>sha1</c> function to the page.</para>
         /// </summary>
@@ -639,10 +636,10 @@ namespace PlaywrightSharp
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in the page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
         /// name="callback"/>.
         /// </para>
-        /// <para>If the <paramref name="callback"/> returns a <see cref="Promise"/>, it will be awaited.</para>
+        /// <para>If the <paramref name="callback"/> returns a <see cref="Task"/>, it will be awaited.</para>
         /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
         /// <para>An example of adding an <c>sha1</c> function to the page.</para>
         /// </summary>
@@ -660,10 +657,10 @@ namespace PlaywrightSharp
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in the page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
         /// name="callback"/>.
         /// </para>
-        /// <para>If the <paramref name="callback"/> returns a <see cref="Promise"/>, it will be awaited.</para>
+        /// <para>If the <paramref name="callback"/> returns a <see cref="Task"/>, it will be awaited.</para>
         /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
         /// <para>An example of adding an <c>sha1</c> function to the page.</para>
         /// </summary>
@@ -682,10 +679,10 @@ namespace PlaywrightSharp
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in the page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
         /// name="callback"/>.
         /// </para>
-        /// <para>If the <paramref name="callback"/> returns a <see cref="Promise"/>, it will be awaited.</para>
+        /// <para>If the <paramref name="callback"/> returns a <see cref="Task"/>, it will be awaited.</para>
         /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
         /// <para>An example of adding an <c>sha1</c> function to the page.</para>
         /// </summary>
@@ -705,10 +702,10 @@ namespace PlaywrightSharp
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in the page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
         /// name="callback"/>.
         /// </para>
-        /// <para>If the <paramref name="callback"/> returns a <see cref="Promise"/>, it will be awaited.</para>
+        /// <para>If the <paramref name="callback"/> returns a <see cref="Task"/>, it will be awaited.</para>
         /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
         /// <para>An example of adding an <c>sha1</c> function to the page.</para>
         /// </summary>
@@ -729,10 +726,10 @@ namespace PlaywrightSharp
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in the page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
         /// name="callback"/>.
         /// </para>
-        /// <para>If the <paramref name="callback"/> returns a <see cref="Promise"/>, it will be awaited.</para>
+        /// <para>If the <paramref name="callback"/> returns a <see cref="Task"/>, it will be awaited.</para>
         /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
         /// <para>An example of adding an <c>sha1</c> function to the page.</para>
         /// </summary>
@@ -754,8 +751,8 @@ namespace PlaywrightSharp
         /// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
         /// <param name="timeout">
         /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
-        /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/>
+        /// or <see cref="IPage.DefaultTimeout"/> methods.
         /// </param>
         /// <returns>A <see cref="Task"/> that completes when a matching response is received, yielding the response being waited for.</returns>
         Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, float? timeout = default);
@@ -764,8 +761,8 @@ namespace PlaywrightSharp
         /// <param name="urlOrPredicateRegex">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
         /// <param name="timeout">
         /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
-        /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/>
+        /// or <see cref="IPage.DefaultTimeout"/> methods.
         /// </param>
         /// <returns>A <see cref="Task"/> that completes when a matching response is received, yielding the response being waited for.</returns>
         Task<IResponse> WaitForResponseAsync(Regex urlOrPredicateRegex, float? timeout = default);
@@ -774,8 +771,8 @@ namespace PlaywrightSharp
         /// <param name="urlOrPredicateFunc">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
         /// <param name="timeout">
         /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
-        /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/>
+        /// or <see cref="IPage.DefaultTimeout"/> methods.
         /// </param>
         /// <returns>A <see cref="Task"/> that completes when a matching response is received, yielding the response being waited for.</returns>
         Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicateFunc, float? timeout = default);
@@ -792,14 +789,14 @@ namespace PlaywrightSharp
         /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync(Func{string, bool}, Action{IRoute})"/>)
         /// when request matches both handlers.
         /// </para>
-        /// <para>To remove a route with its handler you can use <see cref="IPage.UncheckAsync(string, bool?, bool?, float?)"/>.</para>
+        /// <para>To remove a route with its handler you can use <see cref="IPage.UncheckAsync(string, Position, bool?, bool?, float?)"/>.</para>
         /// </summary>
         /// <remarks>
         /// <para>The handler will only be called for the first url if the response is a redirect.</para>
         /// <para>Enabling routing disables http cache.</para>
         /// </remarks>
         /// <param name="urlString">
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+        /// A glob pattern, regex pattern or predicate receiving URL to match
         /// while routing.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
@@ -825,7 +822,7 @@ namespace PlaywrightSharp
         /// <para>Enabling routing disables http cache.</para>
         /// </remarks>
         /// <param name="urlRegex">
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+        /// A glob pattern, regex pattern or predicate receiving URL to match
         /// while routing.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
@@ -851,7 +848,7 @@ namespace PlaywrightSharp
         /// <para>Enabling routing disables http cache.</para>
         /// </remarks>
         /// <param name="urlFunc">
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+        /// A glob pattern, regex pattern or predicate receiving URL to match
         /// while routing.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
@@ -865,7 +862,7 @@ namespace PlaywrightSharp
         /// </para>
         /// </summary>
         /// <param name="urlString">
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+        /// A glob pattern, regex pattern or predicate receiving URL to match
         /// while routing.
         /// </param>
         /// <param name="handler">Optional handler function to route the request.</param>
@@ -879,7 +876,7 @@ namespace PlaywrightSharp
         /// </para>
         /// </summary>
         /// <param name="urlRegex">
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+        /// A glob pattern, regex pattern or predicate receiving URL to match
         /// while routing.
         /// </param>
         /// <param name="handler">Optional handler function to route the request.</param>
@@ -893,7 +890,7 @@ namespace PlaywrightSharp
         /// </para>
         /// </summary>
         /// <param name="urlFunc">
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+        /// A glob pattern, regex pattern or predicate receiving URL to match
         /// while routing.
         /// </param>
         /// <param name="handler">Optional handler function to route the request.</param>

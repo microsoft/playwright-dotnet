@@ -12,12 +12,12 @@ namespace PlaywrightSharp
         /// <para>Returns the return value of <paramref name="expression"/>.</para>
         /// <para>
         /// If the function passed to the <see cref="IFrame.EvaluateAsync"/> returns a <see
-        /// cref="Promise"/>, then <see cref="IFrame.EvaluateAsync"/> would wait for the promise
+        /// cref="Task"/>, then <see cref="IFrame.EvaluateAsync"/> would wait for the promise
         /// to resolve and return its value.
         /// </para>
         /// <para>
         /// If the function passed to the <see cref="IFrame.EvaluateAsync"/> returns a non-<see
-        /// cref="Serializable"/> value, then <see cref="IFrame.EvaluateAsync"/> returns <c>undefined</c>.
+        /// cref="Task"/> value, then <see cref="IFrame.EvaluateAsync"/> returns <c>undefined</c>.
         /// Playwright also supports transferring some additional values that are not serializable
         /// by <c>JSON</c>: <c>-0</c>, <c>NaN</c>, <c>Infinity</c>, <c>-Infinity</c>.
         /// </para>
@@ -44,7 +44,7 @@ namespace PlaywrightSharp
         /// See <a href="./selectors.md">Working with selectors</a> for more details.
         /// </para>
         /// <para>
-        /// If <paramref name="expression"/> returns a <see cref="Promise"/>, then <see cref="IFrame.EvalOnSelectorAllAsync"/>
+        /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IFrame.EvalOnSelectorAllAsync"/>
         /// would wait for the promise to resolve and return its value.
         /// </para>
         /// <para>Examples.</para>
@@ -71,7 +71,7 @@ namespace PlaywrightSharp
         /// throws an error.
         /// </para>
         /// <para>
-        /// If <paramref name="expression"/> returns a <see cref="Promise"/>, then <see cref="IFrame.EvalOnSelectorAsync"/>
+        /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IFrame.EvalOnSelectorAsync"/>
         /// would wait for the promise to resolve and return its value.
         /// </para>
         /// <para>Examples.</para>
@@ -126,9 +126,9 @@ namespace PlaywrightSharp
         /// </param>
         /// <param name="timeout">
         /// Maximum operation time in mi3lliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.DefaultNavigationTimeout"/>,
+        /// <see cref="IBrowserContext.DefaultTimeout"/>, <see cref="IPage.DefaultNavigationTimeout"/>
+        /// or <see cref="IPage.DefaultTimeout"/> methods.
         /// </param>
         /// <returns>Task which resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
@@ -155,7 +155,7 @@ namespace PlaywrightSharp
         /// </para>
         /// </remarks>
         /// <param name="urlRegex">
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+        /// A glob pattern, regex pattern or predicate receiving URL to match
         /// while waiting for the navigation.
         /// </param>
         /// <param name="waitUntil">
@@ -177,9 +177,9 @@ namespace PlaywrightSharp
         /// </param>
         /// <param name="timeout">
         /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.DefaultNavigationTimeout"/>,
+        /// <see cref="IBrowserContext.DefaultTimeout"/>, <see cref="IPage.DefaultNavigationTimeout"/>
+        /// or <see cref="IPage.DefaultTimeout"/> methods.
         /// </param>
         /// <returns>Task which resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
@@ -206,7 +206,7 @@ namespace PlaywrightSharp
         /// </para>
         /// </remarks>
         /// <param name="urlFunc">
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+        /// A glob pattern, regex pattern or predicate receiving URL to match
         /// while waiting for the navigation.
         /// </param>
         /// <param name="waitUntil">
@@ -228,9 +228,9 @@ namespace PlaywrightSharp
         /// </param>
         /// <param name="timeout">
         /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.DefaultNavigationTimeout"/>,
+        /// <see cref="IBrowserContext.DefaultTimeout"/>, <see cref="IPage.DefaultNavigationTimeout"/>
+        /// or <see cref="IPage.DefaultTimeout"/> methods.
         /// </param>
         /// <returns>Task which resolves to the main resource response.
         /// In case of multiple redirects, the navigation will resolve with the response of the last redirect.
@@ -274,8 +274,8 @@ namespace PlaywrightSharp
         /// </param>
         /// <param name="timeout">
         /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// The default value can be changed by using the <see cref="IBrowserContext.DefaultTimeout"/>
+        /// or <see cref="IPage.DefaultTimeout"/> methods.
         /// </param>
         /// <returns>A <see cref="Task"/> the completes when the value have been selected, yielding an array of option values that have been successfully selected.</returns>
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, bool? noWaitAfter = default, float? timeout = default);

@@ -62,7 +62,7 @@ namespace PlaywrightSharp
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
         /// <param name="extraHTTPHeaders">An object containing additional HTTP headers to be sent with every request.</param>
         /// <param name="recordHar">Enables HAR recording for all pages into recordHar.path file. If not specified, the HAR is not recorded.
-        /// Make sure to await <see cref="IPage.CloseAsync(bool)"/> for the HAR to be saved.
+        /// Make sure to await <see cref="IPage.CloseAsync(bool?)"/> for the HAR to be saved.
         /// You can use <see cref="Har.HarResult"/> to deserialize the generated JSON file.</param>
         /// <param name="recordVideo">Enables video recording for all pages into recordVideo.dir directory. If not specified videos are not recorded.
         /// Make sure to await <seealso cref="BrowserContext.CloseAsync"/> for videos to be saved.</param>
@@ -124,7 +124,7 @@ namespace PlaywrightSharp
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
         /// <param name="extraHTTPHeaders">An object containing additional HTTP headers to be sent with every request.</param>
         /// <param name="recordHar">Enables HAR recording for all pages into recordHar.path file. If not specified, the HAR is not recorded.
-        /// Make sure to await <see cref="IPage.CloseAsync(bool)"/> for the HAR to be saved.
+        /// Make sure to await <see cref="IPage.CloseAsync(bool?)"/> for the HAR to be saved.
         /// You can use <see cref="Har.HarResult"/> to deserialize the generated JSON file.</param>
         /// <param name="recordVideo">Enables video recording for all pages into recordVideo.dir directory. If not specified videos are not recorded.
         /// Make sure to await <seealso cref="BrowserContext.CloseAsync"/> for videos to be saved.</param>
@@ -203,7 +203,7 @@ namespace PlaywrightSharp
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
         /// <param name="extraHTTPHeaders">An object containing additional HTTP headers to be sent with every request.</param>
         /// <param name="recordHar">Enables HAR recording for all pages into recordHar.path file. If not specified, the HAR is not recorded.
-        /// Make sure to await <see cref="IPage.CloseAsync(bool)"/> for the HAR to be saved.
+        /// Make sure to await <see cref="IPage.CloseAsync(bool?)"/> for the HAR to be saved.
         /// You can use <see cref="Har.HarResult"/> to deserialize the generated JSON file.</param>
         /// <param name="recordVideo">Enables video recording for all pages into recordVideo.dir directory. If not specified videos are not recorded.
         /// Make sure to await <seealso cref="BrowserContext.CloseAsync"/> for videos to be saved.</param>
@@ -265,7 +265,7 @@ namespace PlaywrightSharp
         /// <param name="locale">Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules.</param>
         /// <param name="extraHTTPHeaders">An object containing additional HTTP headers to be sent with every request.</param>
         /// <param name="recordHar">Enables HAR recording for all pages into recordHar.path file. If not specified, the HAR is not recorded.
-        /// Make sure to await <see cref="IPage.CloseAsync(bool)"/> for the HAR to be saved.
+        /// Make sure to await <see cref="IPage.CloseAsync(bool?)"/> for the HAR to be saved.
         /// You can use <see cref="Har.HarResult"/> to deserialize the generated JSON file.</param>
         /// <param name="recordVideo">Enables video recording for all pages into recordVideo.dir directory. If not specified videos are not recorded.
         /// Make sure to await <seealso cref="BrowserContext.CloseAsync"/> for videos to be saved.</param>
