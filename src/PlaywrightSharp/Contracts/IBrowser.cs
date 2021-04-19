@@ -11,7 +11,7 @@ namespace PlaywrightSharp
     /// a <see cref="IBrowser"/> to create a <see cref="IPage"/>.
     /// </para>
     /// </summary>
-    public partial interface IBrowser
+    public partial interface IBrowser : IAsyncDisposable
     {
         /// <summary><para>Creates a new browser context. It won't share cookies/cache with other browser contexts.</para></summary>
         /// <param name="options">The parameters, but in an options format.</param>

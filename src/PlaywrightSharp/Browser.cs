@@ -8,10 +8,6 @@ using PlaywrightSharp.Transport.Protocol;
 
 namespace PlaywrightSharp
 {
-    public partial interface IBrowser : IAsyncDisposable
-    {
-    }
-
     /// <inheritdoc cref="IBrowser"/>
     public class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
     {
