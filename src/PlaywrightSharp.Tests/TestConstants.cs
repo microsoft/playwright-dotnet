@@ -112,22 +112,6 @@ namespace PlaywrightSharp.Tests
                 );
         }
 
-        /*
-        internal static LaunchOptions GetDefaultBrowserOptions()
-            => new LaunchOptions
-            {
-                SlowMo = Convert.ToInt32(Environment.GetEnvironmentVariable("SLOW_MO")),
-                Headless = Convert.ToBoolean(Environment.GetEnvironmentVariable("HEADLESS") ?? "true"),
-                Timeout = 0,
-            };
-
-        public static LaunchOptions GetHeadfulOptions()
-        {
-            var options = GetDefaultBrowserOptions();
-            options.Headless = false;
-            return options;
-        }*/
-
         public static string FileToUpload => TestUtils.GetWebServerFile("file-to-upload.txt");
 
         internal static ILoggerFactory LoggerFactory { get; set; } = LoggerFactory = new LoggerFactory();
