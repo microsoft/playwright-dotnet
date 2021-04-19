@@ -43,6 +43,5 @@ namespace PlaywrightSharp
 
         public const string PaymentHandler = "payment-handler";
 #pragma warning restore CS1591, SA1600 // Missing XML comment for publicly visible type or member
-
     }
 }
