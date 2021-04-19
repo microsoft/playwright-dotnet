@@ -65,7 +65,7 @@ namespace PlaywrightSharp.Tests
 
         [PlaywrightTest("browsercontext-storage-state.spec.ts", "should set local storage")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout, Skip = "Needs to be implemented.")]
-        public async Task ShouldSetLocalStorage()
+        public void ShouldSetLocalStorage()
         {
             // TODO: actually implement this
             /*
