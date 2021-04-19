@@ -40,6 +40,12 @@ namespace PlaywrightSharp.Tests
         {
         }
 
+        [PlaywrightTest("browsertype-launch.spec.ts", "should throw if userDataDir option is passed")]
+        [Fact(Skip = "This isn't supported in our language port.")]
+        public void ShouldThrowIfUserDataDirOptionIsPassed()
+        {
+        }
+
         [PlaywrightTest("browsertype-launch.spec.ts", "should throw if port option is passed for persistent context")]
         [Fact(Skip = "We don't need this test")]
         public void ShouldThrowIfPortOptionIsPassedForPersistenContext()
