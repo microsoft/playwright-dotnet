@@ -290,7 +290,7 @@ namespace PlaywrightSharp
                     return _video;
                 }
 
-                if (string.IsNullOrEmpty(Context.Options?.RecordVideo?.Dir))
+                if (string.IsNullOrEmpty(Context.VideoPath))
                 {
                     return null;
                 }

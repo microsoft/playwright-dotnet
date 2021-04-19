@@ -5,7 +5,7 @@ using System.Linq;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// See <see cref="BrowserContextOptions.StorageState"/>.
+    /// TODO: move this.
     /// </summary>
     public class StorageState : IEquatable<StorageState>
     {

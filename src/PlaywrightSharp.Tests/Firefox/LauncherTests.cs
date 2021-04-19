@@ -22,15 +22,14 @@ namespace PlaywrightSharp.Tests.Firefox
         [SkipBrowserAndPlatformFact(skipChromium: true, skipWebkit: true)]
         public async Task ShouldPassFirefoxUserPreferences()
         {
-            var options = TestConstants.GetDefaultBrowserOptions();
-            options.FirefoxUserPrefs = new Dictionary<string, object>
+            var firefoxUserPrefs = new Dictionary<string, object>
             {
                 ["network.proxy.type"] = 1,
                 ["network.proxy.http"] = "127.0.0.1",
                 ["network.proxy.http_port"] = 333,
             };
 
-            await using var browser = await BrowserType.LaunchAsync(options);
+            await using var browser = await BrowserType.LaunchAsync(firefoxUserPrefs: firefoxUserPrefs);
             var page = await browser.NewPageAsync();
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GoToAsync("http://example.com"));
 

@@ -1,7 +1,7 @@
 namespace PlaywrightSharp.Har
 {
     /// <summary>
-    /// Resulting model of the file generated using <see cref="BrowserContextOptions.RecordHar"/>.
+    /// Resulting model of the file generated using HAR.
     /// </summary>
     public class HarResult
     {

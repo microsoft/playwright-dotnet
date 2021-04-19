@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await using var browser = await Playwright[TestConstants.Product].LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var browser = await Playwright[TestConstants.Product].LaunchDefaultAsync();
 
             const string func = "() => new Date(1479579154987).toString()";
             await using (var context = await browser.NewContextAsync(new BrowserContextOptions { TimezoneId = "America/Jamaica" }))

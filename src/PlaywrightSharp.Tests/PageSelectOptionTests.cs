@@ -14,7 +14,6 @@ namespace PlaywrightSharp.Tests
         /// <inheritdoc/>
         public PageSelectOptionTests(ITestOutputHelper output) : base(output)
         {
-            DefaultOptions = TestConstants.GetHeadfulOptions();
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should select single option")]

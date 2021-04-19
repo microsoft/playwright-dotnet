@@ -35,7 +35,7 @@ namespace PlaywrightSharp.Tests
             var page = await context.NewPageAsync();
             var response = await page.GoToAsync(TestConstants.EmptyPage);
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-            await context.SetHttpCredentialsAsync(new Credentials
+            await context.SetHttpCredentialsAsync(new HttpCredentials
             {
                 Username = "user",
                 Password = "pass"
@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests
             Server.SetAuth("/empty.html", "user", "pass");
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
-                HttpCredentials = new Credentials
+                HttpCredentials = new HttpCredentials
                 {
                     Username = "user",
                     Password = "pass"
@@ -72,7 +72,7 @@ namespace PlaywrightSharp.Tests
             Server.SetAuth("/empty.html", "user", "pass");
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
-                HttpCredentials = new Credentials
+                HttpCredentials = new HttpCredentials
                 {
                     Username = "foo",
                     Password = "bar"
@@ -91,7 +91,7 @@ namespace PlaywrightSharp.Tests
             Server.SetAuth("/playground.html", "user", "pass");
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
-                HttpCredentials = new Credentials
+                HttpCredentials = new HttpCredentials
                 {
                     Username = "user",
                     Password = "pass"
