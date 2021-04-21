@@ -15,28 +15,28 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="SetInputFilesAsync(IEnumerable{FilePayload}, bool?, float?)"/>
         Task SetInputFilesAsync(FilePayload files, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SelectOptionAsync(IEnumerable{SelectOptionValue}, bool?, float?)" />
+        /// <inheritdoc cref="SelectOptionAsync(IEnumerable{SelectOptionValue}, bool?, float?)"/>
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string values, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SelectOptionAsync(IEnumerable{SelectOptionValue}, bool?, float?)" />
+        /// <inheritdoc cref="SelectOptionAsync(IEnumerable{SelectOptionValue}, bool?, float?)"/>
         Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<string> values, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SelectOptionAsync(IEnumerable{SelectOptionValue}, bool?, float?)" />
+        /// <inheritdoc cref="SelectOptionAsync(IEnumerable{SelectOptionValue}, bool?, float?)"/>
         Task<IReadOnlyCollection<string>> SelectOptionAsync(IElementHandle values, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SelectOptionAsync(IEnumerable{SelectOptionValue}, bool?, float?)" />
+        /// <inheritdoc cref="SelectOptionAsync(IEnumerable{SelectOptionValue}, bool?, float?)"/>
         Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SelectOptionAsync(IEnumerable{SelectOptionValue}, bool?, float?)" />
+        /// <inheritdoc cref="SelectOptionAsync(IEnumerable{SelectOptionValue}, bool?, float?)"/>
         Task<IReadOnlyCollection<string>> SelectOptionAsync(SelectOptionValue values, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SelectOptionAsync(IEnumerable{SelectOptionValue}, bool?, float?)" />
+        /// <inheritdoc cref="SelectOptionAsync(IEnumerable{SelectOptionValue}, bool?, float?)"/>
         Task<IReadOnlyCollection<string>> SelectOptionAsync(params string[] values);
 
-        /// <inheritdoc cref="SelectOptionAsync(IEnumerable{SelectOptionValue}, bool?, float?)" />
+        /// <inheritdoc cref="SelectOptionAsync(IEnumerable{SelectOptionValue}, bool?, float?)"/>
         Task<IReadOnlyCollection<string>> SelectOptionAsync(params SelectOptionValue[] values);
 
-        /// <inheritdoc cref="SelectOptionAsync(IEnumerable{SelectOptionValue}, bool?, float?)" />
+        /// <inheritdoc cref="SelectOptionAsync(IEnumerable{SelectOptionValue}, bool?, float?)"/>
         Task<IReadOnlyCollection<string>> SelectOptionAsync(params IElementHandle[] values);
 
         /// <inheritdoc cref="EvalOnSelectorAsync{T}(string, string, object)" />
