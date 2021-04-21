@@ -358,10 +358,6 @@ namespace PlaywrightSharp
         public async Task<IPage> OpenerAsync() => (await _channel.OpenerAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public Task EmulateMediaAsync()
-            => _channel.EmulateMediaAsync(new Dictionary<string, object>());
-
-        /// <inheritdoc />
         public Task EmulateMediaAsync(ColorScheme colorScheme)
             => _channel.EmulateMediaAsync(new Dictionary<string, object>
             {

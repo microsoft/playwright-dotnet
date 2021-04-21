@@ -18,9 +18,6 @@ namespace PlaywrightSharp
         IFrame FrameByUrl(Func<string, bool> urlFunc);
 
         /// <inheritdoc cref="EmulateMediaAsync(Media, ColorScheme)"/>
-        Task EmulateMediaAsync();
-
-        /// <inheritdoc cref="EmulateMediaAsync(Media, ColorScheme)"/>
         Task EmulateMediaAsync(ColorScheme colorScheme);
 
         /// <inheritdoc cref="EvaluateAsync{T}(string, object)"/>
