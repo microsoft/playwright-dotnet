@@ -358,19 +358,25 @@ namespace PlaywrightSharp
         public async Task<IPage> OpenerAsync() => (await _channel.OpenerAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc />
-        public Task EmulateMediaAsync(ColorScheme colorScheme)
-            => _channel.EmulateMediaAsync(new Dictionary<string, object>
-            {
-                ["colorScheme"] = colorScheme == ColorScheme.Undefined ? "null" : colorScheme,
-            });
+        public Task EmulateMediaAsync(ColorScheme? colorScheme) => EmulateMediaAsync(null, colorScheme);
 
         /// <inheritdoc />
-        public Task EmulateMediaAsync(Media media, ColorScheme colorScheme)
-            => _channel.EmulateMediaAsync(new Dictionary<string, object>
+        public Task EmulateMediaAsync(Media? media, ColorScheme? colorScheme)
+        {
+            var args = new Dictionary<string, object>();
+
+            if (media != null)
             {
-                ["media"] = media == Media.Undefined ? "null" : media,
-                ["colorScheme"] = colorScheme == ColorScheme.Undefined ? "null" : colorScheme,
-            });
+                args["media"] = media == Media.Undefined ? "null" : media;
+            }
+
+            if (colorScheme != null)
+            {
+                args["colorScheme"] = colorScheme == ColorScheme.Undefined ? "null" : colorScheme;
+            }
+
+            return _channel.EmulateMediaAsync(args);
+        }
 
         /// <inheritdoc />
         public Task<IResponse> GoToAsync(string url, WaitUntilState waitUntil, float? timeout, string referer)

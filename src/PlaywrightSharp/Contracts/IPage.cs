@@ -17,8 +17,8 @@ namespace PlaywrightSharp
         /// <inheritdoc cref="FrameByUrl(string, Regex, Func{string, bool})"/>
         IFrame FrameByUrl(Func<string, bool> urlFunc);
 
-        /// <inheritdoc cref="EmulateMediaAsync(Media, ColorScheme)"/>
-        Task EmulateMediaAsync(ColorScheme colorScheme);
+        /// <inheritdoc cref="EmulateMediaAsync(Media?, ColorScheme?)"/>
+        Task EmulateMediaAsync(ColorScheme? colorScheme);
 
         /// <inheritdoc cref="EvaluateAsync{T}(string, object)"/>
         public Task<JsonElement?> EvaluateAsync(string expression, object arg = default);
