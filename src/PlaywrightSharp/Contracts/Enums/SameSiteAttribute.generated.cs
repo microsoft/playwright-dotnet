@@ -46,38 +46,14 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-	public partial class BrowserContextStorageStateResultCookie
+	public enum SameSiteAttribute
 	{
-		/// <summary><para></para></summary>
-		[JsonPropertyName("name")]
-		public string Name { get; set; }
-	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("value")]
-		public string Value { get; set; }
-	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("domain")]
-		public string Domain { get; set; }
-	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("path")]
-		public string Path { get; set; }
-	
-		/// <summary><para>Unix time in seconds.</para></summary>
-		[JsonPropertyName("expires")]
-		public float Expires { get; set; }
-	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("httpOnly")]
-		public bool HttpOnly { get; set; }
-	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("secure")]
-		public bool Secure { get; set; }
-	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("sameSite")]
-		public SameSiteAttribute SameSite { get; set; }
+		Undefined = 0,
+		[EnumMember(Value = "Strict")]
+		Strict,
+		[EnumMember(Value = "Lax")]
+		Lax,
+		[EnumMember(Value = "None")]
+		None,
 	}
 }

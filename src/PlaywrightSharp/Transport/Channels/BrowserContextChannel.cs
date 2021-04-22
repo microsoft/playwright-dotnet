@@ -77,14 +77,11 @@ namespace PlaywrightSharp.Transport.Channels
             }
         }
 
-        internal Task<PageChannel> NewPageAsync(string url)
+        internal Task<PageChannel> NewPageAsync()
             => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "newPage",
-                new Dictionary<string, object>
-                {
-                    ["url"] = url,
-                });
+                null);
 
         internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close");
 
@@ -163,7 +160,7 @@ namespace PlaywrightSharp.Transport.Channels
                 }).ConfigureAwait(false))?.GetProperty("cookies").ToObject<IEnumerable<NetworkCookie>>();
         }
 
-        internal Task AddCookiesAsync(IEnumerable<SetNetworkCookieParam> cookies)
+        internal Task AddCookiesAsync(IEnumerable<Cookie> cookies)
             => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "addCookies",

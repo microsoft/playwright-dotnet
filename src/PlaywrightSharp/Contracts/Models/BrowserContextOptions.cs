@@ -62,7 +62,7 @@ namespace PlaywrightSharp
         public Geolocation Geolocation { get; set; }
 
         /// <summary>
-        /// A collection from origin keys to permissions values. See <see cref="IBrowserContext.GrantPermissionsAsync(string[], string)"/> for more details.
+        /// A collection from origin keys to permissions values. See <see cref="IBrowserContext.GrantPermissionsAsync(IEnumerable{string}, string)"/> for more details.
         /// </summary>
         public string[] Permissions { get; set; }
 
@@ -122,7 +122,7 @@ namespace PlaywrightSharp
         public string StorageStatePath { get; set; }
 
         /// <summary>
-        /// Populates context with given storage state. This method can be used to initialize context with logged-in information obtained via <see cref="IBrowserContext.GetStorageStateAsync(string)"/>.
+        /// Populates context with given storage state. This method can be used to initialize context with logged-in information obtained via <see cref="IBrowserContext.StorageStateAsync(string)"/>.
         /// </summary>
         public string StorageState { get; set; }
 

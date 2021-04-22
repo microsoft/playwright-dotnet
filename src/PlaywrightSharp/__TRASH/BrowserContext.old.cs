@@ -77,7 +77,6 @@ namespace PlaywrightSharp
             }
         }
 
-        internal BrowserContextChannel Channel { get; }
 
         internal Page OwnerPage { get; set; }
 

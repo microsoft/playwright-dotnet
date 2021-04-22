@@ -32,7 +32,6 @@
  * </auto-generated> 
  * ------------------------------------------------------------------------------
  */
-#pragma warning disable CS1734 // XML comment has a paramref tag, but there is no parameter by that name
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -103,39 +102,43 @@ namespace PlaywrightSharp
 		/// <param name="cookies">
 		/// </param>
 		Task AddCookiesAsync(IEnumerable<Cookie> cookies);
-	
-		/// <summary>
-		/// <para>Adds a script which would be evaluated in one of the following scenarios:</para>
-		/// <list type="bullet">
-		/// <item><description>Whenever a page is created in the browser context or is navigated.</description></item>
-		/// <item><description>
-		/// Whenever a child frame is attached or navigated in any page in the browser context.
-		/// In this case, the script is evaluated in the context of the newly attached frame.
-		/// </description></item>
-		/// </list>
-		/// <para>
-		/// The script is evaluated after the document was created but before any of its scripts
-		/// were run. This is useful to amend the JavaScript environment, e.g. to seed <c>Math.random</c>.
-		/// </para>
-		/// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// The order of evaluation of multiple scripts installed via <see cref="IBrowserContext.AddInitScriptAsync"/>
-		/// and <see cref="IPage.AddInitScriptAsync"/> is not defined.
-		/// </para>
-		/// </remarks>
-		/// <param name="script">Script to be evaluated in all pages in the browser context.</param>
-		/// <param name="scriptPath">Instead of specifying <paramref name="script"/>, gives the file name to load from.</param>
-		Task AddInitScriptAsync(string script = null, string scriptPath = null);
-	
-		/// <summary>
-		/// <para>
-		/// Returns the browser instance of the context. If it was launched as a persistent
-		/// context null gets returned.
-		/// </para>
-		/// </summary>
-		IBrowser Browser { get; }
+
+        /// <summary>
+        /// <para>Adds a script which would be evaluated in one of the following scenarios:</para>
+        /// <list type="bullet">
+        /// <item><description>Whenever a page is created in the browser context or is navigated.</description></item>
+        /// <item><description>
+        /// Whenever a child frame is attached or navigated in any page in the browser context.
+        /// In this case, the script is evaluated in the context of the newly attached frame.
+        /// </description></item>
+        /// </list>
+        /// <para>
+        /// The script is evaluated after the document was created but before any of its scripts
+        /// were run. This is useful to amend the JavaScript environment, e.g. to seed <c>Math.random</c>.
+        /// </para>
+        /// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The order of evaluation of multiple scripts installed via <see cref="IBrowserContext.AddInitScriptAsync"/>
+        /// and <see cref="IPage.AddInitScriptAsync"/> is not defined.
+        /// </para>
+        /// </remarks>
+        /// <param name="script">Script to be evaluated in all pages in the browser context.</param>
+        /// <param name="scriptPath">Instead of specifying <paramref name="script"/>, gives the file name to load from.</param>
+        /// <param name="arg">
+		/// Optional argument to pass to <paramref name="script"/> (only supported when passing
+		/// a function).
+		/// </param>
+        Task AddInitScriptAsync(string script = null, string scriptPath = null, object arg = default);
+
+        /// <summary>
+        /// <para>
+        /// Returns the browser instance of the context. If it was launched as a persistent
+        /// context null gets returned.
+        /// </para>
+        /// </summary>
+        IBrowser Browser { get; }
 	
 		/// <summary><para>Clears context cookies.</para></summary>
 		Task ClearCookiesAsync();
@@ -290,43 +293,42 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </remarks>
 		float DefaultNavigationTimeout { get; set; }
-
-
-        /// <summary>
-        /// <para>
-        /// This setting will change the default maximum time for all the methods accepting
-        /// <paramref name="timeout"/> option.
-        /// </para>
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// <see cref="IPage.SetDefaultNavigationTimeout"/>, <see cref="IPage.SetDefaultTimeout"/>
-        /// and <see cref="IBrowserContext.SetDefaultNavigationTimeout"/> take priority over
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
-        /// </para>
-        /// </remarks>
-        float DefaultTimeout { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// The extra HTTP headers will be sent with every request initiated by any page in
-        /// the context. These headers are merged with page-specific extra HTTP headers set
-        /// with <see cref="IPage.SetExtraHttpHeadersAsync"/>. If page overrides a particular
-        /// header, page-specific header value will be used instead of the browser context header
-        /// value.
-        /// </para>
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// <see cref="IBrowserContext.SetExtraHttpHeadersAsync"/> does not guarantee the order
-        /// of headers in the outgoing requests.
-        /// </para>
-        /// </remarks>
-        /// <param name="headers">
-        /// An object containing additional HTTP headers to be sent with every request. All
-        /// header values must be strings.
-        /// </param>
-        Task SetExtraHttpHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers);
+	
+		/// <summary>
+		/// <para>
+		/// This setting will change the default maximum time for all the methods accepting
+		/// `timeout` option.
+		/// </para>
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// <see cref="IPage.SetDefaultNavigationTimeout"/>, <see cref="IPage.SetDefaultTimeout"/>
+		/// and <see cref="IBrowserContext.SetDefaultNavigationTimeout"/> take priority over
+		/// <see cref="IBrowserContext.SetDefaultTimeout"/>.
+		/// </para>
+		/// </remarks>
+		float DefaultTimeout { get; set; }
+	
+		/// <summary>
+		/// <para>
+		/// The extra HTTP headers will be sent with every request initiated by any page in
+		/// the context. These headers are merged with page-specific extra HTTP headers set
+		/// with <see cref="IPage.SetExtraHttpHeadersAsync"/>. If page overrides a particular
+		/// header, page-specific header value will be used instead of the browser context header
+		/// value.
+		/// </para>
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// <see cref="IBrowserContext.SetExtraHttpHeadersAsync"/> does not guarantee the order
+		/// of headers in the outgoing requests.
+		/// </para>
+		/// </remarks>
+		/// <param name="headers">
+		/// An object containing additional HTTP headers to be sent with every request. All
+		/// header values must be strings.
+		/// </param>
+		Task SetExtraHttpHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers);
 	
 		/// <summary>
 		/// <para>
@@ -363,7 +365,7 @@ namespace PlaywrightSharp
 		/// <summary>
 		/// <para>
 		/// Removes a route created with <see cref="IBrowserContext.RouteAsync"/>. When <paramref
-		/// name="handler"/> is not specified, removes all routes for the <paramref name="url"/>.
+		/// name="handler"/> is not specified, removes all routes for the <paramref name="urlString"/>.
 		/// </para>
 		/// </summary>
 		/// <param name="urlString">
@@ -415,5 +417,4 @@ namespace PlaywrightSharp
 		/// </param>
 		Task<IPage> WaitForPageAsync(Func<IPage, bool> predicate = default, float? timeout = default);
 	}
-#pragma warning restore CS1734 // XML comment has a paramref tag, but there is no parameter by that name
 }

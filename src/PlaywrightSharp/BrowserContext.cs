@@ -26,7 +26,6 @@ namespace PlaywrightSharp
         private float _defaultNavigationTimeout;
         private float _defaultTimeout;
 
-
         internal BrowserContext(IChannelOwner parent, string guid, BrowserContextInitializer initializer) : base(parent, guid)
         {
             Channel = new BrowserContextChannel(guid, parent.Connection, this);
@@ -92,11 +91,27 @@ namespace PlaywrightSharp
 
         internal List<Page> PagesList { get; } = new List<Page>();
 
-        /// <inheritdoc/>
-        public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => throw new NotImplementedException();
+        internal Page OwnerPage { get; set; }
+
+        internal List<Worker> ServiceWorkersList { get; } = new List<Worker>();
+
+        internal bool IsChromium => _initializer.IsChromium;
+
+        internal string VideoPath { get; set; }
 
         /// <inheritdoc/>
-        public Task AddInitScriptAsync(string script = null, string scriptPath = null) => throw new NotImplementedException();
+        public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => Channel.AddCookiesAsync(cookies);
+
+        /// <inheritdoc/>
+        public Task AddInitScriptAsync(string script = null, string scriptPath = null, object arg = null)
+        {
+            if (string.IsNullOrEmpty(script))
+            {
+                script = ScriptsHelper.EvaluationScript(script, scriptPath);
+            }
+
+            return Channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(script, new[] { arg }));
+        }
 
         /// <inheritdoc/>
         public Task ClearCookiesAsync() => throw new NotImplementedException();
@@ -104,8 +119,25 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         public Task ClearPermissionsAsync() => throw new NotImplementedException();
 
-        /// <inheritdoc/>
-        public Task CloseAsync() => throw new NotImplementedException();
+        /// <inheritdoc />
+        public async Task CloseAsync()
+        {
+            try
+            {
+                if (!_isClosedOrClosing)
+                {
+                    _isClosedOrClosing = true;
+                    await Channel.CloseAsync().ConfigureAwait(false);
+                    await _closeTcs.Task.ConfigureAwait(false);
+                }
+
+                await _closeTcs.Task.ConfigureAwait(false);
+            }
+            catch (Exception e) when (IsTransient(e))
+            {
+                // Swallow exception
+            }
+        }
 
         /// <inheritdoc/>
         public Task<IReadOnlyCollection<BrowserContextCookiesResult>> GetCookiesAsync(IEnumerable<string> urls = null) => throw new NotImplementedException();
@@ -120,7 +152,7 @@ namespace PlaywrightSharp
         public Task GrantPermissionsAsync(IEnumerable<string> permissions, string origin = null) => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public Task<IPage> NewPageAsync() => throw new NotImplementedException();
+        public async Task<IPage> NewPageAsync() => (await Channel.NewPageAsync().ConfigureAwait(false)).Object;
 
         /// <inheritdoc/>
         public Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler) => throw new NotImplementedException();
@@ -143,114 +175,8 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         public Task<object> WaitForEventAsync(string @event, float? timeout = null) => throw new NotImplementedException();
 
-            timeout ??= TimeoutSettings.Timeout;
-            using var waiter = new Waiter();
-            waiter.RejectOnTimeout(timeout, $"Timeout while waiting for event \"{typeof(T)}\"");
-
-            if (e.Name != ContextEvent.Close.Name)
-            {
-                waiter.RejectOnEvent<EventArgs>(this, ContextEvent.Close.Name, new TargetClosedException("Context closed"));
-            }
-
-            if (typeof(T) == typeof(EventArgs))
-            {
-                await waiter.WaitForEventAsync(this, e.Name).ConfigureAwait(false);
-                return default;
-            }
-
-            return await waiter.WaitForEventAsync(this, e.Name, predicate).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc />
-        public Task AddInitScriptAsync(string script = null, object[] arg = null, string path = null, string content = null)
-        {
-            if (string.IsNullOrEmpty(script))
-            {
-                script = ScriptsHelper.EvaluationScript(content, path);
-            }
-
-            return Channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(script, arg));
-        }
-
-        /// <inheritdoc />
-        public Task SetHttpCredentialsAsync(HttpCredentials httpCredentials) => Channel.SetHttpCredentialsAsync(httpCredentials);
-
-        /// <inheritdoc />
-        public Task SetOfflineAsync(bool offline) => Channel.SetOfflineAsync(offline);
-
-        /// <inheritdoc />
-        public Task RouteAsync(string url, Action<IRoute> handler)
-            => RouteAsync(
-                new RouteSetting
-                {
-                    Url = url,
-                    Handler = handler,
-                });
-
-        /// <inheritdoc />
-        public Task RouteAsync(Regex url, Action<IRoute> handler)
-            => RouteAsync(
-                new RouteSetting
-                {
-                    Regex = url,
-                    Handler = handler,
-                });
-
-        /// <inheritdoc />
-        public Task RouteAsync(Func<string, bool> url, Action<IRoute> handler)
-            => RouteAsync(
-                new RouteSetting
-                {
-                    Function = url,
-                    Handler = handler,
-                });
-
-        /// <inheritdoc />
-        public Task UnrouteAsync(string url, Action<IRoute> handler = null)
-            => UnrouteAsync(
-                new RouteSetting
-                {
-                    Url = url,
-                    Handler = handler,
-                });
-
-        /// <inheritdoc />
-        public Task UnrouteAsync(Regex url, Action<IRoute> handler = null)
-            => UnrouteAsync(
-                new RouteSetting
-                {
-                    Regex = url,
-                    Handler = handler,
-                });
-
-        /// <inheritdoc />
-        public Task UnrouteAsync(Func<string, bool> url, Action<IRoute> handler = null)
-            => UnrouteAsync(
-                new RouteSetting
-                {
-                    Function = url,
-                    Handler = handler,
-                });
-
-        /// <inheritdoc />
-        public Task SetExtraHTTPHeadersAsync(Dictionary<string, string> headers) => Channel.SetExtraHTTPHeadersAsync(headers);
-
-        /// <inheritdoc />
-        public async Task<StorageState> GetStorageStateAsync(string path = null)
-        {
-            var state = await Channel.GetStorageStateAsync().ConfigureAwait(false);
-
-            if (!string.IsNullOrEmpty(path))
-            {
-                File.WriteAllText(
-                    path,
-                    JsonSerializer.Serialize(state, Channel.Connection.GetDefaultJsonSerializerOptions()));
-            }
-
-            return state;
-        }
-
-        internal Task PauseAsync() => Channel.PauseAsync();
+        /// <inheritdoc/>
+        public Task<IPage> WaitForPageAsync(Func<IPage, bool> predicate = null, float? timeout = null) => throw new NotImplementedException();
 
         internal void OnRoute(Route route, IRequest request)
         {
@@ -306,7 +232,7 @@ namespace PlaywrightSharp
                 ((Browser)Browser).BrowserContextsList.Remove(this);
             }
 
-            Close?.Invoke(this, EventArgs.Empty);
+            Close?.Invoke(this, this);
             _closeTcs.TrySetResult(true);
             RejectPendingOperations();
         }
@@ -316,7 +242,7 @@ namespace PlaywrightSharp
             var page = e.PageChannel.Object;
             page.Context = this;
             PagesList.Add(page);
-            Page?.Invoke(this, new PageEventArgs { Page = page });
+            Page?.Invoke(this, page);
         }
 
         private void Channel_BindingCall(object sender, BindingCallEventArgs e)
@@ -358,5 +284,9 @@ namespace PlaywrightSharp
 
             return Channel.ExposeBindingAsync(name, handle);
         }
+
+        private bool IsTransient(Exception e)
+            => e.Message.Contains(DriverMessages.BrowserClosedExceptionMessage) ||
+                e.Message.Contains(DriverMessages.BrowserOrContextClosedExceptionMessage);
     }
 }

@@ -56,7 +56,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="BrowserContext.old.cs" />
+    <Compile Remove="__TRASH\BrowserContext.old.cs" />
     <Compile Remove="__TRASH\IBrowserContext.cs" />
+    <Compile Remove="__TRASH\TimeoutSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ContentWithTargetPath Include="@(DriverFiles)" TargetPath="%(RecursiveDir)%(Filename)%(Extension)">
@@ -65,7 +67,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="__TRASH\BrowserContext.old.cs" />
+    <None Include="__TRASH\BrowserContext.old.cs" />
     <None Include="__TRASH\IBrowserContext.cs" />
+    <None Include="__TRASH\TimeoutSettings.cs" />
   </ItemGroup>
   <Target Name="EnsurePrerequisitsRan" BeforeTargets="InstallBrowsers">
     <Error Text="Playwright prerequisites are missing. Ensure you've ran `dotnet run -p ./src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj -- download-drivers --basepath .`" Condition="!Exists('$(MSBuildProjectDirectory)\Drivers\unix$(NativeFolder)')" />
