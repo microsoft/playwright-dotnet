@@ -95,9 +95,9 @@ namespace PlaywrightSharp
 
         internal bool IsChromium => _initializer.IsChromium;
 
-        internal BrowserContextOptions Options { get; set; }
-
         internal TimeoutSettings TimeoutSettings { get; } = new();
+
+        internal string VideoPath { get; set; }
 
         /// <inheritdoc />
         public async Task<IPage> NewPageAsync(string url = null)
@@ -143,13 +143,13 @@ namespace PlaywrightSharp
         public Task ClearCookiesAsync() => Channel.ClearCookiesAsync();
 
         /// <inheritdoc />
-        public Task GrantPermissionsAsync(ContextPermission[] permissions, string origin = null) => Channel.GrantPermissionsAsync(permissions, origin);
+        public Task GrantPermissionsAsync(string[] permissions, string origin = null) => Channel.GrantPermissionsAsync(permissions, origin);
 
         /// <inheritdoc />
-        public Task GrantPermissionsAsync(ContextPermission permission, string origin = null) => GrantPermissionsAsync(new[] { permission }, origin);
+        public Task GrantPermissionsAsync(string permission, string origin = null) => GrantPermissionsAsync(new[] { permission }, origin);
 
         /// <inheritdoc />
-        public Task SetGeolocationAsync(decimal latitude, decimal longitude, decimal accuracy = 0)
+        public Task SetGeolocationAsync(float latitude, float longitude, float accuracy = 0)
             => SetGeolocationAsync(new Geolocation { Latitude = latitude, Longitude = longitude, Accuracy = accuracy });
 
         /// <inheritdoc />
@@ -260,7 +260,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc />
-        public Task SetHttpCredentialsAsync(Credentials httpCredentials) => Channel.SetHttpCredentialsAsync(httpCredentials);
+        public Task SetHttpCredentialsAsync(HttpCredentials httpCredentials) => Channel.SetHttpCredentialsAsync(httpCredentials);
 
         /// <inheritdoc />
         public Task SetOfflineAsync(bool offline) => Channel.SetOfflineAsync(offline);

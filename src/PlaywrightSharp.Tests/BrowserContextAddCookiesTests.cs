@@ -183,7 +183,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateCookiesBetweenLaunches()
         {
-            await using (var browser1 = await Playwright[TestConstants.Product].LaunchAsync(TestConstants.GetDefaultBrowserOptions()))
+            await using (var browser1 = await Playwright[TestConstants.Product].LaunchDefaultAsync())
             {
                 var context1 = await Browser.NewContextAsync();
 
@@ -196,7 +196,7 @@ namespace PlaywrightSharp.Tests
                 });
             }
 
-            await using (var browser2 = await Playwright[TestConstants.Product].LaunchAsync(TestConstants.GetDefaultBrowserOptions()))
+            await using (var browser2 = await Playwright[TestConstants.Product].LaunchDefaultAsync())
             {
                 var context1 = await Browser.NewContextAsync();
                 var cookies = await context1.GetCookiesAsync();

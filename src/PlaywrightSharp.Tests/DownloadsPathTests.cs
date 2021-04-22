@@ -47,7 +47,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeleteDownloadsWhenContextCloses()
         {
-            var page = await _browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
+            var page = await _browser.NewPageAsync(acceptDownloads: true);
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
             var downloadTask = page.WaitForEventAsync(PageEvent.Download);
 
@@ -66,7 +66,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDownloadsInDownloadsPathFolder()
         {
-            var page = await _browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
+            var page = await _browser.NewPageAsync(acceptDownloads: true);
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
             var downloadTask = page.WaitForEventAsync(PageEvent.Download);
 
@@ -91,10 +91,7 @@ namespace PlaywrightSharp.Tests
             });
 
             _tmp = new TempDirectory();
-
-            var options = TestConstants.GetDefaultBrowserOptions();
-            options.DownloadsPath = _tmp.Path;
-            _browser = await Playwright[TestConstants.Product].LaunchAsync(options);
+            _browser = await Playwright[TestConstants.Product].LaunchDefaultAsync(downloadsPath: _tmp.Path);
         }
 
         /// <inheritsdoc/>

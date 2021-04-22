@@ -11,10 +11,10 @@ using Xunit.Abstractions;
 namespace PlaywrightSharp.Tests
 {
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class ChroimiumCSSCoverageTests : PlaywrightSharpPageBaseTest
+    public class ChromiumCSSCoverageTests : PlaywrightSharpPageBaseTest
     {
         /// <inheritdoc/>
-        public ChroimiumCSSCoverageTests(ITestOutputHelper output) : base(output)
+        public ChromiumCSSCoverageTests(ITestOutputHelper output) : base(output)
         {
         }
 

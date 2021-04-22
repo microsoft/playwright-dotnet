@@ -5,22 +5,17 @@ namespace PlaywrightSharp
     /// <summary>
     /// View port data.
     /// </summary>
-    public class ViewportSize : IEquatable<ViewportSize>
+    public partial class ViewportSize : IEquatable<ViewportSize>
     {
         /// <summary>
         /// ViewportSize used to determine if the a Viewport was set or not.
         /// </summary>
-        public static ViewportSize None => new ViewportSize { Height = -1, Width = -1 };
+        public static ViewportSize Default => new() { Height = 720, Width = 1280 };
 
         /// <summary>
-        /// Viewport width.
+        /// Disables the viewport.
         /// </summary>
-        public int Width { get; set; }
-
-        /// <summary>
-        /// Viewport height.
-        /// </summary>
-        public int Height { get; set; }
+        public static ViewportSize NoViewport => new() { Height = -1, Width = -1 };
 
         /// <summary>
         /// Clones the <see cref="ViewportSize"/>.

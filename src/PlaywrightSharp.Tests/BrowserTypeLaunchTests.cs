@@ -25,7 +25,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectAllPromisesWhenBrowserIsClosed()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var browser = await BrowserType.LaunchDefaultAsync();
             var page = await (await browser.NewContextAsync()).NewPageAsync();
             var neverResolves = page.EvaluateHandleAsync("() => new Promise(r => {})");
             await browser.CloseAsync();
@@ -34,21 +34,15 @@ namespace PlaywrightSharp.Tests
 
         }
 
-        [PlaywrightTest("browsertype-launch.spec.ts", "should throw if userDataDir option is passed")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldThrowIfUserDataDirOptionIsPassed()
-        {
-            var options = TestConstants.GetDefaultBrowserOptions();
-            options.UserDataDir = "random-invalid-path";
-
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() => BrowserType.LaunchAsync(options));
-
-            Assert.Contains("LaunchPersistentContextAsync", exception.Message);
-        }
-
         [PlaywrightTest("browsertype-launch.spec.ts", "should throw if port option is passed")]
         [Fact(Skip = "We don't need this test")]
         public void ShouldThrowIfPortOptionIsPassed()
+        {
+        }
+
+        [PlaywrightTest("browsertype-launch.spec.ts", "should throw if userDataDir option is passed")]
+        [Fact(Skip = "This isn't supported in our language port.")]
+        public void ShouldThrowIfUserDataDirOptionIsPassed()
         {
         }
 
@@ -62,10 +56,7 @@ namespace PlaywrightSharp.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldThrowIfPageArgumentIsPassed()
         {
-            var options = TestConstants.GetDefaultBrowserOptions();
-            options.Args = new[] { TestConstants.EmptyPage };
-
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => BrowserType.LaunchAsync(options));
+            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => BrowserType.LaunchDefaultAsync(args: new[] { TestConstants.EmptyPage }));
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should reject if launched browser fails immediately")]
@@ -95,10 +86,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectIfExecutablePathIsInvalid()
         {
-            var options = TestConstants.GetDefaultBrowserOptions();
-            options.ExecutablePath = "random-invalid-path";
-
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => BrowserType.LaunchAsync(options));
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => BrowserType.LaunchAsync(executablePath: "random-invalid-path"));
 
             Assert.Contains("Failed to launch", exception.Message);
         }
@@ -125,7 +113,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireCloseEventForAllContexts()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var browser = await BrowserType.LaunchDefaultAsync();
             var context = await browser.NewContextAsync();
             var closeTask = new TaskCompletionSource<bool>();
 
@@ -138,7 +126,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeCallableTwice()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var browser = await BrowserType.LaunchDefaultAsync();
             await TaskUtils.WhenAll(browser.CloseAsync(), browser.CloseAsync());
             await browser.CloseAsync();
         }
@@ -149,28 +137,12 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithEnvironmentVariables()
         {
-            var options = TestConstants.GetDefaultBrowserOptions();
-            options.Env = new Dictionary<string, string>
+            var env = new Dictionary<string, string>
             {
                 ["Foo"] = "Var"
             };
 
-            await using var browser = await BrowserType.LaunchAsync(options);
-        }
-
-        /// <summary>
-        /// PuppeteerSharp test. It's not in upstream
-        /// </summary>
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldValidateFirefoxUserPrefs()
-        {
-            var options = TestConstants.GetDefaultBrowserOptions();
-            options.FirefoxUserPrefs = new Dictionary<string, object>
-            {
-                ["Foo"] = "Var"
-            };
-
-            await Assert.ThrowsAsync<ArgumentException>(() => BrowserType.LaunchPersistentContextAsync("foo", options));
+            await using var browser = await BrowserType.LaunchAsync(env: env);
         }
 
         /// <summary>
@@ -179,9 +151,7 @@ namespace PlaywrightSharp.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWorkWithIgnoreDefaultArgs()
         {
-            var options = TestConstants.GetDefaultBrowserOptions();
-            options.IgnoreAllDefaultArgs = true;
-            options.Args = new[]
+            string[] args = new[]
             {
                 "--remote-debugging-pipe",
                 "--headless",
@@ -190,7 +160,7 @@ namespace PlaywrightSharp.Tests
                 "--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4"
             };
 
-            await using var browser = await BrowserType.LaunchAsync(options);
+            await using var browser = await BrowserType.LaunchAsync(ignoreAllDefaultArgs: true, args: args);
         }
     }
 }

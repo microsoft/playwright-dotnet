@@ -9,7 +9,7 @@ namespace PlaywrightSharp.Demo
         {
             using var playwright = await Playwright.CreateAsync();
             var chromium = playwright.Chromium;
-            var browser = await chromium.LaunchAsync(new LaunchOptions { Headless = false });
+            var browser = await chromium.LaunchAsync(headless: false);
             var page = await browser.NewPageAsync();
             await page.GoToAsync("https://example.com");
             Console.ReadLine();

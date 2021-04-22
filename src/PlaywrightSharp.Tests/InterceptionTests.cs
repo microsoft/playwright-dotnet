@@ -44,7 +44,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldWorkWitIgnoreHTTPSErrors()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetDefaultBrowserOptions());
+            await using var browser = await BrowserType.LaunchDefaultAsync();
             var context = await browser.NewContextAsync(new BrowserContextOptions
             {
                 IgnoreHTTPSErrors = true

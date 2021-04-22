@@ -25,7 +25,8 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldHaveDefaultUrlWhenLaunchingBrowser()
         {
             using var tempDir = new TempDirectory();
-            await using var browserContext = await BrowserType.LaunchPersistentContextAsync(tempDir.Path, TestConstants.GetHeadfulOptions());
+            await using var browserContext = await BrowserType.LaunchDefaultPersistentContext(tempDir.Path, headless: false);
+
             string[] pages = browserContext.Pages.Select(page => page.Url).ToArray();
             Assert.Equal(new[] { "about:blank" }, pages);
         }
@@ -36,17 +37,14 @@ namespace PlaywrightSharp.Tests
         {
             using var userDataDir = new TempDirectory();
 
-            // Write a cookie in headful chrome
-            var headfulOptions = TestConstants.GetHeadfulOptions();
-            headfulOptions.UserDataDir = userDataDir.Path;
-
-            await using var headfulContext = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, TestConstants.GetHeadfulOptions());
+            // Write a cookie in headful chrome            
+            await using var headfulContext = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path, headless: false);
             var headfulPage = await headfulContext.NewPageAsync();
             await headfulPage.GoToAsync(TestConstants.EmptyPage);
             await headfulPage.EvaluateAsync("() => document.cookie = 'foo=true; expires=Fri, 31 Dec 9999 23:59:59 GMT'");
             await headfulContext.CloseAsync();
 
-            var headlessContext = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, TestConstants.GetDefaultBrowserOptions());
+            var headlessContext = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path, headless: false);
             var headlessPage = await headlessContext.NewPageAsync();
             await headlessPage.GoToAsync(TestConstants.EmptyPage);
             string cookie = await headlessPage.EvaluateAsync<string>("() => document.cookie");
@@ -60,7 +58,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldCloseBrowserWithBeforeunloadPage()
         {
             using var userDataDir = new TempDirectory();
-            await using var browserContext = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, TestConstants.GetHeadfulOptions());
+            await using var browserContext = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path, headless: false);
             var page = await browserContext.NewPageAsync();
 
             await page.GoToAsync(TestConstants.ServerUrl + "/beforeunload.html");
@@ -72,7 +70,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotCrashWhenCreatingSecondContext()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
+            await using var browser = await BrowserType.LaunchDefaultHeadful();
 
             await using (var browserContext = await browser.NewContextAsync())
             {
@@ -89,7 +87,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickBackgroundTab()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
+            await using var browser = await BrowserType.LaunchDefaultHeadful();
             var page = await browser.NewPageAsync();
             await page.SetContentAsync($"<button>Hello</button><a target=_blank href=\"{TestConstants.EmptyPage}\">empty.html</a>");
             await page.ClickAsync("a");
@@ -100,7 +98,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCloseBrowserAfterContextMenuWasTriggered()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
+            await using var browser = await BrowserType.LaunchDefaultHeadful();
             var page = await browser.NewPageAsync();
             await page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             await page.ClickAsync("body", button: MouseButton.Right);
@@ -110,7 +108,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotBlockThirdPartyCookies()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
+            await using var browser = await BrowserType.LaunchDefaultHeadful();
             var page = await browser.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
 
@@ -157,8 +155,8 @@ namespace PlaywrightSharp.Tests
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldNotOverrideViewportSizeWhenPassedNull()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
-            var context = await browser.NewContextAsync(new BrowserContextOptions { Viewport = null });
+            await using var browser = await BrowserType.LaunchDefaultHeadful();
+            var context = await browser.NewContextAsync(new BrowserContextOptions { Viewport = ViewportSize.NoViewport });
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
             var popupTask = page.WaitForEventAsync(PageEvent.Popup);
@@ -179,8 +177,8 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PageBringToFrontShouldWork()
         {
-            await using var browser = await BrowserType.LaunchAsync(TestConstants.GetHeadfulOptions());
-            var context = await browser.NewContextAsync(new BrowserContextOptions { Viewport = null });
+            await using var browser = await BrowserType.LaunchDefaultHeadful();
+            var context = await browser.NewContextAsync(new BrowserContextOptions { Viewport = ViewportSize.NoViewport });
             var page1 = await context.NewPageAsync();
             await page1.SetContentAsync("Page1");
             var page2 = await context.NewPageAsync();

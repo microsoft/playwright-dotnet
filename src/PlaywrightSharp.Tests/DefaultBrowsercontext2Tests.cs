@@ -115,7 +115,7 @@ namespace PlaywrightSharp.Tests
                     Latitude = 10,
                     Longitude = 10,
                 },
-                Permissions = new[] { ContextPermission.Geolocation },
+                Permissions = new[] { ContextPermissions.Geolocation },
             });
 
             await page.GoToAsync(TestConstants.EmptyPage);
@@ -188,14 +188,15 @@ namespace PlaywrightSharp.Tests
         {
             using var userDataDir = new TempDirectory();
 
-            await using (var browserContext = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, TestConstants.GetDefaultBrowserOptions()))
+
+            await using (var browserContext = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path))
             {
                 var page = await browserContext.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
                 await page.EvaluateAsync("() => localStorage.hey = 'hello'");
             }
 
-            await using (var browserContext2 = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, TestConstants.GetDefaultBrowserOptions()))
+            await using (var browserContext2 = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path))
             {
                 var page = await browserContext2.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
@@ -203,7 +204,7 @@ namespace PlaywrightSharp.Tests
             }
 
             using var userDataDir2 = new TempDirectory();
-            await using (var browserContext2 = await BrowserType.LaunchPersistentContextAsync(userDataDir2.Path, TestConstants.GetDefaultBrowserOptions()))
+            await using (var browserContext2 = await BrowserType.LaunchDefaultPersistentContext(userDataDir2.Path))
             {
                 var page = await browserContext2.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
@@ -220,7 +221,7 @@ namespace PlaywrightSharp.Tests
         {
             var userDataDir = new TempDirectory();
 
-            await using (var browserContext = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, TestConstants.GetDefaultBrowserOptions()))
+            await using (var browserContext = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path))
             {
                 var page = await browserContext.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
@@ -232,7 +233,7 @@ namespace PlaywrightSharp.Tests
                 Assert.Equal("doSomethingOnlyOnce=true", documentCookie);
             }
 
-            await using (var browserContext2 = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, TestConstants.GetDefaultBrowserOptions()))
+            await using (var browserContext2 = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path))
             {
                 var page = await browserContext2.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
@@ -240,7 +241,7 @@ namespace PlaywrightSharp.Tests
             }
 
             var userDataDir2 = new TempDirectory();
-            await using (var browserContext2 = await BrowserType.LaunchPersistentContextAsync(userDataDir2.Path, TestConstants.GetDefaultBrowserOptions()))
+            await using (var browserContext2 = await BrowserType.LaunchDefaultPersistentContext(userDataDir2.Path))
             {
                 var page = await browserContext2.NewPageAsync();
                 await page.GoToAsync(TestConstants.EmptyPage);
@@ -269,10 +270,8 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldThrowIfPageArgumentIsPassed()
         {
             var tmp = new TempDirectory();
-            var options = TestConstants.GetDefaultBrowserOptions();
-            options.Args = new[] { TestConstants.EmptyPage };
-
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => BrowserType.LaunchPersistentContextAsync(tmp.Path, options));
+            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() =>
+                BrowserType.LaunchDefaultPersistentContext(tmp.Path, new[] { TestConstants.EmptyPage }));
 
             tmp.Dispose();
         }
@@ -368,13 +367,10 @@ namespace PlaywrightSharp.Tests
         private async Task<(TempDirectory tmp, IBrowserContext context, IPage page)> LaunchAsync(BrowserContextOptions options = null)
         {
             var tmp = new TempDirectory();
-            var context = await BrowserType.LaunchPersistentContextAsync(
-                tmp.Path,
-                TestConstants.GetDefaultBrowserOptions().ToPersistentOptions() + (options ?? new BrowserContextOptions()));
+            var context = await BrowserType.LaunchDefaultPersistentContext(tmp.Path, null, options);
             var page = context.Pages.First();
 
             return (tmp, context, page);
-
         }
     }
 }

@@ -23,10 +23,9 @@ namespace PlaywrightSharp.Tests
         {
             Server.SetRoute("/target.html", ctx => ctx.Response.WriteAsync("<html><title>Served by the proxy</title></html>"));
 
-            var defaultBrowserOptions = TestConstants.GetDefaultBrowserOptions();
-            defaultBrowserOptions.Proxy = new ProxySettings { Server = $"localhost:{TestConstants.Port}" };
+            var proxy = new Proxy { Server = $"localhost:{TestConstants.Port}" };
 
-            await using var browser = await BrowserType.LaunchAsync(defaultBrowserOptions);
+            await using var browser = await BrowserType.LaunchAsync(proxy: proxy);
 
             var page = await browser.NewPageAsync();
             await page.GoToAsync("http://non-existent.com/target.html");
@@ -51,15 +50,14 @@ namespace PlaywrightSharp.Tests
                 return ctx.Response.WriteAsync($"<html><title>{auth}</title></html>");
             });
 
-            var defaultBrowserOptions = TestConstants.GetDefaultBrowserOptions();
-            defaultBrowserOptions.Proxy = new ProxySettings
+            var proxy = new Proxy
             {
                 Server = $"localhost:{TestConstants.Port}",
                 Username = "user",
                 Password = "secret"
             };
 
-            await using var browser = await BrowserType.LaunchAsync(defaultBrowserOptions);
+            await using var browser = await BrowserType.LaunchAsync(proxy: proxy);
 
             var page = await browser.NewPageAsync();
             await page.GoToAsync("http://non-existent.com/target.html");
@@ -73,14 +71,13 @@ namespace PlaywrightSharp.Tests
         {
             Server.SetRoute("/target.html", ctx => ctx.Response.WriteAsync("<html><title>Served by the proxy</title></html>"));
 
-            var defaultBrowserOptions = TestConstants.GetDefaultBrowserOptions();
-            defaultBrowserOptions.Proxy = new ProxySettings
+            var proxy = new Proxy
             {
                 Server = $"localhost:{TestConstants.Port}",
                 Bypass = "non-existent1.com, .non-existent2.com, .zone",
             };
 
-            await using var browser = await BrowserType.LaunchAsync(defaultBrowserOptions);
+            await using var browser = await BrowserType.LaunchAsync(proxy: proxy);
 
             var page = await browser.NewPageAsync();
             await page.GoToAsync("http://non-existent.com/target.html");
