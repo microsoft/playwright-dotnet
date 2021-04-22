@@ -61,5 +61,14 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="SelectOptionAsync(string, IEnumerable{SelectOptionValue}, bool?, float?)" />
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, params IElementHandle[] values);
+
+        /// <inheritdoc cref="WaitForURLAsync(string, Regex, Func{string, bool}, float?, WaitUntilState)"/>
+        Task WaitForURLAsync(string urlString, float? timeout = default, WaitUntilState waitUntil = default);
+
+        /// <inheritdoc cref="WaitForURLAsync(string, Regex, Func{string, bool}, float?, WaitUntilState)"/>
+        Task WaitForURLAsync(Regex urlRegex, float? timeout = default, WaitUntilState waitUntil = default);
+
+        /// <inheritdoc cref="WaitForURLAsync(string, Regex, Func{string, bool}, float?, WaitUntilState)"/>
+        Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = default, WaitUntilState waitUntil = default);
     }
 }

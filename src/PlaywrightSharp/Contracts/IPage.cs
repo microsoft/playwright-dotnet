@@ -154,5 +154,14 @@ namespace PlaywrightSharp
 
         /// <inheritdoc cref="UnrouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
         Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler = default);
+
+        /// <inheritdoc cref="WaitForURLAsync(string, Regex, Func{string, bool}, float?, WaitUntilState)"/>
+        Task WaitForURLAsync(string urlString, float? timeout = default, WaitUntilState waitUntil = default);
+
+        /// <inheritdoc cref="WaitForURLAsync(string, Regex, Func{string, bool}, float?, WaitUntilState)"/>
+        Task WaitForURLAsync(Regex urlRegex, float? timeout = default, WaitUntilState waitUntil = default);
+
+        /// <inheritdoc cref="WaitForURLAsync(string, Regex, Func{string, bool}, float?, WaitUntilState)"/>
+        Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = default, WaitUntilState waitUntil = default);
     }
 }

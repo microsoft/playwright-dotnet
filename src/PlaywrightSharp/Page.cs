@@ -395,8 +395,20 @@ namespace PlaywrightSharp
             => MainFrame.WaitForNavigationAsync(urlString: null, urlRegex: null, urlFunc: urlFunc, waitUntil: default, timeout: timeout);
 
         /// <inheritdoc />
-        public Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined)
-            => throw new NotImplementedException();
+        public Task WaitForURLAsync(string urlString, float? timeout, WaitUntilState waitUntil)
+            => MainFrame.WaitForURLAsync(urlString, null, null, timeout, waitUntil);
+
+        /// <inheritdoc />
+        public Task WaitForURLAsync(Regex urlRegex, float? timeout, WaitUntilState waitUntil)
+            => MainFrame.WaitForURLAsync(null, urlRegex, null, timeout, waitUntil);
+
+        /// <inheritdoc />
+        public Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout, WaitUntilState waitUntil)
+            => MainFrame.WaitForURLAsync(null, null, urlFunc, timeout, waitUntil);
+
+        /// <inheritdoc />
+        public Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, float? timeout, WaitUntilState waitUntil)
+            => MainFrame.WaitForURLAsync(urlString, urlRegex, urlFunc, timeout, waitUntil);
 
         /// <inheritdoc />
         public Task<IResponse> WaitForNavigationAsync(

@@ -232,6 +232,29 @@ namespace PlaywrightSharp
             => WaitForNavigationAsync(null, null, urlFunc, waitUntil, timeout);
 
         /// <inheritdoc />
+        public Task WaitForURLAsync(string urlString, float? timeout, WaitUntilState waitUntil)
+            => WaitForURLAsync(urlString, null, null, timeout, waitUntil);
+
+        /// <inheritdoc />
+        public Task WaitForURLAsync(Regex urlRegex, float? timeout, WaitUntilState waitUntil)
+            => WaitForURLAsync(null, urlRegex, null, timeout, waitUntil);
+
+        /// <inheritdoc />
+        public Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout, WaitUntilState waitUntil)
+            => WaitForURLAsync(null, null, urlFunc, timeout, waitUntil);
+
+        /// <inheritdoc />
+        public Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, float? timeout, WaitUntilState waitUntil)
+        {
+            if (UrlMatches(Url, urlString, urlRegex, urlFunc))
+            {
+                return WaitForLoadStateAsync(waitUntil.EnsureDefaultValue(WaitUntilState.Load).ToLoadState(), timeout);
+            }
+
+            return WaitForNavigationAsync(urlString, urlRegex, urlFunc, waitUntil, timeout);
+        }
+
+        /// <inheritdoc />
         public async Task<IResponse> WaitForNavigationAsync(
             string urlString,
             Regex urlRegex,
@@ -268,7 +291,7 @@ namespace PlaywrightSharp
                 await waiter.WaitForPromiseAsync(tcs.Task).ConfigureAwait(false);
             }
 
-            if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntil.ToValueString()))
+            if (!_loadStates.Contains(waitUntil.ToLoadState()))
             {
                 await waiter.WaitForEventAsync<LoadState>(
                     this,
@@ -276,7 +299,7 @@ namespace PlaywrightSharp
                     e =>
                     {
                         waiter.Log($"  \"{e}\" event fired");
-                        return e.ToValueString() == waitUntil.ToValueString();
+                        return e == waitUntil.ToLoadState();
                     }).ConfigureAwait(false);
             }
 
@@ -456,9 +479,6 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task<bool> IsVisibleAsync(string selector, float? timeout) => IsVisibleAsync(false, selector, timeout);
-
-        /// <inheritdoc />
-        public Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined) => throw new NotImplementedException();
 
         internal Task TapAsync(bool isPageCall, string selector, IEnumerable<KeyboardModifier> modifiers, Position position, bool? force, bool? noWaitAfter, float? timeout)
             => _channel.TapAsync(selector, modifiers, position, timeout, force ?? false, noWaitAfter, isPageCall);
@@ -768,7 +788,12 @@ namespace PlaywrightSharp
                 return regex.IsMatch(url);
             }
 
-            return match(url);
+            if (match != null)
+            {
+                return match(url);
+            }
+
+            return false;
         }
     }
 }
