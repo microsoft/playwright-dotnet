@@ -41,7 +41,7 @@ namespace PlaywrightSharp.Tests
                 popupTask,
                 Page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
 
-            var popup = popupTask.Result.Page;
+            var popup = popupTask.Result;
 
             Assert.True(await Page.EvaluateAsync<bool>("document.hasFocus()"));
             Assert.True(await popup.EvaluateAsync<bool>("document.hasFocus()"));

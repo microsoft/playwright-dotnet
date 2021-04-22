@@ -6,6 +6,6 @@ namespace PlaywrightSharp.Transport.Channels
     {
         public Route Route { get; set; }
 
-        public Request Request { get; set; }
+        public IRequest Request { get; set; }
     }
 }

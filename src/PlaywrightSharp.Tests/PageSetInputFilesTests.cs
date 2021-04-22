@@ -72,7 +72,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.SetContentAsync("<input type=file>");
             var chooserTsc = new TaskCompletionSource<IElementHandle>();
-            void EventHandler(object sender, FileChooserEventArgs e)
+            void EventHandler(object sender, IFileChooser e)
             {
                 chooserTsc.SetResult(e.Element);
                 Page.FileChooser -= EventHandler;
@@ -179,7 +179,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldReturnTheSameFileChooserWhenThereAreManyWatchdogsSimultaneously()
         {
             await Page.SetContentAsync("<input type=file>");
-            var (fileChooser1, fileChooser2) = await TaskUtils.WhenAll(
+            var (fileChooser1, fileChooser2, _) = await TaskUtils.WhenAll(
                 Page.WaitForEventAsync(PageEvent.FileChooser),
                 Page.WaitForEventAsync(PageEvent.FileChooser),
                 Page.EvalOnSelectorAsync("input", "input => input.click()")

@@ -30,7 +30,7 @@ namespace PlaywrightSharp.Tests
             var page = await browser.NewPageAsync();
             await page.GoToAsync("http://non-existent.com/target.html");
 
-            Assert.Equal("Served by the proxy", await page.GetTitleAsync());
+            Assert.Equal("Served by the proxy", await page.TitleAsync());
         }
 
         [PlaywrightTest("proxy.spec.ts", "should authenticate")]
@@ -62,7 +62,7 @@ namespace PlaywrightSharp.Tests
             var page = await browser.NewPageAsync();
             await page.GoToAsync("http://non-existent.com/target.html");
 
-            Assert.Equal("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:secret")), await page.GetTitleAsync());
+            Assert.Equal("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:secret")), await page.TitleAsync());
         }
 
         [PlaywrightTest("proxy.spec.ts", "should exclude patterns")]
@@ -82,7 +82,7 @@ namespace PlaywrightSharp.Tests
             var page = await browser.NewPageAsync();
             await page.GoToAsync("http://non-existent.com/target.html");
 
-            Assert.Equal("Served by the proxy", await page.GetTitleAsync());
+            Assert.Equal("Served by the proxy", await page.TitleAsync());
 
             await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GoToAsync("http://non-existent1.com/target.html"));
             await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GoToAsync("http://sub.non-existent2.com/target.html"));

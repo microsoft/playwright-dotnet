@@ -8,11 +8,7 @@ namespace PlaywrightSharp
     /// </summary>
     public partial interface IResponse
     {
-        /// <summary>
-        /// <seealso cref="GetJsonAsync{T}"/>.
-        /// </summary>
-        /// <param name="options">The Document options.</param>
-        /// <returns>Returns a <see cref="JsonDocument"/> representation.</returns>
+        /// <inheritdoc cref="GetJsonAsync{T}"/>
         Task<JsonDocument> GetJsonAsync(JsonDocumentOptions options = default);
     }
 }

@@ -43,8 +43,8 @@ namespace PlaywrightSharp.Tests
 
             Page.WebSocket += (_, e) =>
             {
-                log.Add($"open<{e.WebSocket.Url}>");
-                webSocket = e.WebSocket;
+                log.Add($"open<{e.Url}>");
+                webSocket = e;
                 webSocket.Close += (_, _) =>
                 {
                     log.Add("close");
@@ -73,10 +73,10 @@ namespace PlaywrightSharp.Tests
             {
                 log.Add($"open");
 
-                e.WebSocket.FrameSent += (_, e) => log.Add($"sent<{e.Text}>");
-                e.WebSocket.FrameReceived += (_, e) => log.Add($"received<{e.Text}>");
+                e.FrameSent += (_, e) => log.Add($"sent<{e.Text}>");
+                e.FrameReceived += (_, e) => log.Add($"received<{e.Text}>");
 
-                e.WebSocket.Close += (_, _) =>
+                e.Close += (_, _) =>
                 {
                     log.Add("close");
                     socketClosedTcs.TrySetResult(true);
@@ -105,8 +105,8 @@ namespace PlaywrightSharp.Tests
 
             Page.WebSocket += (_, e) =>
             {
-                e.WebSocket.FrameSent += (_, e) => log.Add(e);
-                e.WebSocket.Close += (_, _) => socketClosedTcs.TrySetResult(true);
+                e.FrameSent += (_, e) => log.Add(e);
+                e.Close += (_, _) => socketClosedTcs.TrySetResult(true);
             };
 
             await Page.EvaluateAsync(@"port => {
@@ -140,7 +140,7 @@ namespace PlaywrightSharp.Tests
 
             Page.WebSocket += (_, e) =>
             {
-                e.WebSocket.SocketError += (_, e) => socketErrorTcs.TrySetResult(e);
+                e.SocketError += (_, e) => socketErrorTcs.TrySetResult(e);
             };
 
             await Page.EvaluateAsync(@"port => {
@@ -170,9 +170,9 @@ namespace PlaywrightSharp.Tests
 
             Page.WebSocket += (_, e) =>
             {
-                ws = e.WebSocket;
-                e.WebSocket.SocketError += (_, e) => socketError = e;
-                e.WebSocket.FrameReceived += (_, _) => frameReceivedTcs.TrySetResult(true);
+                ws = e;
+                e.SocketError += (_, e) => socketError = e;
+                e.FrameReceived += (_, _) => frameReceivedTcs.TrySetResult(true);
             };
 
             await TaskUtils.WhenAll(
@@ -194,8 +194,8 @@ namespace PlaywrightSharp.Tests
 
             Page.WebSocket += (_, e) =>
             {
-                ws = e.WebSocket;
-                e.WebSocket.FrameReceived += (_, _) => frameReceivedTcs.TrySetResult(true);
+                ws = e;
+                e.FrameReceived += (_, _) => frameReceivedTcs.TrySetResult(true);
             };
 
             await TaskUtils.WhenAll(
@@ -220,8 +220,8 @@ namespace PlaywrightSharp.Tests
 
             Page.WebSocket += (_, e) =>
             {
-                ws = e.WebSocket;
-                e.WebSocket.FrameReceived += (_, _) => frameReceivedTcs.TrySetResult(true);
+                ws = e;
+                e.FrameReceived += (_, _) => frameReceivedTcs.TrySetResult(true);
             };
 
             await TaskUtils.WhenAll(

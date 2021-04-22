@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -427,7 +428,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(Page, "emoji-test", TestConstants.ServerUrl + "/input/textarea.html");
-            var frame = Page.Frames[1];
+            var frame = Page.Frames.ElementAt(1);
             var textarea = await frame.QuerySelectorAsync("textarea");
             await textarea.TypeAsync("👹 Tokyo street Japan 🇯🇵");
             Assert.Equal("👹 Tokyo street Japan 🇯🇵", await frame.EvalOnSelectorAsync<string>("textarea", "textarea => textarea.value"));

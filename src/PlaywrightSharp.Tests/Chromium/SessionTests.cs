@@ -56,9 +56,10 @@ namespace PlaywrightSharp.Tests.Chromium
         }
 
         [PlaywrightTest("chromium/session.spec.ts", "session", "should enable and disable domains independently")]
-        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
-        public async Task ShouldEnableAndDisableDomainsIndependently()
+        [Fact(Skip = "We won't support coverage")]
+        public void ShouldEnableAndDisableDomainsIndependently()
         {
+            /*
             var client = await ((IChromiumBrowserContext)Page.Context).NewCDPSessionAsync(Page);
             await client.SendAsync("Runtime.enable");
             await client.SendAsync("Debugger.enable");
@@ -79,6 +80,7 @@ namespace PlaywrightSharp.Tests.Chromium
             await TaskUtils.WhenAll(
                 tcs.Task,
                 Page.EvaluateAsync("//# sourceURL=foo.js"));
+            */
         }
 
         [PlaywrightTest("chromium/session.spec.ts", "session", "should be able to detach session")]

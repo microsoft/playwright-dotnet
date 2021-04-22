@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWork()
         {
             await Page.SetContentAsync("<div>hello</div>");
-            string result = await Page.GetContentAsync();
+            string result = await Page.ContentAsync();
             Assert.Equal(_expectedOutput, result);
         }
 
@@ -31,8 +31,8 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDomcontentloaded()
         {
-            await Page.SetContentAsync("<div>hello</div>", LifecycleEvent.DOMContentLoaded);
-            string result = await Page.GetContentAsync();
+            await Page.SetContentAsync("<div>hello</div>", waitUntil: WaitUntilState.DOMContentLoaded);
+            string result = await Page.ContentAsync();
             Assert.Equal(_expectedOutput, result);
         }
 
@@ -42,7 +42,7 @@ namespace PlaywrightSharp.Tests
         {
             string doctype = "<!DOCTYPE html>";
             await Page.SetContentAsync($"{doctype}<div>hello</div>");
-            string result = await Page.GetContentAsync();
+            string result = await Page.ContentAsync();
             Assert.Equal($"{doctype}{_expectedOutput}", result);
         }
 
@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests
         {
             string doctype = "<!DOCTYPE html PUBLIC \" -//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">";
             await Page.SetContentAsync($"{doctype}<div>hello</div>");
-            string result = await Page.GetContentAsync();
+            string result = await Page.ContentAsync();
             Assert.Equal($"{doctype}{_expectedOutput}", result);
         }
 

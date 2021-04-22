@@ -18,7 +18,7 @@
     <ReleaseVersion>0.0.0</ReleaseVersion>
     <BuildFromSource>True</BuildFromSource>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <NoWarn>1701;1702;CS0067</NoWarn>
+    <NoWarn>1701;1702;CS0067;1734</NoWarn>
   </PropertyGroup>
   <Import Project="../Common/Dependencies.props" />
   <Import Project="../Common/SignAssembly.props" />

@@ -26,11 +26,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.SetViewportSizeAsync(new ViewportSize
-            {
-                Width = 500,
-                Height = 500
-            });
+            await Page.SetViewportSizeAsync(500, 500);
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             await Page.EvaluateAsync("window.scrollBy(50, 100)");
             var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(3)");
@@ -42,11 +38,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTakeIntoAccountPaddingAndBorder()
         {
-            await Page.SetViewportSizeAsync(new ViewportSize
-            {
-                Width = 500,
-                Height = 500
-            });
+            await Page.SetViewportSizeAsync(500, 500);
             await Page.SetContentAsync(@"
                 <div style=""height: 14px"">oooo</div>
                 <style>div {
@@ -66,11 +58,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCaptureFullElementWhenLargerThanViewportInParallel()
         {
-            await Page.SetViewportSizeAsync(new ViewportSize
-            {
-                Width = 500,
-                Height = 500
-            });
+            await Page.SetViewportSizeAsync(500, 500);
             await Page.SetContentAsync(@"
                 <div style=""height: 14px"">oooo</div>
                 <style>
@@ -99,11 +87,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldCaptureFullElementWhenLargerThanViewport()
         {
-            await Page.SetViewportSizeAsync(new ViewportSize
-            {
-                Width = 500,
-                Height = 500
-            });
+            await Page.SetViewportSizeAsync(500, 500);
             await Page.SetContentAsync(@"
                 <div style=""height: 14px"">oooo</div>
                 <style>
@@ -131,11 +115,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldScrollElementIntoView()
         {
-            await Page.SetViewportSizeAsync(new ViewportSize
-            {
-                Width = 500,
-                Height = 500
-            });
+            await Page.SetViewportSizeAsync(500, 500);
             await Page.SetContentAsync(@"
                 <div style=""height: 14px"">oooo</div>
                 <style>div.above {
@@ -187,11 +167,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithARotatedElement()
         {
-            await Page.SetViewportSizeAsync(new ViewportSize
-            {
-                Width = 500,
-                Height = 500
-            });
+            await Page.SetViewportSizeAsync(500, 500);
             await Page.SetContentAsync(@"
                 <div style='position: absolute;
                 top: 100px;
@@ -351,7 +327,7 @@ namespace PlaywrightSharp.Tests
             await page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             var sizeBefore = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
 
-            byte[] screenshot = await page.ScreenshotAsync(true);
+            byte[] screenshot = await page.ScreenshotAsync(fullPage: true);
             Assert.NotNull(screenshot);
             Assert.NotEmpty(screenshot);
 
@@ -369,7 +345,7 @@ namespace PlaywrightSharp.Tests
             });
             var page = await context.NewPageAsync();
             await TestUtils.VerifyViewportAsync(page, 456, 789);
-            byte[] screenshot = await page.ScreenshotAsync(true);
+            byte[] screenshot = await page.ScreenshotAsync(fullPage: true);
             Assert.NotNull(screenshot);
             Assert.NotEmpty(screenshot);
 

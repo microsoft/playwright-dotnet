@@ -24,14 +24,11 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Input;
-using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
 
@@ -147,7 +144,7 @@ namespace PlaywrightSharp
 
         /// <inheritdoc />
         public Task SetInputFilesAsync(IEnumerable<string> files, bool? noWaitAfter, float? timeout)
-            => _channel.SetInputFilesAsync(files.Select(f => f.ToElementHandleFile()).ToArray(), noWaitAfter, timeout);
+            => _channel.SetInputFilesAsync(files.Select(f => f.ToFilePayload()).ToArray(), noWaitAfter, timeout);
 
         /// <inheritdoc />
         public Task SetInputFilesAsync(FilePayload files, bool? noWaitAfter, float? timeout)
@@ -202,10 +199,10 @@ namespace PlaywrightSharp
         public Task<string> GetAttributeAsync(string name) => _channel.GetAttributeAsync(name);
 
         /// <inheritdoc />
-        public Task<string> InnerHTMLAsync() => _channel.GetInnerHTMLAsync();
+        public Task<string> InnerHTMLAsync() => _channel.InnerHTMLAsync();
 
         /// <inheritdoc />
-        public Task<string> InnerTextAsync() => _channel.GetInnerTextAsync();
+        public Task<string> InnerTextAsync() => _channel.InnerTextAsync();
 
         /// <inheritdoc />
         public Task<string> TextContentAsync() => _channel.TextContentAsync();
@@ -247,12 +244,12 @@ namespace PlaywrightSharp
         public Task<IReadOnlyCollection<string>> SelectOptionAsync(params IElementHandle[] values) => SelectOptionAsync(values);
 
         /// <inheritdoc />
-        public Task CheckAsync(bool? force, bool? noWaitAfter, float? timeout)
-            => _channel.CheckAsync(timeout, force ?? false, noWaitAfter);
+        public Task CheckAsync(Position position, bool? force, bool? noWaitAfter, float? timeout)
+            => _channel.CheckAsync(position, timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />
-        public Task UncheckAsync(bool? force, bool? noWaitAfter, float? timeout)
-            => _channel.UncheckAsync(timeout, force, noWaitAfter);
+        public Task UncheckAsync(Position position, bool? force, bool? noWaitAfter, float? timeout)
+            => _channel.UncheckAsync(position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
         public Task TapAsync(Position position, IEnumerable<KeyboardModifier> modifiers, bool? force, bool? noWaitAfter, float? timeout)

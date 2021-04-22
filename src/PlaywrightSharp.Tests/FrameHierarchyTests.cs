@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
@@ -30,14 +31,14 @@ namespace PlaywrightSharp.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
             // validate frameattached events
             var attachedFrames = new List<IFrame>();
-            Page.FrameAttached += (_, e) => attachedFrames.Add(e.Frame);
+            Page.FrameAttached += (_, e) => attachedFrames.Add(e);
             await FrameUtils.AttachFrameAsync(Page, "frame1", "./assets/frame.html");
             Assert.Single(attachedFrames);
             Assert.Contains("/assets/frame.html", attachedFrames[0].Url);
 
             // validate framenavigated events
             var navigatedFrames = new List<IFrame>();
-            Page.FrameNavigated += (_, e) => navigatedFrames.Add(e.Frame);
+            Page.FrameNavigated += (_, e) => navigatedFrames.Add(e);
             await Page.EvaluateAsync(@"() => {
                 const frame = document.getElementById('frame1');
                 frame.src = './empty.html';
@@ -48,7 +49,7 @@ namespace PlaywrightSharp.Tests
 
             // validate framedetached events
             var detachedFrames = new List<IFrame>();
-            Page.FrameDetached += (_, e) => detachedFrames.Add(e.Frame);
+            Page.FrameDetached += (_, e) => detachedFrames.Add(e);
             await FrameUtils.DetachFrameAsync(Page, "frame1");
             Assert.Single(detachedFrames);
             Assert.True(detachedFrames[0].IsDetached);
@@ -95,9 +96,9 @@ namespace PlaywrightSharp.Tests
             var attachedFrames = new List<IFrame>();
             var detachedFrames = new List<IFrame>();
             var navigatedFrames = new List<IFrame>();
-            Page.FrameAttached += (_, e) => attachedFrames.Add(e.Frame);
-            Page.FrameDetached += (_, e) => detachedFrames.Add(e.Frame);
-            Page.FrameNavigated += (_, e) => navigatedFrames.Add(e.Frame);
+            Page.FrameAttached += (_, e) => attachedFrames.Add(e);
+            Page.FrameDetached += (_, e) => detachedFrames.Add(e);
+            Page.FrameNavigated += (_, e) => navigatedFrames.Add(e);
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/nested-frames.html");
             Assert.Equal(4, attachedFrames.Count);
             Assert.Empty(detachedFrames);
@@ -119,9 +120,9 @@ namespace PlaywrightSharp.Tests
             var attachedFrames = new List<IFrame>();
             var detachedFrames = new List<IFrame>();
             var navigatedFrames = new List<IFrame>();
-            Page.FrameAttached += (_, e) => attachedFrames.Add(e.Frame);
-            Page.FrameDetached += (_, e) => detachedFrames.Add(e.Frame);
-            Page.FrameNavigated += (_, e) => navigatedFrames.Add(e.Frame);
+            Page.FrameAttached += (_, e) => attachedFrames.Add(e);
+            Page.FrameDetached += (_, e) => detachedFrames.Add(e);
+            Page.FrameNavigated += (_, e) => navigatedFrames.Add(e);
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/frameset.html");
             Assert.Equal(4, attachedFrames.Count);
             Assert.Empty(detachedFrames);
@@ -147,8 +148,8 @@ namespace PlaywrightSharp.Tests
                 document.body.shadowRoot.appendChild(frame);
                 await new Promise(x => frame.onload = x);
             }", TestConstants.EmptyPage);
-            Assert.Equal(2, Page.Frames.Length);
-            Assert.Equal(TestConstants.EmptyPage, Page.Frames[1].Url);
+            Assert.Equal(2, Page.Frames.Count);
+            Assert.Equal(TestConstants.EmptyPage, Page.Frames.ElementAt(1).Url);
         }
 
         [PlaywrightTest("frame-hierarchy.spec.ts", "should report frame.name()")]
@@ -163,9 +164,9 @@ namespace PlaywrightSharp.Tests
                 document.body.appendChild(frame);
                 return new Promise(x => frame.onload = x);
             }", TestConstants.EmptyPage);
-            Assert.Empty(Page.Frames[0].Name);
-            Assert.Equal("theFrameId", Page.Frames[1].Name);
-            Assert.Equal("theFrameName", Page.Frames[2].Name);
+            Assert.Empty(Page.Frames.First().Name);
+            Assert.Equal("theFrameId", Page.Frames.ElementAt(1).Name);
+            Assert.Equal("theFrameName", Page.Frames.ElementAt(2).Name);
         }
 
         [PlaywrightTest("frame-hierarchy.spec.ts", "should report frame.parent()")]
@@ -174,9 +175,9 @@ namespace PlaywrightSharp.Tests
         {
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(Page, "frame2", TestConstants.EmptyPage);
-            Assert.Null(Page.Frames[0].ParentFrame);
-            Assert.Same(Page.MainFrame, Page.Frames[1].ParentFrame);
-            Assert.Same(Page.MainFrame, Page.Frames[2].ParentFrame);
+            Assert.Null(Page.Frames.First().ParentFrame);
+            Assert.Same(Page.MainFrame, Page.Frames.ElementAt(1).ParentFrame);
+            Assert.Same(Page.MainFrame, Page.Frames.ElementAt(2).ParentFrame);
         }
 
         [PlaywrightTest("frame-hierarchy.spec.ts", "should report different frame instance when frame re-attaches")]
@@ -195,7 +196,7 @@ namespace PlaywrightSharp.Tests
               Page.EvaluateAsync("() => document.body.appendChild(window.frame)")
             );
 
-            Assert.False(frame2.Frame.IsDetached);
+            Assert.False(frame2.IsDetached);
             Assert.NotSame(frame1, frame2);
         }
     }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Input;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;

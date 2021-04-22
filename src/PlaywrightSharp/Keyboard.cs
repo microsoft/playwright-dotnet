@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using PlaywrightSharp.Input;
 using PlaywrightSharp.Transport.Channels;
 
 namespace PlaywrightSharp

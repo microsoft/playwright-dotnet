@@ -67,7 +67,7 @@ namespace PlaywrightSharp.Tests
             await Page.SetContentAsync("<iframe name=target></iframe>");
             Assert.Null(Page.Frames.FirstOrDefault(f => f.Name == "bogus"));
             var frame = Page.Frames.FirstOrDefault(f => f.Name == "target");
-            Assert.Same(Page.MainFrame.ChildFrames[0], frame);
+            Assert.Same(Page.MainFrame.ChildFrames.First(), frame);
         }
 
         [PlaywrightTest("page-basic.spec.ts", "page.frame should respect url")]
@@ -77,7 +77,7 @@ namespace PlaywrightSharp.Tests
             await Page.SetContentAsync($"<iframe src=\"{TestConstants.EmptyPage}\"></iframe>");
             Assert.Null(Page.Frames.FirstOrDefault(f => f.Name == "bogus"));
             var frame = Page.Frames.FirstOrDefault(f => f.Url.Contains("empty"));
-            Assert.Same(Page.MainFrame.ChildFrames[0], frame);
+            Assert.Same(Page.MainFrame.ChildFrames.First(), frame);
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should provide access to the opener page")]
@@ -88,7 +88,7 @@ namespace PlaywrightSharp.Tests
                 Page.WaitForEventAsync(PageEvent.Popup),
                 Page.EvaluateAsync("() => window.open('about:blank')")
             );
-            var opener = await popupEvent.Page.GetOpenerAsync();
+            var opener = await popupEvent.OpenerAsync();
             Assert.Equal(Page, opener);
         }
 
@@ -101,7 +101,7 @@ namespace PlaywrightSharp.Tests
                 Page.EvaluateAsync("() => window.open('about:blank')")
             );
             await Page.CloseAsync();
-            var opener = await popupEvent.Page.GetOpenerAsync();
+            var opener = await popupEvent.OpenerAsync();
             Assert.Null(opener);
         }
 
@@ -110,7 +110,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldReturnThePageTitle()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/title.html");
-            Assert.Equal("Woof-Woof", await Page.GetTitleAsync());
+            Assert.Equal("Woof-Woof", await Page.TitleAsync());
         }
 
         [PlaywrightTest("page-basic.spec.ts", "page.url should work")]
@@ -182,7 +182,7 @@ namespace PlaywrightSharp.Tests
         {
             var newPageTask = Page.WaitForEventAsync(PageEvent.Popup);
             await Page.EvaluateAsync<string>("() => window['newPage'] = window.open('about:blank')");
-            var newPage = (await newPageTask).Page;
+            var newPage = await newPageTask;
             var closedTsc = new TaskCompletionSource<bool>();
             newPage.Close += (_, _) => closedTsc.SetResult(true);
             await Page.EvaluateAsync<string>("() => window['newPage'].close()");

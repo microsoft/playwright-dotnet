@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Tests
             {
                 fileInfo.Delete();
             }
-            await Page.GetPdfAsync(outputFile, format: PaperFormat.Letter);
+            await Page.PdfAsync(outputFile, format: PaperFormat.Letter);
             fileInfo = new FileInfo(outputFile);
             Assert.True(new FileInfo(outputFile).Length > 0);
             if (fileInfo.Exists)
@@ -40,6 +40,6 @@ namespace PlaywrightSharp.Tests
         [PlaywrightTest("pdf.spec.ts", "should only have pdf in chromium")]
         [SkipBrowserAndPlatformFact(skipChromium: true)]
         public Task ShouldOnlyHavePdfInChromium()
-            => Assert.ThrowsAsync<NotSupportedException>(() => Page.GetPdfAsync());
+            => Assert.ThrowsAsync<NotSupportedException>(() => Page.PdfAsync());
     }
 }

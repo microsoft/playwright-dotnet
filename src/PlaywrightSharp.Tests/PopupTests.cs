@@ -29,7 +29,7 @@ namespace PlaywrightSharp.Tests
             var popupTask = context.WaitForEventAsync(ContextEvent.Page);
             await TaskUtils.WhenAll(popupTask, page.ClickAsync("a"));
 
-            await popupTask.Result.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+            await popupTask.Result.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             string userAgent = await popupTask.Result.Page.EvaluateAsync<string>("() => window.initialUserAgent");
             await requestTcs.Task;
 
@@ -48,9 +48,9 @@ namespace PlaywrightSharp.Tests
             await page.SetContentAsync("<a target=_blank rel=noopener href=\"empty.html\">link</a>");
             bool intercepted = false;
 
-            await context.RouteAsync("**/empty.html", (route, _) =>
+            await context.RouteAsync("**/empty.html", (route) =>
             {
-                route.ContinueAsync();
+                route.ResumeAsync();
                 intercepted = true;
             });
 
@@ -118,8 +118,8 @@ namespace PlaywrightSharp.Tests
                 popup,
                 page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.ServerUrl + "/title.html"));
 
-            await popup.Result.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
-            Assert.Equal("Woof-Woof", await popup.Result.Page.GetTitleAsync());
+            await popup.Result.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+            Assert.Equal("Woof-Woof", await popup.Result.TitleAsync());
         }
 
         [PlaywrightTest("popup.spec.ts", "should inherit touch support from browser context")]
@@ -179,9 +179,9 @@ namespace PlaywrightSharp.Tests
                 }"),
                 page.WaitForEventAsync(PageEvent.Popup));
 
-            await popup.Page.SetViewportSizeAsync(new ViewportSize { Width = 500, Height = 400 });
-            await popup.Page.WaitForLoadStateAsync();
-            var resized = await popup.Page.EvaluateAsync<ViewportSize>(@"() => ({ width: window.innerWidth, height: window.innerHeight })");
+            await popup.SetViewportSizeAsync(500, 400);
+            await popup.WaitForLoadStateAsync();
+            var resized = await popup.EvaluateAsync<ViewportSize>(@"() => ({ width: window.innerWidth, height: window.innerHeight })");
 
             Assert.Equal(new ViewportSize { Width = 600, Height = 300 }, size);
             Assert.Equal(new ViewportSize { Width = 500, Height = 400 }, resized);
@@ -197,9 +197,9 @@ namespace PlaywrightSharp.Tests
 
             bool intercepted = false;
 
-            await context.RouteAsync("**/empty.html", (route, _) =>
+            await context.RouteAsync("**/empty.html", (route) =>
             {
-                route.ContinueAsync();
+                route.ResumeAsync();
                 intercepted = true;
             });
 
@@ -243,9 +243,9 @@ namespace PlaywrightSharp.Tests
                 popup,
                 page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.CrossProcessUrl + "/title.html"));
 
-            Assert.Equal(123, await popup.Result.Page.EvaluateAsync<int>("injected"));
-            await popup.Result.Page.ReloadAsync();
-            Assert.Equal(123, await popup.Result.Page.EvaluateAsync<int>("injected"));
+            Assert.Equal(123, await popup.Result.EvaluateAsync<int>("injected"));
+            await popup.Result.ReloadAsync();
+            Assert.Equal(123, await popup.Result.EvaluateAsync<int>("injected"));
         }
 
         [PlaywrightTest("popup.spec.ts", "should expose function from browser context")]

@@ -4,6 +4,7 @@
     <Rule Id="SA1200" Action="None" />
     <Rule Id="SA1601" Action="None" /> <!--A C# partial element is missing a documentation header.-->
     <Rule Id="SA1623" Action="None" />
+    <Rule Id="SA1625" Action="None" /><!--Should not copy paste comments.-->
     <Rule Id="SA1101" Action="None" />
     <Rule Id="SA1128" Action="None" />
     <Rule Id="SA1309" Action="None" />
@@ -28,6 +29,7 @@
     <Rule Id="CA1508" Action="None"/> <!-- Avoid dead conditional code. This is a good report but there are many false positives reported.-->
   </Rules>
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CA1003" Action="None" /><!-- Use EvenArgs... how about no?-->
     <Rule Id="CA1303" Action="None" />
     <Rule Id="CA1304" Action="None" /><!-- ToLower with locale-->
     <Rule Id="CA1305" Action="None" /><!-- ChangeType with locale-->

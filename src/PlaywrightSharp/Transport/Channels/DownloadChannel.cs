@@ -9,7 +9,7 @@ namespace PlaywrightSharp.Transport.Channels
         {
         }
 
-        internal async Task<string> GetPathAsync()
+        internal async Task<string> PathAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "path", null).ConfigureAwait(false))?.GetProperty("value").ToString();
 
         internal async Task<string> GetFailureAsync()

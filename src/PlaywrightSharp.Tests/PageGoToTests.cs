@@ -33,7 +33,7 @@ namespace PlaywrightSharp.Tests
             string fileurl = new Uri(TestUtils.GetWebServerFile(Path.Combine("frames", "two-frames.html"))).AbsoluteUri;
             await Page.GoToAsync(fileurl);
             Assert.Equal(fileurl.ToLower(), Page.Url.ToLower());
-            Assert.Equal(3, Page.Frames.Length);
+            Assert.Equal(3, Page.Frames.Count);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should use http for no protocol")]
@@ -55,9 +55,9 @@ namespace PlaywrightSharp.Tests
             IFrame requestFrame = null;
             Page.Request += (_, e) =>
             {
-                if (e.Request.Url == url)
+                if (e.Url == url)
                 {
-                    requestFrame = e.Request.Frame;
+                    requestFrame = e.Frame;
                 }
             };
 
@@ -78,9 +78,9 @@ namespace PlaywrightSharp.Tests
             IFrame requestFrame = null;
             Page.Request += (_, e) =>
             {
-                if (e.Request.Url == TestConstants.ServerUrl + "/frames/frame.html")
+                if (e.Url == TestConstants.ServerUrl + "/frames/frame.html")
                 {
-                    requestFrame = e.Request.Frame;
+                    requestFrame = e.Frame;
                 }
             };
 
@@ -89,7 +89,7 @@ namespace PlaywrightSharp.Tests
             Assert.Same(Page.MainFrame, response.Frame);
             Assert.Equal(TestConstants.ServerUrl + "/frames/one-frame.html", response.Url);
 
-            Assert.Equal(2, Page.Frames.Length);
+            Assert.Equal(2, Page.Frames.Count);
             Assert.Same(Page.FirstChildFrame(), requestFrame);
         }
 
@@ -103,9 +103,9 @@ namespace PlaywrightSharp.Tests
             IFrame requestFrame = null;
             Page.Request += (_, e) =>
             {
-                if (e.Request.Url == TestConstants.CrossProcessHttpPrefix + "/frames/frame.html")
+                if (e.Url == TestConstants.CrossProcessHttpPrefix + "/frames/frame.html")
                 {
-                    requestFrame = e.Request.Frame;
+                    requestFrame = e.Frame;
                 }
             };
 
@@ -114,7 +114,7 @@ namespace PlaywrightSharp.Tests
             Assert.Same(Page.MainFrame, response.Frame);
             Assert.Equal(TestConstants.CrossProcessHttpPrefix + "/frames/one-frame.html", response.Url);
 
-            Assert.Equal(2, Page.Frames.Length);
+            Assert.Equal(2, Page.Frames.Count);
             Assert.Same(Page.FirstChildFrame(), requestFrame);
         }
 
@@ -200,7 +200,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateToEmptyPageWithDOMContentLoaded()
         {
-            var response = await Page.GoToAsync(TestConstants.EmptyPage, LifecycleEvent.DOMContentLoaded);
+            var response = await Page.GoToAsync(TestConstants.EmptyPage, WaitUntilState.DOMContentLoaded);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
@@ -237,9 +237,9 @@ namespace PlaywrightSharp.Tests
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldFailWhenNavigatingToBadSSL()
         {
-            Page.Request += (_, e) => Assert.NotNull(e.Request);
-            Page.RequestFinished += (_, e) => Assert.NotNull(e.Request);
-            Page.RequestFailed += (_, e) => Assert.NotNull(e.Request);
+            Page.Request += (_, e) => Assert.NotNull(e);
+            Page.RequestFinished += (_, e) => Assert.NotNull(e);
+            Page.RequestFailed += (_, e) => Assert.NotNull(e);
 
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await Page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html"));
             TestUtils.AssertSSLError(exception.Message);
@@ -267,12 +267,12 @@ namespace PlaywrightSharp.Tests
 
         [PlaywrightTest("page-goto.spec.ts", "should throw if networkidle0 is passed as an option")]
         [Fact(Skip = "We don't need this test")]
-        public void ShouldThrowIfNetworkidle0IsPassedAsAnOption()
+        public void ShouldThrowIfNetworkIdle0IsPassedAsAnOption()
         { }
 
         [PlaywrightTest("page-goto.spec.ts", "should throw if networkidle2 is passed as an option")]
         [Fact(Skip = "We don't need this test")]
-        public void ShouldThrowIfNetworkidle2IsPassedAsAnOption()
+        public void ShouldThrowIfNetworkIdle2IsPassedAsAnOption()
         { }
 
         [PlaywrightTest("page-goto.spec.ts", "should throw if networkidle is passed as an option")]
@@ -374,14 +374,14 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldDisableTimeoutWhenItsSetTo0()
         {
             bool loaded = false;
-            void OnLoad(object sender, EventArgs e)
+            void OnLoad(object sender, IPage e)
             {
                 loaded = true;
                 Page.Load -= OnLoad;
             }
             Page.Load += OnLoad;
 
-            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", LifecycleEvent.Load, null, 0);
+            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html", WaitUntilState.Load, 0);
             Assert.True(loaded);
         }
 
@@ -472,7 +472,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldNavigateToDataURLAndNotFireDataURLRequests()
         {
             var requests = new List<IRequest>();
-            Page.Request += (_, e) => requests.Add(e.Request);
+            Page.Request += (_, e) => requests.Add(e);
 
             string dataUrl = "data:text/html,<div>yo</div>";
             var response = await Page.GoToAsync(dataUrl);
@@ -485,7 +485,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldNavigateToURLWithHashAndFireRequestsWithoutHash()
         {
             var requests = new List<IRequest>();
-            Page.Request += (_, e) => requests.Add(e.Request);
+            Page.Request += (_, e) => requests.Add(e);
 
             var response = await Page.GoToAsync(TestConstants.EmptyPage + "#hash");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -545,7 +545,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectRefererOptionWhenSetExtraHTTPHeadersProvidesReferer()
         {
-            await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
+            await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string>
             {
                 ["referer"] = "http://microsoft.com/"
             });
@@ -588,7 +588,7 @@ namespace PlaywrightSharp.Tests
         {
             Server.SetRoute("/one-style.html", _ => Task.Delay(10_000));
             var request = Server.WaitForRequest("/one-style.html");
-            var failed = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", TestConstants.IsFirefox ? LifecycleEvent.Networkidle : LifecycleEvent.Load);
+            var failed = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", TestConstants.IsFirefox ? WaitUntilState.NetworkIdle : WaitUntilState.Load);
             await request;
             await Page.GoToAsync(TestConstants.EmptyPage);
 

@@ -50,7 +50,7 @@ namespace PlaywrightSharp.Tests
             var exception = await Assert.ThrowsAsync<TimeoutException>(() => Page.ClickAsync("div", timeout: 3000));
             Assert.Contains("Timeout 3000ms exceeded", exception.Message);
             var dialog = await dialogTask;
-            await dialog.Dialog.DismissAsync();
+            await dialog.DismissAsync();
         }
 
         [PlaywrightTest("page-click-react.spec.ts", "should not retarget when element changes on hover")]

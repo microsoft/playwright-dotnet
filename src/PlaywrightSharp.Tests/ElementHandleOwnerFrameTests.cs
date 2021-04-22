@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -21,7 +22,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
-            var frame = Page.Frames[1];
+            var frame = Page.Frames.ElementAt(1);
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document.body");
             Assert.Equal(frame, await elementHandle.OwnerFrameAsync());
         }
@@ -32,7 +33,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.CrossProcessUrl + "/empty.html");
-            var frame = Page.Frames[1];
+            var frame = Page.Frames.ElementAt(1);
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document.body");
             Assert.Equal(frame, await elementHandle.OwnerFrameAsync());
         }
@@ -43,7 +44,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
-            var frame = Page.Frames[1];
+            var frame = Page.Frames.ElementAt(1);
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document");
             Assert.Equal(frame, await elementHandle.OwnerFrameAsync());
         }
@@ -67,7 +68,7 @@ namespace PlaywrightSharp.Tests
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             var frame = Page.MainFrame;
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document.querySelector('#frame1').contentWindow.document.body");
-            Assert.Equal(frame.ChildFrames[0], await elementHandle.OwnerFrameAsync());
+            Assert.Equal(frame.ChildFrames.First(), await elementHandle.OwnerFrameAsync());
         }
 
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for detached elements")]
@@ -104,12 +105,12 @@ namespace PlaywrightSharp.Tests
                     return div;
                 }");
             Assert.Equal(Page.MainFrame, await divHandle.OwnerFrameAsync());
-            await popup.Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+            await popup.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             await Page.EvaluateAsync(@"() => {
                     var div = document.querySelector('div');
                     window.__popup.document.body.appendChild(div);
                 }");
-            Assert.Same(popup.Page.MainFrame, await divHandle.OwnerFrameAsync());
+            Assert.Same(popup.MainFrame, await divHandle.OwnerFrameAsync());
         }
     }
 }

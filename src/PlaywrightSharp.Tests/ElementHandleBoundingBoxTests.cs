@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.SetViewportSizeAsync(new ViewportSize { Width = 500, Height = 500 });
+            await Page.SetViewportSizeAsync(500, 500);
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
             var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(13)");
             var box = await elementHandle.BoundingBoxAsync();
@@ -32,7 +32,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHandleNestedFrames()
         {
-            await Page.SetViewportSizeAsync(new ViewportSize { Width = 500, Height = 500 });
+            await Page.SetViewportSizeAsync(500, 500);
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/nested-frames.html");
             var nestedFrame = Page.Frames.First(frame => frame.Name == "dos");
             var elementHandle = await nestedFrame.QuerySelectorAsync("div");
@@ -53,7 +53,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldForceALayout()
         {
-            await Page.SetViewportSizeAsync(new ViewportSize { Width = 500, Height = 500 });
+            await Page.SetViewportSizeAsync(500, 500);
             await Page.SetContentAsync("<div style=\"width: 100px; height: 100px\">hello</div>");
             var elementHandle = await Page.QuerySelectorAsync("div");
             await Page.EvaluateAsync("element => element.style.height = '200px'", elementHandle);

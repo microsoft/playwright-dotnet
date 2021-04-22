@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -46,20 +46,20 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-    public enum ElementState
-    {
-        Undefined = 0,
-        [EnumMember(Value = "visible")]
-        Visible,
-        [EnumMember(Value = "hidden")]
-        Hidden,
-        [EnumMember(Value = "stable")]
-        Stable,
-        [EnumMember(Value = "enabled")]
-        Enabled,
-        [EnumMember(Value = "disabled")]
-        Disabled,
-        [EnumMember(Value = "editable")]
-        Editable,
-    }
+	public enum ElementState
+	{
+		Undefined = 0,
+		[EnumMember(Value = "visible")]
+		Visible,
+		[EnumMember(Value = "hidden")]
+		Hidden,
+		[EnumMember(Value = "stable")]
+		Stable,
+		[EnumMember(Value = "enabled")]
+		Enabled,
+		[EnumMember(Value = "disabled")]
+		Disabled,
+		[EnumMember(Value = "editable")]
+		Editable,
+	}
 }

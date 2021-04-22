@@ -17,13 +17,18 @@ namespace PlaywrightSharp
             .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
             .Single(m => m.Name == nameof(ParseEvaluateResult) && m.IsGenericMethod);
 
-        internal static string SerializeScriptCall(string script, object[] args)
+        internal static string SerializeScriptCall(string script, object[] args = null)
         {
             args ??= Array.Empty<object>();
 
             if (script.IsJavascriptFunction())
             {
-                return $"({script})({string.Join(",", args.Select(a => JsonSerializer.Serialize(a, JsonExtensions.GetNewDefaultSerializerOptions())))})";
+                if (args?.Any() == true)
+                {
+                    return $"({script})({string.Join(",", args.Select(a => JsonSerializer.Serialize(a, JsonExtensions.GetNewDefaultSerializerOptions())))})";
+                }
+
+                return $"({script})()";
             }
 
             if (args.Length > 0)

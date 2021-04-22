@@ -32,12 +32,12 @@ namespace PlaywrightSharp
                     BrowserContext.ServiceWorkersList.Remove(this);
                 }
 
-                Close?.Invoke(this, EventArgs.Empty);
+                Close?.Invoke(this, this);
             };
         }
 
         /// <inheritdoc/>
-        public event EventHandler Close;
+        public event EventHandler<IWorker> Close;
 
         /// <inheritdoc/>
         public string Url => _initializer.Url;
@@ -68,7 +68,7 @@ namespace PlaywrightSharp
         public async Task<IWorker> WaitForCloseAsync(float? timeout)
         {
             using var waiter = new Waiter();
-            var waiterResult = waiter.GetWaitForEventTask(this, nameof(Close));
+            var waiterResult = waiter.GetWaitForEventTask<IWorker>(this, nameof(Close), null);
             await waiterResult.Task.WithTimeout(Convert.ToInt32(timeout ?? 0)).ConfigureAwait(false);
             return this;
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -58,12 +59,12 @@ namespace PlaywrightSharp.Tests
 
             var waitForRequestTask = Server.WaitForRequest("/one-style.css");
             var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
-            var domContentLoadedTask = Page.WaitForNavigationAsync(LifecycleEvent.DOMContentLoaded);
+            var domContentLoadedTask = Page.WaitForNavigationAsync(WaitUntilState.DOMContentLoaded);
 
             bool bothFired = false;
             var bothFiredTask = TaskUtils.WhenAll(
                 domContentLoadedTask,
-                Page.WaitForNavigationAsync(LifecycleEvent.Load)).ContinueWith(_ => bothFired = true);
+                Page.WaitForNavigationAsync(WaitUntilState.Load)).ContinueWith(_ => bothFired = true);
 
             await waitForRequestTask.WithTimeout(TestConstants.DefaultTaskTimeout);
             await domContentLoadedTask.WithTimeout(TestConstants.DefaultTaskTimeout);
@@ -186,14 +187,14 @@ namespace PlaywrightSharp.Tests
             var frameAttachedTaskSource = new TaskCompletionSource<IFrame>();
             Page.FrameAttached += (_, e) =>
             {
-                frameAttachedTaskSource.SetResult(e.Frame);
+                frameAttachedTaskSource.SetResult(e);
             };
             var frameNavigatedTaskSource = new TaskCompletionSource<bool>();
             Page.FrameNavigated += (_, e) =>
             {
                 if (frame != null)
                 {
-                    if (e.Frame == frame)
+                    if (e == frame)
                     {
                         frameNavigatedTaskSource.TrySetResult(true);
                     }
@@ -291,7 +292,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkForCrossProcessNavigations()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            var waitTask = Page.WaitForNavigationAsync(LifecycleEvent.DOMContentLoaded);
+            var waitTask = Page.WaitForNavigationAsync(WaitUntilState.DOMContentLoaded);
 
             string url = TestConstants.CrossProcessHttpPrefix + "/empty.html";
             var gotoTask = Page.GoToAsync(url);
@@ -307,7 +308,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkOnFrame()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
-            var frame = Page.Frames[1];
+            var frame = Page.Frames.ElementAt(1);
             var (response, _) = await TaskUtils.WhenAll(
                 frame.WaitForNavigationAsync(),
                 frame.EvaluateAsync("url => window.location.href = url", TestConstants.ServerUrl + "/grid.html")
@@ -323,7 +324,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldFailWhenFrameDetaches()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
-            var frame = Page.Frames[1];
+            var frame = Page.Frames.ElementAt(1);
             Server.SetRoute("/empty.html", _ => Task.Delay(6000));
             var exceptionTask = Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => frame.WaitForNavigationAsync());
 

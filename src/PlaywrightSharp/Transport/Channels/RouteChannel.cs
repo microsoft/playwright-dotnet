@@ -14,13 +14,13 @@ namespace PlaywrightSharp.Transport.Channels
         {
         }
 
-        public Task AbortAsync(RequestAbortErrorCode errorCode)
+        public Task AbortAsync(string errorCode)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "abort",
                 new Dictionary<string, object>
                 {
-                    ["errorCode"] = errorCode,
+                    ["errorCode"] = string.IsNullOrEmpty(errorCode) ? RequestAbortErrorCode.Failed : errorCode,
                 });
 
         public Task FulfillAsync(NormalizedFulfillResponse response)
@@ -29,7 +29,7 @@ namespace PlaywrightSharp.Transport.Channels
                 "fulfill",
                 response);
 
-        public Task ContinueAsync(string url, HttpMethod method, string postData, Dictionary<string, string> headers)
+        public Task ContinueAsync(string url, string method, byte[] postData, IEnumerable<KeyValuePair<string, string>> headers)
         {
             var args = new Dictionary<string, object>();
 
@@ -43,9 +43,9 @@ namespace PlaywrightSharp.Transport.Channels
                 args["method"] = method;
             }
 
-            if (!string.IsNullOrEmpty(postData))
+            if (postData != null)
             {
-                args["postData"] = Convert.ToBase64String(Encoding.UTF8.GetBytes(postData));
+                args["postData"] = Convert.ToBase64String(postData);
             }
 
             if (headers != null)

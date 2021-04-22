@@ -39,6 +39,7 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,7 +57,7 @@ namespace PlaywrightSharp
     /// <para>
     /// Dialogs are dismissed automatically, unless there is a <see cref="IPage.Dialog"/>
     /// listener. When listener is present, it **must** either <see cref="IDialog.AcceptAsync"/>
-    /// or <see cref="IDialog.DismissAsync"/> the dialog - otherwise the page will <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop#never_blocking)">freeze</a>
+    /// or <see cref="IDialog.DismissAsync"/> the dialog - otherwise the page will <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop#never_blocking">freeze</a>
     /// waiting for the dialog, and actions like click will never finish.
     /// </para>
     /// </remarks>
@@ -67,7 +68,7 @@ namespace PlaywrightSharp
         /// A text to enter in prompt. Does not cause any effects if the dialog's <c>type</c>
         /// is not prompt. Optional.
         /// </param>
-        Task AcceptAsync(string promptText = null);
+        Task AcceptAsync(string promptText = default);
 
         /// <summary><para>If dialog is prompt, returns default prompt value. Otherwise, returns empty string.</para></summary>
         string DefaultValue { get; }

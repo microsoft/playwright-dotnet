@@ -8,9 +8,9 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// ConsoleMessage is part of <see cref="ConsoleEventArgs"/> used by <see cref="IPage.Console"/>.
+    /// Used by <see cref="IPage.Console"/>.
     /// </summary>
-    public class ConsoleMessage : ChannelOwnerBase, IChannelOwner<ConsoleMessage>
+    public class ConsoleMessage : ChannelOwnerBase, IChannelOwner<ConsoleMessage>, IConsoleMessage
     {
         private readonly ConsoleMessageChannel _channel;
         private readonly ConsoleMessageInitializer _initializer;
@@ -27,24 +27,16 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         IChannel<ConsoleMessage> IChannelOwner<ConsoleMessage>.Channel => _channel;
 
-        /// <summary>
-        /// Gets the ConsoleMessage type.
-        /// </summary>
+        /// <inheritdoc />
         public string Type => _initializer.Type;
 
-        /// <summary>
-        /// Gets the arguments.
-        /// </summary>
-        public IEnumerable<IJSHandle> Args => _initializer.Args.Select(a => ((JSHandleChannel)a).Object);
+        /// <inheritdoc />
+        public IReadOnlyCollection<IJSHandle> Args => _initializer.Args.Select(a => ((JSHandleChannel)a).Object).ToList().AsReadOnly();
 
-        /// <summary>
-        /// Gets the location.
-        /// </summary>
-        public ConsoleMessageLocation Location => _initializer.Location;
+        /// <inheritdoc />
+        public string Location => _initializer.Location.ToString();
 
-        /// <summary>
-        /// Gets the console text.
-        /// </summary>
+        /// <inheritdoc />
         public string Text => _initializer.Text;
     }
 }

@@ -49,8 +49,8 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldRespectTimeout()
         {
             Server.SetRoute("/one-style.css", _ => Task.Delay(Timeout.Infinite));
-            await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", LifecycleEvent.DOMContentLoaded);
-            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.WaitForLoadStateAsync(LifecycleEvent.Load, 1));
+            await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html", WaitUntilState.DOMContentLoaded);
+            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.WaitForLoadStateAsync(LoadState.Load, 1));
             Assert.Contains("Timeout 1ms exceeded", exception.Message);
         }
 
@@ -86,7 +86,7 @@ namespace PlaywrightSharp.Tests
 
             var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
             await waitForRequestTask;
-            await Page.WaitForLoadStateAsync(LifecycleEvent.DOMContentLoaded);
+            await Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             responseTask.TrySetResult(true);
             await navigationTask;
         }
@@ -121,18 +121,18 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkForFrame()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
-            var frame = Page.Frames[1];
+            var frame = Page.Frames.ElementAt(1);
 
             TaskCompletionSource<bool> requestTask = new TaskCompletionSource<bool>();
             TaskCompletionSource<bool> routeReachedTask = new TaskCompletionSource<bool>();
-            await Page.RouteAsync(TestConstants.ServerUrl + "/one-style.css", async (route, _) =>
+            await Page.RouteAsync(TestConstants.ServerUrl + "/one-style.css", async (route) =>
             {
                 routeReachedTask.TrySetResult(true);
                 await requestTask.Task;
-                await route.ContinueAsync();
+                await route.ResumeAsync();
             });
 
-            await frame.GoToAsync(TestConstants.ServerUrl + "/one-style.html", LifecycleEvent.DOMContentLoaded);
+            await frame.GoToAsync(TestConstants.ServerUrl + "/one-style.html", WaitUntilState.DOMContentLoaded);
 
             await routeReachedTask.Task;
             var loadTask = frame.WaitForLoadStateAsync();

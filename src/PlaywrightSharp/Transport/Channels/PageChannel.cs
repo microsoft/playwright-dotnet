@@ -24,12 +24,10 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Input;
 using PlaywrightSharp.Transport.Converters;
 using PlaywrightSharp.Transport.Protocol;
 
@@ -45,15 +43,15 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler Crashed;
 
-        internal event EventHandler<RequestEventArgs> Request;
+        internal event EventHandler<IRequest> Request;
 
         internal event EventHandler<PageChannelRequestEventArgs> RequestFinished;
 
         internal event EventHandler<PageChannelRequestEventArgs> RequestFailed;
 
-        internal event EventHandler<ResponseEventArgs> Response;
+        internal event EventHandler<IResponse> Response;
 
-        internal event EventHandler<WebSocketEventArgs> WebSocket;
+        internal event EventHandler<IWebSocket> WebSocket;
 
         internal event EventHandler DOMContentLoaded;
 
@@ -63,15 +61,15 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal event EventHandler<RouteEventArgs> Route;
 
-        internal event EventHandler<FrameEventArgs> FrameAttached;
+        internal event EventHandler<IFrame> FrameAttached;
 
-        internal event EventHandler<FrameEventArgs> FrameDetached;
+        internal event EventHandler<IFrame> FrameDetached;
 
-        internal event EventHandler<DialogEventArgs> Dialog;
+        internal event EventHandler<IDialog> Dialog;
 
-        internal event EventHandler<ConsoleEventArgs> Console;
+        internal event EventHandler<IConsoleMessage> Console;
 
-        internal event EventHandler<DownloadEventArgs> Download;
+        internal event EventHandler<IDownload> Download;
 
         internal event EventHandler<PageErrorEventArgs> PageError;
 
@@ -129,19 +127,19 @@ namespace PlaywrightSharp.Transport.Channels
                     FileChooser?.Invoke(this, serverParams?.ToObject<FileChooserChannelEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "frameAttached":
-                    FrameAttached?.Invoke(this, new FrameEventArgs(serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.GetDefaultJsonSerializerOptions()).Object));
+                    FrameAttached?.Invoke(this, serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "frameDetached":
-                    FrameDetached?.Invoke(this, new FrameEventArgs(serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.GetDefaultJsonSerializerOptions()).Object));
+                    FrameDetached?.Invoke(this, serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "dialog":
-                    Dialog?.Invoke(this, new DialogEventArgs(serverParams?.GetProperty("dialog").ToObject<DialogChannel>(Connection.GetDefaultJsonSerializerOptions()).Object));
+                    Dialog?.Invoke(this, serverParams?.GetProperty("dialog").ToObject<DialogChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "console":
-                    Console?.Invoke(this, new ConsoleEventArgs(serverParams?.GetProperty("message").ToObject<ConsoleMessage>(Connection.GetDefaultJsonSerializerOptions())));
+                    Console?.Invoke(this, serverParams?.GetProperty("message").ToObject<ConsoleMessage>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "request":
-                    Request?.Invoke(this, new RequestEventArgs { Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
+                    Request?.Invoke(this, serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "requestFinished":
                     RequestFinished?.Invoke(this, serverParams?.ToObject<PageChannelRequestEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
@@ -150,13 +148,13 @@ namespace PlaywrightSharp.Transport.Channels
                     RequestFailed?.Invoke(this, serverParams?.ToObject<PageChannelRequestEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "response":
-                    Response?.Invoke(this, new ResponseEventArgs { Response = serverParams?.GetProperty("response").ToObject<ResponseChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
+                    Response?.Invoke(this, serverParams?.GetProperty("response").ToObject<ResponseChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "webSocket":
-                    WebSocket?.Invoke(this, new WebSocketEventArgs { WebSocket = serverParams?.GetProperty("webSocket").ToObject<WebSocketChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
+                    WebSocket?.Invoke(this, serverParams?.GetProperty("webSocket").ToObject<WebSocketChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "download":
-                    Download?.Invoke(this, new DownloadEventArgs() { Download = serverParams?.GetProperty("download").ToObject<DownloadChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
+                    Download?.Invoke(this, serverParams?.GetProperty("download").ToObject<DownloadChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "video":
                     Video?.Invoke(this, new VideoEventArgs() { RelativePath = serverParams?.GetProperty("relativePath").ToString() });
@@ -229,7 +227,7 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task BringToFrontAsync() => Connection.SendMessageToServerAsync(Guid, "bringToFront");
 
-        internal Task<ResponseChannel> GoBackAsync(int? timeout, LifecycleEvent? waitUntil)
+        internal Task<ResponseChannel> GoBackAsync(float? timeout, WaitUntilState? waitUntil)
         {
             var args = new Dictionary<string, object>();
 
@@ -246,7 +244,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "goBack", args);
         }
 
-        internal Task<ResponseChannel> GoForwardAsync(int? timeout, LifecycleEvent? waitUntil)
+        internal Task<ResponseChannel> GoForwardAsync(float? timeout, WaitUntilState? waitUntil)
         {
             var args = new Dictionary<string, object>();
 
@@ -263,7 +261,7 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "goForward", args);
         }
 
-        internal Task<ResponseChannel> ReloadAsync(int? timeout, LifecycleEvent? waitUntil)
+        internal Task<ResponseChannel> ReloadAsync(float? timeout, WaitUntilState? waitUntil)
         {
             var args = new Dictionary<string, object>();
 
@@ -289,7 +287,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["enabled"] = enabled,
                 });
 
-        internal Task<PageChannel> GetOpenerAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "opener", null);
+        internal Task<PageChannel> OpenerAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "opener", null);
 
         internal async Task<AccessibilitySnapshotResult> AccessibilitySnapshotAsync(bool? interestingOnly, IChannel<ElementHandle> root)
         {
@@ -315,7 +313,7 @@ namespace PlaywrightSharp.Transport.Channels
             return null;
         }
 
-        internal Task SetViewportSizeAsync(ViewportSize viewport)
+        internal Task SetViewportSizeAsync(PageViewportSizeResult viewport)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "setViewportSize",
@@ -428,7 +426,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["y"] = y,
                 });
 
-        internal Task SetExtraHTTPHeadersAsync(IDictionary<string, string> headers)
+        internal Task SetExtraHttpHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "setExtraHTTPHeaders",
@@ -440,11 +438,11 @@ namespace PlaywrightSharp.Transport.Channels
         internal async Task<string> ScreenshotAsync(
             string path,
             bool fullPage,
-            Rect clip,
+            Clip clip,
             bool omitBackground,
             ScreenshotType? type,
             int? quality,
-            int? timeout)
+            float? timeout)
         {
             var args = new Dictionary<string, object>
             {
@@ -499,21 +497,15 @@ namespace PlaywrightSharp.Transport.Channels
                     ["reportAnonymousScripts"] = reportAnonymousScripts,
                 });
 
-        internal async Task<CSSCoverageEntry[]> StopCSSCoverageAsync()
-            => (await Connection.SendMessageToServerAsync(Guid, "crStopCSSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<CSSCoverageEntry[]>();
-
-        internal async Task<JSCoverageEntry[]> StopJSCoverageAsync()
-            => (await Connection.SendMessageToServerAsync(Guid, "crStopJSCoverage", null).ConfigureAwait(false))?.GetProperty("entries").ToObject<JSCoverageEntry[]>();
-
-        internal async Task<string> GetPdfAsync(
-            decimal scale,
+        internal async Task<string> PdfAsync(
+            float scale,
             bool displayHeaderFooter,
             string headerTemplate,
             string footerTemplate,
             bool printBackground,
             bool landscape,
             string pageRanges,
-            PaperFormat? format,
+            string format,
             string width,
             string height,
             Margin margin,

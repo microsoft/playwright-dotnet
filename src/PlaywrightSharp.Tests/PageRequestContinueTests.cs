@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
@@ -23,7 +24,7 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.RouteAsync("**/*", (route, _) => route.ContinueAsync());
+            await Page.RouteAsync("**/*", (route) => route.ResumeAsync());
             await Page.GoToAsync(TestConstants.EmptyPage);
         }
 
@@ -31,10 +32,10 @@ namespace PlaywrightSharp.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAmendHTTPHeaders()
         {
-            await Page.RouteAsync("**/*", (route, request) =>
+            await Page.RouteAsync("**/*", (route) =>
             {
-                var headers = new Dictionary<string, string>(request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["FOO"] = "bar" };
-                route.ContinueAsync(headers: headers);
+                var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["FOO"] = "bar" };
+                route.ResumeAsync(headers: headers);
             });
             await Page.GoToAsync(TestConstants.EmptyPage);
             var requestTask = Server.WaitForRequest("/sleep.zzz", request => request.Headers["foo"]);
@@ -50,7 +51,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldAmendMethodOnMainRequest()
         {
             var methodTask = Server.WaitForRequest("/empty.html", r => r.Method);
-            await Page.RouteAsync("**/*", (route, _) => route.ContinueAsync(HttpMethod.Post));
+            await Page.RouteAsync("**/*", (route) => route.ResumeAsync(method: HttpMethod.Post.Method));
             await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Equal("POST", await methodTask);
         }
@@ -60,9 +61,9 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldAmendPostData()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.RouteAsync("**/*", (route, _) =>
+            await Page.RouteAsync("**/*", (route) =>
             {
-                route.ContinueAsync(postData: "doggo");
+                route.ResumeAsync(postData: Encoding.UTF8.GetBytes("doggo"));
             });
             var requestTask = Server.WaitForRequest("/sleep.zzz", request =>
             {

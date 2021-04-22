@@ -310,13 +310,14 @@ namespace PlaywrightSharp.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "coverage should work")]
-        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWebkit: true)]
-        public async Task CoverageShouldWork()
+        [Fact(Skip = "We won't support coverage")]
+        public void CoverageShouldWork()
         {
+            /*
             var (tmp, context, page) = await LaunchAsync();
 
             await page.Coverage.StartJSCoverageAsync();
-            await page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/simple.html", LifecycleEvent.Networkidle);
+            await page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/simple.html", LoadState.NetworkIdle);
             var coverage = await page.Coverage.StopJSCoverageAsync();
             Assert.Single(coverage);
             Assert.Contains("/jscoverage/simple.html", coverage[0].Url);
@@ -324,16 +325,19 @@ namespace PlaywrightSharp.Tests
 
             tmp.Dispose();
             await context.DisposeAsync();
+            */
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "coverage should be missing")]
-        [SkipBrowserAndPlatformFact(skipChromium: true)]
-        public async Task CoverageShouldBeMissing()
+        [Fact(Skip = "We won't support coverage")]
+        public void CoverageShouldBeMissing()
         {
+            /*
             var (tmp, context, page) = await LaunchAsync();
             Assert.Null(page.Coverage);
             tmp.Dispose();
             await context.DisposeAsync();
+            */
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should respect selectors")]
@@ -353,8 +357,8 @@ namespace PlaywrightSharp.Tests
 
             await TestUtils.RegisterEngineAsync(Playwright, "defaultContextCSS", defaultContextCSS);
             await page.SetContentAsync("<div>hello</div>");
-            Assert.Equal("hello", await page.GetInnerHTMLAsync("css=div"));
-            Assert.Equal("hello", await page.GetInnerHTMLAsync("defaultContextCSS=div"));
+            Assert.Equal("hello", await page.InnerHTMLAsync("css=div"));
+            Assert.Equal("hello", await page.InnerHTMLAsync("defaultContextCSS=div"));
 
             tmp.Dispose();
             await context.DisposeAsync();

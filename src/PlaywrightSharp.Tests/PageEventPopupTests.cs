@@ -24,7 +24,7 @@ namespace PlaywrightSharp.Tests
                 popupTask,
                 Page.EvaluateAsync("() => window.open('about:blank')")
             );
-            var popup = popupTask.Result.Page;
+            var popup = popupTask.Result;
             Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
             Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
@@ -39,7 +39,7 @@ namespace PlaywrightSharp.Tests
                 popupTask,
                 Page.EvaluateAsync<string>("() => window.open('about:blank', 'Title', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top=0,left=0')")
             );
-            var popup = popupTask.Result.Page;
+            var popup = popupTask.Result;
             Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
             Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
@@ -57,7 +57,7 @@ namespace PlaywrightSharp.Tests
                     win.close();
                 }")
             );
-            Assert.NotNull(popupTask.Result.Page);
+            Assert.NotNull(popupTask.Result);
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should emit for immediately closed popups")]
@@ -73,7 +73,7 @@ namespace PlaywrightSharp.Tests
                     win.close();
                 }")
             );
-            Assert.NotNull(popupTask.Result.Page);
+            Assert.NotNull(popupTask.Result);
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should be able to capture alert")]
@@ -88,10 +88,10 @@ namespace PlaywrightSharp.Tests
             }");
 
             var popup = await popupTask;
-            var dialog = await popup.Page.WaitForEventAsync(PageEvent.Dialog);
+            var dialog = await popup.WaitForEventAsync(PageEvent.Dialog);
 
-            Assert.Equal("hello", dialog.Dialog.Message);
-            await dialog.Dialog.DismissAsync();
+            Assert.Equal("hello", dialog.Message);
+            await dialog.DismissAsync();
             await evaluateTask;
         }
 
@@ -105,7 +105,7 @@ namespace PlaywrightSharp.Tests
                 popupTask,
                 Page.EvaluateAsync("() => window.open('')")
             );
-            var popup = popupTask.Result.Page;
+            var popup = popupTask.Result;
             Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
             Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
@@ -120,7 +120,7 @@ namespace PlaywrightSharp.Tests
                 popupTask,
                 Page.EvaluateAsync("() => window.open(undefined, null, 'noopener')")
             );
-            var popup = popupTask.Result.Page;
+            var popup = popupTask.Result;
             Assert.Equal("about:blank", popup.Url.Split('#')[0]);
             Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
             Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
@@ -136,7 +136,7 @@ namespace PlaywrightSharp.Tests
                 popupTask,
                 Page.EvaluateAsync("() => window.open('about:blank', null, 'noopener')")
             );
-            var popup = popupTask.Result.Page;
+            var popup = popupTask.Result;
             Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
             Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
@@ -151,7 +151,7 @@ namespace PlaywrightSharp.Tests
                 popupTask,
                 Page.EvaluateAsync("url => window.open(url, null, 'noopener')", TestConstants.EmptyPage)
             );
-            var popup = popupTask.Result.Page;
+            var popup = popupTask.Result;
             Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
             Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
@@ -164,7 +164,7 @@ namespace PlaywrightSharp.Tests
             await Page.SetContentAsync("<a target=_blank rel=\"opener\" href=\"/one-style.html\">yo</a>");
             var popupTask = Page.WaitForEventAsync(PageEvent.Popup).ContinueWith(async task =>
             {
-                var popup = task.Result.Page;
+                var popup = task.Result;
                 await popup.WaitForLoadStateAsync();
                 return popup;
             });
@@ -186,7 +186,7 @@ namespace PlaywrightSharp.Tests
             await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
             var popupTask = Page.WaitForEventAsync(PageEvent.Popup).ContinueWith(async task =>
             {
-                var popup = task.Result.Page;
+                var popup = task.Result;
                 await popup.WaitForLoadStateAsync();
                 return popup;
             });
@@ -207,7 +207,7 @@ namespace PlaywrightSharp.Tests
             await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
             var popupTask = Page.WaitForEventAsync(PageEvent.Popup).ContinueWith(async task =>
             {
-                var popup = task.Result.Page;
+                var popup = task.Result;
                 await popup.WaitForLoadStateAsync();
                 return popup;
             });
@@ -228,7 +228,7 @@ namespace PlaywrightSharp.Tests
             await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
             var popupTask = Page.WaitForEventAsync(PageEvent.Popup).ContinueWith(async task =>
             {
-                var popup = task.Result.Page;
+                var popup = task.Result;
                 await popup.WaitForLoadStateAsync();
                 return popup;
             });

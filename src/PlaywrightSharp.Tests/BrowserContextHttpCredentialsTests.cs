@@ -101,7 +101,7 @@ namespace PlaywrightSharp.Tests
             var page = await context.NewPageAsync();
             var response = await page.GoToAsync(TestConstants.ServerUrl + "/playground.html");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("Playground", await page.GetTitleAsync());
+            Assert.Equal("Playground", await page.TitleAsync());
             Assert.Contains("Playground", await response.GetTextAsync());
         }
     }

@@ -39,6 +39,7 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,9 +50,9 @@ namespace PlaywrightSharp
     public partial interface IWebSocket
     {
         /// <summary><para>Fired when the websocket closes.</para></summary>
-        event EventHandler Close;
+        event EventHandler<IWebSocket> Close;
 
-        /// <summary><para>Fired when the websocket recieves a frame.</para></summary>
+        /// <summary><para>Fired when the websocket receives a frame.</para></summary>
         event EventHandler<IWebSocketFrame> FrameReceived;
 
         /// <summary><para>Fired when the websocket sends a frame.</para></summary>
@@ -66,7 +67,6 @@ namespace PlaywrightSharp
         /// <summary><para>Contains the URL of the WebSocket.</para></summary>
         string Url { get; }
 
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
         /// <summary>
         /// <para>
         /// Waits for event to fire and passes its value into the predicate function. Returns
@@ -80,7 +80,7 @@ namespace PlaywrightSharp
         /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
         /// </param>
-        Task<object> WaitForEventAsync(string @event, float? timeout = null);
+        Task<object> WaitForEventAsync(string @event, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -99,7 +99,7 @@ namespace PlaywrightSharp
         /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
         /// </param>
-        Task<IWebSocketFrame> WaitForFrameReceived(Func<IWebSocketFrame, bool> predicate = null, float? timeout = null);
+        Task<IWebSocketFrame> WaitForFrameReceivedAsync(Func<IWebSocketFrame, bool> predicate = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -118,7 +118,6 @@ namespace PlaywrightSharp
         /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
         /// </param>
-        Task<IWebSocketFrame> WaitForFrameSent(Func<IWebSocketFrame, bool> predicate = null, float? timeout = null);
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+        Task<IWebSocketFrame> WaitForFrameSentAsync(Func<IWebSocketFrame, bool> predicate = default, float? timeout = default);
     }
 }

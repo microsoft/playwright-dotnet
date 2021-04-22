@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -39,22 +39,23 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-    public enum WaitForSelectorState
-    {
-        Undefined = 0,
-        [EnumMember(Value = "attached")]
-        Attached,
-        [EnumMember(Value = "detached")]
-        Detached,
-        [EnumMember(Value = "visible")]
-        Visible,
-        [EnumMember(Value = "hidden")]
-        Hidden,
-    }
+	public enum WaitForSelectorState
+	{
+		Undefined = 0,
+		[EnumMember(Value = "attached")]
+		Attached,
+		[EnumMember(Value = "detached")]
+		Detached,
+		[EnumMember(Value = "visible")]
+		Visible,
+		[EnumMember(Value = "hidden")]
+		Hidden,
+	}
 }

@@ -46,7 +46,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc/>
-        public event EventHandler Close;
+        public event EventHandler<EventArgs> Close;
 
         /// <inheritdoc/>
         public event EventHandler<PageEventArgs> Page;
@@ -266,7 +266,7 @@ namespace PlaywrightSharp
         public Task SetOfflineAsync(bool offline) => Channel.SetOfflineAsync(offline);
 
         /// <inheritdoc />
-        public Task RouteAsync(string url, Action<Route, IRequest> handler)
+        public Task RouteAsync(string url, Action<IRoute> handler)
             => RouteAsync(
                 new RouteSetting
                 {
@@ -275,7 +275,7 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task RouteAsync(Regex url, Action<Route, IRequest> handler)
+        public Task RouteAsync(Regex url, Action<IRoute> handler)
             => RouteAsync(
                 new RouteSetting
                 {
@@ -284,7 +284,7 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task RouteAsync(Func<string, bool> url, Action<Route, IRequest> handler)
+        public Task RouteAsync(Func<string, bool> url, Action<IRoute> handler)
             => RouteAsync(
                 new RouteSetting
                 {
@@ -293,7 +293,7 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task UnrouteAsync(string url, Action<Route, IRequest> handler = null)
+        public Task UnrouteAsync(string url, Action<IRoute> handler = null)
             => UnrouteAsync(
                 new RouteSetting
                 {
@@ -302,7 +302,7 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task UnrouteAsync(Regex url, Action<Route, IRequest> handler = null)
+        public Task UnrouteAsync(Regex url, Action<IRoute> handler = null)
             => UnrouteAsync(
                 new RouteSetting
                 {
@@ -311,7 +311,7 @@ namespace PlaywrightSharp
                 });
 
         /// <inheritdoc />
-        public Task UnrouteAsync(Func<string, bool> url, Action<Route, IRequest> handler = null)
+        public Task UnrouteAsync(Func<string, bool> url, Action<IRoute> handler = null)
             => UnrouteAsync(
                 new RouteSetting
                 {
@@ -339,7 +339,7 @@ namespace PlaywrightSharp
 
         internal Task PauseAsync() => Channel.PauseAsync();
 
-        internal void OnRoute(Route route, Request request)
+        internal void OnRoute(Route route, IRequest request)
         {
             foreach (var item in _routes)
             {
@@ -348,12 +348,12 @@ namespace PlaywrightSharp
                     (item.Regex?.IsMatch(request.Url) == true) ||
                     (item.Function?.Invoke(request.Url) == true))
                 {
-                    item.Handler(route, request);
+                    item.Handler(route);
                     return;
                 }
             }
 
-            _ = route.ContinueAsync();
+            _ = route.ResumeAsync();
         }
 
         private Task RouteAsync(RouteSetting setting)

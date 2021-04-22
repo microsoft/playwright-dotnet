@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Tests.Issues
         public async Task ShouldWork()
         {
             await Page.GoToAsync("https://github.com");
-            string title = await Page.GetTitleAsync();
+            string title = await Page.TitleAsync();
             Assert.Contains("GitHub", title);
         }
     }

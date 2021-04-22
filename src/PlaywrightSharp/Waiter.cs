@@ -44,7 +44,7 @@ namespace PlaywrightSharp
                 return;
             }
 
-            var (task, dispose) = typeof(T) == typeof(EventArgs) ? GetWaitForEventTask(eventSource, e) : GetWaitForEventTask<T>(eventSource, e, predicate);
+            var (task, dispose) = GetWaitForEventTask(eventSource, e, predicate);
             RejectOn(
                 task.ContinueWith(_ => throw navigationException, _cts.Token, TaskContinuationOptions.RunContinuationsAsynchronously, TaskScheduler.Current),
                 dispose);
@@ -71,33 +71,10 @@ namespace PlaywrightSharp
             return WaitForPromiseAsync(task, dispose);
         }
 
-        internal Task WaitForEventAsync(object eventSource, string e)
+        internal Task<object> WaitForEventAsync(object eventSource, string e)
         {
-            var (task, dispose) = GetWaitForEventTask(eventSource, e);
+            var (task, dispose) = GetWaitForEventTask<object>(eventSource, e, null);
             return WaitForPromiseAsync(task, dispose);
-        }
-
-        internal (Task Task, Action Dispose) GetWaitForEventTask(object eventSource, string eventName)
-        {
-            var info = eventSource.GetType().GetEvent(eventName) ?? eventSource.GetType().BaseType.GetEvent(eventName);
-            var eventTsc = new TaskCompletionSource<object>();
-
-            void EventHandler(object sender, EventArgs args)
-            {
-                try
-                {
-                    eventTsc.SetResult(null);
-                }
-                catch (Exception e)
-                {
-                    eventTsc.SetException(e);
-                }
-
-                info.RemoveEventHandler(eventSource, (EventHandler)EventHandler);
-            }
-
-            info.AddEventHandler(eventSource, (EventHandler)EventHandler);
-            return (eventTsc.Task, () => info.RemoveEventHandler(eventSource, (EventHandler)EventHandler));
         }
 
         internal (Task<T> Task, Action Dispose) GetWaitForEventTask<T>(object eventSource, string e, Func<T, bool> predicate)
@@ -138,29 +115,6 @@ namespace PlaywrightSharp
                 dispose?.Invoke();
                 await firstTask.ConfigureAwait(false);
                 return await task.ConfigureAwait(false);
-            }
-            catch (TimeoutException ex)
-            {
-                dispose?.Invoke();
-                Dispose();
-                throw new TimeoutException(ex.Message + FormatLogRecording(_logs), ex);
-            }
-            catch (Exception ex)
-            {
-                dispose?.Invoke();
-                Dispose();
-                throw new PlaywrightSharpException(ex.Message + FormatLogRecording(_logs), ex);
-            }
-        }
-
-        internal async Task WaitForPromiseAsync(Task task, Action dispose = null)
-        {
-            try
-            {
-                var firstTask = await Task.WhenAny(_failures.Prepend(task)).ConfigureAwait(false);
-                dispose?.Invoke();
-                await firstTask.ConfigureAwait(false);
-                await task.ConfigureAwait(false);
             }
             catch (TimeoutException ex)
             {

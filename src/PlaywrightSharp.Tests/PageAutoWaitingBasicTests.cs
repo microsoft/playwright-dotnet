@@ -185,7 +185,7 @@ namespace PlaywrightSharp.Tests
                 <a href=""{ TestConstants.EmptyPage}"" target=target>empty.html</a>
                 <iframe name=target></iframe>");
 
-            var frame = Page.GetFrame("target");
+            var frame = Page.Frame("target");
 
             await TaskUtils.WhenAll(
                 Page.ClickAsync("a").ContinueWith(_ => messages.Add("click")),
@@ -222,13 +222,13 @@ namespace PlaywrightSharp.Tests
             var clickLoaded = new TaskCompletionSource<bool>();
 
             await TaskUtils.WhenAll(
-                Page.ClickAsync("a").ContinueWith(_ => Page.WaitForLoadStateAsync(LifecycleEvent.Load).ContinueWith(_ =>
+                Page.ClickAsync("a").ContinueWith(_ => Page.WaitForLoadStateAsync(LoadState.Load).ContinueWith(_ =>
                 {
                     messages.Add("clickload");
                     clickLoaded.TrySetResult(true);
                 })),
                 clickLoaded.Task,
-                Page.WaitForNavigationAsync(LifecycleEvent.DOMContentLoaded).ContinueWith(_ => messages.Add("domcontentloaded")));
+                Page.WaitForNavigationAsync(WaitUntilState.DOMContentLoaded).ContinueWith(_ => messages.Add("domcontentloaded")));
 
             Assert.Equal("route|domcontentloaded|clickload", string.Join("|", messages));
         }

@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
@@ -39,7 +40,7 @@ namespace PlaywrightSharp.Tests
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
 
-            await Page.EmulateMediaAsync(colorScheme: null);
+            await Page.EmulateMediaAsync(colorScheme: ColorScheme.Undefined);
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
         }
@@ -82,7 +83,7 @@ namespace PlaywrightSharp.Tests
                     popupTask,
                     page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
 
-                var popup = popupTask.Result.Page;
+                var popup = popupTask.Result;
 
                 Assert.True(await popup.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
                 Assert.False(await popup.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
@@ -101,7 +102,7 @@ namespace PlaywrightSharp.Tests
                     popupTask,
                     page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
 
-                var popup = popupTask.Result.Page;
+                var popup = popupTask.Result;
 
                 Assert.False(await popup.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
                 Assert.True(await popup.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
@@ -120,7 +121,7 @@ namespace PlaywrightSharp.Tests
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(page, "frame1", TestConstants.CrossProcessHttpPrefix + "/empty.html");
-            var frame = page.Frames[1];
+            var frame = page.Frames.ElementAt(1);
 
             Assert.True(await frame.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
         }
@@ -131,13 +132,13 @@ namespace PlaywrightSharp.Tests
         {
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
-            await Page.EmulateMediaAsync(MediaType.Print);
+            await Page.EmulateMediaAsync(Media.Print);
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
             await Page.EmulateMediaAsync();
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
-            await Page.EmulateMediaAsync(MediaType.Null);
+            await Page.EmulateMediaAsync(Media.Undefined);
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
         }

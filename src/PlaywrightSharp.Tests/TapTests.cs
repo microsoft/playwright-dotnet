@@ -23,7 +23,6 @@
  */
 using System.Text.Json;
 using System.Threading.Tasks;
-using PlaywrightSharp.Input;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Xunit;
 using Xunit;
@@ -166,7 +165,7 @@ namespace PlaywrightSharp.Tests
                     })");
 
             await Page.EvaluateAsync("() => void 0");
-            await Page.TapAsync("body", modifiers: new[] { Modifier.Alt });
+            await Page.TapAsync("body", modifiers: new[] { KeyboardModifier.Alt });
             Assert.True((await altKeyTask));
         }
 

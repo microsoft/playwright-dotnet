@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Input;
 using PlaywrightSharp.Tests.Attributes;
 using PlaywrightSharp.Tests.BaseTests;
 using PlaywrightSharp.Tests.Helpers;
@@ -123,7 +122,7 @@ namespace PlaywrightSharp.Tests
                 return promise;
             }", TestConstants.CrossProcessUrl + "/grid.html");
 
-            string documentCookie = await page.Frames[1].EvaluateAsync<string>(@"() => {
+            string documentCookie = await page.Frames.ElementAt(1).EvaluateAsync<string>(@"() => {
                 document.cookie = 'username=John Doe';
                 return document.cookie;
             }");
@@ -169,7 +168,7 @@ namespace PlaywrightSharp.Tests
                     win.resizeTo(500, 450);
                 }"));
 
-            var popup = popupTask.Result.Page;
+            var popup = popupTask.Result;
             await popup.WaitForLoadStateAsync();
             await popup.WaitForFunctionAsync("() => window.outerWidth === 500 && window.outerHeight === 450");
         }

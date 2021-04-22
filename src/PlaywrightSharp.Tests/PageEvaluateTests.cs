@@ -213,7 +213,7 @@ namespace PlaywrightSharp.Tests
             Task<int> frameEvaluation = null;
             Page.FrameNavigated += (_, e) =>
             {
-                frameEvaluation = e.Frame.EvaluateAsync<int>("() => 6 * 7");
+                frameEvaluation = e.EvaluateAsync<int>("() => 6 * 7");
             };
             await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Equal(42, await frameEvaluation);
@@ -227,7 +227,7 @@ namespace PlaywrightSharp.Tests
             Task<int> frameEvaluation = null;
             Page.FrameNavigated += (_, e) =>
             {
-                frameEvaluation = e.Frame.EvaluateAsync<int>("() => 6 * 7");
+                frameEvaluation = e.EvaluateAsync<int>("() => 6 * 7");
             };
             await Page.GoToAsync(TestConstants.CrossProcessUrl + "/empty.html");
             Assert.Equal(42, await frameEvaluation);
