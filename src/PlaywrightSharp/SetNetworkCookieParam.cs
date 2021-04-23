@@ -6,8 +6,8 @@ namespace PlaywrightSharp
     /// <summary>
     /// Cookie set data.
     /// </summary>
-    /// <seealso cref="IBrowserContext.AddCookiesAsync(SetNetworkCookieParam[])"/>
-    /// <seealso cref="IBrowserContext.GetCookiesAsync(string[])"/>
+    /// <seealso cref="IBrowserContext.AddCookiesAsync(IEnumerable{Cookie})"/>
+    /// <seealso cref="IBrowserContext.GetCookiesAsync(IEnumerable{string})"/>
     public class SetNetworkCookieParam : IEquatable<SetNetworkCookieParam>
     {
         /// <summary>

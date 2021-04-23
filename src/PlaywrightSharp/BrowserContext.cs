@@ -114,10 +114,10 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc/>
-        public Task ClearCookiesAsync() => throw new NotImplementedException();
+        public Task ClearCookiesAsync() => Channel.ClearCookiesAsync();
 
         /// <inheritdoc/>
-        public Task ClearPermissionsAsync() => throw new NotImplementedException();
+        public Task ClearPermissionsAsync() => Channel.ClearPermissionsAsync();
 
         /// <inheritdoc />
         public async Task CloseAsync()
@@ -140,7 +140,7 @@ namespace PlaywrightSharp
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyCollection<BrowserContextCookiesResult>> GetCookiesAsync(IEnumerable<string> urls = null) => throw new NotImplementedException();
+        public Task<IReadOnlyCollection<BrowserContextCookiesResult>> GetCookiesAsync(IEnumerable<string> urls = null) => Channel.GetCookiesAsync(urls);
 
         /// <inheritdoc/>
         public Task ExposeBindingAsync(string name, Action callback, bool? handle = null) => throw new NotImplementedException();
@@ -149,22 +149,31 @@ namespace PlaywrightSharp
         public Task ExposeFunctionAsync(string name, Action callback) => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public Task GrantPermissionsAsync(IEnumerable<string> permissions, string origin = null) => throw new NotImplementedException();
+        public Task GrantPermissionsAsync(IEnumerable<string> permissions, string origin = null) => Channel.GrantPermissionsAsync(permissions, origin);
 
         /// <inheritdoc/>
         public async Task<IPage> NewPageAsync() => (await Channel.NewPageAsync().ConfigureAwait(false)).Object;
 
         /// <inheritdoc/>
-        public Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler) => throw new NotImplementedException();
+        public Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler)
+            => RouteAsync(
+                new RouteSetting()
+                {
+                    Regex = urlRegex,
+                    Url = urlString,
+                    Function = urlFunc,
+                    Handler = handler,
+                });
 
         /// <inheritdoc/>
-        public Task SetExtraHttpHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers) => throw new NotImplementedException();
+        public Task SetExtraHttpHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
+            => Channel.SetExtraHTTPHeadersAsync(headers);
 
         /// <inheritdoc/>
-        public Task SetGeolocationAsync(Geolocation geolocation) => throw new NotImplementedException();
+        public Task SetGeolocationAsync(Geolocation geolocation) => Channel.SetGeolocationAsync(geolocation);
 
         /// <inheritdoc/>
-        public Task SetOfflineAsync(bool offline) => throw new NotImplementedException();
+        public Task SetOfflineAsync(bool offline) => Channel.SetOfflineAsync(offline);
 
         /// <inheritdoc/>
         public Task<string> StorageStateAsync(string path = null) => throw new NotImplementedException();

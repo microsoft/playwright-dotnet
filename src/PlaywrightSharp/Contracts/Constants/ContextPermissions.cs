@@ -6,7 +6,7 @@ namespace PlaywrightSharp
 {
     /// <summary>
     /// Contains all the constants relevant to permissions.
-    /// <seealso cref="IBrowserContext.GrantPermissionsAsync(string, string)"/>
+    /// <seealso cref="IBrowserContext.GrantPermissionsAsync(IEnumerable{string}, string)"/>
     /// </summary>
     public static class ContextPermissions
     {
