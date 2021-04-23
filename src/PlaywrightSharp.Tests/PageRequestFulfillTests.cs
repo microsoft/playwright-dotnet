@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests
         {
             await Page.RouteAsync("**/*", (route) =>
             {
-                route.FulfillAsync(HttpStatusCode.UpgradeRequired, "Yo, page!");
+                route.FulfillAsync(HttpStatusCode.UpgradeRequired, body: "Yo, page!");
             });
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Equal(HttpStatusCode.UpgradeRequired, response.StatusCode);

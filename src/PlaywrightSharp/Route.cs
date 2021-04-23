@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport;
@@ -40,21 +39,21 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         public Task FulfillAsync(
             HttpStatusCode status,
-            string body = null,
-            byte[] bodyBytes = null,
-            string contentType = null,
-            IEnumerable<KeyValuePair<string, string>> headers = null,
-            string path = null)
-            => FulfillAsync(body, bodyBytes, contentType, headers, path, (int?)status);
+            IEnumerable<KeyValuePair<string, string>> headers,
+            string contentType,
+            string body,
+            byte[] bodyBytes,
+            string path)
+            => FulfillAsync((int?)status, headers, contentType, body, bodyBytes, path);
 
         /// <inheritdoc/>
         public Task FulfillAsync(
-            string body = null,
-            byte[] bodyBytes = null,
-            string contentType = null,
-            IEnumerable<KeyValuePair<string, string>> headers = null,
-            string path = null,
-            int? status = null)
+            int? status,
+            IEnumerable<KeyValuePair<string, string>> headers,
+            string contentType,
+            string body,
+            byte[] bodyBytes,
+            string path)
         {
             var normalized = NormalizeFulfillParameters(status, headers, contentType, body, bodyBytes, path);
             return _channel.FulfillAsync(normalized);
@@ -65,10 +64,10 @@ namespace PlaywrightSharp
 
         /// <inheritdoc/>
         public Task ResumeAsync(
-            IEnumerable<KeyValuePair<string, string>> headers = null,
-            string method = null,
-            byte[] postData = null,
-            string url = null)
+            string url = default,
+            string method = default,
+            byte[] postData = default,
+            IEnumerable<KeyValuePair<string, string>> headers = default)
             => _channel.ContinueAsync(url, method, postData, headers);
 
         private NormalizedFulfillResponse NormalizeFulfillParameters(

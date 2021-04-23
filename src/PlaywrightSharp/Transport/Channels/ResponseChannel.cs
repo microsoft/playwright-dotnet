@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -10,7 +10,7 @@ namespace PlaywrightSharp.Transport.Channels
         {
         }
 
-        internal async Task<string> GetBodyAsync()
+        internal async Task<string> BodyAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "body", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
 
         internal async Task<string> FinishedAsync()

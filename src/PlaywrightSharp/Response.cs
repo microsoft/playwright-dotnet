@@ -15,7 +15,7 @@ namespace PlaywrightSharp
     {
         private readonly ResponseChannel _channel;
         private readonly ResponseInitializer _initializer;
-        private readonly Dictionary<string, string> _headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, string> _headers = new(StringComparer.OrdinalIgnoreCase);
 
         internal Response(IChannelOwner parent, string guid, ResponseInitializer initializer) : base(parent, guid)
         {
@@ -54,7 +54,7 @@ namespace PlaywrightSharp
         public string Url => _initializer.Url;
 
         /// <inheritdoc/>
-        public HttpStatusCode StatusCode => (HttpStatusCode)this.Status;
+        public HttpStatusCode StatusCode => (HttpStatusCode)Status;
 
         /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
@@ -63,29 +63,29 @@ namespace PlaywrightSharp
         IChannel<Response> IChannelOwner<Response>.Channel => _channel;
 
         /// <inheritdoc />
-        public async Task<byte[]> GetBodyAsync() => Convert.FromBase64String(await _channel.GetBodyAsync().ConfigureAwait(false));
+        public async Task<byte[]> BodyAsync() => Convert.FromBase64String(await _channel.BodyAsync().ConfigureAwait(false));
 
         /// <inheritdoc />
-        public Task<string> GetFinishedAsync() => _channel.FinishedAsync();
+        public Task<string> FinishedAsync() => _channel.FinishedAsync();
 
         /// <inheritdoc />
-        public async Task<T> GetJsonAsync<T>()
+        public async Task<T> JsonAsync<T>()
         {
-            string content = await GetTextAsync().ConfigureAwait(false);
+            string content = await TextAsync().ConfigureAwait(false);
             return JsonSerializer.Deserialize<T>(content, _channel.Connection.GetDefaultJsonSerializerOptions());
         }
 
         /// <inheritdoc/>
-        public async Task<JsonDocument> GetJsonAsync(JsonDocumentOptions options = default)
+        public async Task<JsonDocument> JsonAsync(JsonDocumentOptions options = default)
         {
-            string content = await GetTextAsync().ConfigureAwait(false);
+            string content = await TextAsync().ConfigureAwait(false);
             return JsonDocument.Parse(content, options);
         }
 
         /// <inheritdoc />
-        public async Task<string> GetTextAsync()
+        public async Task<string> TextAsync()
         {
-            byte[] content = await GetBodyAsync().ConfigureAwait(false);
+            byte[] content = await BodyAsync().ConfigureAwait(false);
             return Encoding.UTF8.GetString(content);
         }
     }

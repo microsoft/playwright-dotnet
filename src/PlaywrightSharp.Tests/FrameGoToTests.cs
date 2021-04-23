@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -98,7 +98,7 @@ namespace PlaywrightSharp.Tests
                 matchingData[i].ServerResponseTcs.TrySetResult(serverResponseTexts[i]);
                 var response = await matchingData[i].NavigationTask;
                 Assert.Same(matchingData[i].FrameTask.Result, response.Frame);
-                Assert.Equal(serverResponseTexts[i], await response.GetTextAsync());
+                Assert.Equal(serverResponseTexts[i], await response.TextAsync());
             }
         }
 

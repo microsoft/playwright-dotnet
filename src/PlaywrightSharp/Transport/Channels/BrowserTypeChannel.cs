@@ -312,12 +312,12 @@ namespace PlaywrightSharp.Transport.Channels
                 channelArgs.Add("locale", locale);
             }
 
-            if (permissions != null && permissions.Any())
+            if (permissions?.Any() == true)
             {
                 channelArgs.Add("permissions", permissions);
             }
 
-            if (extraHTTPHeaders != null && extraHTTPHeaders.Any())
+            if (extraHTTPHeaders?.Any() == true)
             {
                 channelArgs.Add("extraHTTPHeaders", extraHTTPHeaders.Remap());
             }
@@ -342,7 +342,7 @@ namespace PlaywrightSharp.Transport.Channels
                 channelArgs.Add("recordHar", new
                 {
                     Path = recordHarPath,
-                    OmitContent = recordHarOmitContent.GetValueOrDefault(false),
+                    OmitContent = recordHarOmitContent ?? false,
                 });
             }
 
@@ -356,7 +356,7 @@ namespace PlaywrightSharp.Transport.Channels
                 });
             }
 
-            if (ignoreDefaultArgs != null && ignoreDefaultArgs.Any())
+            if (ignoreDefaultArgs?.Any() == true)
             {
                 channelArgs.Add("ignoreDefaultArgs", ignoreDefaultArgs);
             }

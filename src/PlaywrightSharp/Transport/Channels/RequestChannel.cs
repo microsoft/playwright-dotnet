@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace PlaywrightSharp.Transport.Channels
@@ -9,6 +9,6 @@ namespace PlaywrightSharp.Transport.Channels
         {
         }
 
-        internal Task<ResponseChannel> GetResponseAsync() => Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "response", null);
+        internal Task<ResponseChannel> ResponseAsync() => Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "response", null);
     }
 }

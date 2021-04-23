@@ -432,7 +432,8 @@ namespace PlaywrightSharp.Transport.Channels
             float? timeout,
             bool force,
             bool? noWaitAfter,
-            bool isPage)
+            bool isPage,
+            bool trial)
         {
             var args = new Dictionary<string, object>
             {
@@ -442,6 +443,7 @@ namespace PlaywrightSharp.Transport.Channels
                 ["clickCount"] = clickCount,
                 ["force"] = force,
                 ["isPage"] = isPage,
+                ["trial"] = trial,
             };
 
             if (modifiers != null)
@@ -476,7 +478,8 @@ namespace PlaywrightSharp.Transport.Channels
             float? timeout,
             bool force,
             bool? noWaitAfter,
-            bool isPage)
+            bool isPage,
+            bool trial)
         {
             var args = new Dictionary<string, object>
             {
@@ -485,6 +488,7 @@ namespace PlaywrightSharp.Transport.Channels
                 ["button"] = button,
                 ["force"] = force,
                 ["isPage"] = isPage,
+                ["trial"] = trial,
             };
 
             if (modifiers != null)
@@ -552,13 +556,21 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "fill", args);
         }
 
-        internal Task CheckAsync(string selector, Position position, float? timeout, bool force, bool? noWaitAfter, bool isPage)
+        internal Task CheckAsync(
+            string selector,
+            Position position,
+            float? timeout,
+            bool force,
+            bool? noWaitAfter,
+            bool isPage,
+            bool trial)
         {
             var args = new Dictionary<string, object>
             {
                 ["selector"] = selector,
                 ["force"] = force,
                 ["isPage"] = isPage,
+                ["trial"] = trial,
             };
 
             if (position != null)
@@ -579,13 +591,21 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "check", args);
         }
 
-        internal Task UncheckAsync(string selector, Position position, float? timeout, bool force, bool? noWaitAfter, bool isPage)
+        internal Task UncheckAsync(
+            string selector,
+            Position position,
+            float? timeout,
+            bool force,
+            bool? noWaitAfter,
+            bool isPage,
+            bool trial)
         {
             var args = new Dictionary<string, object>
             {
                 ["selector"] = selector,
                 ["force"] = force,
                 ["isPage"] = isPage,
+                ["trial"] = trial,
             };
 
             if (position != null)
@@ -624,13 +644,21 @@ namespace PlaywrightSharp.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "dispatchEvent", args);
         }
 
-        internal Task HoverAsync(string selector, Position position, IEnumerable<KeyboardModifier> modifiers, bool force, float? timeout, bool isPage)
+        internal Task HoverAsync(
+            string selector,
+            Position position,
+            IEnumerable<KeyboardModifier> modifiers,
+            bool force,
+            float? timeout,
+            bool isPage,
+            bool? trial)
         {
             var args = new Dictionary<string, object>
             {
                 ["selector"] = selector,
                 ["force"] = force,
                 ["isPage"] = isPage,
+                ["trial"] = trial,
             };
 
             if (modifiers != null)
@@ -847,13 +875,22 @@ namespace PlaywrightSharp.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "textContent", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task TapAsync(string selector, IEnumerable<KeyboardModifier> modifiers = null, Position position = null, float? timeout = null, bool force = false, bool? noWaitAfter = null, bool isPage = false)
+        internal Task TapAsync(
+            string selector,
+            IEnumerable<KeyboardModifier> modifiers,
+            Position position,
+            float? timeout,
+            bool force,
+            bool? noWaitAfter,
+            bool isPage,
+            bool trial)
         {
             var args = new Dictionary<string, object>
             {
                 ["selector"] = selector,
                 ["force"] = force,
                 ["isPage"] = isPage,
+                ["trial"] = trial,
             };
 
             if (modifiers != null)

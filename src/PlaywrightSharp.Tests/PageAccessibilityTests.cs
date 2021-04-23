@@ -516,21 +516,6 @@ namespace PlaywrightSharp.Tests
             Assert.Contains("hello", snapshot.Value.ToString());
             Assert.Contains("world", snapshot.Value.ToString());
             Assert.NotEmpty(snapshot.Children);
-            Func<AccessibilitySnapshotResult, AccessibilitySnapshotResult> findFocusedNode = root =>
-            {
-                var nodes = new System.Collections.Generic.Stack<AccessibilitySnapshotResult>(new[] { root });
-                while (nodes.Count > 0)
-                {
-                    var node = nodes.Pop();
-                    if (node.Focused) return node;
-                    foreach (var innerNode in node.Children)
-                    {
-                        nodes.Push(innerNode);
-                    }
-                }
-
-                return null;
-            };
         }
     }
 }

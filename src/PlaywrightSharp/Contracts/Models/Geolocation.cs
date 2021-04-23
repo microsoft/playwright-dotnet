@@ -30,6 +30,14 @@ namespace PlaywrightSharp
     /// </summary>
     public partial class Geolocation : IEquatable<Geolocation>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Geolocation"/> class.
+        /// </summary>
+        public Geolocation()
+        {
+            Accuracy = 0;
+        }
+
         /// <inheritdoc/>
         public bool Equals(Geolocation other) =>
             other != null &&

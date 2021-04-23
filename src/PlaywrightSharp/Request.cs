@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -86,7 +86,7 @@ namespace PlaywrightSharp
         internal Request FinalRequest => RedirectedTo != null ? ((Request)RedirectedTo).FinalRequest : this;
 
         /// <inheritdoc/>
-        public async Task<IResponse> GetResponseAsync() => (await _channel.GetResponseAsync().ConfigureAwait(false))?.Object;
+        public async Task<IResponse> ResponseAsync() => (await _channel.ResponseAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc/>
         public JsonDocument GetPayloadAsJson(JsonDocumentOptions documentOptions = default)

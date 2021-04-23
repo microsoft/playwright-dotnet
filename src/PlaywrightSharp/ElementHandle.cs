@@ -103,8 +103,9 @@ namespace PlaywrightSharp
             Position position,
             IEnumerable<KeyboardModifier> modifiers,
             bool? force,
-            float? timeout)
-            => _channel.HoverAsync(modifiers, position, timeout, force ?? false);
+            float? timeout,
+            bool? trial)
+            => _channel.HoverAsync(modifiers, position, timeout, force ?? false, trial ?? false);
 
         /// <inheritdoc />
         public Task ScrollIntoViewIfNeededAsync(float? timeout) => _channel.ScrollIntoViewIfNeededAsync(timeout);
@@ -124,8 +125,9 @@ namespace PlaywrightSharp
             IEnumerable<KeyboardModifier> modifiers,
             bool? force,
             bool? noWaitAfter,
-            float? timeout)
-            => _channel.ClickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force ?? false, noWaitAfter);
+            float? timeout,
+            bool? trial)
+            => _channel.ClickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force ?? false, noWaitAfter, trial ?? false);
 
         /// <inheritdoc />
         public Task DblClickAsync(
@@ -135,8 +137,9 @@ namespace PlaywrightSharp
             IEnumerable<KeyboardModifier> modifiers,
             bool? force,
             bool? noWaitAfter,
-            float? timeout)
-            => _channel.DblClickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), modifiers, position, timeout, force ?? false, noWaitAfter);
+            float? timeout,
+            bool? trial)
+            => _channel.DblClickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), modifiers, position, timeout, force ?? false, noWaitAfter, trial ?? false);
 
         /// <inheritdoc />
         public Task SetInputFilesAsync(string files, bool? noWaitAfter, float? timeout)
@@ -244,16 +247,16 @@ namespace PlaywrightSharp
         public Task<IReadOnlyCollection<string>> SelectOptionAsync(params IElementHandle[] values) => SelectOptionAsync(values);
 
         /// <inheritdoc />
-        public Task CheckAsync(Position position, bool? force, bool? noWaitAfter, float? timeout)
-            => _channel.CheckAsync(position, timeout, force ?? false, noWaitAfter);
+        public Task CheckAsync(Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
+            => _channel.CheckAsync(position, timeout, force ?? false, noWaitAfter, trial ?? false);
 
         /// <inheritdoc />
-        public Task UncheckAsync(Position position, bool? force, bool? noWaitAfter, float? timeout)
-            => _channel.UncheckAsync(position, timeout, force, noWaitAfter);
+        public Task UncheckAsync(Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
+            => _channel.UncheckAsync(position, timeout, force, noWaitAfter, trial ?? false);
 
         /// <inheritdoc />
-        public Task TapAsync(Position position, IEnumerable<KeyboardModifier> modifiers, bool? force, bool? noWaitAfter, float? timeout)
-            => _channel.TapAsync(position, modifiers, timeout, force ?? false, noWaitAfter);
+        public Task TapAsync(Position position, IEnumerable<KeyboardModifier> modifiers, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
+            => _channel.TapAsync(position, modifiers, timeout, force ?? false, noWaitAfter, trial ?? false);
 
         /// <inheritdoc />
         public Task<bool> IsCheckedAsync() => _channel.IsCheckedAsync();
