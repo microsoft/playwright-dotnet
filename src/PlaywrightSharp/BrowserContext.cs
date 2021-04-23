@@ -187,6 +187,9 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         public Task<IPage> WaitForPageAsync(Func<IPage, bool> predicate = null, float? timeout = null) => throw new NotImplementedException();
 
+        /// <inheritdoc/>
+        public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
+
         internal void OnRoute(Route route, IRequest request)
         {
             foreach (var item in _routes)
