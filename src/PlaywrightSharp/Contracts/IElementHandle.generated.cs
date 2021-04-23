@@ -84,7 +84,7 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </summary>
 		Task<ElementHandleBoundingBoxResult> BoundingBoxAsync();
-
+	
 		/// <summary>
 		/// <para>This method checks the element by performing the following steps:</para>
 		/// <list type="ordinal">
@@ -133,8 +133,13 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task CheckAsync(Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
-
+		/// <param name="trial">
+		/// When set, this method only performs the <a href="./actionability.md">actionability</a>
+		/// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+		/// element is ready for the action without performing it.
+		/// </param>
+		Task CheckAsync(Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default, bool? trial = default);
+	
 		/// <summary>
 		/// <para>This method clicks the element by performing the following steps:</para>
 		/// <list type="ordinal">
@@ -192,8 +197,13 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task ClickAsync(MouseButton button = default, int? clickCount = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
-
+		/// <param name="trial">
+		/// When set, this method only performs the <a href="./actionability.md">actionability</a>
+		/// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+		/// element is ready for the action without performing it.
+		/// </param>
+		Task ClickAsync(MouseButton button = default, int? clickCount = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default, bool? trial = default);
+	
 		/// <summary>
 		/// <para>
 		/// Returns the content frame for element handles referencing iframe nodes, or <c>null</c>
@@ -201,7 +211,7 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </summary>
 		Task<IFrame> ContentFrameAsync();
-
+	
 		/// <summary>
 		/// <para>This method double clicks the element by performing the following steps:</para>
 		/// <list type="ordinal">
@@ -265,8 +275,13 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task DblClickAsync(MouseButton button = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
-
+		/// <param name="trial">
+		/// When set, this method only performs the <a href="./actionability.md">actionability</a>
+		/// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+		/// element is ready for the action without performing it.
+		/// </param>
+		Task DblClickAsync(MouseButton button = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default, bool? trial = default);
+	
 		/// <summary>
 		/// <para>
 		/// The snippet below dispatches the <c>click</c> event on the element. Regardless of
@@ -299,7 +314,7 @@ namespace PlaywrightSharp
 		/// <param name="type">DOM event type: <c>"click"</c>, <c>"dragstart"</c>, etc.</param>
 		/// <param name="eventInit">Optional event-specific initialization properties.</param>
 		Task DispatchEventAsync(string type, object eventInit = default);
-
+	
 		/// <summary>
 		/// <para>Returns the return value of <paramref name="expression"/>.</para>
 		/// <para>
@@ -325,7 +340,7 @@ namespace PlaywrightSharp
 		/// </param>
 		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
 		Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg = default);
-
+	
 		/// <summary>
 		/// <para>Returns the return value of <paramref name="expression"/>.</para>
 		/// <para>
@@ -351,7 +366,7 @@ namespace PlaywrightSharp
 		/// </param>
 		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
 		Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg = default);
-
+	
 		/// <summary>
 		/// <para>
 		/// This method waits for <a href="./actionability.md">actionability</a> checks, focuses
@@ -378,7 +393,7 @@ namespace PlaywrightSharp
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
 		Task FillAsync(string value, bool? noWaitAfter = default, float? timeout = default);
-
+	
 		/// <summary>
 		/// <para>
 		/// Calls <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus">focus</a>
@@ -386,11 +401,11 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </summary>
 		Task FocusAsync();
-
+	
 		/// <summary><para>Returns element attribute value.</para></summary>
 		/// <param name="name">Attribute name to get the value for.</param>
 		Task<string> GetAttributeAsync(string name);
-
+	
 		/// <summary>
 		/// <para>This method hovers over the element by performing the following steps:</para>
 		/// <list type="ordinal">
@@ -436,14 +451,19 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task HoverAsync(Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, float? timeout = default);
-
+		/// <param name="trial">
+		/// When set, this method only performs the <a href="./actionability.md">actionability</a>
+		/// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+		/// element is ready for the action without performing it.
+		/// </param>
+		Task HoverAsync(Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, float? timeout = default, bool? trial = default);
+	
 		/// <summary><para>Returns the <c>element.innerHTML</c>.</para></summary>
 		Task<string> InnerHTMLAsync();
-
+	
 		/// <summary><para>Returns the <c>element.innerText</c>.</para></summary>
 		Task<string> InnerTextAsync();
-
+	
 		/// <summary>
 		/// <para>
 		/// Returns whether the element is checked. Throws if the element is not a checkbox
@@ -451,25 +471,25 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </summary>
 		Task<bool> IsCheckedAsync();
-
+	
 		/// <summary><para>Returns whether the element is disabled, the opposite of <a href="./actionability.md#enabled">enabled</a>.</para></summary>
 		Task<bool> IsDisabledAsync();
-
+	
 		/// <summary><para>Returns whether the element is <a href="./actionability.md#editable">editable</a>.</para></summary>
 		Task<bool> IsEditableAsync();
-
+	
 		/// <summary><para>Returns whether the element is <a href="./actionability.md#enabled">enabled</a>.</para></summary>
 		Task<bool> IsEnabledAsync();
-
+	
 		/// <summary><para>Returns whether the element is hidden, the opposite of <a href="./actionability.md#visible">visible</a>.</para></summary>
 		Task<bool> IsHiddenAsync();
-
+	
 		/// <summary><para>Returns whether the element is <a href="./actionability.md#visible">visible</a>.</para></summary>
 		Task<bool> IsVisibleAsync();
-
+	
 		/// <summary><para>Returns the frame containing the given element.</para></summary>
 		Task<IFrame> OwnerFrameAsync();
-
+	
 		/// <summary>
 		/// <para>Focuses the element, and then uses <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.</para>
 		/// <para>
@@ -523,7 +543,7 @@ namespace PlaywrightSharp
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
 		Task PressAsync(string key, float? delay = default, bool? noWaitAfter = default, float? timeout = default);
-
+	
 		/// <summary>
 		/// <para>
 		/// The method finds an element matching the specified selector in the <c>ElementHandle</c>'s
@@ -536,7 +556,7 @@ namespace PlaywrightSharp
 		/// for more details.
 		/// </param>
 		Task<IElementHandle> QuerySelectorAsync(string selector);
-
+	
 		/// <summary>
 		/// <para>
 		/// The method finds all elements matching the specified selector in the <c>ElementHandle</c>s
@@ -549,7 +569,7 @@ namespace PlaywrightSharp
 		/// for more details.
 		/// </param>
 		Task<IReadOnlyCollection<IElementHandle>> QuerySelectorAllAsync(string selector);
-
+	
 		/// <summary>
 		/// <para>Returns the buffer with the captured screenshot.</para>
 		/// <para>
@@ -576,7 +596,7 @@ namespace PlaywrightSharp
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
 		Task<byte[]> ScreenshotAsync(string path = default, ScreenshotType type = default, int? quality = default, bool? omitBackground = default, float? timeout = default);
-
+	
 		/// <summary>
 		/// <para>
 		/// This method waits for <a href="./actionability.md">actionability</a> checks, then
@@ -595,7 +615,7 @@ namespace PlaywrightSharp
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
 		Task ScrollIntoViewIfNeededAsync(float? timeout = default);
-
+	
 		/// <summary>
 		/// <para>Returns the array of option values that have been successfully selected.</para>
 		/// <para>
@@ -623,7 +643,7 @@ namespace PlaywrightSharp
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
 		Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, bool? noWaitAfter = default, float? timeout = default);
-
+	
 		/// <summary>
 		/// <para>
 		/// This method waits for <a href="./actionability.md">actionability</a> checks, then
@@ -636,7 +656,7 @@ namespace PlaywrightSharp
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
 		Task SelectTextAsync(float? timeout = default);
-
+	
 		/// <summary>
 		/// <para>
 		/// This method expects <c>elementHandle</c> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
@@ -662,7 +682,7 @@ namespace PlaywrightSharp
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
 		Task SetInputFilesAsync(IEnumerable<FilePayload> files, bool? noWaitAfter = default, float? timeout = default);
-
+	
 		/// <summary>
 		/// <para>This method taps the element by performing the following steps:</para>
 		/// <list type="ordinal">
@@ -720,11 +740,16 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task TapAsync(Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
-
+		/// <param name="trial">
+		/// When set, this method only performs the <a href="./actionability.md">actionability</a>
+		/// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+		/// element is ready for the action without performing it.
+		/// </param>
+		Task TapAsync(Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default, bool? trial = default);
+	
 		/// <summary><para>Returns the <c>node.textContent</c>.</para></summary>
 		Task<string> TextContentAsync();
-
+	
 		/// <summary>
 		/// <para>
 		/// Focuses the element, and then sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>,
@@ -747,7 +772,7 @@ namespace PlaywrightSharp
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
 		Task TypeAsync(string text, float? delay = default, bool? noWaitAfter = default, float? timeout = default);
-
+	
 		/// <summary>
 		/// <para>This method checks the element by performing the following steps:</para>
 		/// <list type="ordinal">
@@ -796,8 +821,13 @@ namespace PlaywrightSharp
 		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
-		Task UncheckAsync(Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
-
+		/// <param name="trial">
+		/// When set, this method only performs the <a href="./actionability.md">actionability</a>
+		/// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+		/// element is ready for the action without performing it.
+		/// </param>
+		Task UncheckAsync(Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default, bool? trial = default);
+	
 		/// <summary>
 		/// <para>Returns when the element satisfies the <paramref name="state"/>.</para>
 		/// <para>
@@ -836,7 +866,7 @@ namespace PlaywrightSharp
 		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
 		/// </param>
 		Task WaitForElementStateAsync(ElementState state, float? timeout = default);
-
+	
 		/// <summary>
 		/// <para>
 		/// Returns element specified by selector when it satisfies <paramref name="state"/>

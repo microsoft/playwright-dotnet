@@ -15,7 +15,7 @@ namespace PlaywrightSharp
     {
         /// <summary><para>Creates a new browser context. It won't share cookies/cache with other browser contexts.</para></summary>
         /// <param name="options">The parameters, but in an options format.</param>
-        /// <returns><see cref="IBrowser.NewContextAsync(bool?, bool?, ColorScheme, float?, IEnumerable{KeyValuePair{string, string}}, Geolocation, bool?, HttpCredentials, bool?, bool?, bool?, string, bool?, IEnumerable{string}, Proxy, bool?, string, string, RecordVideoSize, ScreenSize, string, string, string, string, ViewportSize)"/>.</returns>
+        /// <returns><see cref="IBrowser.NewContextAsync(bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, ColorScheme, string, bool?, string, RecordVideoSize, Proxy, string, string)"/>.</returns>
         Task<IBrowserContext> NewContextAsync(BrowserContextOptions options);
     }
 }

@@ -70,10 +70,10 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </summary>
 		IElementHandle AsElement { get; }
-
+	
 		/// <summary><para>The <c>jsHandle.dispose</c> method stops referencing the element handle.</para></summary>
 		Task DisposeAsync();
-
+	
 		/// <summary>
 		/// <para>Returns the return value of <paramref name="expression"/>.</para>
 		/// <para>This method passes this handle as the first argument to <paramref name="expression"/>.</para>
@@ -90,7 +90,7 @@ namespace PlaywrightSharp
 		/// </param>
 		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
 		Task<T> EvaluateAsync<T>(string expression, object arg = default);
-
+	
 		/// <summary>
 		/// <para>Returns the return value of <paramref name="expression"/> as a <see cref="IJSHandle"/>.</para>
 		/// <para>This method passes this handle as the first argument to <paramref name="expression"/>.</para>
@@ -112,7 +112,7 @@ namespace PlaywrightSharp
 		/// </param>
 		/// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
 		Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = default);
-
+	
 		/// <summary>
 		/// <para>
 		/// The method returns a map with **own property names** as keys and JSHandle instances
@@ -120,11 +120,11 @@ namespace PlaywrightSharp
 		/// </para>
 		/// </summary>
 		Task<Dictionary<string, IJSHandle>> GetPropertiesAsync();
-
+	
 		/// <summary><para>Fetches a single property from the referenced object.</para></summary>
 		/// <param name="propertyName">property to get</param>
 		Task<IJSHandle> GetPropertyAsync(string propertyName);
-
+	
 		/// <summary>
 		/// <para>
 		/// Returns a JSON representation of the object. If the object has a <c>toJSON</c> function,

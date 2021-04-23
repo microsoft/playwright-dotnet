@@ -33,7 +33,7 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         public bool Equals(Geolocation other) =>
             other != null &&
-            other.Accuracy == Accuracy &&
+            (other.Accuracy ?? 0) == (Accuracy ?? 0) &&
             other.Latitude == Latitude &&
             other.Longitude == Latitude;
 

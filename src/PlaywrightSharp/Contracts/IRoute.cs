@@ -6,7 +6,13 @@ namespace PlaywrightSharp
 {
     public partial interface IRoute
     {
-        /// <inheritdoc cref="FulfillAsync(string, byte[], string, IEnumerable{KeyValuePair{string, string}}, string, int?)"/>
-        Task FulfillAsync(HttpStatusCode status, string body = default, byte[] bodyBytes = default, string contentType = default, IEnumerable<KeyValuePair<string, string>> headers = default, string path = default);
+        /// <inheritdoc cref="FulfillAsync(int?, IEnumerable{KeyValuePair{string, string}}, string, string, byte[], string)"/>
+        Task FulfillAsync(
+            HttpStatusCode status,
+            IEnumerable<KeyValuePair<string, string>> headers = null,
+            string contentType = null,
+            string body = null,
+            byte[] bodyBytes = null,
+            string path = null);
     }
 }
