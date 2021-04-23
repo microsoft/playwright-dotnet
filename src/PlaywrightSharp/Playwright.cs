@@ -45,16 +45,16 @@ namespace PlaywrightSharp
         IChannel<Playwright> IChannelOwner<Playwright>.Channel => _channel;
 
         /// <inheritdoc/>
-        public IBrowserType Chromium { get => _initializer.Chromium; set => throw new NotSupportedException(); }
+        public IBrowserType Chromium => _initializer.Chromium;
 
         /// <inheritdoc/>
-        public IBrowserType Firefox { get => _initializer.Firefox; set => throw new NotSupportedException(); }
+        public IBrowserType Firefox => _initializer.Firefox;
 
         /// <inheritdoc/>
-        public IBrowserType Webkit { get => _initializer.Webkit; set => throw new NotSupportedException(); }
+        public IBrowserType Webkit => _initializer.Webkit;
 
         /// <inheritdoc/>
-        public ISelectors Selectors { get => PlaywrightSharp.Selectors.SharedSelectors; set => throw new NotSupportedException(); }
+        public ISelectors Selectors => PlaywrightSharp.Selectors.SharedSelectors;
 
         internal Connection Connection { get; set; }
 

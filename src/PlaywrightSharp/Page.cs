@@ -45,10 +45,7 @@ namespace PlaywrightSharp
         private readonly List<Frame> _frames = new();
         private readonly List<(IEvent PageEvent, TaskCompletionSource<bool> WaitTcs)> _waitForCancellationTcs = new();
         private readonly object _fileChooserEventLock = new();
-        private readonly IAccessibility _accessibility;
         private readonly IMouse _mouse;
-        private readonly IKeyboard _keyboard;
-        private readonly ITouchscreen _touchscreen;
 
         private List<RouteSetting> _routes = new();
         private EventHandler<IFileChooser> _fileChooserEventHandler;
@@ -66,9 +63,9 @@ namespace PlaywrightSharp
             _frames.Add(MainFrame);
             ViewportSize = initializer.ViewportSize;
             IsClosed = initializer.IsClosed;
-            _accessibility = new Accesibility(_channel);
-            _keyboard = new Keyboard(_channel);
-            _touchscreen = new Touchscreen(_channel);
+            Accessibility = new Accesibility(_channel);
+            Keyboard = new Keyboard(_channel);
+            Touchscreen = new Touchscreen(_channel);
             _mouse = new Mouse(_channel);
             TimeoutSettings = new TimeoutSettings(Context.TimeoutSettings);
 
@@ -224,11 +221,7 @@ namespace PlaywrightSharp
         public PageViewportSizeResult ViewportSize { get; private set; }
 
         /// <inheritdoc />
-        public IAccessibility Accessibility
-        {
-            get => _accessibility;
-            set => throw new NotSupportedException();
-        }
+        public IAccessibility Accessibility { get; }
 
         /// <inheritdoc />
         /// <inheritdoc />
@@ -245,18 +238,10 @@ namespace PlaywrightSharp
         public IReadOnlyCollection<IFrame> Frames => _frames.AsReadOnly();
 
         /// <inheritdoc />
-        public IKeyboard Keyboard
-        {
-            get => _keyboard;
-            set => throw new NotSupportedException();
-        }
+        public IKeyboard Keyboard { get; }
 
         /// <inheritdoc />
-        public ITouchscreen Touchscreen
-        {
-            get => _touchscreen;
-            set => throw new NotSupportedException();
-        }
+        public ITouchscreen Touchscreen { get; }
 
         /// <inheritdoc/>
         public float DefaultTimeout

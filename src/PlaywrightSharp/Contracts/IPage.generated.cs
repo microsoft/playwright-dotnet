@@ -224,8 +224,7 @@ namespace PlaywrightSharp
         /// </summary>
         event EventHandler<IWorker> Worker;
 
-        [JsonPropertyName("accessibility")]
-        public IAccessibility Accessibility { get; set; }
+        public IAccessibility Accessibility { get; }
 
         /// <summary>
         /// <para>Adds a script which would be evaluated in one of the following scenarios:</para>
@@ -1122,8 +1121,7 @@ namespace PlaywrightSharp
         /// </param>
         Task<bool> IsVisibleAsync(string selector, float? timeout = default);
 
-        [JsonPropertyName("keyboard")]
-        public IKeyboard Keyboard { get; set; }
+        public IKeyboard Keyboard { get; }
 
         /// <summary>
         /// <para>
@@ -1133,8 +1131,7 @@ namespace PlaywrightSharp
         /// </summary>
         IFrame MainFrame { get; }
 
-        [JsonPropertyName("mouse")]
-        public IMouse Mouse { get; set; }
+        public IMouse Mouse { get; }
 
         /// <summary>
         /// <para>
@@ -1677,8 +1674,7 @@ namespace PlaywrightSharp
         /// <summary><para>Returns the page's title. Shortcut for main frame's <see cref="IFrame.TitleAsync"/>.</para></summary>
         Task<string> TitleAsync();
 
-        [JsonPropertyName("touchscreen")]
-        public ITouchscreen Touchscreen { get; set; }
+        public ITouchscreen Touchscreen { get; }
 
         /// <summary>
         /// <para>
