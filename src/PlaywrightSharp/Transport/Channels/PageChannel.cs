@@ -304,9 +304,6 @@ namespace PlaywrightSharp.Transport.Channels
             if ((await Connection.SendMessageToServerAsync(Guid, "accessibilitySnapshot", args).ConfigureAwait(false)).Value.TryGetProperty("rootAXNode", out var jsonElement))
             {
                 var options = Connection.GetDefaultJsonSerializerOptions();
-
-                // TODO: Get rid of the converter GH1253
-                options.Converters.Add(new BooleanToStringConverter());
                 return jsonElement.ToObject<AccessibilitySnapshotResult>(options);
             }
 
