@@ -1,4 +1,4 @@
-﻿/*
+/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -46,18 +46,18 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-	public partial class SelectOptionValue
-	{
-		/// <summary><para>Matches by <c>option.value</c>. Optional.</para></summary>
-		[JsonPropertyName("value")]
-		public string Value { get; set; }
-	
-		/// <summary><para>Matches by <c>option.label</c>. Optional.</para></summary>
-		[JsonPropertyName("label")]
-		public string Label { get; set; }
-	
-		/// <summary><para>Matches by the index. Optional.</para></summary>
-		[JsonPropertyName("index")]
-		public int? Index { get; set; }
-	}
+    public partial class SelectOptionValue
+    {
+        /// <summary><para>Matches by <c>option.value</c>. Optional.</para></summary>
+        [JsonPropertyName("value")]
+        public string Value { get; set; }
+
+        /// <summary><para>Matches by <c>option.label</c>. Optional.</para></summary>
+        [JsonPropertyName("label")]
+        public string Label { get; set; }
+
+        /// <summary><para>Matches by the index. Optional.</para></summary>
+        [JsonPropertyName("index")]
+        public int? Index { get; set; }
+    }
 }

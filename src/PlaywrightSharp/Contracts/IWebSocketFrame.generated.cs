@@ -1,4 +1,4 @@
-﻿/*
+/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -46,19 +46,19 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-	/// <summary>
-	/// <para>
-	/// The <see cref="IWebSocketFrame"/> class represents frames sent over <see cref="IWebSocket"/>
-	/// connections in the page. Frame payload is returned by either <see cref="IWebSocketFrame.Text"/>
-	/// or <see cref="IWebSocketFrame.Binary"/> method depending on the its type.
-	/// </para>
-	/// </summary>
-	public partial interface IWebSocketFrame
-	{
-		/// <summary><para>Returns binary payload.</para></summary>
-		byte[] Binary { get; }
-	
-		/// <summary><para>Returns text payload.</para></summary>
-		string Text { get; }
-	}
+    /// <summary>
+    /// <para>
+    /// The <see cref="IWebSocketFrame"/> class represents frames sent over <see cref="IWebSocket"/>
+    /// connections in the page. Frame payload is returned by either <see cref="IWebSocketFrame.Text"/>
+    /// or <see cref="IWebSocketFrame.Binary"/> method depending on the its type.
+    /// </para>
+    /// </summary>
+    public partial interface IWebSocketFrame
+    {
+        /// <summary><para>Returns binary payload.</para></summary>
+        byte[] Binary { get; }
+
+        /// <summary><para>Returns text payload.</para></summary>
+        string Text { get; }
+    }
 }

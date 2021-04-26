@@ -45,39 +45,39 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-	/// <summary>
-	/// <para>
-	/// Whenever the page sends a request for a network resource the following sequence
-	/// of events are emitted by <see cref="IPage"/>:
-	/// </para>
-	/// <list type="bullet">
-	/// <item><description><see cref="IPage.Request"/> emitted when the request is issued by the page.</description></item>
-	/// <item><description>
-	/// <see cref="IPage.Response"/> emitted when/if the response status and headers are
-	/// received for the request.
-	/// </description></item>
-	/// <item><description>
-	/// <see cref="IPage.RequestFinished"/> emitted when the response body is downloaded
-	/// and the request is complete.
-	/// </description></item>
-	/// </list>
-	/// <para>
-	/// If request fails at some point, then instead of <c>'requestfinished'</c> event (and
-	/// possibly instead of 'response' event), the  <see cref="IPage.RequestFailed"/> event
-	/// is emitted.
-	/// </para>
-	/// <para>
-	/// If request gets a 'redirect' response, the request is successfully finished with
-	/// the 'requestfinished' event, and a new request is  issued to a redirected url.
-	/// </para>
-	/// </summary>
-	/// <remarks>
-	/// <para>
-	/// HTTP Error responses, such as 404 or 503, are still successful responses from HTTP
-	/// standpoint, so request will complete with <c>'requestfinished'</c> event.
-	/// </para>
-	/// </remarks>
-	public partial interface IRequest
+    /// <summary>
+    /// <para>
+    /// Whenever the page sends a request for a network resource the following sequence
+    /// of events are emitted by <see cref="IPage"/>:
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description><see cref="IPage.Request"/> emitted when the request is issued by the page.</description></item>
+    /// <item><description>
+    /// <see cref="IPage.Response"/> emitted when/if the response status and headers are
+    /// received for the request.
+    /// </description></item>
+    /// <item><description>
+    /// <see cref="IPage.RequestFinished"/> emitted when the response body is downloaded
+    /// and the request is complete.
+    /// </description></item>
+    /// </list>
+    /// <para>
+    /// If request fails at some point, then instead of <c>'requestfinished'</c> event (and
+    /// possibly instead of 'response' event), the  <see cref="IPage.RequestFailed"/> event
+    /// is emitted.
+    /// </para>
+    /// <para>
+    /// If request gets a 'redirect' response, the request is successfully finished with
+    /// the 'requestfinished' event, and a new request is  issued to a redirected url.
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// HTTP Error responses, such as 404 or 503, are still successful responses from HTTP
+    /// standpoint, so request will complete with <c>'requestfinished'</c> event.
+    /// </para>
+    /// </remarks>
+    public partial interface IRequest
     {
         /// <summary>
         /// <para>

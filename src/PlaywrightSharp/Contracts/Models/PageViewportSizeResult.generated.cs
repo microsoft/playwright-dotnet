@@ -1,4 +1,4 @@
-﻿/*
+/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -46,17 +46,17 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-	/// <summary>
-	/// Result of calling <see cref="IPage.ViewportSize"/>.
-	/// </summary>
-	public partial class PageViewportSizeResult
-	{
-		/// <summary><para>page width in pixels.</para></summary>
-		[JsonPropertyName("width")]
-		public int Width { get; set; }
-	
-		/// <summary><para>page height in pixels.</para></summary>
-		[JsonPropertyName("height")]
-		public int Height { get; set; }
-	}
+    /// <summary>
+    /// Result of calling <see cref="IPage.ViewportSize"/>.
+    /// </summary>
+    public partial class PageViewportSizeResult
+    {
+        /// <summary><para>page width in pixels.</para></summary>
+        [JsonPropertyName("width")]
+        public int Width { get; set; }
+
+        /// <summary><para>page height in pixels.</para></summary>
+        [JsonPropertyName("height")]
+        public int Height { get; set; }
+    }
 }

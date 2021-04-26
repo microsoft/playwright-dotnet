@@ -1,4 +1,4 @@
-﻿/*
+/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -46,14 +46,14 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-	public enum WaitUntilState
-	{
-		Undefined = 0,
-		[EnumMember(Value = "load")]
-		Load,
-		[EnumMember(Value = "domcontentloaded")]
-		DOMContentLoaded,
-		[EnumMember(Value = "networkidle")]
-		NetworkIdle,
-	}
+    public enum WaitUntilState
+    {
+        Undefined = 0,
+        [EnumMember(Value = "load")]
+        Load,
+        [EnumMember(Value = "domcontentloaded")]
+        DOMContentLoaded,
+        [EnumMember(Value = "networkidle")]
+        NetworkIdle,
+    }
 }

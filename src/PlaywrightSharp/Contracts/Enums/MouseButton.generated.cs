@@ -45,14 +45,14 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-	public enum MouseButton
-	{
-		Undefined = 0,
-		[EnumMember(Value = "left")]
-		Left,
-		[EnumMember(Value = "right")]
-		Right,
-		[EnumMember(Value = "middle")]
-		Middle,
-	}
+    public enum MouseButton
+    {
+        Undefined = 0,
+        [EnumMember(Value = "left")]
+        Left,
+        [EnumMember(Value = "right")]
+        Right,
+        [EnumMember(Value = "middle")]
+        Middle,
+    }
 }

@@ -45,7 +45,7 @@ dotnet tool update dotnet-format --add-source https://dotnet.myget.org/F/format/
 and then
 
 ```powershell
-dotnet format
+dotnet format --include-generated
 ```
 
 and the result should be formatted code according to our style guide.

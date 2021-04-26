@@ -46,14 +46,14 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-	public partial class ScreenSize
-	{
-		/// <summary><para>page width in pixels.</para></summary>
-		[JsonPropertyName("width")]
-		public int Width { get; set; }
-	
-		/// <summary><para>page height in pixels.</para></summary>
-		[JsonPropertyName("height")]
-		public int Height { get; set; }
-	}
+    public partial class ScreenSize
+    {
+        /// <summary><para>page width in pixels.</para></summary>
+        [JsonPropertyName("width")]
+        public int Width { get; set; }
+
+        /// <summary><para>page height in pixels.</para></summary>
+        [JsonPropertyName("height")]
+        public int Height { get; set; }
+    }
 }

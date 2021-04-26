@@ -46,14 +46,14 @@ using System.Threading.Tasks;
 
 namespace PlaywrightSharp
 {
-	public partial class RecordVideoSize
-	{
-		/// <summary><para>Video frame width.</para></summary>
-		[JsonPropertyName("width")]
-		public int Width { get; set; }
-	
-		/// <summary><para>Video frame height.</para></summary>
-		[JsonPropertyName("height")]
-		public int Height { get; set; }
-	}
+    public partial class RecordVideoSize
+    {
+        /// <summary><para>Video frame width.</para></summary>
+        [JsonPropertyName("width")]
+        public int Width { get; set; }
+
+        /// <summary><para>Video frame height.</para></summary>
+        [JsonPropertyName("height")]
+        public int Height { get; set; }
+    }
 }
