@@ -216,7 +216,15 @@ namespace PlaywrightSharp
         public Task GrantPermissionsAsync(string permission) => Channel.GrantPermissionsAsync(new string[] { permission }, null);
 
         /// <inheritdoc/>
-        public async Task<IPage> NewPageAsync() => (await Channel.NewPageAsync().ConfigureAwait(false)).Object;
+        public async Task<IPage> NewPageAsync()
+        {
+            if (OwnerPage != null)
+            {
+                throw new PlaywrightSharpException("Please use Browser.NewContextAsync()");
+            }
+
+            return (await Channel.NewPageAsync().ConfigureAwait(false)).Object;
+        }
 
         /// <inheritdoc/>
         public Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler)
