@@ -8,15 +8,18 @@ namespace PlaywrightSharp
     /// </summary>
     public static class ContextEvent
     {
+        internal const string PageEventName = "Page";
+        internal const string CloseEventName = "Close";
+
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IBrowserContext.Page"/>.
         /// </summary>
-        public static PlaywrightEvent<PageEventArgs> Page { get; } = new PlaywrightEvent<PageEventArgs>() { Name = "Page" };
+        public static PlaywrightEvent<IPage> Page { get; } = new PlaywrightEvent<IPage>() { Name = PageEventName };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IBrowserContext.Close"/>.
         /// </summary>
-        public static PlaywrightEvent<EventArgs> Close { get; } = new PlaywrightEvent<EventArgs>() { Name = "Close" };
+        public static PlaywrightEvent<IBrowserContext> Close { get; } = new PlaywrightEvent<IBrowserContext>() { Name = CloseEventName };
 
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IChromiumBrowserContext.BackgroundPage"/>.

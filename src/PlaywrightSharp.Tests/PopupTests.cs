@@ -29,8 +29,8 @@ namespace PlaywrightSharp.Tests
             var popupTask = context.WaitForEventAsync(ContextEvent.Page);
             await TaskUtils.WhenAll(popupTask, page.ClickAsync("a"));
 
-            await popupTask.Result.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-            string userAgent = await popupTask.Result.Page.EvaluateAsync<string>("() => window.initialUserAgent");
+            await popupTask.Result.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+            string userAgent = await popupTask.Result.EvaluateAsync<string>("() => window.initialUserAgent");
             await requestTcs.Task;
 
             Assert.Equal("hey", userAgent);

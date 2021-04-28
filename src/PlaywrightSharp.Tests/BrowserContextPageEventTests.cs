@@ -28,7 +28,7 @@ namespace PlaywrightSharp.Tests
                 context.WaitForEventAsync(ContextEvent.Page),
                 page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
 
-            Assert.Equal(TestConstants.EmptyPage, otherPage.Page.Url);
+            Assert.Equal(TestConstants.EmptyPage, otherPage.Url);
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should have url after domcontentloaded")]
@@ -42,8 +42,8 @@ namespace PlaywrightSharp.Tests
                 context.WaitForEventAsync(ContextEvent.Page),
                 page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
 
-            await otherPage.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-            Assert.Equal(TestConstants.EmptyPage, otherPage.Page.Url);
+            await otherPage.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+            Assert.Equal(TestConstants.EmptyPage, otherPage.Url);
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should have about:blank url with domcontentloaded")]
@@ -57,8 +57,8 @@ namespace PlaywrightSharp.Tests
                 context.WaitForEventAsync(ContextEvent.Page),
                 page.EvaluateAsync("url => window.open(url)", "about:blank"));
 
-            await otherPage.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-            Assert.Equal("about:blank", otherPage.Page.Url);
+            await otherPage.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+            Assert.Equal("about:blank", otherPage.Url);
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should have about:blank for empty url with domcontentloaded")]
@@ -72,8 +72,8 @@ namespace PlaywrightSharp.Tests
                 context.WaitForEventAsync(ContextEvent.Page),
                 page.EvaluateAsync("() => window.open()"));
 
-            await otherPage.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-            Assert.Equal("about:blank", otherPage.Page.Url);
+            await otherPage.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+            Assert.Equal("about:blank", otherPage.Url);
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should report when a new page is created and closed")]
@@ -86,7 +86,7 @@ namespace PlaywrightSharp.Tests
             var (otherPageEvent, _) = await TaskUtils.WhenAll(
                 context.WaitForEventAsync(ContextEvent.Page),
                 page.EvaluateAsync("url => window.open(url)", TestConstants.CrossProcessUrl + "/empty.html"));
-            var otherPage = otherPageEvent.Page;
+            var otherPage = otherPageEvent;
 
             Assert.Contains(TestConstants.CrossProcessUrl, otherPage.Url);
             Assert.Equal("Hello world", await otherPage.EvaluateAsync<string>("() => ['Hello', 'world'].join(' ')"));
@@ -116,12 +116,12 @@ namespace PlaywrightSharp.Tests
             var pageTask = context.WaitForEventAsync(ContextEvent.Page);
             _ = context.NewPageAsync();
             var newPage = await pageTask;
-            Assert.Equal("about:blank", newPage.Page.Url);
+            Assert.Equal("about:blank", newPage.Url);
 
             var popupTask = context.WaitForEventAsync(ContextEvent.Page);
-            var evaluateTask = newPage.Page.EvaluateAsync("() => window.open('about:blank')");
+            var evaluateTask = newPage.EvaluateAsync("() => window.open('about:blank')");
             var popup = await popupTask;
-            Assert.Equal("about:blank", popup.Page.Url);
+            Assert.Equal("about:blank", popup.Url);
             await evaluateTask;
         }
 
@@ -145,7 +145,7 @@ namespace PlaywrightSharp.Tests
                 page.EvaluateAsync("url => window.open(url)", TestConstants.ServerUrl + "/one-style.html"),
                 Server.WaitForRequest("/one-style.css"));
 
-            var newPage = pageCreatedTask.Result.Page;
+            var newPage = pageCreatedTask.Result;
 
             await newPage.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             Assert.Equal(TestConstants.ServerUrl + "/one-style.html", newPage.Url);
@@ -163,7 +163,7 @@ namespace PlaywrightSharp.Tests
               context.WaitForEventAsync(ContextEvent.Page),
               page.GoToAsync(TestConstants.ServerUrl + "/popup/window-open.html"));
 
-            var popup = popupEvent.Page;
+            var popup = popupEvent;
             Assert.Equal(TestConstants.ServerUrl + "/popup/popup.html", popup.Url);
             Assert.Same(page, await popup.OpenerAsync());
             Assert.Null(await page.OpenerAsync());
@@ -209,7 +209,7 @@ namespace PlaywrightSharp.Tests
               popupEventTask,
               page.ClickAsync("a", modifiers: new[] { KeyboardModifier.Shift }));
 
-            Assert.Null(await popupEventTask.Result.Page.OpenerAsync());
+            Assert.Null(await popupEventTask.Result.OpenerAsync());
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should report when a new page is created and closed")]
@@ -228,7 +228,7 @@ namespace PlaywrightSharp.Tests
               popupEventTask,
               page.ClickAsync("a", modifiers: new[] { TestConstants.IsMacOSX ? KeyboardModifier.Meta : KeyboardModifier.Control }));
 
-            Assert.Null(await popupEventTask.Result.Page.OpenerAsync());
+            Assert.Null(await popupEventTask.Result.OpenerAsync());
         }
     }
 }

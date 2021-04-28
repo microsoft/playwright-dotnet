@@ -112,7 +112,7 @@ namespace PlaywrightSharp
                 script = ScriptsHelper.EvaluationScript(script, scriptPath);
             }
 
-            return Channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(script, new[] { arg }));
+            return Channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(script, arg != null ? new[] { arg } : null));
         }
 
         /// <inheritdoc/>
@@ -290,10 +290,33 @@ namespace PlaywrightSharp
             => UnrouteAsync(null, null, urlFunc, handler);
 
         /// <inheritdoc/>
-        public Task<object> WaitForEventAsync(string @event, float? timeout = null) => throw new NotImplementedException();
+        public async Task<object> WaitForEventAsync(string @event, float? timeout = null)
+        => @event switch
+        {
+            ContextEvent.PageEventName => await WaitForEventAsync(ContextEvent.Page, timeout).ConfigureAwait(false),
+            ContextEvent.CloseEventName => await WaitForEventAsync(ContextEvent.Close, timeout).ConfigureAwait(false),
+            _ => throw new InvalidOperationException(),
+        };
 
         /// <inheritdoc/>
-        public Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, float? timeout = null) => throw new NotImplementedException();
+        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, float? timeout = null)
+        {
+            if (playwrightEvent == null)
+            {
+                throw new ArgumentException("Page event is required", nameof(playwrightEvent));
+            }
+
+            timeout ??= DefaultTimeout;
+            using var waiter = new Waiter();
+            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{playwrightEvent.Name}\"");
+
+            if (playwrightEvent.Name != ContextEvent.Close.Name)
+            {
+                waiter.RejectOnEvent<IBrowserContext>(this, ContextEvent.Close.Name, new TargetClosedException("Context closed"));
+            }
+
+            return await waiter.WaitForEventAsync<T>(this, playwrightEvent.Name, null).ConfigureAwait(false);
+        }
 
         /// <inheritdoc/>
         public Task<IPage> WaitForPageAsync(Func<IPage, bool> predicate = null, float? timeout = null) => throw new NotImplementedException();
