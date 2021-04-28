@@ -4,7 +4,7 @@ using PlaywrightSharp.Chromium;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Context events. See <see cref="IBrowserContext.WaitForEventAsync(string, float?)"/>.
+    /// Context events. See <see cref="IBrowserContext.WaitForEventAsync{T}(PlaywrightEvent{T}, float?)"/>.
     /// </summary>
     public static class ContextEvent
     {

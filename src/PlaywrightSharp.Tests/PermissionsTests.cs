@@ -153,7 +153,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("prompt", await GetPermissionAsync(otherPage, "geolocation"));
 
             await Context.GrantPermissionsAsync(Array.Empty<string>(), TestConstants.EmptyPage);
-            await otherContext.GrantPermissionsAsync(new string[] { ContextPermissions.Geolocation }, TestConstants.EmptyPage);
+            await otherContext.GrantPermissionsAsync(new[] { ContextPermissions.Geolocation }, TestConstants.EmptyPage);
             Assert.Equal("denied", await GetPermissionAsync(Page, "geolocation"));
             Assert.Equal("granted", await GetPermissionAsync(otherPage, "geolocation"));
 
