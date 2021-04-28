@@ -108,7 +108,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldResetPermissions()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Context.GrantPermissionsAsync(new [] { ContextPermissions.Geolocation }, TestConstants.EmptyPage);
+            await Context.GrantPermissionsAsync(new[] { ContextPermissions.Geolocation }, TestConstants.EmptyPage);
             Assert.Equal("granted", await GetPermissionAsync(Page, "geolocation"));
             await Context.ClearPermissionsAsync();
             Assert.Equal("prompt", await GetPermissionAsync(Page, "geolocation"));
