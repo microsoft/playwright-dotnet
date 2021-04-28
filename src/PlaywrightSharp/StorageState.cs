@@ -4,10 +4,7 @@ using System.Linq;
 
 namespace PlaywrightSharp
 {
-    /// <summary>
-    /// TODO: move this.
-    /// </summary>
-    public class StorageState : IEquatable<StorageState>
+    internal class StorageState : IEquatable<StorageState>
     {
         /// <summary>
         /// Cookie list.

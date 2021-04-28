@@ -162,7 +162,7 @@ namespace PlaywrightSharp.Tests
         {
             // Setup cookie.
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Context.AddCookiesAsync(new SetNetworkCookieParam
+            await Context.AddCookiesAsync(new Cookie
             {
                 Url = TestConstants.EmptyPage,
                 Name = "foo",

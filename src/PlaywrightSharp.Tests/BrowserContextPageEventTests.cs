@@ -178,8 +178,8 @@ namespace PlaywrightSharp.Tests
 
             context.Page += (_, e) =>
             {
-                events.Add("CREATED: " + e.Page.Url);
-                e.Page.Close += (sender, _) => events.Add("DESTROYED: " + ((IPage)sender).Url);
+                events.Add("CREATED: " + e.Url);
+                e.Close += (sender, _) => events.Add("DESTROYED: " + ((IPage)sender).Url);
             };
 
             var page = await context.NewPageAsync();

@@ -39,7 +39,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(-1, cookie.Expires);
             Assert.False(cookie.HttpOnly);
             Assert.False(cookie.Secure);
-            Assert.Equal(SameSite.None, cookie.SameSite);
+            Assert.Equal(SameSiteAttribute.None, cookie.SameSite);
 
             tmp.Dispose();
             await context.DisposeAsync();
@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests
             var (tmp, context, page) = await LaunchAsync();
 
             await page.GoToAsync(TestConstants.EmptyPage);
-            await context.AddCookiesAsync(new SetNetworkCookieParam
+            await context.AddCookiesAsync(new Cookie
             {
                 Url = TestConstants.EmptyPage,
                 Name = "username",
@@ -69,7 +69,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(-1, cookie.Expires);
             Assert.False(cookie.HttpOnly);
             Assert.False(cookie.Secure);
-            Assert.Equal(SameSite.None, cookie.SameSite);
+            Assert.Equal(SameSiteAttribute.None, cookie.SameSite);
 
             tmp.Dispose();
             await context.DisposeAsync();
@@ -83,13 +83,13 @@ namespace PlaywrightSharp.Tests
 
             await page.GoToAsync(TestConstants.EmptyPage);
             await context.AddCookiesAsync(
-                new SetNetworkCookieParam
+                new Cookie
                 {
                     Url = TestConstants.EmptyPage,
                     Name = "cookie1",
                     Value = "1",
                 },
-                new SetNetworkCookieParam
+                new Cookie
                 {
                     Url = TestConstants.EmptyPage,
                     Name = "cookie2",
@@ -138,7 +138,7 @@ namespace PlaywrightSharp.Tests
                 Assert.False(cookie.HttpOnly);
                 Assert.Equal("username", cookie.Name);
                 Assert.Equal("/", cookie.Path);
-                Assert.Equal(SameSite.None, cookie.SameSite);
+                Assert.Equal(SameSiteAttribute.None, cookie.SameSite);
                 Assert.False(cookie.Secure);
                 Assert.Equal("John Doe", cookie.Value);
             }

@@ -156,7 +156,7 @@ namespace PlaywrightSharp.Transport.Channels
                 "cookies",
                 new Dictionary<string, object>
                 {
-                    ["urls"] = urls?.ToArray(),
+                    ["urls"] = urls?.ToArray() ?? Array.Empty<string>(),
                 }).ConfigureAwait(false))?.GetProperty("cookies").ToObject<IReadOnlyCollection<BrowserContextCookiesResult>>();
         }
 

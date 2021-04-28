@@ -108,7 +108,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldResetPermissions()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Context.GrantPermissionsAsync(ContextPermissions.Geolocation, TestConstants.EmptyPage);
+            await Context.GrantPermissionsAsync(new [] { ContextPermissions.Geolocation }, TestConstants.EmptyPage);
             Assert.Equal("granted", await GetPermissionAsync(Page, "geolocation"));
             await Context.ClearPermissionsAsync();
             Assert.Equal("prompt", await GetPermissionAsync(Page, "geolocation"));
@@ -131,7 +131,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal(new[] { "prompt" }, await Page.EvaluateAsync<string[]>("window.events"));
             await Context.GrantPermissionsAsync(Array.Empty<string>(), TestConstants.EmptyPage);
             Assert.Equal(new[] { "prompt", "denied" }, await Page.EvaluateAsync<string[]>("window.events"));
-            await Context.GrantPermissionsAsync(ContextPermissions.Geolocation, TestConstants.EmptyPage);
+            await Context.GrantPermissionsAsync(new[] { ContextPermissions.Geolocation }, TestConstants.EmptyPage);
             Assert.Equal(
                 new[] { "prompt", "denied", "granted" },
                 await Page.EvaluateAsync<string[]>("window.events"));
@@ -153,7 +153,7 @@ namespace PlaywrightSharp.Tests
             Assert.Equal("prompt", await GetPermissionAsync(otherPage, "geolocation"));
 
             await Context.GrantPermissionsAsync(Array.Empty<string>(), TestConstants.EmptyPage);
-            await otherContext.GrantPermissionsAsync(ContextPermissions.Geolocation, TestConstants.EmptyPage);
+            await otherContext.GrantPermissionsAsync(new string[] { ContextPermissions.Geolocation }, TestConstants.EmptyPage);
             Assert.Equal("denied", await GetPermissionAsync(Page, "geolocation"));
             Assert.Equal("granted", await GetPermissionAsync(otherPage, "geolocation"));
 

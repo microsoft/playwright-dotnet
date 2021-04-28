@@ -214,7 +214,7 @@ namespace PlaywrightSharp
         public Task GrantPermissionsAsync(IEnumerable<string> permissions, string origin = null) => Channel.GrantPermissionsAsync(permissions, origin);
 
         /// <inheritdoc/>
-        public Task GrantPermissionsAsync(params string[] permissions) => Channel.GrantPermissionsAsync(permissions, null);
+        public Task GrantPermissionsAsync(string permission) => Channel.GrantPermissionsAsync(new string[] { permission }, null);
 
         /// <inheritdoc/>
         public async Task<IPage> NewPageAsync() => (await Channel.NewPageAsync().ConfigureAwait(false)).Object;
@@ -253,10 +253,29 @@ namespace PlaywrightSharp
         public Task SetOfflineAsync(bool offline) => Channel.SetOfflineAsync(offline);
 
         /// <inheritdoc/>
-        public Task<string> StorageStateAsync(string path = null) => throw new NotImplementedException();
+        public async Task<string> StorageStateAsync(string path = null)
+        {
+            string state = JsonSerializer.Serialize(
+                await Channel.GetStorageStateAsync().ConfigureAwait(false),
+                Channel.Connection.GetDefaultJsonSerializerOptions());
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                File.WriteAllText(path, state);
+            }
+
+            return state;
+        }
 
         /// <inheritdoc/>
-        public Task UnrouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler = null) => throw new NotImplementedException();
+        public Task UnrouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler = null)
+            => UnrouteAsync(new RouteSetting()
+            {
+                Function = urlFunc,
+                Url = urlString,
+                Regex = urlRegex,
+                Handler = handler,
+            });
 
         /// <inheritdoc cref="UnrouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
         public Task UnrouteAsync(string urlString, Action<IRoute> handler = default)

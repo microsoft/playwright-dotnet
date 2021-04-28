@@ -51,7 +51,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkWithExtraHeadersFromBrowserContext()
         {
             await using var context = await Browser.NewContextAsync();
-            await context.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
+            await context.SetExtraHttpHeadersAsync(new Dictionary<string, string>
             {
                 ["Foo"] = "Bar"
             });
@@ -68,7 +68,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldOverrideExtraHeadersFromBrowserContext()
         {
             await using var context = await Browser.NewContextAsync();
-            await context.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
+            await context.SetExtraHttpHeadersAsync(new Dictionary<string, string>
             {
                 ["fOo"] = "bAr",
                 ["baR"] = "foO",

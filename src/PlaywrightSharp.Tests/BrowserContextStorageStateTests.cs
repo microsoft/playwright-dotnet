@@ -39,28 +39,12 @@ namespace PlaywrightSharp.Tests
             {
                 localStorage['name2'] = 'value2';
             }");
-            var storage = await Context.GetStorageStateAsync();
-            Assert.Equal(
-                new List<StorageStateOrigin>()
-                {
-                    new StorageStateOrigin
-                    {
-                        Origin= "https://www.example.com",
-                        LocalStorage = new List<NameValueEntry>
-                        {
-                            new NameValueEntry("name1", "value1")
-                        },
-                    },
-                    new StorageStateOrigin
-                    {
-                        Origin= "https://www.domain.com",
-                        LocalStorage = new List<NameValueEntry>
-                        {
-                            new NameValueEntry("name2", "value2")
-                        },
-                    }
-                  },
-                storage.Origins);
+
+            string storage = await Context.StorageStateAsync();
+
+            // TODO: think about IVT-in the StorageState and serializing
+            string expected = @"{""cookies"":[],""origins"":[{""origin"":""https://www.example.com"",""localStorage"":[{""name"":""name1"",""value"":""value1""}]},{""origin"":""https://www.domain.com"",""localStorage"":[{""name"":""name2"",""value"":""value2""}]}]}";
+            Assert.Equal(storage, expected);
         }
 
         [PlaywrightTest("browsercontext-storage-state.spec.ts", "should set local storage")]
@@ -87,8 +71,8 @@ namespace PlaywrightSharp.Tests
             }");
             using var tempDir = new TempDirectory();
             string path = Path.Combine(tempDir.Path, "storage-state.json");
-            var storage = await Context.GetStorageStateAsync(path);
-            Assert.Equal(storage, JsonSerializer.Deserialize<StorageState>(File.ReadAllText(path), JsonExtensions.DefaultJsonSerializerOptions));
+            string storage = await Context.StorageStateAsync(path);
+            Assert.Equal(storage, File.ReadAllText(path));
 
             await using var context = await Browser.NewContextAsync(storageStatePath: path);
             var page2 = await context.NewPageAsync();

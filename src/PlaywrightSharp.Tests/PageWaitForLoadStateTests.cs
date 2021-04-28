@@ -102,7 +102,7 @@ namespace PlaywrightSharp.Tests
                   await new Promise(f => setTimeout(f, 100));
             }");
             var pages = Context.Pages;
-            Assert.Equal(2, pages.Length);
+            Assert.Equal(2, pages.Count);
 
             // order is not guaranteed
             var mainPage = pages.FirstOrDefault(p => ReferenceEquals(Page, p));

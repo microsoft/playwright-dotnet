@@ -55,7 +55,7 @@ namespace PlaywrightSharp
         Task<IReadOnlyCollection<BrowserContextCookiesResult>> GetCookiesAsync(params string[] urls);
 
         /// <inheritdoc cref="IBrowserContext.GrantPermissionsAsync(IEnumerable{string}, string)"/>
-        Task GrantPermissionsAsync(params string[] permissions);
+        Task GrantPermissionsAsync(string permission);
 
         /// <inheritdoc cref="IBrowserContext.WaitForEventAsync(string, float?)"/>
         Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, float? timeout = default);

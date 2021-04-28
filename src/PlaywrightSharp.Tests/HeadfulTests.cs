@@ -141,7 +141,7 @@ namespace PlaywrightSharp.Tests
                 Assert.False(cookie.HttpOnly);
                 Assert.Equal("username", cookie.Name);
                 Assert.Equal("/", cookie.Path);
-                Assert.Equal(SameSite.None, cookie.SameSite);
+                Assert.Equal(SameSiteAttribute.None, cookie.SameSite);
                 Assert.False(cookie.Secure);
                 Assert.Equal("John Doe", cookie.Value);
             }

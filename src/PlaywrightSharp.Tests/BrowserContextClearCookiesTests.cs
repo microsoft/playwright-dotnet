@@ -19,7 +19,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldClearCookes()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Context.AddCookiesAsync(new SetNetworkCookieParam
+            await Context.AddCookiesAsync(new Cookie
             {
                 Url = TestConstants.EmptyPage,
                 Name = "cookie1",
@@ -37,14 +37,14 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldIsolateWhenClearing()
         {
             await using var anotherContext = await Browser.NewContextAsync();
-            await Context.AddCookiesAsync(new SetNetworkCookieParam
+            await Context.AddCookiesAsync(new Cookie
             {
                 Name = "page1cookie",
                 Value = "page1value",
                 Url = TestConstants.EmptyPage
             });
 
-            await anotherContext.AddCookiesAsync(new SetNetworkCookieParam
+            await anotherContext.AddCookiesAsync(new Cookie
             {
                 Name = "page2cookie",
                 Value = "page2value",
