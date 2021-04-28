@@ -48,5 +48,76 @@ namespace PlaywrightSharp
     /// </summary>
     public partial interface IBrowserContext : IAsyncDisposable
     {
+        /// <inheritdoc cref="IBrowserContext.AddCookiesAsync(IEnumerable{Cookie})"/>
+        Task AddCookiesAsync(params Cookie[] cookies);
+
+        /// <inheritdoc cref="IBrowserContext"/>
+        Task<IReadOnlyCollection<BrowserContextCookiesResult>> GetCookiesAsync(params string[] urls);
+
+        /// <inheritdoc cref="IBrowserContext.GrantPermissionsAsync(IEnumerable{string}, string)"/>
+        Task GrantPermissionsAsync(params string[] permissions);
+
+        /// <inheritdoc cref="IBrowserContext.WaitForEventAsync(string, float?)"/>
+        Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, float? timeout = default);
+
+        /// <inheritdoc cref="RouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
+        Task RouteAsync(string urlString, Action<IRoute> handler);
+
+        /// <inheritdoc cref="RouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
+        Task RouteAsync(Regex urlRegex, Action<IRoute> handler);
+
+        /// <inheritdoc cref="RouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
+        Task RouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler);
+
+        /// <inheritdoc cref="UnrouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
+        Task UnrouteAsync(string urlString, Action<IRoute> handler = default);
+
+        /// <inheritdoc cref="UnrouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
+        Task UnrouteAsync(Regex urlRegex, Action<IRoute> handler = default);
+
+        /// <inheritdoc cref="UnrouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
+        Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler = default);
+
+        /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
+        Task ExposeBindingAsync(string name, Action<BindingSource> callback);
+
+        /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
+        Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback);
+
+        /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
+        Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback);
+
+        /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
+        Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback);
+
+        /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
+        Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback);
+
+        /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
+        Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback);
+
+        /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
+        Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback);
+
+        /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
+        Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback);
+
+        /// <inheritdoc cref="ExposeFunctionAsync(string, Action)"/>
+        Task ExposeFunctionAsync<T>(string name, Action<T> callback);
+
+        /// <inheritdoc cref="ExposeFunctionAsync(string, Action)"/>
+        Task ExposeFunctionAsync<TResult>(string name, Func<TResult> callback);
+
+        /// <inheritdoc cref="ExposeFunctionAsync(string, Action)"/>
+        Task ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> callback);
+
+        /// <inheritdoc cref="ExposeFunctionAsync(string, Action)"/>
+        Task ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> callback);
+
+        /// <inheritdoc cref="ExposeFunctionAsync(string, Action)"/>
+        Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> callback);
+
+        /// <inheritdoc cref="ExposeFunctionAsync(string, Action)"/>
+        Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback);
     }
 }

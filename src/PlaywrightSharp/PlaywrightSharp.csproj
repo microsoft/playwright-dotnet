@@ -59,6 +59,7 @@
     <Compile Remove="__TRASH\BrowserContext.old.cs" />
     <Compile Remove="__TRASH\IBrowserContext.cs" />
     <Compile Remove="__TRASH\NetworkCookie.cs" />
+    <Compile Remove="__TRASH\SetNetworkCookieParam.cs" />
     <Compile Remove="__TRASH\TimeoutSettings.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -71,6 +72,7 @@
     <None Include="__TRASH\BrowserContext.old.cs" />
     <None Include="__TRASH\IBrowserContext.cs" />
     <None Include="__TRASH\NetworkCookie.cs" />
+    <None Include="__TRASH\SetNetworkCookieParam.cs" />
     <None Include="__TRASH\TimeoutSettings.cs" />
   </ItemGroup>
   <Target Name="EnsurePrerequisitsRan" BeforeTargets="InstallBrowsers">

@@ -50,6 +50,6 @@ namespace PlaywrightSharp.Har
         /// <summary>
         /// SameSite.
         /// </summary>
-        public SameSite SameSite { get; set; } = SameSite.None;
+        public SameSiteAttribute SameSite { get; set; } = SameSiteAttribute.None;
     }
 }

@@ -12,7 +12,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// Cookie list.
         /// </summary>
-        public ICollection<SetNetworkCookieParam> Cookies { get; set; } = new List<SetNetworkCookieParam>();
+        public ICollection<Cookie> Cookies { get; set; } = new List<Cookie>();
 
         /// <summary>
         /// List of local storage per origin.
@@ -28,7 +28,7 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         public override int GetHashCode()
             => 412870874 +
-                EqualityComparer<ICollection<SetNetworkCookieParam>>.Default.GetHashCode(Cookies) +
+                EqualityComparer<ICollection<Cookie>>.Default.GetHashCode(Cookies) +
                 EqualityComparer<ICollection<StorageStateOrigin>>.Default.GetHashCode(Origins);
 
         /// <inheritdoc/>
