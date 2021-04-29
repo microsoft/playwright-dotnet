@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace PlaywrightSharp.LocalNugetTest
+namespace Microsoft.Playwright.LocalNugetTest
 {
     public class NugetTests
     {
