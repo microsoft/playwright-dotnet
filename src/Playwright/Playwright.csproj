@@ -20,11 +20,12 @@
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <NoWarn>1701;1702;CS0067;1734</NoWarn>
     <AssemblyName>Microsoft.Playwright</AssemblyName>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
   <Import Project="../Common/Dependencies.props" />
   <Import Project="../Common/SignAssembly.props" />
   <Import Project="../Common/PackageInfo.props" />
-  <Import Project="build/netstandard2.0/Playwright.targets" />
+  <Import Project="build/netstandard2.0/Microsoft.Playwright.targets" />
   <ItemGroup>
     <PackageReference Include="Esprima" Version="1.0.1270" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
