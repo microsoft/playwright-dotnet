@@ -1,4 +1,4 @@
-using PlaywrightSharp.Transport.Channels;
+using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {

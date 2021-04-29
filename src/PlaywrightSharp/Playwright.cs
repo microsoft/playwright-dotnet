@@ -1,13 +1,15 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
-namespace Microsoft.Playwright.Something
+namespace Microsoft.Playwright
 {
     /// <inheritdoc cref="IPlaywright" />
+    [SuppressMessage("Microsoft.Design", "CA1724", Justification = "Playwright is the entrypoint for all languages.")]
     public sealed class Playwright : ChannelOwnerBase, IPlaywright, IChannelOwner<Playwright>
     {
         /// <summary>
