@@ -4,10 +4,10 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Playwright;
+using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.Helpers;
 using Microsoft.Playwright.Tests.TestServer;
 using Microsoft.Playwright.Transport.Channels;
-using Microsoft.Playwright.Testing.Xunit;
 using Xunit.Abstractions;
 
 namespace Microsoft.Playwright.Tests.BaseTests
