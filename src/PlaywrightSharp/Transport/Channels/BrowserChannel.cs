@@ -188,9 +188,6 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task CloseAsync() => Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "close", null);
 
-        internal Task<CDPSessionChannel> NewBrowserCDPSessionAsync()
-            => Connection.SendMessageToServerAsync<CDPSessionChannel>(Guid, "crNewBrowserCDPSession", null);
-
         internal Task StartTracingAsync(IPage page, bool screenshots, string path, IEnumerable<string> categories)
         {
             var args = new Dictionary<string, object>

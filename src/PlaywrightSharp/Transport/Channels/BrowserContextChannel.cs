@@ -208,15 +208,6 @@ namespace PlaywrightSharp.Transport.Channels
                     ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }),
                 });
 
-        internal Task<CDPSessionChannel> NewCDPSessionAsync(IPage page)
-            => Connection.SendMessageToServerAsync<CDPSessionChannel>(
-                Guid,
-                "crNewCDPSession",
-                new Dictionary<string, object>
-                {
-                    ["page"] = page,
-                });
-
         internal Task<StorageState> GetStorageStateAsync()
             => Connection.SendMessageToServerAsync<StorageState>(Guid, "storageState", null);
     }
