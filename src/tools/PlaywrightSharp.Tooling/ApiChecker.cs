@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Tooling
             var assembly = Assembly.LoadFrom(AssemblyPath);
 
             var report = new StringBuilder("<html><body><ul>");
-            string json = await File.ReadAllTextAsync(Path.Combine(BasePath, "src", "Microsoft.Playwright", "Drivers", "api.json")).ConfigureAwait(false);
+            string json = await File.ReadAllTextAsync(Path.Combine(BasePath, "src", "Playwright", "Drivers", "api.json")).ConfigureAwait(false);
 
             var api = JsonSerializer.Deserialize<PlaywrightEntity[]>(json, new JsonSerializerOptions
             {
@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Tooling
                 },
             });
 
-            string mismatchJsonFile = Path.Combine(BasePath, "src", "Microsoft.Playwright", "Drivers", "expected_api_mismatch.json");
+            string mismatchJsonFile = Path.Combine(BasePath, "src", "Playwright", "Drivers", "expected_api_mismatch.json");
             string mismatchJson = await File.ReadAllTextAsync(mismatchJsonFile).ConfigureAwait(false);
             Mismatch mismatches;
 

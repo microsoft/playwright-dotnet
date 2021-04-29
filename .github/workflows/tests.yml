@@ -56,7 +56,7 @@ jobs:
         env:
           PRODUCT: ${{ matrix.product }}
         run: |
-          dotnet test ./src/PlaywrightSharp.Tests/PlaywrightSharp.Tests.csproj -c Debug -f net5.0 --logger "trx;LogFileName=TestResults.xml"
+          dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --logger "trx;LogFileName=TestResults.xml"
       - name: Run tests (Linux)
         if: ${{ matrix.os == 'ubuntu-latest' }}
         env:
