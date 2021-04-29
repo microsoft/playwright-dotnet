@@ -27,7 +27,7 @@ namespace PlaywrightSharp.Tooling
             var assembly = Assembly.LoadFrom(AssemblyPath);
 
             var report = new StringBuilder("<html><body><ul>");
-            string json = await File.ReadAllTextAsync(Path.Combine(BasePath, "src", "PlaywrightSharp", "Drivers", "api.json")).ConfigureAwait(false);
+            string json = await File.ReadAllTextAsync(Path.Combine(BasePath, "src", "Playwright", "Drivers", "api.json")).ConfigureAwait(false);
 
             var api = JsonSerializer.Deserialize<PlaywrightEntity[]>(json, new JsonSerializerOptions
             {
@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Tooling
                 },
             });
 
-            string mismatchJsonFile = Path.Combine(BasePath, "src", "PlaywrightSharp", "Drivers", "expected_api_mismatch.json");
+            string mismatchJsonFile = Path.Combine(BasePath, "src", "Playwright", "Drivers", "expected_api_mismatch.json");
             string mismatchJson = await File.ReadAllTextAsync(mismatchJsonFile).ConfigureAwait(false);
             Mismatch mismatches;
 
@@ -61,7 +61,7 @@ namespace PlaywrightSharp.Tooling
 
             report.Append("</ul></body></html>");
             await File.WriteAllTextAsync(
-                Path.Combine(BasePath, "src", "PlaywrightSharp", "Drivers", "report.html"),
+                Path.Combine(BasePath, "src", "Playwright", "Drivers", "report.html"),
                 report.ToString()).ConfigureAwait(false);
 
             return true;
@@ -72,7 +72,7 @@ namespace PlaywrightSharp.Tooling
             ApiChecker apiChecker = new ApiChecker
             {
                 BasePath = o.BasePath,
-                AssemblyPath = Path.Combine(o.BasePath, "src", "PlaywrightSharp", "bin", "Debug", "net5.0", "PlaywrightSharp.dll"),
+                AssemblyPath = Path.Combine(o.BasePath, "src", "Playwright", "bin", "Debug", "net5.0", "Microsoft.Playwright.dll"),
             };
             return apiChecker.ExecuteAsync();
         }
@@ -105,21 +105,21 @@ namespace PlaywrightSharp.Tooling
 
         private void EvaluateEntity(Assembly assembly, string name, PlaywrightEntity entity, StringBuilder report, Mismatch mismatches)
         {
-            var playwrightSharpType = assembly.GetType($"PlaywrightSharp.I{name}");
+            var playwrightSharpType = assembly.GetType($"Microsoft.Playwright.I{name}");
 
             if (playwrightSharpType == null)
             {
-                playwrightSharpType = assembly.GetType($"PlaywrightSharp.{name}");
+                playwrightSharpType = assembly.GetType($"Microsoft.Playwright.{name}");
             }
 
             if (playwrightSharpType == null)
             {
-                playwrightSharpType = assembly.GetType($"PlaywrightSharp.Chromium.{name}");
+                playwrightSharpType = assembly.GetType($"Microsoft.Playwright.Chromium.{name}");
             }
 
             if (playwrightSharpType == null)
             {
-                playwrightSharpType = assembly.GetType($"PlaywrightSharp.{name}EventArgs");
+                playwrightSharpType = assembly.GetType($"Microsoft.Playwright.{name}EventArgs");
             }
 
             if (playwrightSharpType != null)

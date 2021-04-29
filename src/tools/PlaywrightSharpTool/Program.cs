@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using CommandLine;
-using PlaywrightSharp;
+using Microsoft.Playwright;
 using PlaywrightSharpTool.Options;
 
 namespace PlaywrightSharpTool
