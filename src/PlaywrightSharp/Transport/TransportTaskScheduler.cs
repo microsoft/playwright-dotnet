@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp.Transport
+namespace Microsoft.Playwright.Transport
 {
     /// <summary>
     /// Delegate for scheduling of long-running transport tasks.

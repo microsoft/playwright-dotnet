@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp.Transport
+namespace Microsoft.Playwright.Transport
 {
     /// <summary>
     /// Transport interface.

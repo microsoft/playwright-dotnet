@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 
-namespace PlaywrightSharp.Har
+namespace Microsoft.Playwright.Har
 {
     /// <summary>
     /// HAR entry HTTP request.

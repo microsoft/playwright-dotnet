@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <summary>
     /// See <see cref="StorageState.Origins"/>.

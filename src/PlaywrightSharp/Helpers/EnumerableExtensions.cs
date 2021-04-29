@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PlaywrightSharp.Helpers
+namespace Microsoft.Playwright.Helpers
 {
     internal static class EnumerableExtensions
     {

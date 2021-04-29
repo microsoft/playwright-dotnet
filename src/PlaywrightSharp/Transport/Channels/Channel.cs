@@ -1,6 +1,6 @@
 using System;
 
-namespace PlaywrightSharp.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels
 {
     internal class Channel<T> : ChannelBase, IChannel<T>
         where T : ChannelOwnerBase, IChannelOwner<T>

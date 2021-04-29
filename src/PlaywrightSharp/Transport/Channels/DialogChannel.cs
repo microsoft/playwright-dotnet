@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels
 {
     internal class DialogChannel : Channel<Dialog>
     {

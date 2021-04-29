@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp.Helpers
+namespace Microsoft.Playwright.Helpers
 {
     internal class TaskQueue : IDisposable
     {

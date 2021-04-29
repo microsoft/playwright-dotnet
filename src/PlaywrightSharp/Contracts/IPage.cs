@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     public partial interface IPage
     {

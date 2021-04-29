@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using PlaywrightSharp.Transport;
-using PlaywrightSharp.Transport.Channels;
-using PlaywrightSharp.Transport.Protocol;
+using Microsoft.Playwright.Transport;
+using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Transport.Protocol;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <inheritdoc cref="IBrowser"/>
     public class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
@@ -17,7 +17,7 @@ namespace PlaywrightSharp
 
         internal Browser(IChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
         {
-            Channel = new PlaywrightSharp.Transport.Channels.BrowserChannel(guid, parent.Connection, this);
+            Channel = new Microsoft.Playwright.Transport.Channels.BrowserChannel(guid, parent.Connection, this);
             IsConnected = true;
             Channel.Closed += (_, _) => DidClose();
             _initializer = initializer;
@@ -41,7 +41,7 @@ namespace PlaywrightSharp
         /// <inheritdoc/>
         public string Version => _initializer.Version;
 
-        internal PlaywrightSharp.Transport.Channels.BrowserChannel Channel { get; }
+        internal Microsoft.Playwright.Transport.Channels.BrowserChannel Channel { get; }
 
         internal List<BrowserContext> BrowserContextsList { get; } = new List<BrowserContext>();
 

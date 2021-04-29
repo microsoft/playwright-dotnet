@@ -1,4 +1,4 @@
-namespace PlaywrightSharp.Har
+namespace Microsoft.Playwright.Har
 {
     /// <summary>
     /// Resulting model of the file generated using HAR.

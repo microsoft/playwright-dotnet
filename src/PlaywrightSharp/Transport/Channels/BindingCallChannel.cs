@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
+using Microsoft.Playwright.Helpers;
 
-namespace PlaywrightSharp.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels
 {
     internal class BindingCallChannel : Channel<BindingCall>
     {

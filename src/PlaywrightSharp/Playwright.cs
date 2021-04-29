@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using PlaywrightSharp.Transport;
-using PlaywrightSharp.Transport.Channels;
-using PlaywrightSharp.Transport.Protocol;
+using Microsoft.Playwright.Transport;
+using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Transport.Protocol;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright.Something
 {
     /// <inheritdoc cref="IPlaywright" />
     public sealed class Playwright : ChannelOwnerBase, IPlaywright, IChannelOwner<Playwright>
@@ -27,7 +27,7 @@ namespace PlaywrightSharp
             _initializer = initializer;
             _channel = new PlaywrightChannel(guid, parent.Connection, this);
             _loggerFactory = loggerFactory;
-            _ = (Selectors as PlaywrightSharp.Selectors).AddChannelAsync(initializer.Selectors.Object);
+            _ = (Selectors as Microsoft.Playwright.Selectors).AddChannelAsync(initializer.Selectors.Object);
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
@@ -52,7 +52,7 @@ namespace PlaywrightSharp
         public IBrowserType Webkit { get => _initializer.Webkit; set => throw new NotSupportedException(); }
 
         /// <inheritdoc/>
-        public ISelectors Selectors { get => PlaywrightSharp.Selectors.SharedSelectors; set => throw new NotSupportedException(); }
+        public ISelectors Selectors { get => Microsoft.Playwright.Selectors.SharedSelectors; set => throw new NotSupportedException(); }
 
         internal Connection Connection { get; set; }
 

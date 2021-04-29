@@ -1,6 +1,6 @@
 using System;
 
-namespace PlaywrightSharp.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels
 {
     internal class RouteEventArgs : EventArgs
     {

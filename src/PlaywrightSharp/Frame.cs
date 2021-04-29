@@ -30,12 +30,12 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Transport;
-using PlaywrightSharp.Transport.Channels;
-using PlaywrightSharp.Transport.Protocol;
+using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport;
+using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Transport.Protocol;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <inheritdoc cref="IFrame" />
     public class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
@@ -388,7 +388,7 @@ namespace PlaywrightSharp
         {
             Task<LoadState> task;
             Waiter waiter = null;
-            state = state.EnsureDefaultValue(PlaywrightSharp.LoadState.Load);
+            state = state.EnsureDefaultValue(Microsoft.Playwright.LoadState.Load);
 
             try
             {

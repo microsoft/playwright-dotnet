@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace PlaywrightSharp.Transport.Converters
+namespace Microsoft.Playwright.Transport.Converters
 {
     /// <summary>
     /// JSON converter for Mixed state.

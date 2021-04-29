@@ -23,7 +23,7 @@
  */
 using System;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <summary>
     /// <see cref="Geolocation"/>.

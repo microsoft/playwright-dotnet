@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using PlaywrightSharp.Transport.Protocol;
+using Microsoft.Playwright.Transport.Protocol;
 
-namespace PlaywrightSharp.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels
 {
     internal class BrowserChannel : Channel<Browser>
     {

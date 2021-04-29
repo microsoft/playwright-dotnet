@@ -4,9 +4,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using PlaywrightSharp.Transport.Protocol;
+using Microsoft.Playwright.Transport.Protocol;
 
-namespace PlaywrightSharp.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels
 {
     internal class RouteChannel : Channel<Route>
     {

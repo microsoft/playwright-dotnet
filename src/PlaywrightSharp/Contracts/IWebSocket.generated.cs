@@ -44,7 +44,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <summary><para>The <see cref="IWebSocket"/> class represents websocket connections in the page.</para></summary>
     public partial interface IWebSocket

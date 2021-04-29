@@ -1,7 +1,7 @@
 using System;
 using System.Text.Json;
 
-namespace PlaywrightSharp.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels
 {
     internal class ChannelBase
     {

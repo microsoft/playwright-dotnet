@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <summary>
     /// Partial <see cref="IResponse"/>.

@@ -1,4 +1,4 @@
-namespace PlaywrightSharp.Transport
+namespace Microsoft.Playwright.Transport
 {
     internal class ErrorEntry
     {

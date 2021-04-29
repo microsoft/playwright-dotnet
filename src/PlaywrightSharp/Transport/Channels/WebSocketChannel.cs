@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Transport.Converters;
+using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport.Converters;
 
-namespace PlaywrightSharp.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels
 {
     internal class WebSocketChannel : Channel<WebSocket>
     {

@@ -43,7 +43,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
 	/// <summary>
 	/// <para>
@@ -128,7 +128,7 @@ namespace PlaywrightSharp
         /// <summary>
         /// <para>
         /// Contains the request's resource type as it was perceived by the rendering engine.
-        /// You can use <see cref="PlaywrightSharp.Contracts.Constants.ResourceTypes" /> to
+        /// You can use <see cref="Microsoft.Playwright.Contracts.Constants.ResourceTypes" /> to
         /// access the constants for all the values available as a result of this method.
         /// </para>
         /// </summary>

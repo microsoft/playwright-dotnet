@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <summary>
     /// Payload information.

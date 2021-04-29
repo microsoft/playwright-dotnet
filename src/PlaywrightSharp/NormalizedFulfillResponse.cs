@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Net;
-using PlaywrightSharp.Transport.Protocol;
+using Microsoft.Playwright.Transport.Protocol;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     internal class NormalizedFulfillResponse
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <summary>
     /// Workder created event arguments.

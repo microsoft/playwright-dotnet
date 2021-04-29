@@ -1,4 +1,4 @@
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <summary>
     /// Represents a definition of a keyboard key.

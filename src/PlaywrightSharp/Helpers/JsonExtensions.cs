@@ -1,9 +1,9 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using PlaywrightSharp.Transport.Converters;
+using Microsoft.Playwright.Transport.Converters;
 
-namespace PlaywrightSharp.Helpers
+namespace Microsoft.Playwright.Helpers
 {
     /// <summary>
     /// JSON extensions.
@@ -13,7 +13,7 @@ namespace PlaywrightSharp.Helpers
         static JsonExtensions() => DefaultJsonSerializerOptions = GetNewDefaultSerializerOptions();
 
         /// <summary>
-        /// Base serialization options used by PlaywrightSharp.
+        /// Base serialization options used by Microsoft.Playwright.
         /// </summary>
         public static JsonSerializerOptions DefaultJsonSerializerOptions { get; }
 

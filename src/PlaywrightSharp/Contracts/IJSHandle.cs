@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     public partial interface IJSHandle
     {

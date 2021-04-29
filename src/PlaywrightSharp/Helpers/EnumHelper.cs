@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace PlaywrightSharp.Helpers
+namespace Microsoft.Playwright.Helpers
 {
     internal static class EnumHelper
     {

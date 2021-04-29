@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Transport.Channels;
+using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport.Channels;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     internal class Mouse : IMouse
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     public partial interface IWebSocket
     {

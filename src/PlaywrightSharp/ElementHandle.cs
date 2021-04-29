@@ -28,11 +28,11 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Transport.Channels;
-using PlaywrightSharp.Transport.Protocol;
+using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Transport.Protocol;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <inheritdoc cref="IElementHandle" />
     public class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHandle>

@@ -1,4 +1,4 @@
-namespace PlaywrightSharp.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels
 {
     internal class PageChannelPopupEventArgs
     {

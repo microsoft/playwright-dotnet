@@ -1,10 +1,10 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using PlaywrightSharp.Transport;
-using PlaywrightSharp.Transport.Channels;
+using Microsoft.Playwright.Transport;
+using Microsoft.Playwright.Transport.Channels;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     internal class Video : IVideo
     {

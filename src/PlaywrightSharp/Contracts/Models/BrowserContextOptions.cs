@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Transport.Protocol;
+using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport.Protocol;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <summary>
     /// TODO: This class needs to be updated, as does its documentation.

@@ -1,9 +1,9 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using PlaywrightSharp.Transport.Channels;
+using Microsoft.Playwright.Transport.Channels;
 
-namespace PlaywrightSharp.Transport.Converters
+namespace Microsoft.Playwright.Transport.Converters
 {
     internal class ChannelOwnerToGuidConverter : JsonConverter<IChannelOwner>
     {

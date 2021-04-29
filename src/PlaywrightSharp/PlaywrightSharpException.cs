@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <summary>
     /// Base exception used to identify any exception thrown by PlaywrightSharp.

@@ -38,7 +38,7 @@ using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Converters;
 using PlaywrightSharp.Transport.Protocol;
 
-namespace PlaywrightSharp.Transport
+namespace Microsoft.Playwright.Transport
 {
     internal class Connection : IDisposable
     {

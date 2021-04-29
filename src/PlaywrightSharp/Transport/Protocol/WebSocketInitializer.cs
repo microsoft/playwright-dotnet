@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace PlaywrightSharp.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class WebSocketInitializer
     {

@@ -43,7 +43,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <summary><para><see cref="IResponse"/> class represents responses which are received by page.</para></summary>
     public partial interface IResponse

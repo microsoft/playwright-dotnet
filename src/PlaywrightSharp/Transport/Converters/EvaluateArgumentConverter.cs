@@ -1,10 +1,10 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Transport.Channels;
+using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport.Channels;
 
-namespace PlaywrightSharp.Transport.Converters
+namespace Microsoft.Playwright.Transport.Converters
 {
     internal class EvaluateArgumentConverter : JsonConverter<EvaluateArgument>
     {

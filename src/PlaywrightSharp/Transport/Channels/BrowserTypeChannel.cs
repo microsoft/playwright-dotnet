@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
+using Microsoft.Playwright.Helpers;
 
-namespace PlaywrightSharp.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels
 {
     internal class BrowserTypeChannel : Channel<BrowserType>
     {
@@ -14,7 +14,7 @@ namespace PlaywrightSharp.Transport.Channels
 
         public Task<BrowserChannel> LaunchAsync(
             bool? headless = default,
-            global::PlaywrightSharp.BrowserChannel channel = default,
+            global::Microsoft.Playwright.BrowserChannel channel = default,
             string executablePath = default,
             IEnumerable<string> passedArguments = default,
             Proxy proxy = default,
@@ -33,7 +33,7 @@ namespace PlaywrightSharp.Transport.Channels
         {
             var args = new Dictionary<string, object>();
 
-            if (channel != global::PlaywrightSharp.BrowserChannel.Undefined)
+            if (channel != global::Microsoft.Playwright.BrowserChannel.Undefined)
             {
                 args.Add("channel", channel);
             }
@@ -128,7 +128,7 @@ namespace PlaywrightSharp.Transport.Channels
         internal Task<BrowserContextChannel> LaunchPersistentContextAsync(
             string userDataDir,
             bool? headless = default,
-            PlaywrightSharp.BrowserChannel channel = default,
+            Microsoft.Playwright.BrowserChannel channel = default,
             string executablePath = default,
             IEnumerable<string> args = default,
             Proxy proxy = default,
@@ -178,7 +178,7 @@ namespace PlaywrightSharp.Transport.Channels
                 channelArgs.Add("headless", headless);
             }
 
-            if (channel != PlaywrightSharp.BrowserChannel.Undefined)
+            if (channel != Microsoft.Playwright.BrowserChannel.Undefined)
             {
                 channelArgs.Add("channel", channel);
             }

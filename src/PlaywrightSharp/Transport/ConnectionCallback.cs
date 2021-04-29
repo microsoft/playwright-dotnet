@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp.Transport
+namespace Microsoft.Playwright.Transport
 {
     internal class ConnectionCallback
     {

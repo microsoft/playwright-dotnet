@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using PlaywrightSharp.Transport.Channels;
+using Microsoft.Playwright.Transport.Channels;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     internal class Keyboard : IKeyboard
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <summary>
     /// WebSocket events for <see cref="IWebSocket.WaitForEventAsync{T}(PlaywrightEvent{T}, Func{T, bool}, float?)"/>.

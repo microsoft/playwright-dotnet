@@ -1,4 +1,4 @@
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <summary>
     /// Messages coming from the Playwright Driver.

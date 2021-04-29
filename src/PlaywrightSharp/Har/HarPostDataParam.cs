@@ -1,4 +1,4 @@
-namespace PlaywrightSharp.Har
+namespace Microsoft.Playwright.Har
 {
     /// <summary>
     /// POST data param.

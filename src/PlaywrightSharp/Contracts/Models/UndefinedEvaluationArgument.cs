@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PlaywrightSharp.Contracts.Models
+namespace Microsoft.Playwright.Contracts.Models
 {
     /// <summary>
     /// Represents an `Undefined` argument.

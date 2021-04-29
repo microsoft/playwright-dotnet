@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace PlaywrightSharp.Har
+namespace Microsoft.Playwright.Har
 {
     /// <summary>
     /// HAR Log.

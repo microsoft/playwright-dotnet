@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace PlaywrightSharp.Transport
+namespace Microsoft.Playwright.Transport
 {
     internal class PlaywrightServerMessage
     {

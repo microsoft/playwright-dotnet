@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <summary>
     /// Result of calling <see cref="IAccessibility.SnapshotAsync" />.

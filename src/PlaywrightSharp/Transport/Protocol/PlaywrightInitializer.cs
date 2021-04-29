@@ -1,6 +1,6 @@
 using PlaywrightSharp.Transport.Channels;
 
-namespace PlaywrightSharp.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class PlaywrightInitializer
     {

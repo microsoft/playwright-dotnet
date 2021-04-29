@@ -1,6 +1,6 @@
 using System;
 
-namespace PlaywrightSharp.Har
+namespace Microsoft.Playwright.Har
 {
     /// <summary>
     /// Cookie model.

@@ -1,4 +1,4 @@
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <summary>
     /// Environment variables used by the Playwright.

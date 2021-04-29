@@ -1,4 +1,4 @@
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     internal class EvaluateArgumentGuidElement
     {

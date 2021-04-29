@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace PlaywrightSharp.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels
 {
     internal class SelectorsChannel : Channel<SelectorsOwner>
     {

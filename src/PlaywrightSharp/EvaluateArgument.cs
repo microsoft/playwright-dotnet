@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     internal class EvaluateArgument
     {

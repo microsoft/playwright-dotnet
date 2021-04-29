@@ -1,7 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     internal class RouteSetting
     {

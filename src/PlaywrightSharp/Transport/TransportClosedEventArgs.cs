@@ -1,6 +1,6 @@
 using System;
 
-namespace PlaywrightSharp.Transport
+namespace Microsoft.Playwright.Transport
 {
     /// <summary>
     /// See <see cref="IConnectionTransport.TransportClosed"/>.

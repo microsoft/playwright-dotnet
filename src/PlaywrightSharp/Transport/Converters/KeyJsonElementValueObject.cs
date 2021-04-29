@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace PlaywrightSharp.Transport.Converters
+namespace Microsoft.Playwright.Transport.Converters
 {
     internal class KeyJsonElementValueObject
     {

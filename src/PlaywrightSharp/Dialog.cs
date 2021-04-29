@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using PlaywrightSharp.Transport;
-using PlaywrightSharp.Transport.Channels;
-using PlaywrightSharp.Transport.Protocol;
+using Microsoft.Playwright.Transport;
+using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Transport.Protocol;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     internal class Dialog : ChannelOwnerBase, IChannelOwner<Dialog>, IDialog
     {

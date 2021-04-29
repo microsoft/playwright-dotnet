@@ -1,7 +1,7 @@
 using System;
-using PlaywrightSharp.Contracts.Models;
+using Microsoft.Playwright.Contracts.Models;
 
-namespace PlaywrightSharp.Helpers
+namespace Microsoft.Playwright.Helpers
 {
     internal static class ObjectExtensions
     {

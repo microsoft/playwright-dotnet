@@ -27,11 +27,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Transport.Converters;
-using PlaywrightSharp.Transport.Protocol;
+using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport.Converters;
+using Microsoft.Playwright.Transport.Protocol;
 
-namespace PlaywrightSharp.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels
 {
     internal class PageChannel : Channel<Page>
     {

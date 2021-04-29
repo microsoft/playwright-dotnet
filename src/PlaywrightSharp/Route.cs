@@ -5,12 +5,12 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Transport;
-using PlaywrightSharp.Transport.Channels;
-using PlaywrightSharp.Transport.Protocol;
+using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport;
+using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Transport.Protocol;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <summary>
     /// Whenever a network route is set up with <see cref="IPage.RouteAsync(Func{string, bool}, Action{IRoute})"/> or <see cref="IBrowserContext.RouteAsync(string, System.Text.RegularExpressions.Regex, Func{string, bool}, Action{IRoute})"/> the Route object allows to handle the route.

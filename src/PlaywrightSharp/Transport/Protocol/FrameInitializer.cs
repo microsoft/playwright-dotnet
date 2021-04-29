@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace PlaywrightSharp.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class FrameInitializer
     {

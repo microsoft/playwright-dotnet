@@ -1,7 +1,7 @@
 using System.Text.Json;
-using PlaywrightSharp.Transport.Channels;
+using Microsoft.Playwright.Transport.Channels;
 
-namespace PlaywrightSharp.Transport
+namespace Microsoft.Playwright.Transport
 {
     internal class CreateObjectInfo
     {

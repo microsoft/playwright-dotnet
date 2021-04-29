@@ -27,9 +27,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
+using Microsoft.Playwright.Helpers;
 
-namespace PlaywrightSharp.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels
 {
     internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
     {

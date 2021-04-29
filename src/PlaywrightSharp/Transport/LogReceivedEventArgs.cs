@@ -1,6 +1,6 @@
 using System;
 
-namespace PlaywrightSharp.Transport
+namespace Microsoft.Playwright.Transport
 {
     /// <summary>
     /// Log received event arguments.

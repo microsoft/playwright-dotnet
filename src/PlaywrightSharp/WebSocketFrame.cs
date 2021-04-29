@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <inheritdoc/>
     public class WebSocketFrame : IWebSocketFrame

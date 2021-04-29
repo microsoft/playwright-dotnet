@@ -1,6 +1,6 @@
 using System;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <summary>
     /// Events for <see cref="IPage.WaitForEventAsync(string, float?)"/>/>

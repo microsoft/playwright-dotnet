@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     /// <summary>
     /// Exception thrown when a <see cref="IPage"/> fails to navigate an URL.

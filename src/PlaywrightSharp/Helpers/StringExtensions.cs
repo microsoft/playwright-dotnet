@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using Esprima;
 using Esprima.Ast;
 
-namespace PlaywrightSharp.Helpers
+namespace Microsoft.Playwright.Helpers
 {
     /// <summary>
     /// String extensions.

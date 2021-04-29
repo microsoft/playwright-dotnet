@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace PlaywrightSharp.Contracts.Constants
+namespace Microsoft.Playwright.Contracts.Constants
 {
     /// <summary>
     /// Contains the constants of resource types as returned by Playwright.

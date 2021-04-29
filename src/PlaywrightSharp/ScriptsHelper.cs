@@ -5,11 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Transport.Channels;
-using PlaywrightSharp.Transport.Converters;
+using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Transport.Converters;
 
-namespace PlaywrightSharp
+namespace Microsoft.Playwright
 {
     internal static class ScriptsHelper
     {
