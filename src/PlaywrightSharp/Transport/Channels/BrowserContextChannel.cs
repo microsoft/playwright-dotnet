@@ -77,18 +77,15 @@ namespace PlaywrightSharp.Transport.Channels
             }
         }
 
-        internal Task<PageChannel> NewPageAsync(string url)
+        internal Task<PageChannel> NewPageAsync()
             => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "newPage",
-                new Dictionary<string, object>
-                {
-                    ["url"] = url,
-                });
+                null);
 
         internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close");
 
-        internal Task SetDefaultNavigationTimeoutNoReplyAsync(int timeout)
+        internal Task SetDefaultNavigationTimeoutNoReplyAsync(float timeout)
             => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "setDefaultNavigationTimeoutNoReply",
@@ -97,7 +94,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["timeout"] = timeout,
                 });
 
-        internal Task SetDefaultTimeoutNoReplyAsync(int timeout)
+        internal Task SetDefaultTimeoutNoReplyAsync(float timeout)
             => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "setDefaultTimeoutNoReply",
@@ -152,18 +149,18 @@ namespace PlaywrightSharp.Transport.Channels
                     ["offline"] = offline,
                 });
 
-        internal async Task<IEnumerable<NetworkCookie>> GetCookiesAsync(string[] urls)
+        internal async Task<IReadOnlyCollection<BrowserContextCookiesResult>> GetCookiesAsync(IEnumerable<string> urls)
         {
             return (await Connection.SendMessageToServerAsync(
                 Guid,
                 "cookies",
                 new Dictionary<string, object>
                 {
-                    ["urls"] = urls,
-                }).ConfigureAwait(false))?.GetProperty("cookies").ToObject<IEnumerable<NetworkCookie>>();
+                    ["urls"] = urls?.ToArray() ?? Array.Empty<string>(),
+                }).ConfigureAwait(false))?.GetProperty("cookies").ToObject<IReadOnlyCollection<BrowserContextCookiesResult>>();
         }
 
-        internal Task AddCookiesAsync(IEnumerable<SetNetworkCookieParam> cookies)
+        internal Task AddCookiesAsync(IEnumerable<Cookie> cookies)
             => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "addCookies",
@@ -173,11 +170,11 @@ namespace PlaywrightSharp.Transport.Channels
                 },
                 true);
 
-        internal Task GrantPermissionsAsync(string[] permissions, string origin)
+        internal Task GrantPermissionsAsync(IEnumerable<string> permissions, string origin)
         {
             var args = new Dictionary<string, object>
             {
-                ["permissions"] = permissions,
+                ["permissions"] = permissions?.ToArray(),
             };
 
             if (origin != null)
@@ -202,7 +199,7 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task ClearCookiesAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "clearCookies", null);
 
-        internal Task SetExtraHTTPHeadersAsync(IDictionary<string, string> headers)
+        internal Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "setExtraHTTPHeaders",
@@ -222,8 +219,5 @@ namespace PlaywrightSharp.Transport.Channels
 
         internal Task<StorageState> GetStorageStateAsync()
             => Connection.SendMessageToServerAsync<StorageState>(Guid, "storageState", null);
-
-        internal Task PauseAsync()
-            => Connection.SendMessageToServerAsync(Guid, "pause", null);
     }
 }

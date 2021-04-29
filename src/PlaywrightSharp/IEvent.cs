@@ -3,7 +3,8 @@ using System;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Events for <see cref="IPage.WaitForEventAsync{T}(PlaywrightEvent{T}, Func{T, bool}, float?)"/> and <see cref="IBrowserContext.WaitForEventAsync{T}(PlaywrightEvent{T}, Func{T, bool}, int?)"/>.
+    /// Events for <see cref="IPage.WaitForEventAsync(string, float?)"/>/>
+    /// and <see cref="IBrowserContext.WaitForEventAsync(string, float?)"/>.
     /// </summary>
     public interface IEvent
     {

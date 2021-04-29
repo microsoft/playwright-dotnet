@@ -13,7 +13,7 @@ using PlaywrightSharp.Transport.Protocol;
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// Whenever a network route is set up with <see cref="IPage.RouteAsync(Func{string, bool}, Action{IRoute})"/> or <see cref="IBrowserContext.RouteAsync(Func{string, bool}, Action{IRoute})"/> the Route object allows to handle the route.
+    /// Whenever a network route is set up with <see cref="IPage.RouteAsync(Func{string, bool}, Action{IRoute})"/> or <see cref="IBrowserContext.RouteAsync(string, System.Text.RegularExpressions.Regex, Func{string, bool}, Action{IRoute})"/> the Route object allows to handle the route.
     /// </summary>
     public class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
     {

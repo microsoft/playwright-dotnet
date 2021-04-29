@@ -105,7 +105,7 @@ namespace PlaywrightSharp.Tests
             string harFilePath = Path.Combine(harPath.Path, "test.har");
 
             var context = await BrowserType.LaunchPersistentContextAsync(_persistentContextDir.Path, recordHarPath: harFilePath);
-            var page = context.Pages[0];
+            var page = context.Pages.FirstOrDefault();
 
             await TaskUtils.WhenAll(
                 page.GoToAsync("data:text/html,<title>Hello</title>"),
@@ -242,10 +242,10 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldIncludeCookies()
         {
             await _context.AddCookiesAsync(
-                new SetNetworkCookieParam { Name = "name1", Value = "value1", Domain = "localhost", Path = "/", HttpOnly = true },
-                new SetNetworkCookieParam { Name = "name2", Value = "val\"ue2", Domain = "localhost", Path = "/", SameSite = SameSite.Lax },
-                new SetNetworkCookieParam { Name = "name3", Value = "val=ue3", Domain = "localhost", Path = "/" },
-                new SetNetworkCookieParam { Name = "name4", Value = "val,ue4", Domain = "localhost", Path = "/" });
+                new Cookie { Name = "name1", Value = "value1", Domain = "localhost", Path = "/", HttpOnly = true },
+                new Cookie { Name = "name2", Value = "val\"ue2", Domain = "localhost", Path = "/", SameSite = SameSiteAttribute.Lax },
+                new Cookie { Name = "name3", Value = "val=ue3", Domain = "localhost", Path = "/" },
+                new Cookie { Name = "name4", Value = "val,ue4", Domain = "localhost", Path = "/" });
 
             await _page.GoToAsync(TestConstants.EmptyPage);
             var log = await GetLogAsync();

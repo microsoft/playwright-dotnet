@@ -27,21 +27,9 @@ namespace PlaywrightSharp.Tests
         }
 
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with setHTTPCredentials")]
-        [Fact(Skip = "This sends a deprecarte which breaks the pipe")]
-        public async Task ShouldWorkWithSetHTTPCredentials()
+        [Fact(Skip = "This test is no longer applicable as the API no longer exists.")]
+        public void ShouldWorkWithSetHTTPCredentials()
         {
-            Server.SetAuth("/empty.html", "user", "pass");
-            await using var context = await Browser.NewContextAsync();
-            var page = await context.NewPageAsync();
-            var response = await page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-            await context.SetHttpCredentialsAsync(new HttpCredentials
-            {
-                Username = "user",
-                Password = "pass"
-            });
-            response = await page.ReloadAsync();
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with correct credentials")]

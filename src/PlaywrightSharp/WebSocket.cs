@@ -66,7 +66,7 @@ namespace PlaywrightSharp
                 throw new ArgumentException("WebSocket event is required", nameof(webSocketEvent));
             }
 
-            timeout ??= _page.TimeoutSettings.Timeout;
+            timeout ??= _page.DefaultTimeout;
             using var waiter = new Waiter();
             waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{typeof(T)}\"");
 
@@ -93,7 +93,7 @@ namespace PlaywrightSharp
                 throw new ArgumentException("WebSocket event is required", nameof(@event));
             }
 
-            timeout ??= _page.TimeoutSettings.Timeout;
+            timeout ??= _page.DefaultTimeout;
             using var waiter = new Waiter();
             waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{@event}\"");
 

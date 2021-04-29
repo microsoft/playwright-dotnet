@@ -7,7 +7,7 @@ namespace PlaywrightSharp
     /// <summary>
     /// See <see cref="StorageState.Origins"/>.
     /// </summary>
-    public class StorageStateOrigin : IEquatable<StorageStateOrigin>
+    internal class StorageStateOrigin : IEquatable<StorageStateOrigin>
     {
         /// <summary>
         /// Origin.

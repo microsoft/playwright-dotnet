@@ -76,7 +76,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldWorkWithBrowserContextScriptsWithPath()
         {
             await using var context = await Browser.NewContextAsync();
-            await context.AddInitScriptAsync(path: TestUtils.GetWebServerFile("injectedfile.js"));
+            await context.AddInitScriptAsync(scriptPath: TestUtils.GetWebServerFile("injectedfile.js"));
 
             var page = await context.NewPageAsync();
 

@@ -170,7 +170,7 @@ namespace PlaywrightSharp.Transport.Channels
             }
         }
 
-        internal Task SetDefaultTimeoutNoReplyAsync(int timeout)
+        internal Task SetDefaultTimeoutNoReplyAsync(float timeout)
             => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "setDefaultTimeoutNoReply",
@@ -179,7 +179,7 @@ namespace PlaywrightSharp.Transport.Channels
                     ["timeout"] = timeout,
                 });
 
-        internal Task SetDefaultNavigationTimeoutNoReplyAsync(int timeout)
+        internal Task SetDefaultNavigationTimeoutNoReplyAsync(float timeout)
             => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,
                 "setDefaultNavigationTimeoutNoReply",
@@ -352,6 +352,9 @@ namespace PlaywrightSharp.Transport.Channels
                     ["text"] = text,
                     ["delay"] = delay,
                 });
+
+        internal Task PauseAsync()
+            => Connection.SendMessageToServerAsync(Guid, "pause", null);
 
         internal Task PressAsync(string key, float delay)
             => Connection.SendMessageToServerAsync(

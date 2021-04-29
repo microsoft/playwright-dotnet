@@ -54,6 +54,8 @@ namespace PlaywrightSharp
         private EventHandler<IFileChooser> _fileChooserEventHandler;
         private bool _fileChooserIntercepted;
         private IVideo _video;
+        private float _defaultNavigationTimeout;
+        private float _defaultTimeout;
 
         internal Page(IChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
         {
@@ -70,8 +72,6 @@ namespace PlaywrightSharp
             _keyboard = new Keyboard(_channel);
             _touchscreen = new Touchscreen(_channel);
             _mouse = new Mouse(_channel);
-            TimeoutSettings = new TimeoutSettings(Context.TimeoutSettings);
-
             _channel.Closed += Channel_Closed;
             _channel.Crashed += Channel_Crashed;
             _channel.Popup += (_, e) => Popup?.Invoke(this, e.Page);
@@ -115,6 +115,9 @@ namespace PlaywrightSharp
                 e.WorkerChannel.Object.Page = this;
                 Worker?.Invoke(this, e.WorkerChannel.Object);
             };
+
+            _defaultNavigationTimeout = Context.DefaultNavigationTimeout;
+            _defaultTimeout = Context.DefaultTimeout;
         }
 
         /// <inheritdoc />
@@ -263,13 +266,13 @@ namespace PlaywrightSharp
         {
             get
             {
-                return TimeoutSettings.Timeout;
+                return _defaultTimeout;
             }
 
             set
             {
-                TimeoutSettings.SetDefaultTimeout(Convert.ToInt32(value));
-                _ = _channel.SetDefaultTimeoutNoReplyAsync(Convert.ToInt32(value));
+                _defaultTimeout = value;
+                _ = _channel.SetDefaultTimeoutNoReplyAsync(value);
             }
         }
 
@@ -278,13 +281,13 @@ namespace PlaywrightSharp
         {
             get
             {
-                return TimeoutSettings.NavigationTimeout;
+                return _defaultNavigationTimeout;
             }
 
             set
             {
-                TimeoutSettings.SetDefaultNavigationTimeout(Convert.ToInt32(value));
-                _ = _channel.SetDefaultNavigationTimeoutNoReplyAsync(Convert.ToInt32(value));
+                _defaultNavigationTimeout = value;
+                _ = _channel.SetDefaultNavigationTimeoutNoReplyAsync(value);
             }
         }
 
@@ -316,8 +319,6 @@ namespace PlaywrightSharp
         internal Dictionary<string, Delegate> Bindings { get; } = new Dictionary<string, Delegate>();
 
         internal List<Worker> WorkersList { get; } = new List<Worker>();
-
-        internal TimeoutSettings TimeoutSettings { get; set; }
 
         /// <inheritdoc />
         public IFrame Frame(string name)
@@ -479,7 +480,7 @@ namespace PlaywrightSharp
                 throw new ArgumentException("Page event is required", nameof(pageEvent));
             }
 
-            timeout ??= TimeoutSettings.Timeout;
+            timeout ??= _defaultTimeout;
             using var waiter = new Waiter();
             waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{typeof(T)}\"");
 
@@ -504,7 +505,7 @@ namespace PlaywrightSharp
                 throw new ArgumentException("Page event is required", nameof(@event));
             }
 
-            timeout ??= TimeoutSettings.Timeout;
+            timeout ??= _defaultTimeout;
             using var waiter = new Waiter();
             waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{@event}\"");
 
@@ -1029,7 +1030,7 @@ namespace PlaywrightSharp
         public Task<bool> IsVisibleAsync(string selector, float? timeout) => MainFrame.IsVisibleAsync(true, selector, timeout);
 
         /// <inheritdoc />
-        public Task PauseAsync() => Context.PauseAsync();
+        public Task PauseAsync() => _channel.PauseAsync();
 
         internal void OnFrameNavigated(Frame frame)
             => FrameNavigated?.Invoke(this, frame);

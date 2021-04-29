@@ -84,9 +84,9 @@ namespace PlaywrightSharp.Tests
             }");
 
             Assert.Single(context1.Pages);
-            Assert.Equal(page1, context1.Pages[0]);
+            Assert.Equal(page1, context1.Pages.FirstOrDefault());
             Assert.Single(context2.Pages);
-            Assert.Equal(page2, context2.Pages[0]);
+            Assert.Equal(page2, context2.Pages.FirstOrDefault());
 
             // Make sure pages don't share localstorage or cookies.
             Assert.Equal("page1", await page1.EvaluateAsync<string>("() => localStorage.getItem('name')"));
@@ -204,7 +204,7 @@ namespace PlaywrightSharp.Tests
             });
 
             IPage popup = null;
-            context.Page += (_, e) => popup = e.Page;
+            context.Page += (_, e) => popup = e;
             await page.GoToAsync(TestConstants.EmptyPage);
             await page.ClickAsync("'Click me'");
             await context.CloseAsync();
@@ -233,7 +233,7 @@ namespace PlaywrightSharp.Tests
             var page = await context.NewPageAsync();
             var second = await context.NewPageAsync();
 
-            Assert.Equal(2, context.Pages.Length);
+            Assert.Equal(2, context.Pages.Count);
             Assert.Contains(page, context.Pages);
             Assert.Contains(second, context.Pages);
         }

@@ -1,7 +1,7 @@
 namespace PlaywrightSharp
 {
     /// <summary>
-    /// <see cref="IBrowserContext.ExposeBindingAsync(string, System.Action{BindingSource})"/> caller information.
+    /// <see cref="IBrowserContext.ExposeBindingAsync(string, System.Action, bool?)"/> caller information.
     /// </summary>
     public class BindingSource
     {
