@@ -1,11 +1,10 @@
-using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Transport.Channels;
 
 namespace PlaywrightSharp.Transport.Protocol
 {
     internal class PlaywrightInitializer
     {
-        public ChromiumBrowserType Chromium { get; set; }
+        public BrowserType Chromium { get; set; }
 
         public BrowserType Webkit { get; set; }
 

@@ -33,7 +33,6 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Helpers;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Converters;
@@ -376,42 +375,15 @@ namespace PlaywrightSharp.Transport
                     break;
                 case ChannelOwnerType.Browser:
                     var browserInitializer = initializer?.ToObject<BrowserInitializer>(GetDefaultJsonSerializerOptions());
-
-                    if (browserInitializer.Name == BrowserType.Chromium)
-                    {
-                        result = new ChromiumBrowser(parent, guid, browserInitializer);
-                    }
-                    else
-                    {
-                        result = new Browser(parent, guid, browserInitializer);
-                    }
-
+                    result = new Browser(parent, guid, browserInitializer);
                     break;
                 case ChannelOwnerType.BrowserType:
                     var browserTypeInitializer = initializer?.ToObject<BrowserTypeInitializer>(GetDefaultJsonSerializerOptions());
-
-                    if (browserTypeInitializer.Name == BrowserType.Chromium)
-                    {
-                        result = new ChromiumBrowserType(parent, guid, browserTypeInitializer);
-                    }
-                    else
-                    {
-                        result = new BrowserType(parent, guid, browserTypeInitializer);
-                    }
-
+                    result = new BrowserType(parent, guid, browserTypeInitializer);
                     break;
                 case ChannelOwnerType.BrowserContext:
                     var browserContextInitializer = initializer?.ToObject<BrowserContextInitializer>(GetDefaultJsonSerializerOptions());
-
-                    if (browserContextInitializer.IsChromium)
-                    {
-                        result = new ChromiumBrowserContext(parent, guid, browserContextInitializer);
-                    }
-                    else
-                    {
-                        result = new BrowserContext(parent, guid, browserContextInitializer);
-                    }
-
+                    result = new BrowserContext(parent, guid, browserContextInitializer);
                     break;
                 case ChannelOwnerType.ConsoleMessage:
                     result = new ConsoleMessage(parent, guid, initializer?.ToObject<ConsoleMessageInitializer>(GetDefaultJsonSerializerOptions()));
@@ -448,9 +420,6 @@ namespace PlaywrightSharp.Transport
                     break;
                 case ChannelOwnerType.WebSocket:
                     result = new WebSocket(parent, guid, initializer?.ToObject<WebSocketInitializer>(GetDefaultJsonSerializerOptions()));
-                    break;
-                case ChannelOwnerType.CDPSession:
-                    result = new CDPSession(parent, guid);
                     break;
                 case ChannelOwnerType.Selectors:
                     result = new SelectorsOwner(parent, guid);

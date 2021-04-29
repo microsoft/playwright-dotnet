@@ -1,5 +1,4 @@
 using System;
-using PlaywrightSharp.Chromium;
 
 namespace PlaywrightSharp
 {
@@ -20,15 +19,5 @@ namespace PlaywrightSharp
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IBrowserContext.Close"/>.
         /// </summary>
         public static PlaywrightEvent<IBrowserContext> Close { get; } = new PlaywrightEvent<IBrowserContext>() { Name = CloseEventName };
-
-        /// <summary>
-        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IChromiumBrowserContext.BackgroundPage"/>.
-        /// </summary>
-        public static PlaywrightEvent<PageEventArgs> BackgroundPage { get; } = new PlaywrightEvent<PageEventArgs>() { Name = "BackgroundPage" };
-
-        /// <summary>
-        /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IChromiumBrowserContext.ServiceWorker"/>.
-        /// </summary>
-        public static PlaywrightEvent<WorkerEventArgs> ServiceWorker { get; } = new PlaywrightEvent<WorkerEventArgs>() { Name = "ServiceWorker" };
     }
 }

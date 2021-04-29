@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using PlaywrightSharp.Chromium;
 using PlaywrightSharp.Transport;
 using PlaywrightSharp.Transport.Channels;
 using PlaywrightSharp.Transport.Protocol;
