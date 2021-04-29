@@ -8,7 +8,7 @@
         <RootNamespace>Microsoft.Playwright.LocalNugetTest</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Playwright" Version="0.160.0-alpha" />
+        <PackageReference Include="Microsoft.Playwright" Version="1.11.0-alpha" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
