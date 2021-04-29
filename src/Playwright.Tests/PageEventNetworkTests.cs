@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.Tests
         public async Task PageEventsRequestFailed()
         {
             int port = TestConstants.Port + 100;
-            var disposableServer = new SimpleServer(port, TestUtils.FindParentDirectory("Microsoft.Playwright.TestServer"), false);
+            var disposableServer = new SimpleServer(port, TestUtils.FindParentDirectory("Playwright.Tests.TestServer"), false);
             await disposableServer.StartAsync();
 
             disposableServer.SetRoute("/one-style.css", async _ =>
