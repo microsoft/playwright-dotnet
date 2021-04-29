@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Xunit;
+using Microsoft.Playwright.Tests.BaseTests;
+using Microsoft.Playwright.Test.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>page-set-input-files.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]

@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using PlaywrightSharp.Tests.Attributes;
-using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Xunit;
+using Microsoft.Playwright.Tests.Attributes;
+using Microsoft.Playwright.Tests.BaseTests;
+using Microsoft.Playwright.Test.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Firefox
+namespace Microsoft.Playwright.Tests.Firefox
 {
     ///<playwright-file>firefox/launcher.spec.ts</playwright-file>
     ///<playwright-describe>launcher</playwright-describe>

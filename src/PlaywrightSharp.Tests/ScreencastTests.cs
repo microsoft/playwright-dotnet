@@ -1,15 +1,15 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Tests.Attributes;
-using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
-using PlaywrightSharp.Xunit;
+using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Tests.Attributes;
+using Microsoft.Playwright.Tests.BaseTests;
+using Microsoft.Playwright.Tests.Helpers;
+using Microsoft.Playwright.Test.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>screencast.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]

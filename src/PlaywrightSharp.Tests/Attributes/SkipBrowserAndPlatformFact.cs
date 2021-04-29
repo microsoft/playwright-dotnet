@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using Xunit;
 
-namespace PlaywrightSharp.Tests.Attributes
+namespace Microsoft.Playwright.Tests.Attributes
 {
     /// <summary>
     /// Skip browsers and/or platforms

@@ -1,13 +1,13 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using PlaywrightSharp.Tests.Attributes;
-using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Xunit;
+using Microsoft.Playwright.Tests.Attributes;
+using Microsoft.Playwright.Tests.BaseTests;
+using Microsoft.Playwright.Test.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>pdf.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
+using Microsoft.Playwright.Helpers;
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     internal static class TaskUtils
     {

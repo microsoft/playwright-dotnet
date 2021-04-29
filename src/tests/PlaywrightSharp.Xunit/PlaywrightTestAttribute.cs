@@ -1,6 +1,6 @@
 using System;
 
-namespace PlaywrightSharp.Xunit
+namespace Microsoft.Playwright.Test.Xunit
 {
     /// <summary>
     /// Enables decorating test facts with information about the corresponding test in the upstream repository.

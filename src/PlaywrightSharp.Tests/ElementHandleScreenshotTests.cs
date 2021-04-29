@@ -2,16 +2,16 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Tests.Attributes;
-using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
-using PlaywrightSharp.Xunit;
+using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Tests.Attributes;
+using Microsoft.Playwright.Tests.BaseTests;
+using Microsoft.Playwright.Tests.Helpers;
+using Microsoft.Playwright.Test.Xunit;
 using SixLabors.ImageSharp;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>elementhandle-screenshot.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]

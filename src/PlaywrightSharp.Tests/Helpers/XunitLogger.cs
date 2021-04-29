@@ -2,7 +2,7 @@ using System;
 using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Helpers
+namespace Microsoft.Playwright.Tests.Helpers
 {
     internal class XunitLogger : ILogger, IDisposable
     {

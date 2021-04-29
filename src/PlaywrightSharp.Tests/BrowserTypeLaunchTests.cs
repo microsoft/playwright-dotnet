@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using PlaywrightSharp.Tests.Attributes;
-using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Transport;
-using PlaywrightSharp.Xunit;
+using Microsoft.Playwright.Tests.Attributes;
+using Microsoft.Playwright.Tests.BaseTests;
+using Microsoft.Playwright.Transport;
+using Microsoft.Playwright.Test.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>browsertype-launch.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
@@ -73,7 +73,7 @@ namespace PlaywrightSharp.Tests
         public async Task ShouldCurateTheLaunchError()
         {
             // Set an invalid location
-            using var playwright = await PlaywrightSharp.Playwright.CreateAsync(browsersPath: Path.Combine(typeof(PlaywrightSharp.Playwright).Assembly.Location));
+            using var playwright = await Microsoft.Playwright.Playwright.CreateAsync(browsersPath: Path.Combine(typeof(Microsoft.Playwright.Playwright).Assembly.Location));
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => playwright[TestConstants.Product].LaunchAsync());
 
             Assert.Contains("Failed to launch", exception.Message);

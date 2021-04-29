@@ -2,12 +2,12 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Http;
-using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Xunit;
+using Microsoft.Playwright.Tests.BaseTests;
+using Microsoft.Playwright.Test.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>ignorehttpserrors.spec.ts</playwright-file>
     ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>

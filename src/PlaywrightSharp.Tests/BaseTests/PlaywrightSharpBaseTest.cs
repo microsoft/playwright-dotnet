@@ -3,14 +3,14 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using PlaywrightSharp;
-using PlaywrightSharp.Tests.Helpers;
-using PlaywrightSharp.TestServer;
-using PlaywrightSharp.Transport.Channels;
-using PlaywrightSharp.Xunit;
+using Microsoft.Playwright;
+using Microsoft.Playwright.Tests.Helpers;
+using Microsoft.Playwright.Test.TestServer;
+using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Test.Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.BaseTests
+namespace Microsoft.Playwright.Tests.BaseTests
 {
     /// <summary>
     /// This base tests setup logging and http servers

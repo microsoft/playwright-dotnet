@@ -1,10 +1,10 @@
 using System;
 using System.Runtime.Serialization;
 using System.Text.Json;
-using PlaywrightSharp.Helpers;
+using Microsoft.Playwright.Helpers;
 using Xunit;
 
-namespace PlaywrightSharp.Tests.Internals
+namespace Microsoft.Playwright.Tests.Internals
 {
     /// <summary>
     /// FlexibleStringEnumConverterTests

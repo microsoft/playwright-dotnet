@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
-namespace PlaywrightSharp.TestServer
+namespace Microsoft.Playwright.Test.TestServer
 {
     public class SimpleServer
     {

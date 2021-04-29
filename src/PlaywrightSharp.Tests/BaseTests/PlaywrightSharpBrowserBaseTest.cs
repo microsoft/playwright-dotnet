@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.BaseTests
+namespace Microsoft.Playwright.Tests.BaseTests
 {
     /// <summary>
     /// Based on <see cref="PlaywrightSharpBaseTest"/>, this base class also creates a new Browser

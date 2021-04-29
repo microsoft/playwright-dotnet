@@ -1,11 +1,11 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
+using Microsoft.Playwright.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.BaseTests
+namespace Microsoft.Playwright.Tests.BaseTests
 {
     /// <summary>
     /// Based on <see cref="PlaywrightSharpBrowserBaseTest"/>, this calss creates a new <see cref="IBrowserContext"/>

@@ -3,7 +3,7 @@ using System.Reflection;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace PlaywrightSharp.Tests.BaseTests
+namespace Microsoft.Playwright.Tests.BaseTests
 {
     /// <inheritdoc/>
     public class PlaywrightXunitTestFrameworkExecutor : XunitTestFrameworkExecutor

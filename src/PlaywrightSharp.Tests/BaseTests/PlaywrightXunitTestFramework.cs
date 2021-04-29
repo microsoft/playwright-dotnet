@@ -3,10 +3,10 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-[assembly: TestFramework("PlaywrightSharp.Tests.BaseTests.PlaywrightXunitTestFramework", "PlaywrightSharp.Tests")]
+[assembly: TestFramework("Microsoft.Playwright.Tests.BaseTests.PlaywrightXunitTestFramework", "PlaywrightSharp.Tests")]
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 
-namespace PlaywrightSharp.Tests.BaseTests
+namespace Microsoft.Playwright.Tests.BaseTests
 {
     /// <inheritdoc/>
     public class PlaywrightXunitTestFramework : XunitTestFramework

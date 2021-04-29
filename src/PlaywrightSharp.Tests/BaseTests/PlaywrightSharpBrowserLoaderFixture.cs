@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace PlaywrightSharp.Tests.BaseTests
+namespace Microsoft.Playwright.Tests.BaseTests
 {
     /// <summary>
     /// This class setup a single browser instance for tests.
@@ -23,7 +23,7 @@ namespace PlaywrightSharp.Tests.BaseTests
         {
             try
             {
-                Playwright = await PlaywrightSharp.Playwright.CreateAsync(TestConstants.LoggerFactory, debug: "pw*");
+                Playwright = await Microsoft.Playwright.Playwright.CreateAsync(TestConstants.LoggerFactory, debug: "pw*");
                 Browser = await Playwright[TestConstants.Product].LaunchDefaultAsync();
             }
             catch (Exception ex)

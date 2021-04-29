@@ -1,6 +1,6 @@
 using System.Linq;
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     internal static class PageExtensions
     {

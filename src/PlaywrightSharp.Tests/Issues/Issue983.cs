@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Threading.Tasks;
-using PlaywrightSharp.Tests.Attributes;
-using PlaywrightSharp.Tests.BaseTests;
+using Microsoft.Playwright.Tests.Attributes;
+using Microsoft.Playwright.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.Issues
+namespace Microsoft.Playwright.Tests.Issues
 {
     /// <summary>
     /// See https://github.com/microsoft/playwright-sharp/issues/983.

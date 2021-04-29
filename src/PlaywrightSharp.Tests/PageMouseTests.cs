@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using PlaywrightSharp.Tests.Attributes;
-using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Xunit;
+using Microsoft.Playwright.Tests.Attributes;
+using Microsoft.Playwright.Tests.BaseTests;
+using Microsoft.Playwright.Test.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageMouseTests : PlaywrightSharpPageBaseTest

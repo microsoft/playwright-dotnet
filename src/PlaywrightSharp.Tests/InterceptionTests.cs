@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Tests;
-using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Xunit;
+using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Tests;
+using Microsoft.Playwright.Tests.BaseTests;
+using Microsoft.Playwright.Test.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class GlobTests : PlaywrightSharpPageBaseTest

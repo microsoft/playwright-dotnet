@@ -4,7 +4,7 @@ using System.IO.Compression;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace PlaywrightSharp.TestServer
+namespace Microsoft.Playwright.Test.TestServer
 {
     internal class SimpleCompressionMiddleware
     {

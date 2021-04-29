@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using PlaywrightSharp.TestServer;
+using Microsoft.Playwright.Test.TestServer;
 
-namespace PlaywrightSharp.Tests.BaseTests
+namespace Microsoft.Playwright.Tests.BaseTests
 {
     /// <summary>
     /// This class will build all http servers and download browsers

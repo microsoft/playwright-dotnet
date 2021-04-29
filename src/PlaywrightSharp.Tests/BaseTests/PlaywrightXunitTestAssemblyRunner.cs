@@ -4,7 +4,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace PlaywrightSharp.Tests.BaseTests
+namespace Microsoft.Playwright.Tests.BaseTests
 {
     /// <inheritdoc/>
     public class PlaywrightXunitTestAssemblyRunner : XunitTestAssemblyRunner

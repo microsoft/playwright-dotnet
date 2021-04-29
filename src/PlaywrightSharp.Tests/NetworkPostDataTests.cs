@@ -1,12 +1,12 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
-using PlaywrightSharp.Tests.BaseTests;
+using Microsoft.Playwright.Tests.BaseTests;
 using Xunit;
 using Xunit.Abstractions;
 
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     /// <playwright-file>network-post-data.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
@@ -21,7 +21,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
         /// <playwright-it>should return correct postData buffer for utf-8 body</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = Microsoft.Playwright.Playwright.DefaultTimeout)]
         public async Task ShouldReturnCorrectPostdataBufferForUtf8Body()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -52,7 +52,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
         /// <playwright-it>should return post data w/o content-type</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = Microsoft.Playwright.Playwright.DefaultTimeout)]
         public async Task ShouldReturnPostDataWOContentType()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -75,7 +75,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
         /// <playwright-it>should throw on invalid JSON in post data</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = Microsoft.Playwright.Playwright.DefaultTimeout)]
         public async Task ShouldThrowOnInvalidJSONInPostData()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -97,7 +97,7 @@ namespace PlaywrightSharp.Tests
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
         /// <playwright-it>should return post data for PUT requests</playwright-it>
-        [Fact(Timeout = PlaywrightSharp.Playwright.DefaultTimeout)]
+        [Fact(Timeout = Microsoft.Playwright.Playwright.DefaultTimeout)]
         public async Task ShouldReturnPostDataForPUTRequests()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 
-namespace PlaywrightSharp.Tests.Helpers
+namespace Microsoft.Playwright.Tests.Helpers
 {
 #if NETCOREAPP
     internal class JsonElementComparer : IEqualityComparer<JsonElement>

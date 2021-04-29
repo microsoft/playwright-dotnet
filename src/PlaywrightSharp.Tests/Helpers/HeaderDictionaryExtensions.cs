@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 
-namespace PlaywrightSharp.Tests.Helpers
+namespace Microsoft.Playwright.Tests.Helpers
 {
     internal static class HeaderDictionaryExtensions
     {

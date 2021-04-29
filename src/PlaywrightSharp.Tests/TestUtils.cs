@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     internal class TestUtils
     {
@@ -90,7 +90,7 @@ namespace PlaywrightSharp.Tests
             }
         }
 
-        internal static string GetWebServerFile(string path) => Path.Combine(FindParentDirectory("PlaywrightSharp.TestServer"), "wwwroot", path);
+        internal static string GetWebServerFile(string path) => Path.Combine(FindParentDirectory("Microsoft.Playwright.TestServer"), "wwwroot", path);
 
         internal static async Task VerifyViewportAsync(IPage page, int width, int height)
         {

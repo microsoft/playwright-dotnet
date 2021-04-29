@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests.BaseTests
+namespace Microsoft.Playwright.Tests.BaseTests
 {
     /// <summary>
     /// Based on <see cref="PlaywrightSharpBrowserBaseTest"/>, this class will create a new Page.

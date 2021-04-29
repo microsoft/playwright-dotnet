@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Http;
 
-namespace PlaywrightSharp.TestServer
+namespace Microsoft.Playwright.Test.TestServer
 {
     public class RequestReceivedEventArgs : EventArgs
     {

@@ -4,9 +4,9 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using PlaywrightSharp.Tests.Helpers;
+using Microsoft.Playwright.Tests.Helpers;
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     internal static class TestConstants
     {

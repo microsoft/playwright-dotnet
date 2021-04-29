@@ -10,18 +10,18 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Primitives;
-using PlaywrightSharp.Har;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Tests.Attributes;
-using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
-using PlaywrightSharp.Transport.Channels;
-using PlaywrightSharp.Transport.Protocol;
-using PlaywrightSharp.Xunit;
+using Microsoft.Playwright.Har;
+using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Tests.Attributes;
+using Microsoft.Playwright.Tests.BaseTests;
+using Microsoft.Playwright.Tests.Helpers;
+using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Transport.Protocol;
+using Microsoft.Playwright.Test.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     /// <playwright-file>har.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]

@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using PlaywrightSharp.Contracts.Constants;
-using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.TestServer;
-using PlaywrightSharp.Xunit;
+using Microsoft.Playwright.Contracts.Constants;
+using Microsoft.Playwright.Tests.BaseTests;
+using Microsoft.Playwright.Test.TestServer;
+using Microsoft.Playwright.Test.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageEventNetworkTests : PlaywrightSharpPageBaseTest
@@ -54,7 +54,7 @@ namespace PlaywrightSharp.Tests
         public async Task PageEventsRequestFailed()
         {
             int port = TestConstants.Port + 100;
-            var disposableServer = new SimpleServer(port, TestUtils.FindParentDirectory("PlaywrightSharp.TestServer"), false);
+            var disposableServer = new SimpleServer(port, TestUtils.FindParentDirectory("Microsoft.Playwright.TestServer"), false);
             await disposableServer.StartAsync();
 
             disposableServer.SetRoute("/one-style.css", async _ =>

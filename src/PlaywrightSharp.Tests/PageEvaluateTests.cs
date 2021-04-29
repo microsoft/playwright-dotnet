@@ -4,14 +4,14 @@ using System.ComponentModel;
 using System.Dynamic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using PlaywrightSharp.Helpers;
-using PlaywrightSharp.Tests.Attributes;
-using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Xunit;
+using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Tests.Attributes;
+using Microsoft.Playwright.Tests.BaseTests;
+using Microsoft.Playwright.Test.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageEvaluateTests : PlaywrightSharpPageBaseTest

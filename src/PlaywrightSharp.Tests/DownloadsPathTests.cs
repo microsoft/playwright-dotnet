@@ -1,13 +1,13 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Tests.Helpers;
-using PlaywrightSharp.Xunit;
+using Microsoft.Playwright.Tests.BaseTests;
+using Microsoft.Playwright.Tests.Helpers;
+using Microsoft.Playwright.Test.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class DownloadsPathTests : PlaywrightSharpBaseTest, IAsyncLifetime
