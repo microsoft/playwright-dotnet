@@ -3,12 +3,12 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using PlaywrightSharp.Tests.BaseTests;
-using PlaywrightSharp.Xunit;
+using Microsoft.Playwright.Tests.BaseTests;
+using Microsoft.Playwright.Testing.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PlaywrightSharp.Tests
+namespace Microsoft.Playwright.Tests
 {
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class PageWaitForUrlTests : PlaywrightSharpPageBaseTest
