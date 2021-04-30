@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using PlaywrightSharp.Xunit;
+using Microsoft.Playwright.Testing.Xunit;
 
 namespace PlaywrightSharp.Tooling
 {

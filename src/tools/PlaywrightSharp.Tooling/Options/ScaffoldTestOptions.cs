@@ -38,7 +38,7 @@ namespace PlaywrightSharp.Tooling
         [Option(Required = false, HelpText = "The location of the scaffold code. If not present, will output to console.")]
         public string OutputFile { get; set; }
 
-        [Option(Required = false, HelpText = "The namespace of the generated class.", Default = "PlaywrightSharp.Tests")]
+        [Option(Required = false, HelpText = "The namespace of the generated class.", Default = "Microsoft.Playwright.Tests")]
         public string Namespace { get; set; }
     }
 }

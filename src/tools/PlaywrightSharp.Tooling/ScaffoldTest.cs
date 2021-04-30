@@ -97,7 +97,7 @@ namespace PlaywrightSharp.Tooling
 
             // add imports
             globalNamespace.Imports.Add(new CodeNamespaceImport("System.Threading.Tasks"));
-            globalNamespace.Imports.Add(new CodeNamespaceImport("PlaywrightSharp.Tests.BaseTests"));
+            globalNamespace.Imports.Add(new CodeNamespaceImport("Microsoft.Playwright.Tests.BaseTests"));
             globalNamespace.Imports.Add(new CodeNamespaceImport("Xunit"));
             globalNamespace.Imports.Add(new CodeNamespaceImport("Xunit.Abstractions"));
 
@@ -110,7 +110,7 @@ namespace PlaywrightSharp.Tooling
                 TypeAttributes = System.Reflection.TypeAttributes.Public | System.Reflection.TypeAttributes.Sealed,
             };
 
-            targetClass.BaseTypes.Add(new CodeTypeReference("PlaywrightSharpPageBaseTest"));
+            targetClass.BaseTypes.Add(new CodeTypeReference("MicrosoftPlaywrightPageBaseTest"));
 
             _ = targetClass.CustomAttributes.Add(new CodeAttributeDeclaration(
                 "Collection",
@@ -166,7 +166,7 @@ namespace PlaywrightSharp.Tooling
                     new CodeAttributeArgument(
                         "Timeout",
                         new CodeFieldReferenceExpression(
-                            new CodeTypeReferenceExpression("PlaywrightSharp.Playwright"),
+                            new CodeTypeReferenceExpression("Microsoft.Playwright"),
                             "DefaultTimeout")),
                     new CodeAttributeArgument(
                         "Skip",

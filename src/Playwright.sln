@@ -1,0 +1,83 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestTools", "TestTools", "{D250D790-5A30-4C38-8F60-50FA96DB4E67}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F0EC30F-2600-4399-9925-A16B049B9311}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Common\Dependencies.props = Common\Dependencies.props
+		..\Directory.Build.props = ..\Directory.Build.props
+		Common\PackageInfo.props = Common\PackageInfo.props
+		Playwright.ruleset = Playwright.ruleset
+		Common\SignAssembly.props = Common\SignAssembly.props
+		stylecop.json = stylecop.json
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright.Tests.TestServer", "Playwright.Tests.TestServer\Playwright.Tests.TestServer.csproj", "{A907B324-4541-4FAF-8CAE-D0B512B4BC36}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright.Tests", "Playwright.Tests\Playwright.Tests.csproj", "{162425E9-A05E-4ECE-8DBE-5AEC68C5DD23}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright", "Playwright\Playwright.csproj", "{EAB878F1-E9FE-4C0B-8DF5-AE58522F8D0A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright.Demo", "Playwright.Demo\Playwright.Demo.csproj", "{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5C6D57B1-C82A-48D6-9EBD-73B712CAE476}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharpTool", "tools\PlaywrightSharpTool\PlaywrightSharpTool.csproj", "{795BA2A6-D983-4D96-B817-6921A145AB56}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharp.Tooling", "tools\PlaywrightSharp.Tooling\PlaywrightSharp.Tooling.csproj", "{61C89FA2-645D-4D0E-9A20-06ABE32054CF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright.Testing.Xunit", "Playwright.Testing.Xunit\Playwright.Testing.Xunit.csproj", "{FEFC3D43-748A-4825-836F-462C9B9F7D78}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A907B324-4541-4FAF-8CAE-D0B512B4BC36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A907B324-4541-4FAF-8CAE-D0B512B4BC36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A907B324-4541-4FAF-8CAE-D0B512B4BC36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A907B324-4541-4FAF-8CAE-D0B512B4BC36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{162425E9-A05E-4ECE-8DBE-5AEC68C5DD23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{162425E9-A05E-4ECE-8DBE-5AEC68C5DD23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{162425E9-A05E-4ECE-8DBE-5AEC68C5DD23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{162425E9-A05E-4ECE-8DBE-5AEC68C5DD23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAB878F1-E9FE-4C0B-8DF5-AE58522F8D0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAB878F1-E9FE-4C0B-8DF5-AE58522F8D0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAB878F1-E9FE-4C0B-8DF5-AE58522F8D0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAB878F1-E9FE-4C0B-8DF5-AE58522F8D0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{795BA2A6-D983-4D96-B817-6921A145AB56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{795BA2A6-D983-4D96-B817-6921A145AB56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{795BA2A6-D983-4D96-B817-6921A145AB56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{795BA2A6-D983-4D96-B817-6921A145AB56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61C89FA2-645D-4D0E-9A20-06ABE32054CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61C89FA2-645D-4D0E-9A20-06ABE32054CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61C89FA2-645D-4D0E-9A20-06ABE32054CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61C89FA2-645D-4D0E-9A20-06ABE32054CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEFC3D43-748A-4825-836F-462C9B9F7D78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEFC3D43-748A-4825-836F-462C9B9F7D78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEFC3D43-748A-4825-836F-462C9B9F7D78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEFC3D43-748A-4825-836F-462C9B9F7D78}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A907B324-4541-4FAF-8CAE-D0B512B4BC36} = {D250D790-5A30-4C38-8F60-50FA96DB4E67}
+		{795BA2A6-D983-4D96-B817-6921A145AB56} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
+		{61C89FA2-645D-4D0E-9A20-06ABE32054CF} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8D6EDE73-B005-4ABC-BCF8-BB3C154497EC}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		version = 0.0.0
+	EndGlobalSection
+EndGlobal

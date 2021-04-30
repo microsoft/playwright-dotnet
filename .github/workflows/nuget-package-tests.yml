@@ -33,12 +33,12 @@ jobs:
       - name: Cache drivers
         uses: actions/cache@v2
         with:
-          path: ./src/PlaywrightSharp/runtimes/
+          path: ./src/Playwright/runtimes/
           key: ${{ hashFiles('./src/Common/PackageInfo.props') }}
       - name: Download Drivers
         run: dotnet run -p ./src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj -- download-drivers --basepath .
       - name: Build Project
-        run: dotnet build ./src/PlaywrightSharp/PlaywrightSharp.csproj -c Debug
+        run: dotnet build ./src/Playwright/Playwright.csproj -c Debug
       - name: Delete browsers on Mac
         if: matrix.os == 'macos-latest'
         run: rm -r ~/Library/Caches/ms-playwright
@@ -49,4 +49,4 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: Remove-Item -path $env:USERPROFILE\AppData\Local\ms-playwright -recurse
       - name: Run Tests
-        run: dotnet test ./src/PlaywrightSharp.LocalNugetTest/PlaywrightSharp.LocalNugetTest.csproj
+        run: dotnet test ./src/Playwright.LocalNugetTest/Playwright.LocalNugetTest.csproj
