@@ -40,21 +40,21 @@ namespace Microsoft.Playwright
         /// <inheritdoc/>
         public Task FulfillAsync(
             HttpStatusCode status,
+            IEnumerable<KeyValuePair<string, string>> headers = null,
+            string contentType = null,
             string body = null,
             byte[] bodyBytes = null,
-            string contentType = null,
-            IEnumerable<KeyValuePair<string, string>> headers = null,
             string path = null)
-            => FulfillAsync(body, bodyBytes, contentType, headers, path, (int?)status);
+            => FulfillAsync((int?)status, headers, contentType, body, bodyBytes, path);
 
         /// <inheritdoc/>
         public Task FulfillAsync(
+            int? status = null,
+            IEnumerable<KeyValuePair<string, string>> headers = null,
+            string contentType = null,
             string body = null,
             byte[] bodyBytes = null,
-            string contentType = null,
-            IEnumerable<KeyValuePair<string, string>> headers = null,
-            string path = null,
-            int? status = null)
+            string path = null)
         {
             var normalized = NormalizeFulfillParameters(status, headers, contentType, body, bodyBytes, path);
             return _channel.FulfillAsync(normalized);
@@ -65,10 +65,10 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc/>
         public Task ResumeAsync(
-            IEnumerable<KeyValuePair<string, string>> headers = null,
+            string url = null,
             string method = null,
             byte[] postData = null,
-            string url = null)
+            IEnumerable<KeyValuePair<string, string>> headers = null)
             => _channel.ContinueAsync(url, method, postData, headers);
 
         private NormalizedFulfillResponse NormalizeFulfillParameters(

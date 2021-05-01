@@ -104,14 +104,14 @@ namespace Microsoft.Playwright
         public Task AddCookiesAsync(params Cookie[] cookies) => Channel.AddCookiesAsync(cookies);
 
         /// <inheritdoc/>
-        public Task AddInitScriptAsync(string script = null, string scriptPath = null, object arg = null)
+        public Task AddInitScriptAsync(string script = null, string scriptPath = null)
         {
             if (string.IsNullOrEmpty(script))
             {
                 script = ScriptsHelper.EvaluationScript(script, scriptPath);
             }
 
-            return Channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(script, arg != null ? new[] { arg } : null));
+            return Channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(script, null));
         }
 
         /// <inheritdoc/>

@@ -522,7 +522,7 @@ namespace Microsoft.Playwright.Tests
                 while (nodes.Count > 0)
                 {
                     var node = nodes.Pop();
-                    if (node.Focused) return node;
+                    if (node.Focused == true) return node;
                     foreach (var innerNode in node.Children)
                     {
                         nodes.Push(innerNode);

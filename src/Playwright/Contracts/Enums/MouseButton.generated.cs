@@ -39,20 +39,21 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-	public enum MouseButton
-	{
-		Undefined = 0,
-		[EnumMember(Value = "left")]
-		Left,
-		[EnumMember(Value = "right")]
-		Right,
-		[EnumMember(Value = "middle")]
-		Middle,
-	}
+    public enum MouseButton
+    {
+        Undefined = 0,
+        [EnumMember(Value = "left")]
+        Left,
+        [EnumMember(Value = "right")]
+        Right,
+        [EnumMember(Value = "middle")]
+        Middle,
+    }
 }

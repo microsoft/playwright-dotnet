@@ -46,41 +46,41 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-	/// <summary>
-	/// Result of calling <see cref="IBrowserContext.GetCookiesAsync"/>.
-	/// </summary>
-	public partial class BrowserContextCookiesResult
-	{
-		/// <summary><para></para></summary>
-		[JsonPropertyName("name")]
-		public string Name { get; set; }
-	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("value")]
-		public string Value { get; set; }
-	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("domain")]
-		public string Domain { get; set; }
-	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("path")]
-		public string Path { get; set; }
-	
-		/// <summary><para>Unix time in seconds.</para></summary>
-		[JsonPropertyName("expires")]
-		public float Expires { get; set; }
-	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("httpOnly")]
-		public bool HttpOnly { get; set; }
-	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("secure")]
-		public bool Secure { get; set; }
-	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("sameSite")]
-		public SameSiteAttribute SameSite { get; set; }
-	}
+    /// <summary>
+    /// Result of calling <see cref="IBrowserContext.GetCookiesAsync"/>.
+    /// </summary>
+    public partial class BrowserContextCookiesResult
+    {
+        /// <summary><para></para></summary>
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        /// <summary><para></para></summary>
+        [JsonPropertyName("value")]
+        public string Value { get; set; }
+
+        /// <summary><para></para></summary>
+        [JsonPropertyName("domain")]
+        public string Domain { get; set; }
+
+        /// <summary><para></para></summary>
+        [JsonPropertyName("path")]
+        public string Path { get; set; }
+
+        /// <summary><para>Unix time in seconds.</para></summary>
+        [JsonPropertyName("expires")]
+        public float Expires { get; set; }
+
+        /// <summary><para></para></summary>
+        [JsonPropertyName("httpOnly")]
+        public bool HttpOnly { get; set; }
+
+        /// <summary><para></para></summary>
+        [JsonPropertyName("secure")]
+        public bool Secure { get; set; }
+
+        /// <summary><para></para></summary>
+        [JsonPropertyName("sameSite")]
+        public SameSiteAttribute SameSite { get; set; }
+    }
 }

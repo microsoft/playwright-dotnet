@@ -57,20 +57,18 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// This object can be used to launch or connect to Chromium, returning instances of
-        /// <see cref="ChromiumBrowser"/>.
+        /// <see cref="IBrowser"/>.
         /// </para>
         /// </summary>
-        [JsonPropertyName("chromium")]
-        public IBrowserType Chromium { get; set; }
+        public IBrowserType Chromium { get; }
 
         /// <summary>
         /// <para>
         /// This object can be used to launch or connect to Firefox, returning instances of
-        /// <see cref="FirefoxBrowser"/>.
+        /// <see cref="IBrowser"/>.
         /// </para>
         /// </summary>
-        [JsonPropertyName("firefox")]
-        public IBrowserType Firefox { get; set; }
+        public IBrowserType Firefox { get; }
 
         /// <summary>
         /// <para>
@@ -78,16 +76,14 @@ namespace Microsoft.Playwright
         /// with selectors</a> for more information.
         /// </para>
         /// </summary>
-        [JsonPropertyName("selectors")]
-        public ISelectors Selectors { get; set; }
+        public ISelectors Selectors { get; }
 
         /// <summary>
         /// <para>
         /// This object can be used to launch or connect to WebKit, returning instances of <see
-        /// cref="WebKitBrowser"/>.
+        /// cref="IBrowser"/>.
         /// </para>
         /// </summary>
-        [JsonPropertyName("webkit")]
-        public IBrowserType Webkit { get; set; }
+        public IBrowserType Webkit { get; }
     }
 }

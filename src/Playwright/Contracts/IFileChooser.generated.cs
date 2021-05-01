@@ -1,4 +1,4 @@
-﻿/*
+/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -46,43 +46,43 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-	/// <summary>
-	/// <para>
-	/// <see cref="IFileChooser"/> objects are dispatched by the page in the <see cref="IPage.FileChooser"/>
-	/// event.
-	/// </para>
-	/// </summary>
-	public partial interface IFileChooser
-	{
-		/// <summary><para>Returns input element associated with this file chooser.</para></summary>
-		IElementHandle Element { get; }
-	
-		/// <summary><para>Returns whether this file chooser accepts multiple files.</para></summary>
-		bool IsMultiple { get; }
-	
-		/// <summary><para>Returns page this file chooser belongs to.</para></summary>
-		IPage Page { get; }
-	
-		/// <summary>
-		/// <para>
-		/// Sets the value of the file input this chooser is associated with. If some of the
-		/// <c>filePaths</c> are relative paths, then they are resolved relative to the the
-		/// current working directory. For empty array, clears the selected files.
-		/// </para>
-		/// </summary>
-		/// <param name="files">
-		/// </param>
-		/// <param name="noWaitAfter">
-		/// Actions that initiate navigations are waiting for these navigations to happen and
-		/// for pages to start loading. You can opt out of waiting via setting this flag. You
-		/// would only need this option in the exceptional cases such as navigating to inaccessible
-		/// pages. Defaults to <c>false</c>.
-		/// </param>
-		/// <param name="timeout">
-		/// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-		/// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-		/// or <see cref="IPage.SetDefaultTimeout"/> methods.
-		/// </param>
-		Task SetFilesAsync(IEnumerable<string> files, bool? noWaitAfter = default, float? timeout = default);
-	}
+    /// <summary>
+    /// <para>
+    /// <see cref="IFileChooser"/> objects are dispatched by the page in the <see cref="IPage.FileChooser"/>
+    /// event.
+    /// </para>
+    /// </summary>
+    public partial interface IFileChooser
+    {
+        /// <summary><para>Returns input element associated with this file chooser.</para></summary>
+        IElementHandle Element { get; }
+
+        /// <summary><para>Returns whether this file chooser accepts multiple files.</para></summary>
+        bool IsMultiple { get; }
+
+        /// <summary><para>Returns page this file chooser belongs to.</para></summary>
+        IPage Page { get; }
+
+        /// <summary>
+        /// <para>
+        /// Sets the value of the file input this chooser is associated with. If some of the
+        /// <c>filePaths</c> are relative paths, then they are resolved relative to the the
+        /// current working directory. For empty array, clears the selected files.
+        /// </para>
+        /// </summary>
+        /// <param name="files">
+        /// </param>
+        /// <param name="noWaitAfter">
+        /// Actions that initiate navigations are waiting for these navigations to happen and
+        /// for pages to start loading. You can opt out of waiting via setting this flag. You
+        /// would only need this option in the exceptional cases such as navigating to inaccessible
+        /// pages. Defaults to <c>false</c>.
+        /// </param>
+        /// <param name="timeout">
+        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
+        Task SetFilesAsync(IEnumerable<string> files, bool? noWaitAfter = default, float? timeout = default);
+    }
 }

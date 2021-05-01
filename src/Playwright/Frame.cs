@@ -189,15 +189,16 @@ namespace Microsoft.Playwright
             IEnumerable<KeyboardModifier> modifiers,
             bool? force,
             bool? noWaitAfter,
-            float? timeout)
+            float? timeout,
+            bool? trial)
             => ClickAsync(false, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task CheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout)
+        public Task CheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
             => CheckAsync(false, selector, position, force, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task UncheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout)
+        public Task UncheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
             => UncheckAsync(false, selector, position, force, noWaitAfter, timeout);
 
         /// <inheritdoc />
@@ -209,7 +210,8 @@ namespace Microsoft.Playwright
             IEnumerable<KeyboardModifier> modifiers,
             bool? force,
             bool? noWaitAfter,
-            float? timeout)
+            float? timeout,
+            bool? trial)
             => DblClickAsync(false, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), position, modifiers, timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />
@@ -282,7 +284,7 @@ namespace Microsoft.Playwright
 
             var request = navigatedEvent.NewDocument?.Request?.Object;
             var response = request != null
-                ? await waiter.WaitForPromiseAsync(request.FinalRequest.GetResponseAsync()).ConfigureAwait(false)
+                ? await waiter.WaitForPromiseAsync(request.FinalRequest.ResponseAsync()).ConfigureAwait(false)
                 : null;
 
             waiter.Dispose();
@@ -314,7 +316,8 @@ namespace Microsoft.Playwright
             Position position,
             IEnumerable<KeyboardModifier> modifiers,
             bool? force,
-            float? timeout)
+            float? timeout,
+            bool? trial)
             => HoverAsync(false, selector, position, modifiers, force ?? false, timeout);
 
         /// <inheritdoc />
@@ -436,7 +439,7 @@ namespace Microsoft.Playwright
             => GetTextContentAsync(false, selector, timeout);
 
         /// <inheritdoc />
-        public Task TapAsync(string selector, Position position, IEnumerable<KeyboardModifier> modifiers, bool? noWaitAfter, bool? force, float? timeout)
+        public Task TapAsync(string selector, Position position, IEnumerable<KeyboardModifier> modifiers, bool? noWaitAfter, bool? force, float? timeout, bool? trial)
             => TapAsync(false, selector, modifiers, position, force, noWaitAfter, timeout);
 
         /// <inheritdoc />

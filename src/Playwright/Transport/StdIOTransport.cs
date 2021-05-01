@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Transport
             process.ErrorDataReceived += (_, e) => LogReceived?.Invoke(this, new LogReceivedEventArgs(e.Data));
             process.BeginErrorReadLine();
 
-            scheduler(GetResponseAsync, _readerCancellationSource.Token);
+            scheduler(ResponseAsync, _readerCancellationSource.Token);
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
@@ -106,7 +106,7 @@ namespace Microsoft.Playwright.Transport
             }
         }
 
-        private async Task GetResponseAsync(CancellationToken token)
+        private async Task ResponseAsync(CancellationToken token)
         {
             try
             {

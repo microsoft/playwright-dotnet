@@ -39,6 +39,7 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,10 +50,10 @@ namespace Microsoft.Playwright
     public partial interface IResponse
     {
         /// <summary><para>Returns the buffer with response body.</para></summary>
-        Task<byte[]> GetBodyAsync();
+        Task<byte[]> BodyAsync();
 
         /// <summary><para>Waits for this response to finish, returns failure error if request failed.</para></summary>
-        Task<string> GetFinishedAsync();
+        Task<string> FinishedAsync();
 
         /// <summary><para>Returns the <see cref="IFrame"/> that initiated this response.</para></summary>
         IFrame Frame { get; }
@@ -69,7 +70,7 @@ namespace Microsoft.Playwright
         /// <para>Returns the JSON representation of response body.</para>
         /// <para>This method will throw if the response body is not parsable via <c>JSON.parse</c>.</para>
         /// </summary>
-        Task<T> GetJsonAsync<T>();
+        Task<T> JsonAsync<T>();
 
         /// <summary>
         /// <para>
@@ -89,12 +90,12 @@ namespace Microsoft.Playwright
         string StatusText { get; }
 
         /// <summary><para>Returns the text representation of response body.</para></summary>
-        Task<string> GetTextAsync();
+        Task<string> TextAsync();
 
         /// <summary><para>Contains the URL of the response.</para></summary>
         string Url { get; }
 
-        /// <summary><para>Gets the <see cref="System.Net.HttpStatusCode" /> code of the response.</para></summary>
+        /// <summary><para>Gets the <see cref="System.Net.HttpStatusCode"/> code of the response.</para></summary>
         System.Net.HttpStatusCode StatusCode { get; }
     }
 }

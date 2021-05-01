@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests
         {
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/pptr.png");
             byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
-            Assert.Equal(imageBuffer, await response.GetBodyAsync());
+            Assert.Equal(imageBuffer, await response.BodyAsync());
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should return body with compression")]
@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
             Server.EnableGzip("/pptr.png");
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/pptr.png");
             byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
-            Assert.Equal(imageBuffer, await response.GetBodyAsync());
+            Assert.Equal(imageBuffer, await response.BodyAsync());
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should work")]
@@ -56,14 +56,14 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReturnJson()
         {
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/simple.json");
-            Assert.Equal("{\"foo\": \"bar\"}", (await response.GetJsonAsync()).RootElement.GetRawText());
+            Assert.Equal("{\"foo\": \"bar\"}", (await response.JsonAsync()).RootElement.GetRawText());
         }
 
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithGenerics()
         {
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/simple.json");
-            Assert.Equal("bar", (await response.GetJsonAsync<TestClass>()).Foo);
+            Assert.Equal("bar", (await response.JsonAsync<TestClass>()).Foo);
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should return status text")]
@@ -89,7 +89,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReturnText()
         {
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/simple.json");
-            Assert.Equal("{\"foo\": \"bar\"}", (await response.GetTextAsync()).Trim());
+            Assert.Equal("{\"foo\": \"bar\"}", (await response.TextAsync()).Trim());
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should return uncompressed text")]
@@ -99,7 +99,7 @@ namespace Microsoft.Playwright.Tests
             Server.EnableGzip("/simple.json");
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/simple.json");
             Assert.Equal("gzip", response.GetHeaderValue("content-encoding"));
-            Assert.Equal("{\"foo\": \"bar\"}", (await response.GetTextAsync()).Trim());
+            Assert.Equal("{\"foo\": \"bar\"}", (await response.TextAsync()).Trim());
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should throw when requesting body of redirected response")]
@@ -110,10 +110,10 @@ namespace Microsoft.Playwright.Tests
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/foo.html");
             var redirectedFrom = response.Request.RedirectedFrom;
             Assert.NotNull(redirectedFrom);
-            var redirected = await redirectedFrom.GetResponseAsync();
+            var redirected = await redirectedFrom.ResponseAsync();
             Assert.Equal(HttpStatusCode.Redirect, redirected.StatusCode);
 
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async () => await redirected.GetTextAsync());
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async () => await redirected.TextAsync());
             Assert.Contains("Response body is unavailable for redirect responses", exception.Message);
         }
 
@@ -148,7 +148,7 @@ namespace Microsoft.Playwright.Tests
             Assert.Equal(HttpStatusCode.OK, pageResponse.StatusCode);
             Assert.False(requestFinished);
 
-            var responseText = pageResponse.GetTextAsync();
+            var responseText = pageResponse.TextAsync();
             // Write part of the response and wait for it to be flushed.
             await serverResponse.WriteAsync("wor");
             // Finish response.

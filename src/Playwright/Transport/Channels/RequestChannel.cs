@@ -9,6 +9,6 @@ namespace Microsoft.Playwright.Transport.Channels
         {
         }
 
-        internal Task<ResponseChannel> GetResponseAsync() => Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "response", null);
+        internal Task<ResponseChannel> ResponseAsync() => Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "response", null);
     }
 }

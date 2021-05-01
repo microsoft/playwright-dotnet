@@ -1,4 +1,4 @@
-﻿/*
+/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -46,16 +46,16 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-	public enum WaitForSelectorState
-	{
-		Undefined = 0,
-		[EnumMember(Value = "attached")]
-		Attached,
-		[EnumMember(Value = "detached")]
-		Detached,
-		[EnumMember(Value = "visible")]
-		Visible,
-		[EnumMember(Value = "hidden")]
-		Hidden,
-	}
+    public enum WaitForSelectorState
+    {
+        Undefined = 0,
+        [EnumMember(Value = "attached")]
+        Attached,
+        [EnumMember(Value = "detached")]
+        Detached,
+        [EnumMember(Value = "visible")]
+        Visible,
+        [EnumMember(Value = "hidden")]
+        Hidden,
+    }
 }

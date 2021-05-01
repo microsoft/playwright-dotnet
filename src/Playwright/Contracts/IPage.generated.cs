@@ -224,8 +224,7 @@ namespace Microsoft.Playwright
         /// </summary>
         event EventHandler<IWorker> Worker;
 
-        [JsonPropertyName("accessibility")]
-        public IAccessibility Accessibility { get; set; }
+        public IAccessibility Accessibility { get; }
 
         /// <summary>
         /// <para>Adds a script which would be evaluated in one of the following scenarios:</para>
@@ -321,7 +320,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// <para>
         /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
-        /// this method throws a <see cref="ITimeoutError"/>. Passing zero timeout disables
+        /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
         /// this.
         /// </para>
         /// <para>Shortcut for main frame's <see cref="IFrame.CheckAsync"/>.</para>
@@ -350,7 +349,12 @@ namespace Microsoft.Playwright
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task CheckAsync(string selector, Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+        /// <param name="trial">
+        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
+        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+        /// element is ready for the action without performing it.
+        /// </param>
+        Task CheckAsync(string selector, Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default, bool? trial = default);
 
         /// <summary>
         /// <para>
@@ -379,7 +383,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// <para>
         /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
-        /// this method throws a <see cref="ITimeoutError"/>. Passing zero timeout disables
+        /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
         /// this.
         /// </para>
         /// <para>Shortcut for main frame's <see cref="IFrame.ClickAsync"/>.</para>
@@ -419,7 +423,12 @@ namespace Microsoft.Playwright
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task ClickAsync(string selector, MouseButton button = default, int? clickCount = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+        /// <param name="trial">
+        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
+        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+        /// element is ready for the action without performing it.
+        /// </param>
+        Task ClickAsync(string selector, MouseButton button = default, int? clickCount = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default, bool? trial = default);
 
         /// <summary>
         /// <para>
@@ -476,7 +485,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// <para>
         /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
-        /// this method throws a <see cref="ITimeoutError"/>. Passing zero timeout disables
+        /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
         /// this.
         /// </para>
         /// <para>Shortcut for main frame's <see cref="IFrame.DblClickAsync"/>.</para>
@@ -521,7 +530,12 @@ namespace Microsoft.Playwright
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task DblClickAsync(string selector, MouseButton button = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+        /// <param name="trial">
+        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
+        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+        /// element is ready for the action without performing it.
+        /// </param>
+        Task DblClickAsync(string selector, MouseButton button = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default, bool? trial = default);
 
         /// <summary>
         /// <para>
@@ -566,6 +580,13 @@ namespace Microsoft.Playwright
         /// </param>
         Task DispatchEventAsync(string selector, string type, object eventInit = default, float? timeout = default);
 
+        /// <summary>
+        /// <para>
+        /// This method changes the <c>CSS media type</c> through the <c>media</c> argument,
+        /// and/or the <c>'prefers-colors-scheme'</c> media feature, using the <c>colorScheme</c>
+        /// argument.
+        /// </para>
+        /// </summary>
         /// <param name="media">
         /// Changes the CSS media type of the page. The only allowed values are <c>'screen'</c>,
         /// <c>'print'</c> and <c>null</c>. Passing <c>null</c> disables CSS media emulation.
@@ -584,7 +605,7 @@ namespace Microsoft.Playwright
         /// the selector, the method throws an error. Returns the value of <paramref name="expression"/>.
         /// </para>
         /// <para>
-        /// If <paramref name="expression"/> returns a <see cref="Promise"/>, then <see cref="IPage.EvalOnSelectorAsync"/>
+        /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IPage.EvalOnSelectorAsync"/>
         /// would wait for the promise to resolve and return its value.
         /// </para>
         /// <para>Examples:</para>
@@ -609,7 +630,7 @@ namespace Microsoft.Playwright
         /// Returns the result of <paramref name="expression"/> invocation.
         /// </para>
         /// <para>
-        /// If <paramref name="expression"/> returns a <see cref="Promise"/>, then <see cref="IPage.EvalOnSelectorAllAsync"/>
+        /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IPage.EvalOnSelectorAllAsync"/>
         /// would wait for the promise to resolve and return its value.
         /// </para>
         /// <para>Examples:</para>
@@ -629,7 +650,7 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>Returns the value of the <paramref name="expression"/> invocation.</para>
         /// <para>
-        /// If the function passed to the <see cref="IPage.EvaluateAsync"/> returns a <see cref="Promise"/>,
+        /// If the function passed to the <see cref="IPage.EvaluateAsync"/> returns a <see cref="Task"/>,
         /// then <see cref="IPage.EvaluateAsync"/> would wait for the promise to resolve and
         /// return its value.
         /// </para>
@@ -663,7 +684,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>
         /// If the function passed to the <see cref="IPage.EvaluateHandleAsync"/> returns a
-        /// <see cref="Promise"/>, then <see cref="IPage.EvaluateHandleAsync"/> would wait for
+        /// <see cref="Task"/>, then <see cref="IPage.EvaluateHandleAsync"/> would wait for
         /// the promise to resolve and return its value.
         /// </para>
         /// <para>A string can also be passed in instead of a function:</para>
@@ -681,7 +702,7 @@ namespace Microsoft.Playwright
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in this page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
         /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
         /// it will be awaited.
         /// </para>
@@ -708,10 +729,10 @@ namespace Microsoft.Playwright
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in the page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
         /// name="callback"/>.
         /// </para>
-        /// <para>If the <paramref name="callback"/> returns a <see cref="Promise"/>, it will be awaited.</para>
+        /// <para>If the <paramref name="callback"/> returns a <see cref="Task"/>, it will be awaited.</para>
         /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
         /// <para>An example of adding an <c>sha1</c> function to the page:</para>
         /// </summary>
@@ -970,7 +991,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// <para>
         /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
-        /// this method throws a <see cref="ITimeoutError"/>. Passing zero timeout disables
+        /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
         /// this.
         /// </para>
         /// <para>Shortcut for main frame's <see cref="IFrame.HoverAsync"/>.</para>
@@ -998,7 +1019,12 @@ namespace Microsoft.Playwright
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task HoverAsync(string selector, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, float? timeout = default);
+        /// <param name="trial">
+        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
+        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+        /// element is ready for the action without performing it.
+        /// </param>
+        Task HoverAsync(string selector, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, float? timeout = default, bool? trial = default);
 
         /// <summary><para>Returns <c>element.innerHTML</c>.</para></summary>
         /// <param name="selector">
@@ -1122,8 +1148,7 @@ namespace Microsoft.Playwright
         /// </param>
         Task<bool> IsVisibleAsync(string selector, float? timeout = default);
 
-        [JsonPropertyName("keyboard")]
-        public IKeyboard Keyboard { get; set; }
+        public IKeyboard Keyboard { get; }
 
         /// <summary>
         /// <para>
@@ -1133,8 +1158,7 @@ namespace Microsoft.Playwright
         /// </summary>
         IFrame MainFrame { get; }
 
-        [JsonPropertyName("mouse")]
-        public IMouse Mouse { get; set; }
+        public IMouse Mouse { get; }
 
         /// <summary>
         /// <para>
@@ -1386,6 +1410,10 @@ namespace Microsoft.Playwright
         /// <para>An example of a naive handler that aborts all image requests:</para>
         /// <para>or the same snippet using a regex pattern instead:</para>
         /// <para>
+        /// It is possible to examine the request to decide the route action. For example, mocking
+        /// all requests that contain some post data, and leaving all other requests as is:
+        /// </para>
+        /// <para>
         /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync"/>)
         /// when request matches both handlers.
         /// </para>
@@ -1619,7 +1647,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// <para>
         /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
-        /// this method throws a <see cref="ITimeoutError"/>. Passing zero timeout disables
+        /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
         /// this.
         /// </para>
         /// <para>Shortcut for main frame's <see cref="IFrame.TapAsync"/>.</para>
@@ -1659,7 +1687,12 @@ namespace Microsoft.Playwright
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task TapAsync(string selector, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? noWaitAfter = default, bool? force = default, float? timeout = default);
+        /// <param name="trial">
+        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
+        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+        /// element is ready for the action without performing it.
+        /// </param>
+        Task TapAsync(string selector, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? noWaitAfter = default, bool? force = default, float? timeout = default, bool? trial = default);
 
         /// <summary><para>Returns <c>element.textContent</c>.</para></summary>
         /// <param name="selector">
@@ -1677,8 +1710,7 @@ namespace Microsoft.Playwright
         /// <summary><para>Returns the page's title. Shortcut for main frame's <see cref="IFrame.TitleAsync"/>.</para></summary>
         Task<string> TitleAsync();
 
-        [JsonPropertyName("touchscreen")]
-        public ITouchscreen Touchscreen { get; set; }
+        public ITouchscreen Touchscreen { get; }
 
         /// <summary>
         /// <para>
@@ -1738,7 +1770,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// <para>
         /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
-        /// this method throws a <see cref="ITimeoutError"/>. Passing zero timeout disables
+        /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
         /// this.
         /// </para>
         /// <para>Shortcut for main frame's <see cref="IFrame.UncheckAsync"/>.</para>
@@ -1767,7 +1799,12 @@ namespace Microsoft.Playwright
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task UncheckAsync(string selector, Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+        /// <param name="trial">
+        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
+        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+        /// element is ready for the action without performing it.
+        /// </param>
+        Task UncheckAsync(string selector, Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default, bool? trial = default);
 
         /// <summary>
         /// <para>
@@ -2019,7 +2056,12 @@ namespace Microsoft.Playwright
         /// </param>
         Task<IPage> WaitForPopupAsync(Func<IPage, bool> predicate = default, float? timeout = default);
 
-        /// <summary><para>Waits for the matching request and returns it.</para></summary>
+        /// <summary>
+        /// <para>
+        /// Waits for the matching request and returns it.  See <a href="./events.md#waiting-for-event">waiting
+        /// for event</a> for more details about events.
+        /// </para>
+        /// </summary>
         /// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
         /// <param name="urlOrPredicateRegex">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
         /// <param name="urlOrPredicateFunc">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
@@ -2030,7 +2072,12 @@ namespace Microsoft.Playwright
         /// </param>
         Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, Regex urlOrPredicateRegex, Func<IRequest, bool> urlOrPredicateFunc, float? timeout = default);
 
-        /// <summary><para>Returns the matched response.</para></summary>
+        /// <summary>
+        /// <para>
+        /// Returns the matched response. See <a href="./events.md#waiting-for-event">waiting
+        /// for event</a> for more details about events.
+        /// </para>
+        /// </summary>
         /// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
         /// <param name="urlOrPredicateRegex">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
         /// <param name="urlOrPredicateFunc">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
