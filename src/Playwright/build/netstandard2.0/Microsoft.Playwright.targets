@@ -35,4 +35,7 @@
     <Exec Command="chmod u+x $(OutputPath)/.playwright/unix/native/node" />
     <Exec Command="chmod u+x $(OutputPath)/.playwright/unix/native/package/third_party/ffmpeg/ffmpeg-linux" />
   </Target>
+  <Target Name="GenerateInterfaces">
+    <Exec Command="node ..\playwright\utils\doclint\generateDotnetApi.js $(MSBuildProjectDirectory)/Contracts" WorkingDirectory="$(MSBuildStartupDirectory)"/>
+  </Target>
 </Project>
