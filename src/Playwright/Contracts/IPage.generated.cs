@@ -224,8 +224,7 @@ namespace Microsoft.Playwright
         /// </summary>
         event EventHandler<IWorker> Worker;
 
-        [JsonPropertyName("accessibility")]
-        public IAccessibility Accessibility { get; set; }
+        public IAccessibility Accessibility { get; }
 
         /// <summary>
         /// <para>Adds a script which would be evaluated in one of the following scenarios:</para>
@@ -321,7 +320,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// <para>
         /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
-        /// this method throws a <see cref="ITimeoutError"/>. Passing zero timeout disables
+        /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
         /// this.
         /// </para>
         /// <para>Shortcut for main frame's <see cref="IFrame.CheckAsync"/>.</para>
@@ -350,7 +349,12 @@ namespace Microsoft.Playwright
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task CheckAsync(string selector, Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+        /// <param name="trial">
+        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
+        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+        /// element is ready for the action without performing it.
+        /// </param>
+        Task CheckAsync(string selector, Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default, bool? trial = default);
 
         /// <summary>
         /// <para>
@@ -379,7 +383,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// <para>
         /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
-        /// this method throws a <see cref="ITimeoutError"/>. Passing zero timeout disables
+        /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
         /// this.
         /// </para>
         /// <para>Shortcut for main frame's <see cref="IFrame.ClickAsync"/>.</para>
@@ -419,7 +423,12 @@ namespace Microsoft.Playwright
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task ClickAsync(string selector, MouseButton button = default, int? clickCount = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+        /// <param name="trial">
+        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
+        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+        /// element is ready for the action without performing it.
+        /// </param>
+        Task ClickAsync(string selector, MouseButton button = default, int? clickCount = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default, bool? trial = default);
 
         /// <summary>
         /// <para>
@@ -476,7 +485,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// <para>
         /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
-        /// this method throws a <see cref="ITimeoutError"/>. Passing zero timeout disables
+        /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
         /// this.
         /// </para>
         /// <para>Shortcut for main frame's <see cref="IFrame.DblClickAsync"/>.</para>
@@ -521,7 +530,12 @@ namespace Microsoft.Playwright
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task DblClickAsync(string selector, MouseButton button = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+        /// <param name="trial">
+        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
+        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+        /// element is ready for the action without performing it.
+        /// </param>
+        Task DblClickAsync(string selector, MouseButton button = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default, bool? trial = default);
 
         /// <summary>
         /// <para>
@@ -566,6 +580,13 @@ namespace Microsoft.Playwright
         /// </param>
         Task DispatchEventAsync(string selector, string type, object eventInit = default, float? timeout = default);
 
+        /// <summary>
+        /// <para>
+        /// This method changes the <c>CSS media type</c> through the <c>media</c> argument,
+        /// and/or the <c>'prefers-colors-scheme'</c> media feature, using the <c>colorScheme</c>
+        /// argument.
+        /// </para>
+        /// </summary>
         /// <param name="media">
         /// Changes the CSS media type of the page. The only allowed values are <c>'screen'</c>,
         /// <c>'print'</c> and <c>null</c>. Passing <c>null</c> disables CSS media emulation.
@@ -584,7 +605,7 @@ namespace Microsoft.Playwright
         /// the selector, the method throws an error. Returns the value of <paramref name="expression"/>.
         /// </para>
         /// <para>
-        /// If <paramref name="expression"/> returns a <see cref="Promise"/>, then <see cref="IPage.EvalOnSelectorAsync"/>
+        /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IPage.EvalOnSelectorAsync"/>
         /// would wait for the promise to resolve and return its value.
         /// </para>
         /// <para>Examples:</para>
@@ -609,7 +630,7 @@ namespace Microsoft.Playwright
         /// Returns the result of <paramref name="expression"/> invocation.
         /// </para>
         /// <para>
-        /// If <paramref name="expression"/> returns a <see cref="Promise"/>, then <see cref="IPage.EvalOnSelectorAllAsync"/>
+        /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IPage.EvalOnSelectorAllAsync"/>
         /// would wait for the promise to resolve and return its value.
         /// </para>
         /// <para>Examples:</para>
@@ -629,7 +650,7 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>Returns the value of the <paramref name="expression"/> invocation.</para>
         /// <para>
-        /// If the function passed to the <see cref="IPage.EvaluateAsync"/> returns a <see cref="Promise"/>,
+        /// If the function passed to the <see cref="IPage.EvaluateAsync"/> returns a <see cref="Task"/>,
         /// then <see cref="IPage.EvaluateAsync"/> would wait for the promise to resolve and
         /// return its value.
         /// </para>
@@ -663,7 +684,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>
         /// If the function passed to the <see cref="IPage.EvaluateHandleAsync"/> returns a
-        /// <see cref="Promise"/>, then <see cref="IPage.EvaluateHandleAsync"/> would wait for
+        /// <see cref="Task"/>, then <see cref="IPage.EvaluateHandleAsync"/> would wait for
         /// the promise to resolve and return its value.
         /// </para>
         /// <para>A string can also be passed in instead of a function:</para>
@@ -681,7 +702,7 @@ namespace Microsoft.Playwright
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in this page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
         /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
         /// it will be awaited.
         /// </para>
@@ -708,10 +729,10 @@ namespace Microsoft.Playwright
         /// <para>
         /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
         /// of every frame in the page. When called, the function executes <paramref name="callback"/>
-        /// and returns a <see cref="Promise"/> which resolves to the return value of <paramref
+        /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
         /// name="callback"/>.
         /// </para>
-        /// <para>If the <paramref name="callback"/> returns a <see cref="Promise"/>, it will be awaited.</para>
+        /// <para>If the <paramref name="callback"/> returns a <see cref="Task"/>, it will be awaited.</para>
         /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
         /// <para>An example of adding an <c>sha1</c> function to the page:</para>
         /// </summary>
@@ -789,15 +810,21 @@ namespace Microsoft.Playwright
         /// A glob pattern, regex pattern or predicate receiving frame's <c>url</c> as a <see
         /// cref="URL"/> object.
         /// </param>
+        IFrame FrameByUrl(string urlString);
+
+        /// <summary><para>Returns frame with matching URL.</para></summary>
         /// <param name="urlRegex">
         /// A glob pattern, regex pattern or predicate receiving frame's <c>url</c> as a <see
         /// cref="URL"/> object.
         /// </param>
+        IFrame FrameByUrl(Regex urlRegex);
+
+        /// <summary><para>Returns frame with matching URL.</para></summary>
         /// <param name="urlFunc">
         /// A glob pattern, regex pattern or predicate receiving frame's <c>url</c> as a <see
         /// cref="URL"/> object.
         /// </param>
-        IFrame FrameByUrl(string urlString, Regex urlRegex, Func<string, bool> urlFunc);
+        IFrame FrameByUrl(Func<string, bool> urlFunc);
 
         /// <summary><para>An array of all frames attached to the page.</para></summary>
         IReadOnlyCollection<IFrame> Frames { get; }
@@ -970,7 +997,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// <para>
         /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
-        /// this method throws a <see cref="ITimeoutError"/>. Passing zero timeout disables
+        /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
         /// this.
         /// </para>
         /// <para>Shortcut for main frame's <see cref="IFrame.HoverAsync"/>.</para>
@@ -998,7 +1025,12 @@ namespace Microsoft.Playwright
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task HoverAsync(string selector, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, float? timeout = default);
+        /// <param name="trial">
+        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
+        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+        /// element is ready for the action without performing it.
+        /// </param>
+        Task HoverAsync(string selector, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, float? timeout = default, bool? trial = default);
 
         /// <summary><para>Returns <c>element.innerHTML</c>.</para></summary>
         /// <param name="selector">
@@ -1122,8 +1154,7 @@ namespace Microsoft.Playwright
         /// </param>
         Task<bool> IsVisibleAsync(string selector, float? timeout = default);
 
-        [JsonPropertyName("keyboard")]
-        public IKeyboard Keyboard { get; set; }
+        public IKeyboard Keyboard { get; }
 
         /// <summary>
         /// <para>
@@ -1133,8 +1164,7 @@ namespace Microsoft.Playwright
         /// </summary>
         IFrame MainFrame { get; }
 
-        [JsonPropertyName("mouse")]
-        public IMouse Mouse { get; set; }
+        public IMouse Mouse { get; }
 
         /// <summary>
         /// <para>
@@ -1386,6 +1416,10 @@ namespace Microsoft.Playwright
         /// <para>An example of a naive handler that aborts all image requests:</para>
         /// <para>or the same snippet using a regex pattern instead:</para>
         /// <para>
+        /// It is possible to examine the request to decide the route action. For example, mocking
+        /// all requests that contain some post data, and leaving all other requests as is:
+        /// </para>
+        /// <para>
         /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync"/>)
         /// when request matches both handlers.
         /// </para>
@@ -1399,16 +1433,66 @@ namespace Microsoft.Playwright
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while routing.
         /// </param>
+        /// <param name="handler">handler function to route the request.</param>
+        Task RouteAsync(string urlString, Action<IRoute> handler);
+
+        /// <summary>
+        /// <para>Routing provides the capability to modify network requests that are made by a page.</para>
+        /// <para>
+        /// Once routing is enabled, every request matching the url pattern will stall unless
+        /// it's continued, fulfilled or aborted.
+        /// </para>
+        /// <para>An example of a naive handler that aborts all image requests:</para>
+        /// <para>or the same snippet using a regex pattern instead:</para>
+        /// <para>
+        /// It is possible to examine the request to decide the route action. For example, mocking
+        /// all requests that contain some post data, and leaving all other requests as is:
+        /// </para>
+        /// <para>
+        /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync"/>)
+        /// when request matches both handlers.
+        /// </para>
+        /// <para>To remove a route with its handler you can use <see cref="IPage.UnrouteAsync"/>.</para>
+        /// </summary>
+        /// <remarks>
+        /// <para>The handler will only be called for the first url if the response is a redirect.</para>
+        /// <para>Enabling routing disables http cache.</para>
+        /// </remarks>
         /// <param name="urlRegex">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while routing.
         /// </param>
+        /// <param name="handler">handler function to route the request.</param>
+        Task RouteAsync(Regex urlRegex, Action<IRoute> handler);
+
+        /// <summary>
+        /// <para>Routing provides the capability to modify network requests that are made by a page.</para>
+        /// <para>
+        /// Once routing is enabled, every request matching the url pattern will stall unless
+        /// it's continued, fulfilled or aborted.
+        /// </para>
+        /// <para>An example of a naive handler that aborts all image requests:</para>
+        /// <para>or the same snippet using a regex pattern instead:</para>
+        /// <para>
+        /// It is possible to examine the request to decide the route action. For example, mocking
+        /// all requests that contain some post data, and leaving all other requests as is:
+        /// </para>
+        /// <para>
+        /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync"/>)
+        /// when request matches both handlers.
+        /// </para>
+        /// <para>To remove a route with its handler you can use <see cref="IPage.UnrouteAsync"/>.</para>
+        /// </summary>
+        /// <remarks>
+        /// <para>The handler will only be called for the first url if the response is a redirect.</para>
+        /// <para>Enabling routing disables http cache.</para>
+        /// </remarks>
         /// <param name="urlFunc">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while routing.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
-        Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler);
+        Task RouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler);
 
         /// <summary><para>Returns the buffer with the captured screenshot.</para></summary>
         /// <param name="path">
@@ -1619,7 +1703,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// <para>
         /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
-        /// this method throws a <see cref="ITimeoutError"/>. Passing zero timeout disables
+        /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
         /// this.
         /// </para>
         /// <para>Shortcut for main frame's <see cref="IFrame.TapAsync"/>.</para>
@@ -1659,7 +1743,12 @@ namespace Microsoft.Playwright
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task TapAsync(string selector, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? noWaitAfter = default, bool? force = default, float? timeout = default);
+        /// <param name="trial">
+        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
+        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+        /// element is ready for the action without performing it.
+        /// </param>
+        Task TapAsync(string selector, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? noWaitAfter = default, bool? force = default, float? timeout = default, bool? trial = default);
 
         /// <summary><para>Returns <c>element.textContent</c>.</para></summary>
         /// <param name="selector">
@@ -1677,8 +1766,7 @@ namespace Microsoft.Playwright
         /// <summary><para>Returns the page's title. Shortcut for main frame's <see cref="IFrame.TitleAsync"/>.</para></summary>
         Task<string> TitleAsync();
 
-        [JsonPropertyName("touchscreen")]
-        public ITouchscreen Touchscreen { get; set; }
+        public ITouchscreen Touchscreen { get; }
 
         /// <summary>
         /// <para>
@@ -1738,7 +1826,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// <para>
         /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
-        /// this method throws a <see cref="ITimeoutError"/>. Passing zero timeout disables
+        /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
         /// this.
         /// </para>
         /// <para>Shortcut for main frame's <see cref="IFrame.UncheckAsync"/>.</para>
@@ -1767,7 +1855,12 @@ namespace Microsoft.Playwright
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task UncheckAsync(string selector, Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default);
+        /// <param name="trial">
+        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
+        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+        /// element is ready for the action without performing it.
+        /// </param>
+        Task UncheckAsync(string selector, Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default, bool? trial = default);
 
         /// <summary>
         /// <para>
@@ -1779,16 +1872,34 @@ namespace Microsoft.Playwright
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while routing.
         /// </param>
+        /// <param name="handler">Optional handler function to route the request.</param>
+        Task UnrouteAsync(string urlString, Action<IRoute> handler = default);
+
+        /// <summary>
+        /// <para>
+        /// Removes a route created with <see cref="IPage.RouteAsync"/>. When <paramref name="handler"/>
+        /// is not specified, removes all routes for the <paramref name="url"/>.
+        /// </para>
+        /// </summary>
         /// <param name="urlRegex">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while routing.
         /// </param>
+        /// <param name="handler">Optional handler function to route the request.</param>
+        Task UnrouteAsync(Regex urlRegex, Action<IRoute> handler = default);
+
+        /// <summary>
+        /// <para>
+        /// Removes a route created with <see cref="IPage.RouteAsync"/>. When <paramref name="handler"/>
+        /// is not specified, removes all routes for the <paramref name="url"/>.
+        /// </para>
+        /// </summary>
         /// <param name="urlFunc">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while routing.
         /// </param>
         /// <param name="handler">Optional handler function to route the request.</param>
-        Task UnrouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler = default);
+        Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler = default);
 
         /// <summary><para>Shortcut for main frame's <see cref="IFrame.Url"/>.</para></summary>
         string Url { get; }
@@ -1967,10 +2078,102 @@ namespace Microsoft.Playwright
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation.
         /// </param>
+        /// <param name="waitUntil">
+        /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
+        /// <list type="bullet">
+        /// <item><description>
+        /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
+        /// event is fired.
+        /// </description></item>
+        /// <item><description>
+        /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
+        /// fired.
+        /// </description></item>
+        /// <item><description>
+        /// <c>'networkidle'</c> - consider operation to be finished when there are no network
+        /// connections for at least <c>500</c> ms.
+        /// </description></item>
+        /// </list>
+        /// </param>
+        /// <param name="timeout">
+        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
+        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
+        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
+        Task<IResponse> WaitForNavigationAsync(string urlString, WaitUntilState waitUntil = default, float? timeout = default);
+
+        /// <summary>
+        /// <para>
+        /// Waits for the main frame navigation and returns the main resource response. In case
+        /// of multiple redirects, the navigation will resolve with the response of the last
+        /// redirect. In case of navigation to a different anchor or navigation due to History
+        /// API usage, the navigation will resolve with <c>null</c>.
+        /// </para>
+        /// <para>
+        /// This resolves when the page navigates to a new URL or reloads. It is useful for
+        /// when you run code which will indirectly cause the page to navigate. e.g. The click
+        /// target has an <c>onclick</c> handler that triggers navigation from a <c>setTimeout</c>.
+        /// Consider this example:
+        /// </para>
+        /// <para>Shortcut for main frame's <see cref="IFrame.WaitForNavigationAsync"/>.</para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Usage of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API">History
+        /// API</a> to change the URL is considered a navigation.
+        /// </para>
+        /// </remarks>
         /// <param name="urlRegex">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation.
         /// </param>
+        /// <param name="waitUntil">
+        /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
+        /// <list type="bullet">
+        /// <item><description>
+        /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
+        /// event is fired.
+        /// </description></item>
+        /// <item><description>
+        /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
+        /// fired.
+        /// </description></item>
+        /// <item><description>
+        /// <c>'networkidle'</c> - consider operation to be finished when there are no network
+        /// connections for at least <c>500</c> ms.
+        /// </description></item>
+        /// </list>
+        /// </param>
+        /// <param name="timeout">
+        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
+        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
+        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
+        Task<IResponse> WaitForNavigationAsync(Regex urlRegex, WaitUntilState waitUntil = default, float? timeout = default);
+
+        /// <summary>
+        /// <para>
+        /// Waits for the main frame navigation and returns the main resource response. In case
+        /// of multiple redirects, the navigation will resolve with the response of the last
+        /// redirect. In case of navigation to a different anchor or navigation due to History
+        /// API usage, the navigation will resolve with <c>null</c>.
+        /// </para>
+        /// <para>
+        /// This resolves when the page navigates to a new URL or reloads. It is useful for
+        /// when you run code which will indirectly cause the page to navigate. e.g. The click
+        /// target has an <c>onclick</c> handler that triggers navigation from a <c>setTimeout</c>.
+        /// Consider this example:
+        /// </para>
+        /// <para>Shortcut for main frame's <see cref="IFrame.WaitForNavigationAsync"/>.</para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Usage of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API">History
+        /// API</a> to change the URL is considered a navigation.
+        /// </para>
+        /// </remarks>
         /// <param name="urlFunc">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation.
@@ -1998,7 +2201,52 @@ namespace Microsoft.Playwright
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task<IResponse> WaitForNavigationAsync(string urlString = default, Regex urlRegex = default, Func<string, bool> urlFunc = default, WaitUntilState waitUntil = default, float? timeout = default);
+        Task<IResponse> WaitForNavigationAsync(Func<string, bool> urlFunc, WaitUntilState waitUntil = default, float? timeout = default);
+        /// <summary>
+        /// <para>
+        /// Waits for the main frame navigation and returns the main resource response. In case
+        /// of multiple redirects, the navigation will resolve with the response of the last
+        /// redirect. In case of navigation to a different anchor or navigation due to History
+        /// API usage, the navigation will resolve with <c>null</c>.
+        /// </para>
+        /// <para>
+        /// This resolves when the page navigates to a new URL or reloads. It is useful for
+        /// when you run code which will indirectly cause the page to navigate. e.g. The click
+        /// target has an <c>onclick</c> handler that triggers navigation from a <c>setTimeout</c>.
+        /// Consider this example:
+        /// </para>
+        /// <para>Shortcut for main frame's <see cref="IFrame.WaitForNavigationAsync"/>.</para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Usage of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API">History
+        /// API</a> to change the URL is considered a navigation.
+        /// </para>
+        /// </remarks>
+        /// <param name="waitUntil">
+        /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
+        /// <list type="bullet">
+        /// <item><description>
+        /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
+        /// event is fired.
+        /// </description></item>
+        /// <item><description>
+        /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
+        /// fired.
+        /// </description></item>
+        /// <item><description>
+        /// <c>'networkidle'</c> - consider operation to be finished when there are no network
+        /// connections for at least <c>500</c> ms.
+        /// </description></item>
+        /// </list>
+        /// </param>
+        /// <param name="timeout">
+        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
+        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
+        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
+        Task<IResponse> WaitForNavigationAsync(WaitUntilState waitUntil = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2019,27 +2267,89 @@ namespace Microsoft.Playwright
         /// </param>
         Task<IPage> WaitForPopupAsync(Func<IPage, bool> predicate = default, float? timeout = default);
 
-        /// <summary><para>Waits for the matching request and returns it.</para></summary>
+        /// <summary>
+        /// <para>
+        /// Waits for the matching request and returns it.  See <a href="./events.md#waiting-for-event">waiting
+        /// for event</a> for more details about events.
+        /// </para>
+        /// </summary>
         /// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+        /// <param name="timeout">
+        /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
+        /// the timeout. The default value can be changed by using the <see cref="IPage.SetDefaultTimeout"/>
+        /// method.
+        /// </param>
+        Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, float? timeout = default);
+
+        /// <summary>
+        /// <para>
+        /// Waits for the matching request and returns it.  See <a href="./events.md#waiting-for-event">waiting
+        /// for event</a> for more details about events.
+        /// </para>
+        /// </summary>
         /// <param name="urlOrPredicateRegex">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+        /// <param name="timeout">
+        /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
+        /// the timeout. The default value can be changed by using the <see cref="IPage.SetDefaultTimeout"/>
+        /// method.
+        /// </param>
+        Task<IRequest> WaitForRequestAsync(Regex urlOrPredicateRegex, float? timeout = default);
+
+        /// <summary>
+        /// <para>
+        /// Waits for the matching request and returns it.  See <a href="./events.md#waiting-for-event">waiting
+        /// for event</a> for more details about events.
+        /// </para>
+        /// </summary>
         /// <param name="urlOrPredicateFunc">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
         /// <param name="timeout">
         /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
         /// the timeout. The default value can be changed by using the <see cref="IPage.SetDefaultTimeout"/>
         /// method.
         /// </param>
-        Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, Regex urlOrPredicateRegex, Func<IRequest, bool> urlOrPredicateFunc, float? timeout = default);
+        Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicateFunc, float? timeout = default);
 
-        /// <summary><para>Returns the matched response.</para></summary>
+        /// <summary>
+        /// <para>
+        /// Returns the matched response. See <a href="./events.md#waiting-for-event">waiting
+        /// for event</a> for more details about events.
+        /// </para>
+        /// </summary>
         /// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="timeout">
+        /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
+        /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
+        Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, float? timeout = default);
+
+        /// <summary>
+        /// <para>
+        /// Returns the matched response. See <a href="./events.md#waiting-for-event">waiting
+        /// for event</a> for more details about events.
+        /// </para>
+        /// </summary>
         /// <param name="urlOrPredicateRegex">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="timeout">
+        /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
+        /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
+        Task<IResponse> WaitForResponseAsync(Regex urlOrPredicateRegex, float? timeout = default);
+
+        /// <summary>
+        /// <para>
+        /// Returns the matched response. See <a href="./events.md#waiting-for-event">waiting
+        /// for event</a> for more details about events.
+        /// </para>
+        /// </summary>
         /// <param name="urlOrPredicateFunc">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
         /// <param name="timeout">
         /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
         /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, Regex urlOrPredicateRegex, Func<IResponse, bool> urlOrPredicateFunc, float? timeout = default);
+        Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicateFunc, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2103,10 +2413,68 @@ namespace Microsoft.Playwright
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation.
         /// </param>
+        /// <param name="timeout">
+        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
+        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
+        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
+        /// <param name="waitUntil">
+        /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
+        /// <list type="bullet">
+        /// <item><description>
+        /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
+        /// event is fired.
+        /// </description></item>
+        /// <item><description>
+        /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
+        /// fired.
+        /// </description></item>
+        /// <item><description>
+        /// <c>'networkidle'</c> - consider operation to be finished when there are no network
+        /// connections for at least <c>500</c> ms.
+        /// </description></item>
+        /// </list>
+        /// </param>
+        Task WaitForURLAsync(string urlString, float? timeout = default, WaitUntilState waitUntil = default);
+
+        /// <summary>
+        /// <para>Waits for the main frame to navigate to the given URL.</para>
+        /// <para>Shortcut for main frame's <see cref="IFrame.WaitForURLAsync"/>.</para>
+        /// </summary>
         /// <param name="urlRegex">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation.
         /// </param>
+        /// <param name="timeout">
+        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
+        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
+        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
+        /// <param name="waitUntil">
+        /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
+        /// <list type="bullet">
+        /// <item><description>
+        /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
+        /// event is fired.
+        /// </description></item>
+        /// <item><description>
+        /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
+        /// fired.
+        /// </description></item>
+        /// <item><description>
+        /// <c>'networkidle'</c> - consider operation to be finished when there are no network
+        /// connections for at least <c>500</c> ms.
+        /// </description></item>
+        /// </list>
+        /// </param>
+        Task WaitForURLAsync(Regex urlRegex, float? timeout = default, WaitUntilState waitUntil = default);
+
+        /// <summary>
+        /// <para>Waits for the main frame to navigate to the given URL.</para>
+        /// <para>Shortcut for main frame's <see cref="IFrame.WaitForURLAsync"/>.</para>
+        /// </summary>
         /// <param name="urlFunc">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation.
@@ -2134,7 +2502,7 @@ namespace Microsoft.Playwright
         /// </description></item>
         /// </list>
         /// </param>
-        Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, float? timeout = default, WaitUntilState waitUntil = default);
+        Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = default, WaitUntilState waitUntil = default);
 
         /// <summary>
         /// <para>

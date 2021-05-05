@@ -334,22 +334,6 @@ namespace Microsoft.Playwright
         public IFrame FrameByUrl(Func<string, bool> urlFunc) => Frames.FirstOrDefault(f => urlFunc(f.Url));
 
         /// <inheritdoc />
-        public IFrame FrameByUrl(string urlString, Regex urlRegex, Func<string, bool> urlFunc)
-        {
-            if (string.IsNullOrEmpty(urlString))
-            {
-                return FrameByUrl(urlString);
-            }
-
-            if (urlRegex != null)
-            {
-                return FrameByUrl(urlRegex);
-            }
-
-            return FrameByUrl(urlFunc);
-        }
-
-        /// <inheritdoc />
         public Task<string> TitleAsync() => MainFrame.TitleAsync();
 
         /// <inheritdoc />
@@ -384,6 +368,22 @@ namespace Microsoft.Playwright
             => MainFrame.GoToAsync(true, url, waitUntil.EnsureDefaultValue(WaitUntilState.Load), referer, timeout);
 
         /// <inheritdoc />
+        public Task WaitForURLAsync(string urlString, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined)
+            => MainFrame.WaitForURLAsync(urlString, timeout, waitUntil);
+
+        /// <inheritdoc />
+        public Task WaitForURLAsync(Regex urlRegex, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined)
+            => MainFrame.WaitForURLAsync(urlRegex, timeout, waitUntil);
+
+        /// <inheritdoc />
+        public Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined)
+            => MainFrame.WaitForURLAsync(urlFunc, timeout, waitUntil);
+
+        /// <inheritdoc/>
+        public Task<IResponse> WaitForNavigationAsync(string urlString, WaitUntilState waitUntil = default, float? timeout = default)
+            => MainFrame.WaitForNavigationAsync(urlString, null, null, waitUntil, timeout);
+
+        /// <inheritdoc />
         public Task<IResponse> WaitForNavigationAsync(WaitUntilState waitUntil, float? timeout)
              => MainFrame.WaitForNavigationAsync(urlString: null, urlRegex: null, urlFunc: null, waitUntil: waitUntil, timeout: timeout);
 
@@ -396,19 +396,6 @@ namespace Microsoft.Playwright
             => MainFrame.WaitForNavigationAsync(urlString: null, urlRegex: null, urlFunc: urlFunc, waitUntil: default, timeout: timeout);
 
         /// <inheritdoc />
-        public Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined)
-            => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public Task<IResponse> WaitForNavigationAsync(
-            string urlString,
-            Regex urlRegex,
-            Func<string, bool> urlFunc,
-            WaitUntilState waitUntil,
-            float? timeout)
-            => MainFrame.WaitForNavigationAsync(urlString, urlRegex, urlFunc, waitUntil, timeout);
-
-        /// <inheritdoc />
         public Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, float? timeout)
             => WaitForEventAsync(PageEvent.Request, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
 
@@ -419,22 +406,6 @@ namespace Microsoft.Playwright
         /// <inheritdoc />
         public Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicateFunc, float? timeout)
             => WaitForEventAsync(PageEvent.Request, e => urlOrPredicateFunc(e), timeout);
-
-        /// <inheritdoc />
-        public Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, Regex urlOrPredicateRegex, Func<IRequest, bool> urlOrPredicateFunc, float? timeout)
-        {
-            if (string.IsNullOrEmpty(urlOrPredicateString))
-            {
-                return WaitForRequestAsync(urlOrPredicateString, timeout);
-            }
-
-            if (urlOrPredicateRegex != null)
-            {
-                return WaitForRequestAsync(urlOrPredicateRegex, timeout);
-            }
-
-            return WaitForRequestAsync(urlOrPredicateFunc, timeout);
-        }
 
         /// <inheritdoc />
         public Task<IPage> WaitForCloseAsync(float? timeout)
@@ -587,7 +558,9 @@ namespace Microsoft.Playwright
             Position position,
             IEnumerable<KeyboardModifier> modifiers,
             bool? force,
-            float? timeout) => MainFrame.HoverAsync(true, selector, position, modifiers, force ?? false, timeout);
+            float? timeout,
+            bool? trial)
+            => MainFrame.HoverAsync(true, selector, position, modifiers, force ?? false, timeout);
 
         /// <inheritdoc />
         public Task PressAsync(string selector, string key, float? delay, bool? noWaitAfter, float? timeout)
@@ -715,7 +688,8 @@ namespace Microsoft.Playwright
             IEnumerable<KeyboardModifier> modifiers,
             bool? force,
             bool? noWaitAfter,
-            float? timeout)
+            float? timeout,
+            bool? trial)
             => MainFrame.ClickAsync(true, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />
@@ -727,7 +701,8 @@ namespace Microsoft.Playwright
             IEnumerable<KeyboardModifier> modifiers,
             bool? force,
             bool? noWaitAfter,
-            float? timeout)
+            float? timeout,
+            bool? trial)
             => MainFrame.DblClickAsync(true, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), position, modifiers, timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />
@@ -819,22 +794,6 @@ namespace Microsoft.Playwright
             => WaitForEventAsync(PageEvent.Response, e => urlOrPredicateFunc(e), timeout);
 
         /// <inheritdoc />
-        public Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, Regex urlOrPredicateRegex, Func<IResponse, bool> urlOrPredicateFunc, float? timeout)
-        {
-            if (string.IsNullOrEmpty(urlOrPredicateString))
-            {
-                return WaitForResponseAsync(urlOrPredicateString, timeout);
-            }
-
-            if (urlOrPredicateRegex != null)
-            {
-                return WaitForResponseAsync(urlOrPredicateRegex, timeout);
-            }
-
-            return WaitForResponseAsync(urlOrPredicateFunc, timeout);
-        }
-
-        /// <inheritdoc />
         public async Task<byte[]> PdfAsync(
             string path,
             float? scale,
@@ -910,22 +869,6 @@ namespace Microsoft.Playwright
                 });
 
         /// <inheritdoc />
-        public Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler)
-        {
-            if (string.IsNullOrEmpty(urlString))
-            {
-                return RouteAsync(urlString, handler);
-            }
-
-            if (urlRegex != null)
-            {
-                return RouteAsync(urlRegex, handler);
-            }
-
-            return RouteAsync(urlFunc, handler);
-        }
-
-        /// <inheritdoc />
         public Task UnrouteAsync(string urlString, Action<IRoute> handler)
             => UnrouteAsync(
                 new RouteSetting
@@ -953,22 +896,6 @@ namespace Microsoft.Playwright
                 });
 
         /// <inheritdoc />
-        public Task UnrouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler)
-        {
-            if (string.IsNullOrEmpty(urlString))
-            {
-                return UnrouteAsync(urlString, handler);
-            }
-
-            if (urlRegex != null)
-            {
-                return UnrouteAsync(urlRegex, handler);
-            }
-
-            return UnrouteAsync(urlFunc, handler);
-        }
-
-        /// <inheritdoc />
         public Task WaitForLoadStateAsync(LoadState state, float? timeout)
             => MainFrame.WaitForLoadStateAsync(state, timeout);
 
@@ -980,11 +907,11 @@ namespace Microsoft.Playwright
         }
 
         /// <inheritdoc />
-        public Task CheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout)
+        public Task CheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
             => MainFrame.CheckAsync(true, selector, position, force, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task UncheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout)
+        public Task UncheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
             => MainFrame.UncheckAsync(true, selector, position, force, noWaitAfter, timeout);
 
         /// <inheritdoc />
@@ -1008,7 +935,7 @@ namespace Microsoft.Playwright
              => MainFrame.GetTextContentAsync(true, selector, timeout);
 
         /// <inheritdoc />
-        public Task TapAsync(string selector, Position position, IEnumerable<KeyboardModifier> modifiers, bool? noWaitAfter, bool? force, float? timeout)
+        public Task TapAsync(string selector, Position position, IEnumerable<KeyboardModifier> modifiers, bool? noWaitAfter, bool? force, float? timeout, bool? trial)
             => MainFrame.TapAsync(true, selector, modifiers, position, force, noWaitAfter, timeout);
 
         /// <inheritdoc />

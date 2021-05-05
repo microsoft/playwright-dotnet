@@ -80,7 +80,7 @@ namespace Microsoft.Playwright
         /// <para>Returns the return value of <paramref name="expression"/>.</para>
         /// <para>
         /// If the function passed to the <see cref="IWorker.EvaluateAsync"/> returns a <see
-        /// cref="Promise"/>, then <see cref="IWorker.EvaluateAsync"/> would wait for the promise
+        /// cref="Task"/>, then <see cref="IWorker.EvaluateAsync"/> would wait for the promise
         /// to resolve and return its value.
         /// </para>
         /// <para>
@@ -106,7 +106,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>
         /// If the function passed to the <see cref="IWorker.EvaluateHandleAsync"/> returns
-        /// a <see cref="Promise"/>, then <see cref="IWorker.EvaluateHandleAsync"/> would wait
+        /// a <see cref="Task"/>, then <see cref="IWorker.EvaluateHandleAsync"/> would wait
         /// for the promise to resolve and return its value.
         /// </para>
         /// </summary>

@@ -39,6 +39,7 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -128,8 +129,9 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// Contains the request's resource type as it was perceived by the rendering engine.
-        /// You can use <see cref="Microsoft.Playwright.Contracts.Constants.ResourceTypes" /> to
-        /// access the constants for all the values available as a result of this method.
+        /// ResourceType will be one of the following: <c>document</c>, <c>stylesheet</c>, <c>image</c>,
+        /// <c>media</c>, <c>font</c>, <c>script</c>, <c>texttrack</c>, <c>xhr</c>, <c>fetch</c>,
+        /// <c>eventsource</c>, <c>websocket</c>, <c>manifest</c>, <c>other</c>.
         /// </para>
         /// </summary>
         string ResourceType { get; }
@@ -140,13 +142,13 @@ namespace Microsoft.Playwright
         /// was not received due to error.
         /// </para>
         /// </summary>
-        Task<IResponse> GetResponseAsync();
+        Task<IResponse> ResponseAsync();
 
         /// <summary>
         /// <para>
         /// Returns resource timing information for given request. Most of the timing values
         /// become available upon the response, <c>responseEnd</c> becomes available when request
-        /// finishes. Find more information at <a href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceResourceTiming)">Resource
+        /// finishes. Find more information at <a href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceResourceTiming">Resource
         /// Timing API</a>.
         /// </para>
         /// </summary>
@@ -155,8 +157,8 @@ namespace Microsoft.Playwright
         /// <summary><para>URL of the request.</para></summary>
         string Url { get; }
 
-        /// <summary><para>Returns a <see cref="JsonDocument" /> representation of <see cref="IRequest.PostDataBuffer"/>.</para></summary>
-        /// <param name="documentOptions">The JSON Document Options.</param>
+        /// <summary><para>Returns a <see cref="JsonDocument"/> representation of <see cref="IRequest.PostDataBuffer"/>.</para></summary>
+        /// <param name="documentOptions">The options that control custom behaviour when parsing the JSON.</param>
         JsonDocument GetPayloadAsJson(JsonDocumentOptions documentOptions = default);
     }
 }

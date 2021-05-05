@@ -60,24 +60,6 @@ namespace Microsoft.Playwright
         /// <inheritdoc cref="IBrowserContext.WaitForEventAsync(string, float?)"/>
         Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, float? timeout = default);
 
-        /// <inheritdoc cref="RouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
-        Task RouteAsync(string urlString, Action<IRoute> handler);
-
-        /// <inheritdoc cref="RouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
-        Task RouteAsync(Regex urlRegex, Action<IRoute> handler);
-
-        /// <inheritdoc cref="RouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
-        Task RouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler);
-
-        /// <inheritdoc cref="UnrouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
-        Task UnrouteAsync(string urlString, Action<IRoute> handler = default);
-
-        /// <inheritdoc cref="UnrouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
-        Task UnrouteAsync(Regex urlRegex, Action<IRoute> handler = default);
-
-        /// <inheritdoc cref="UnrouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
-        Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler = default);
-
         /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
         Task ExposeBindingAsync(string name, Action<BindingSource> callback);
 

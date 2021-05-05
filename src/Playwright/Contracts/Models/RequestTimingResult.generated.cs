@@ -47,7 +47,7 @@ using System.Threading.Tasks;
 namespace Microsoft.Playwright
 {
     /// <summary>
-    /// Result of calling <see cref="IRequest.Timing" />.
+    /// Result of calling <see cref="IRequest.Timing"/>.
     /// </summary>
     public partial class RequestTimingResult
     {
