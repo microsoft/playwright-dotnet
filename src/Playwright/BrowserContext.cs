@@ -328,14 +328,13 @@ namespace Microsoft.Playwright
         }
 
         private Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler)
-        => RouteAsync(
-        new RouteSetting()
-        {
-            Regex = urlRegex,
-            Url = urlString,
-            Function = urlFunc,
-            Handler = handler,
-        });
+            => RouteAsync(new RouteSetting()
+            {
+                Regex = urlRegex,
+                Url = urlString,
+                Function = urlFunc,
+                Handler = handler,
+            });
 
         private Task RouteAsync(RouteSetting setting)
         {

@@ -70,7 +70,7 @@ namespace Microsoft.Playwright
         /// current working directory. For empty array, clears the selected files.
         /// </para>
         /// </summary>
-        /// <param name="files">
+        /// <param name="filesString">
         /// </param>
         /// <param name="noWaitAfter">
         /// Actions that initiate navigations are waiting for these navigations to happen and
@@ -83,6 +83,72 @@ namespace Microsoft.Playwright
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task SetFilesAsync(IEnumerable<string> files, bool? noWaitAfter = default, float? timeout = default);
+        Task SetFilesAsync(string filesString, bool? noWaitAfter = default, float? timeout = default);
+
+        /// <summary>
+        /// <para>
+        /// Sets the value of the file input this chooser is associated with. If some of the
+        /// <c>filePaths</c> are relative paths, then they are resolved relative to the the
+        /// current working directory. For empty array, clears the selected files.
+        /// </para>
+        /// </summary>
+        /// <param name="filesEnumerableString">
+        /// </param>
+        /// <param name="noWaitAfter">
+        /// Actions that initiate navigations are waiting for these navigations to happen and
+        /// for pages to start loading. You can opt out of waiting via setting this flag. You
+        /// would only need this option in the exceptional cases such as navigating to inaccessible
+        /// pages. Defaults to <c>false</c>.
+        /// </param>
+        /// <param name="timeout">
+        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
+        Task SetFilesAsync(IEnumerable<string> filesEnumerableString, bool? noWaitAfter = default, float? timeout = default);
+
+        /// <summary>
+        /// <para>
+        /// Sets the value of the file input this chooser is associated with. If some of the
+        /// <c>filePaths</c> are relative paths, then they are resolved relative to the the
+        /// current working directory. For empty array, clears the selected files.
+        /// </para>
+        /// </summary>
+        /// <param name="filesFilePayload">
+        /// </param>
+        /// <param name="noWaitAfter">
+        /// Actions that initiate navigations are waiting for these navigations to happen and
+        /// for pages to start loading. You can opt out of waiting via setting this flag. You
+        /// would only need this option in the exceptional cases such as navigating to inaccessible
+        /// pages. Defaults to <c>false</c>.
+        /// </param>
+        /// <param name="timeout">
+        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
+        Task SetFilesAsync(FilePayload filesFilePayload, bool? noWaitAfter = default, float? timeout = default);
+
+        /// <summary>
+        /// <para>
+        /// Sets the value of the file input this chooser is associated with. If some of the
+        /// <c>filePaths</c> are relative paths, then they are resolved relative to the the
+        /// current working directory. For empty array, clears the selected files.
+        /// </para>
+        /// </summary>
+        /// <param name="filesEnumerableFilePayload">
+        /// </param>
+        /// <param name="noWaitAfter">
+        /// Actions that initiate navigations are waiting for these navigations to happen and
+        /// for pages to start loading. You can opt out of waiting via setting this flag. You
+        /// would only need this option in the exceptional cases such as navigating to inaccessible
+        /// pages. Defaults to <c>false</c>.
+        /// </param>
+        /// <param name="timeout">
+        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </param>
+        Task SetFilesAsync(IEnumerable<FilePayload> filesEnumerableFilePayload, bool? noWaitAfter = default, float? timeout = default);
     }
 }
