@@ -90,28 +90,28 @@ namespace Microsoft.Playwright
         Task AbortAsync(string errorCode = default);
 
         /// <summary><para>Continues route's request with optional overrides.</para></summary>
-        /// <param name="headers">If set changes the request HTTP headers. Header values will be converted to a string.</param>
+        /// <param name="url">If set changes the request URL. New URL must have same protocol as original one.</param>
         /// <param name="method">If set changes the request method (e.g. GET or POST)</param>
         /// <param name="postData">If set changes the post data of request</param>
-        /// <param name="url">If set changes the request URL. New URL must have same protocol as original one.</param>
-        Task ResumeAsync(IEnumerable<KeyValuePair<string, string>> headers = default, string method = default, byte[] postData = default, string url = default);
+        /// <param name="headers">If set changes the request HTTP headers. Header values will be converted to a string.</param>
+        Task ResumeAsync(string url = default, string method = default, byte[] postData = default, IEnumerable<KeyValuePair<string, string>> headers = default);
 
         /// <summary>
         /// <para>Fulfills route's request with given response.</para>
         /// <para>An example of fulfilling all requests with 404 responses:</para>
         /// <para>An example of serving static file:</para>
         /// </summary>
+        /// <param name="status">Response status code, defaults to <c>200</c>.</param>
+        /// <param name="headers">Response headers. Header values will be converted to a string.</param>
+        /// <param name="contentType">If set, equals to setting <c>Content-Type</c> response header.</param>
         /// <param name="body">Optional response body as text.</param>
         /// <param name="bodyBytes">Optional response body as raw bytes.</param>
-        /// <param name="contentType">If set, equals to setting <c>Content-Type</c> response header.</param>
-        /// <param name="headers">Response headers. Header values will be converted to a string.</param>
         /// <param name="path">
         /// File path to respond with. The content type will be inferred from file extension.
         /// If <c>path</c> is a relative path, then it is resolved relative to the current working
         /// directory.
         /// </param>
-        /// <param name="status">Response status code, defaults to <c>200</c>.</param>
-        Task FulfillAsync(string body = default, byte[] bodyBytes = default, string contentType = default, IEnumerable<KeyValuePair<string, string>> headers = default, string path = default, int? status = default);
+        Task FulfillAsync(int? status = default, IEnumerable<KeyValuePair<string, string>> headers = default, string contentType = default, string body = default, byte[] bodyBytes = default, string path = default);
 
         /// <summary><para>A request to be routed.</para></summary>
         IRequest Request { get; }

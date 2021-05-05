@@ -8,7 +8,7 @@ namespace Microsoft.Playwright
     /// </summary>
     public partial interface IResponse
     {
-        /// <inheritdoc cref="GetJsonAsync{T}"/>
-        Task<JsonDocument> GetJsonAsync(JsonDocumentOptions options = default);
+        /// <inheritdoc cref="JsonAsync{T}"/>
+        Task<JsonDocument> JsonAsync(JsonDocumentOptions options = default);
     }
 }

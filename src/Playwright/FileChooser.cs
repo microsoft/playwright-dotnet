@@ -33,19 +33,19 @@ namespace Microsoft.Playwright
         public bool IsMultiple { get; set; }
 
         /// <inheritdoc />
-        public Task SetFilesAsync(string files, bool? noWaitAfter, float? timeout)
-            => Element.SetInputFilesAsync(files, noWaitAfter, timeout);
+        public Task SetFilesAsync(string filesString, bool? noWaitAfter = default, float? timeout = default)
+            => Element.SetInputFilesAsync(filesString, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task SetFilesAsync(IEnumerable<string> files, bool? noWaitAfter, float? timeout)
-            => Element.SetInputFilesAsync(files, noWaitAfter, timeout);
+        public Task SetFilesAsync(IEnumerable<string> filesString, bool? noWaitAfter = default, float? timeout = default)
+            => Element.SetInputFilesAsync(filesString, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task SetFilesAsync(FilePayload files, bool? noWaitAfter, float? timeout)
-            => Element.SetInputFilesAsync(files, noWaitAfter, timeout);
+        public Task SetFilesAsync(FilePayload filesFilePayload, bool? noWaitAfter = default, float? timeout = default)
+            => Element.SetInputFilesAsync(filesFilePayload, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task SetFilesAsync(IEnumerable<FilePayload> files, bool? noWaitAfter, float? timeout)
-            => Element.SetInputFilesAsync(files, noWaitAfter, timeout);
+        public Task SetFilesAsync(IEnumerable<FilePayload> filesEnumerableFilePayload, bool? noWaitAfter = default, float? timeout = default)
+            => Element.SetInputFilesAsync(filesEnumerableFilePayload, noWaitAfter, timeout);
     }
 }

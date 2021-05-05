@@ -189,15 +189,16 @@ namespace Microsoft.Playwright
             IEnumerable<KeyboardModifier> modifiers,
             bool? force,
             bool? noWaitAfter,
-            float? timeout)
+            float? timeout,
+            bool? trial)
             => ClickAsync(false, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force, noWaitAfter);
 
         /// <inheritdoc />
-        public Task CheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout)
+        public Task CheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
             => CheckAsync(false, selector, position, force, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task UncheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout)
+        public Task UncheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
             => UncheckAsync(false, selector, position, force, noWaitAfter, timeout);
 
         /// <inheritdoc />
@@ -209,7 +210,8 @@ namespace Microsoft.Playwright
             IEnumerable<KeyboardModifier> modifiers,
             bool? force,
             bool? noWaitAfter,
-            float? timeout)
+            float? timeout,
+            bool? trial)
             => DblClickAsync(false, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), position, modifiers, timeout, force ?? false, noWaitAfter);
 
         /// <inheritdoc />
@@ -218,6 +220,10 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc />
         public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg) => EvalOnSelectorAsync<T>(false, selector, expression, arg);
+
+        /// <inheritdoc />
+        public Task<IResponse> WaitForNavigationAsync(string urlString, WaitUntilState waitUntil = default, float? timeout = default)
+            => WaitForNavigationAsync(urlString, null, null, waitUntil, timeout);
 
         /// <inheritdoc />
         public Task<IResponse> WaitForNavigationAsync(WaitUntilState waitUntil, float? timeout)
@@ -230,64 +236,6 @@ namespace Microsoft.Playwright
         /// <inheritdoc />
         public Task<IResponse> WaitForNavigationAsync(Func<string, bool> urlFunc, WaitUntilState waitUntil, float? timeout)
             => WaitForNavigationAsync(null, null, urlFunc, waitUntil, timeout);
-
-        /// <inheritdoc />
-        public async Task<IResponse> WaitForNavigationAsync(
-            string urlString,
-            Regex urlRegex,
-            Func<string, bool> urlFunc,
-            WaitUntilState waitUntil,
-            float? timeout)
-        {
-            waitUntil = waitUntil.EnsureDefaultValue(WaitUntilState.Load);
-            var waiter = SetupNavigationWaiter(timeout);
-            string toUrl = !string.IsNullOrEmpty(urlString) ? $" to \"{urlString}\"" : string.Empty;
-
-            waiter.Log($"waiting for navigation{toUrl} until \"{waitUntil}\"");
-
-            var navigatedEvent = await waiter.WaitForEventAsync<FrameNavigatedEventArgs>(
-                this,
-                "Navigated",
-                e =>
-                {
-                    // Any failed navigation results in a rejection.
-                    if (e.Error != null)
-                    {
-                        return true;
-                    }
-
-                    waiter.Log($"  navigated to \"{e.Url}\"");
-                    return UrlMatches(e.Url, urlString, urlRegex, urlFunc);
-                }).ConfigureAwait(false);
-
-            if (navigatedEvent.Error != null)
-            {
-                var ex = new NavigationException(navigatedEvent.Error);
-                var tcs = new TaskCompletionSource<bool>();
-                tcs.TrySetException(ex);
-                await waiter.WaitForPromiseAsync(tcs.Task).ConfigureAwait(false);
-            }
-
-            if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntil.ToValueString()))
-            {
-                await waiter.WaitForEventAsync<LoadState>(
-                    this,
-                    "LoadState",
-                    e =>
-                    {
-                        waiter.Log($"  \"{e}\" event fired");
-                        return e.ToValueString() == waitUntil.ToValueString();
-                    }).ConfigureAwait(false);
-            }
-
-            var request = navigatedEvent.NewDocument?.Request?.Object;
-            var response = request != null
-                ? await waiter.WaitForPromiseAsync(request.FinalRequest.GetResponseAsync()).ConfigureAwait(false)
-                : null;
-
-            waiter.Dispose();
-            return response;
-        }
 
         /// <inheritdoc />
         public Task FocusAsync(string selector, float? timeout) => FocusAsync(false, selector, timeout);
@@ -314,7 +262,8 @@ namespace Microsoft.Playwright
             Position position,
             IEnumerable<KeyboardModifier> modifiers,
             bool? force,
-            float? timeout)
+            float? timeout,
+            bool? trial)
             => HoverAsync(false, selector, position, modifiers, force ?? false, timeout);
 
         /// <inheritdoc />
@@ -436,7 +385,7 @@ namespace Microsoft.Playwright
             => GetTextContentAsync(false, selector, timeout);
 
         /// <inheritdoc />
-        public Task TapAsync(string selector, Position position, IEnumerable<KeyboardModifier> modifiers, bool? noWaitAfter, bool? force, float? timeout)
+        public Task TapAsync(string selector, Position position, IEnumerable<KeyboardModifier> modifiers, bool? noWaitAfter, bool? force, float? timeout, bool? trial)
             => TapAsync(false, selector, modifiers, position, force, noWaitAfter, timeout);
 
         /// <inheritdoc />
@@ -458,7 +407,73 @@ namespace Microsoft.Playwright
         public Task<bool> IsVisibleAsync(string selector, float? timeout) => IsVisibleAsync(false, selector, timeout);
 
         /// <inheritdoc />
-        public Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined) => throw new NotImplementedException();
+        public Task WaitForURLAsync(string urlString, float? timeout = default, WaitUntilState waitUntil = default)
+            => WaitForURLAsync(urlString, null, null, timeout, waitUntil);
+
+        /// <inheritdoc />
+        public Task WaitForURLAsync(Regex urlRegex, float? timeout = default, WaitUntilState waitUntil = default)
+            => WaitForURLAsync(null, urlRegex, null, timeout, waitUntil);
+
+        /// <inheritdoc />
+        public Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = default, WaitUntilState waitUntil = default)
+            => WaitForURLAsync(null, null, urlFunc, timeout, waitUntil);
+
+        internal async Task<IResponse> WaitForNavigationAsync(
+            string urlString,
+            Regex urlRegex,
+            Func<string, bool> urlFunc,
+            WaitUntilState waitUntil,
+            float? timeout)
+        {
+            waitUntil = waitUntil.EnsureDefaultValue(WaitUntilState.Load);
+            var waiter = SetupNavigationWaiter(timeout);
+            string toUrl = !string.IsNullOrEmpty(urlString) ? $" to \"{urlString}\"" : string.Empty;
+
+            waiter.Log($"waiting for navigation{toUrl} until \"{waitUntil}\"");
+
+            var navigatedEvent = await waiter.WaitForEventAsync<FrameNavigatedEventArgs>(
+                this,
+                "Navigated",
+                e =>
+                {
+                    // Any failed navigation results in a rejection.
+                    if (e.Error != null)
+                    {
+                        return true;
+                    }
+
+                    waiter.Log($"  navigated to \"{e.Url}\"");
+                    return UrlMatches(e.Url, urlString, urlRegex, urlFunc);
+                }).ConfigureAwait(false);
+
+            if (navigatedEvent.Error != null)
+            {
+                var ex = new NavigationException(navigatedEvent.Error);
+                var tcs = new TaskCompletionSource<bool>();
+                tcs.TrySetException(ex);
+                await waiter.WaitForPromiseAsync(tcs.Task).ConfigureAwait(false);
+            }
+
+            if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntil.ToValueString()))
+            {
+                await waiter.WaitForEventAsync<LoadState>(
+                    this,
+                    "LoadState",
+                    e =>
+                    {
+                        waiter.Log($"  \"{e}\" event fired");
+                        return e.ToValueString() == waitUntil.ToValueString();
+                    }).ConfigureAwait(false);
+            }
+
+            var request = navigatedEvent.NewDocument?.Request?.Object;
+            var response = request != null
+                ? await waiter.WaitForPromiseAsync(request.FinalRequest.ResponseAsync()).ConfigureAwait(false)
+                : null;
+
+            waiter.Dispose();
+            return response;
+        }
 
         internal Task TapAsync(bool isPageCall, string selector, IEnumerable<KeyboardModifier> modifiers, Position position, bool? force, bool? noWaitAfter, float? timeout)
             => _channel.TapAsync(selector, modifiers, position, timeout, force ?? false, noWaitAfter, isPageCall);
@@ -729,6 +744,16 @@ namespace Microsoft.Playwright
 
         internal Task<bool> IsVisibleAsync(bool isPageCall, string selector, float? timeout)
             => _channel.IsVisibleAsync(selector, timeout, isPageCall);
+
+        private Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, float? timeout, WaitUntilState waitUntil)
+        {
+            if (UrlMatches(Url, urlString, urlRegex, urlFunc))
+            {
+                return WaitForLoadStateAsync(waitUntil.EnsureDefaultValue(WaitUntilState.Load).ToLoadState(), timeout);
+            }
+
+            return WaitForNavigationAsync(urlString, urlRegex, urlFunc, waitUntil, timeout);
+        }
 
         private Waiter SetupNavigationWaiter(float? timeout)
         {

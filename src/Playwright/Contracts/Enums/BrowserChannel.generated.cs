@@ -46,24 +46,26 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-	public enum BrowserChannel
-	{
-		Undefined = 0,
-		[EnumMember(Value = "chrome")]
-		Chrome,
-		[EnumMember(Value = "chrome-beta")]
-		ChromeBeta,
-		[EnumMember(Value = "chrome-dev")]
-		ChromeDev,
-		[EnumMember(Value = "chrome-canary")]
-		ChromeCanary,
-		[EnumMember(Value = "msedge")]
-		Msedge,
-		[EnumMember(Value = "msedge-beta")]
-		MsedgeBeta,
-		[EnumMember(Value = "msedge-dev")]
-		MsedgeDev,
-		[EnumMember(Value = "msedge-canary")]
-		MsedgeCanary,
-	}
+    public enum BrowserChannel
+    {
+        Undefined = 0,
+        [EnumMember(Value = "chrome")]
+        Chrome,
+        [EnumMember(Value = "chrome-beta")]
+        ChromeBeta,
+        [EnumMember(Value = "chrome-dev")]
+        ChromeDev,
+        [EnumMember(Value = "chrome-canary")]
+        ChromeCanary,
+        [EnumMember(Value = "msedge")]
+        Msedge,
+        [EnumMember(Value = "msedge-beta")]
+        MsedgeBeta,
+        [EnumMember(Value = "msedge-dev")]
+        MsedgeDev,
+        [EnumMember(Value = "msedge-canary")]
+        MsedgeCanary,
+        [EnumMember(Value = "firefox-stable")]
+        FirefoxStable,
+    }
 }

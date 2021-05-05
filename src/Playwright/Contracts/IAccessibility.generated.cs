@@ -39,6 +39,7 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,15 +49,15 @@ namespace Microsoft.Playwright
     /// <summary>
     /// <para>
     /// The Accessibility class provides methods for inspecting Chromium's accessibility
-    /// tree. The accessibility tree is used by assistive technology such as <a href="https://en.wikipedia.org/wiki/Screen_reader)">screen
-    /// readers</a> or <a href="https://en.wikipedia.org/wiki/Switch_access)">switches</a>.
+    /// tree. The accessibility tree is used by assistive technology such as <a href="https://en.wikipedia.org/wiki/Screen_reader">screen
+    /// readers</a> or <a href="https://en.wikipedia.org/wiki/Switch_access">switches</a>.
     /// </para>
     /// <para>
     /// Accessibility is a very platform-specific thing. On different platforms, there are
     /// different screen readers that might have wildly different output.
     /// </para>
     /// <para>
-    /// Rendering engines of Chromium, Firefox and Webkit have a concept of "accessibility
+    /// Rendering engines of Chromium, Firefox and WebKit have a concept of "accessibility
     /// tree", which is then translated into different platform-specific APIs. Accessibility
     /// namespace gives access to this Accessibility Tree.
     /// </para>
@@ -76,10 +77,32 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>An example of dumping the entire accessibility tree:</para>
         /// <code>
-        /// var accessibilitySnapshot = await Page.Accessibility.SnapshotAsync();
+        /// var accessibilitySnapshot = await Page.Accessibility.SnapshotAsync();<br/>
         /// Console.WriteLine(accessibilitySnapshot);
         /// </code>
         /// <para>An example of logging the focused node's name:</para>
+        /// <code>
+        /// Func&lt;AccessibilitySnapshotResult, AccessibilitySnapshotResult&gt; findFocusedNode = root =><br/>
+        /// {<br/>
+        ///     var nodes = new Stack&lt;AccessibilitySnapshotResult&gt;(new[] { root });<br/>
+        ///     while (nodes.Count &gt; 0)<br/>
+        ///     {<br/>
+        ///         var node = nodes.Pop();<br/>
+        ///         if (node.Focused) return node;<br/>
+        ///         foreach (var innerNode in node.Children)<br/>
+        ///         {<br/>
+        ///             nodes.Push(innerNode);<br/>
+        ///         }<br/>
+        ///     }<br/>
+        /// <br/>
+        ///     return null;<br/>
+        /// };<br/>
+        /// <br/>
+        /// var accessibilitySnapshot = await Page.Accessibility.SnapshotAsync();<br/>
+        /// var focusedNode = findFocusedNode(accessibilitySnapshot);<br/>
+        /// if(focusedNode != null)<br/>
+        ///   Console.WriteLine(focusedNode.Name);
+        /// </code>
         /// </summary>
         /// <remarks>
         /// <para>
@@ -90,6 +113,6 @@ namespace Microsoft.Playwright
         /// </remarks>
         /// <param name="interestingOnly">Prune uninteresting nodes from the tree. Defaults to <c>true</c>.</param>
         /// <param name="root">The root DOM element for the snapshot. Defaults to the whole page.</param>
-        Task<AccessibilitySnapshotResult> SnapshotAsync(bool? interestingOnly = null, IElementHandle root = null);
+        Task<AccessibilitySnapshotResult> SnapshotAsync(bool? interestingOnly = default, IElementHandle root = default);
     }
 }

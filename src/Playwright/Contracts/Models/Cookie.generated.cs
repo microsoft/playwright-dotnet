@@ -46,42 +46,42 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-	public partial class Cookie
-	{
-		/// <summary><para></para></summary>
-		[JsonPropertyName("name")]
-		public string Name { get; set; }
-	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("value")]
-		public string Value { get; set; }
-	
-		/// <summary><para>either url or domain / path are required. Optional.</para></summary>
-		[JsonPropertyName("url")]
-		public string Url { get; set; }
-	
-		/// <summary><para>either url or domain / path are required Optional.</para></summary>
-		[JsonPropertyName("domain")]
-		public string Domain { get; set; }
-	
-		/// <summary><para>either url or domain / path are required Optional.</para></summary>
-		[JsonPropertyName("path")]
-		public string Path { get; set; }
-	
-		/// <summary><para>Unix time in seconds. Optional.</para></summary>
-		[JsonPropertyName("expires")]
-		public float? Expires { get; set; }
-	
-		/// <summary><para>Optional.</para></summary>
-		[JsonPropertyName("httpOnly")]
-		public bool? HttpOnly { get; set; }
-	
-		/// <summary><para>Optional.</para></summary>
-		[JsonPropertyName("secure")]
-		public bool? Secure { get; set; }
-	
-		/// <summary><para>Optional.</para></summary>
-		[JsonPropertyName("sameSite")]
-		public SameSiteAttribute SameSite { get; set; }
-	}
+    public partial class Cookie
+    {
+        /// <summary><para></para></summary>
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        /// <summary><para></para></summary>
+        [JsonPropertyName("value")]
+        public string Value { get; set; }
+
+        /// <summary><para>either url or domain / path are required. Optional.</para></summary>
+        [JsonPropertyName("url")]
+        public string Url { get; set; }
+
+        /// <summary><para>either url or domain / path are required Optional.</para></summary>
+        [JsonPropertyName("domain")]
+        public string Domain { get; set; }
+
+        /// <summary><para>either url or domain / path are required Optional.</para></summary>
+        [JsonPropertyName("path")]
+        public string Path { get; set; }
+
+        /// <summary><para>Unix time in seconds. Optional.</para></summary>
+        [JsonPropertyName("expires")]
+        public float? Expires { get; set; }
+
+        /// <summary><para>Optional.</para></summary>
+        [JsonPropertyName("httpOnly")]
+        public bool? HttpOnly { get; set; }
+
+        /// <summary><para>Optional.</para></summary>
+        [JsonPropertyName("secure")]
+        public bool? Secure { get; set; }
+
+        /// <summary><para>Optional.</para></summary>
+        [JsonPropertyName("sameSite")]
+        public SameSiteAttribute SameSite { get; set; }
+    }
 }

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -46,14 +46,14 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-	public enum ColorScheme
-	{
-		Undefined = 0,
-		[EnumMember(Value = "light")]
-		Light,
-		[EnumMember(Value = "dark")]
-		Dark,
-		[EnumMember(Value = "no-preference")]
-		NoPreference,
-	}
+    public enum ColorScheme
+    {
+        Undefined = 0,
+        [EnumMember(Value = "light")]
+        Light,
+        [EnumMember(Value = "dark")]
+        Dark,
+        [EnumMember(Value = "no-preference")]
+        NoPreference,
+    }
 }

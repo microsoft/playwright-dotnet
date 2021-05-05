@@ -47,11 +47,11 @@ using System.Threading.Tasks;
 namespace Microsoft.Playwright
 {
     /// <summary>
-    /// Result of calling <see cref="IAccessibility.SnapshotAsync" />.
+    /// Result of calling <see cref="IAccessibility.SnapshotAsync"/>.
     /// </summary>
     public partial class AccessibilitySnapshotResult
     {
-        /// <summary><para>The <a href="https://www.w3.org/TR/wai-aria/#usage_intro)">role</a>.</para></summary>
+        /// <summary><para>The <a href="https://www.w3.org/TR/wai-aria/#usage_intro">role</a>.</para></summary>
         [JsonPropertyName("role")]
         public string Role { get; set; }
 
@@ -81,44 +81,44 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Whether the node is disabled, if applicable.</para></summary>
         [JsonPropertyName("disabled")]
-        public bool Disabled { get; set; }
+        public bool? Disabled { get; set; }
 
         /// <summary><para>Whether the node is expanded or collapsed, if applicable.</para></summary>
         [JsonPropertyName("expanded")]
-        public bool Expanded { get; set; }
+        public bool? Expanded { get; set; }
 
         /// <summary><para>Whether the node is focused, if applicable.</para></summary>
         [JsonPropertyName("focused")]
-        public bool Focused { get; set; }
+        public bool? Focused { get; set; }
 
         /// <summary>
         /// <para>
-        /// Whether the node is <a href="https://en.wikipedia.org/wiki/Modal_window)">modal</a>,
+        /// Whether the node is <a href="https://en.wikipedia.org/wiki/Modal_window">modal</a>,
         /// if applicable.
         /// </para>
         /// </summary>
         [JsonPropertyName("modal")]
-        public bool Modal { get; set; }
+        public bool? Modal { get; set; }
 
         /// <summary><para>Whether the node text input supports multiline, if applicable.</para></summary>
         [JsonPropertyName("multiline")]
-        public bool Multiline { get; set; }
+        public bool? Multiline { get; set; }
 
         /// <summary><para>Whether more than one child can be selected, if applicable.</para></summary>
         [JsonPropertyName("multiselectable")]
-        public bool Multiselectable { get; set; }
+        public bool? Multiselectable { get; set; }
 
         /// <summary><para>Whether the node is read only, if applicable.</para></summary>
         [JsonPropertyName("readonly")]
-        public bool Readonly { get; set; }
+        public bool? Readonly { get; set; }
 
         /// <summary><para>Whether the node is required, if applicable.</para></summary>
         [JsonPropertyName("required")]
-        public bool Required { get; set; }
+        public bool? Required { get; set; }
 
         /// <summary><para>Whether the node is selected in its parent node, if applicable.</para></summary>
         [JsonPropertyName("selected")]
-        public bool Selected { get; set; }
+        public bool? Selected { get; set; }
 
         /// <summary><para>Whether the checkbox is checked, or "mixed", if applicable.</para></summary>
         [JsonPropertyName("checked")]
@@ -130,15 +130,15 @@ namespace Microsoft.Playwright
 
         /// <summary><para>The level of a heading, if applicable.</para></summary>
         [JsonPropertyName("level")]
-        public int Level { get; set; }
+        public int? Level { get; set; }
 
         /// <summary><para>The minimum value in a node, if applicable.</para></summary>
         [JsonPropertyName("valuemin")]
-        public float Valuemin { get; set; }
+        public float? Valuemin { get; set; }
 
         /// <summary><para>The maximum value in a node, if applicable.</para></summary>
         [JsonPropertyName("valuemax")]
-        public float Valuemax { get; set; }
+        public float? Valuemax { get; set; }
 
         /// <summary><para>What kind of autocomplete is supported by a control, if applicable.</para></summary>
         [JsonPropertyName("autocomplete")]
@@ -159,6 +159,5 @@ namespace Microsoft.Playwright
         /// <summary><para>Child nodes, if any, if applicable.</para></summary>
         [JsonPropertyName("children")]
         public IEnumerable<AccessibilitySnapshotResult> Children { get; set; }
-
     }
 }

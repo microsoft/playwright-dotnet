@@ -17,15 +17,6 @@ namespace Microsoft.Playwright
         /// <inheritdoc cref="EvalOnSelectorAllAsync{T}(string, string, object)"/>
         Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg = default);
 
-        /// <inheritdoc cref="WaitForNavigationAsync(string, Regex, Func{string, bool}, WaitUntilState, float?)"/>
-        Task<IResponse> WaitForNavigationAsync(WaitUntilState waitUntil, float? timeout = default);
-
-        /// <inheritdoc cref="WaitForNavigationAsync(string, Regex, Func{string, bool}, WaitUntilState, float?)"/>
-        Task<IResponse> WaitForNavigationAsync(Regex urlRegex, WaitUntilState waitUntil = default, float? timeout = default);
-
-        /// <inheritdoc cref="WaitForNavigationAsync(string, Regex, Func{string, bool}, WaitUntilState, float?)"/>
-        Task<IResponse> WaitForNavigationAsync(Func<string, bool> urlFunc, WaitUntilState waitUntil = default, float? timeout = default);
-
         /// <inheritdoc cref="SetInputFilesAsync(string, IEnumerable{FilePayload}, bool?, float?)"/>
         Task SetInputFilesAsync(string selector, string files, bool? noWaitAfter = default, float? timeout = default);
 

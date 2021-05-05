@@ -112,7 +112,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GoToAsync(TestConstants.ServerUrl + "/foo.html");
 
             // This is different on purpose, promises work different in TS.
-            await responses[1].GetFinishedAsync();
+            await responses[1].FinishedAsync();
 
             Assert.Equal(2, responses.Count);
             Assert.Equal(TestConstants.ServerUrl + "/foo.html", responses[0].Url);

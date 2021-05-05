@@ -1,4 +1,4 @@
-﻿/*
+/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -46,12 +46,12 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-	public enum Media
-	{
-		Undefined = 0,
-		[EnumMember(Value = "screen")]
-		Screen,
-		[EnumMember(Value = "print")]
-		Print,
-	}
+    public enum Media
+    {
+        Undefined = 0,
+        [EnumMember(Value = "screen")]
+        Screen,
+        [EnumMember(Value = "print")]
+        Print,
+    }
 }

@@ -39,6 +39,7 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,7 +50,7 @@ namespace Microsoft.Playwright
     /// <para>
     /// The Touchscreen class operates in main-frame CSS pixels relative to the top-left
     /// corner of the viewport. Methods on the touchscreen can only be used in browser contexts
-    /// that have been intialized with <c>hasTouch</c> set to true.
+    /// that have been initialized with <c>hasTouch</c> set to true.
     /// </para>
     /// </summary>
     public partial interface ITouchscreen
