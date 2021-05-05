@@ -96,3 +96,13 @@ dotnet test .\src\PlaywrightSharp.sln --filter PlaywrightSharp.Tests.TapTests
 to narrow down the tests.
 
 Additionally, you can use the Test Explorer if you're using Visual Studio.
+
+### Generating the interfaces
+
+We use the [generator](https://github.com/microsoft/playwright/blob/master/utils/doclint/generateDotnetApi.js), located upstream, to generate the interfaces from the "single source of truth". To run the generator locally, you can run the following command from the **solution root**:
+
+```powershell
+dotnet msbuild -target:GenerateInterfaces .\src\Playwright\Playwright.csproj
+```
+
+Note that for this to work, the script expects the `playwright` repository, to be checked out next to `playwright-sharp`. 
