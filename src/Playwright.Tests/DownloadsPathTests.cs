@@ -9,7 +9,6 @@ using Xunit.Abstractions;
 
 namespace Microsoft.Playwright.Tests
 {
-    /*
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class DownloadsPathTests : PlaywrightSharpBaseTest, IAsyncLifetime
     {
@@ -102,5 +101,4 @@ namespace Microsoft.Playwright.Tests
             await _browser.CloseAsync();
         }
     }
-    */
 }

@@ -367,6 +367,9 @@ namespace Microsoft.Playwright.Transport
 
             switch (type)
             {
+                case ChannelOwnerType.Artifact:
+                    result = new Artifact(parent, guid);
+                    break;
                 case ChannelOwnerType.BindingCall:
                     result = new BindingCall(parent, guid, initializer?.ToObject<BindingCallInitializer>(GetDefaultJsonSerializerOptions()));
                     break;
@@ -390,9 +393,6 @@ namespace Microsoft.Playwright.Transport
                     break;
                 case ChannelOwnerType.Dialog:
                     result = new Dialog(parent, guid, initializer?.ToObject<DialogInitializer>(GetDefaultJsonSerializerOptions()));
-                    break;
-                case ChannelOwnerType.Download:
-                    result = new Download(parent, guid, initializer?.ToObject<DownloadInitializer>(GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.ElementHandle:
                     result = new ElementHandle(parent, guid, initializer?.ToObject<ElementHandleInitializer>(GetDefaultJsonSerializerOptions()));
@@ -423,6 +423,9 @@ namespace Microsoft.Playwright.Transport
                     break;
                 case ChannelOwnerType.Selectors:
                     result = new SelectorsOwner(parent, guid);
+                    break;
+                case ChannelOwnerType.Stream:
+                    result = new PlaywrightStream(parent, guid);
                     break;
                 default:
                     _logger?.LogInformation("Missing type " + type);

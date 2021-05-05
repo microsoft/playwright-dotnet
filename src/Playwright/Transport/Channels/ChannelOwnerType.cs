@@ -69,5 +69,8 @@ namespace Microsoft.Playwright.Transport.Channels
 
         [EnumMember(Value = "Android")]
         Android,
+
+        [EnumMember(Value = "stream")]
+        Stream,
     }
 }
