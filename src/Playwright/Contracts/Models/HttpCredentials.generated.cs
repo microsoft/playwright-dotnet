@@ -46,14 +46,14 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-	public partial class HttpCredentials
-	{
-		/// <summary><para></para></summary>
-		[JsonPropertyName("username")]
-		public string Username { get; set; }
-	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("password")]
-		public string Password { get; set; }
-	}
+    public partial class HttpCredentials
+    {
+        /// <summary><para></para></summary>
+        [JsonPropertyName("username")]
+        public string Username { get; set; }
+
+        /// <summary><para></para></summary>
+        [JsonPropertyName("password")]
+        public string Password { get; set; }
+    }
 }

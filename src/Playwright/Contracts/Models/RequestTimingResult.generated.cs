@@ -46,91 +46,91 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-	/// <summary>
-	/// Result of calling <see cref="IRequest.Timing" />.
-	/// </summary>
-	public partial class RequestTimingResult
-	{
-		/// <summary><para>Request start time in milliseconds elapsed since January 1, 1970 00:00:00 UTC</para></summary>
-		[JsonPropertyName("startTime")]
-		public float StartTime { get; set; }
-	
-		/// <summary>
-		/// <para>
-		/// Time immediately before the browser starts the domain name lookup for the resource.
-		/// The value is given in milliseconds relative to <c>startTime</c>, -1 if not available.
-		/// </para>
-		/// </summary>
-		[JsonPropertyName("domainLookupStart")]
-		public float DomainLookupStart { get; set; }
-	
-		/// <summary>
-		/// <para>
-		/// Time immediately after the browser starts the domain name lookup for the resource.
-		/// The value is given in milliseconds relative to <c>startTime</c>, -1 if not available.
-		/// </para>
-		/// </summary>
-		[JsonPropertyName("domainLookupEnd")]
-		public float DomainLookupEnd { get; set; }
-	
-		/// <summary>
-		/// <para>
-		/// Time immediately before the user agent starts establishing the connection to the
-		/// server to retrieve the resource. The value is given in milliseconds relative to
-		/// <c>startTime</c>, -1 if not available.
-		/// </para>
-		/// </summary>
-		[JsonPropertyName("connectStart")]
-		public float ConnectStart { get; set; }
-	
-		/// <summary>
-		/// <para>
-		/// Time immediately before the browser starts the handshake process to secure the current
-		/// connection. The value is given in milliseconds relative to <c>startTime</c>, -1
-		/// if not available.
-		/// </para>
-		/// </summary>
-		[JsonPropertyName("secureConnectionStart")]
-		public float SecureConnectionStart { get; set; }
-	
-		/// <summary>
-		/// <para>
-		/// Time immediately before the user agent starts establishing the connection to the
-		/// server to retrieve the resource. The value is given in milliseconds relative to
-		/// <c>startTime</c>, -1 if not available.
-		/// </para>
-		/// </summary>
-		[JsonPropertyName("connectEnd")]
-		public float ConnectEnd { get; set; }
-	
-		/// <summary>
-		/// <para>
-		/// Time immediately before the browser starts requesting the resource from the server,
-		/// cache, or local resource. The value is given in milliseconds relative to <c>startTime</c>,
-		/// -1 if not available.
-		/// </para>
-		/// </summary>
-		[JsonPropertyName("requestStart")]
-		public float RequestStart { get; set; }
-	
-		/// <summary>
-		/// <para>
-		/// Time immediately after the browser starts requesting the resource from the server,
-		/// cache, or local resource. The value is given in milliseconds relative to <c>startTime</c>,
-		/// -1 if not available.
-		/// </para>
-		/// </summary>
-		[JsonPropertyName("responseStart")]
-		public float ResponseStart { get; set; }
-	
-		/// <summary>
-		/// <para>
-		/// Time immediately after the browser receives the last byte of the resource or immediately
-		/// before the transport connection is closed, whichever comes first. The value is given
-		/// in milliseconds relative to <c>startTime</c>, -1 if not available.
-		/// </para>
-		/// </summary>
-		[JsonPropertyName("responseEnd")]
-		public float ResponseEnd { get; set; }
-	}
+    /// <summary>
+    /// Result of calling <see cref="IRequest.Timing" />.
+    /// </summary>
+    public partial class RequestTimingResult
+    {
+        /// <summary><para>Request start time in milliseconds elapsed since January 1, 1970 00:00:00 UTC</para></summary>
+        [JsonPropertyName("startTime")]
+        public float StartTime { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Time immediately before the browser starts the domain name lookup for the resource.
+        /// The value is given in milliseconds relative to <c>startTime</c>, -1 if not available.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("domainLookupStart")]
+        public float DomainLookupStart { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Time immediately after the browser starts the domain name lookup for the resource.
+        /// The value is given in milliseconds relative to <c>startTime</c>, -1 if not available.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("domainLookupEnd")]
+        public float DomainLookupEnd { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Time immediately before the user agent starts establishing the connection to the
+        /// server to retrieve the resource. The value is given in milliseconds relative to
+        /// <c>startTime</c>, -1 if not available.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("connectStart")]
+        public float ConnectStart { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Time immediately before the browser starts the handshake process to secure the current
+        /// connection. The value is given in milliseconds relative to <c>startTime</c>, -1
+        /// if not available.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("secureConnectionStart")]
+        public float SecureConnectionStart { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Time immediately before the user agent starts establishing the connection to the
+        /// server to retrieve the resource. The value is given in milliseconds relative to
+        /// <c>startTime</c>, -1 if not available.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("connectEnd")]
+        public float ConnectEnd { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Time immediately before the browser starts requesting the resource from the server,
+        /// cache, or local resource. The value is given in milliseconds relative to <c>startTime</c>,
+        /// -1 if not available.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("requestStart")]
+        public float RequestStart { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Time immediately after the browser starts requesting the resource from the server,
+        /// cache, or local resource. The value is given in milliseconds relative to <c>startTime</c>,
+        /// -1 if not available.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("responseStart")]
+        public float ResponseStart { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Time immediately after the browser receives the last byte of the resource or immediately
+        /// before the transport connection is closed, whichever comes first. The value is given
+        /// in milliseconds relative to <c>startTime</c>, -1 if not available.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("responseEnd")]
+        public float ResponseEnd { get; set; }
+    }
 }

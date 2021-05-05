@@ -47,17 +47,17 @@ using System.Threading.Tasks;
 namespace Microsoft.Playwright
 {
     public partial class FunctionRange
-	{
-		/// <summary><para></para></summary>
-		[JsonPropertyName("count")]
-		public int Count { get; set; }
-	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("startOffset")]
-		public int StartOffset { get; set; }
-	
-		/// <summary><para></para></summary>
-		[JsonPropertyName("endOffset")]
-		public int EndOffset { get; set; }
-	}
+    {
+        /// <summary><para></para></summary>
+        [JsonPropertyName("count")]
+        public int Count { get; set; }
+
+        /// <summary><para></para></summary>
+        [JsonPropertyName("startOffset")]
+        public int StartOffset { get; set; }
+
+        /// <summary><para></para></summary>
+        [JsonPropertyName("endOffset")]
+        public int EndOffset { get; set; }
+    }
 }

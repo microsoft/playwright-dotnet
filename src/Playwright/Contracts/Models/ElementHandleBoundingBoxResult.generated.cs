@@ -1,4 +1,4 @@
-﻿/*
+/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -46,25 +46,25 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-	/// <summary>
-	/// Result of calling <see cref="IElementHandle.BoundingBoxAsync"/>.
-	/// </summary>
-	public partial class ElementHandleBoundingBoxResult
-	{
-		/// <summary><para>the x coordinate of the element in pixels.</para></summary>
-		[JsonPropertyName("x")]
-		public float X { get; set; }
-	
-		/// <summary><para>the y coordinate of the element in pixels.</para></summary>
-		[JsonPropertyName("y")]
-		public float Y { get; set; }
-	
-		/// <summary><para>the width of the element in pixels.</para></summary>
-		[JsonPropertyName("width")]
-		public float Width { get; set; }
-	
-		/// <summary><para>the height of the element in pixels.</para></summary>
-		[JsonPropertyName("height")]
-		public float Height { get; set; }
-	}
+    /// <summary>
+    /// Result of calling <see cref="IElementHandle.BoundingBoxAsync"/>.
+    /// </summary>
+    public partial class ElementHandleBoundingBoxResult
+    {
+        /// <summary><para>the x coordinate of the element in pixels.</para></summary>
+        [JsonPropertyName("x")]
+        public float X { get; set; }
+
+        /// <summary><para>the y coordinate of the element in pixels.</para></summary>
+        [JsonPropertyName("y")]
+        public float Y { get; set; }
+
+        /// <summary><para>the width of the element in pixels.</para></summary>
+        [JsonPropertyName("width")]
+        public float Width { get; set; }
+
+        /// <summary><para>the height of the element in pixels.</para></summary>
+        [JsonPropertyName("height")]
+        public float Height { get; set; }
+    }
 }

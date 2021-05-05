@@ -1,4 +1,4 @@
-﻿/*
+/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -45,75 +45,75 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-	/// <summary>
-	/// <para>
-	/// The Mouse class operates in main-frame CSS pixels relative to the top-left corner
-	/// of the viewport.
-	/// </para>
-	/// <para>Every <c>page</c> object has its own Mouse, accessible with <see cref="IPage.Mouse"/>.</para>
-	/// <code>
-	/// await Page.Mouse.MoveAsync(0, 0);<br/>
-	/// await Page.Mouse.DownAsync();<br/>
-	/// await Page.Mouse.MoveAsync(0, 100);<br/>
-	/// await Page.Mouse.MoveAsync(100, 100);<br/>
-	/// await Page.Mouse.MoveAsync(100, 0);<br/>
-	/// await Page.Mouse.MoveAsync(0, 0);<br/>
-	/// await Page.Mouse.UpAsync();
-	/// </code>
-	/// </summary>
-	public partial interface IMouse
-	{
-		/// <summary>
-		/// <para>
-		/// Shortcut for <see cref="IMouse.MoveAsync"/>, <see cref="IMouse.DownAsync"/>, <see
-		/// cref="IMouse.UpAsync"/>.
-		/// </para>
-		/// </summary>
-		/// <param name="x">
-		/// </param>
-		/// <param name="y">
-		/// </param>
-		/// <param name="button">Defaults to <c>left</c>.</param>
-		/// <param name="clickCount">defaults to 1. See [UIEvent.detail].</param>
-		/// <param name="delay">
-		/// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
-		/// to 0.
-		/// </param>
-		Task ClickAsync(float x, float y, MouseButton button = default, int? clickCount = null, float? delay = null);
-	
-		/// <summary>
-		/// <para>
-		/// Shortcut for <see cref="IMouse.MoveAsync"/>, <see cref="IMouse.DownAsync"/>, <see
-		/// cref="IMouse.UpAsync"/>, <see cref="IMouse.DownAsync"/> and <see cref="IMouse.UpAsync"/>.
-		/// </para>
-		/// </summary>
-		/// <param name="x">
-		/// </param>
-		/// <param name="y">
-		/// </param>
-		/// <param name="button">Defaults to <c>left</c>.</param>
-		/// <param name="delay">
-		/// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
-		/// to 0.
-		/// </param>
-		Task DblClickAsync(float x, float y, MouseButton button = default, float? delay = null);
-	
-		/// <summary><para>Dispatches a <c>mousedown</c> event.</para></summary>
-		/// <param name="button">Defaults to <c>left</c>.</param>
-		/// <param name="clickCount">defaults to 1. See [UIEvent.detail].</param>
-		Task DownAsync(MouseButton button = default, int? clickCount = null);
-	
-		/// <summary><para>Dispatches a <c>mousemove</c> event.</para></summary>
-		/// <param name="x">
-		/// </param>
-		/// <param name="y">
-		/// </param>
-		/// <param name="steps">defaults to 1. Sends intermediate <c>mousemove</c> events.</param>
-		Task MoveAsync(float x, float y, int? steps = null);
-	
-		/// <summary><para>Dispatches a <c>mouseup</c> event.</para></summary>
-		/// <param name="button">Defaults to <c>left</c>.</param>
-		/// <param name="clickCount">defaults to 1. See [UIEvent.detail].</param>
-		Task UpAsync(MouseButton button = default, int? clickCount = null);
-	}
+    /// <summary>
+    /// <para>
+    /// The Mouse class operates in main-frame CSS pixels relative to the top-left corner
+    /// of the viewport.
+    /// </para>
+    /// <para>Every <c>page</c> object has its own Mouse, accessible with <see cref="IPage.Mouse"/>.</para>
+    /// <code>
+    /// await Page.Mouse.MoveAsync(0, 0);<br/>
+    /// await Page.Mouse.DownAsync();<br/>
+    /// await Page.Mouse.MoveAsync(0, 100);<br/>
+    /// await Page.Mouse.MoveAsync(100, 100);<br/>
+    /// await Page.Mouse.MoveAsync(100, 0);<br/>
+    /// await Page.Mouse.MoveAsync(0, 0);<br/>
+    /// await Page.Mouse.UpAsync();
+    /// </code>
+    /// </summary>
+    public partial interface IMouse
+    {
+        /// <summary>
+        /// <para>
+        /// Shortcut for <see cref="IMouse.MoveAsync"/>, <see cref="IMouse.DownAsync"/>, <see
+        /// cref="IMouse.UpAsync"/>.
+        /// </para>
+        /// </summary>
+        /// <param name="x">
+        /// </param>
+        /// <param name="y">
+        /// </param>
+        /// <param name="button">Defaults to <c>left</c>.</param>
+        /// <param name="clickCount">defaults to 1. See [UIEvent.detail].</param>
+        /// <param name="delay">
+        /// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
+        /// to 0.
+        /// </param>
+        Task ClickAsync(float x, float y, MouseButton button = default, int? clickCount = null, float? delay = null);
+
+        /// <summary>
+        /// <para>
+        /// Shortcut for <see cref="IMouse.MoveAsync"/>, <see cref="IMouse.DownAsync"/>, <see
+        /// cref="IMouse.UpAsync"/>, <see cref="IMouse.DownAsync"/> and <see cref="IMouse.UpAsync"/>.
+        /// </para>
+        /// </summary>
+        /// <param name="x">
+        /// </param>
+        /// <param name="y">
+        /// </param>
+        /// <param name="button">Defaults to <c>left</c>.</param>
+        /// <param name="delay">
+        /// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
+        /// to 0.
+        /// </param>
+        Task DblClickAsync(float x, float y, MouseButton button = default, float? delay = null);
+
+        /// <summary><para>Dispatches a <c>mousedown</c> event.</para></summary>
+        /// <param name="button">Defaults to <c>left</c>.</param>
+        /// <param name="clickCount">defaults to 1. See [UIEvent.detail].</param>
+        Task DownAsync(MouseButton button = default, int? clickCount = null);
+
+        /// <summary><para>Dispatches a <c>mousemove</c> event.</para></summary>
+        /// <param name="x">
+        /// </param>
+        /// <param name="y">
+        /// </param>
+        /// <param name="steps">defaults to 1. Sends intermediate <c>mousemove</c> events.</param>
+        Task MoveAsync(float x, float y, int? steps = null);
+
+        /// <summary><para>Dispatches a <c>mouseup</c> event.</para></summary>
+        /// <param name="button">Defaults to <c>left</c>.</param>
+        /// <param name="clickCount">defaults to 1. See [UIEvent.detail].</param>
+        Task UpAsync(MouseButton button = default, int? clickCount = null);
+    }
 }
