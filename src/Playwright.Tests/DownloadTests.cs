@@ -10,6 +10,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.Playwright.Tests
 {
+    /*
     ///<playwright-file>download.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class DownloadTests : PlaywrightSharpPageBaseTest
@@ -449,5 +450,5 @@ namespace Microsoft.Playwright.Tests
             Assert.False(new FileInfo(path2).Exists);
             Assert.False(new FileInfo(Path.Combine(path1, "..")).Exists);
         }
-    }
+    }*/
 }

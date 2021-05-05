@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Tests
             }
             else
             {
-                Assert.Equal("This page is asking you to confirm that you want to leave - data you have entered may not be saved.", dialog.Message);
+                Assert.Contains("This page is asking you to confirm that you want to leave", dialog.Message);
             }
 
             await dialog.AcceptAsync();

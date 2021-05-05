@@ -157,7 +157,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     Download?.Invoke(this, serverParams?.GetProperty("download").ToObject<DownloadChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "video":
-                    Video?.Invoke(this, new VideoEventArgs() { RelativePath = serverParams?.GetProperty("relativePath").ToString() });
+                    Video?.Invoke(this, new VideoEventArgs());
                     break;
                 case "worker":
                     Worker?.Invoke(
@@ -286,8 +286,6 @@ namespace Microsoft.Playwright.Transport.Channels
                 {
                     ["enabled"] = enabled,
                 });
-
-        internal Task<PageChannel> OpenerAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "opener", null);
 
         internal async Task<AccessibilitySnapshotResult> AccessibilitySnapshotAsync(bool? interestingOnly, IChannel<ElementHandle> root)
         {
