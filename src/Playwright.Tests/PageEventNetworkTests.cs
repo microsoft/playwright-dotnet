@@ -30,7 +30,7 @@ namespace Microsoft.Playwright.Tests
             Assert.Equal(TestConstants.EmptyPage, requests[0].Url);
             Assert.Equal(ResourceTypes.Document, requests[0].ResourceType, true);
             Assert.Equal(HttpMethod.Get.Method, requests[0].Method);
-            Assert.NotNull(await requests[0].GetResponseAsync());
+            Assert.NotNull(await requests[0].ResponseAsync());
             Assert.Equal(Page.MainFrame, requests[0].Frame);
             Assert.Equal(TestConstants.EmptyPage, requests[0].Frame.Url);
         }
@@ -69,7 +69,7 @@ namespace Microsoft.Playwright.Tests
 
             Assert.Single(failedRequests);
             Assert.Contains("one-style.css", failedRequests[0].Url);
-            Assert.Null(await failedRequests[0].GetResponseAsync());
+            Assert.Null(await failedRequests[0].ResponseAsync());
             Assert.Equal(ResourceTypes.Stylesheet, failedRequests[0].ResourceType, true);
 
             string error = string.Empty;
@@ -89,7 +89,7 @@ namespace Microsoft.Playwright.Tests
 
             var request = response.Request;
             Assert.Equal(TestConstants.EmptyPage, request.Url);
-            Assert.NotNull(await request.GetResponseAsync());
+            Assert.NotNull(await request.ResponseAsync());
             Assert.Equal(HttpMethod.Get.Method, request.Method);
             Assert.Equal(Page.MainFrame, request.Frame);
             Assert.Equal(TestConstants.EmptyPage, request.Frame.Url);
@@ -103,7 +103,7 @@ namespace Microsoft.Playwright.Tests
             Page.Request += (_, _) => events.Add("request");
             Page.Response += (_, _) => events.Add("response");
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
-            await response.GetFinishedAsync();
+            await response.FinishedAsync();
             events.Add("requestfinished");
             Assert.Equal(new[] { "request", "response", "requestfinished" }, events);
         }
@@ -120,7 +120,7 @@ namespace Microsoft.Playwright.Tests
             Server.SetRedirect("/foo.html", "/empty.html");
             const string FOO_URL = TestConstants.ServerUrl + "/foo.html";
             var response = await Page.GoToAsync(FOO_URL);
-            await response.GetFinishedAsync();
+            await response.FinishedAsync();
             Assert.Equal(new[] {
                 $"GET {FOO_URL}",
                 $"302 {FOO_URL}",

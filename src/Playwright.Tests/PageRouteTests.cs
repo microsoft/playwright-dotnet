@@ -495,7 +495,7 @@ namespace Microsoft.Playwright.Tests
             var response = await Page.GoToAsync($"data:text/html,<link rel=\"stylesheet\" href=\"{TestConstants.EmptyPage}/fonts?helvetica|arial\"/>");
             Assert.Null(response);
             Assert.Single(requests);
-            Assert.Equal(HttpStatusCode.NotFound, (await requests[0].GetResponseAsync()).StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, (await requests[0].ResponseAsync()).StatusCode);
         }
 
         [PlaywrightTest("page-route.spec.ts", @"should not throw ""Invalid Interception Id"" if the request was cancelled")]

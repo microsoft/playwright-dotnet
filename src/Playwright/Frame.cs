@@ -407,16 +407,16 @@ namespace Microsoft.Playwright
         public Task<bool> IsVisibleAsync(string selector, float? timeout) => IsVisibleAsync(false, selector, timeout);
 
         /// <inheritdoc />
-        public Task WaitForURLAsync(string urlString, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined)
-            => WaitForNavigationAsync(urlString, null, null, waitUntil, timeout);
+        public Task WaitForURLAsync(string urlString, float? timeout = default, WaitUntilState waitUntil = default)
+            => WaitForURLAsync(urlString, null, null, timeout, waitUntil);
 
         /// <inheritdoc />
-        public Task WaitForURLAsync(Regex urlRegex, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined)
-            => WaitForNavigationAsync(null, urlRegex, null, waitUntil, timeout);
+        public Task WaitForURLAsync(Regex urlRegex, float? timeout = default, WaitUntilState waitUntil = default)
+            => WaitForURLAsync(null, urlRegex, null, timeout, waitUntil);
 
         /// <inheritdoc />
-        public Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined)
-            => WaitForNavigationAsync(null, null, urlFunc, waitUntil, timeout);
+        public Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = default, WaitUntilState waitUntil = default)
+            => WaitForURLAsync(null, null, urlFunc, timeout, waitUntil);
 
         internal async Task<IResponse> WaitForNavigationAsync(
             string urlString,
@@ -744,6 +744,16 @@ namespace Microsoft.Playwright
 
         internal Task<bool> IsVisibleAsync(bool isPageCall, string selector, float? timeout)
             => _channel.IsVisibleAsync(selector, timeout, isPageCall);
+
+        private Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, float? timeout, WaitUntilState waitUntil)
+        {
+            if (UrlMatches(Url, urlString, urlRegex, urlFunc))
+            {
+                return WaitForLoadStateAsync(waitUntil.EnsureDefaultValue(WaitUntilState.Load).ToLoadState(), timeout);
+            }
+
+            return WaitForNavigationAsync(urlString, urlRegex, urlFunc, waitUntil, timeout);
+        }
 
         private Waiter SetupNavigationWaiter(float? timeout)
         {
