@@ -157,7 +157,10 @@ namespace Microsoft.Playwright
         /// and <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Headless_mode">Firefox</a>.
         /// Defaults to <c>true</c> unless the <paramref name="devtools"/> option is <c>true</c>.
         /// </param>
-        /// <param name="channel">Browser distribution channel.</param>
+        /// <param name="channel">
+        /// Browser distribution channel. Read more about using <a href="./browsers.md#google-chrome--microsoft-edge">Google
+        /// Chrome and Microsoft Edge</a>.
+        /// </param>
         /// <param name="executablePath">
         /// Path to a browser executable to run instead of the bundled one. If <paramref name="executablePath"/>
         /// is a relative path, then it is resolved relative to the current working directory.
@@ -202,7 +205,7 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="screenSize">
         /// Emulates consistent window screen size available inside web page via <c>window.screen</c>.
-        /// Is only used when the <paramref name="viewportSize"/> is set.
+        /// Is only used when the <paramref name="viewport"/> is set.
         /// </param>
         /// <param name="userAgent">Specific user agent to use in this context.</param>
         /// <param name="deviceScaleFactor">Specify device scale factor (can be thought of as dpr). Defaults to <c>1</c>.</param>

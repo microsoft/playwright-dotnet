@@ -46,18 +46,18 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-	public partial class Geolocation
-	{
-		/// <summary><para>Latitude between -90 and 90.</para></summary>
-		[JsonPropertyName("latitude")]
-		public float Latitude { get; set; }
-	
-		/// <summary><para>Longitude between -180 and 180.</para></summary>
-		[JsonPropertyName("longitude")]
-		public float Longitude { get; set; }
-	
-		/// <summary><para>Non-negative accuracy value. Defaults to <c>0</c>.</para></summary>
-		[JsonPropertyName("accuracy")]
-		public float Accuracy { get; set; }
-	}
+    public partial class Geolocation
+    {
+        /// <summary><para>Latitude between -90 and 90.</para></summary>
+        [JsonPropertyName("latitude")]
+        public float Latitude { get; set; }
+
+        /// <summary><para>Longitude between -180 and 180.</para></summary>
+        [JsonPropertyName("longitude")]
+        public float Longitude { get; set; }
+
+        /// <summary><para>Non-negative accuracy value. Defaults to <c>0</c>.</para></summary>
+        [JsonPropertyName("accuracy")]
+        public float? Accuracy { get; set; }
+    }
 }

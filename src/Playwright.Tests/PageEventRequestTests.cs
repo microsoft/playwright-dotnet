@@ -60,9 +60,9 @@ namespace Microsoft.Playwright.Tests
 
             Assert.Equal("responseFromServiceWorker:foo", swResponse);
             Assert.Equal(TestConstants.ServerUrl + "/serviceworkers/fetchdummy/foo", request.Url);
-            var response = await request.GetResponseAsync();
+            var response = await request.ResponseAsync();
             Assert.Equal(TestConstants.ServerUrl + "/serviceworkers/fetchdummy/foo", response.Url);
-            Assert.Equal("responseFromServiceWorker:foo", await response.GetTextAsync());
+            Assert.Equal("responseFromServiceWorker:foo", await response.TextAsync());
         }
     }
 }

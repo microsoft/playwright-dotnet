@@ -86,7 +86,7 @@ namespace Microsoft.Playwright
         internal Request FinalRequest => RedirectedTo != null ? ((Request)RedirectedTo).FinalRequest : this;
 
         /// <inheritdoc/>
-        public async Task<IResponse> GetResponseAsync() => (await _channel.GetResponseAsync().ConfigureAwait(false))?.Object;
+        public async Task<IResponse> ResponseAsync() => (await _channel.GetResponseAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc/>
         public JsonDocument GetPayloadAsJson(JsonDocumentOptions documentOptions = default)

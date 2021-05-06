@@ -13,7 +13,7 @@ using Microsoft.Playwright.Transport.Protocol;
 namespace Microsoft.Playwright
 {
     /// <summary>
-    /// Whenever a network route is set up with <see cref="IPage.RouteAsync(Func{string, bool}, Action{IRoute})"/> or <see cref="IBrowserContext.RouteAsync(string, System.Text.RegularExpressions.Regex, Func{string, bool}, Action{IRoute})"/> the Route object allows to handle the route.
+    /// <see cref="IRoute"/>.
     /// </summary>
     public class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
     {
@@ -45,16 +45,16 @@ namespace Microsoft.Playwright
             string contentType = null,
             IEnumerable<KeyValuePair<string, string>> headers = null,
             string path = null)
-            => FulfillAsync(body, bodyBytes, contentType, headers, path, (int?)status);
+            => FulfillAsync((int?)status, headers, contentType, body, bodyBytes, path);
 
         /// <inheritdoc/>
         public Task FulfillAsync(
-            string body = null,
-            byte[] bodyBytes = null,
-            string contentType = null,
-            IEnumerable<KeyValuePair<string, string>> headers = null,
-            string path = null,
-            int? status = null)
+            int? status = default,
+            IEnumerable<KeyValuePair<string, string>> headers = default,
+            string contentType = default,
+            string body = default,
+            byte[] bodyBytes = default,
+            string path = default)
         {
             var normalized = NormalizeFulfillParameters(status, headers, contentType, body, bodyBytes, path);
             return _channel.FulfillAsync(normalized);
@@ -65,10 +65,10 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc/>
         public Task ResumeAsync(
-            IEnumerable<KeyValuePair<string, string>> headers = null,
-            string method = null,
-            byte[] postData = null,
-            string url = null)
+            string url = default,
+            string method = default,
+            byte[] postData = default,
+            IEnumerable<KeyValuePair<string, string>> headers = default)
             => _channel.ContinueAsync(url, method, postData, headers);
 
         private NormalizedFulfillResponse NormalizeFulfillParameters(

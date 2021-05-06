@@ -98,55 +98,62 @@ namespace Microsoft.Playwright
         /// Whether to automatically download all the attachments. Defaults to <c>false</c>
         /// where all the downloads are canceled.
         /// </param>
-        /// <param name="bypassCSP">Toggles bypassing page's Content-Security-Policy.</param>
-        /// <param name="colorScheme">
-        /// Emulates <c>'prefers-colors-scheme'</c> media feature, supported values are <c>'light'</c>,
-        /// <c>'dark'</c>, <c>'no-preference'</c>. See <see cref="IPage.EmulateMediaAsync"/>
-        /// for more details. Defaults to <c>'light'</c>.
-        /// </param>
-        /// <param name="deviceScaleFactor">Specify device scale factor (can be thought of as dpr). Defaults to <c>1</c>.</param>
-        /// <param name="extraHTTPHeaders">
-        /// An object containing additional HTTP headers to be sent with every request. All
-        /// header values must be strings.
-        /// </param>
-        /// <param name="geolocation">
-        /// </param>
-        /// <param name="hasTouch">Specifies if viewport supports touch events. Defaults to false.</param>
-        /// <param name="httpCredentials">
-        /// Credentials for <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication">HTTP
-        /// authentication</a>.
-        /// </param>
         /// <param name="ignoreHTTPSErrors">Whether to ignore HTTPS errors during navigation. Defaults to <c>false</c>.</param>
+        /// <param name="bypassCSP">Toggles bypassing page's Content-Security-Policy.</param>
+        /// <param name="viewportSize">
+        /// Emulates consistent viewport for each page. Defaults to an 1280x720 viewport. Use
+        /// <c>ViewportSize.NoViewport</c> to disable the default viewport.
+        /// </param>
+        /// <param name="screenSize">
+        /// Emulates consistent window screen size available inside web page via <c>window.screen</c>.
+        /// Is only used when the <paramref name="viewport"/> is set.
+        /// </param>
+        /// <param name="userAgent">Specific user agent to use in this context.</param>
+        /// <param name="deviceScaleFactor">Specify device scale factor (can be thought of as dpr). Defaults to <c>1</c>.</param>
         /// <param name="isMobile">
         /// Whether the <c>meta viewport</c> tag is taken into account and touch events are
         /// enabled. Defaults to <c>false</c>. Not supported in Firefox.
         /// </param>
+        /// <param name="hasTouch">Specifies if viewport supports touch events. Defaults to false.</param>
         /// <param name="javaScriptEnabled">Whether or not to enable JavaScript in the context. Defaults to <c>true</c>.</param>
+        /// <param name="timezoneId">
+        /// Changes the timezone of the context. See <a href="https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1">ICU's
+        /// metaZones.txt</a> for a list of supported timezone IDs.
+        /// </param>
+        /// <param name="geolocation">
+        /// </param>
         /// <param name="locale">
         /// Specify user locale, for example <c>en-GB</c>, <c>de-DE</c>, etc. Locale will affect
         /// <c>navigator.language</c> value, <c>Accept-Language</c> request header value as
         /// well as number and date formatting rules.
         /// </param>
-        /// <param name="offline">Whether to emulate network being offline. Defaults to <c>false</c>.</param>
         /// <param name="permissions">
         /// A list of permissions to grant to all pages in this context. See <see cref="IBrowserContext.GrantPermissionsAsync"/>
         /// for more details.
         /// </param>
-        /// <param name="proxy">
-        /// Network proxy settings to use with this context. Note that browser needs to be launched
-        /// with the global proxy for this option to work. If all contexts override the proxy,
-        /// global proxy will be never used and can be any string, for example <c>launch({ proxy:
-        /// { server: 'per-context' } })</c>.
+        /// <param name="extraHTTPHeaders">
+        /// An object containing additional HTTP headers to be sent with every request. All
+        /// header values must be strings.
         /// </param>
-        /// <param name="recordHarOmitContent">
-        /// Optional setting to control whether to omit request content from the HAR. Defaults
-        /// to <c>false</c>.
+        /// <param name="offline">Whether to emulate network being offline. Defaults to <c>false</c>.</param>
+        /// <param name="httpCredentials">
+        /// Credentials for <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication">HTTP
+        /// authentication</a>.
+        /// </param>
+        /// <param name="colorScheme">
+        /// Emulates <c>'prefers-colors-scheme'</c> media feature, supported values are <c>'light'</c>,
+        /// <c>'dark'</c>, <c>'no-preference'</c>. See <see cref="IPage.EmulateMediaAsync"/>
+        /// for more details. Defaults to <c>'light'</c>.
         /// </param>
         /// <param name="recordHarPath">
         /// Enables <a href="http://www.softwareishard.com/blog/har-12-spec">HAR</a> recording
         /// for all pages into the specified HAR file on the filesystem. If not specified, the
         /// HAR is not recorded. Make sure to call <see cref="IBrowserContext.CloseAsync"/>
         /// for the HAR to be saved.
+        /// </param>
+        /// <param name="recordHarOmitContent">
+        /// Optional setting to control whether to omit request content from the HAR. Defaults
+        /// to <c>false</c>.
         /// </param>
         /// <param name="recordVideoDir">
         /// Enables video recording for all pages into the specified directory. If not specified
@@ -159,10 +166,7 @@ namespace Microsoft.Playwright
         /// the video size defaults to 800x450. Actual picture of each page will be scaled down
         /// if necessary to fit the specified size.
         /// </param>
-        /// <param name="screenSize">
-        /// Emulates consistent window screen size available inside web page via <c>window.screen</c>.
-        /// Is only used when the <paramref name="viewportSize"/> is set.
-        /// </param>
+        /// <param name="proxy">Network proxy settings to use with this context.</param>
         /// <param name="storageState">
         /// Populates context with given storage state. This option can be used to initialize
         /// context with logged-in information obtained via <see cref="IBrowserContext.StorageStateAsync"/>.
@@ -172,16 +176,7 @@ namespace Microsoft.Playwright
         /// context with logged-in information obtained via <see cref="IBrowserContext.StorageStateAsync"/>.
         /// Path to the file with saved storage state.
         /// </param>
-        /// <param name="timezoneId">
-        /// Changes the timezone of the context. See <a href="https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1">ICU's
-        /// metaZones.txt</a> for a list of supported timezone IDs.
-        /// </param>
-        /// <param name="userAgent">Specific user agent to use in this context.</param>
-        /// <param name="viewportSize">
-        /// Emulates consistent viewport for each page. Defaults to an 1280x720 viewport. <c>null</c>
-        /// disables the default viewport.
-        /// </param>
-        Task<IBrowserContext> NewContextAsync(bool? acceptDownloads = default, bool? bypassCSP = default, ColorScheme colorScheme = default, float? deviceScaleFactor = default, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = default, Geolocation geolocation = default, bool? hasTouch = default, HttpCredentials httpCredentials = default, bool? ignoreHTTPSErrors = default, bool? isMobile = default, bool? javaScriptEnabled = default, string locale = default, bool? offline = default, IEnumerable<string> permissions = default, Proxy proxy = default, bool? recordHarOmitContent = default, string recordHarPath = default, string recordVideoDir = default, RecordVideoSize recordVideoSize = default, ScreenSize screenSize = default, string storageState = default, string storageStatePath = default, string timezoneId = default, string userAgent = default, ViewportSize viewportSize = default);
+        Task<IBrowserContext> NewContextAsync(bool? acceptDownloads = default, bool? ignoreHTTPSErrors = default, bool? bypassCSP = default, ViewportSize viewportSize = default, ScreenSize screenSize = default, string userAgent = default, float? deviceScaleFactor = default, bool? isMobile = default, bool? hasTouch = default, bool? javaScriptEnabled = default, string timezoneId = default, Geolocation geolocation = default, string locale = default, IEnumerable<string> permissions = default, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = default, bool? offline = default, HttpCredentials httpCredentials = default, ColorScheme colorScheme = default, string recordHarPath = default, bool? recordHarOmitContent = default, string recordVideoDir = default, RecordVideoSize recordVideoSize = default, Proxy proxy = default, string storageState = default, string storageStatePath = default);
 
         /// <summary>
         /// <para>
@@ -199,55 +194,62 @@ namespace Microsoft.Playwright
         /// Whether to automatically download all the attachments. Defaults to <c>false</c>
         /// where all the downloads are canceled.
         /// </param>
-        /// <param name="bypassCSP">Toggles bypassing page's Content-Security-Policy.</param>
-        /// <param name="colorScheme">
-        /// Emulates <c>'prefers-colors-scheme'</c> media feature, supported values are <c>'light'</c>,
-        /// <c>'dark'</c>, <c>'no-preference'</c>. See <see cref="IPage.EmulateMediaAsync"/>
-        /// for more details. Defaults to <c>'light'</c>.
-        /// </param>
-        /// <param name="deviceScaleFactor">Specify device scale factor (can be thought of as dpr). Defaults to <c>1</c>.</param>
-        /// <param name="extraHTTPHeaders">
-        /// An object containing additional HTTP headers to be sent with every request. All
-        /// header values must be strings.
-        /// </param>
-        /// <param name="geolocation">
-        /// </param>
-        /// <param name="hasTouch">Specifies if viewport supports touch events. Defaults to false.</param>
-        /// <param name="httpCredentials">
-        /// Credentials for <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication">HTTP
-        /// authentication</a>.
-        /// </param>
         /// <param name="ignoreHTTPSErrors">Whether to ignore HTTPS errors during navigation. Defaults to <c>false</c>.</param>
+        /// <param name="bypassCSP">Toggles bypassing page's Content-Security-Policy.</param>
+        /// <param name="viewportSize">
+        /// Emulates consistent viewport for each page. Defaults to an 1280x720 viewport. Use
+        /// <c>ViewportSize.NoViewport</c> to disable the default viewport.
+        /// </param>
+        /// <param name="screenSize">
+        /// Emulates consistent window screen size available inside web page via <c>window.screen</c>.
+        /// Is only used when the <paramref name="viewport"/> is set.
+        /// </param>
+        /// <param name="userAgent">Specific user agent to use in this context.</param>
+        /// <param name="deviceScaleFactor">Specify device scale factor (can be thought of as dpr). Defaults to <c>1</c>.</param>
         /// <param name="isMobile">
         /// Whether the <c>meta viewport</c> tag is taken into account and touch events are
         /// enabled. Defaults to <c>false</c>. Not supported in Firefox.
         /// </param>
+        /// <param name="hasTouch">Specifies if viewport supports touch events. Defaults to false.</param>
         /// <param name="javaScriptEnabled">Whether or not to enable JavaScript in the context. Defaults to <c>true</c>.</param>
+        /// <param name="timezoneId">
+        /// Changes the timezone of the context. See <a href="https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1">ICU's
+        /// metaZones.txt</a> for a list of supported timezone IDs.
+        /// </param>
+        /// <param name="geolocation">
+        /// </param>
         /// <param name="locale">
         /// Specify user locale, for example <c>en-GB</c>, <c>de-DE</c>, etc. Locale will affect
         /// <c>navigator.language</c> value, <c>Accept-Language</c> request header value as
         /// well as number and date formatting rules.
         /// </param>
-        /// <param name="offline">Whether to emulate network being offline. Defaults to <c>false</c>.</param>
         /// <param name="permissions">
         /// A list of permissions to grant to all pages in this context. See <see cref="IBrowserContext.GrantPermissionsAsync"/>
         /// for more details.
         /// </param>
-        /// <param name="proxy">
-        /// Network proxy settings to use with this context. Note that browser needs to be launched
-        /// with the global proxy for this option to work. If all contexts override the proxy,
-        /// global proxy will be never used and can be any string, for example <c>launch({ proxy:
-        /// { server: 'per-context' } })</c>.
+        /// <param name="extraHTTPHeaders">
+        /// An object containing additional HTTP headers to be sent with every request. All
+        /// header values must be strings.
         /// </param>
-        /// <param name="recordHarOmitContent">
-        /// Optional setting to control whether to omit request content from the HAR. Defaults
-        /// to <c>false</c>.
+        /// <param name="offline">Whether to emulate network being offline. Defaults to <c>false</c>.</param>
+        /// <param name="httpCredentials">
+        /// Credentials for <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication">HTTP
+        /// authentication</a>.
+        /// </param>
+        /// <param name="colorScheme">
+        /// Emulates <c>'prefers-colors-scheme'</c> media feature, supported values are <c>'light'</c>,
+        /// <c>'dark'</c>, <c>'no-preference'</c>. See <see cref="IPage.EmulateMediaAsync"/>
+        /// for more details. Defaults to <c>'light'</c>.
         /// </param>
         /// <param name="recordHarPath">
         /// Enables <a href="http://www.softwareishard.com/blog/har-12-spec">HAR</a> recording
         /// for all pages into the specified HAR file on the filesystem. If not specified, the
         /// HAR is not recorded. Make sure to call <see cref="IBrowserContext.CloseAsync"/>
         /// for the HAR to be saved.
+        /// </param>
+        /// <param name="recordHarOmitContent">
+        /// Optional setting to control whether to omit request content from the HAR. Defaults
+        /// to <c>false</c>.
         /// </param>
         /// <param name="recordVideoDir">
         /// Enables video recording for all pages into the specified directory. If not specified
@@ -260,10 +262,7 @@ namespace Microsoft.Playwright
         /// the video size defaults to 800x450. Actual picture of each page will be scaled down
         /// if necessary to fit the specified size.
         /// </param>
-        /// <param name="screenSize">
-        /// Emulates consistent window screen size available inside web page via <c>window.screen</c>.
-        /// Is only used when the <paramref name="viewportSize"/> is set.
-        /// </param>
+        /// <param name="proxy">Network proxy settings to use with this context.</param>
         /// <param name="storageState">
         /// Populates context with given storage state. This option can be used to initialize
         /// context with logged-in information obtained via <see cref="IBrowserContext.StorageStateAsync"/>.
@@ -273,16 +272,7 @@ namespace Microsoft.Playwright
         /// context with logged-in information obtained via <see cref="IBrowserContext.StorageStateAsync"/>.
         /// Path to the file with saved storage state.
         /// </param>
-        /// <param name="timezoneId">
-        /// Changes the timezone of the context. See <a href="https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1">ICU's
-        /// metaZones.txt</a> for a list of supported timezone IDs.
-        /// </param>
-        /// <param name="userAgent">Specific user agent to use in this context.</param>
-        /// <param name="viewportSize">
-        /// Emulates consistent viewport for each page. Defaults to an 1280x720 viewport. <c>null</c>
-        /// disables the default viewport.
-        /// </param>
-        Task<IPage> NewPageAsync(bool? acceptDownloads = default, bool? bypassCSP = default, ColorScheme colorScheme = default, float? deviceScaleFactor = default, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = default, Geolocation geolocation = default, bool? hasTouch = default, HttpCredentials httpCredentials = default, bool? ignoreHTTPSErrors = default, bool? isMobile = default, bool? javaScriptEnabled = default, string locale = default, bool? offline = default, IEnumerable<string> permissions = default, Proxy proxy = default, bool? recordHarOmitContent = default, string recordHarPath = default, string recordVideoDir = default, RecordVideoSize recordVideoSize = default, ScreenSize screenSize = default, string storageState = default, string storageStatePath = default, string timezoneId = default, string userAgent = default, ViewportSize viewportSize = default);
+        Task<IPage> NewPageAsync(bool? acceptDownloads = default, bool? ignoreHTTPSErrors = default, bool? bypassCSP = default, ViewportSize viewportSize = default, ScreenSize screenSize = default, string userAgent = default, float? deviceScaleFactor = default, bool? isMobile = default, bool? hasTouch = default, bool? javaScriptEnabled = default, string timezoneId = default, Geolocation geolocation = default, string locale = default, IEnumerable<string> permissions = default, IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = default, bool? offline = default, HttpCredentials httpCredentials = default, ColorScheme colorScheme = default, string recordHarPath = default, bool? recordHarOmitContent = default, string recordVideoDir = default, RecordVideoSize recordVideoSize = default, Proxy proxy = default, string storageState = default, string storageStatePath = default);
 
         /// <summary><para>Returns the browser version.</para></summary>
         string Version { get; }

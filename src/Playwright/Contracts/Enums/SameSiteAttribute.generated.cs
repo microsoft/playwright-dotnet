@@ -46,14 +46,14 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-	public enum SameSiteAttribute
-	{
-		Undefined = 0,
-		[EnumMember(Value = "Strict")]
-		Strict,
-		[EnumMember(Value = "Lax")]
-		Lax,
-		[EnumMember(Value = "None")]
-		None,
-	}
+    public enum SameSiteAttribute
+    {
+        Undefined = 0,
+        [EnumMember(Value = "Strict")]
+        Strict,
+        [EnumMember(Value = "Lax")]
+        Lax,
+        [EnumMember(Value = "None")]
+        None,
+    }
 }

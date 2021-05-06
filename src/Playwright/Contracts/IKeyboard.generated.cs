@@ -39,6 +39,7 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -65,9 +66,9 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>Dispatches a <c>keydown</c> event.</para>
         /// <para>
-        /// <paramref name="key"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key)">keyboardEvent.key</a>
+        /// <paramref name="key"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a>
         /// value or a single character to generate the text for. A superset of the <paramref
-        /// name="key"/> values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values)">here</a>.
+        /// name="key"/> values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">here</a>.
         /// Examples of the keys are:
         /// </para>
         /// <para>
@@ -96,7 +97,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>
         /// After the key is pressed once, subsequent calls to <see cref="IKeyboard.DownAsync"/>
-        /// will have <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/repeat)">repeat</a>
+        /// will have <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/repeat">repeat</a>
         /// set to true. To release the key, use <see cref="IKeyboard.UpAsync"/>.
         /// </para>
         /// </summary>
@@ -129,9 +130,9 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// <paramref name="key"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key)">keyboardEvent.key</a>
+        /// <paramref name="key"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a>
         /// value or a single character to generate the text for. A superset of the <paramref
-        /// name="key"/> values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values)">here</a>.
+        /// name="key"/> values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">here</a>.
         /// Examples of the keys are:
         /// </para>
         /// <para>
@@ -155,7 +156,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>
         /// Shortcuts such as <c>key: "Control+o"</c> or <c>key: "Control+Shift+T"</c> are supported
-        /// as well. When speficied with the modifier, modifier is pressed and being held while
+        /// as well. When specified with the modifier, modifier is pressed and being held while
         /// the subsequent key is being pressed.
         /// </para>
         /// <para>Shortcut for <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.</para>
@@ -168,7 +169,7 @@ namespace Microsoft.Playwright
         /// Time to wait between <c>keydown</c> and <c>keyup</c> in milliseconds. Defaults to
         /// 0.
         /// </param>
-        Task PressAsync(string key, float? delay = null);
+        Task PressAsync(string key, float? delay = default);
 
         /// <summary>
         /// <para>
@@ -182,10 +183,14 @@ namespace Microsoft.Playwright
         /// Modifier keys DO NOT effect <c>keyboard.type</c>. Holding down <c>Shift</c> will
         /// not type the text in upper case.
         /// </para>
+        /// <para>
+        /// For characters that are not on a US keyboard, only an <c>input</c> event will be
+        /// sent.
+        /// </para>
         /// </remarks>
         /// <param name="text">A text to type into a focused element.</param>
         /// <param name="delay">Time to wait between key presses in milliseconds. Defaults to 0.</param>
-        Task TypeAsync(string text, float? delay = null);
+        Task TypeAsync(string text, float? delay = default);
 
         /// <summary><para>Dispatches a <c>keyup</c> event.</para></summary>
         /// <param name="key">

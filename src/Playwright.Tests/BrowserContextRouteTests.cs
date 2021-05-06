@@ -114,7 +114,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var response = await page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal("page", await response.GetTextAsync());
+            Assert.Equal("page", await response.TextAsync());
         }
 
         [PlaywrightTest("browsercontext-route.spec.ts", "should fall back to context.route")]
@@ -134,7 +134,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var response = await page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal("context", await response.GetTextAsync());
+            Assert.Equal("context", await response.TextAsync());
         }
     }
 }
