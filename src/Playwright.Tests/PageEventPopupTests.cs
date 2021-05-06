@@ -77,10 +77,9 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should be able to capture alert")]
-        [Fact(Skip = "TODO: FixMe", Timeout = TestConstants.DefaultTestTimeout)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToCaptureAlert()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
             var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
             var evaluateTask = Page.EvaluateAsync<string>(@"() => {
                 const win = window.open('');
