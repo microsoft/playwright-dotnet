@@ -564,7 +564,7 @@ namespace Microsoft.Playwright
             bool? force,
             float? timeout,
             bool? trial)
-            => MainFrame.HoverAsync(true, selector, position, modifiers, force ?? false, timeout);
+            => MainFrame.HoverAsync(true, selector, position, modifiers, force ?? false, timeout, trial);
 
         /// <inheritdoc />
         public Task PressAsync(string selector, string key, float? delay, bool? noWaitAfter, float? timeout)
@@ -694,7 +694,7 @@ namespace Microsoft.Playwright
             bool? noWaitAfter,
             float? timeout,
             bool? trial)
-            => MainFrame.ClickAsync(true, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force ?? false, noWaitAfter);
+            => MainFrame.ClickAsync(true, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force ?? false, noWaitAfter, trial);
 
         /// <inheritdoc />
         public Task DblClickAsync(
@@ -707,7 +707,7 @@ namespace Microsoft.Playwright
             bool? noWaitAfter,
             float? timeout,
             bool? trial)
-            => MainFrame.DblClickAsync(true, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), position, modifiers, timeout, force ?? false, noWaitAfter);
+            => MainFrame.DblClickAsync(true, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), position, modifiers, timeout, force ?? false, noWaitAfter, trial);
 
         /// <inheritdoc />
         public async Task<IResponse> GoBackAsync(WaitUntilState waitUntil, float? timeout)
@@ -912,11 +912,11 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc />
         public Task CheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
-            => MainFrame.CheckAsync(true, selector, position, force, noWaitAfter, timeout);
+            => MainFrame.CheckAsync(true, selector, position, force, noWaitAfter, timeout, trial);
 
         /// <inheritdoc />
         public Task UncheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
-            => MainFrame.UncheckAsync(true, selector, position, force, noWaitAfter, timeout);
+            => MainFrame.UncheckAsync(true, selector, position, force, noWaitAfter, timeout, trial);
 
         /// <inheritdoc />
         public Task DispatchEventAsync(string selector, string type, object eventInit, float? timeout)
@@ -940,7 +940,7 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc />
         public Task TapAsync(string selector, Position position, IEnumerable<KeyboardModifier> modifiers, bool? noWaitAfter, bool? force, float? timeout, bool? trial)
-            => MainFrame.TapAsync(true, selector, modifiers, position, force, noWaitAfter, timeout);
+            => MainFrame.TapAsync(true, selector, modifiers, position, force, noWaitAfter, timeout, trial);
 
         /// <inheritdoc />
         public Task<bool> IsCheckedAsync(string selector, float? timeout) => MainFrame.IsCheckedAsync(true, selector, timeout);

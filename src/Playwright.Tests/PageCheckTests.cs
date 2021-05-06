@@ -92,5 +92,23 @@ namespace Microsoft.Playwright.Tests
             await Page.CheckAsync("div");
             Assert.Equal("true", await Page.EvaluateAsync<string>("checkbox.getAttribute('aria-checked')"));
         }
+
+        [PlaywrightTest("page-check.spec.ts", "trial run should not check")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task TrialRunShouldNotCheck()
+        {
+            await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
+            await Page.CheckAsync("input", trial: true);
+            Assert.False(await Page.EvaluateAsync<bool>("window['checkbox'].checked"));
+        }
+
+        [PlaywrightTest("page-check.spec.ts", "trial run should not uncheck")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task TrialRunShouldNotUncheck()
+        {
+            await Page.SetContentAsync("<input id='checkbox' type='checkbox' checked></input>");
+            await Page.CheckAsync("input", trial: true);
+            Assert.True(await Page.EvaluateAsync<bool>("window['checkbox'].checked"));
+        }
     }
 }

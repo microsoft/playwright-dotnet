@@ -163,10 +163,11 @@ namespace Microsoft.Playwright.Transport.Channels
         internal Task<FrameChannel> OwnerFrameAsync() => Connection.SendMessageToServerAsync<FrameChannel>(Guid, "ownerFrame", null);
 
         internal Task HoverAsync(
-            IEnumerable<KeyboardModifier> modifiers = null,
-            Position position = null,
-            float? timeout = null,
-            bool force = false)
+            IEnumerable<KeyboardModifier> modifiers,
+            Position position,
+            float? timeout,
+            bool force,
+            bool? trial)
         {
             var args = new Dictionary<string, object>
             {
@@ -181,6 +182,11 @@ namespace Microsoft.Playwright.Transport.Channels
             if (timeout != null)
             {
                 args["timeout"] = timeout;
+            }
+
+            if (trial != null)
+            {
+                args["trial"] = trial;
             }
 
             if (modifiers != null)
@@ -201,7 +207,8 @@ namespace Microsoft.Playwright.Transport.Channels
             Position position,
             float? timeout,
             bool force,
-            bool? noWaitAfter)
+            bool? noWaitAfter,
+            bool? trial)
         {
             var args = new Dictionary<string, object>
             {
@@ -219,6 +226,11 @@ namespace Microsoft.Playwright.Transport.Channels
             if (timeout != null)
             {
                 args["timeout"] = timeout;
+            }
+
+            if (trial != null)
+            {
+                args["trial"] = trial;
             }
 
             if (position != null)
@@ -241,7 +253,8 @@ namespace Microsoft.Playwright.Transport.Channels
             Position position,
             float? timeout,
             bool force,
-            bool? noWaitAfter)
+            bool? noWaitAfter,
+            bool? trial)
         {
             var args = new Dictionary<string, object>
             {
@@ -258,6 +271,11 @@ namespace Microsoft.Playwright.Transport.Channels
             if (timeout != null)
             {
                 args["timeout"] = timeout;
+            }
+
+            if (trial != null)
+            {
+                args["trial"] = trial;
             }
 
             if (position != null)
@@ -431,7 +449,7 @@ namespace Microsoft.Playwright.Transport.Channels
         internal async Task<bool> IsCheckedAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "isChecked", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
-        internal Task CheckAsync(Position position, float? timeout, bool force, bool? noWaitAfter)
+        internal Task CheckAsync(Position position, float? timeout, bool force, bool? noWaitAfter, bool? trial)
         {
             var args = new Dictionary<string, object>
             {
@@ -441,6 +459,11 @@ namespace Microsoft.Playwright.Transport.Channels
             if (position != null)
             {
                 args["position"] = position;
+            }
+
+            if (trial != null)
+            {
+                args["trial"] = trial;
             }
 
             if (timeout != null)
@@ -456,7 +479,7 @@ namespace Microsoft.Playwright.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "check", args);
         }
 
-        internal Task UncheckAsync(Position position, float? timeout, bool? force, bool? noWaitAfter)
+        internal Task UncheckAsync(Position position, float? timeout, bool? force, bool? noWaitAfter, bool? trial)
         {
             var args = new Dictionary<string, object>();
 
@@ -468,6 +491,11 @@ namespace Microsoft.Playwright.Transport.Channels
             if (position != null)
             {
                 args["position"] = position;
+            }
+
+            if (trial != null)
+            {
+                args["trial"] = trial;
             }
 
             if (timeout != null)
@@ -525,7 +553,13 @@ namespace Microsoft.Playwright.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "press", args);
         }
 
-        internal Task TapAsync(Position position = null, IEnumerable<KeyboardModifier> modifiers = null, float? timeout = null, bool force = false, bool? noWaitAfter = null)
+        internal Task TapAsync(
+            Position position,
+            IEnumerable<KeyboardModifier> modifiers,
+            float? timeout,
+            bool force,
+            bool? noWaitAfter,
+            bool? trial)
         {
             var args = new Dictionary<string, object>
             {
@@ -549,6 +583,11 @@ namespace Microsoft.Playwright.Transport.Channels
             if (modifiers != null)
             {
                 args["modifiers"] = modifiers.Select(m => m.ToValueString());
+            }
+
+            if (trial != null)
+            {
+                args["trial"] = trial;
             }
 
             if (timeout != null)
