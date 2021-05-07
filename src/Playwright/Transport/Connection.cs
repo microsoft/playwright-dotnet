@@ -368,7 +368,7 @@ namespace Microsoft.Playwright.Transport
             switch (type)
             {
                 case ChannelOwnerType.Artifact:
-                    result = new Artifact(parent, guid);
+                    result = new Artifact(parent, guid, initializer?.ToObject<ArtifactInitializer>(GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.BindingCall:
                     result = new BindingCall(parent, guid, initializer?.ToObject<BindingCallInitializer>(GetDefaultJsonSerializerOptions()));

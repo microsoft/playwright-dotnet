@@ -111,8 +111,7 @@ namespace Microsoft.Playwright
                 userAgent,
                 viewportSize).ConfigureAwait(false)).Object;
 
-            // TODO: this might be a useful thing to rethink down the line
-            context.VideoPath = recordVideoDir;
+            context.RecordVideo = !string.IsNullOrEmpty(recordVideoDir);
 
             BrowserContextsList.Add(context);
             return context;
