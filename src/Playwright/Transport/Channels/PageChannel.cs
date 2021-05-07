@@ -69,7 +69,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal event EventHandler<IConsoleMessage> Console;
 
-        internal event EventHandler<IDownload> Download;
+        internal event EventHandler<PageDownloadEvent> Download;
 
         internal event EventHandler<PageErrorEventArgs> PageError;
 
@@ -154,7 +154,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     WebSocket?.Invoke(this, serverParams?.GetProperty("webSocket").ToObject<WebSocketChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "download":
-                    Download?.Invoke(this, serverParams?.GetProperty("download").ToObject<DownloadChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
+                    Download?.Invoke(this, serverParams?.ToObject<PageDownloadEvent>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "video":
                     Video?.Invoke(this, new VideoEventArgs());

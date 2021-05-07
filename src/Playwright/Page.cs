@@ -98,7 +98,7 @@ namespace Microsoft.Playwright
             _channel.Dialog += (_, e) => Dialog?.Invoke(this, e);
             _channel.Console += (_, e) => Console?.Invoke(this, e);
             _channel.DOMContentLoaded += (_, e) => DOMContentLoaded?.Invoke(this, this);
-            _channel.Download += (_, e) => Download?.Invoke(this, e);
+            _channel.Download += (_, e) => Download?.Invoke(this, new Download(e.Url, e.SuggestedFilename, e.Artifact.Object));
             _channel.PageError += (_, e) => PageError?.Invoke(this, e.ToString());
             _channel.Load += (_, e) => Load?.Invoke(this, this);
             _channel.Video += (_, e) =>
