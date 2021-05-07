@@ -49,6 +49,7 @@ namespace Microsoft.Playwright
         private readonly IMouse _mouse;
         private readonly IKeyboard _keyboard;
         private readonly ITouchscreen _touchscreen;
+        private readonly PageInitializer _initializer;
 
         private List<RouteSetting> _routes = new();
         private EventHandler<IFileChooser> _fileChooserEventHandler;
@@ -118,6 +119,7 @@ namespace Microsoft.Playwright
 
             _defaultNavigationTimeout = Context.DefaultNavigationTimeout;
             _defaultTimeout = Context.DefaultTimeout;
+            _initializer = initializer;
         }
 
         /// <inheritdoc />
@@ -320,6 +322,8 @@ namespace Microsoft.Playwright
 
         internal List<Worker> WorkersList { get; } = new List<Worker>();
 
+        internal Page Opener => _initializer.Opener?.Object;
+
         /// <inheritdoc />
         public IFrame Frame(string name)
             => Frames.FirstOrDefault(f => f.Name == name);
@@ -340,7 +344,7 @@ namespace Microsoft.Playwright
         public Task BringToFrontAsync() => _channel.BringToFrontAsync();
 
         /// <inheritdoc />
-        public async Task<IPage> OpenerAsync() => (await _channel.OpenerAsync().ConfigureAwait(false))?.Object;
+        public Task<IPage> OpenerAsync() => Task.FromResult<IPage>(Opener?.IsClosed == false ? Opener : null);
 
         /// <inheritdoc />
         public Task EmulateMediaAsync(ColorScheme? colorScheme) => EmulateMediaAsync(null, colorScheme);
@@ -958,6 +962,8 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc />
         public Task PauseAsync() => _channel.PauseAsync();
+
+        internal void NotifyPopup(Page page) => Popup?.Invoke(this, page);
 
         internal void OnFrameNavigated(Frame frame)
             => FrameNavigated?.Invoke(this, frame);

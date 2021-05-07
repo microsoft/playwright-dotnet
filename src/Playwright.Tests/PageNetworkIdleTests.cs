@@ -111,7 +111,7 @@ namespace Microsoft.Playwright.Tests
                 () => Page.GoToAsync(TestConstants.ServerUrl + "/networkidle-frame.html", WaitUntilState.NetworkIdle));
 
         [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle from the popup")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Fact]
         public async Task ShouldWaitForNetworkIdleFromThePopup()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
@@ -125,11 +125,12 @@ namespace Microsoft.Playwright.Tests
 
             for (int i = 1; i < 6; i++)
             {
-                var popup = await TaskUtils.WhenAll(
+                var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
+                await Task.WhenAll(
                     Page.WaitForEventAsync(PageEvent.Popup),
-                    Page.ClickAsync("#box" + i));
+                    Page.ClickAsync("#box" + i)).WithTimeout(TestConstants.DefaultTestTimeout);
 
-                await popup.WaitForLoadStateAsync(LoadState.NetworkIdle);
+                await popupTask.Result.WaitForLoadStateAsync(LoadState.NetworkIdle);
             }
         }
 

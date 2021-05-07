@@ -392,6 +392,11 @@ namespace Microsoft.Playwright
             page.Context = this;
             PagesList.Add(page);
             Page?.Invoke(this, page);
+
+            if (page.Opener != null && !page.Opener.IsClosed)
+            {
+                page.Opener.NotifyPopup(page);
+            }
         }
 
         private void Channel_BindingCall(object sender, BindingCallEventArgs e)

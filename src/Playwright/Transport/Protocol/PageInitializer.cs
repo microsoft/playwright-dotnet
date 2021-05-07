@@ -9,5 +9,7 @@ namespace Microsoft.Playwright.Transport.Protocol
         public PageViewportSizeResult ViewportSize { get; set; }
 
         public bool IsClosed { get; set; }
+
+        public PageChannel Opener { get; set; }
     }
 }

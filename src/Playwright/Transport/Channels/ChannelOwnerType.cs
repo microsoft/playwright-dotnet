@@ -4,6 +4,9 @@ namespace Microsoft.Playwright.Transport.Channels
 {
     internal enum ChannelOwnerType
     {
+        [EnumMember(Value = "artifact")]
+        Artifact,
+
         [EnumMember(Value = "bindingCall")]
         BindingCall,
 

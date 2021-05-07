@@ -80,7 +80,6 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToCaptureAlert()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
             var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
             var evaluateTask = Page.EvaluateAsync<string>(@"() => {
                 const win = window.open('');
