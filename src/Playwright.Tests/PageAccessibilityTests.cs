@@ -198,7 +198,7 @@ namespace Microsoft.Playwright.Tests
 
             var snapshot = (await Page.Accessibility.SnapshotAsync());
 
-            CompareLogic compareLogic = new CompareLogic();
+            var compareLogic = new CompareLogic();
             var result = compareLogic.Compare(nodeToCheck, snapshot);
             Assert.True(result.AreEqual, result.DifferencesString);
         }
@@ -261,9 +261,9 @@ namespace Microsoft.Playwright.Tests
             Assert.Equal("foo", snapshot.Children.First().Keyshortcuts);
         }
 
-        [PlaywrightTest("page-accessibility.spec.ts", "filtering children of leaf nodes")]
+        [PlaywrightTest("page-accessibility.spec.ts", "should not report text nodes inside controls")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task FilteringChildrenOfLeafNodes()
+        public async Task ShouldNotReportTextNodesInsideControls()
         {
             await Page.SetContentAsync(@"
             <div role=""tablist"">
@@ -389,6 +389,7 @@ namespace Microsoft.Playwright.Tests
                     Role = "textbox",
                     Name = "",
                     Value = "Edit this image: ",
+                    Multiline = TestConstants.IsChromium ? true : null,
                     Children = new AccessibilitySnapshotResult[]
                     {
                         new AccessibilitySnapshotResult
@@ -402,6 +403,100 @@ namespace Microsoft.Playwright.Tests
                             Name = "my fake image"
                         }
                     }
+                };
+            }
+
+            Assert.Equal(node, (await Page.Accessibility.SnapshotAsync()).Children.First());
+        }
+
+
+        [PlaywrightTest("page-accessibility.spec.ts", "non editable textbox with role and tabIndex and label should not have children")]
+        [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
+        public async Task NonEditableTextboxWithRoleAndTabIndexAndLabelShouldNotHaveChildren()
+        {
+            await Page.SetContentAsync(@"
+            <div role='textbox' tabIndex=0 aria-checked='true' aria-label='my favorite textbox'>
+                this is the inner content
+                <img alt='yo' src='fakeimg.png'>
+            </div>");
+
+            AccessibilitySnapshotResult node;
+            if (TestConstants.IsFirefox)
+            {
+                node = new AccessibilitySnapshotResult
+                {
+                    Role = "textbox",
+                    Name = "my favorite textbox",
+                    Value = "this is the inner content yo"
+                };
+            }
+            else if (TestConstants.IsChromium)
+            {
+                node = new AccessibilitySnapshotResult
+                {
+                    Role = "textbox",
+                    Name = "my favorite textbox",
+                    Value = "this is the inner content "
+                };
+            }
+            else
+            {
+                node = new AccessibilitySnapshotResult
+                {
+                    Role = "textbox",
+                    Name = "my favorite textbox",
+                    Value = "this is the inner content  "
+                };
+            }
+            Assert.Equal(node, (await Page.Accessibility.SnapshotAsync()).Children.First());
+        }
+
+        [PlaywrightTest("page-accessibility.spec.ts", "contenteditable", "checkbox with and tabIndex and label should not have children")]
+        [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
+        public async Task CheckboxWithAndTabIndexAndLabelShouldNotHaveChildren()
+        {
+            await Page.SetContentAsync(@"
+            <div role='checkbox' tabIndex=0 aria-checked='true' aria-label='my favorite checkbox'>
+                this is the inner content
+                <img alt='yo' src='fakeimg.png'>
+            </div>");
+            Assert.Equal(
+                new AccessibilitySnapshotResult
+                {
+                    Role = "checkbox",
+                    Name = "my favorite checkbox",
+                    Checked = MixedState.On
+                },
+                (await Page.Accessibility.SnapshotAsync()).Children.First());
+        }
+
+        [PlaywrightTest("page-accessibility.spec.ts", "contenteditable", "checkbox without label should not have children")]
+        [SkipBrowserAndPlatformFact(skipWebkit: true, skipFirefox: true)]
+        public async Task CheckboxWithoutLabelShouldNotHaveChildren()
+        {
+            await Page.SetContentAsync(@"
+            <div role='checkbox' aria-checked='true'>
+                this is the inner content
+                <img alt='yo' src='fakeimg.png'>
+            </div>");
+
+            AccessibilitySnapshotResult node;
+            if (TestConstants.IsFirefox)
+            {
+                node = new AccessibilitySnapshotResult
+                {
+                    Role = "checkbox",
+                    Name = "this is the inner content yo",
+                    Checked = MixedState.On,
+                };
+            }
+            else
+            {
+                node = new AccessibilitySnapshotResult
+                {
+                    Role = "checkbox",
+                    Name = "this is the inner content yo",
+                    Checked = MixedState.On,
                 };
             }
 
@@ -479,7 +574,7 @@ namespace Microsoft.Playwright.Tests
                 Orientation = TestConstants.IsWebKit ? "vertical" : null
             };
 
-            CompareLogic compareLogic = new CompareLogic();
+            var compareLogic = new CompareLogic();
             var result = compareLogic.Compare(nodeToCheck, (await Page.Accessibility.SnapshotAsync(root: menu)));
             Assert.True(result.AreEqual, result.DifferencesString);
         }
@@ -516,21 +611,16 @@ namespace Microsoft.Playwright.Tests
             Assert.Contains("hello", snapshot.Value.ToString());
             Assert.Contains("world", snapshot.Value.ToString());
             Assert.NotEmpty(snapshot.Children);
-            Func<AccessibilitySnapshotResult, AccessibilitySnapshotResult> findFocusedNode = root =>
-            {
-                var nodes = new System.Collections.Generic.Stack<AccessibilitySnapshotResult>(new[] { root });
-                while (nodes.Count > 0)
-                {
-                    var node = nodes.Pop();
-                    if (node.Focused.GetValueOrDefault()) return node;
-                    foreach (var innerNode in node.Children)
-                    {
-                        nodes.Push(innerNode);
-                    }
-                }
+        }
 
-                return null;
-            };
+        [PlaywrightTest("page-accessibility.spec.ts", "should work when there is a title ")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldWorkWhenThereIsAYitle()
+        {
+            await Page.SetContentAsync("<title>This is the title</title><div>This is the content</div>");
+            var snapshot = await Page.Accessibility.SnapshotAsync();
+            Assert.Equal("This is the title", snapshot.Name);
+            Assert.Equal("This is the content", snapshot.Children.First().Name);
         }
     }
 }
