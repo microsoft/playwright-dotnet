@@ -280,13 +280,13 @@ namespace Microsoft.Playwright
         public async Task<object> WaitForEventAsync(string @event, float? timeout = null)
         => @event switch
         {
-            ContextEvent.PageEventName => await WaitForEventAsync(ContextEvent.Page, timeout).ConfigureAwait(false),
-            ContextEvent.CloseEventName => await WaitForEventAsync(ContextEvent.Close, timeout).ConfigureAwait(false),
+            ContextEvent.PageEventName => await WaitForEventAsync(ContextEvent.Page, null, timeout).ConfigureAwait(false),
+            ContextEvent.CloseEventName => await WaitForEventAsync(ContextEvent.Close, null, timeout).ConfigureAwait(false),
             _ => throw new InvalidOperationException(),
         };
 
         /// <inheritdoc/>
-        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, float? timeout = null)
+        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<T, bool> predicate, float? timeout)
         {
             if (playwrightEvent == null)
             {
@@ -306,7 +306,8 @@ namespace Microsoft.Playwright
         }
 
         /// <inheritdoc/>
-        public Task<IPage> WaitForPageAsync(Func<IPage, bool> predicate = null, float? timeout = null) => throw new NotImplementedException();
+        public Task<IPage> WaitForPageAsync(Func<IPage, bool> predicate = null, float? timeout = null)
+            => WaitForEventAsync(ContextEvent.Page, predicate, timeout);
 
         /// <inheritdoc/>
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);

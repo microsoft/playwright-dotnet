@@ -58,7 +58,7 @@ namespace Microsoft.Playwright
         Task GrantPermissionsAsync(string permission);
 
         /// <inheritdoc cref="IBrowserContext.WaitForEventAsync(string, float?)"/>
-        Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, float? timeout = default);
+        Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<T, bool> predicate = default, float? timeout = default);
 
         /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
         Task ExposeBindingAsync(string name, Action<BindingSource> callback);
