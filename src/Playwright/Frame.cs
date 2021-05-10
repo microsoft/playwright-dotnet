@@ -321,18 +321,6 @@ namespace Microsoft.Playwright
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, params string[] values)
-            => SelectOptionAsync(selector, values, null, null);
-
-        /// <inheritdoc />
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, params SelectOptionValue[] values)
-            => SelectOptionAsync(selector, values, null, null);
-
-        /// <inheritdoc />
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, params IElementHandle[] values)
-            => SelectOptionAsync(selector, values, null, null);
-
-        /// <inheritdoc />
         public async Task WaitForLoadStateAsync(LoadState state, float? timeout)
         {
             Task<LoadState> task;

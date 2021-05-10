@@ -595,15 +595,6 @@ namespace Microsoft.Playwright
             => MainFrame.SelectOptionAsync(true, selector, values.Cast<ElementHandle>().ToArray(), noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, params string[] values) => SelectOptionAsync(selector, values, null, null);
-
-        /// <inheritdoc />
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, params SelectOptionValue[] values) => SelectOptionAsync(selector, values, null, null);
-
-        /// <inheritdoc />
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, params IElementHandle[] values) => SelectOptionAsync(selector, values, null, null);
-
-        /// <inheritdoc />
         public Task WaitForTimeoutAsync(float timeout) => Task.Delay(Convert.ToInt32(timeout));
 
         /// <inheritdoc />
