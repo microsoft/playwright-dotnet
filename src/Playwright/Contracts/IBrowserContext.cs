@@ -48,15 +48,6 @@ namespace Microsoft.Playwright
     /// </summary>
     public partial interface IBrowserContext : IAsyncDisposable
     {
-        /// <inheritdoc cref="IBrowserContext.AddCookiesAsync(IEnumerable{Cookie})"/>
-        Task AddCookiesAsync(params Cookie[] cookies);
-
-        /// <inheritdoc cref="IBrowserContext"/>
-        Task<IReadOnlyCollection<BrowserContextCookiesResult>> GetCookiesAsync(params string[] urls);
-
-        /// <inheritdoc cref="IBrowserContext.GrantPermissionsAsync(IEnumerable{string}, string)"/>
-        Task GrantPermissionsAsync(string permission);
-
         /// <inheritdoc cref="IBrowserContext.WaitForEventAsync(string, float?)"/>
         Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, float? timeout = default);
 

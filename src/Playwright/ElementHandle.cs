@@ -238,15 +238,6 @@ namespace Microsoft.Playwright
             => _channel.SelectOptionAsync(values, noWaitAfter, timeout);
 
         /// <inheritdoc />
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(params string[] values) => SelectOptionAsync(values);
-
-        /// <inheritdoc />
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(params SelectOptionValue[] values) => SelectOptionAsync(values);
-
-        /// <inheritdoc />
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(params IElementHandle[] values) => SelectOptionAsync(values);
-
-        /// <inheritdoc />
         public Task CheckAsync(Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
             => _channel.CheckAsync(position, timeout, force ?? false, noWaitAfter);
 

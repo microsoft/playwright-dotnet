@@ -52,11 +52,14 @@ namespace Microsoft.Playwright.Tests
             var (tmp, context, page) = await LaunchAsync();
 
             await page.GoToAsync(TestConstants.EmptyPage);
-            await context.AddCookiesAsync(new Cookie
+            await context.AddCookiesAsync(new[]
             {
-                Url = TestConstants.EmptyPage,
-                Name = "username",
-                Value = "John Doe",
+                new Cookie
+                {
+                    Url = TestConstants.EmptyPage,
+                    Name = "username",
+                    Value = "John Doe",
+                }
             });
 
             Assert.Equal("username=John Doe", await page.EvaluateAsync<string>(@"() => document.cookie"));
@@ -82,7 +85,8 @@ namespace Microsoft.Playwright.Tests
             var (tmp, context, page) = await LaunchAsync();
 
             await page.GoToAsync(TestConstants.EmptyPage);
-            await context.AddCookiesAsync(
+            await context.AddCookiesAsync(new[]
+            {
                 new Cookie
                 {
                     Url = TestConstants.EmptyPage,
@@ -94,7 +98,8 @@ namespace Microsoft.Playwright.Tests
                     Url = TestConstants.EmptyPage,
                     Name = "cookie2",
                     Value = "2",
-                });
+                },
+            });
 
             Assert.Equal("cookie1=1; cookie2=2", await page.EvaluateAsync<string>(@"() => document.cookie"));
 
@@ -127,7 +132,7 @@ namespace Microsoft.Playwright.Tests
             await page.FirstChildFrame().EvaluateAsync<string>("document.cookie = 'username=John Doe'");
             await page.WaitForTimeoutAsync(2000);
             bool allowsThirdPart = !TestConstants.IsWebKit;
-            var cookies = await context.GetCookiesAsync(TestConstants.CrossProcessUrl + "/grid.html");
+            var cookies = await context.GetCookiesAsync(new[] { TestConstants.CrossProcessUrl + "/grid.html" });
 
             if (allowsThirdPart)
             {

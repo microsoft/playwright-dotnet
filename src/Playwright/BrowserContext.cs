@@ -100,9 +100,6 @@ namespace Microsoft.Playwright
         /// <inheritdoc/>
         public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => Channel.AddCookiesAsync(cookies);
 
-        /// <inheritdoc cref="AddCookiesAsync(IEnumerable{Cookie})"/>
-        public Task AddCookiesAsync(params Cookie[] cookies) => Channel.AddCookiesAsync(cookies);
-
         /// <inheritdoc/>
         public Task AddInitScriptAsync(string script = null, string scriptPath = null)
         {
@@ -142,9 +139,6 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc/>
         public Task<IReadOnlyCollection<BrowserContextCookiesResult>> GetCookiesAsync(IEnumerable<string> urls = null) => Channel.GetCookiesAsync(urls);
-
-        /// <inheritdoc/>
-        public Task<IReadOnlyCollection<BrowserContextCookiesResult>> GetCookiesAsync(params string[] urls) => Channel.GetCookiesAsync(urls);
 
         /// <inheritdoc/>
         public Task ExposeBindingAsync(string name, Action callback, bool? handle = null)
@@ -212,9 +206,6 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc/>
         public Task GrantPermissionsAsync(IEnumerable<string> permissions, string origin = null) => Channel.GrantPermissionsAsync(permissions, origin);
-
-        /// <inheritdoc/>
-        public Task GrantPermissionsAsync(string permission) => Channel.GrantPermissionsAsync(new string[] { permission }, null);
 
         /// <inheritdoc/>
         public async Task<IPage> NewPageAsync()
