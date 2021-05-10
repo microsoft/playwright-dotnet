@@ -9,20 +9,37 @@ namespace Microsoft.Playwright
     internal class Video : IVideo
     {
         private readonly Page _page;
-        private readonly TaskCompletionSource<string> _pathTask = new TaskCompletionSource<string>();
+        private readonly TaskCompletionSource<Artifact> _artifactTcs = new();
 
-        public Video(Page page) => _page = page;
+        public Video(Page page)
+        {
+            _page = page;
+
+            page.Close += (_, __) => _artifactTcs.TrySetCanceled();
+            page.Crash += (_, __) => _artifactTcs.TrySetCanceled();
+        }
 
         /// <inheritdoc/>
-        public Task DeleteAsync() => throw new NotImplementedException();
+        public async Task DeleteAsync()
+        {
+            var artifact = await _artifactTcs.Task.ConfigureAwait(false);
+            await artifact.DeleteAsync().ConfigureAwait(false);
+        }
 
         /// <inheritdoc/>
-        public Task<string> PathAsync() => _pathTask.Task;
+        public async Task<string> PathAsync()
+        {
+            var artifact = await _artifactTcs.Task.ConfigureAwait(false);
+            return artifact.AbsolutePath;
+        }
 
         /// <inheritdoc/>
-        public Task SaveAsAsync(string path) => throw new NotImplementedException();
+        public async Task SaveAsAsync(string path)
+        {
+            var artifact = await _artifactTcs.Task.ConfigureAwait(false);
+            await artifact.SaveAsAsync(path).ConfigureAwait(false);
+        }
 
-        internal void SetRelativePath(string relativePath)
-            => _pathTask.TrySetResult(Path.Combine(_page.Context.VideoPath, relativePath));
+        internal void ArtifactReady(Artifact artifact) => _artifactTcs.TrySetResult(artifact);
     }
 }

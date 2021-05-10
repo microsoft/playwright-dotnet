@@ -157,7 +157,10 @@ namespace Microsoft.Playwright.Transport.Channels
                     Download?.Invoke(this, serverParams?.ToObject<PageDownloadEvent>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "video":
-                    Video?.Invoke(this, new VideoEventArgs());
+                    Video?.Invoke(this, new VideoEventArgs()
+                    {
+                        Artifact = serverParams?.GetProperty("artifact").ToObject<ArtifactChannel>(Connection.GetDefaultJsonSerializerOptions()).Object,
+                    });
                     break;
                 case "worker":
                     Worker?.Invoke(

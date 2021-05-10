@@ -13,10 +13,11 @@ namespace Microsoft.Playwright
         private readonly Connection _connection;
         private readonly ArtifactChannel _channel;
 
-        internal Artifact(IChannelOwner parent, string guid) : base(parent, guid)
+        internal Artifact(IChannelOwner parent, string guid, ArtifactInitializer initializer) : base(parent, guid)
         {
             _connection = parent.Connection;
             _channel = new ArtifactChannel(guid, parent.Connection, this);
+            AbsolutePath = initializer.AbsolutePath;
         }
 
         /// <inheritdoc/>
@@ -27,6 +28,8 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc/>
         IChannel<Artifact> IChannelOwner<Artifact>.Channel => _channel;
+
+        internal string AbsolutePath { get; }
 
         public Task<string> PathAfterFinishedAsync() => _channel.PathAfterFinishedAsync();
 

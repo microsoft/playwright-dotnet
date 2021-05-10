@@ -11,7 +11,6 @@ using Xunit.Abstractions;
 
 namespace Microsoft.Playwright.Tests
 {
-    /*
     ///<playwright-file>screencast.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class ScreencastTests : PlaywrightSharpBrowserBaseTest
@@ -143,5 +142,4 @@ namespace Microsoft.Playwright.Tests
             Assert.NotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
         }
     }
-    */
 }
