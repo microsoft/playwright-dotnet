@@ -95,7 +95,7 @@ namespace Microsoft.Playwright
 
         internal bool IsChromium => _initializer.IsChromium;
 
-        internal string VideoPath { get; set; }
+        internal bool RecordVideo { get; set; }
 
         /// <inheritdoc/>
         public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => Channel.AddCookiesAsync(cookies);
@@ -147,7 +147,8 @@ namespace Microsoft.Playwright
         public Task<IReadOnlyCollection<BrowserContextCookiesResult>> GetCookiesAsync(params string[] urls) => Channel.GetCookiesAsync(urls);
 
         /// <inheritdoc/>
-        public Task ExposeBindingAsync(string name, Action callback, bool? handle = null) => throw new NotImplementedException();
+        public Task ExposeBindingAsync(string name, Action callback, bool? handle = null)
+            => ExposeBindingAsync(name, _ => callback());
 
         /// <inheritdoc/>
         public Task ExposeBindingAsync(string name, Action<BindingSource> callback)
@@ -163,7 +164,7 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc/>
         public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback)
-            => ExposeBindingAsync(name, (Delegate)callback, true);
+            => ExposeBindingAsync(name, callback, true);
 
         /// <inheritdoc/>
         public Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback)
@@ -393,7 +394,7 @@ namespace Microsoft.Playwright
             PagesList.Add(page);
             Page?.Invoke(this, page);
 
-            if (page.Opener != null && !page.Opener.IsClosed)
+            if (page.Opener?.IsClosed == false)
             {
                 page.Opener.NotifyPopup(page);
             }
