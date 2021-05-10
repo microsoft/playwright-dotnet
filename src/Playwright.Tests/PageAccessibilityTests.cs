@@ -6,6 +6,7 @@ using KellermanSoftware.CompareNetObjects;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.Attributes;
 using Microsoft.Playwright.Tests.BaseTests;
+using Microsoft.Playwright.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -390,7 +391,7 @@ namespace Microsoft.Playwright.Tests
                     Role = "textbox",
                     Name = "",
                     Value = "Edit this image: ",
-                    Multiline = TestConstants.IsChromium ? true : null,
+                    Multiline = TestConstants.IsChromium && Browser.GetMajorVersion() >= 92 ? true : null,
                     Children = new List<AccessibilitySnapshotResult>
                     {
                         new AccessibilitySnapshotResult
