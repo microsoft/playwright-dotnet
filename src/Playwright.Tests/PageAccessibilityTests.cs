@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KellermanSoftware.CompareNetObjects;
@@ -372,7 +373,7 @@ namespace Microsoft.Playwright.Tests
                     Role = "textbox",
                     Name = "",
                     Value = "Edit this image: my fake image",
-                    Children = new AccessibilitySnapshotResult[]
+                    Children = new List<AccessibilitySnapshotResult>
                     {
                         new AccessibilitySnapshotResult
                         {
@@ -390,7 +391,7 @@ namespace Microsoft.Playwright.Tests
                     Name = "",
                     Value = "Edit this image: ",
                     Multiline = TestConstants.IsChromium ? true : null,
-                    Children = new AccessibilitySnapshotResult[]
+                    Children = new List<AccessibilitySnapshotResult>
                     {
                         new AccessibilitySnapshotResult
                         {
@@ -406,7 +407,9 @@ namespace Microsoft.Playwright.Tests
                 };
             }
 
-            Assert.Equal(node, (await Page.Accessibility.SnapshotAsync()).Children.First());
+            var compareLogic = new CompareLogic();
+            var result = compareLogic.Compare(node, (await Page.Accessibility.SnapshotAsync()).Children.First());
+            Assert.True(result.AreEqual, result.DifferencesString);
         }
 
 
