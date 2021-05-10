@@ -235,7 +235,7 @@ namespace Microsoft.Playwright.Tests
             var download = downloadTask.Result;
             await download.DeleteAsync();
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => download.SaveAsAsync(userPath));
-            Assert.Contains("File already deleted. Save before deleting.", exception.Message);
+            Assert.Contains("Target page, context or browser has been closed", exception.Message);
         }
 
         [PlaywrightTest("download.spec.ts", "should error when saving after deletion when connected remotely")]
