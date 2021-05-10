@@ -10,7 +10,6 @@ using Xunit.Abstractions;
 
 namespace Microsoft.Playwright.Tests
 {
-    /*
     ///<playwright-file>download.spec.ts</playwright-file>
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class DownloadTests : PlaywrightSharpPageBaseTest
@@ -236,7 +235,7 @@ namespace Microsoft.Playwright.Tests
             var download = downloadTask.Result;
             await download.DeleteAsync();
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => download.SaveAsAsync(userPath));
-            Assert.Contains("Download already deleted. Save before deleting.", exception.Message);
+            Assert.Contains("File already deleted. Save before deleting.", exception.Message);
         }
 
         [PlaywrightTest("download.spec.ts", "should error when saving after deletion when connected remotely")]
@@ -450,5 +449,5 @@ namespace Microsoft.Playwright.Tests
             Assert.False(new FileInfo(path2).Exists);
             Assert.False(new FileInfo(Path.Combine(path1, "..")).Exists);
         }
-    }*/
+    }
 }

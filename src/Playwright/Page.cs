@@ -54,7 +54,7 @@ namespace Microsoft.Playwright
         private List<RouteSetting> _routes = new();
         private EventHandler<IFileChooser> _fileChooserEventHandler;
         private bool _fileChooserIntercepted;
-        private IVideo _video;
+        private Video _video;
         private float _defaultNavigationTimeout;
         private float _defaultTimeout;
 
@@ -98,16 +98,10 @@ namespace Microsoft.Playwright
             _channel.Dialog += (_, e) => Dialog?.Invoke(this, e);
             _channel.Console += (_, e) => Console?.Invoke(this, e);
             _channel.DOMContentLoaded += (_, e) => DOMContentLoaded?.Invoke(this, this);
-            _channel.Download += (_, e) => Download?.Invoke(this, e);
+            _channel.Download += (_, e) => Download?.Invoke(this, new Download(e.Url, e.SuggestedFilename, e.Artifact.Object));
             _channel.PageError += (_, e) => PageError?.Invoke(this, e.ToString());
             _channel.Load += (_, e) => Load?.Invoke(this, this);
-            _channel.Video += (_, e) =>
-            {
-                if (Video != null)
-                {
-                    ((Video)Video).SetRelativePath(e.RelativePath);
-                }
-            };
+            _channel.Video += (_, e) => ForceVideo().ArtifactReady(e.Artifact);
 
             _channel.FileChooser += (_, e) => _fileChooserEventHandler?.Invoke(this, new FileChooser(this, e.Element.Object, e.IsMultiple));
             _channel.Worker += (_, e) =>
@@ -301,19 +295,14 @@ namespace Microsoft.Playwright
         {
             get
             {
-                if (_video != null)
-                {
-                    return _video;
-                }
-
-                if (string.IsNullOrEmpty(Context.VideoPath))
+                if (!Context.RecordVideo)
                 {
                     return null;
                 }
 
-                _video = new Video(this);
-                return _video;
+                return ForceVideo();
             }
+            set => _video = value as Video;
         }
 
         internal BrowserContext OwnedContext { get; set; }
@@ -1080,5 +1069,7 @@ namespace Microsoft.Playwright
 
             return _channel.ExposeBindingAsync(name, handle);
         }
+
+        private Video ForceVideo() => _video ??= new Video(this);
     }
 }

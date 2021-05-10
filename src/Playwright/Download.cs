@@ -13,73 +13,58 @@ namespace Microsoft.Playwright
     /// All the downloaded files belonging to the browser context are deleted when the browser context is closed.All downloaded files are deleted when the browser closes.
     /// Download event is emitted once the download starts.
     /// </summary>
-    public class Download : ChannelOwnerBase, IChannelOwner<Download>, IDownload
+    public class Download : IDownload
     {
-        private readonly Connection _connection;
-        private readonly DownloadChannel _channel;
-        private readonly DownloadInitializer _initializer;
+        private readonly Artifact _artifact;
 
-        internal Download(IChannelOwner parent, string guid, DownloadInitializer initializer) : base(parent, guid)
+        internal Download(string url, string suggestedFilename, Artifact artifact)
         {
-            _connection = parent.Connection;
-            _channel = new DownloadChannel(guid, parent.Connection, this);
-            _initializer = initializer;
+            Url = url;
+            SuggestedFilename = suggestedFilename;
+            _artifact = artifact;
         }
 
         /// <summary>
         /// Returns downloaded url.
         /// </summary>
-        public string Url => _initializer.Url;
+        public string Url { get; }
 
         /// <summary>
         /// Returns suggested filename for this download.
         /// It is typically computed by the browser from the Content-Disposition response header or the download attribute. See the spec on whatwg.
         /// Different browsers can use different logic for computing it.
         /// </summary>
-        public string SuggestedFilename => _initializer.SuggestedFilename;
-
-        /// <inheritdoc/>
-        Connection IChannelOwner.Connection => _connection;
-
-        /// <inheritdoc/>
-        ChannelBase IChannelOwner.Channel => _channel;
-
-        /// <inheritdoc/>
-        IChannel<Download> IChannelOwner<Download>.Channel => _channel;
+        public string SuggestedFilename { get; }
 
         /// <summary>
         /// Returns path to the downloaded file in case of successful download.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the download file path is resolved, yielding the path.</returns>
-        public Task<string> PathAsync() => _channel.PathAsync();
+        public Task<string> PathAsync() => _artifact.PathAfterFinishedAsync();
 
         /// <summary>
         /// Returns download error if any.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when failure is resolved, yielding the faulire.</returns>
-        public Task<string> FailureAsync() => _channel.GetFailureAsync();
+        public Task<string> FailureAsync() => _artifact.FailureAsync();
 
         /// <summary>
         /// Deletes the downloaded file.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the file is removed.</returns>
-        public Task DeleteAsync() => _channel.DeleteAsync();
+        public Task DeleteAsync() => _artifact.DeleteAsync();
 
         /// <summary>
         /// Saves the download to a user-specified path.
         /// </summary>
         /// <param name="path">Path where the download should be saved.</param>
         /// <returns>A <see cref="Task"/> that completes when the file is saved.</returns>
-        public Task SaveAsAsync(string path) => _channel.SaveAsAsync(path);
+        public Task SaveAsAsync(string path) => _artifact.SaveAsAsync(path);
 
         /// <summary>
         /// Returns readable stream for current download or null if download failed.
         /// </summary>
         /// <returns>A <see cref="Task"/> that completes when the stream is created, yielding the stream.</returns>
-        public async Task<Stream> CreateReadStreamAsync()
-        {
-            string fileName = await PathAsync().ConfigureAwait(false);
-            return string.IsNullOrEmpty(fileName) ? null : new FileStream(fileName, FileMode.Open);
-        }
+        public Task<Stream> CreateReadStreamAsync() => _artifact.CreateReadStreamAsync();
     }
 }

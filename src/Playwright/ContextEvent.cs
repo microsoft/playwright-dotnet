@@ -3,7 +3,7 @@ using System;
 namespace Microsoft.Playwright
 {
     /// <summary>
-    /// Context events. See <see cref="IBrowserContext.WaitForEventAsync{T}(PlaywrightEvent{T}, float?)"/>.
+    /// Context events. See <see cref="IBrowserContext.WaitForEventAsync{T}(PlaywrightEvent{T}, Func{T, bool}, float?)"/>.
     /// </summary>
     public static class ContextEvent
     {
