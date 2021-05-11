@@ -189,7 +189,7 @@ namespace Microsoft.Playwright
                 options.IgnoreHTTPSErrors,
                 options.BypassCSP,
                 options.Viewport,
-                screenSize: null,
+                options.ScreenSize,
                 options.UserAgent,
                 options.DeviceScaleFactor,
                 options.IsMobile,
@@ -203,10 +203,42 @@ namespace Microsoft.Playwright
                 options.Offline,
                 options.HttpCredentials,
                 options.ColorScheme,
-                recordHarPath: null,
-                recordHarOmitContent: null,
-                recordVideoDir: null,
-                recordVideoSize: null,
+                options.RecordHarPath,
+                options.RecordHarOmitContent,
+                options.RecordVideoDir,
+                options.RecordVideoSize,
+                options.Proxy,
+                options.StorageState,
+                options.StorageStatePath);
+        }
+
+        /// <inheritdoc/>
+        public Task<IPage> NewPageAsync(BrowserContextOptions options)
+        {
+            options ??= new BrowserContextOptions();
+            return NewPageAsync(
+                options.AcceptDownloads,
+                options.IgnoreHTTPSErrors,
+                options.BypassCSP,
+                options.Viewport,
+                options.ScreenSize,
+                options.UserAgent,
+                options.DeviceScaleFactor,
+                options.IsMobile,
+                options.HasTouch,
+                options.JavaScriptEnabled,
+                options.TimezoneId,
+                options.Geolocation,
+                options.Locale,
+                options.Permissions,
+                options.ExtraHTTPHeaders,
+                options.Offline,
+                options.HttpCredentials,
+                options.ColorScheme,
+                options.RecordHarPath,
+                options.RecordHarOmitContent,
+                options.RecordVideoDir,
+                options.RecordVideoSize,
                 options.Proxy,
                 options.StorageState,
                 options.StorageStatePath);
