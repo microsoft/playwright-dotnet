@@ -10,8 +10,6 @@ namespace Microsoft.Playwright.Tests
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class BrowserContextDeviceTests : PlaywrightSharpBrowserBaseTest
     {
-        private readonly BrowserContextOptions _iPhone = TestConstants.iPhone6;
-
         /// <inheritdoc/>
         public BrowserContextDeviceTests(ITestOutputHelper output) : base(output)
         {
@@ -21,7 +19,7 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWork()
         {
-            await using var context = await Browser.NewContextAsync(_iPhone);
+            await using var context = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
             var page = await context.NewPageAsync();
 
             await page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
@@ -33,7 +31,7 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldSupportClicking()
         {
-            await using var context = await Browser.NewContextAsync(_iPhone);
+            await using var context = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
             var page = await context.NewPageAsync();
 
             await page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -21,6 +22,7 @@ namespace Microsoft.Playwright
         private readonly PlaywrightInitializer _initializer;
         private readonly PlaywrightChannel _channel;
         private readonly Connection _connection;
+        private readonly Dictionary<string, BrowserContextOptions> _devices = new(StringComparer.InvariantCultureIgnoreCase);
 
         internal Playwright(IChannelOwner parent, string guid, PlaywrightInitializer initializer, ILoggerFactory loggerFactory)
              : base(parent, guid)
@@ -29,7 +31,13 @@ namespace Microsoft.Playwright
             _initializer = initializer;
             _channel = new PlaywrightChannel(guid, parent.Connection, this);
             _loggerFactory = loggerFactory;
-            _ = (Selectors as Microsoft.Playwright.Selectors).AddChannelAsync(initializer.Selectors.Object);
+
+            foreach (var entry in initializer.DeviceDescriptors)
+            {
+                _devices[entry.Name] = entry.Descriptor;
+            }
+
+            _ = (Selectors as Selectors).AddChannelAsync(initializer.Selectors.Object);
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
@@ -55,6 +63,9 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc/>
         public ISelectors Selectors { get => Microsoft.Playwright.Selectors.SharedSelectors; set => throw new NotSupportedException(); }
+
+        /// <inheritdoc/>
+        public IReadOnlyDictionary<string, BrowserContextOptions> Devices => _devices;
 
         internal Connection Connection { get; set; }
 

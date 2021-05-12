@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.Attributes;
 using Microsoft.Playwright.Tests.BaseTests;
@@ -10,9 +10,6 @@ namespace Microsoft.Playwright.Tests
     [Collection(TestConstants.TestFixtureBrowserCollectionName)]
     public class BrowserContextViewportMobileTests : PlaywrightSharpBrowserBaseTest
     {
-        private readonly BrowserContextOptions _iPhone = TestConstants.iPhone6;
-        private readonly BrowserContextOptions _iPhoneLandscape = TestConstants.iPhone6Landscape;
-
         /// <inheritdoc/>
         public BrowserContextViewportMobileTests(ITestOutputHelper output) : base(output)
         {
@@ -22,7 +19,7 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldSupportMobileEmulation()
         {
-            await using var context = await Browser.NewContextAsync(_iPhone);
+            await using var context = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
             var page = await context.NewPageAsync();
 
             await page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
@@ -49,7 +46,7 @@ namespace Microsoft.Playwright.Tests
               return promise;
             }";
 
-            await using var context = await Browser.NewContextAsync(_iPhone);
+            await using var context = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
             Assert.True(await page.EvaluateAsync<bool>("'ontouchstart' in window"));
@@ -60,7 +57,7 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldBeDetectableByModernizr()
         {
-            await using var context = await Browser.NewContextAsync(_iPhone);
+            await using var context = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
             var page = await context.NewPageAsync();
             await page.GoToAsync(TestConstants.ServerUrl + "/detect-touch.html");
             Assert.Equal("YES", await page.EvaluateAsync<string>("document.body.textContent.trim()"));
@@ -90,12 +87,12 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldSupportLandscapeEmulation()
         {
-            await using var context1 = await Browser.NewContextAsync(_iPhone);
+            await using var context1 = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
             var page1 = await context1.NewPageAsync();
             await page1.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
             Assert.False(await page1.EvaluateAsync<bool>("() => matchMedia('(orientation: landscape)').matches"));
 
-            await using var context2 = await Browser.NewContextAsync(_iPhoneLandscape);
+            await using var context2 = await Browser.NewContextAsync(Playwright.Devices["iPhone 6 landscape"]);
             var page2 = await context2.NewPageAsync();
             await page2.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
             Assert.True(await page2.EvaluateAsync<bool>("() => matchMedia('(orientation: landscape)').matches"));

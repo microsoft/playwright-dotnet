@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -305,8 +305,8 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions
             {
-                Viewport = TestConstants.iPhone6.Viewport,
-                HasTouch = TestConstants.iPhone6.HasTouch,
+                Viewport = Playwright.Devices["iPhone 6"].Viewport,
+                HasTouch = Playwright.Devices["iPhone 6"].HasTouch,
             });
 
             var page = await context.NewPageAsync();
