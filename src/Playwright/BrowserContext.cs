@@ -277,32 +277,23 @@ namespace Microsoft.Playwright
             => UnrouteAsync(null, null, urlFunc, handler);
 
         /// <inheritdoc/>
-        public async Task<object> WaitForEventAsync(string @event, float? timeout = null)
-        => @event switch
+        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> @event, Func<T, bool> predicate, float? timeout)
         {
-            ContextEvent.PageEventName => await WaitForEventAsync(ContextEvent.Page, null, timeout).ConfigureAwait(false),
-            ContextEvent.CloseEventName => await WaitForEventAsync(ContextEvent.Close, null, timeout).ConfigureAwait(false),
-            _ => throw new InvalidOperationException(),
-        };
-
-        /// <inheritdoc/>
-        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<T, bool> predicate, float? timeout)
-        {
-            if (playwrightEvent == null)
+            if (@event == null)
             {
-                throw new ArgumentException("Page event is required", nameof(playwrightEvent));
+                throw new ArgumentException("Page event is required", nameof(@event));
             }
 
             timeout ??= DefaultTimeout;
             using var waiter = new Waiter();
-            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{playwrightEvent.Name}\"");
+            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{@event.Name}\"");
 
-            if (playwrightEvent.Name != ContextEvent.Close.Name)
+            if (@event.Name != ContextEvent.Close.Name)
             {
                 waiter.RejectOnEvent<IBrowserContext>(this, ContextEvent.Close.Name, new TargetClosedException("Context closed"));
             }
 
-            return await waiter.WaitForEventAsync<T>(this, playwrightEvent.Name, null).ConfigureAwait(false);
+            return await waiter.WaitForEventAsync<T>(this, @event.Name, null).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>

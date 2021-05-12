@@ -59,34 +59,7 @@ namespace Microsoft.Playwright
         public bool IsClosed { get; internal set; }
 
         /// <inheritdoc/>
-        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> webSocketEvent, Func<T, bool> predicate = null, float? timeout = null)
-        {
-            if (webSocketEvent == null)
-            {
-                throw new ArgumentException("WebSocket event is required", nameof(webSocketEvent));
-            }
-
-            timeout ??= _page.DefaultTimeout;
-            using var waiter = new Waiter();
-            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{typeof(T)}\"");
-
-            if (webSocketEvent.Name != WebSocketEvent.SocketError.Name)
-            {
-                waiter.RejectOnEvent<string>(this, WebSocketEvent.SocketError.Name, new PlaywrightSharpException("Socket error"));
-            }
-
-            if (webSocketEvent.Name != WebSocketEvent.Close.Name)
-            {
-                waiter.RejectOnEvent<IWebSocket>(this, WebSocketEvent.Close.Name, new PlaywrightSharpException("Socket closed"));
-            }
-
-            waiter.RejectOnEvent<IPage>(_page, PageEvent.Close.Name, new TargetClosedException("Page closed"));
-
-            return await waiter.WaitForEventAsync(this, webSocketEvent.Name, predicate).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc/>
-        public async Task<object> WaitForEventAsync(string @event, float? timeout = null)
+        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> @event, Func<T, bool> predicate = null, float? timeout = null)
         {
             if (@event == null)
             {
@@ -95,21 +68,21 @@ namespace Microsoft.Playwright
 
             timeout ??= _page.DefaultTimeout;
             using var waiter = new Waiter();
-            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{@event}\"");
+            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{typeof(T)}\"");
 
-            if (@event != WebSocketEvent.SocketError.Name)
+            if (@event.Name != WebSocketEvent.SocketError.Name)
             {
                 waiter.RejectOnEvent<string>(this, WebSocketEvent.SocketError.Name, new PlaywrightSharpException("Socket error"));
             }
 
-            if (@event != WebSocketEvent.Close.Name)
+            if (@event.Name != WebSocketEvent.Close.Name)
             {
-                waiter.RejectOnEvent<EventArgs>(this, WebSocketEvent.Close.Name, new PlaywrightSharpException("Socket closed"));
+                waiter.RejectOnEvent<IWebSocket>(this, WebSocketEvent.Close.Name, new PlaywrightSharpException("Socket closed"));
             }
 
-            waiter.RejectOnEvent<EventArgs>(_page, PageEvent.Close.Name, new TargetClosedException("Page closed"));
-            await waiter.WaitForEventAsync(this, @event).ConfigureAwait(false);
-            return this;
+            waiter.RejectOnEvent<IPage>(_page, PageEvent.Close.Name, new TargetClosedException("Page closed"));
+
+            return await waiter.WaitForEventAsync(this, @event.Name, predicate).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>

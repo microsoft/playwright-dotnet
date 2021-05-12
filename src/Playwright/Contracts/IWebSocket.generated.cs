@@ -74,13 +74,14 @@ namespace Microsoft.Playwright
         /// closed before the event is fired. Returns the event data value.
         /// </para>
         /// </summary>
-        /// <param name="event">Event name, same one would pass into <c>webSocket.on(event)</c>.</param>
+        /// <param name="event">WebSocket context event.</param>
+        /// <param name="predicate">Receives the event data and resolves to truthy value when the waiting should resolve.</param>
         /// <param name="timeout">
         /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
         /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
         /// </param>
-        Task<object> WaitForEventAsync(string @event, float? timeout = default);
+        Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> @event, Func<T, bool> predicate = default, float? timeout = default);
 
         /// <summary>
         /// <para>

@@ -437,53 +437,28 @@ namespace Microsoft.Playwright
             => MainFrame.WaitForFunctionAsync(true, expression, arg, pollingInterval, timeout);
 
         /// <inheritdoc />
-        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<T, bool> predicate, float? timeout)
+        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> @event, Func<T, bool> predicate, float? timeout)
         {
-            if (pageEvent == null)
-            {
-                throw new ArgumentException("Page event is required", nameof(pageEvent));
-            }
-
-            timeout ??= _defaultTimeout;
-            using var waiter = new Waiter();
-            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{typeof(T)}\"");
-
-            if (pageEvent.Name != PageEvent.Crash.Name)
-            {
-                waiter.RejectOnEvent<IPage>(this, PageEvent.Crash.Name, new TargetClosedException("Page crashed"));
-            }
-
-            if (pageEvent.Name != PageEvent.Close.Name)
-            {
-                waiter.RejectOnEvent<IPage>(this, PageEvent.Close.Name, new TargetClosedException("Page closed"));
-            }
-
-            return await waiter.WaitForEventAsync(this, pageEvent.Name, predicate).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc />
-        public async Task<object> WaitForEventAsync(string @event, float? timeout)
-        {
-            if (string.IsNullOrEmpty(@event))
+            if (@event == null)
             {
                 throw new ArgumentException("Page event is required", nameof(@event));
             }
 
             timeout ??= _defaultTimeout;
             using var waiter = new Waiter();
-            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{@event}\"");
+            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{typeof(T)}\"");
 
-            if (@event != PageEvent.Crash.Name)
+            if (@event.Name != PageEvent.Crash.Name)
             {
-                waiter.RejectOnEvent<EventArgs>(this, PageEvent.Crash.Name, new TargetClosedException("Page crashed"));
+                waiter.RejectOnEvent<IPage>(this, PageEvent.Crash.Name, new TargetClosedException("Page crashed"));
             }
 
-            if (@event != PageEvent.Close.Name)
+            if (@event.Name != PageEvent.Close.Name)
             {
-                waiter.RejectOnEvent<EventArgs>(this, PageEvent.Close.Name, new TargetClosedException("Page closed"));
+                waiter.RejectOnEvent<IPage>(this, PageEvent.Close.Name, new TargetClosedException("Page closed"));
             }
 
-            return await waiter.WaitForEventAsync(this, @event).ConfigureAwait(false);
+            return await waiter.WaitForEventAsync(this, @event.Name, predicate).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
