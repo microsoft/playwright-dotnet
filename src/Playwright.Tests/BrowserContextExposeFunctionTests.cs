@@ -116,5 +116,25 @@ namespace Microsoft.Playwright.Tests
             Assert.Equal(42, await target.EvaluateAsync<int>("x => x.foo"));
             Assert.Equal(17, result);
         }
+
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ExposeBindingHandleLikeInDocumentation()
+        {
+            var result = new TaskCompletionSource<string>();
+            var page = await Context.NewPageAsync();
+            await Context.ExposeBindingAsync("clicked", async (BindingSource _, IJSHandle t) =>
+            {
+                return result.TrySetResult(await t.AsElement.TextContentAsync());
+            });
+
+            await page.SetContentAsync("<script>\n" +
+             "  document.addEventListener('click', event => window.clicked(event.target));\n" +
+             "</script>\n" +
+             "<div>Click me</div>\n" +
+             "<div>Or click me</div>\n");
+
+            await page.ClickAsync("div");
+            Assert.Equal("Click me", await result.Task);
+        }
     }
 }
