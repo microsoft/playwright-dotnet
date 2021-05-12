@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.Attributes;
@@ -138,7 +138,7 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWaitForStablePosition()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
             await Page.EvalOnSelectorAsync("button", @"button => {
                 button.style.transition = 'margin 10000ms linear 0s';

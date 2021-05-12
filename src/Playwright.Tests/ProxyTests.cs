@@ -28,7 +28,7 @@ namespace Microsoft.Playwright.Tests
             await using var browser = await BrowserType.LaunchAsync(proxy: proxy);
 
             var page = await browser.NewPageAsync();
-            await page.GoToAsync("http://non-existent.com/target.html");
+            await page.GotoAsync("http://non-existent.com/target.html");
 
             Assert.Equal("Served by the proxy", await page.TitleAsync());
         }
@@ -60,7 +60,7 @@ namespace Microsoft.Playwright.Tests
             await using var browser = await BrowserType.LaunchAsync(proxy: proxy);
 
             var page = await browser.NewPageAsync();
-            await page.GoToAsync("http://non-existent.com/target.html");
+            await page.GotoAsync("http://non-existent.com/target.html");
 
             Assert.Equal("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:secret")), await page.TitleAsync());
         }
@@ -80,13 +80,13 @@ namespace Microsoft.Playwright.Tests
             await using var browser = await BrowserType.LaunchAsync(proxy: proxy);
 
             var page = await browser.NewPageAsync();
-            await page.GoToAsync("http://non-existent.com/target.html");
+            await page.GotoAsync("http://non-existent.com/target.html");
 
             Assert.Equal("Served by the proxy", await page.TitleAsync());
 
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GoToAsync("http://non-existent1.com/target.html"));
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GoToAsync("http://sub.non-existent2.com/target.html"));
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GoToAsync("http://foo.zone/target.html"));
+            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GotoAsync("http://non-existent1.com/target.html"));
+            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GotoAsync("http://sub.non-existent2.com/target.html"));
+            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GotoAsync("http://foo.zone/target.html"));
         }
     }
 }

@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests
         {
             /*
             await Page.Coverage.StartCSSCoverageAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/csscoverage/simple.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/csscoverage/simple.html");
             var coverage = await Page.Coverage.StopCSSCoverageAsync();
             Assert.Single(coverage);
             Assert.Contains("/csscoverage/simple.html", coverage[0].Url);
@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
         {
             /*
             await Page.Coverage.StartCSSCoverageAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/csscoverage/sourceurl.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/csscoverage/sourceurl.html");
             var coverage = await Page.Coverage.StopCSSCoverageAsync();
             Assert.Single(coverage);
             Assert.Equal("nicename.css", coverage[0].Url);
@@ -60,7 +60,7 @@ namespace Microsoft.Playwright.Tests
         {
             /*
             await Page.Coverage.StartCSSCoverageAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/csscoverage/multiple.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/csscoverage/multiple.html");
             var coverage = await Page.Coverage.StopCSSCoverageAsync();
             Assert.Equal(2, coverage.Length);
             var orderedList = coverage.OrderBy(c => c.Url).ToArray();
@@ -75,7 +75,7 @@ namespace Microsoft.Playwright.Tests
         {
             /*
             await Page.Coverage.StartCSSCoverageAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/csscoverage/unused.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/csscoverage/unused.html");
             var coverage = await Page.Coverage.StopCSSCoverageAsync();
             Assert.Single(coverage);
             var entry = coverage[0];
@@ -90,7 +90,7 @@ namespace Microsoft.Playwright.Tests
         {
             /*
             await Page.Coverage.StartCSSCoverageAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/csscoverage/media.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/csscoverage/media.html");
             var coverage = await Page.Coverage.StopCSSCoverageAsync();
             Assert.Single(coverage);
             var entry = coverage[0];
@@ -128,7 +128,7 @@ namespace Microsoft.Playwright.Tests
               }
             ]";
             await Page.Coverage.StartCSSCoverageAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/csscoverage/involved.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/csscoverage/involved.html");
             var coverage = await Page.Coverage.StopCSSCoverageAsync();
             Assert.Equal(
                 TestUtils.CompressText(involved),
@@ -157,8 +157,8 @@ namespace Microsoft.Playwright.Tests
         {
             /*
             await Page.Coverage.StartCSSCoverageAsync(false);
-            await Page.GoToAsync(TestConstants.ServerUrl + "/csscoverage/multiple.html");
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.ServerUrl + "/csscoverage/multiple.html");
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var coverage = await Page.Coverage.StopCSSCoverageAsync();
             Assert.Equal(2, coverage.Length);
             */
@@ -170,8 +170,8 @@ namespace Microsoft.Playwright.Tests
         {
             /*
             await Page.Coverage.StartCSSCoverageAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/csscoverage/multiple.html");
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.ServerUrl + "/csscoverage/multiple.html");
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var coverage = await Page.Coverage.StopCSSCoverageAsync();
             Assert.Empty(coverage);
             */

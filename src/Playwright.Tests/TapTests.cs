@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  * 
  * Copyright (c) Microsoft Corporation.
@@ -127,7 +127,7 @@ namespace Microsoft.Playwright.Tests
         {
             var requestResponse = new TaskCompletionSource<bool>();
             string route = "/intercept-this.html";
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Server.SetRoute(route, _ =>
             {
                 requestResponse.SetResult(true);

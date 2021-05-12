@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.Attributes;
@@ -22,7 +22,7 @@ namespace Microsoft.Playwright.Tests
         {
             var (error, _) = await TaskUtils.WhenAll(
                 Page.WaitForEventAsync(PageEvent.PageError),
-                Page.GoToAsync(TestConstants.ServerUrl + "/error.html")
+                Page.GotoAsync(TestConstants.ServerUrl + "/error.html")
             );
 
             Assert.Contains("Error", error);
@@ -43,7 +43,7 @@ namespace Microsoft.Playwright.Tests
         {
             var (error, _) = await TaskUtils.WhenAll(
                 Page.WaitForEventAsync(PageEvent.PageError),
-                Page.GoToAsync(TestConstants.ServerUrl + "/error.html"));
+                Page.GotoAsync(TestConstants.ServerUrl + "/error.html"));
 
             Assert.Contains("myscript.js", error);
         }

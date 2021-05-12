@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,7 +26,7 @@ namespace Microsoft.Playwright.Tests
         {
             var (request, _) = await TaskUtils.WhenAll(
                 Page.WaitForEventAsync(PageEvent.RequestFinished),
-                Page.GoToAsync(TestConstants.EmptyPage));
+                Page.GotoAsync(TestConstants.EmptyPage));
 
             var timing = request.Timing;
             Assert.True(timing.DomainLookupStart >= -1);
@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
             var requests = new List<IRequest>();
 
             Page.RequestFinished += (_, e) => requests.Add(e);
-            await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
 
             Assert.Equal(2, requests.Count);
 
@@ -82,7 +82,7 @@ namespace Microsoft.Playwright.Tests
             var page = await Browser.NewPageAsync(ignoreHTTPSErrors: true);
             var (request, _) = await TaskUtils.WhenAll(
                 page.WaitForEventAsync(PageEvent.RequestFinished),
-                page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html"));
+                page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html"));
 
             var timing = request.Timing;
             if (!(TestConstants.IsWebKit && TestConstants.IsMacOSX))
@@ -109,7 +109,7 @@ namespace Microsoft.Playwright.Tests
             var responses = new List<IResponse>();
 
             Page.Response += (_, e) => responses.Add(e);
-            await Page.GoToAsync(TestConstants.ServerUrl + "/foo.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/foo.html");
 
             // This is different on purpose, promises work different in TS.
             await responses[1].FinishedAsync();

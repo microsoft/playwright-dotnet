@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -23,7 +23,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForDisplayNoneToBeGone()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "b => b.style.display = 'none'");
             var exception = await Assert.ThrowsAsync<TimeoutException>(()
                 => Page.ClickAsync("button", timeout: 5000));
@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForVisbilityHiddenToBeGone()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "b => b.style.visibility = 'hidden'");
             var clickTask = Page.ClickAsync("button", timeout: 5000);
             var exception = await Assert.ThrowsAsync<TimeoutException>(()

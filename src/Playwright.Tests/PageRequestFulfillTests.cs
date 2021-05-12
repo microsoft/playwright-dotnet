@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -35,7 +35,7 @@ namespace Microsoft.Playwright.Tests
                     contentType: "text/html",
                     body: "Yo, page!");
             });
-            var response = await Page.GoToAsync(TestConstants.EmptyPage);
+            var response = await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal("bar", response.GetHeaderValue("foo"));
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.Tests
             {
                 route.FulfillAsync(HttpStatusCode.UpgradeRequired, "Yo, page!");
             });
-            var response = await Page.GoToAsync(TestConstants.EmptyPage);
+            var response = await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal(HttpStatusCode.UpgradeRequired, response.StatusCode);
             Assert.Equal("Upgrade Required", response.StatusText);
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
@@ -123,7 +123,7 @@ namespace Microsoft.Playwright.Tests
                     body: "Yo, page!");
             });
 
-            var response = await Page.GoToAsync(TestConstants.EmptyPage);
+            var response = await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("true", response.GetHeaderValue("foo"));
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
@@ -133,10 +133,10 @@ namespace Microsoft.Playwright.Tests
         [Fact(Skip = "Flacky with the ASP.NET server")]
         public async Task ShouldNotModifyTheHeadersSentToTheServer()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var interceptedRequests = new List<Dictionary<string, string>>();
 
-            await Page.GoToAsync(TestConstants.ServerUrl + "/unused");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/unused");
 
             Server.SetRoute("/something", ctx =>
             {
@@ -175,7 +175,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeTheOriginHeader()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             IRequest interceptedRequest = null;
 
             await Page.RouteAsync(TestConstants.CrossProcessUrl + "/something", (route) =>

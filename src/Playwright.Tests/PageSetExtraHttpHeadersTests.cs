@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.BaseTests;
@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var headerTask = Server.WaitForRequest("/empty.html", request => request.Headers["Foo"]);
-            await TaskUtils.WhenAll(Page.GoToAsync(TestConstants.EmptyPage), headerTask);
+            await TaskUtils.WhenAll(Page.GotoAsync(TestConstants.EmptyPage), headerTask);
 
             Assert.Equal("Bar", headerTask.Result);
         }
@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var headerTask = Server.WaitForRequest("/empty.html", request => request.Headers["Foo"]);
-            await TaskUtils.WhenAll(Page.GoToAsync(TestConstants.ServerUrl + "/foo.html"), headerTask);
+            await TaskUtils.WhenAll(Page.GotoAsync(TestConstants.ServerUrl + "/foo.html"), headerTask);
 
             Assert.Equal("Bar", headerTask.Result);
         }
@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.Tests
             var page = await context.NewPageAsync();
 
             var headerTask = Server.WaitForRequest("/empty.html", request => request.Headers["Foo"]);
-            await TaskUtils.WhenAll(page.GoToAsync(TestConstants.EmptyPage), headerTask);
+            await TaskUtils.WhenAll(page.GotoAsync(TestConstants.EmptyPage), headerTask);
 
             Assert.Equal("Bar", headerTask.Result);
         }
@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var headerTask = Server.WaitForRequest("/empty.html", request => (request.Headers["Foo"], request.Headers["baR"]));
-            await TaskUtils.WhenAll(page.GoToAsync(TestConstants.EmptyPage), headerTask);
+            await TaskUtils.WhenAll(page.GotoAsync(TestConstants.EmptyPage), headerTask);
 
             Assert.Equal("Bar", headerTask.Result.Item1);
             Assert.Equal("foO", headerTask.Result.Item2);

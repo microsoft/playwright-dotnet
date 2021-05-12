@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForHitTarget()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
 
             await Page.EvalOnSelectorAsync("button", @"button => {

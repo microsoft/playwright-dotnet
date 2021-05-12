@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Testing.Xunit;
@@ -157,11 +157,11 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
 
             var (popupEvent, _) = await TaskUtils.WhenAll(
               context.WaitForEventAsync(ContextEvent.Page),
-              page.GoToAsync(TestConstants.ServerUrl + "/popup/window-open.html"));
+              page.GotoAsync(TestConstants.ServerUrl + "/popup/window-open.html"));
 
             var popup = popupEvent;
             Assert.Equal(TestConstants.ServerUrl + "/popup/popup.html", popup.Url);
@@ -183,7 +183,7 @@ namespace Microsoft.Playwright.Tests
             };
 
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             await page.CloseAsync();
             Assert.Equal(
                 new List<string>()
@@ -201,7 +201,7 @@ namespace Microsoft.Playwright.Tests
             // WebKit: Shift+Click does not open a new window.
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             await page.SetContentAsync("<a href=\"/one-style.html\">yo</a>");
 
             var popupEventTask = context.WaitForEventAsync(ContextEvent.Page);
@@ -220,7 +220,7 @@ namespace Microsoft.Playwright.Tests
             // WebKit: Ctrl+Click does not open a new tab.
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             await page.SetContentAsync("<a href=\"/one-style.html\">yo</a>");
 
             var popupEventTask = context.WaitForEventAsync(ContextEvent.Page);

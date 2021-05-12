@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 
@@ -12,7 +12,7 @@ namespace PlaywrightSharp.Demo
             var chromium = playwright.Chromium;
             var browser = await chromium.LaunchAsync(headless: false);
             var page = await browser.NewPageAsync();
-            await page.GoToAsync("https://example.com");
+            await page.GotoAsync("https://example.com");
             Console.ReadLine();
         }
     }

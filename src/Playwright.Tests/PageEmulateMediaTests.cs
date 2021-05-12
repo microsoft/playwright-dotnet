@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.Attributes;
@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkDuringNavigation()
         {
             await Page.EmulateMediaAsync(ColorScheme.Light);
-            var navigated = Page.GoToAsync(TestConstants.EmptyPage);
+            var navigated = Page.GotoAsync(TestConstants.EmptyPage);
 
             for (int i = 0; i < 9; i++)
             {
@@ -76,7 +76,7 @@ namespace Microsoft.Playwright.Tests
             }))
             {
                 var page = await context.NewPageAsync();
-                await page.GoToAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(TestConstants.EmptyPage);
                 var popupTask = page.WaitForEventAsync(PageEvent.Popup);
 
                 await TaskUtils.WhenAll(
@@ -95,7 +95,7 @@ namespace Microsoft.Playwright.Tests
             }))
             {
                 var page = await context.NewPageAsync();
-                await page.GoToAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(TestConstants.EmptyPage);
                 var popupTask = page.WaitForEventAsync(PageEvent.Popup);
 
                 await TaskUtils.WhenAll(
@@ -119,7 +119,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(page, "frame1", TestConstants.CrossProcessHttpPrefix + "/empty.html");
             var frame = page.Frames.ElementAt(1);
 

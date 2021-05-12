@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldUploadTheFile()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/fileupload.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/fileupload.html");
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", TestConstants.FileToUpload);
             var input = await Page.QuerySelectorAsync("input");
             await input.SetInputFilesAsync(filePath);
@@ -130,7 +130,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithCSP()
         {
             Server.SetCSP("/empty.html", "default-src \"none\"");
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync("<input type=file>");
 
             await Page.SetInputFilesAsync("input", Path.Combine(Directory.GetCurrentDirectory(), "Assets", TestConstants.FileToUpload));
@@ -221,7 +221,7 @@ namespace Microsoft.Playwright.Tests
                 return Task.CompletedTask;
             });
 
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync(@"
                 <form action=""/upload"" method=""post"" enctype=""multipart/form-data"">
                     <input type=""file"" name=""file1"">

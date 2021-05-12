@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -53,7 +53,7 @@ namespace Microsoft.Playwright.Tests
             var page = await context.NewPageAsync();
 
             await page.RouteAsync("**/*", (route) => route.ResumeAsync());
-            var response = await page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html");
+            var response = await page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
@@ -70,7 +70,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             Server.SetRedirect("/rrredirect", "/frames/one-frame.html");
-            await Page.GoToAsync(TestConstants.ServerUrl + "/rrredirect");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/rrredirect");
             Assert.True(requests["rrredirect"].IsNavigationRequest);
             Assert.True(requests["frame.html"].IsNavigationRequest);
             Assert.False(requests["script.js"].IsNavigationRequest);
@@ -87,7 +87,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldInterceptAfterAServiceWorker()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/serviceworkers/fetchdummy/sw.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/serviceworkers/fetchdummy/sw.html");
             await Page.EvaluateAsync("() => window.activationPromise");
 
             string swResponse = await Page.EvaluateAsync<string>("() => fetchDummy('foo')");

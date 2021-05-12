@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Testing.Xunit;
@@ -60,7 +60,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
             Server.SetRoute("/one-style.css", _ => Task.Delay(2000));
-            var task = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
+            var task = Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
             await Page.WaitForNavigationAsync(WaitUntilState.DOMContentLoaded);
 
             await CrashAsync(Page);
@@ -84,7 +84,7 @@ namespace Microsoft.Playwright.Tests
         {
             try
             {
-                await page.GoToAsync("chrome://crash");
+                await page.GotoAsync("chrome://crash");
             }
             catch
             {

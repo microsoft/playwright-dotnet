@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.BaseTests;
@@ -137,7 +137,7 @@ namespace Microsoft.Playwright.Tests
         {
             /*
             Server.SetCSP("/empty.html", "script-src " + TestConstants.ServerUrl);
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await TaskUtils.WhenAll(
                 Page.WaitForFunctionAsync(
                     "() => window.__FOO === 'hit'",
@@ -230,11 +230,11 @@ namespace Microsoft.Playwright.Tests
             bool fooFound = false;
             var waitForFunction = Page.WaitForFunctionAsync("window.__FOO === 1")
                 .ContinueWith(_ => fooFound = true);
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.False(fooFound);
             await Page.ReloadAsync();
             Assert.False(fooFound);
-            await Page.GoToAsync(TestConstants.CrossProcessUrl + "/grid.html");
+            await Page.GotoAsync(TestConstants.CrossProcessUrl + "/grid.html");
             Assert.False(fooFound);
             await Page.EvaluateAsync("window.__FOO = 1");
             await waitForFunction;
@@ -246,8 +246,8 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldSurviveNavigations()
         {
             var watchdog = Page.WaitForFunctionAsync("() => window.__done");
-            await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.GoToAsync(TestConstants.ServerUrl + "/consolelog.html");
+            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.ServerUrl + "/consolelog.html");
             await Page.EvaluateAsync("() => window.__done = true");
             await watchdog;
         }

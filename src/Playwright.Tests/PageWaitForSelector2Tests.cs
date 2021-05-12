@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
@@ -24,11 +24,11 @@ namespace Microsoft.Playwright.Tests
         {
             bool boxFound = false;
             var waitForSelector = Page.WaitForSelectorAsync(".box").ContinueWith(_ => boxFound = true);
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.False(boxFound);
             await Page.ReloadAsync();
             Assert.False(boxFound);
-            await Page.GoToAsync(TestConstants.CrossProcessHttpPrefix + "/grid.html");
+            await Page.GotoAsync(TestConstants.CrossProcessHttpPrefix + "/grid.html");
             await waitForSelector;
             Assert.True(boxFound);
         }
@@ -192,7 +192,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportSelectorSyntax()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var frame = Page.MainFrame;
             var watchdog = frame.WaitForSelectorAsync("css=div >> css=span", WaitForSelectorState.Attached);
             await frame.EvaluateAsync(AddElement, "br");

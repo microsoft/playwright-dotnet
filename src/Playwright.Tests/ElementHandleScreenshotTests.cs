@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,7 +27,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWork()
         {
             await Page.SetViewportSizeAsync(500, 500);
-            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
             await Page.EvaluateAsync("window.scrollBy(50, 100)");
             var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(3)");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
@@ -210,7 +210,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWaitForVisible()
         {
             await Page.SetViewportSizeAsync(500, 500);
-            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
             await Page.EvaluateAsync("() => window.scrollBy(50, 100)");
             var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(3)");
             await elementHandle.EvaluateAsync("e => e.style.visibility = 'hidden'");
@@ -251,7 +251,7 @@ namespace Microsoft.Playwright.Tests
                 IsMobile = true,
             });
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
+            await page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
             await page.EvaluateAsync("() => window.scrollBy(50, 100)");
             var elementHandle = await page.QuerySelectorAsync(".box:nth-of-type(3)");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
@@ -273,7 +273,7 @@ namespace Microsoft.Playwright.Tests
                 DeviceScaleFactor = 2,
             });
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
+            await page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
             await page.EvaluateAsync("() => window.scrollBy(50, 100)");
             var elementHandle = await page.QuerySelectorAsync(".box:nth-of-type(3)");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
@@ -324,7 +324,7 @@ namespace Microsoft.Playwright.Tests
                 Viewport = ViewportSize.NoViewport
             });
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
+            await page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
             var sizeBefore = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
 
             byte[] screenshot = await page.ScreenshotAsync(fullPage: true);
@@ -425,7 +425,7 @@ namespace Microsoft.Playwright.Tests
         public async Task PathOptionShouldCreateSubdirectories()
         {
             await Page.SetViewportSizeAsync(500, 500);
-            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
             await Page.EvaluateAsync("() => window.scrollBy(50, 100)");
             var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(3)");
             using var tmpDir = new TempDirectory();

@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.BaseTests;
@@ -22,7 +22,7 @@ namespace Microsoft.Playwright.Tests
             Server.SetAuth("/empty.html", "user", "pass");
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            var response = await page.GoToAsync(TestConstants.EmptyPage);
+            var response = await page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
@@ -48,7 +48,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await context.NewPageAsync();
-            var response = await page.GoToAsync(TestConstants.EmptyPage);
+            var response = await page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
@@ -68,7 +68,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await context.NewPageAsync();
-            var response = await page.GoToAsync(TestConstants.EmptyPage);
+            var response = await page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
@@ -87,7 +87,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await context.NewPageAsync();
-            var response = await page.GoToAsync(TestConstants.ServerUrl + "/playground.html");
+            var response = await page.GotoAsync(TestConstants.ServerUrl + "/playground.html");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("Playground", await page.TitleAsync());
             Assert.Contains("Playground", await response.TextAsync());

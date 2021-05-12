@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests
         {
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Single(requests);
             Assert.Equal(Page.MainFrame, requests[0].Frame);
         }
@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
 
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
 
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             Assert.Equal(2, requests.Count);
@@ -48,7 +48,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForFetchRequests()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
             await Page.EvaluateAsync("fetch('/digits/1.png')");
@@ -60,7 +60,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnHeaders()
         {
-            var response = await Page.GoToAsync(TestConstants.EmptyPage);
+            var response = await Page.GotoAsync(TestConstants.EmptyPage);
 
             string expected = TestConstants.Product switch
             {
@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnPostData()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Server.SetRoute("/post", _ => Task.CompletedTask);
             IRequest request = null;
             Page.Request += (_, e) => request = e;
@@ -96,7 +96,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBinaryPostData()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Server.SetRoute("/post", _ => Task.CompletedTask);
             IRequest request = null;
             Page.Request += (_, e) => request = e;
@@ -115,7 +115,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBinaryPostDataAndInterception()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Server.SetRoute("/post", _ => Task.CompletedTask);
             await Page.RouteAsync("/post", (route) => route.ResumeAsync());
             IRequest request = null;
@@ -135,7 +135,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeUndefinedWhenThereIsNoPostData()
         {
-            var response = await Page.GoToAsync(TestConstants.EmptyPage);
+            var response = await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Null(response.Request.PostData);
         }
 
@@ -144,7 +144,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldParseTheJsonPostData()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Server.SetRoute("/post", _ => Task.CompletedTask);
             IRequest request = null;
             Page.Request += (_, e) => request = e;
@@ -157,7 +157,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldParseTheDataIfContentTypeIsApplicationXWwwFormUrlencoded()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Server.SetRoute("/post", _ => Task.CompletedTask);
             IRequest request = null;
             Page.Request += (_, e) => request = e;
@@ -174,7 +174,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeUndefinedWhenThereIsNoPostData2()
         {
-            var response = await Page.GoToAsync(TestConstants.EmptyPage);
+            var response = await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Null(response.Request.GetPayloadAsJson());
         }
 
@@ -195,7 +195,7 @@ namespace Microsoft.Playwright.Tests
                 await ctx.Response.Body.FlushAsync();
             });
 
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
 
@@ -216,7 +216,7 @@ namespace Microsoft.Playwright.Tests
             var requests = new Dictionary<string, IRequest>();
             Page.Request += (_, e) => requests[e.Url.Split('/').Last()] = e;
             Server.SetRedirect("/rrredirect", "/frames/one-frame.html");
-            await Page.GoToAsync(TestConstants.ServerUrl + "/rrredirect");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/rrredirect");
             Assert.True(requests["rrredirect"].IsNavigationRequest);
             Assert.True(requests["one-frame.html"].IsNavigationRequest);
             Assert.True(requests["frame.html"].IsNavigationRequest);
@@ -230,7 +230,7 @@ namespace Microsoft.Playwright.Tests
         {
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
-            await Page.GoToAsync(TestConstants.ServerUrl + "/pptr.png");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/pptr.png");
             Assert.True(requests[0].IsNavigationRequest);
         }
     }

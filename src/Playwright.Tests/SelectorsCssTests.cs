@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.BaseTests;
@@ -19,7 +19,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForOpenShadowRoots()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/deep-shadow.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/deep-shadow.html");
             Assert.Equal("Hello from root1", await Page.EvalOnSelectorAsync<string>("css=span", "e => e.textContent"));
             Assert.Equal("Hello from root3 #2", await Page.EvalOnSelectorAsync<string>("css =[attr=\"value\\ space\"]", "e => e.textContent"));
             Assert.Equal("Hello from root3 #2", await Page.EvalOnSelectorAsync<string>("css =[attr='value\\ \\space']", "e => e.textContent"));
@@ -71,7 +71,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCommaSeparatedList()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/deep-shadow.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/deep-shadow.html");
             Assert.Equal(5, await Page.EvalOnSelectorAllAsync<int>("css=span, section #root1", "els => els.length"));
             Assert.Equal(5, await Page.EvalOnSelectorAllAsync<int>("css=section #root1, div span", "els => els.length"));
             Assert.Equal("root1", await Page.EvalOnSelectorAsync<string>("css=doesnotexist, section #root1", "e => e.id"));

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var waitForNavigationResult = Page.WaitForNavigationAsync();
             await TaskUtils.WhenAll(
                 waitForNavigationResult,
@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Tests
         {
             var waitForNavigationResult = Page.WaitForNavigationAsync("**/frame.html", timeout: 5000);
 
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
 
             var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => waitForNavigationResult);
 
@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.Tests
             Server.SetRoute("/one-style.css", _ => responseCompleted.Task);
 
             var waitForRequestTask = Server.WaitForRequest("/one-style.css");
-            var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
+            var navigationTask = Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
             var domContentLoadedTask = Page.WaitForNavigationAsync(WaitUntilState.DOMContentLoaded);
 
             bool bothFired = false;
@@ -78,7 +78,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithClickingOnAnchorLinks()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync("<a href='#foobar'>foobar</a>");
             var navigationTask = Page.WaitForNavigationAsync();
             await TaskUtils.WhenAll(
@@ -94,7 +94,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldWorkWithClickingOnLinksWhichDoNotCommitNavigation()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync($"<a href='{TestConstants.HttpsPrefix}/empty.html'>foobar</a>");
             var navigationTask = Page.WaitForNavigationAsync();
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => TaskUtils.WhenAll(
@@ -108,7 +108,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithHistoryPushState()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync(@"
               <a onclick='javascript:pushState()'>SPA</a>
               <script>
@@ -128,7 +128,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithHistoryReplaceState()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync(@"
               <a onclick='javascript:pushState()'>SPA</a>
               <script>
@@ -148,7 +148,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDOMHistoryBackAndHistoryForward()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync(@"
               <a id=back onclick='javascript:goBack()'>back</a>
               <a id=forward onclick='javascript:goForward()'>forward</a>
@@ -206,7 +206,7 @@ namespace Microsoft.Playwright.Tests
             };
 
             Server.SetRoute("/frames/style.css", _ => Task.CompletedTask);
-            var navigationTask = Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
+            var navigationTask = Page.GotoAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
 
             frame = await frameAttachedTaskSource.Task;
 
@@ -241,26 +241,26 @@ namespace Microsoft.Playwright.Tests
             Assert.Null(response1);
             Assert.Null(response2);
             Assert.Null(response3);
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Null(response1);
             Assert.Null(response2);
             Assert.Null(response3);
-            await Page.GoToAsync(TestConstants.ServerUrl + "/frame.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/frame.html");
             Assert.Null(response1);
             await response2Task;
             Assert.NotNull(response2);
             Assert.Null(response3);
-            await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
             await response1Task;
             Assert.NotNull(response1);
             Assert.NotNull(response2);
             Assert.Null(response3);
-            await Page.GoToAsync(TestConstants.ServerUrl + "/frame.html?foo=bar");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/frame.html?foo=bar");
             await response3Task;
             Assert.NotNull(response1);
             Assert.NotNull(response2);
             Assert.NotNull(response3);
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal(TestConstants.ServerUrl + "/one-style.html", response1.Url);
             Assert.Equal(TestConstants.ServerUrl + "/frame.html", response2.Url);
             Assert.Equal(TestConstants.ServerUrl + "/frame.html?foo=bar", response3.Url);
@@ -270,7 +270,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithUrlMatchForSameDocumentNavigations()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             bool resolved = false;
             var waitTask = Page.WaitForNavigationAsync(new Regex("third\\.html")).ContinueWith(_ => resolved = true);
 
@@ -291,11 +291,11 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForCrossProcessNavigations()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var waitTask = Page.WaitForNavigationAsync(WaitUntilState.DOMContentLoaded);
 
             string url = TestConstants.CrossProcessHttpPrefix + "/empty.html";
-            var gotoTask = Page.GoToAsync(url);
+            var gotoTask = Page.GotoAsync(url);
             var response = await waitTask;
             Assert.Equal(url, response.Url);
             Assert.Equal(url, Page.Url);
@@ -307,7 +307,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkOnFrame()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
             var frame = Page.Frames.ElementAt(1);
             var (response, _) = await TaskUtils.WhenAll(
                 frame.WaitForNavigationAsync(),
@@ -323,7 +323,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenFrameDetaches()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
             var frame = Page.Frames.ElementAt(1);
             Server.SetRoute("/empty.html", _ => Task.Delay(6000));
             var exceptionTask = Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => frame.WaitForNavigationAsync());

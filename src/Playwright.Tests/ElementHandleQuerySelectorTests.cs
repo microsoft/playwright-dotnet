@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.BaseTests;
@@ -19,7 +19,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldQueryExistingElement()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/playground.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/playground.html");
             await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">A</div></div></body></html>");
             var html = await Page.QuerySelectorAsync("html");
             var second = await html.QuerySelectorAsync(".second");
@@ -42,7 +42,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForAdoptedElements()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
 
             var (popup, _) = await TaskUtils.WhenAll(
                 Page.WaitForEventAsync(PageEvent.Popup),
@@ -96,7 +96,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task XPathShouldQueryExistingElement()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/playground.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/playground.html");
             await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">A</div></div></body></html>");
             var html = await Page.QuerySelectorAsync("html");
             var second = await html.QuerySelectorAllAsync("xpath=./body/div[contains(@class, 'second')]");

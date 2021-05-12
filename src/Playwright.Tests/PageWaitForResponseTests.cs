@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.BaseTests;
@@ -19,7 +19,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var task = Page.WaitForResponseAsync(TestConstants.ServerUrl + "/digits/2.png");
             var (response, _) = await TaskUtils.WhenAll(
                 task,
@@ -53,7 +53,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithPredicate()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var task = Page.WaitForEventAsync(PageEvent.Response, e => e.Url == TestConstants.ServerUrl + "/digits/2.png");
             var (responseEvent, _) = await TaskUtils.WhenAll(
                 task,
@@ -70,7 +70,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoTimeout()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var task = Page.WaitForResponseAsync(TestConstants.ServerUrl + "/digits/2.png", 0);
             var (response, _) = await TaskUtils.WhenAll(
                 task,

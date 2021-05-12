@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.BaseTests;
@@ -19,7 +19,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/offscreenbuttons.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/offscreenbuttons.html");
             for (int i = 0; i < 11; ++i)
             {
                 var button = await Page.QuerySelectorAsync("#btn" + i);

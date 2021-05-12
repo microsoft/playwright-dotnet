@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.Attributes;
@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Tests.Firefox
 
             await using var browser = await BrowserType.LaunchAsync(firefoxUserPrefs: firefoxUserPrefs);
             var page = await browser.NewPageAsync();
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GoToAsync("http://example.com"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GotoAsync("http://example.com"));
 
             Assert.Contains("NS_ERROR_PROXY_CONNECTION_REFUSED", exception.Message);
         }

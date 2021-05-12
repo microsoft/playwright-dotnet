@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
@@ -27,7 +27,7 @@ namespace Microsoft.Playwright.Tests
 
             await TaskUtils.WhenAll(
                 requestTask,
-                page.GoToAsync(TestConstants.EmptyPage));
+                page.GotoAsync(TestConstants.EmptyPage));
 
             Assert.StartsWith("fr-CH", acceptLanguage);
         }
@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.Tests
             }))
             {
                 var page = await context.NewPageAsync();
-                await page.GoToAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(TestConstants.EmptyPage);
                 Assert.Equal("1,000,000.5", await page.EvaluateAsync<string>("() => (1000000.50).toLocaleString()"));
             }
 
@@ -64,7 +64,7 @@ namespace Microsoft.Playwright.Tests
             }))
             {
                 var page = await context.NewPageAsync();
-                await page.GoToAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(TestConstants.EmptyPage);
                 string value = await page.EvaluateAsync<string>("() => (1000000.50).toLocaleString().replace(/\\s/g, ' ')");
                 Assert.Equal("1 000 000,5", value);
             }
@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Tests
             }))
             {
                 var page = await context.NewPageAsync();
-                await page.GoToAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(TestConstants.EmptyPage);
                 Assert.Equal(
                     "Sat Nov 19 2016 10:12:34 GMT-0800 (Pacific Standard Time)",
                     await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
@@ -94,7 +94,7 @@ namespace Microsoft.Playwright.Tests
             }))
             {
                 var page = await context.NewPageAsync();
-                await page.GoToAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(TestConstants.EmptyPage);
                 Assert.Equal(
                     "Sat Nov 19 2016 19:12:34 GMT+0100 (Mitteleuropäische Normalzeit)",
                     await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
@@ -111,7 +111,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             var popupTask = page.WaitForEventAsync(PageEvent.Popup);
 
             await TaskUtils.WhenAll(
@@ -133,7 +133,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             var popupTask = page.WaitForEventAsync(PageEvent.Popup);
 
             await TaskUtils.WhenAll(

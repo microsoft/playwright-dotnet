@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -22,11 +22,11 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateSubFrames()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
             Assert.Single(Page.Frames.Where(f => f.Url.Contains("/frames/one-frame.html")));
             Assert.Single(Page.Frames.Where(f => f.Url.Contains("/frames/frame.html")));
             var childFrame = Page.FirstChildFrame();
-            var response = await childFrame.GoToAsync(TestConstants.EmptyPage);
+            var response = await childFrame.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Same(response.Frame, childFrame);
         }
@@ -35,10 +35,10 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectWhenFrameDetaches()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
             Server.SetRoute("/empty.html", _ => Task.Delay(10000));
             var waitForRequestTask = Server.WaitForRequest("/empty.html");
-            var navigationTask = Page.FirstChildFrame().GoToAsync(TestConstants.EmptyPage);
+            var navigationTask = Page.FirstChildFrame().GotoAsync(TestConstants.EmptyPage);
             await waitForRequestTask;
             await Page.EvalOnSelectorAsync("iframe", "frame => frame.remove()");
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async () => await navigationTask);
@@ -51,7 +51,7 @@ namespace Microsoft.Playwright.Tests
         {
             Server.SetRoute("/frames/script.js", _ => Task.Delay(10000));
             string url = TestConstants.ServerUrl + "/frames/child-redirect.html";
-            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.GoToAsync(url, WaitUntilState.NetworkIdle, 5000));
+            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.GotoAsync(url, WaitUntilState.NetworkIdle, 5000));
 
             Assert.Contains("Timeout 5000ms", exception.Message);
             Assert.Contains($"navigating to \"{url}\", waiting until \"networkidle\"", exception.Message);
@@ -61,7 +61,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnMatchingResponses()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             // Attach three frames.
             var matchingData = new MatchingResponseData[]
             {
@@ -88,7 +88,7 @@ namespace Microsoft.Playwright.Tests
             for (int i = 0; i < 3; ++i)
             {
                 var waitRequestTask = Server.WaitForRequest("/one-style.html");
-                matchingData[i].NavigationTask = matchingData[i].FrameTask.Result.GoToAsync($"{TestConstants.ServerUrl}/one-style.html?index={i}");
+                matchingData[i].NavigationTask = matchingData[i].FrameTask.Result.GotoAsync($"{TestConstants.ServerUrl}/one-style.html?index={i}");
                 await waitRequestTask;
             }
             // Respond from server out-of-order.

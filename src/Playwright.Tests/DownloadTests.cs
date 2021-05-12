@@ -255,7 +255,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await Browser.NewPageAsync(acceptDownloads: true);
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             await page.SetContentAsync($"<a download=\"file.txt\" href=\"{TestConstants.ServerUrl}/download\">download</a>");
             var downloadTask = page.WaitForEventAsync(PageEvent.Download);
 
@@ -302,7 +302,7 @@ namespace Microsoft.Playwright.Tests
                 downloadPathTcs.TrySetResult(await e.PathAsync());
             };
 
-            await page.GoToAsync(TestConstants.ServerUrl + "/download-blob.html");
+            await page.GotoAsync(TestConstants.ServerUrl + "/download-blob.html");
             await page.ClickAsync("a");
             string path = await downloadPathTcs.Task;
 

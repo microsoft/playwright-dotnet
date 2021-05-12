@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.BaseTests;
 using Xunit;
@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFocusPopupsByDefault()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
 
             await TaskUtils.WhenAll(
@@ -54,8 +54,8 @@ namespace Microsoft.Playwright.Tests
             var page2 = await Page.Context.NewPageAsync();
 
             await TaskUtils.WhenAll(
-                Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html"),
-                page2.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html"));
+                Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html"),
+                page2.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html"));
 
             await TaskUtils.WhenAll(
                 Page.FocusAsync("input"),
@@ -110,8 +110,8 @@ namespace Microsoft.Playwright.Tests
             var page2 = await Page.Context.NewPageAsync();
 
             await TaskUtils.WhenAll(
-                Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html"),
-                page2.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html"));
+                Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html"),
+                page2.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html"));
 
             await TaskUtils.WhenAll(
                 Page.FocusAsync("input"),
@@ -135,7 +135,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldChangeFocusedIframe()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
 
             var (frame1, frame2) = await TaskUtils.WhenAll(
                 FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.ServerUrl + "/input/textarea.html"),

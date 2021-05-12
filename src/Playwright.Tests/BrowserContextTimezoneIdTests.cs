@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.Attributes;
 using Microsoft.Playwright.Tests.BaseTests;
@@ -80,7 +80,7 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { TimezoneId = "Europe/Moscow" });
 
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
 
             await TaskUtils.WhenAll(
                 page.WaitForEventAsync(PageEvent.Popup),

@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.BaseTests;
 using Xunit;
@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAUrl()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var styleHandle = await Page.AddStyleTagAsync(url: "/injectedstyle.css");
             Assert.NotNull(styleHandle);
             Assert.Equal("rgb(255, 0, 0)", await Page.EvaluateAsync<string>("window.getComputedStyle(document.querySelector('body')).getPropertyValue('background-color')"));
@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowAnErrorIfLoadingFromUrlFail()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Assert.ThrowsAsync<PlaywrightSharpException>(() =>
                 Page.AddStyleTagAsync(url: "/nonexistfile.js"));
         }
@@ -43,7 +43,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAPath()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var styleHandle = await Page.AddStyleTagAsync(path: TestUtils.GetWebServerFile("injectedstyle.css"));
             Assert.NotNull(styleHandle);
             Assert.Equal("rgb(255, 0, 0)", await Page.EvaluateAsync<string>("window.getComputedStyle(document.querySelector('body')).getPropertyValue('background-color')"));
@@ -53,7 +53,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeSourceURLWhenPathIsProvided()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.AddStyleTagAsync(path: TestUtils.GetWebServerFile("injectedstyle.css"));
             var styleHandle = await Page.QuerySelectorAsync("style");
             string styleContent = await Page.EvaluateAsync<string>("style => style.innerHTML", styleHandle);
@@ -64,7 +64,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithContent()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var styleHandle = await Page.AddStyleTagAsync(content: "body { background-color: green; }");
             Assert.NotNull(styleHandle);
             Assert.Equal("rgb(0, 128, 0)", await Page.EvaluateAsync<string>("window.getComputedStyle(document.querySelector('body')).getPropertyValue('background-color')"));
@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenAddedWithContentToTheCSPPage()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/csp.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/csp.html");
             await Assert.ThrowsAsync<PlaywrightSharpException>(() =>
                 Page.AddStyleTagAsync(content: "body { background-color: green; }"));
         }
@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenAddedWithURLToTheCSPPage()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/csp.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/csp.html");
             await Assert.ThrowsAsync<PlaywrightSharpException>(() =>
                 Page.AddStyleTagAsync(url: TestConstants.CrossProcessUrl + "/injectedstyle.css"));
         }

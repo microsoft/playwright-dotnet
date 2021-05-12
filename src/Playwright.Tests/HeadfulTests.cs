@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Testing.Xunit;
@@ -40,13 +40,13 @@ namespace Microsoft.Playwright.Tests
             // Write a cookie in headful chrome            
             await using var headfulContext = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path, headless: false);
             var headfulPage = await headfulContext.NewPageAsync();
-            await headfulPage.GoToAsync(TestConstants.EmptyPage);
+            await headfulPage.GotoAsync(TestConstants.EmptyPage);
             await headfulPage.EvaluateAsync("() => document.cookie = 'foo=true; expires=Fri, 31 Dec 9999 23:59:59 GMT'");
             await headfulContext.CloseAsync();
 
             var headlessContext = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path, headless: false);
             var headlessPage = await headlessContext.NewPageAsync();
-            await headlessPage.GoToAsync(TestConstants.EmptyPage);
+            await headlessPage.GotoAsync(TestConstants.EmptyPage);
             string cookie = await headlessPage.EvaluateAsync<string>("() => document.cookie");
             await headlessContext.CloseAsync();
 
@@ -61,7 +61,7 @@ namespace Microsoft.Playwright.Tests
             await using var browserContext = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path, headless: false);
             var page = await browserContext.NewPageAsync();
 
-            await page.GoToAsync(TestConstants.ServerUrl + "/beforeunload.html");
+            await page.GotoAsync(TestConstants.ServerUrl + "/beforeunload.html");
             // We have to interact with a page so that 'beforeunload' handlers fire.
             await page.ClickAsync("body");
         }
@@ -100,7 +100,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var browser = await BrowserType.LaunchDefaultHeadful();
             var page = await browser.NewPageAsync();
-            await page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
+            await page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
             await page.ClickAsync("body", button: MouseButton.Right);
         }
 
@@ -110,7 +110,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var browser = await BrowserType.LaunchDefaultHeadful();
             var page = await browser.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
 
             await page.EvaluateAsync(@"src => {
                 let fulfill;
@@ -158,7 +158,7 @@ namespace Microsoft.Playwright.Tests
             await using var browser = await BrowserType.LaunchDefaultHeadful();
             var context = await browser.NewContextAsync(new BrowserContextOptions { Viewport = ViewportSize.NoViewport });
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             var popupTask = page.WaitForEventAsync(PageEvent.Popup);
 
             await TaskUtils.WhenAll(

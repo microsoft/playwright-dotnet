@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
                 context.Abort(); // is this right?
                 return Task.CompletedTask;
             });
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.GoToAsync(TestConstants.EmptyPage));
+            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.GotoAsync(TestConstants.EmptyPage));
             Assert.Contains(nameof(PageBasicTests), exception.StackTrace);
         }
 
@@ -45,7 +45,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PagePressShouldWork()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.PressAsync("textarea", "a");
             Assert.Equal("a", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
         }
@@ -109,7 +109,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnThePageTitle()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/title.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/title.html");
             Assert.Equal("Woof-Woof", await Page.TitleAsync());
         }
 
@@ -118,7 +118,7 @@ namespace Microsoft.Playwright.Tests
         public async Task PageUrlShouldWork()
         {
             Assert.Equal("about:blank", Page.Url);
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal(TestConstants.EmptyPage, Page.Url);
         }
 
@@ -126,7 +126,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeHashes()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage + "#hash");
+            await Page.GotoAsync(TestConstants.EmptyPage + "#hash");
             Assert.Equal(TestConstants.EmptyPage + "#hash", Page.Url);
             await Page.EvaluateAsync("() => window.location.hash = 'dynamic'");
             Assert.Equal(TestConstants.EmptyPage + "#dynamic", Page.Url);
@@ -206,7 +206,7 @@ namespace Microsoft.Playwright.Tests
         {
             await TaskUtils.WhenAll(
                 Page.WaitForEventAsync(PageEvent.Load),
-                Page.GoToAsync("about:blank")
+                Page.GotoAsync("about:blank")
             );
         }
 
@@ -214,7 +214,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireDOMcontentloadedWhenExpected()
         {
-            var task = Page.GoToAsync("about:blank");
+            var task = Page.GotoAsync("about:blank");
             await Page.WaitForEventAsync(PageEvent.DOMContentLoaded);
             await task;
         }

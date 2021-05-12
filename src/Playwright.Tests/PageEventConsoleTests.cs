@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -102,7 +102,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTriggerCorrectLog()
         {
-            await Page.GoToAsync("about:blank");
+            await Page.GotoAsync("about:blank");
             var (messageEvent, _) = await TaskUtils.WhenAll(
                 Page.WaitForEventAsync(PageEvent.Console),
                 Page.EvaluateAsync("async url => fetch(url).catch (e => { })", TestConstants.EmptyPage)
@@ -115,10 +115,10 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveLocationForConsoleAPICalls()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var (messageEvent, _) = await TaskUtils.WhenAll(
                 Page.WaitForEventAsync(PageEvent.Console),
-                Page.GoToAsync(TestConstants.ServerUrl + "/consolelog.html")
+                Page.GotoAsync(TestConstants.ServerUrl + "/consolelog.html")
             );
             Assert.Equal("yellow", messageEvent.Text);
             Assert.Equal("log", messageEvent.Type);
@@ -129,7 +129,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotThrowWhenThereAreConsoleMessagesInDetachedIframes()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var (popup, _) = await TaskUtils.WhenAll(
                 Page.WaitForEventAsync(PageEvent.Popup),
                 Page.EvaluateAsync<bool>(@"async () =>

@@ -54,6 +54,7 @@ namespace Microsoft.Playwright
     /// </summary>
     public partial interface IConsoleMessage
     {
+        /// <summary><para>List of arguments passed to a <c>console</c> function call. See also <see cref="IPage.Console"/>.</para></summary>
         IReadOnlyCollection<IJSHandle> Args { get; }
 
         /// <summary>
@@ -64,6 +65,7 @@ namespace Microsoft.Playwright
         /// </summary>
         string Location { get; }
 
+        /// <summary><para>The text of the console message.</para></summary>
         string Text { get; }
 
         /// <summary>

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -29,12 +29,12 @@ namespace Microsoft.Playwright.Tests
                 route.FulfillAsync(body: "<html></html>");
             });
 
-            await page1.GoToAsync("https://www.example.com");
+            await page1.GotoAsync("https://www.example.com");
             await page1.EvaluateAsync(@"() =>
             {
                 localStorage['name1'] = 'value1';
             }");
-            await page1.GoToAsync("https://www.domain.com");
+            await page1.GotoAsync("https://www.domain.com");
             await page1.EvaluateAsync(@"() =>
             {
                 localStorage['name2'] = 'value2';
@@ -63,7 +63,7 @@ namespace Microsoft.Playwright.Tests
                 route.FulfillAsync(body: "<html></html>");
             });
 
-            await page1.GoToAsync("https://www.example.com");
+            await page1.GotoAsync("https://www.example.com");
             await page1.EvaluateAsync(@"() =>
             {
                 localStorage['name1'] = 'value1';
@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Tests
                 route.FulfillAsync(body: "<html></html>");
             });
 
-            await page1.GoToAsync("https://www.example.com");
+            await page1.GotoAsync("https://www.example.com");
             Assert.Equal("value1", await page1.EvaluateAsync<string>("localStorage['name1']"));
             Assert.Equal("username=John Doe", await page1.EvaluateAsync<string>("document.cookie"));
         }

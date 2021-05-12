@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.BaseTests;
 using Xunit;
@@ -169,7 +169,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForOpenShadowRoots()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/deep-shadow.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/deep-shadow.html");
             Assert.Equal("Hello from root1", await Page.EvalOnSelectorAsync<string>("text=root1", "e => e.textContent"));
             Assert.Equal("Hello from root2", await Page.EvalOnSelectorAsync<string>("text=root2", "e => e.textContent"));
             Assert.Equal("Hello from root3", await Page.EvalOnSelectorAsync<string>("text=root3", "e => e.textContent"));

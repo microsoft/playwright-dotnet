@@ -51,6 +51,23 @@ namespace Microsoft.Playwright
     /// A Browser is created via <see cref="IBrowserType.LaunchAsync"/>. An example of using
     /// a <see cref="IBrowser"/> to create a <see cref="IPage"/>:
     /// </para>
+    /// <code>
+    /// using Microsoft.Playwright;<br/>
+    /// using System.Threading.Tasks;<br/>
+    /// <br/>
+    /// class BrowserExamples<br/>
+    /// {<br/>
+    ///     public static async Task Main()<br/>
+    ///     {<br/>
+    ///         using var playwright = await Playwright.CreateAsync();<br/>
+    ///         var firefox = playwright.Firefox;<br/>
+    ///         var browser = await firefox.LaunchAsync(headless: false);<br/>
+    ///         var page = await browser.NewPageAsync();<br/>
+    ///         await page.GoToAsync("https://www.bing.com");<br/>
+    ///         await browser.CloseAsync();<br/>
+    ///     }<br/>
+    /// }
+    /// </code>
     /// </summary>
     public partial interface IBrowser
     {
@@ -87,13 +104,31 @@ namespace Microsoft.Playwright
         /// Returns an array of all open browser contexts. In a newly created browser, this
         /// will return zero browser contexts.
         /// </para>
+        /// <code>
+        /// using var playwright = await Playwright.CreateAsync();<br/>
+        /// var browser = await playwright.Webkit.LaunchAsync();<br/>
+        /// System.Console.WriteLine(browser.Contexts.Count); // prints "0"<br/>
+        /// var context = await browser.NewContextAsync();<br/>
+        /// System.Console.WriteLine(browser.Contexts.Count); // prints "1"
+        /// </code>
         /// </summary>
         IReadOnlyCollection<IBrowserContext> Contexts { get; }
 
         /// <summary><para>Indicates that the browser is connected.</para></summary>
         bool IsConnected { get; }
 
-        /// <summary><para>Creates a new browser context. It won't share cookies/cache with other browser contexts.</para></summary>
+        /// <summary>
+        /// <para>Creates a new browser context. It won't share cookies/cache with other browser contexts.</para>
+        /// <code>
+        /// using var playwright = await Playwright.CreateAsync();<br/>
+        /// var browser = await playwright.Firefox.LaunchAsync();<br/>
+        /// // Create a new incognito browser context.<br/>
+        /// var context = await browser.NewContextAsync();<br/>
+        /// // Create a new page in a pristine context.<br/>
+        /// var page = await context.NewPageAsync(); ;<br/>
+        /// await page.GoToAsync("https://www.bing.com");
+        /// </code>
+        /// </summary>
         /// <param name="acceptDownloads">
         /// Whether to automatically download all the attachments. Defaults to <c>false</c>
         /// where all the downloads are canceled.

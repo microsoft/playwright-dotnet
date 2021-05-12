@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
@@ -152,7 +152,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEvaluateInThePageContext()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/global-var.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/global-var.html");
             Assert.Equal(123, await Page.EvaluateAsync<int>("globalVar"));
         }
 
@@ -215,7 +215,7 @@ namespace Microsoft.Playwright.Tests
             {
                 frameEvaluation = e.EvaluateAsync<int>("() => 6 * 7");
             };
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal(42, await frameEvaluation);
         }
 
@@ -223,13 +223,13 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkRightAfterACrossOriginNavigation()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Task<int> frameEvaluation = null;
             Page.FrameNavigated += (_, e) =>
             {
                 frameEvaluation = e.EvaluateAsync<int>("() => 6 * 7");
             };
-            await Page.GoToAsync(TestConstants.CrossProcessUrl + "/empty.html");
+            await Page.GotoAsync(TestConstants.CrossProcessUrl + "/empty.html");
             Assert.Equal(42, await frameEvaluation);
         }
 
@@ -501,7 +501,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotThrowAnErrorWhenEvaluationDoesANavigation()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
             int[] result = await Page.EvaluateAsync<int[]>(@"() => {
                 window.location = '/empty.html';
                 return [42];
@@ -562,7 +562,7 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldAwaitPromiseFromPopup()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
 
             int result = await Page.EvaluateAsync<int>(@"() => {
                 const win = window.open('about:blank');
@@ -576,7 +576,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithNewFunctionAndCSP()
         {
             Server.SetCSP("/empty.html", "script-src" + TestConstants.ServerUrl);
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
 
             Assert.True(await Page.EvaluateAsync<bool>("() => new Function('return true')()"));
         }
@@ -623,7 +623,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithCSP()
         {
             Server.SetCSP("/empty.html", "script-src 'self'");
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
 
             Assert.Equal(4, await Page.EvaluateAsync<int>("() => 2 + 2"));
         }

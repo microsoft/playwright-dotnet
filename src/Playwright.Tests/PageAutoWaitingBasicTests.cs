@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Playwright.Testing.Xunit;
@@ -154,7 +154,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAwaitNavigationWhenEvaluatingReload()
         {
             var messages = new List<string>();
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Server.SetRoute("/empty.html", context =>
             {
                 messages.Add("route");
@@ -253,7 +253,7 @@ namespace Microsoft.Playwright.Tests
 
             await Page.FillAsync("input[type=text]", "admin");
             await Page.ClickAsync("input[type=submit]");
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
         }
 
         [PlaywrightTest("page-autowaiting-basic.spec.ts", "should report navigation in the log when clicking anchor")]
