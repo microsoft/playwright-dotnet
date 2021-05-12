@@ -66,7 +66,7 @@ namespace Microsoft.Playwright
         /// <inheritdoc/>
         public float DefaultNavigationTimeout
         {
-            get => _defaultNavigationTimeout;
+            internal get => _defaultNavigationTimeout;
             set
             {
                 _defaultNavigationTimeout = value;
@@ -77,7 +77,7 @@ namespace Microsoft.Playwright
         /// <inheritdoc/>
         public float DefaultTimeout
         {
-            get => _defaultTimeout;
+            internal get => _defaultTimeout;
             set
             {
                 _defaultTimeout = value;

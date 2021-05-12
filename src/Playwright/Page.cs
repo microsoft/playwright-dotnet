@@ -247,24 +247,18 @@ namespace Microsoft.Playwright
         public IKeyboard Keyboard
         {
             get => _keyboard;
-            set => throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public ITouchscreen Touchscreen
         {
             get => _touchscreen;
-            set => throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public float DefaultTimeout
         {
-            get
-            {
-                return _defaultTimeout;
-            }
-
+            internal get => _defaultTimeout;
             set
             {
                 _defaultTimeout = value;
@@ -275,11 +269,7 @@ namespace Microsoft.Playwright
         /// <inheritdoc/>
         public float DefaultNavigationTimeout
         {
-            get
-            {
-                return _defaultNavigationTimeout;
-            }
-
+            internal get => _defaultNavigationTimeout;
             set
             {
                 _defaultNavigationTimeout = value;
