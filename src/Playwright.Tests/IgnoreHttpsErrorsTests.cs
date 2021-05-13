@@ -55,7 +55,7 @@ namespace Microsoft.Playwright.Tests
             await using (var context = await Browser.NewContextAsync())
             {
                 var page = await context.NewPageAsync();
-                await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html"));
+                await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html"));
             }
         }
 

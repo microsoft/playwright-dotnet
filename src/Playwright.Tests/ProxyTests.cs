@@ -84,9 +84,9 @@ namespace Microsoft.Playwright.Tests
 
             Assert.Equal("Served by the proxy", await page.TitleAsync());
 
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GoToAsync("http://non-existent1.com/target.html"));
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GoToAsync("http://sub.non-existent2.com/target.html"));
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GoToAsync("http://foo.zone/target.html"));
+            await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.GoToAsync("http://non-existent1.com/target.html"));
+            await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.GoToAsync("http://sub.non-existent2.com/target.html"));
+            await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.GoToAsync("http://foo.zone/target.html"));
         }
     }
 }

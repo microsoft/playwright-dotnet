@@ -7,7 +7,7 @@ namespace Microsoft.Playwright
     /// Exception thrown when a <see cref="IPage"/> fails to navigate an URL.
     /// </summary>
     [Serializable]
-    public class NavigationException : PlaywrightSharpException
+    public class NavigationException : PlaywrightException
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationException"/> class.

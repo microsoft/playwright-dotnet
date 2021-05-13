@@ -36,7 +36,7 @@ namespace Microsoft.Playwright
         internal void RejectOnEvent<T>(
             object eventSource,
             string e,
-            PlaywrightSharpException navigationException,
+            PlaywrightException navigationException,
             Func<T, bool> predicate = null)
         {
             if (eventSource == null)
@@ -126,7 +126,7 @@ namespace Microsoft.Playwright
             {
                 dispose?.Invoke();
                 Dispose();
-                throw new PlaywrightSharpException(ex.Message + FormatLogRecording(_logs), ex);
+                throw new PlaywrightException(ex.Message + FormatLogRecording(_logs), ex);
             }
         }
 

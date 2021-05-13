@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Tests
             var navigationTask = Page.FirstChildFrame().GoToAsync(TestConstants.EmptyPage);
             await waitForRequestTask;
             await Page.EvalOnSelectorAsync("iframe", "frame => frame.remove()");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async () => await navigationTask);
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(async () => await navigationTask);
             Assert.Contains("frame was detached", exception.Message);
         }
 

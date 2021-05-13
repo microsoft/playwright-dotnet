@@ -59,8 +59,8 @@ namespace Microsoft.Playwright.Tests
             Assert.Equal("<div>x</div>", await Page.EvalOnSelectorAsync<string>("\"x\"", "e => e.outerHTML"));
             Assert.Equal("<div>x</div>", await Page.EvalOnSelectorAsync<string>("'x'", "e => e.outerHTML"));
 
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.QuerySelectorAsync("\""));
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.QuerySelectorAsync("'"));
+            await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.QuerySelectorAsync("\""));
+            await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.QuerySelectorAsync("'"));
 
             await Page.SetContentAsync("<div> ' </div><div> \" </div>");
             Assert.Equal("<div> \" </div>", await Page.EvalOnSelectorAsync<string>("text=\"", "e => e.outerHTML"));

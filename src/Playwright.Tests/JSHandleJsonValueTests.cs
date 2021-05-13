@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowForCircularObjects()
         {
             var windowHandle = await Page.EvaluateHandleAsync("window");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => windowHandle.JsonValueAsync<object>());
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => windowHandle.JsonValueAsync<object>());
             Assert.Contains("Argument is a circular structure", exception.Message);
         }
     }

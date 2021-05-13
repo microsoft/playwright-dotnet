@@ -1053,7 +1053,7 @@ namespace Microsoft.Playwright
         {
             if (Bindings.ContainsKey(name))
             {
-                throw new PlaywrightSharpException($"Function \"{name}\" has been already registered");
+                throw new PlaywrightException($"Function \"{name}\" has been already registered");
             }
 
             Bindings.Add(name, callback);

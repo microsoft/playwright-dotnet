@@ -285,7 +285,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldFailNavigationWhenAbortingMainResource()
         {
             await Page.RouteAsync("**/*", (route) => route.AbortAsync());
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.GoToAsync(TestConstants.EmptyPage));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.GoToAsync(TestConstants.EmptyPage));
             Assert.NotNull(exception);
             if (TestConstants.IsWebKit)
             {
@@ -591,7 +591,7 @@ namespace Microsoft.Playwright.Tests
 
             Assert.Equal(new[] { "electric", "cars" }, resp);
 
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.EvaluateAsync<string>(@"async () => {
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.EvaluateAsync<string>(@"async () => {
                 const response = await fetch('https://example.com/cars?reject', { mode: 'cors' });
                 return response.json();
             }"));

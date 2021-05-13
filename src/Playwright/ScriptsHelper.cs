@@ -33,7 +33,7 @@ namespace Microsoft.Playwright
 
             if (args.Length > 0)
             {
-                throw new PlaywrightSharpException("Cannot evaluate a string with arguments");
+                throw new PlaywrightException("Cannot evaluate a string with arguments");
             }
 
             return script;
@@ -111,7 +111,7 @@ namespace Microsoft.Playwright
 
             if (visited.Contains(value))
             {
-                throw new PlaywrightSharpException("Argument is a circular structure");
+                throw new PlaywrightException("Argument is a circular structure");
             }
 
             if (value == null)

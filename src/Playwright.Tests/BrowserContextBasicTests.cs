@@ -152,7 +152,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowDeviceScaleFactorWithViewportDisabled()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Browser.NewContextAsync(new BrowserContextOptions
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = ViewportSize.NoViewport,
                 DeviceScaleFactor = 3,
@@ -164,7 +164,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowIsMobileWithViewportDisabled()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Browser.NewContextAsync(new BrowserContextOptions
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new BrowserContextOptions
             {
                 Viewport = ViewportSize.NoViewport,
                 IsMobile = true,
@@ -187,7 +187,7 @@ namespace Microsoft.Playwright.Tests
             var context = await Browser.NewContextAsync();
             var waitTask = context.WaitForEventAsync(ContextEvent.Page);
             await context.CloseAsync();
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => waitTask);
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => waitTask);
             Assert.Equal("Context closed", exception.Message);
         }
 
@@ -291,7 +291,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { Offline = true });
             var page = await context.NewPageAsync();
-            await Assert.ThrowsAsync<PlaywrightSharpException>(() => page.GoToAsync(TestConstants.EmptyPage));
+            await Assert.ThrowsAsync<PlaywrightException>(() => page.GoToAsync(TestConstants.EmptyPage));
             await context.SetOfflineAsync(false);
             var response = await page.GoToAsync(TestConstants.EmptyPage);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

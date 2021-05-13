@@ -207,7 +207,7 @@ namespace Microsoft.Playwright.Tests
             await frameReceivedTcs.Task;
             var frameSentTask = ws.WaitForEventAsync(WebSocketEvent.FrameSent);
             await Page.EvaluateAsync("window.ws.close()");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => frameSentTask);
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => frameSentTask);
             Assert.Contains("Socket closed", exception.Message);
         }
 
@@ -232,7 +232,7 @@ namespace Microsoft.Playwright.Tests
 
             var frameSentTask = ws.WaitForEventAsync(WebSocketEvent.FrameSent);
             await Page.CloseAsync();
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => frameSentTask.WithTimeout(TestConstants.DefaultTaskTimeout));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => frameSentTask.WithTimeout(TestConstants.DefaultTaskTimeout));
             Assert.Contains("Page closed", exception.Message);
         }
     }
