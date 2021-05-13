@@ -77,7 +77,7 @@ namespace Microsoft.Playwright.Tests
             var childFrame = Page.MainFrame.ChildFrames.First();
             dynamic childResult = await childFrame.EvaluateAsync<ExpandoObject>("() => window.__foo");
             Assert.Equal("baz", childResult.bar);
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => childFrame.EvaluateAsync<string>("foo => foo.bar", handle));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => childFrame.EvaluateAsync<string>("foo => foo.bar", handle));
             Assert.Equal("JSHandles can be evaluated only in the context they were created!", exception.Message);
         }
 
@@ -98,7 +98,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
             var frame = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.CrossProcessUrl + "/empty.html");
             var bodyHandle = await frame.QuerySelectorAsync("body");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync("body => body.innerHTML", bodyHandle));
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("body => body.innerHTML", bodyHandle));
             Assert.Contains("Unable to adopt element handle from a different document", exception.Message);
         }
 
@@ -108,7 +108,7 @@ namespace Microsoft.Playwright.Tests
         {
             var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             await FrameUtils.DetachFrameAsync(Page, "frame1");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => frame1.EvaluateAsync("() => 7 * 8"));
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => frame1.EvaluateAsync("() => 7 * 8"));
             Assert.Contains("Execution Context is not available in detached frame", exception.Message);
         }
 

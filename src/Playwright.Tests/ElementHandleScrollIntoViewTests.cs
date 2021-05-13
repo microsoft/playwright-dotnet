@@ -43,7 +43,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<div>Hello</div>");
             var div = await Page.QuerySelectorAsync("div");
             await div.EvaluateAsync("div => div.remove()");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => div.ScrollIntoViewIfNeededAsync());
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => div.ScrollIntoViewIfNeededAsync());
             Assert.Contains("Element is not attached to the DOM", exception.Message);
         }
 

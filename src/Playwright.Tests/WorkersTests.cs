@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
             worker.Close += (sender, _) => workerDestroyedTcs.TrySetResult((IWorker)sender);
             await Page.EvaluateAsync("workerObj => workerObj.terminate()", workerObj);
             Assert.Same(worker, await workerDestroyedTcs.Task);
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => workerThisObj.GetPropertyAsync("self"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => workerThisObj.GetPropertyAsync("self"));
             Assert.Contains("Most likely the worker has been closed.", exception.Message);
         }
 

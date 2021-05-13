@@ -70,10 +70,10 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowExceptionInPageContext()
         {
-            await Page.ExposeFunctionAsync("woof", () =>
+            await Page.ExposeFunctionAsync("woof", (System.Action)(() =>
             {
-                throw new PlaywrightSharpException("WOOF WOOF");
-            });
+                throw new PlaywrightException("WOOF WOOF");
+            }));
             var result = await Page.EvaluateAsync<JsonElement>(@"async () => {
                 try
                 {
@@ -229,7 +229,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowForDuplicateRegistrations()
         {
             await Page.ExposeFunctionAsync("foo", () => { });
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.ExposeFunctionAsync("foo", () => { }));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.ExposeFunctionAsync("foo", () => { }));
             Assert.Equal("Function \"foo\" has been already registered", exception.Message);
         }
 

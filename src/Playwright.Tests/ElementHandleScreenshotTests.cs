@@ -190,7 +190,7 @@ namespace Microsoft.Playwright.Tests
             var elementHandle = await Page.QuerySelectorAsync("h1");
             await Page.EvaluateAsync("element => element.remove()", elementHandle);
 
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => elementHandle.ScreenshotAsync());
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => elementHandle.ScreenshotAsync());
             Assert.Contains("Element is not attached to the DOM", exception.Message);
         }
 

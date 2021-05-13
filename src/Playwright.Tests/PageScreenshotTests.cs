@@ -92,7 +92,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetViewportSizeAsync(500, 500);
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.ScreenshotAsync(
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Page.ScreenshotAsync(
                 clip: new Clip
                 {
                     X = 50,

@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
             Assert.Equal($"{TestConstants.ServerUrl}/downloadWithFilename", download.Url);
             Assert.Equal("file.txt", download.SuggestedFilename);
 
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => download.PathAsync());
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => download.PathAsync());
             Assert.Contains("acceptDownloads", await download.FailureAsync());
             Assert.Contains("acceptDownloads: true", exception.Message);
         }
@@ -214,7 +214,7 @@ namespace Microsoft.Playwright.Tests
             string userPath = Path.Combine(tmpDir.Path, "download.txt");
             var download = downloadTask.Result;
 
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => download.SaveAsAsync(userPath));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => download.SaveAsAsync(userPath));
             Assert.Contains("Pass { acceptDownloads: true } when you are creating your browser context", exception.Message);
         }
 
@@ -234,7 +234,7 @@ namespace Microsoft.Playwright.Tests
             string userPath = Path.Combine(tmpDir.Path, "download.txt");
             var download = downloadTask.Result;
             await download.DeleteAsync();
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => download.SaveAsAsync(userPath));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => download.SaveAsAsync(userPath));
             Assert.Contains("Target page, context or browser has been closed", exception.Message);
         }
 

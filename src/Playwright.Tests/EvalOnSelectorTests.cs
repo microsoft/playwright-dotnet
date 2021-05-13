@@ -136,7 +136,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowErrorIfNoElementIsFound()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(()
                 => Page.EvalOnSelectorAsync("section", "e => e.id"));
             Assert.Contains("failed to find element matching selector \"section\"", exception.Message);
         }
@@ -192,7 +192,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowOnMultipleStarCaptures()
         {
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.EvalOnSelectorAsync<string>("*css=div >> *css=span", "(e) => e.outerHTML"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.EvalOnSelectorAsync<string>("*css=div >> *css=span", "(e) => e.outerHTML"));
             Assert.Equal("Only one of the selectors can capture using * modifier", exception.Message);
         }
 
@@ -200,7 +200,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowOnMalformedStarCapture()
         {
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.EvalOnSelectorAsync<string>("*=div", "(e) => e.outerHTML"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.EvalOnSelectorAsync<string>("*=div", "(e) => e.outerHTML"));
             Assert.Equal("Unknown engine \"\" while parsing selector *=div", exception.Message);
         }
 

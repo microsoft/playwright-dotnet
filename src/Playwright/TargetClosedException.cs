@@ -5,7 +5,7 @@ namespace Microsoft.Playwright
     /// <summary>
     /// Exception thrown by a connection when it detects that the target was closed.
     /// </summary>
-    public class TargetClosedException : PlaywrightSharpException
+    public class TargetClosedException : PlaywrightException
     {
         /// <inheritdoc cref="Exception"/>
         public TargetClosedException()

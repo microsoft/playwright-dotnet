@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
                 context.Abort(); // is this right?
                 return Task.CompletedTask;
             });
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.GoToAsync(TestConstants.EmptyPage));
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Page.GoToAsync(TestConstants.EmptyPage));
             Assert.Contains(nameof(PageBasicTests), exception.StackTrace);
         }
 
@@ -138,7 +138,7 @@ namespace Microsoft.Playwright.Tests
         {
             var task = Page.WaitForEventAsync(PageEvent.Download);
             await Page.CloseAsync();
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => task);
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => task);
             Assert.Contains("Page closed", exception.Message);
         }
 
@@ -234,7 +234,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldTerminateNetworkWaiters()
         {
             var newPage = await Context.NewPageAsync();
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => TaskUtils.WhenAll(
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => TaskUtils.WhenAll(
                 newPage.WaitForRequestAsync(TestConstants.EmptyPage),
                 newPage.WaitForResponseAsync(TestConstants.EmptyPage),
                 newPage.CloseAsync()
