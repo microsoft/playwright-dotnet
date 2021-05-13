@@ -151,7 +151,8 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldGetCookiesFromMultipleUrls()
         {
-            await Context.AddCookiesAsync(
+            await Context.AddCookiesAsync(new[]
+            {
                 new Cookie
                 {
                     Url = "https://foo.com",
@@ -169,9 +170,9 @@ namespace Microsoft.Playwright.Tests
                     Url = "https://baz.com",
                     Name = "birdo",
                     Value = "tweets"
-                }
-            );
-            var cookies = (await Context.GetCookiesAsync("https://foo.com", "https://baz.com")).OrderBy(c => c.Name).ToList();
+                },
+            });
+            var cookies = (await Context.GetCookiesAsync(new[] { "https://foo.com", "https://baz.com" })).OrderBy(c => c.Name).ToList();
 
             Assert.Equal(2, cookies.Count);
 

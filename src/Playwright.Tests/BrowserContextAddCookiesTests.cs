@@ -70,11 +70,14 @@ namespace Microsoft.Playwright.Tests
                 return Task.CompletedTask;
             });
 
-            await Context.AddCookiesAsync(new Cookie
+            await Context.AddCookiesAsync(new[]
             {
-                Name = "cookie",
-                Value = "value",
-                Url = TestConstants.EmptyPage
+                new Cookie
+                {
+                    Name = "cookie",
+                    Value = "value",
+                    Url = TestConstants.EmptyPage
+                }
             });
 
             var page = await Context.NewPageAsync();
@@ -87,18 +90,24 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldIsolateCookiesInBrowserContexts()
         {
             await using var anotherContext = await Browser.NewContextAsync();
-            await Context.AddCookiesAsync(new Cookie
+            await Context.AddCookiesAsync(new[]
             {
-                Name = "isolatecookie",
-                Value = "page1value",
-                Url = TestConstants.EmptyPage
+                new Cookie
+                {
+                    Name = "isolatecookie",
+                    Value = "page1value",
+                    Url = TestConstants.EmptyPage
+                }
             });
 
-            await anotherContext.AddCookiesAsync(new Cookie
+            await anotherContext.AddCookiesAsync(new[]
             {
-                Name = "isolatecookie",
-                Value = "page2value",
-                Url = TestConstants.EmptyPage
+                new Cookie
+                {
+                    Name = "isolatecookie",
+                    Value = "page2value",
+                    Url = TestConstants.EmptyPage
+                }
             });
 
             var cookies1 = await Context.GetCookiesAsync();
@@ -172,11 +181,14 @@ namespace Microsoft.Playwright.Tests
                 return Task.CompletedTask;
             });
 
-            await Context.AddCookiesAsync(new Cookie
+            await Context.AddCookiesAsync(new[]
             {
-                Name = "sendcookie",
-                Value = "value",
-                Url = TestConstants.EmptyPage
+                new Cookie
+                {
+                    Name = "sendcookie",
+                    Value = "value",
+                    Url = TestConstants.EmptyPage
+                }
             });
 
             var page = await Context.NewPageAsync();
@@ -197,12 +209,15 @@ namespace Microsoft.Playwright.Tests
             {
                 var context1 = await Browser.NewContextAsync();
 
-                await Context.AddCookiesAsync(new Cookie
+                await Context.AddCookiesAsync(new[]
                 {
-                    Name = "cookie-in-context-1",
-                    Value = "value",
-                    Expires = DateTimeOffset.Now.ToUnixTimeSeconds() + 10000,
-                    Url = TestConstants.EmptyPage
+                    new Cookie
+                    {
+                        Name = "cookie-in-context-1",
+                        Value = "value",
+                        Expires = DateTimeOffset.Now.ToUnixTimeSeconds() + 10000,
+                        Url = TestConstants.EmptyPage
+                    }
                 });
             }
 
@@ -220,7 +235,8 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
 
-            await Context.AddCookiesAsync(
+            await Context.AddCookiesAsync(new[]
+            {
                 new Cookie
                 {
                     Url = TestConstants.EmptyPage,
@@ -232,8 +248,8 @@ namespace Microsoft.Playwright.Tests
                     Url = TestConstants.EmptyPage,
                     Name = "multiple-2",
                     Value = "bar"
-                }
-            );
+                },
+            });
 
             Assert.Equal(
                 new[]
@@ -252,11 +268,14 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveExpiresSetToMinus1ForSessionCookies()
         {
-            await Context.AddCookiesAsync(new Cookie
+            await Context.AddCookiesAsync(new[]
             {
-                Url = TestConstants.EmptyPage,
-                Name = "expires",
-                Value = "123456"
+                new Cookie
+                {
+                    Url = TestConstants.EmptyPage,
+                    Name = "expires",
+                    Value = "123456"
+                }
             });
 
             var cookies = await Context.GetCookiesAsync();
@@ -268,11 +287,14 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetCookieWithReasonableDefaults()
         {
-            await Context.AddCookiesAsync(new Cookie
+            await Context.AddCookiesAsync(new[]
             {
-                Url = TestConstants.EmptyPage,
-                Name = "defaults",
-                Value = "123456"
+                new Cookie
+                {
+                    Url = TestConstants.EmptyPage,
+                    Name = "defaults",
+                    Value = "123456"
+                }
             });
 
             var cookie = Assert.Single(await Context.GetCookiesAsync());
@@ -291,13 +313,17 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldSetACookieWithAPath()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            await Context.AddCookiesAsync(new Cookie
+            await Context.AddCookiesAsync(new[]
             {
-                Domain = "localhost",
-                Path = "/grid.html",
-                Name = "gridcookie",
-                Value = "GRID"
+                new Cookie
+                {
+                    Domain = "localhost",
+                    Path = "/grid.html",
+                    Name = "gridcookie",
+                    Value = "GRID"
+                }
             });
+
             var cookie = Assert.Single(await Context.GetCookiesAsync());
             Assert.Equal("gridcookie", cookie.Name);
             Assert.Equal("GRID", cookie.Value);
@@ -322,19 +348,21 @@ namespace Microsoft.Playwright.Tests
             await Page.GoToAsync(TestConstants.AboutBlank);
 
             var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async ()
-                => await Context.AddCookiesAsync(
-                    new Cookie
-                    {
-                        Url = TestConstants.EmptyPage,
-                        Name = "example-cookie",
-                        Value = "best"
-                    },
-                    new Cookie
-                    {
-                        Url = "about:blank",
-                        Name = "example-cookie-blank",
-                        Value = "best"
-                    }));
+                => await Context.AddCookiesAsync(new[]
+                {
+                        new Cookie
+                        {
+                            Url = TestConstants.EmptyPage,
+                            Name = "example-cookie",
+                            Value = "best"
+                        },
+                        new Cookie
+                        {
+                            Url = "about:blank",
+                            Name = "example-cookie-blank",
+                            Value = "best"
+                        },
+                }));
             Assert.Equal("Blank page can not have cookie \"example-cookie-blank\"", exception.Message);
         }
 
@@ -344,13 +372,15 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GoToAsync("data:,Hello%2C%20World!");
             var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async ()
-                => await Context.AddCookiesAsync(
-                    new Cookie
-                    {
-                        Url = "data:,Hello%2C%20World!",
-                        Name = "example-cookie",
-                        Value = "best"
-                    }));
+                => await Context.AddCookiesAsync(new[]
+                {
+                        new Cookie
+                        {
+                            Url = "data:,Hello%2C%20World!",
+                            Name = "example-cookie",
+                            Value = "best"
+                        }
+                }));
 
             Assert.Equal("Data URL page can not have cookie \"example-cookie\"", exception.Message);
         }
@@ -362,13 +392,16 @@ namespace Microsoft.Playwright.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
             const string secureUrl = "https://example.com";
 
-            await Context.AddCookiesAsync(new Cookie
+            await Context.AddCookiesAsync(new[]
             {
-                Url = secureUrl,
-                Name = "foo",
-                Value = "bar"
+                new Cookie
+                {
+                    Url = secureUrl,
+                    Name = "foo",
+                    Value = "bar"
+                }
             });
-            var cookie = Assert.Single(await Context.GetCookiesAsync(secureUrl));
+            var cookie = Assert.Single(await Context.GetCookiesAsync(new[] { secureUrl }));
             Assert.True(cookie.Secure);
         }
 
@@ -379,13 +412,16 @@ namespace Microsoft.Playwright.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
             string SecureUrl = "http://example.com";
 
-            await Context.AddCookiesAsync(new Cookie
+            await Context.AddCookiesAsync(new[]
             {
-                Url = SecureUrl,
-                Name = "foo",
-                Value = "bar"
+                new Cookie
+                {
+                    Url = SecureUrl,
+                    Name = "foo",
+                    Value = "bar"
+                }
             });
-            var cookie = Assert.Single(await Context.GetCookiesAsync(SecureUrl));
+            var cookie = Assert.Single(await Context.GetCookiesAsync(new[] { SecureUrl }));
             Assert.False(cookie.Secure);
         }
 
@@ -394,9 +430,17 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldSetACookieOnADifferentDomain()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            await Context.AddCookiesAsync(new Cookie { Name = "example-cookie", Value = "best", Url = "https://www.example.com" });
+            await Context.AddCookiesAsync(new[]
+            {
+                new Cookie
+                {
+                    Name = "example-cookie",
+                    Value = "best",
+                    Url = "https://www.example.com"
+                }
+            });
             Assert.Equal(string.Empty, await Page.EvaluateAsync<string>("document.cookie"));
-            var cookie = Assert.Single(await Context.GetCookiesAsync("https://www.example.com"));
+            var cookie = Assert.Single(await Context.GetCookiesAsync(new[] { "https://www.example.com" }));
             Assert.Equal("example-cookie", cookie.Name);
             Assert.Equal("best", cookie.Value);
             Assert.Equal("www.example.com", cookie.Domain);
@@ -412,13 +456,15 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldSetCookiesForAFrame()
         {
             await Page.GoToAsync(TestConstants.EmptyPage);
-            await Context.AddCookiesAsync(
+            await Context.AddCookiesAsync(new[]
+            {
                 new Cookie
                 {
                     Url = TestConstants.ServerUrl,
                     Name = "frame-cookie",
                     Value = "value"
-                });
+                }
+            });
 
             await Page.EvaluateAsync(@"src => {
                     let fulfill;
@@ -452,7 +498,7 @@ namespace Microsoft.Playwright.Tests
             await Page.FirstChildFrame().EvaluateAsync<string>("document.cookie = 'username=John Doe'");
             await Page.WaitForTimeoutAsync(2000);
             bool allowsThirdPart = !TestConstants.IsWebKit;
-            var cookies = await Context.GetCookiesAsync(TestConstants.CrossProcessUrl + "/grid.html");
+            var cookies = await Context.GetCookiesAsync(new[] { TestConstants.CrossProcessUrl + "/grid.html" });
 
             if (allowsThirdPart)
             {

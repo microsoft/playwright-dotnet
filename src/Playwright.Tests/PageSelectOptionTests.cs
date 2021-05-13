@@ -91,7 +91,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldSelectOnlyFirstOption()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
-            await Page.SelectOptionAsync("select", "blue", "green", "red");
+            await Page.SelectOptionAsync("select", new[] { "blue", "green", "red" });
             Assert.Equal(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
             Assert.Equal(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
@@ -115,7 +115,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
             await Page.EvaluateAsync("() => makeMultiple()");
-            await Page.SelectOptionAsync("select", "blue", "green", "red");
+            await Page.SelectOptionAsync("select", new[] { "blue", "green", "red" });
             Assert.Equal(new[] { "blue", "green", "red" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
             Assert.Equal(new[] { "blue", "green", "red" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
@@ -126,7 +126,13 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
             await Page.EvaluateAsync("() => makeMultiple()");
-            await Page.SelectOptionAsync("select", new SelectOptionValue { Value = "blue" }, new SelectOptionValue { Label = "Green" }, new SelectOptionValue { Index = 4 });
+            await Page.SelectOptionAsync(
+                "select",
+                new[] {
+                    new SelectOptionValue { Value = "blue" },
+                    new SelectOptionValue { Label = "Green" },
+                    new SelectOptionValue { Index = 4 }
+                });
             Assert.Equal(new[] { "blue", "gray", "green" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
             Assert.Equal(new[] { "blue", "gray", "green" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
@@ -165,7 +171,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
             await Page.EvaluateAsync<string>("() => makeMultiple()");
-            var result = await Page.SelectOptionAsync("select", "blue", "black", "magenta");
+            var result = await Page.SelectOptionAsync("select", new[] { "blue", "black", "magenta" });
             Assert.Equal(new[] { "blue", "black", "magenta" }.OrderBy(v => v), result.OrderBy(v => v));
         }
 
@@ -174,7 +180,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReturnAnArrayOfOneElementWhenMultipleIsNotSet()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
-            var result = await Page.SelectOptionAsync("select", "42", "blue", "black", "magenta");
+            var result = await Page.SelectOptionAsync("select", new[] { "42", "blue", "black", "magenta" });
             Assert.Single(result);
         }
 
@@ -216,7 +222,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
             await Page.EvaluateAsync("() => makeMultiple()");
-            await Page.SelectOptionAsync("select", "blue", "black", "magenta");
+            await Page.SelectOptionAsync("select", new[] { "blue", "black", "magenta" });
             await Page.SelectOptionAsync("select");
             Assert.True(await Page.EvalOnSelectorAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected)"));
         }
@@ -226,7 +232,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldDeselectAllOptionsWhenPassedNoValuesForASelectWithoutMultiple()
         {
             await Page.GoToAsync(TestConstants.ServerUrl + "/input/select.html");
-            await Page.SelectOptionAsync("select", "blue", "black", "magenta");
+            await Page.SelectOptionAsync("select", new[] { "blue", "black", "magenta" });
             await Page.SelectOptionAsync("select", Array.Empty<string>());
             Assert.True(await Page.EvalOnSelectorAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected)"));
         }
