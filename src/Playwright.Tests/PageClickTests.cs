@@ -596,6 +596,78 @@ namespace Microsoft.Playwright.Tests
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
         }
 
+        [PlaywrightTest("page-click.spec.ts", "should wait for becoming hit target with trial run")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldWaitForBecomingHitTargetWithTrialRun()
+        {
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.EvalOnSelectorAsync("button", @"button => {
+                button.style.borderWidth = '0';
+                button.style.width = '200px';
+                button.style.height = '20px';
+                document.body.style.margin = '0';
+                document.body.style.position = 'relative';
+                const flyOver = document.createElement('div');
+                flyOver.className = 'flyover';
+                flyOver.style.position = 'absolute';
+                flyOver.style.width = '400px';
+                flyOver.style.height = '20px';
+                flyOver.style.left = '-200px';
+                flyOver.style.top = '0';
+                flyOver.style.background = 'red';
+                document.body.appendChild(flyOver);
+            }");
+
+            var clickTask = Page.ClickAsync("button", trial: true);
+            Assert.False(clickTask.IsCompleted);
+
+            await Page.EvalOnSelectorAsync(".flyover", "flyOver => flyOver.style.left = '0'");
+            await GiveItAChanceToClick(Page);
+            Assert.False(clickTask.IsCompleted);
+
+            await Page.EvalOnSelectorAsync(".flyover", "flyOver => flyOver.style.left = '200px'");
+            await clickTask.WithTimeout(TestConstants.DefaultTaskTimeout);
+            Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("window.result"));
+        }
+
+        [PlaywrightTest("page-click.spec.ts", "trial run should work with short timeout")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task TrialRunShouldWorkWithShortTimeout()
+        {
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            var button = await Page.QuerySelectorAsync("button");
+            await Page.EvalOnSelectorAsync("button", @"button => button.disabled = true");
+            var exception = await Assert.ThrowsAsync<TimeoutException>(() => Page.ClickAsync("button", trial: true, timeout: 500));
+            Assert.Contains("click action (trial run)", exception.Message);
+            Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("window.result"));
+        }
+
+        [PlaywrightTest("page-click.spec.ts", "trial run should not click")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task TrialRunShouldNotClick()
+        {
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.ClickAsync("button", trial: true);
+            Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("window.result"));
+        }
+
+        [PlaywrightTest("page-click.spec.ts", "trial run should not double click")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task TrialRunShouldNotDoubleClick()
+        {
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.EvaluateAsync(@"() => {
+                window['double'] = false;
+                const button = document.querySelector('button');
+                button.addEventListener('dblclick', event => {
+                    window['double'] = true;
+                });
+            }");
+            await Page.DblClickAsync("button", trial: true);
+            Assert.False(await Page.EvaluateAsync<bool>("double"));
+            Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("window.result"));
+        }
+
         [PlaywrightTest("page-click.spec.ts", "should fail when obscured and not waiting for hit target")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenObscuredAndNotWaitingForHitTarget()

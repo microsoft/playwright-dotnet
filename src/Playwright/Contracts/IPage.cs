@@ -47,15 +47,6 @@ namespace Microsoft.Playwright
         /// <inheritdoc cref="SelectOptionAsync(string, IEnumerable{SelectOptionValue}, bool?, float?)" />
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, bool? noWaitAfter = default, float? timeout = default);
 
-        /// <inheritdoc cref="SelectOptionAsync(string, IEnumerable{SelectOptionValue}, bool?, float?)" />
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, params string[] values);
-
-        /// <inheritdoc cref="SelectOptionAsync(string, IEnumerable{SelectOptionValue}, bool?, float?)" />
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, params SelectOptionValue[] values);
-
-        /// <inheritdoc cref="SelectOptionAsync(string, IEnumerable{SelectOptionValue}, bool?, float?)" />
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, params IElementHandle[] values);
-
         /// <inheritdoc cref="WaitForEventAsync(string, float?)"/>
         Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<T, bool> predicate = default, float? timeout = default);
 

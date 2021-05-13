@@ -162,11 +162,14 @@ namespace Microsoft.Playwright.Tests
         {
             // Setup cookie.
             await Page.GotoAsync(TestConstants.EmptyPage);
-            await Context.AddCookiesAsync(new Cookie
+            await Context.AddCookiesAsync(new[]
             {
-                Url = TestConstants.EmptyPage,
-                Name = "foo",
-                Value = "bar"
+                new Cookie
+                {
+                    Url = TestConstants.EmptyPage,
+                    Name = "foo",
+                    Value = "bar"
+                }
             });
 
             // Setup request interception.

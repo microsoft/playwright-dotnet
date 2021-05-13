@@ -1,4 +1,4 @@
-/*
+﻿/*
  * MIT License
  *
  * Copyright (c) Microsoft Corporation.
@@ -63,7 +63,7 @@ namespace Microsoft.Playwright
     ///         var firefox = playwright.Firefox;<br/>
     ///         var browser = await firefox.LaunchAsync(headless: false);<br/>
     ///         var page = await browser.NewPageAsync();<br/>
-    ///         await page.GoToAsync("https://www.bing.com");<br/>
+    ///         await page.GotoAsync("https://www.bing.com");<br/>
     ///         await browser.CloseAsync();<br/>
     ///     }<br/>
     /// }
@@ -126,7 +126,7 @@ namespace Microsoft.Playwright
         /// var context = await browser.NewContextAsync();<br/>
         /// // Create a new page in a pristine context.<br/>
         /// var page = await context.NewPageAsync(); ;<br/>
-        /// await page.GoToAsync("https://www.bing.com");
+        /// await page.GotoAsync("https://www.bing.com");
         /// </code>
         /// </summary>
         /// <param name="acceptDownloads">

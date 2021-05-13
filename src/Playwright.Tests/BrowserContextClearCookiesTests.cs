@@ -19,11 +19,14 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldClearCookes()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            await Context.AddCookiesAsync(new Cookie
+            await Context.AddCookiesAsync(new[]
             {
-                Url = TestConstants.EmptyPage,
-                Name = "cookie1",
-                Value = "1"
+                new Cookie
+                {
+                    Url = TestConstants.EmptyPage,
+                    Name = "cookie1",
+                    Value = "1"
+                }
             });
             Assert.Equal("cookie1=1", await Page.EvaluateAsync<string>("document.cookie"));
             await Context.ClearCookiesAsync();
@@ -37,18 +40,24 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldIsolateWhenClearing()
         {
             await using var anotherContext = await Browser.NewContextAsync();
-            await Context.AddCookiesAsync(new Cookie
+            await Context.AddCookiesAsync(new[]
             {
-                Name = "page1cookie",
-                Value = "page1value",
-                Url = TestConstants.EmptyPage
+                new Cookie
+                {
+                    Name = "page1cookie",
+                    Value = "page1value",
+                    Url = TestConstants.EmptyPage
+                }
             });
 
-            await anotherContext.AddCookiesAsync(new Cookie
+            await anotherContext.AddCookiesAsync(new[]
             {
-                Name = "page2cookie",
-                Value = "page2value",
-                Url = TestConstants.EmptyPage
+                new Cookie
+                {
+                    Name = "page2cookie",
+                    Value = "page2value",
+                    Url = TestConstants.EmptyPage
+                }
             });
 
             Assert.Single(await Context.GetCookiesAsync());

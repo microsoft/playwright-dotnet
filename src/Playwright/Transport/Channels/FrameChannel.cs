@@ -432,7 +432,8 @@ namespace Microsoft.Playwright.Transport.Channels
             float? timeout,
             bool force,
             bool? noWaitAfter,
-            bool isPage)
+            bool isPage,
+            bool? trial)
         {
             var args = new Dictionary<string, object>
             {
@@ -459,6 +460,11 @@ namespace Microsoft.Playwright.Transport.Channels
                 args["noWaitAfter"] = noWaitAfter;
             }
 
+            if (trial != null)
+            {
+                args["trial"] = trial;
+            }
+
             if (timeout != null)
             {
                 args["timeout"] = timeout;
@@ -476,7 +482,8 @@ namespace Microsoft.Playwright.Transport.Channels
             float? timeout,
             bool force,
             bool? noWaitAfter,
-            bool isPage)
+            bool isPage,
+            bool? trial)
         {
             var args = new Dictionary<string, object>
             {
@@ -495,6 +502,11 @@ namespace Microsoft.Playwright.Transport.Channels
             if (position != null)
             {
                 args["position"] = position;
+            }
+
+            if (trial != null)
+            {
+                args["trial"] = trial;
             }
 
             if (timeout != null)
@@ -552,7 +564,7 @@ namespace Microsoft.Playwright.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "fill", args);
         }
 
-        internal Task CheckAsync(string selector, Position position, float? timeout, bool force, bool? noWaitAfter, bool isPage)
+        internal Task CheckAsync(string selector, Position position, float? timeout, bool force, bool? noWaitAfter, bool isPage, bool? trial)
         {
             var args = new Dictionary<string, object>
             {
@@ -569,6 +581,11 @@ namespace Microsoft.Playwright.Transport.Channels
             if (noWaitAfter != null)
             {
                 args["noWaitAfter"] = noWaitAfter;
+            }
+
+            if (trial != null)
+            {
+                args["trial"] = trial;
             }
 
             if (timeout != null)
@@ -579,7 +596,7 @@ namespace Microsoft.Playwright.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "check", args);
         }
 
-        internal Task UncheckAsync(string selector, Position position, float? timeout, bool force, bool? noWaitAfter, bool isPage)
+        internal Task UncheckAsync(string selector, Position position, float? timeout, bool force, bool? noWaitAfter, bool isPage, bool? trial)
         {
             var args = new Dictionary<string, object>
             {
@@ -596,6 +613,11 @@ namespace Microsoft.Playwright.Transport.Channels
             if (noWaitAfter != null)
             {
                 args["noWaitAfter"] = noWaitAfter;
+            }
+
+            if (trial != null)
+            {
+                args["trial"] = trial;
             }
 
             if (timeout != null)
@@ -624,7 +646,14 @@ namespace Microsoft.Playwright.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "dispatchEvent", args);
         }
 
-        internal Task HoverAsync(string selector, Position position, IEnumerable<KeyboardModifier> modifiers, bool force, float? timeout, bool isPage)
+        internal Task HoverAsync(
+            string selector,
+            Position position,
+            IEnumerable<KeyboardModifier> modifiers,
+            bool force,
+            float? timeout,
+            bool isPage,
+            bool? trial)
         {
             var args = new Dictionary<string, object>
             {
@@ -641,6 +670,11 @@ namespace Microsoft.Playwright.Transport.Channels
             if (position != null)
             {
                 args["position"] = position;
+            }
+
+            if (trial != null)
+            {
+                args["trial"] = trial;
             }
 
             if (timeout != null)
@@ -847,7 +881,15 @@ namespace Microsoft.Playwright.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "textContent", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task TapAsync(string selector, IEnumerable<KeyboardModifier> modifiers = null, Position position = null, float? timeout = null, bool force = false, bool? noWaitAfter = null, bool isPage = false)
+        internal Task TapAsync(
+            string selector,
+            IEnumerable<KeyboardModifier> modifiers,
+            Position position,
+            float? timeout,
+            bool force,
+            bool? noWaitAfter,
+            bool isPage,
+            bool? trial)
         {
             var args = new Dictionary<string, object>
             {
@@ -864,6 +906,11 @@ namespace Microsoft.Playwright.Transport.Channels
             if (noWaitAfter != null)
             {
                 args["noWaitAfter"] = noWaitAfter;
+            }
+
+            if (trial != null)
+            {
+                args["trial"] = trial;
             }
 
             if (timeout != null)

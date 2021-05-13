@@ -241,11 +241,13 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeCookies()
         {
-            await _context.AddCookiesAsync(
+            await _context.AddCookiesAsync(new[]
+            {
                 new Cookie { Name = "name1", Value = "value1", Domain = "localhost", Path = "/", HttpOnly = true },
                 new Cookie { Name = "name2", Value = "val\"ue2", Domain = "localhost", Path = "/", SameSite = SameSiteAttribute.Lax },
                 new Cookie { Name = "name3", Value = "val=ue3", Domain = "localhost", Path = "/" },
-                new Cookie { Name = "name4", Value = "val,ue4", Domain = "localhost", Path = "/" });
+                new Cookie { Name = "name4", Value = "val,ue4", Domain = "localhost", Path = "/" },
+            });
 
             await _page.GotoAsync(TestConstants.EmptyPage);
             var log = await GetLogAsync();
