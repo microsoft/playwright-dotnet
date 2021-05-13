@@ -43,7 +43,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenInvalidLongitude()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() =>
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() =>
                 Context.SetGeolocationAsync(new Geolocation
                 {
                     Longitude = 200,

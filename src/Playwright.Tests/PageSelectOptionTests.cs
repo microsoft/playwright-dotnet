@@ -152,7 +152,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowWhenElementIsNotASelect()
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.SelectOptionAsync("body", string.Empty));
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Page.SelectOptionAsync("body", string.Empty));
             Assert.Contains("Element is not a <select> element.", exception.Message);
         }
 
@@ -199,7 +199,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
             await Page.EvaluateAsync("() => makeMultiple()");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(
                 () => Page.SelectOptionAsync("select", new[] { "blue", null, "black", "magenta" }));
             Assert.Contains("got null", exception.Message);
         }

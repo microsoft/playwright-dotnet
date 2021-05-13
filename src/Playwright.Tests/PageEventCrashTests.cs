@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
             var crashTask = Page.WaitForEventAsync(PageEvent.Crash);
             await CrashAsync(Page);
             await crashTask.WithTimeout(TestConstants.DefaultTaskTimeout);
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.EvaluateAsync("() => {}"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.EvaluateAsync("() => {}"));
             Assert.Contains("crash", exception.Message);
         }
 
@@ -49,7 +49,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<div>This page should crash</div>");
             var responseTask = Page.WaitForEventAsync(PageEvent.Response);
             await CrashAsync(Page);
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => responseTask.WithTimeout(TestConstants.DefaultTaskTimeout));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => responseTask.WithTimeout(TestConstants.DefaultTaskTimeout));
             Assert.Contains("Page crashed", exception.Message);
         }
 
@@ -64,7 +64,7 @@ namespace Microsoft.Playwright.Tests
             await Page.WaitForNavigationAsync(WaitUntilState.DOMContentLoaded);
 
             await CrashAsync(Page);
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => task);
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => task);
             Assert.Contains("Navigation failed because page crashed", exception.Message);
         }
 

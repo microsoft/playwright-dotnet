@@ -69,11 +69,11 @@ namespace Microsoft.Playwright.Tests
         public async Task InnerTextShouldThrow()
         {
             await Page.SetContentAsync("<svg>text</svg>");
-            var exception1 = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.InnerTextAsync("svg"));
+            var exception1 = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.InnerTextAsync("svg"));
             Assert.Contains("Not an HTMLElement", exception1.Message);
 
             var handle = await Page.QuerySelectorAsync("svg");
-            var exception2 = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => handle.InnerTextAsync());
+            var exception2 = await Assert.ThrowsAnyAsync<PlaywrightException>(() => handle.InnerTextAsync());
             Assert.Contains("Not an HTMLElement", exception1.Message);
         }
 
@@ -266,7 +266,7 @@ namespace Microsoft.Playwright.Tests
             await handle.EvaluateAsync("input => input.checked = false");
             Assert.False(await handle.IsCheckedAsync());
             Assert.False(await Page.IsCheckedAsync("input"));
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.IsCheckedAsync("div"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.IsCheckedAsync("div"));
             Assert.Contains("Not a checkbox or radio button", exception.Message);
         }
     }

@@ -113,7 +113,7 @@ namespace Microsoft.Playwright.Tests
             var redirected = await redirectedFrom.ResponseAsync();
             Assert.Equal(HttpStatusCode.Redirect, redirected.StatusCode);
 
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async () => await redirected.TextAsync());
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(async () => await redirected.TextAsync());
             Assert.Contains("Response body is unavailable for redirect responses", exception.Message);
         }
 

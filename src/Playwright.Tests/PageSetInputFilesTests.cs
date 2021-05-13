@@ -294,7 +294,7 @@ namespace Microsoft.Playwright.Tests
                Page.WaitForEventAsync(PageEvent.FileChooser),
                Page.ClickAsync("input")
             );
-            await Assert.ThrowsAsync<PlaywrightSharpException>(() => fileChooser.SetFilesAsync(new string[]
+            await Assert.ThrowsAsync<PlaywrightException>(() => fileChooser.SetFilesAsync(new string[]
             {
                 TestUtils.GetWebServerFile(TestConstants.FileToUpload),
                 TestUtils.GetWebServerFile("pptr.png"),

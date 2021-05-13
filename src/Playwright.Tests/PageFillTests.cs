@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Tests
             foreach (string type in new[] { "button", "checkbox", "file", "image", "radio", "range", "reset", "submit" })
             {
                 await Page.EvalOnSelectorAsync("input", "(input, type) => input.setAttribute('type', type)", type);
-                var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.FillAsync("input", string.Empty));
+                var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Page.FillAsync("input", string.Empty));
                 Assert.Contains($"input of type \"{type}\" cannot be filled", exception.Message);
             }
         }
@@ -75,7 +75,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<input type=date>");
             await Page.ClickAsync("input");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.FillAsync("input", "2020-13-02"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.FillAsync("input", "2020-13-02"));
             Assert.Contains("Malformed value", exception.Message);
         }
 
@@ -95,7 +95,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<input type=time>");
             await Page.ClickAsync("input");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.FillAsync("input", "25:05"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.FillAsync("input", "25:05"));
             Assert.Contains("Malformed value", exception.Message);
         }
 
@@ -115,7 +115,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<input type=datetime-local>");
             await Page.ClickAsync("input");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.FillAsync("input", "abc"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.FillAsync("input", "abc"));
             Assert.Contains("Malformed value", exception.Message);
         }
 
@@ -162,7 +162,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowWhenElementIsNotAnInputOrTextareaOrContenteditable()
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.FillAsync("body", string.Empty));
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Page.FillAsync("body", string.Empty));
             Assert.Contains("Element is not an <input>", exception.Message);
         }
 
@@ -282,7 +282,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldNotBeAbleToFillTextIntoTheInputTypeNumber()
         {
             await Page.SetContentAsync("<input id=\"input\" type=\"number\"></input>");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.FillAsync("input", "abc"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.FillAsync("input", "abc"));
             Assert.Contains("Cannot type text into input[type=number]", exception.Message);
         }
 

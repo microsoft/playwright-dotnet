@@ -179,7 +179,7 @@ namespace Microsoft.Playwright.Tests
                 context.Response.StatusCode = 204;
                 return Task.CompletedTask;
             });
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(
                 () => Page.GotoAsync(TestConstants.EmptyPage));
 
             if (TestConstants.IsChromium)
@@ -221,7 +221,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenNavigatingToBadUrl()
         {
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await Page.GotoAsync("asdfasdf"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(async () => await Page.GotoAsync("asdfasdf"));
             if (TestConstants.IsChromium || TestConstants.IsWebKit)
             {
                 Assert.Contains("Cannot navigate to invalid URL", exception.Message);
@@ -241,7 +241,7 @@ namespace Microsoft.Playwright.Tests
             Page.RequestFinished += (_, e) => Assert.NotNull(e);
             Page.RequestFailed += (_, e) => Assert.NotNull(e);
 
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await Page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(async () => await Page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html"));
             TestUtils.AssertSSLError(exception.Message);
         }
 
@@ -252,7 +252,7 @@ namespace Microsoft.Playwright.Tests
         {
             Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
             Server.SetRedirect("/redirect/2.html", "/empty.html");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await Page.GotoAsync(TestConstants.HttpsPrefix + "/redirect/1.html"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(async () => await Page.GotoAsync(TestConstants.HttpsPrefix + "/redirect/1.html"));
             TestUtils.AssertSSLError(exception.Message);
         }
 
@@ -398,7 +398,7 @@ namespace Microsoft.Playwright.Tests
                 return Task.Delay(-1);
             });
 
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await Page.GotoAsync(TestConstants.EmptyPage));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(async () => await Page.GotoAsync(TestConstants.EmptyPage));
             await anotherTask;
 
             if (TestConstants.IsChromium)
@@ -509,7 +509,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldFailWhenNavigatingAndShowTheUrlAtTheErrorMessage()
         {
             const string url = TestConstants.HttpsPrefix + "/redirect/1.html";
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await Page.GotoAsync(url));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(async () => await Page.GotoAsync(url));
             Assert.Contains(url, exception.Message);
         }
 
@@ -550,7 +550,7 @@ namespace Microsoft.Playwright.Tests
                 ["referer"] = "http://microsoft.com/"
             });
 
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async () =>
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(async () =>
                 await Page.GotoAsync(TestConstants.ServerUrl + "/grid.html", referer: "http://google.com/"));
 
             Assert.Contains("\"referer\" is already specified as extra HTTP header", exception.Message);
@@ -592,7 +592,7 @@ namespace Microsoft.Playwright.Tests
             await request;
             await Page.GotoAsync(TestConstants.EmptyPage);
 
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async () => await failed);
+            await Assert.ThrowsAnyAsync<PlaywrightException>(async () => await failed);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "extraHTTPHeaders should be pushed to provisional page")]

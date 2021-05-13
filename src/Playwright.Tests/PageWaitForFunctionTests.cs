@@ -106,7 +106,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWithPredicateThrowingOnFirstCall()
         {
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.WaitForFunctionAsync("() => { throw new Error('oh my'); }"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.WaitForFunctionAsync("() => { throw new Error('oh my'); }"));
             Assert.Contains("oh my", exception.Message);
         }
 
@@ -114,7 +114,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWithPredicateThrowingSometimes()
         {
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.WaitForFunctionAsync(@"() => {
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.WaitForFunctionAsync(@"() => {
               window.counter = (window.counter || 0) + 1;
               if (window.counter === 3)
                 throw new Error('Bad counter!');
@@ -127,7 +127,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWithReferenceErrorOnWrongPage()
         {
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.WaitForFunctionAsync("() => globalVar === 123"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.WaitForFunctionAsync("() => globalVar === 123"));
             Assert.Contains("globalVar", exception.Message);
         }
 
@@ -156,7 +156,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowNegativePollingInterval()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(()
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(()
                 => Page.WaitForFunctionAsync("() => !!document.body", pollingInterval: -10));
 
             Assert.Contains("Cannot poll with non-positive interval", exception.Message);

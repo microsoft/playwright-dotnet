@@ -270,7 +270,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowIfPageArgumentIsPassed()
         {
             var tmp = new TempDirectory();
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() =>
+            await Assert.ThrowsAnyAsync<PlaywrightException>(() =>
                 BrowserType.LaunchDefaultPersistentContext(tmp.Path, new[] { TestConstants.EmptyPage }));
 
             tmp.Dispose();

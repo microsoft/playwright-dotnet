@@ -212,7 +212,7 @@ namespace Microsoft.Playwright
         {
             if (OwnerPage != null)
             {
-                throw new PlaywrightSharpException("Please use Browser.NewContextAsync()");
+                throw new PlaywrightException("Please use Browser.NewContextAsync()");
             }
 
             return (await Channel.NewPageAsync().ConfigureAwait(false)).Object;
@@ -408,13 +408,13 @@ namespace Microsoft.Playwright
             {
                 if (page.Bindings.ContainsKey(name))
                 {
-                    throw new PlaywrightSharpException($"Function \"{name}\" has been already registered in one of the pages");
+                    throw new PlaywrightException($"Function \"{name}\" has been already registered in one of the pages");
                 }
             }
 
             if (_bindings.ContainsKey(name))
             {
-                throw new PlaywrightSharpException($"Function \"{name}\" has been already registered");
+                throw new PlaywrightException($"Function \"{name}\" has been already registered");
             }
 
             _bindings.Add(name, callback);

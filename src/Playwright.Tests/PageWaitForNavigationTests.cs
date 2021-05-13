@@ -97,7 +97,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync($"<a href='{TestConstants.HttpsPrefix}/empty.html'>foobar</a>");
             var navigationTask = Page.WaitForNavigationAsync();
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => TaskUtils.WhenAll(
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => TaskUtils.WhenAll(
                 navigationTask,
                 Page.ClickAsync("a")
             ));
@@ -326,7 +326,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
             var frame = Page.Frames.ElementAt(1);
             Server.SetRoute("/empty.html", _ => Task.Delay(6000));
-            var exceptionTask = Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => frame.WaitForNavigationAsync());
+            var exceptionTask = Assert.ThrowsAnyAsync<PlaywrightException>(() => frame.WaitForNavigationAsync());
 
             try
             {

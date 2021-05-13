@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -84,9 +84,9 @@ namespace Microsoft.Playwright.Tests
 
             Assert.Equal("Served by the proxy", await page.TitleAsync());
 
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GotoAsync("http://non-existent1.com/target.html"));
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GotoAsync("http://sub.non-existent2.com/target.html"));
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GotoAsync("http://foo.zone/target.html"));
+            await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.GotoAsync("http://non-existent1.com/target.html"));
+            await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.GotoAsync("http://sub.non-existent2.com/target.html"));
+            await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.GotoAsync("http://foo.zone/target.html"));
         }
     }
 }

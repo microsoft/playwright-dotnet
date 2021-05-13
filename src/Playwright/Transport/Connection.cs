@@ -131,7 +131,7 @@ namespace Microsoft.Playwright.Transport
         {
             if (IsClosed)
             {
-                throw new PlaywrightSharpException($"Connection closed ({_reason})");
+                throw new PlaywrightException($"Connection closed ({_reason})");
             }
 
             int id = Interlocked.Increment(ref _lastId);
@@ -271,7 +271,7 @@ namespace Microsoft.Playwright.Transport
                 return fallbackBinPath;
             }
 
-            throw new PlaywrightSharpException($@"Driver not found in any of the locations. Tried:
+            throw new PlaywrightException($@"Driver not found in any of the locations. Tried:
  * {executableFile}
  * {fallbackBinPath}");
         }
@@ -297,7 +297,7 @@ namespace Microsoft.Playwright.Transport
             }
             else
             {
-                throw new PlaywrightSharpException("Unknown platform");
+                throw new PlaywrightException("Unknown platform");
             }
 
             return Path.Combine(driversPath, ".playwright", platformId, "native", runnerName);
@@ -461,7 +461,7 @@ namespace Microsoft.Playwright.Transport
         {
             if (string.IsNullOrEmpty(error.Message))
             {
-                return new PlaywrightSharpException(error.Value);
+                return new PlaywrightException(error.Value);
             }
 
             if (error.Name == "TimeoutError")
@@ -487,7 +487,7 @@ namespace Microsoft.Playwright.Transport
                     "use DEBUG=pw:api environment variable and rerun",
                     "pass `debug: \"pw:api\"` to LaunchAsync");
 
-            return new PlaywrightSharpException(message);
+            return new PlaywrightException(message);
         }
 
         private Exception CreateException(string message)
@@ -507,7 +507,7 @@ namespace Microsoft.Playwright.Transport
                 return new NavigationException(message);
             }
 
-            return new PlaywrightSharpException(message);
+            return new PlaywrightException(message);
         }
 
         private void Dispose(bool disposing)

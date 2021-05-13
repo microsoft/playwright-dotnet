@@ -62,13 +62,13 @@ namespace Microsoft.Playwright.Tests
         {
             await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { TimezoneId = "Foo/Bar" }))
             {
-                var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => context.NewPageAsync());
+                var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => context.NewPageAsync());
                 Assert.Contains("Invalid timezone ID: Foo/Bar", exception.Message);
             }
 
             await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { TimezoneId = "Baz/Qux" }))
             {
-                var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => context.NewPageAsync());
+                var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => context.NewPageAsync());
                 Assert.Contains("Invalid timezone ID: Baz/Qux", exception.Message);
             }
         }

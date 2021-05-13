@@ -87,7 +87,7 @@ namespace Microsoft.Playwright.Tests
             }
 
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => task);
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => task);
             Assert.Contains("Execution context was destroyed, most likely because of a navigation", exception.Message);
         }
 

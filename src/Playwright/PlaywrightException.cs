@@ -6,38 +6,38 @@ namespace Microsoft.Playwright
     /// <summary>
     /// Base exception used to identify any exception thrown by PlaywrightSharp.
     /// </summary>
-    public class PlaywrightSharpException : Exception
+    public class PlaywrightException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlaywrightSharpException"/> class.
+        /// Initializes a new instance of the <see cref="PlaywrightException"/> class.
         /// </summary>
-        public PlaywrightSharpException()
+        public PlaywrightException()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlaywrightSharpException"/> class.
+        /// Initializes a new instance of the <see cref="PlaywrightException"/> class.
         /// </summary>
         /// <param name="message">Exception message.</param>
-        public PlaywrightSharpException(string message) : base(message)
+        public PlaywrightException(string message) : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlaywrightSharpException"/> class.
+        /// Initializes a new instance of the <see cref="PlaywrightException"/> class.
         /// </summary>
         /// <param name="message">Exception message.</param>
         /// <param name="innerException">Inner exception.</param>
-        public PlaywrightSharpException(string message, Exception innerException) : base(message, innerException)
+        public PlaywrightException(string message, Exception innerException) : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlaywrightSharpException"/> class.
+        /// Initializes a new instance of the <see cref="PlaywrightException"/> class.
         /// </summary>
         /// <param name="info">Info.</param>
         /// <param name="context">Context.</param>
-        protected PlaywrightSharpException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected PlaywrightException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 

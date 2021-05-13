@@ -65,7 +65,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowAnErrorIfLoadingFromUrlFail()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.AddScriptTagAsync(url: "/nonexistfile.js"));
+            await Assert.ThrowsAsync<PlaywrightException>(() => Page.AddScriptTagAsync(url: "/nonexistfile.js"));
         }
 
         [PlaywrightTest("page-add-script-tag.spec.ts", "should work with a path")]
@@ -103,7 +103,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowWhenAddedWithContentToTheCSPPage()
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/csp.html");
-            await Assert.ThrowsAsync<PlaywrightSharpException>(() =>
+            await Assert.ThrowsAsync<PlaywrightException>(() =>
                 Page.AddScriptTagAsync(content: "window.__injected = 35;"));
         }
 
@@ -112,7 +112,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowWhenAddedWithURLToTheCSPPage()
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/csp.html");
-            await Assert.ThrowsAsync<PlaywrightSharpException>(() =>
+            await Assert.ThrowsAsync<PlaywrightException>(() =>
                 Page.AddScriptTagAsync(url: TestConstants.CrossProcessUrl + "/injectedfile.js"));
         }
 
@@ -122,7 +122,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
             string url = TestConstants.ServerUrl + "/this_does_not_exists.js";
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.AddScriptTagAsync(url));
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Page.AddScriptTagAsync(url));
             Assert.Contains(url, exception.Message);
         }
     }

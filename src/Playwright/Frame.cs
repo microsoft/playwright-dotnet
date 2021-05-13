@@ -508,7 +508,7 @@ namespace Microsoft.Playwright
                 {
                     if (values[i] == null)
                     {
-                        throw new PlaywrightSharpException($"options[{i}]: expected object, got null");
+                        throw new PlaywrightException($"options[{i}]: expected object, got null");
                     }
                 }
             }

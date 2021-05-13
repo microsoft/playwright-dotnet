@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -347,7 +347,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.AboutBlank);
 
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(async ()
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(async ()
                 => await Context.AddCookiesAsync(new[]
                 {
                         new Cookie
@@ -371,7 +371,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldNotSetACookieOnADataURLPage()
         {
             await Page.GotoAsync("data:,Hello%2C%20World!");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(async ()
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(async ()
                 => await Context.AddCookiesAsync(new[]
                 {
                         new Cookie

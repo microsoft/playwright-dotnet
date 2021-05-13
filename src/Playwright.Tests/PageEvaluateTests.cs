@@ -191,7 +191,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenEvaluationTriggersReload()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync<object>(@"() => {
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync<object>(@"() => {
                 location.reload();
                 return new Promise(() => { });
             }"));
@@ -249,7 +249,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectPromiseWithException()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync("() => not_existing_object.property"));
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("() => not_existing_object.property"));
             Assert.Contains("not_existing_object", exception.Message);
         }
 
@@ -257,7 +257,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportThrownStringsAsErrorMessages()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync("() => { throw 'qwerty'; }"));
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("() => { throw 'qwerty'; }"));
             Assert.Contains("qwerty", exception.Message);
         }
 
@@ -265,7 +265,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportThrownNumbersAsErrorMessages()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync("() => { throw 100500; }"));
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("() => { throw 100500; }"));
             Assert.Contains("100500", exception.Message);
         }
 
@@ -419,8 +419,8 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldBeAbleToThrowATrickyError()
         {
             var windowHandle = await Page.EvaluateHandleAsync("() => window");
-            var exceptionText = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => windowHandle.JsonValueAsync<object>());
-            var error = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.EvaluateAsync<JsonElement>(@"errorText => {
+            var exceptionText = await Assert.ThrowsAnyAsync<PlaywrightException>(() => windowHandle.JsonValueAsync<object>());
+            var error = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.EvaluateAsync<JsonElement>(@"errorText => {
                 throw new Error(errorText);
             }", exceptionText.Message));
             Assert.Contains(exceptionText.Message, error.Message);
@@ -465,7 +465,7 @@ namespace Microsoft.Playwright.Tests
             Assert.NotNull(element);
             await element.DisposeAsync();
 
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => Page.EvaluateAsync("e => e.textContent", element));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.EvaluateAsync("e => e.textContent", element));
             Assert.Contains("JSHandle is disposed", exception.Message);
         }
 
@@ -485,7 +485,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowANiceErrorAfterANavigation()
         {
-            var exceptionTask = Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync("() => new Promise(f => window.__resolve = f)"));
+            var exceptionTask = Assert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("() => new Promise(f => window.__resolve = f)"));
             await TaskUtils.WhenAll(
                 Page.WaitForNavigationAsync(),
                 Page.EvaluateAsync(@"() => {
@@ -543,7 +543,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowErrorWithDetailedInformationOnExceptionInsidePromise()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync<object>(@"() => new Promise(() => {
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync<object>(@"() => new Promise(() => {
                 throw new Error('Error in promise');
             })"));
             Assert.Contains("Error in promise", exception.Message);
@@ -595,7 +595,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectUseStrictExpression()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync<object>(@"() => {
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync<object>(@"() => {
                 ""use strict"";
                 variableY = 3.14;
                return variableY;
@@ -614,7 +614,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotLeakHandles()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => Page.EvaluateAsync<object>(@"() => handles.length"));
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync<object>(@"() => handles.length"));
             Assert.Contains("handles", exception.Message);
         }
 

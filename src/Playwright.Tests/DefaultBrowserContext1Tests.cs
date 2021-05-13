@@ -240,7 +240,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             await page.GotoAsync("data:text/html, <script>var something = \"forbidden\"</script>");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.EvaluateAsync("something"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.EvaluateAsync("something"));
 
             if (TestConstants.IsWebKit)
             {
@@ -285,7 +285,7 @@ namespace Microsoft.Playwright.Tests
                 Offline = true
             });
 
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => page.GotoAsync(TestConstants.EmptyPage));
+            await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.GotoAsync(TestConstants.EmptyPage));
 
             tmp.Dispose();
             await context.DisposeAsync();

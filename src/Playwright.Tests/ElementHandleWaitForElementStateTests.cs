@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
             var div = await Page.QuerySelectorAsync("div");
             var task = div.WaitForElementStateAsync(ElementState.Visible);
             await div.EvaluateAsync("div => div.remove()");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => task);
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => task);
             Assert.Contains("Element is not attached to the DOM", exception.Message);
         }
 
@@ -117,7 +117,7 @@ namespace Microsoft.Playwright.Tests
             var button = await Page.QuerySelectorAsync("button");
             var task = button.WaitForElementStateAsync(ElementState.Enabled);
             await button.EvaluateAsync("button => button.remove()");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => task);
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => task);
             Assert.Contains("Element is not attached to the DOM", exception.Message);
         }
 

@@ -72,12 +72,12 @@ namespace Microsoft.Playwright
 
             if (webSocketEvent.Name != WebSocketEvent.SocketError.Name)
             {
-                waiter.RejectOnEvent<string>(this, WebSocketEvent.SocketError.Name, new PlaywrightSharpException("Socket error"));
+                waiter.RejectOnEvent<string>(this, WebSocketEvent.SocketError.Name, new PlaywrightException("Socket error"));
             }
 
             if (webSocketEvent.Name != WebSocketEvent.Close.Name)
             {
-                waiter.RejectOnEvent<IWebSocket>(this, WebSocketEvent.Close.Name, new PlaywrightSharpException("Socket closed"));
+                waiter.RejectOnEvent<IWebSocket>(this, WebSocketEvent.Close.Name, new PlaywrightException("Socket closed"));
             }
 
             waiter.RejectOnEvent<IPage>(_page, PageEvent.Close.Name, new TargetClosedException("Page closed"));
@@ -99,12 +99,12 @@ namespace Microsoft.Playwright
 
             if (@event != WebSocketEvent.SocketError.Name)
             {
-                waiter.RejectOnEvent<string>(this, WebSocketEvent.SocketError.Name, new PlaywrightSharpException("Socket error"));
+                waiter.RejectOnEvent<string>(this, WebSocketEvent.SocketError.Name, new PlaywrightException("Socket error"));
             }
 
             if (@event != WebSocketEvent.Close.Name)
             {
-                waiter.RejectOnEvent<EventArgs>(this, WebSocketEvent.Close.Name, new PlaywrightSharpException("Socket closed"));
+                waiter.RejectOnEvent<EventArgs>(this, WebSocketEvent.Close.Name, new PlaywrightException("Socket closed"));
             }
 
             waiter.RejectOnEvent<EventArgs>(_page, PageEvent.Close.Name, new TargetClosedException("Page closed"));

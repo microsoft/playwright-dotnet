@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldThrowIfPageArgumentIsPassed()
         {
-            await Assert.ThrowsAnyAsync<PlaywrightSharpException>(() => BrowserType.LaunchDefaultAsync(args: new[] { TestConstants.EmptyPage }));
+            await Assert.ThrowsAnyAsync<PlaywrightException>(() => BrowserType.LaunchDefaultAsync(args: new[] { TestConstants.EmptyPage }));
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should reject if launched browser fails immediately")]
@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Tests
         {
             // Set an invalid location
             using var playwright = await Microsoft.Playwright.Playwright.CreateAsync(browsersPath: Path.Combine(typeof(Microsoft.Playwright.Playwright).Assembly.Location));
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => playwright[TestConstants.Product].LaunchAsync());
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => playwright[TestConstants.Product].LaunchAsync());
 
             Assert.Contains("Failed to launch", exception.Message);
             Assert.Contains("Try re-installing the browsers running `playwright.cmd install` in windows or `./playwright.sh install` in MacOS or Linux.", exception.Message);
@@ -86,7 +86,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectIfExecutablePathIsInvalid()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightSharpException>(() => BrowserType.LaunchAsync(executablePath: "random-invalid-path"));
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(executablePath: "random-invalid-path"));
 
             Assert.Contains("Failed to launch", exception.Message);
         }
