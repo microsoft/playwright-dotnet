@@ -1,4 +1,4 @@
-using System.Text.Encodings.Web;
+﻿using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Tests.BaseTests;
@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
 
             var request = task.Result;
             Assert.Equal(expectedJsonValue, request.PostData);
-            Assert.Equal(value, request.GetPayloadAsJson().RootElement.GetString());
+            Assert.Equal(value, request.PostDataJSON().RootElement.GetString());
         }
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
@@ -70,7 +70,7 @@ namespace Microsoft.Playwright.Tests
             Task.WaitAll(task, actualTask);
 
             var request = task.Result;
-            Assert.Equal(42, request.GetPayloadAsJson().RootElement.GetProperty("value").GetInt32());
+            Assert.Equal(42, request.PostDataJSON().RootElement.GetProperty("value").GetInt32());
         }
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
@@ -92,7 +92,7 @@ namespace Microsoft.Playwright.Tests
             Task.WaitAll(task, actualTask);
 
             var request = task.Result;
-            Assert.ThrowsAny<JsonException>(() => request.GetPayloadAsJson());
+            Assert.ThrowsAny<JsonException>(() => request.PostDataJSON());
         }
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
@@ -114,7 +114,7 @@ namespace Microsoft.Playwright.Tests
             Task.WaitAll(task, actualTask);
 
             var request = task.Result;
-            Assert.Equal(42, request.GetPayloadAsJson().RootElement.GetProperty("value").GetInt32());
+            Assert.Equal(42, request.PostDataJSON().RootElement.GetProperty("value").GetInt32());
         }
     }
 }

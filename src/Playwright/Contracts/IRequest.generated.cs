@@ -167,7 +167,7 @@ namespace Microsoft.Playwright
         /// of the values will be returned. Otherwise it will be parsed as JSON.
         /// </para>
         /// </summary>
-        /// <param name="documentOptions">The options that control custom behaviour when parsing the JSON.</param>
-        JsonDocument PostDataJsonAsync(JsonDocumentOptions documentOptions = default);
+        /// <param name="documentOptions">Optional Json options that control custom behaviour when parsing the JSON.</param>
+        JsonDocument PostDataJSON(JsonDocumentOptions documentOptions = default);
     }
 }
