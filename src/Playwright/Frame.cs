@@ -191,15 +191,15 @@ namespace Microsoft.Playwright
             bool? noWaitAfter,
             float? timeout,
             bool? trial)
-            => ClickAsync(false, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force, noWaitAfter);
+            => ClickAsync(false, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force, noWaitAfter, trial);
 
         /// <inheritdoc />
         public Task CheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
-            => CheckAsync(false, selector, position, force, noWaitAfter, timeout);
+            => CheckAsync(false, selector, position, force, noWaitAfter, timeout, trial);
 
         /// <inheritdoc />
         public Task UncheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
-            => UncheckAsync(false, selector, position, force, noWaitAfter, timeout);
+            => UncheckAsync(false, selector, position, force, noWaitAfter, timeout, trial);
 
         /// <inheritdoc />
         public Task DblClickAsync(
@@ -212,7 +212,7 @@ namespace Microsoft.Playwright
             bool? noWaitAfter,
             float? timeout,
             bool? trial)
-            => DblClickAsync(false, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), position, modifiers, timeout, force ?? false, noWaitAfter);
+            => DblClickAsync(false, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), position, modifiers, timeout, force ?? false, noWaitAfter, trial);
 
         /// <inheritdoc />
         public Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg)
@@ -264,7 +264,7 @@ namespace Microsoft.Playwright
             bool? force,
             float? timeout,
             bool? trial)
-            => HoverAsync(false, selector, position, modifiers, force ?? false, timeout);
+            => HoverAsync(false, selector, position, modifiers, force ?? false, timeout, trial);
 
         /// <inheritdoc />
         public Task TypeAsync(string selector, string text, float? delay, bool? noWaitAfter, float? timeout)
@@ -374,7 +374,7 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc />
         public Task TapAsync(string selector, Position position, IEnumerable<KeyboardModifier> modifiers, bool? noWaitAfter, bool? force, float? timeout, bool? trial)
-            => TapAsync(false, selector, modifiers, position, force, noWaitAfter, timeout);
+            => TapAsync(false, selector, modifiers, position, force, noWaitAfter, timeout, trial);
 
         /// <inheritdoc />
         public Task<bool> IsCheckedAsync(string selector, float? timeout) => IsCheckedAsync(false, selector, timeout);
@@ -463,8 +463,16 @@ namespace Microsoft.Playwright
             return response;
         }
 
-        internal Task TapAsync(bool isPageCall, string selector, IEnumerable<KeyboardModifier> modifiers, Position position, bool? force, bool? noWaitAfter, float? timeout)
-            => _channel.TapAsync(selector, modifiers, position, timeout, force ?? false, noWaitAfter, isPageCall);
+        internal Task TapAsync(
+            bool isPageCall,
+            string selector,
+            IEnumerable<KeyboardModifier> modifiers,
+            Position position,
+            bool? force,
+            bool? noWaitAfter,
+            float? timeout,
+            bool? trial)
+            => _channel.TapAsync(selector, modifiers, position, timeout, force ?? false, noWaitAfter, isPageCall, trial);
 
         internal Task<string> ContentAsync(bool isPageCall) => _channel.ContentAsync(isPageCall);
 
@@ -486,8 +494,8 @@ namespace Microsoft.Playwright
         internal Task<string> GetTextContentAsync(bool isPageCall, string selector, float? timeout)
             => _channel.GetTextContentAsync(selector, timeout, isPageCall);
 
-        internal Task HoverAsync(bool isPageCall, string selector, Position position, IEnumerable<KeyboardModifier> modifiers, bool force, float? timeout)
-            => _channel.HoverAsync(selector, position, modifiers, force, timeout, isPageCall);
+        internal Task HoverAsync(bool isPageCall, string selector, Position position, IEnumerable<KeyboardModifier> modifiers, bool force, float? timeout, bool? trial)
+            => _channel.HoverAsync(selector, position, modifiers, force, timeout, isPageCall, trial);
 
         internal Task<string[]> PressAsync(bool isPageCall, string selector, string key, float? delay, bool? noWaitAfter, float? timeout)
             => _channel.PressAsync(selector, key, delay ?? 0, timeout, noWaitAfter, isPageCall);
@@ -557,8 +565,9 @@ namespace Microsoft.Playwright
             Position position,
             float? timeout,
             bool? force,
-            bool? noWaitAfter)
-            => _channel.ClickAsync(selector, delay, button, clickCount, modifiers, position, timeout, force ?? false, noWaitAfter, isPageCall);
+            bool? noWaitAfter,
+            bool? trial)
+            => _channel.ClickAsync(selector, delay, button, clickCount, modifiers, position, timeout, force ?? false, noWaitAfter, isPageCall, trial);
 
         internal Task DblClickAsync(
             bool isPageCall,
@@ -569,14 +578,15 @@ namespace Microsoft.Playwright
             IEnumerable<KeyboardModifier> modifiers,
             float? timeout,
             bool force,
-            bool? noWaitAfter)
-            => _channel.DblClickAsync(selector, delay, button, position, modifiers, timeout, force, noWaitAfter, isPageCall);
+            bool? noWaitAfter,
+            bool? trial)
+            => _channel.DblClickAsync(selector, delay, button, position, modifiers, timeout, force, noWaitAfter, isPageCall, trial);
 
-        internal Task CheckAsync(bool isPageCall, string selector, Position position, bool? force, bool? noWaitAfter, float? timeout)
-            => _channel.CheckAsync(selector, position, timeout, force ?? false, noWaitAfter, isPageCall);
+        internal Task CheckAsync(bool isPageCall, string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
+            => _channel.CheckAsync(selector, position, timeout, force ?? false, noWaitAfter, isPageCall, trial);
 
-        internal Task UncheckAsync(bool isPageCall, string selector, Position position, bool? force, bool? noWaitAfter, float? timeout)
-            => _channel.UncheckAsync(selector, position, timeout, force ?? false, noWaitAfter, isPageCall);
+        internal Task UncheckAsync(bool isPageCall, string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
+            => _channel.UncheckAsync(selector, position, timeout, force ?? false, noWaitAfter, isPageCall, trial);
 
         internal Task SetContentAsync(bool isPageCall, string html, WaitUntilState waitUntil, float? timeout)
             => _channel.SetContentAsync(html, timeout, waitUntil, isPageCall);

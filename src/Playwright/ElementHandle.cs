@@ -105,7 +105,7 @@ namespace Microsoft.Playwright
             bool? force,
             float? timeout,
             bool? trial)
-            => _channel.HoverAsync(modifiers, position, timeout, force ?? false);
+            => _channel.HoverAsync(modifiers, position, timeout, force ?? false, trial);
 
         /// <inheritdoc />
         public Task ScrollIntoViewIfNeededAsync(float? timeout) => _channel.ScrollIntoViewIfNeededAsync(timeout);
@@ -127,7 +127,7 @@ namespace Microsoft.Playwright
             bool? noWaitAfter,
             float? timeout,
             bool? trial)
-            => _channel.ClickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force ?? false, noWaitAfter);
+            => _channel.ClickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force ?? false, noWaitAfter, trial);
 
         /// <inheritdoc />
         public Task DblClickAsync(
@@ -139,7 +139,7 @@ namespace Microsoft.Playwright
             bool? noWaitAfter,
             float? timeout,
             bool? trial)
-            => _channel.DblClickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), modifiers, position, timeout, force ?? false, noWaitAfter);
+            => _channel.DblClickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), modifiers, position, timeout, force ?? false, noWaitAfter, trial);
 
         /// <inheritdoc />
         public Task SetInputFilesAsync(string files, bool? noWaitAfter, float? timeout)
@@ -239,15 +239,15 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc />
         public Task CheckAsync(Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
-            => _channel.CheckAsync(position, timeout, force ?? false, noWaitAfter);
+            => _channel.CheckAsync(position, timeout, force ?? false, noWaitAfter, trial);
 
         /// <inheritdoc />
         public Task UncheckAsync(Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
-            => _channel.UncheckAsync(position, timeout, force, noWaitAfter);
+            => _channel.UncheckAsync(position, timeout, force, noWaitAfter, trial);
 
         /// <inheritdoc />
         public Task TapAsync(Position position, IEnumerable<KeyboardModifier> modifiers, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
-            => _channel.TapAsync(position, modifiers, timeout, force ?? false, noWaitAfter);
+            => _channel.TapAsync(position, modifiers, timeout, force ?? false, noWaitAfter, trial);
 
         /// <inheritdoc />
         public Task<bool> IsCheckedAsync() => _channel.IsCheckedAsync();

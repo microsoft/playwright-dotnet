@@ -73,6 +73,21 @@ namespace Microsoft.Playwright.Tests
             });
         }
 
+        [PlaywrightTest("tap.spec.ts", "trial run should not tap")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task TrialRunShouldNotTap()
+        {
+            await Page.SetContentAsync(
+                @"<div id=""a"" style=""background: lightblue; width: 50px; height: 50px"">a</div>
+                <div id=""b"" style=""background: pink; width: 50px; height: 50px"">b</div>");
+
+            await Page.TapAsync("#a");
+            var handle = await TrackEventsAsync("#b");
+            await Page.TapAsync("#b", trial: true);
+
+            Assert.Empty(await handle.JsonValueAsync<string[]>());
+        }
+
         [PlaywrightTest("tap.spec.ts", "should not send mouse events touchstart is canceled")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotSendMouseEventsTouchStartIsCanceled()
