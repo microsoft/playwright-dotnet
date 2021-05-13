@@ -64,6 +64,14 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
+        /// Returns a dictionary of devices to be used with <see cref="IBrowser.NewContextAsync"/>
+        /// or <see cref="IBrowser.NewPageAsync"/>.
+        /// </para>
+        /// </summary>
+        public IReadOnlyDictionary<string, BrowserContextOptions> Devices { get; }
+
+        /// <summary>
+        /// <para>
         /// This object can be used to launch or connect to Firefox, returning instances of
         /// <see cref="IBrowser"/>.
         /// </para>
