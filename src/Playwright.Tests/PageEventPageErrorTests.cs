@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.Attributes;

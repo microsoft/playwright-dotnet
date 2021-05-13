@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
