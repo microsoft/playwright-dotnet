@@ -255,28 +255,6 @@ namespace Microsoft.Playwright
             get => _touchscreen;
         }
 
-        /// <inheritdoc/>
-        public float DefaultTimeout
-        {
-            internal get => _defaultTimeout;
-            set
-            {
-                _defaultTimeout = value;
-                _ = _channel.SetDefaultTimeoutNoReplyAsync(value);
-            }
-        }
-
-        /// <inheritdoc/>
-        public float DefaultNavigationTimeout
-        {
-            internal get => _defaultNavigationTimeout;
-            set
-            {
-                _defaultNavigationTimeout = value;
-                _ = _channel.SetDefaultNavigationTimeoutNoReplyAsync(value);
-            }
-        }
-
         /// <inheritdoc />
         public IReadOnlyCollection<IWorker> Workers => WorkersList;
 
@@ -302,6 +280,26 @@ namespace Microsoft.Playwright
         internal List<Worker> WorkersList { get; } = new List<Worker>();
 
         internal Page Opener => _initializer.Opener?.Object;
+
+        internal float DefaultTimeout
+        {
+            get => _defaultTimeout;
+            set
+            {
+                _defaultTimeout = value;
+                _ = _channel.SetDefaultTimeoutNoReplyAsync(value);
+            }
+        }
+
+        internal float DefaultNavigationTimeout
+        {
+            get => _defaultNavigationTimeout;
+            set
+            {
+                _defaultNavigationTimeout = value;
+                _ = _channel.SetDefaultNavigationTimeoutNoReplyAsync(value);
+            }
+        }
 
         /// <inheritdoc />
         public IFrame Frame(string name)
@@ -941,6 +939,12 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc />
         public Task PauseAsync() => _channel.PauseAsync();
+
+        /// <inheritdoc/>
+        public void SetDefaultNavigationTimeout(float timeout) => DefaultNavigationTimeout = timeout;
+
+        /// <inheritdoc/>
+        public void SetDefaultTimeout(float timeout) => DefaultTimeout = timeout;
 
         internal void NotifyPopup(Page page) => Popup?.Invoke(this, page);
 

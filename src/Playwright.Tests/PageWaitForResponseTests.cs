@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.BaseTests;
@@ -44,7 +44,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectDefaultTimeout()
         {
-            Page.DefaultTimeout = 1;
+            Page.SetDefaultTimeout(1);
             var exception = await Assert.ThrowsAsync<TimeoutException>(
                 () => Page.WaitForEventAsync(PageEvent.Response, _ => false));
         }
