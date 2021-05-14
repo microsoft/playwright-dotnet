@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -150,7 +150,7 @@ namespace Microsoft.Playwright.Tests
             Page.Request += (_, e) => request = e;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: JSON.stringify({ foo: 'bar'})})");
             Assert.NotNull(request);
-            Assert.Equal("bar", request.GetPayloadAsJson().RootElement.GetProperty("foo").ToString());
+            Assert.Equal("bar", request.PostDataJSON().RootElement.GetProperty("foo").ToString());
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should parse the data if content-type is application/x-www-form-urlencoded")]
@@ -165,7 +165,7 @@ namespace Microsoft.Playwright.Tests
             await Page.ClickAsync("input[type=submit]");
 
             Assert.NotNull(request);
-            var element = request.GetPayloadAsJson().RootElement;
+            var element = request.PostDataJSON().RootElement;
             Assert.Equal("bar", element.GetProperty("foo").ToString());
             Assert.Equal("123", element.GetProperty("baz").ToString());
         }
@@ -175,7 +175,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldBeUndefinedWhenThereIsNoPostData2()
         {
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Null(response.Request.GetPayloadAsJson());
+            Assert.Null(response.Request.PostDataJSON());
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should return event source")]

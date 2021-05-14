@@ -157,8 +157,17 @@ namespace Microsoft.Playwright
         /// <summary><para>URL of the request.</para></summary>
         string Url { get; }
 
-        /// <summary><para>Returns a <see cref="JsonDocument"/> representation of <see cref="IRequest.PostDataBuffer"/>.</para></summary>
-        /// <param name="documentOptions">The options that control custom behaviour when parsing the JSON.</param>
-        JsonDocument GetPayloadAsJson(JsonDocumentOptions documentOptions = default);
+        /// <summary>
+        /// <para>
+        /// Returns parsed request's body for <c>form-urlencoded</c> and JSON as a fallback
+        /// if any.
+        /// </para>
+        /// <para>
+        /// When the response is <c>application/x-www-form-urlencoded</c> then a key/value object
+        /// of the values will be returned. Otherwise it will be parsed as JSON.
+        /// </para>
+        /// </summary>
+        /// <param name="documentOptions">Optional Json options that control custom behaviour when parsing the JSON.</param>
+        JsonDocument PostDataJSON(JsonDocumentOptions documentOptions = default);
     }
 }
