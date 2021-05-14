@@ -315,8 +315,8 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldFailWhenExceedingDefaultMaximumNavigationTimeout()
         {
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
-            Page.Context.DefaultNavigationTimeout = 2;
-            Page.DefaultNavigationTimeout = 1;
+            Page.Context.SetDefaultNavigationTimeout(2);
+            Page.SetDefaultNavigationTimeout(1);
             var exception = await Assert.ThrowsAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
             Assert.Contains("Timeout 1ms exceeded", exception.Message);
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
@@ -327,7 +327,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldFailWhenExceedingBrowserContextNavigationTimeout()
         {
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
-            Page.Context.DefaultNavigationTimeout = 2;
+            Page.Context.SetDefaultNavigationTimeout(2);
             var exception = await Assert.ThrowsAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
             Assert.Contains("Timeout 2ms exceeded", exception.Message);
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
@@ -338,8 +338,8 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldFailWhenExceedingDefaultMaximumTimeout()
         {
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
-            Page.Context.DefaultTimeout = 2;
-            Page.DefaultTimeout = 1;
+            Page.Context.SetDefaultTimeout(2);
+            Page.SetDefaultTimeout(1);
             var exception = await Assert.ThrowsAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
             Assert.Contains("Timeout 1ms exceeded", exception.Message);
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
@@ -350,7 +350,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldFailWhenExceedingBrowserContextTimeout()
         {
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
-            Page.Context.DefaultTimeout = 2;
+            Page.Context.SetDefaultTimeout(2);
             var exception = await Assert.ThrowsAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
             Assert.Contains("Timeout 2ms exceeded", exception.Message);
             Assert.Contains(TestConstants.EmptyPage, exception.Message);
@@ -362,8 +362,8 @@ namespace Microsoft.Playwright.Tests
         {
             // Hang for request to the empty.html
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
-            Page.DefaultTimeout = 0;
-            Page.DefaultNavigationTimeout = 1;
+            Page.SetDefaultTimeout(0);
+            Page.SetDefaultNavigationTimeout(1);
             var exception = await Assert.ThrowsAnyAsync<TimeoutException>(async () => await Page.GoToAsync(TestConstants.EmptyPage));
             Assert.Contains("Timeout 1ms exceeded", exception.Message);
             Assert.Contains(TestConstants.EmptyPage, exception.Message);

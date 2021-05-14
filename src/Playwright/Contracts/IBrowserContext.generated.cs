@@ -336,7 +336,8 @@ namespace Microsoft.Playwright
         /// take priority over <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>.
         /// </para>
         /// </remarks>
-        float DefaultNavigationTimeout { get; set; }
+        /// <param name="timeout">Maximum navigation time in milliseconds</param>
+        void SetDefaultNavigationTimeout(float timeout);
 
         /// <summary>
         /// <para>
@@ -351,7 +352,8 @@ namespace Microsoft.Playwright
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
         /// </para>
         /// </remarks>
-        float DefaultTimeout { get; set; }
+        /// <param name="timeout">Maximum time in milliseconds</param>
+        void SetDefaultTimeout(float timeout);
 
         /// <summary>
         /// <para>

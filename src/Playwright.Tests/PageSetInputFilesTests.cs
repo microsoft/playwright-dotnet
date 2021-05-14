@@ -147,7 +147,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectDefaultTimeoutWhenThereIsNoCustomTimeout()
         {
-            Page.DefaultTimeout = 1;
+            Page.SetDefaultTimeout(1);
             await Assert.ThrowsAsync<TimeoutException>(() => Page.WaitForEventAsync(PageEvent.FileChooser));
         }
 
@@ -155,7 +155,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldPrioritizeExactTimeoutOverDefaultTimeout()
         {
-            Page.DefaultTimeout = 0;
+            Page.SetDefaultTimeout(0);
             await Assert.ThrowsAsync<TimeoutException>(() => Page.WaitForEventAsync(PageEvent.FileChooser, timeout: 1));
         }
 

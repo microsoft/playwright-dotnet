@@ -1603,7 +1603,8 @@ namespace Microsoft.Playwright
         /// <see cref="IBrowserContext.SetDefaultTimeout"/> and <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>.
         /// </para>
         /// </remarks>
-        float DefaultNavigationTimeout { get; set; }
+        /// <param name="timeout">Maximum navigation time in milliseconds</param>
+        void SetDefaultNavigationTimeout(float timeout);
 
         /// <summary>
         /// <para>
@@ -1612,7 +1613,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <remarks><para><see cref="IPage.SetDefaultNavigationTimeout"/> takes priority over <see cref="IPage.SetDefaultTimeout"/>.</para></remarks>
-        float DefaultTimeout { get; set; }
+        /// <param name="timeout">Maximum time in milliseconds</param>
+        void SetDefaultTimeout(float timeout);
 
         /// <summary><para>The extra HTTP headers will be sent with every request the page initiates.</para></summary>
         /// <remarks>
