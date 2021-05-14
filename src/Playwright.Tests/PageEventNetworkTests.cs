@@ -44,7 +44,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GoToAsync(TestConstants.EmptyPage);
             Assert.Single(responses);
             Assert.Equal(TestConstants.EmptyPage, responses[0].Url);
-            Assert.Equal(HttpStatusCode.OK, responses[0].StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, responses[0].Status);
             Assert.True(responses[0].Ok);
             Assert.NotNull(responses[0].Request);
         }

@@ -111,7 +111,7 @@ namespace Microsoft.Playwright.Tests
             var redirectedFrom = response.Request.RedirectedFrom;
             Assert.NotNull(redirectedFrom);
             var redirected = await redirectedFrom.ResponseAsync();
-            Assert.Equal(HttpStatusCode.Redirect, redirected.StatusCode);
+            Assert.Equal((int)HttpStatusCode.Redirect, redirected.Status);
 
             var exception = await Assert.ThrowsAsync<PlaywrightException>(async () => await redirected.TextAsync());
             Assert.Contains("Response body is unavailable for redirect responses", exception.Message);
@@ -145,7 +145,7 @@ namespace Microsoft.Playwright.Tests
 
             Assert.NotNull(serverResponse);
             Assert.NotNull(pageResponse);
-            Assert.Equal(HttpStatusCode.OK, pageResponse.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, pageResponse.Status);
             Assert.False(requestFinished);
 
             var responseText = pageResponse.TextAsync();

@@ -138,7 +138,7 @@ namespace Microsoft.Playwright.Tests
             Server.SetRedirect("/redirect/2.html", "/empty.html");
 
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/redirect/1.html");
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
             await Page.GoToAsync(TestConstants.EmptyPage);
         }
 
@@ -155,7 +155,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReturnResponseWhenPageChangesItsURLAfterLoad()
         {
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/historyapi.html");
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work with subframes return 204")]
@@ -201,7 +201,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldNavigateToEmptyPageWithDOMContentLoaded()
         {
             var response = await Page.GoToAsync(TestConstants.EmptyPage, WaitUntilState.DOMContentLoaded);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work when page calls history API in beforeunload")]
@@ -214,7 +214,7 @@ namespace Microsoft.Playwright.Tests
                 window.addEventListener('beforeunload', () => history.replaceState(null, 'initial', window.location.href), false);
             }");
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when navigating to bad url")]
@@ -420,7 +420,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWhenNavigatingToValidUrl()
         {
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work when navigating to data url")]
@@ -436,7 +436,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWhenNavigatingTo404()
         {
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/not-found");
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.NotFound, response.Status);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should return last response in redirect chain")]
@@ -448,7 +448,7 @@ namespace Microsoft.Playwright.Tests
             Server.SetRedirect("/redirect/3.html", TestConstants.EmptyPage);
 
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/redirect/1.html");
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
             Assert.Equal(TestConstants.EmptyPage, response.Url);
         }
 
@@ -488,7 +488,7 @@ namespace Microsoft.Playwright.Tests
             Page.Request += (_, e) => requests.Add(e);
 
             var response = await Page.GoToAsync(TestConstants.EmptyPage + "#hash");
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
             Assert.Equal(TestConstants.EmptyPage, response.Url);
             Assert.Single(requests);
             Assert.Equal(TestConstants.EmptyPage, requests[0].Url);
@@ -499,7 +499,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithSelfRequestingPage()
         {
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/self-request.html");
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
             Assert.Contains("self-request.html", response.Url);
         }
 

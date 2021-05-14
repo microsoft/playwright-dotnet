@@ -27,7 +27,7 @@ namespace Microsoft.Playwright.Tests
             Assert.Single(Page.Frames.Where(f => f.Url.Contains("/frames/frame.html")));
             var childFrame = Page.FirstChildFrame();
             var response = await childFrame.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
             Assert.Same(response.Frame, childFrame);
         }
 

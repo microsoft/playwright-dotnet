@@ -27,7 +27,7 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync("**/*", (route) =>
             {
                 route.FulfillAsync(
-                    status: HttpStatusCode.Created,
+                    status: (int)HttpStatusCode.Created,
                     headers: new Dictionary<string, string>
                     {
                         ["foo"] = "bar"
@@ -36,7 +36,7 @@ namespace Microsoft.Playwright.Tests
                     body: "Yo, page!");
             });
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.Created, response.Status);
             Assert.Equal("bar", response.GetHeaderValue("foo"));
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }
@@ -55,7 +55,7 @@ namespace Microsoft.Playwright.Tests
                 route.FulfillAsync(HttpStatusCode.UpgradeRequired, "Yo, page!");
             });
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.UpgradeRequired, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.UpgradeRequired, response.Status);
             Assert.Equal("Upgrade Required", response.StatusText);
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }
@@ -115,7 +115,7 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync("**/*", (route) =>
             {
                 route.FulfillAsync(
-                    status: HttpStatusCode.OK,
+                    status: (int)HttpStatusCode.OK,
                     headers: new Dictionary<string, string>
                     {
                         ["foo"] = "true"
@@ -124,7 +124,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var response = await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
             Assert.Equal("true", response.GetHeaderValue("foo"));
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }

@@ -54,9 +54,6 @@ namespace Microsoft.Playwright
         public string Url => _initializer.Url;
 
         /// <inheritdoc/>
-        public HttpStatusCode StatusCode => (HttpStatusCode)Status;
-
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
 
         /// <inheritdoc/>

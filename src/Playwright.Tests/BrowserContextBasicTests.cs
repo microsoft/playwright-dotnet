@@ -294,7 +294,7 @@ namespace Microsoft.Playwright.Tests
             await Assert.ThrowsAsync<PlaywrightException>(() => page.GoToAsync(TestConstants.EmptyPage));
             await context.SetOfflineAsync(false);
             var response = await page.GoToAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should emulate navigator.onLine")]
