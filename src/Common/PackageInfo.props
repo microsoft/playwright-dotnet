@@ -14,5 +14,7 @@
 		<RepositoryUrl>https://github.com/microsoft/playwright-sharp.git</RepositoryUrl>
 		<PackageReleaseNotes><![CDATA[
 ]]></PackageReleaseNotes>
+    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 </Project>
