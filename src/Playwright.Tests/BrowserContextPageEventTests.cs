@@ -165,8 +165,8 @@ namespace Microsoft.Playwright.Tests
 
             var popup = popupEvent;
             Assert.Equal(TestConstants.ServerUrl + "/popup/popup.html", popup.Url);
-            Assert.Same(page, await popup.OpenerAsync());
-            Assert.Null(await page.OpenerAsync());
+            Assert.Same(page, popup.Opener);
+            Assert.Null(page.Opener);
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should fire page lifecycle events")]
@@ -209,7 +209,7 @@ namespace Microsoft.Playwright.Tests
               popupEventTask,
               page.ClickAsync("a", modifiers: new[] { KeyboardModifier.Shift }));
 
-            Assert.Null(await popupEventTask.Result.OpenerAsync());
+            Assert.Null(popupEventTask.Result.Opener);
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should report when a new page is created and closed")]
@@ -228,7 +228,7 @@ namespace Microsoft.Playwright.Tests
               popupEventTask,
               page.ClickAsync("a", modifiers: new[] { TestConstants.IsMacOSX ? KeyboardModifier.Meta : KeyboardModifier.Control }));
 
-            Assert.Null(await popupEventTask.Result.OpenerAsync());
+            Assert.Null(popupEventTask.Result.Opener);
         }
     }
 }

@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
@@ -88,7 +88,7 @@ namespace Microsoft.Playwright.Tests
                 Page.WaitForEventAsync(PageEvent.Popup),
                 Page.EvaluateAsync("() => window.open('about:blank')")
             );
-            var opener = await popupEvent.OpenerAsync();
+            var opener = popupEvent.Opener;
             Assert.Equal(Page, opener);
         }
 
@@ -101,7 +101,7 @@ namespace Microsoft.Playwright.Tests
                 Page.EvaluateAsync("() => window.open('about:blank')")
             );
             await Page.CloseAsync();
-            var opener = await popupEvent.OpenerAsync();
+            var opener = popupEvent.Opener;
             Assert.Null(opener);
         }
 

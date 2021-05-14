@@ -392,7 +392,7 @@ namespace Microsoft.Playwright
 
             if (page.Opener?.IsClosed == false)
             {
-                page.Opener.NotifyPopup(page);
+                (page.Opener as Page).NotifyPopup(page);
             }
         }
 

@@ -1168,14 +1168,6 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Returns the opener for popup pages and <c>null</c> for others. If the opener has
-        /// been closed already the returns <c>null</c>.
-        /// </para>
-        /// </summary>
-        Task<IPage> OpenerAsync();
-
-        /// <summary>
-        /// <para>
         /// Pauses script execution. Playwright will stop executing the script and wait for
         /// the user to either press 'Resume' button in the page overlay or to call <c>playwright.resume()</c>
         /// in the DevTools console.
@@ -2552,5 +2544,13 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <remarks><para>This does not contain ServiceWorkers</para></remarks>
         IReadOnlyCollection<IWorker> Workers { get; }
+
+        /// <summary>
+        /// <para>
+        /// Returns the opener for popup pages and <c>null</c> for others. If the opener has
+        /// been closed already the returns <c>null</c>.
+        /// </para>
+        /// </summary>
+        IPage Opener { get; }
     }
 }

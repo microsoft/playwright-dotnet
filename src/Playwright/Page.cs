@@ -273,13 +273,14 @@ namespace Microsoft.Playwright
             set => _video = value as Video;
         }
 
+        /// <inheritdoc />
+        public IPage Opener => _initializer.Opener?.Object?.IsClosed == false ? _initializer.Opener?.Object : null;
+
         internal BrowserContext OwnedContext { get; set; }
 
         internal Dictionary<string, Delegate> Bindings { get; } = new Dictionary<string, Delegate>();
 
         internal List<Worker> WorkersList { get; } = new List<Worker>();
-
-        internal Page Opener => _initializer.Opener?.Object;
 
         internal float DefaultTimeout
         {
@@ -319,9 +320,6 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc />
         public Task BringToFrontAsync() => _channel.BringToFrontAsync();
-
-        /// <inheritdoc />
-        public Task<IPage> OpenerAsync() => Task.FromResult<IPage>(Opener?.IsClosed == false ? Opener : null);
 
         /// <inheritdoc />
         public Task EmulateMediaAsync(ColorScheme? colorScheme) => EmulateMediaAsync(null, colorScheme);
