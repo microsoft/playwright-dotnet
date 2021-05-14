@@ -69,7 +69,7 @@ namespace Microsoft.Playwright
         /// an instance of <see cref="IElementHandle"/>.
         /// </para>
         /// </summary>
-        IElementHandle AsElement { get; }
+        IElementHandle AsElement();
 
         /// <summary><para>The <c>jsHandle.dispose</c> method stops referencing the element handle.</para></summary>
         Task DisposeAsync();

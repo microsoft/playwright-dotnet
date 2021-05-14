@@ -26,10 +26,10 @@ namespace Microsoft.Playwright
         /// <inheritdoc/>
         IChannel<JSHandle> IChannelOwner<JSHandle>.Channel => _channel;
 
-        /// <inheritdoc />
-        public IElementHandle AsElement => this as IElementHandle;
-
         internal string Preview { get; set; }
+
+        /// <inheritdoc />
+        public IElementHandle AsElement() => this as IElementHandle;
 
         /// <inheritdoc />
         public async Task<JsonElement?> EvaluateAsync(string expression, object arg)
