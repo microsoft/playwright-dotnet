@@ -426,7 +426,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldDeleteDownloadsOnBrowserGone()
         {
             var browser = await BrowserType.LaunchDefaultAsync();
-            var page = await browser.NewPageAsync(acceptDownloads: true);
+            var page = await browser.NewPageAsync(new BrowserContextOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
             var download1Task = page.WaitForEventAsync(PageEvent.Download);
 

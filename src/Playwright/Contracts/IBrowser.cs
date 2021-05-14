@@ -5,17 +5,16 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    /// <summary>
-    /// <para>
-    /// A Browser is created via <see cref="IBrowserType.LaunchAsync"/>. An example of using
-    /// a <see cref="IBrowser"/> to create a <see cref="IPage"/>.
-    /// </para>
-    /// </summary>
     public partial interface IBrowser : IAsyncDisposable
     {
-        /// <summary><para>Creates a new browser context. It won't share cookies/cache with other browser contexts.</para></summary>
+        /// <summary>See <see cref="IBrowser.NewContextAsync(bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, ColorScheme, string, bool?, string, RecordVideoSize, Proxy, string, string)"/>.</summary>
         /// <param name="options">The parameters, but in an options format.</param>
         /// <returns><see cref="IBrowser.NewContextAsync(bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, ColorScheme, string, bool?, string, RecordVideoSize, Proxy, string, string)"/>.</returns>
         Task<IBrowserContext> NewContextAsync(BrowserContextOptions options);
+
+        /// <summary>See <see cref="IBrowser.NewPageAsync(bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, ColorScheme, string, bool?, string, RecordVideoSize, Proxy, string, string)"/>.</summary>
+        /// <param name="options">The parameters, but in an options format.</param>
+        /// <returns><see cref="IBrowser.NewPageAsync(bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, ColorScheme, string, bool?, string, RecordVideoSize, Proxy, string, string)"/>.</returns>
+        Task<IPage> NewPageAsync(BrowserContextOptions options);
     }
 }

@@ -126,6 +126,21 @@ namespace Microsoft.Playwright
         /// </summary>
         public string StorageState { get; set; }
 
+        /// <inheritdoc path="/param[@name='viewportSize']" cref="IBrowser.NewPageAsync(bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, Proxy, string, string)" />
+        public string RecordHarPath { get; set; }
+
+        /// <inheritdoc path="/param[@name='recordHarOmitContent']" cref="IBrowser.NewPageAsync(bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, Proxy, string, string)" />
+        public bool? RecordHarOmitContent { get; set; }
+
+        /// <inheritdoc path="/param[@name='recordVideoDir']" cref="IBrowser.NewPageAsync(bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, Proxy, string, string)" />
+        public string RecordVideoDir { get; set; }
+
+        /// <inheritdoc path="/param[@name='recordVideoSize']" cref="IBrowser.NewPageAsync(bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, Proxy, string, string)" />
+        public RecordVideoSize RecordVideoSize { get; set; }
+
+        /// <inheritdoc path="/param[@name='screenSize']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
+        public ScreenSize ScreenSize { get; set; }
+
         private BrowserContextOptions CopyFrom(BrowserContextOptions options)
         {
             options.UserAgent = UserAgent;

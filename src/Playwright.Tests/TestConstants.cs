@@ -37,49 +37,13 @@ namespace Microsoft.Playwright.Tests
             this IBrowserType browserType,
             string userDataDir,
             string[] args = null,
-            BrowserContextOptions options = null,
+            LaunchPersistentOptions options = null,
             bool? headless = null)
         {
-            options ??= new BrowserContextOptions();
-            return browserType.LaunchPersistentContextAsync(
-                userDataDir: userDataDir,
-                acceptDownloads: options.AcceptDownloads,
-                args: args,
-                bypassCSP: options.BypassCSP,
-                channel: BrowserChannel.Undefined,
-                chromiumSandbox: null,
-                colorScheme: options.ColorScheme,
-                deviceScaleFactor: options.DeviceScaleFactor,
-                devtools: null,
-                downloadsPath: null,
-                env: null,
-                executablePath: null,
-                extraHTTPHeaders: options.ExtraHTTPHeaders,
-                geolocation: options.Geolocation,
-                handleSIGHUP: null,
-                handleSIGINT: null,
-                handleSIGTERM: null,
-                hasTouch: options.HasTouch,
-                headless: headless,
-                httpCredentials: options.HttpCredentials,
-                ignoreAllDefaultArgs: null,
-                ignoreHTTPSErrors: options.IgnoreHTTPSErrors,
-                isMobile: options.IsMobile,
-                javaScriptEnabled: options.JavaScriptEnabled,
-                locale: options.Locale,
-                offline: options.Offline,
-                permissions: options.Permissions,
-                proxy: options.Proxy,
-                recordHarOmitContent: null,
-                recordHarPath: null,
-                recordVideoDir: null,
-                recordVideoSize: null,
-                slowMo: null,
-                timeout: null,
-                timezoneId: options.TimezoneId,
-                userAgent: options.UserAgent,
-                viewportSize: options.Viewport
-                );
+            options ??= new LaunchPersistentOptions();
+            options.Args ??= args;
+            options.Headless ??= headless;
+            return browserType.LaunchPersistentContextAsync(userDataDir, options);
         }
 
         internal static Task<IBrowser> LaunchDefaultAsync(
