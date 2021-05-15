@@ -19,7 +19,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveANicePreview()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/dom.html");
             var outer = await Page.QuerySelectorAsync("#outer");
             var inner = await Page.QuerySelectorAsync("#inner");
             var check = await Page.QuerySelectorAsync("#check");
@@ -35,7 +35,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task GetAttributeShouldWork()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/dom.html");
             var handle = await Page.QuerySelectorAsync("#outer");
 
             Assert.Equal("value", await handle.GetAttributeAsync("name"));
@@ -46,7 +46,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task InnerHTMLShouldWork()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/dom.html");
             var handle = await Page.QuerySelectorAsync("#outer");
 
             Assert.Equal("<div id=\"inner\">Text,\nmore text</div>", await handle.InnerHTMLAsync());
@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task InnerTextShouldWork()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/dom.html");
             var handle = await Page.QuerySelectorAsync("#inner");
 
             Assert.Equal("Text, more text", await handle.InnerTextAsync());
@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task TextContentShouldWork()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/dom.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/dom.html");
             var handle = await Page.QuerySelectorAsync("#outer");
 
             Assert.Equal("Text,\nmore text", await handle.TextContentAsync());

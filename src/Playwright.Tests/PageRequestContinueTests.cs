@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWork()
         {
             await Page.RouteAsync("**/*", (route) => route.ResumeAsync());
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
         }
 
         [PlaywrightTest("page-request-continue.spec.ts", "should amend HTTP headers")]
@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
                 var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["FOO"] = "bar" };
                 route.ResumeAsync(headers: headers);
             });
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var requestTask = Server.WaitForRequest("/sleep.zzz", request => request.Headers["foo"]);
             await TaskUtils.WhenAll(
                 requestTask,
@@ -52,7 +52,7 @@ namespace Microsoft.Playwright.Tests
         {
             var methodTask = Server.WaitForRequest("/empty.html", r => r.Method);
             await Page.RouteAsync("**/*", (route) => route.ResumeAsync(method: HttpMethod.Post.Method));
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal("POST", await methodTask);
         }
 
@@ -60,7 +60,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldAmendPostData()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.RouteAsync("**/*", (route) =>
             {
                 route.ResumeAsync(postData: Encoding.UTF8.GetBytes("doggo"));

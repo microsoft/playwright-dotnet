@@ -21,7 +21,7 @@ namespace Microsoft.Playwright.Tests
         {
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Single(requests);
         }
 
@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Tests
         {
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             Assert.Equal(2, requests.Count);
         }
@@ -42,7 +42,7 @@ namespace Microsoft.Playwright.Tests
         {
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.EvaluateAsync("fetch('/empty.html')");
             Assert.Equal(2, requests.Count);
         }
@@ -51,7 +51,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportRequestsAndResponsesHandledByServiceWorker()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/serviceworkers/fetchdummy/sw.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/serviceworkers/fetchdummy/sw.html");
             await Page.EvaluateAsync("() => window.activationPromise");
 
             var (request, swResponse) = await TaskUtils.WhenAll(

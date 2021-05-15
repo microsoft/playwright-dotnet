@@ -26,7 +26,7 @@ namespace Microsoft.Playwright.Tests.Issues
         [Fact(Skip = "Getting navigation timeouts on CI")]
         public async Task ShouldWork()
         {
-            await Page.GoToAsync("https://github.com");
+            await Page.GotoAsync("https://github.com");
             string title = await Page.TitleAsync();
             Assert.Contains("GitHub", title);
         }

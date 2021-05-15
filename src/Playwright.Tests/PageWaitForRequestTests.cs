@@ -20,7 +20,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var task = Page.WaitForRequestAsync(TestConstants.ServerUrl + "/digits/2.png");
             var (request, _) = await TaskUtils.WhenAll(
                 task,
@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithPredicate()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var task = Page.WaitForEventAsync(PageEvent.Request, e => e.Url == TestConstants.ServerUrl + "/digits/2.png");
             var (requestEvent, _) = await TaskUtils.WhenAll(
                 task,
@@ -71,7 +71,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoTimeout()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var task = Page.WaitForRequestAsync(TestConstants.ServerUrl + "/digits/2.png", 0);
             var (request, _) = await TaskUtils.WhenAll(
                 task,
@@ -88,7 +88,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithUrlMatch()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var task = Page.WaitForRequestAsync(new Regex(@"/digits/\d.png"));
             var (request, _) = await TaskUtils.WhenAll(
                 task,

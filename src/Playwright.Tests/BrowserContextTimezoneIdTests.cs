@@ -80,7 +80,7 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { TimezoneId = "Europe/Moscow" });
 
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
 
             await TaskUtils.WhenAll(
                 page.WaitForEventAsync(PageEvent.Popup),

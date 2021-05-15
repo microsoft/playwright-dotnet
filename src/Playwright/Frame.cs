@@ -128,8 +128,8 @@ namespace Microsoft.Playwright
         public Task<string> TitleAsync() => _channel.TitleAsync();
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, WaitUntilState waitUntil, float? timeout, string referer)
-            => GoToAsync(false, url, waitUntil.EnsureDefaultValue(WaitUntilState.Load), referer, timeout);
+        public Task<IResponse> GotoAsync(string url, WaitUntilState waitUntil, float? timeout, string referer)
+            => GotoAsync(false, url, waitUntil.EnsureDefaultValue(WaitUntilState.Load), referer, timeout);
 
         /// <inheritdoc />
         public Task SetContentAsync(string html, float? timeout, WaitUntilState waitUntil)
@@ -722,8 +722,8 @@ namespace Microsoft.Playwright
                 arg: ScriptsHelper.SerializedArgument(args),
                 isPage: isPageCall).ConfigureAwait(false));
 
-        internal async Task<IResponse> GoToAsync(bool isPage, string url, WaitUntilState? waitUntil, string referer, float? timeout)
-            => (await _channel.GoToAsync(url, timeout, waitUntil, referer, isPage).ConfigureAwait(false))?.Object;
+        internal async Task<IResponse> GotoAsync(bool isPage, string url, WaitUntilState? waitUntil, string referer, float? timeout)
+            => (await _channel.GotoAsync(url, timeout, waitUntil, referer, isPage).ConfigureAwait(false))?.Object;
 
         internal Task<bool> IsCheckedAsync(bool isPageCall, string selector, float? timeout)
             => _channel.IsCheckedAsync(selector, timeout, isPageCall);

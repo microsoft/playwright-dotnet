@@ -19,7 +19,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillTextarea()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.FillAsync("textarea", "some value");
             Assert.Equal("some value", await Page.EvaluateAsync<string>("() => result"));
         }
@@ -28,7 +28,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillInput()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.FillAsync("input", "some value");
             Assert.Equal("some value", await Page.EvaluateAsync<string>("() => result"));
         }
@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowOnUnsupportedInputs()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             foreach (string type in new[] { "button", "checkbox", "file", "image", "radio", "range", "reset", "submit" })
             {
                 await Page.EvalOnSelectorAsync("input", "(input, type) => input.setAttribute('type', type)", type);
@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillDifferentInputTypes()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             foreach (string type in new[] { "password", "search", "tel", "text", "url" })
             {
                 await Page.EvalOnSelectorAsync("input", "(input, type) => input.setAttribute('type', type)", type);
@@ -123,7 +123,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillContenteditable()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.FillAsync("div[contenteditable]", "some value");
             Assert.Equal("some value", await Page.EvalOnSelectorAsync<string>("div[contenteditable]", "div => div.textContent"));
         }
@@ -132,7 +132,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillElementsWithExistingValueAndSelection()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
 
             await Page.EvalOnSelectorAsync("input", "input => input.value = 'value one'");
             await Page.FillAsync("input", "another value");
@@ -161,7 +161,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenElementIsNotAnInputOrTextareaOrContenteditable()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Page.FillAsync("body", string.Empty));
             Assert.Contains("Element is not an <input>", exception.Message);
         }
@@ -176,7 +176,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetryOnDisabledElement()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.EvalOnSelectorAsync("input", "i => i.disabled = true");
 
             var task = Page.FillAsync("input", "some value");
@@ -193,7 +193,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetryOnReadonlyElement()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.EvalOnSelectorAsync("textarea", "i => i.readOnly = true");
             var task = Page.FillAsync("textarea", "some value");
             await GiveItAChanceToFillAsync(Page);
@@ -209,7 +209,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetryOnInvisibleElement()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.EvalOnSelectorAsync("input", "i => i.style.display = 'none'");
 
             var task = Page.FillAsync("input", "some value");
@@ -290,7 +290,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToClear()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.FillAsync("input", "some value");
             Assert.Equal("some value", await Page.EvaluateAsync<string>("() => result"));
             await Page.FillAsync("input", "");

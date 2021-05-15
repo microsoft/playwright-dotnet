@@ -163,7 +163,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportSpacesWithDoubleGreaterThanSyntax()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/deep-shadow.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/deep-shadow.html");
             string text = await Page.EvalOnSelectorAsync<string>(" css = div >>css=div>>css   = span  ", "e => e.textContent");
             Assert.Equal("Hello from root2", text);
         }

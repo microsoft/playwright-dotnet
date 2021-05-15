@@ -324,7 +324,7 @@ namespace Microsoft.Playwright
         /// <list type="bullet">
         /// <item><description><see cref="IPage.GoBackAsync"/></description></item>
         /// <item><description><see cref="IPage.GoForwardAsync"/></description></item>
-        /// <item><description><see cref="IPage.GoToAsync"/></description></item>
+        /// <item><description><see cref="IPage.GotoAsync"/></description></item>
         /// <item><description><see cref="IPage.ReloadAsync"/></description></item>
         /// <item><description><see cref="IPage.SetContentAsync"/></description></item>
         /// <item><description><see cref="IPage.WaitForNavigationAsync"/></description></item>

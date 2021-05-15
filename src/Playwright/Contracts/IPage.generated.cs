@@ -745,14 +745,17 @@ namespace Microsoft.Playwright
         /// <para>
         /// This method waits for an element matching <paramref name="selector"/>, waits for
         /// <a href="./actionability.md">actionability</a> checks, focuses the element, fills
-        /// it and triggers an <c>input</c> event after filling. If the element is inside the
-        /// <c>&lt;label&gt;</c> element that has associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
-        /// that control will be filled instead. If the element to be filled is not an <c>&lt;input&gt;</c>,
-        /// <c>&lt;textarea&gt;</c> or <c>[contenteditable]</c> element, this method throws
-        /// an error. Note that you can pass an empty string to clear the input field.
+        /// it and triggers an <c>input</c> event after filling. Note that you can pass an empty
+        /// string to clear the input field.
+        /// </para>
+        /// <para>
+        /// If the target element is not an <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or
+        /// <c>[contenteditable]</c> element, this method throws an error. However, if the element
+        /// is inside the <c>&lt;label&gt;</c> element that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// the control will be filled instead.
         /// </para>
         /// <para>To send fine-grained keyboard events, use <see cref="IPage.TypeAsync"/>.</para>
-        /// <para>Shortcut for main frame's <see cref="IFrame.FillAsync"/></para>
+        /// <para>Shortcut for main frame's <see cref="IFrame.FillAsync"/>.</para>
         /// </summary>
         /// <param name="selector">
         /// A selector to search for element. If there are multiple elements satisfying the
@@ -927,7 +930,7 @@ namespace Microsoft.Playwright
         /// by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
         /// The status code for such responses can be retrieved by calling <see cref="IResponse.Status"/>.
         /// </para>
-        /// <para>Shortcut for main frame's <see cref="IFrame.GoToAsync"/></para>
+        /// <para>Shortcut for main frame's <see cref="IFrame.GotoAsync"/></para>
         /// </summary>
         /// <remarks>
         /// <para>
@@ -968,7 +971,7 @@ namespace Microsoft.Playwright
         /// Referer header value. If provided it will take preference over the referer header
         /// value set by <see cref="IPage.SetExtraHttpHeadersAsync"/>.
         /// </param>
-        Task<IResponse> GoToAsync(string url, WaitUntilState waitUntil = default, float? timeout = default, string referer = default);
+        Task<IResponse> GotoAsync(string url, WaitUntilState waitUntil = default, float? timeout = default, string referer = default);
 
         /// <summary>
         /// <para>
@@ -1353,7 +1356,8 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// The method finds an element matching the specified selector within the page. If
-        /// no elements match the selector, the return value resolves to <c>null</c>.
+        /// no elements match the selector, the return value resolves to <c>null</c>. To wait
+        /// for an element on the page, use <see cref="IPage.WaitForSelectorAsync"/>.
         /// </para>
         /// <para>Shortcut for main frame's <see cref="IFrame.QuerySelectorAsync"/>.</para>
         /// </summary>
@@ -1523,14 +1527,23 @@ namespace Microsoft.Playwright
         Task<byte[]> ScreenshotAsync(string path = default, ScreenshotType type = default, int? quality = default, bool? fullPage = default, Clip clip = default, bool? omitBackground = default, float? timeout = default);
 
         /// <summary>
+        /// <para>
+        /// This method waits for an element matching <paramref name="selector"/>, waits for
+        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
+        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// </para>
+        /// <para>
+        /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
+        /// an error. However, if the element is inside the <c>&lt;label&gt;</c> element that
+        /// has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// the control will be used instead.
+        /// </para>
         /// <para>Returns the array of option values that have been successfully selected.</para>
         /// <para>
         /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
-        /// been selected. If there's no <c>&lt;select&gt;</c> element matching <paramref name="selector"/>,
-        /// the method throws an error.
+        /// been selected.
         /// </para>
-        /// <para>Will wait until all specified options are present in the <c>&lt;select&gt;</c> element.</para>
-        /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/></para>
+        /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
         /// </summary>
         /// <param name="selector">
         /// A selector to search for element. If there are multiple elements satisfying the
@@ -1590,7 +1603,7 @@ namespace Microsoft.Playwright
         /// <list type="bullet">
         /// <item><description><see cref="IPage.GoBackAsync"/></description></item>
         /// <item><description><see cref="IPage.GoForwardAsync"/></description></item>
-        /// <item><description><see cref="IPage.GoToAsync"/></description></item>
+        /// <item><description><see cref="IPage.GotoAsync"/></description></item>
         /// <item><description><see cref="IPage.ReloadAsync"/></description></item>
         /// <item><description><see cref="IPage.SetContentAsync"/></description></item>
         /// <item><description><see cref="IPage.WaitForNavigationAsync"/></description></item>

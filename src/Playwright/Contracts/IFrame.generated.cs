@@ -478,11 +478,14 @@ namespace Microsoft.Playwright
         /// <para>
         /// This method waits for an element matching <paramref name="selector"/>, waits for
         /// <a href="./actionability.md">actionability</a> checks, focuses the element, fills
-        /// it and triggers an <c>input</c> event after filling. If the element is inside the
-        /// <c>&lt;label&gt;</c> element that has associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
-        /// that control will be filled instead. If the element to be filled is not an <c>&lt;input&gt;</c>,
-        /// <c>&lt;textarea&gt;</c> or <c>[contenteditable]</c> element, this method throws
-        /// an error. Note that you can pass an empty string to clear the input field.
+        /// it and triggers an <c>input</c> event after filling. Note that you can pass an empty
+        /// string to clear the input field.
+        /// </para>
+        /// <para>
+        /// If the target element is not an <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or
+        /// <c>[contenteditable]</c> element, this method throws an error. However, if the element
+        /// is inside the <c>&lt;label&gt;</c> element that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// the control will be filled instead.
         /// </para>
         /// <para>To send fine-grained keyboard events, use <see cref="IFrame.TypeAsync"/>.</para>
         /// </summary>
@@ -615,7 +618,7 @@ namespace Microsoft.Playwright
         /// Referer header value. If provided it will take preference over the referer header
         /// value set by <see cref="IPage.SetExtraHttpHeadersAsync"/>.
         /// </param>
-        Task<IResponse> GoToAsync(string url, WaitUntilState waitUntil = default, float? timeout = default, string referer = default);
+        Task<IResponse> GotoAsync(string url, WaitUntilState waitUntil = default, float? timeout = default, string referer = default);
 
         /// <summary>
         /// <para>
@@ -905,13 +908,22 @@ namespace Microsoft.Playwright
         Task<IReadOnlyCollection<IElementHandle>> QuerySelectorAllAsync(string selector);
 
         /// <summary>
+        /// <para>
+        /// This method waits for an element matching <paramref name="selector"/>, waits for
+        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
+        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// </para>
+        /// <para>
+        /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
+        /// an error. However, if the element is inside the <c>&lt;label&gt;</c> element that
+        /// has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// the control will be used instead.
+        /// </para>
         /// <para>Returns the array of option values that have been successfully selected.</para>
         /// <para>
         /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
-        /// been selected. If there's no <c>&lt;select&gt;</c> element matching <paramref name="selector"/>,
-        /// the method throws an error.
+        /// been selected.
         /// </para>
-        /// <para>Will wait until all specified options are present in the <c>&lt;select&gt;</c> element.</para>
         /// </summary>
         /// <param name="selector">
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>

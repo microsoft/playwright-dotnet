@@ -21,7 +21,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { UserAgent = "hey" });
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             var requestTcs = new TaskCompletionSource<string>();
             _ = Server.WaitForRequest("/popup/popup.html", request => requestTcs.TrySetResult(request.Headers["user-agent"]));
 
@@ -43,7 +43,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
 
             await page.SetContentAsync("<a target=_blank rel=noopener href=\"empty.html\">link</a>");
             bool intercepted = false;
@@ -72,7 +72,7 @@ namespace Microsoft.Playwright.Tests
                 }
             });
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             var requestTcs = new TaskCompletionSource<string>();
             _ = Server.WaitForRequest("/dummy.html", request => requestTcs.TrySetResult(request.Headers["foo"]));
 
@@ -88,7 +88,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             await context.SetOfflineAsync(true);
 
             bool online = await page.EvaluateAsync<bool>(@"url => {
@@ -111,7 +111,7 @@ namespace Microsoft.Playwright.Tests
                 HttpCredentials = new HttpCredentials() { Username = "user", Password = "pass" },
             });
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             var popup = page.WaitForEventAsync(PageEvent.Popup);
 
             await TaskUtils.WhenAll(
@@ -132,7 +132,7 @@ namespace Microsoft.Playwright.Tests
                 HasTouch = true,
             });
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
 
             bool hasTouch = await page.EvaluateAsync<bool>(@"() => {
                 const win = window.open('');
@@ -151,7 +151,7 @@ namespace Microsoft.Playwright.Tests
                 Viewport = new ViewportSize { Width = 400, Height = 500 },
             });
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
 
             var size = await page.EvaluateAsync<ViewportSize>(@"() => {
                 const win = window.open('about:blank');
@@ -170,7 +170,7 @@ namespace Microsoft.Playwright.Tests
                 Viewport = new ViewportSize { Width = 700, Height = 700 },
             });
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
 
             var (size, popup) = await TaskUtils.WhenAll(
                 page.EvaluateAsync<ViewportSize>(@"() => {
@@ -193,7 +193,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
 
             bool intercepted = false;
 
@@ -218,7 +218,7 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             await context.AddInitScriptAsync("() => window.injected = 123");
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
 
             int injected = await page.EvaluateAsync<int>(@"() => {
                 const win = window.open('about:blank');
@@ -235,7 +235,7 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             await context.AddInitScriptAsync("() => window.injected = 123");
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
 
             var popup = page.WaitForEventAsync(PageEvent.Popup);
 
@@ -255,7 +255,7 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             await context.ExposeFunctionAsync("add", (int a, int b) => a + b);
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
 
             int injected = await page.EvaluateAsync<int>(@"() => {
                 const win = window.open('about:blank');

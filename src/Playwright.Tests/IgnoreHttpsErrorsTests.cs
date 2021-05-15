@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Tests
             var requestTask = HttpsServer.WaitForRequest(
                 "/empty.html",
                 request => request.HttpContext.Features.Get<ITlsHandshakeFeature>().Protocol);
-            var responseTask = page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html");
+            var responseTask = page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html");
 
             await TaskUtils.WhenAll(
                 requestTask,
@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
             await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { IgnoreHTTPSErrors = true }))
             {
                 var page = await context.NewPageAsync();
-                var response = await page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html");
+                var response = await page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html");
 
                 Assert.Equal((int)HttpStatusCode.OK, response.Status);
             }
@@ -55,7 +55,7 @@ namespace Microsoft.Playwright.Tests
             await using (var context = await Browser.NewContextAsync())
             {
                 var page = await context.NewPageAsync();
-                await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html"));
+                await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html"));
             }
         }
 
@@ -70,7 +70,7 @@ namespace Microsoft.Playwright.Tests
             });
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { IgnoreHTTPSErrors = true });
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.HttpsPrefix + "/mixedcontent.html", WaitUntilState.DOMContentLoaded);
+            await page.GotoAsync(TestConstants.HttpsPrefix + "/mixedcontent.html", WaitUntilState.DOMContentLoaded);
             Assert.Equal(2, page.Frames.Count);
             Assert.Equal(3, await page.MainFrame.EvaluateAsync<int>("1 + 2"));
             Assert.Equal(5, await page.FirstChildFrame().EvaluateAsync<int>("2 + 3"));

@@ -52,8 +52,9 @@ namespace Microsoft.Playwright
     /// event.
     /// </para>
     /// <para>
-    /// All the downloaded files belonging to the browser context are deleted when the browser
-    /// context is closed. All downloaded files are deleted when the browser closes.
+    /// If <c>downloadsPath</c> isn't specified, all the downloaded files belonging to the
+    /// browser context are deleted when the browser context is closed. And all downloaded
+    /// files are deleted when the browser closes.
     /// </para>
     /// <para>
     /// Download event is emitted once the download starts. Download path becomes available
@@ -89,11 +90,11 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Saves the download to a user-specified path. It is safe to call this method while
-        /// the download is still in progress.
+        /// Copy the download to a user-specified path. It is safe to call this method while
+        /// the download is still in progress. Will wait for the download to finish if necessary.
         /// </para>
         /// </summary>
-        /// <param name="path">Path where the download should be saved.</param>
+        /// <param name="path">Path where the download should be copied.</param>
         Task SaveAsAsync(string path);
 
         /// <summary>

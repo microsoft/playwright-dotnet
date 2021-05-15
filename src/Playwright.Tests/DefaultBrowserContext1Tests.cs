@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Testing.Xunit;
@@ -23,7 +23,7 @@ namespace Microsoft.Playwright.Tests
         {
             var (tmp, context, page) = await LaunchAsync();
 
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
 
             string documentCookie = await page.EvaluateAsync<string>(@"() => {
               document.cookie = 'username=John Doe';
@@ -51,7 +51,7 @@ namespace Microsoft.Playwright.Tests
         {
             var (tmp, context, page) = await LaunchAsync();
 
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             await context.AddCookiesAsync(new[]
             {
                 new Cookie
@@ -84,7 +84,7 @@ namespace Microsoft.Playwright.Tests
         {
             var (tmp, context, page) = await LaunchAsync();
 
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             await context.AddCookiesAsync(new[]
             {
                 new Cookie
@@ -118,7 +118,7 @@ namespace Microsoft.Playwright.Tests
         {
             var (tmp, context, page) = await LaunchAsync();
 
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             await page.EvaluateAsync(@"src => {
                   let fulfill;
                   const promise = new Promise(x => fulfill = x);
@@ -205,7 +205,7 @@ namespace Microsoft.Playwright.Tests
 
             await TaskUtils.WhenAll(
                 Server.WaitForRequest("/empty.html", r => userAgent = r.Headers["user-agent"]),
-                page.GoToAsync(TestConstants.EmptyPage));
+                page.GotoAsync(TestConstants.EmptyPage));
 
             Assert.Equal("foobar", userAgent);
 
@@ -222,7 +222,7 @@ namespace Microsoft.Playwright.Tests
                 BypassCSP = true
             });
 
-            await page.GoToAsync(TestConstants.ServerUrl + "/csp.html");
+            await page.GotoAsync(TestConstants.ServerUrl + "/csp.html");
             await page.AddScriptTagAsync(content: "window.__injected = 42;");
             Assert.Equal(42, await page.EvaluateAsync<int>("window.__injected"));
 
@@ -239,7 +239,7 @@ namespace Microsoft.Playwright.Tests
                 JavaScriptEnabled = false
             });
 
-            await page.GoToAsync("data:text/html, <script>var something = \"forbidden\"</script>");
+            await page.GotoAsync("data:text/html, <script>var something = \"forbidden\"</script>");
             var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.EvaluateAsync("something"));
 
             if (TestConstants.IsWebKit)
@@ -269,7 +269,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             Server.SetAuth("/playground.html", "user", "pass");
-            var response = await page.GoToAsync(TestConstants.ServerUrl + "/playground.html");
+            var response = await page.GotoAsync(TestConstants.ServerUrl + "/playground.html");
             Assert.Equal((int)HttpStatusCode.OK, response.Status);
 
             tmp.Dispose();
@@ -285,7 +285,7 @@ namespace Microsoft.Playwright.Tests
                 Offline = true
             });
 
-            await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.GoToAsync(TestConstants.EmptyPage));
+            await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.GotoAsync(TestConstants.EmptyPage));
 
             tmp.Dispose();
             await context.DisposeAsync();

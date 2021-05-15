@@ -15,7 +15,7 @@ namespace Microsoft.Playwright.LocalNugetTest
 
             var page = await browser.NewPageAsync();
             Console.WriteLine("Navigating google");
-            await page.GoToAsync("http://www.google.com");
+            await page.GotoAsync("http://www.google.com");
 
             Assert.Contains("Google", await page.TitleAsync());
         }

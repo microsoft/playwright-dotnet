@@ -19,7 +19,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForOpenShadowRoots()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/deep-shadow.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/deep-shadow.html");
             Assert.Equal("Hello from root2", await Page.EvalOnSelectorAsync<string>("id=target", "e => e.textContent"));
             Assert.Equal("Hello from root1", await Page.EvalOnSelectorAsync<string>("data-testid=foo", "e => e.textContent"));
             Assert.Equal(3, await Page.EvalOnSelectorAllAsync<int>("data-testid=foo", "els => els.length"));

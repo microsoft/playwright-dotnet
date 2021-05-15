@@ -18,7 +18,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ClickingOnLinksWhichDoNotCommitNavigation()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync($"<a href=\"{TestConstants.EmptyPage}\">fooobar</a>");
             await Page.ClickAsync("a");
         }
@@ -51,7 +51,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task AssigningLocationToAboutBlank()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.EvaluateAsync("window.location.href = 'about:blank';");
         }
 
@@ -71,7 +71,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task CallingWindowOpenAndWindowClose()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
 
             await Page.EvaluateAsync($@"(url) => {{
                 const popup = window.open(window.location.href);
@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task OpeningAPopup()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
 
             await TaskUtils.WhenAll(
                 Page.WaitForEventAsync(PageEvent.Popup),

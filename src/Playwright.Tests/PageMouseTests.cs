@@ -49,7 +49,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectTheTextWithMouse()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             await Page.FocusAsync("textarea");
             const string text = "This is the text that we are going to try to select. Let\'s see how it goes.";
             await Page.Keyboard.TypeAsync(text);
@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTriggerHoverState()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/scrollable.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/scrollable.html");
             await Page.HoverAsync("#button-6");
             Assert.Equal("button-6", await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"));
             await Page.HoverAsync("#button-2");
@@ -94,7 +94,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTriggerHoverStateWithRemovedWindowNode()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/scrollable.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/scrollable.html");
             await Page.EvaluateAsync("() => delete window.Node");
             await Page.HoverAsync("#button-6");
             Assert.Equal("button-6", await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"));
@@ -104,7 +104,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetModifierKeysOnClick()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/scrollable.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/scrollable.html");
             await Page.EvaluateAsync("() => document.querySelector('#button-3').addEventListener('mousedown', e => window.lastEvent = e, true)");
             var modifiers = new Dictionary<string, string> { ["Shift"] = "shiftKey", ["Control"] = "ctrlKey", ["Alt"] = "altKey", ["Meta"] = "metaKey" };
             // In Firefox, the Meta modifier only exists on Mac
@@ -167,9 +167,9 @@ namespace Microsoft.Playwright.Tests
                 IsMobile = true,
             });
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
 
-            await page.GoToAsync(TestConstants.CrossProcessHttpPrefix + "/mobile.html");
+            await page.GotoAsync(TestConstants.CrossProcessHttpPrefix + "/mobile.html");
             await page.EvaluateAsync(@"() => {
                 document.addEventListener('click', event => {
                     window.result = { x: event.clientX, y: event.clientY };

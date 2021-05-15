@@ -22,7 +22,7 @@ namespace Microsoft.Playwright.Tests
         {
             /*
             await Page.Coverage.StartJSCoverageAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/simple.html", LoadState.NetworkIdle);
+            await Page.GotoAsync(TestConstants.ServerUrl + "/jscoverage/simple.html", LoadState.NetworkIdle);
             var coverage = await Page.Coverage.StopJSCoverageAsync();
             Assert.Single(coverage);
             Assert.Contains("/jscoverage/simple.html", coverage[0].Url);
@@ -36,7 +36,7 @@ namespace Microsoft.Playwright.Tests
         {
             /*
             await Page.Coverage.StartJSCoverageAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/sourceurl.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/jscoverage/sourceurl.html");
             var coverage = await Page.Coverage.StopJSCoverageAsync();
             Assert.Single(coverage);
             Assert.Equal("nicename.js", coverage[0].Url);
@@ -49,7 +49,7 @@ namespace Microsoft.Playwright.Tests
         {
             /*
             await Page.Coverage.StartJSCoverageAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/eval.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/jscoverage/eval.html");
             var coverage = await Page.Coverage.StopJSCoverageAsync();
             Assert.Single(coverage);
             */
@@ -61,7 +61,7 @@ namespace Microsoft.Playwright.Tests
         {
             /*
             await Page.Coverage.StartJSCoverageAsync(reportAnonymousScripts: true);
-            await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/eval.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/jscoverage/eval.html");
             var coverage = await Page.Coverage.StopJSCoverageAsync();
             Assert.Equal("console.log(\"foo\")", coverage.Single(entry => entry.Url == string.Empty).Source);
             Assert.Equal(2, coverage.Length);
@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Tests
         {
             /*
             await Page.Coverage.StartJSCoverageAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/multiple.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/jscoverage/multiple.html");
             var coverage = await Page.Coverage.StopJSCoverageAsync();
             Assert.Equal(2, coverage.Length);
             var orderedList = coverage.OrderBy(c => c.Url).ToArray();
@@ -89,8 +89,8 @@ namespace Microsoft.Playwright.Tests
         {
             /*
             await Page.Coverage.StartJSCoverageAsync(false);
-            await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/multiple.html");
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.ServerUrl + "/jscoverage/multiple.html");
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var coverage = await Page.Coverage.StopJSCoverageAsync();
             Assert.Equal(2, coverage.Length);
             */
@@ -102,8 +102,8 @@ namespace Microsoft.Playwright.Tests
         {
             /*
             await Page.Coverage.StartJSCoverageAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/multiple.html");
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.ServerUrl + "/jscoverage/multiple.html");
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var coverage = await Page.Coverage.StopJSCoverageAsync();
             Assert.Empty(coverage);
             */
@@ -115,7 +115,7 @@ namespace Microsoft.Playwright.Tests
         {
             /*
             await Page.Coverage.StartJSCoverageAsync();
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.EvaluateAsync(@"() => {
                 debugger; // eslint-disable-line no-debugger
             }");

@@ -23,13 +23,13 @@ namespace Microsoft.Playwright.Tests
         {
             await TaskUtils.WhenAll(
                 Page.WaitForEventAsync(PageEvent.Worker),
-                Page.GoToAsync(TestConstants.ServerUrl + "/worker/worker.html"));
+                Page.GotoAsync(TestConstants.ServerUrl + "/worker/worker.html"));
             var worker = Page.Workers.First();
             Assert.Contains("worker.js", worker.Url);
 
             Assert.Equal("worker function result", await worker.EvaluateAsync<string>("() => self['workerFunction']()"));
 
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Empty(Page.Workers);
         }
 
@@ -111,7 +111,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearUponNavigation()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var workerCreatedTask = Page.WaitForEventAsync(PageEvent.Worker);
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
             var worker = await workerCreatedTask;
@@ -120,7 +120,7 @@ namespace Microsoft.Playwright.Tests
             bool destroyed = false;
             worker.Close += (_, _) => destroyed = true;
 
-            await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
             Assert.True(destroyed);
             Assert.Empty(Page.Workers);
         }
@@ -128,7 +128,7 @@ namespace Microsoft.Playwright.Tests
         [Fact]
         public async Task WorkerShouldWaitOnClose()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var workerCreatedTask = Page.WaitForEventAsync(PageEvent.Worker);
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
             var worker = await workerCreatedTask;
@@ -136,7 +136,7 @@ namespace Microsoft.Playwright.Tests
             Assert.Single(Page.Workers);
 
             var t = worker.WaitForCloseAsync();
-            await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
             await t;
             Assert.Empty(Page.Workers);
         }
@@ -144,7 +144,7 @@ namespace Microsoft.Playwright.Tests
         [Fact]
         public async Task WorkerShouldFailOnTimeout()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var workerCreatedTask = Page.WaitForEventAsync(PageEvent.Worker);
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
             var worker = await workerCreatedTask;
@@ -153,7 +153,7 @@ namespace Microsoft.Playwright.Tests
 
             var t = worker.WaitForCloseAsync(1);
             await Task.Delay(100);
-            await Page.GoToAsync(TestConstants.ServerUrl + "/one-style.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
             await Assert.ThrowsAsync<TimeoutException>(async () => await t);
         }
 
@@ -161,7 +161,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearUponCrossProcessNavigation()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var workerCreatedTask = Page.WaitForEventAsync(PageEvent.Worker);
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
             var worker = await workerCreatedTask;
@@ -170,7 +170,7 @@ namespace Microsoft.Playwright.Tests
             bool destroyed = false;
             worker.Close += (_, _) => destroyed = true;
 
-            await Page.GoToAsync(TestConstants.CrossProcessUrl + "/empty.html");
+            await Page.GotoAsync(TestConstants.CrossProcessUrl + "/empty.html");
             Assert.True(destroyed);
             Assert.Empty(Page.Workers);
         }
@@ -181,7 +181,7 @@ namespace Microsoft.Playwright.Tests
         {
             var (worker, _) = await TaskUtils.WhenAll(
                 Page.WaitForEventAsync(PageEvent.Worker),
-                Page.GoToAsync(TestConstants.ServerUrl + "/worker/worker.html")
+                Page.GotoAsync(TestConstants.ServerUrl + "/worker/worker.html")
             );
 
             string url = TestConstants.ServerUrl + "/one-style.css";
@@ -201,7 +201,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNetworkActivityOnWorkerCreation()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             string url = TestConstants.ServerUrl + "/one-style.css";
 
             var requestTask = Page.WaitForRequestAsync(url);
@@ -224,7 +224,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { Locale = "ru-RU" });
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             var (worker, _) = await TaskUtils.WhenAll(
                 page.WaitForEventAsync(PageEvent.Worker),
                 page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], {type: 'application/javascript'})))"));

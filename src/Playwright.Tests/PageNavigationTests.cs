@@ -21,7 +21,7 @@ namespace Microsoft.Playwright.Tests
         {
             Server.SetRoute("/empty.html", ctx =>
             ctx.Response.WriteAsync($"<a href=\"{TestConstants.EmptyPage}\" target=\"_blank\">Click me</a>"));
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.ClickAsync("\"Click me\"");
         }
 
@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Tests
         {
             Server.SetRoute("/empty.html", ctx =>
             ctx.Response.WriteAsync($"<a href=\"{TestConstants.CrossProcessUrl}/empty.html\" target=\"_blank\">Click me</a>"));
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.ClickAsync("\"Click me\"");
         }
     }

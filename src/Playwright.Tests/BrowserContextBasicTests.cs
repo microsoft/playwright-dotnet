@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             var popupTargetCompletion = new TaskCompletionSource<IPage>();
             page.Popup += (_, e) => popupTargetCompletion.SetResult(e);
 
@@ -66,7 +66,7 @@ namespace Microsoft.Playwright.Tests
 
             // Create a page in first incognito context.
             var page1 = await context1.NewPageAsync();
-            await page1.GoToAsync(TestConstants.EmptyPage);
+            await page1.GotoAsync(TestConstants.EmptyPage);
             await page1.EvaluateAsync(@"() => {
                 localStorage.setItem('name', 'page1');
                 document.cookie = 'name=page1';
@@ -77,7 +77,7 @@ namespace Microsoft.Playwright.Tests
 
             // Create a page in second incognito context.
             var page2 = await context2.NewPageAsync();
-            await page2.GoToAsync(TestConstants.EmptyPage);
+            await page2.GotoAsync(TestConstants.EmptyPage);
             await page2.EvaluateAsync(@"() => {
                 localStorage.setItem('name', 'page2');
                 document.cookie = 'name=page2';
@@ -205,7 +205,7 @@ namespace Microsoft.Playwright.Tests
 
             IPage popup = null;
             context.Page += (_, e) => popup = e;
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             await page.ClickAsync("'Click me'");
             await context.CloseAsync();
 
@@ -259,7 +259,7 @@ namespace Microsoft.Playwright.Tests
             await using (var context = await Browser.NewContextAsync(javaScriptEnabled: false))
             {
                 var page = await context.NewPageAsync();
-                await page.GoToAsync("data:text/html, <script>var something = 'forbidden'</script>");
+                await page.GotoAsync("data:text/html, <script>var something = 'forbidden'</script>");
 
                 var exception = await Assert.ThrowsAnyAsync<Exception>(async () => await page.EvaluateAsync("something"));
 
@@ -271,7 +271,7 @@ namespace Microsoft.Playwright.Tests
             await using (var context = await Browser.NewContextAsync())
             {
                 var page = await context.NewPageAsync();
-                await page.GoToAsync("data:text/html, <script>var something = 'forbidden'</script>");
+                await page.GotoAsync("data:text/html, <script>var something = 'forbidden'</script>");
                 Assert.Equal("forbidden", await page.EvaluateAsync<string>("something"));
             }
         }
@@ -282,7 +282,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(javaScriptEnabled: false);
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should work with offline option")]
@@ -291,9 +291,9 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new BrowserContextOptions { Offline = true });
             var page = await context.NewPageAsync();
-            await Assert.ThrowsAsync<PlaywrightException>(() => page.GoToAsync(TestConstants.EmptyPage));
+            await Assert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync(TestConstants.EmptyPage));
             await context.SetOfflineAsync(false);
-            var response = await page.GoToAsync(TestConstants.EmptyPage);
+            var response = await page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal((int)HttpStatusCode.OK, response.Status);
         }
 

@@ -22,7 +22,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWork()
         {
             await Context.GrantPermissionsAsync(new[] { ContextPermissions.Geolocation });
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Context.SetGeolocationAsync(new Geolocation
             {
                 Longitude = 10,
@@ -63,7 +63,7 @@ namespace Microsoft.Playwright.Tests
                 Longitude = 10,
                 Latitude = 10
             });
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
 
 
             await using var context2 = await Browser.NewContextAsync(new BrowserContextOptions
@@ -73,7 +73,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page2 = await context2.NewPageAsync();
-            await page2.GoToAsync(TestConstants.EmptyPage);
+            await page2.GotoAsync(TestConstants.EmptyPage);
 
             var geolocation = await Page.EvaluateAsync<Geolocation>(
                 @"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
@@ -107,7 +107,7 @@ namespace Microsoft.Playwright.Tests
             var geolocation = new Geolocation { Latitude = 10, Longitude = 10 };
             BrowserContextOptions options = new BrowserContextOptions { Geolocation = geolocation };
             await using var context = await Browser.NewContextAsync(options);
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Context.SetGeolocationAsync(new Geolocation
             {
                 Longitude = 20,
@@ -136,7 +136,7 @@ namespace Microsoft.Playwright.Tests
 
             await using var context = await Browser.NewContextAsync(options);
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
 
             var geolocation = await page.EvaluateAsync<Geolocation>(@"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
                 resolve({latitude: position.coords.latitude, longitude: position.coords.longitude});
@@ -149,7 +149,7 @@ namespace Microsoft.Playwright.Tests
         public async Task WatchPositionShouldBeNotified()
         {
             await Context.GrantPermissionsAsync(new[] { ContextPermissions.Geolocation });
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
 
             var messages = new List<string>();
             Page.Console += (_, e) => messages.Add(e.Text);

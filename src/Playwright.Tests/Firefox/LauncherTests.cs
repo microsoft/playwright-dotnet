@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Tests.Firefox
 
             await using var browser = await BrowserType.LaunchAsync(firefoxUserPrefs: firefoxUserPrefs);
             var page = await browser.NewPageAsync();
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.GoToAsync("http://example.com"));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.GotoAsync("http://example.com"));
 
             Assert.Contains("NS_ERROR_PROXY_CONNECTION_REFUSED", exception.Message);
         }

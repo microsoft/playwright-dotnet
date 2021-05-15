@@ -77,12 +77,12 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>An example of dumping the entire accessibility tree:</para>
         /// <code>
-        /// var accessibilitySnapshot = await Page.Accessibility.SnapshotAsync();<br/>
-        /// Console.WriteLine(accessibilitySnapshot);
+        /// var accessibilitySnapshot = await page.Accessibility.SnapshotAsync();<br/>
+        /// Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(accessibilitySnapshot));
         /// </code>
         /// <para>An example of logging the focused node's name:</para>
         /// <code>
-        /// Func&lt;AccessibilitySnapshotResult, AccessibilitySnapshotResult&gt; findFocusedNode = root =><br/>
+        /// static AccessibilitySnapshotResult findFocusedNode(AccessibilitySnapshotResult root)<br/>
         /// {<br/>
         ///     var nodes = new Stack&lt;AccessibilitySnapshotResult&gt;(new[] { root });<br/>
         ///     while (nodes.Count &gt; 0)<br/>
@@ -96,12 +96,13 @@ namespace Microsoft.Playwright
         ///     }<br/>
         /// <br/>
         ///     return null;<br/>
-        /// };<br/>
+        /// }<br/>
         /// <br/>
-        /// var accessibilitySnapshot = await Page.Accessibility.SnapshotAsync();<br/>
+        /// var accessibilitySnapshot = await page.Accessibility.SnapshotAsync();<br/>
+        /// Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(accessibilitySnapshot));<br/>
         /// var focusedNode = findFocusedNode(accessibilitySnapshot);<br/>
-        /// if(focusedNode != null)<br/>
-        ///   Console.WriteLine(focusedNode.Name);
+        /// if (focusedNode != null)<br/>
+        ///     Console.WriteLine(focusedNode.Name);
         /// </code>
         /// </summary>
         /// <remarks>

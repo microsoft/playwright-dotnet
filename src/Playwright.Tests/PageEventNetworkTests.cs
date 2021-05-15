@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests
         {
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Single(requests);
             Assert.Equal(TestConstants.EmptyPage, requests[0].Url);
             Assert.Equal(ResourceTypes.Document, requests[0].ResourceType, true);
@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Tests
         {
             var responses = new List<IResponse>();
             Page.Response += (_, e) => responses.Add(e);
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Single(responses);
             Assert.Equal(TestConstants.EmptyPage, responses[0].Url);
             Assert.Equal((int)HttpStatusCode.OK, responses[0].Status);
@@ -65,7 +65,7 @@ namespace Microsoft.Playwright.Tests
 
             Page.RequestFailed += (_, e) => failedRequests.Add(e);
 
-            await Page.GoToAsync($"http://localhost:{port}/one-style.html");
+            await Page.GotoAsync($"http://localhost:{port}/one-style.html");
 
             Assert.Single(failedRequests);
             Assert.Contains("one-style.css", failedRequests[0].Url);
@@ -85,7 +85,7 @@ namespace Microsoft.Playwright.Tests
         {
             var (_, response) = await TaskUtils.WhenAll(
                 Page.WaitForEventAsync(PageEvent.RequestFinished),
-                Page.GoToAsync(TestConstants.EmptyPage));
+                Page.GotoAsync(TestConstants.EmptyPage));
 
             var request = response.Request;
             Assert.Equal(TestConstants.EmptyPage, request.Url);
@@ -102,7 +102,7 @@ namespace Microsoft.Playwright.Tests
             var events = new List<string>();
             Page.Request += (_, _) => events.Add("request");
             Page.Response += (_, _) => events.Add("response");
-            var response = await Page.GoToAsync(TestConstants.EmptyPage);
+            var response = await Page.GotoAsync(TestConstants.EmptyPage);
             await response.FinishedAsync();
             events.Add("requestfinished");
             Assert.Equal(new[] { "request", "response", "requestfinished" }, events);
@@ -119,7 +119,7 @@ namespace Microsoft.Playwright.Tests
             Page.RequestFailed += (_, e) => events.Add($"FAIL {e.Url}");
             Server.SetRedirect("/foo.html", "/empty.html");
             const string FOO_URL = TestConstants.ServerUrl + "/foo.html";
-            var response = await Page.GoToAsync(FOO_URL);
+            var response = await Page.GotoAsync(FOO_URL);
             await response.FinishedAsync();
             Assert.Equal(new[] {
                 $"GET {FOO_URL}",

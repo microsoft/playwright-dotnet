@@ -18,7 +18,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
             await button.ClickAsync();
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("() => result"));
@@ -28,7 +28,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNodeRemoved()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.EvaluateAsync("() => delete window['Node']");
             var button = await Page.QuerySelectorAsync("button");
             await button.ClickAsync();
@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForShadowDOMV1()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/shadow.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/shadow.html");
             var buttonHandle = (IElementHandle)await Page.EvaluateHandleAsync("() => button");
             await buttonHandle.ClickAsync();
             Assert.True(await Page.EvaluateAsync<bool>("() => clicked"));
@@ -49,7 +49,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForTextNodes()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             var buttonTextNode = (IElementHandle)await Page.EvaluateHandleAsync("() => document.querySelector('button').firstChild");
             await buttonTextNode.ClickAsync();
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("() => result"));
@@ -59,7 +59,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForDetachedNodes()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
             await Page.EvaluateAsync("button => button.remove()", button);
             var exception = await Assert.ThrowsAsync<PlaywrightException>(() => button.ClickAsync());
@@ -70,7 +70,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForHiddenNodesWithForce()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
             await Page.EvaluateAsync("button => button.style.display = 'none'", button);
             var exception = await Assert.ThrowsAsync<PlaywrightException>(() => button.ClickAsync(force: true));
@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForRecursivelyHiddenNodesWithForce()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
             await Page.EvaluateAsync("button => button.parentElement.style.display = 'none'", button);
             var exception = await Assert.ThrowsAsync<PlaywrightException>(() => button.ClickAsync(force: true));
@@ -102,7 +102,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDoubleClickTheButton()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.EvaluateAsync(@"() => {
               window.double = false;
               const button = document.querySelector('button');

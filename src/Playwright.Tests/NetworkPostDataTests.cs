@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = Microsoft.Playwright.Playwright.DefaultTimeout)]
         public async Task ShouldReturnCorrectPostdataBufferForUtf8Body()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             string value = "baẞ";
 
             var task = Page.WaitForEventAsync(PageEvent.Request, (r) => true);
@@ -55,7 +55,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = Microsoft.Playwright.Playwright.DefaultTimeout)]
         public async Task ShouldReturnPostDataWOContentType()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
 
             var task = Page.WaitForEventAsync(PageEvent.Request, (r) => true);
             var actualTask = Page.EvaluateAsync(@"(url) => {
@@ -78,7 +78,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = Microsoft.Playwright.Playwright.DefaultTimeout)]
         public async Task ShouldThrowOnInvalidJSONInPostData()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
 
             var task = Page.WaitForEventAsync(PageEvent.Request, (r) => true);
             var actualTask = Page.EvaluateAsync(@"(url) => {
@@ -100,7 +100,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = Microsoft.Playwright.Playwright.DefaultTimeout)]
         public async Task ShouldReturnPostDataForPUTRequests()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
 
             var task = Page.WaitForEventAsync(PageEvent.Request, (r) => true);
             var actualTask = Page.EvaluateAsync(@"(url) => {

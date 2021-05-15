@@ -22,7 +22,7 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
             var page = await context.NewPageAsync();
 
-            await page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
+            await page.GotoAsync(TestConstants.ServerUrl + "/mobile.html");
             Assert.Equal(375, await page.EvaluateAsync<int>("window.innerWidth"));
             Assert.Contains("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
         }
@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
             var page = await context.NewPageAsync();
 
-            await page.GoToAsync(TestConstants.ServerUrl + "/input/button.html");
+            await page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             var button = await page.QuerySelectorAsync("button");
             await button.EvaluateAsync("button => button.style.marginTop = '200px'", button);
             await button.ClickAsync();
@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
             });
             var page = await context.NewPageAsync();
 
-            await page.GoToAsync(TestConstants.ServerUrl + "/input/scrollable.html");
+            await page.GotoAsync(TestConstants.ServerUrl + "/input/scrollable.html");
             var element = await page.QuerySelectorAsync("#button-91");
             await element.ClickAsync();
             Assert.Equal("clicked", await element.TextContentAsync());
