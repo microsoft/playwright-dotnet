@@ -6,6 +6,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\PlaywrightSharp\PlaywrightSharp.csproj" />
+      <ProjectReference Include="..\..\src\Playwright\Playwright.csproj" />
     </ItemGroup>
 </Project>
