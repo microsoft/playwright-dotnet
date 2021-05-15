@@ -25,6 +25,7 @@
  */
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -144,6 +145,21 @@ namespace Microsoft.Playwright.Transport
 
             _callbacks.TryAdd(id, callback);
 
+            var st = new StackTrace(true);
+            var stack = new List<object>();
+            for (int i = 0; i < st.FrameCount; ++i)
+            {
+                StackFrame sf = st.GetFrame(i);
+                var fileName = sf.GetFileName();
+                if (string.IsNullOrEmpty(fileName) || fileName.Contains("/Playwright/") || fileName.Contains("\\Playwright\\"))
+                {
+                    continue;
+                }
+
+                stack.Add(new { file = fileName, line = sf.GetFileLineNumber() });
+            }
+
+            var metadata = new { stack = stack };
             await _queue.EnqueueAsync(() =>
             {
                 var message = new MessageRequest
@@ -152,6 +168,7 @@ namespace Microsoft.Playwright.Transport
                     Guid = guid,
                     Method = method,
                     Params = args,
+                    Metadata = metadata,
                 };
 
                 string messageString = JsonSerializer.Serialize(message, serializerOptions ?? GetDefaultJsonSerializerOptions(ignoreNullValues));

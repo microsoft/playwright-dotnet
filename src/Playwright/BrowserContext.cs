@@ -283,7 +283,7 @@ namespace Microsoft.Playwright
             }
 
             timeout ??= DefaultTimeout;
-            using var waiter = new Waiter();
+            using var waiter = new Waiter(Channel, $"context.WaitForEventAsync(\"{playwrightEvent.Name}\")");
             waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{playwrightEvent.Name}\"");
 
             if (playwrightEvent.Name != ContextEvent.Close.Name)

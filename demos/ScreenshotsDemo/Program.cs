@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 
-namespace PdfDemo
+namespace ScreenshotsDemo
 {
     class Program
     {

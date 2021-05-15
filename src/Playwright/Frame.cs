@@ -336,7 +336,7 @@ namespace Microsoft.Playwright
                         return;
                     }
 
-                    waiter = SetupNavigationWaiter(timeout);
+                    waiter = SetupNavigationWaiter("frame.WaitForLoadStateAsync", timeout);
                     task = waiter.WaitForEventAsync<LoadState>(this, "LoadState", s =>
                     {
                         waiter.Log($"  \"{s}\" event fired");
@@ -414,7 +414,7 @@ namespace Microsoft.Playwright
             float? timeout)
         {
             waitUntil = waitUntil.EnsureDefaultValue(WaitUntilState.Load);
-            var waiter = SetupNavigationWaiter(timeout);
+            var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", timeout);
             string toUrl = !string.IsNullOrEmpty(urlString) ? $" to \"{urlString}\"" : string.Empty;
 
             waiter.Log($"waiting for navigation{toUrl} until \"{waitUntil}\"");
@@ -753,9 +753,9 @@ namespace Microsoft.Playwright
             return WaitForNavigationAsync(urlString, urlRegex, urlFunc, waitUntil, timeout);
         }
 
-        private Waiter SetupNavigationWaiter(float? timeout)
+        private Waiter SetupNavigationWaiter(string apiName, float? timeout)
         {
-            var waiter = new Waiter();
+            var waiter = new Waiter(_channel, apiName);
             waiter.RejectOnEvent<IPage>(Page, PageEvent.Close.Name, new NavigationException("Navigation failed because page was closed!"));
             waiter.RejectOnEvent<IPage>(Page, PageEvent.Crash.Name, new NavigationException("Navigation failed because page was crashed!"));
             waiter.RejectOnEvent<IFrame>(

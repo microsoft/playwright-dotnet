@@ -433,7 +433,7 @@ namespace Microsoft.Playwright
             }
 
             timeout ??= _defaultTimeout;
-            using var waiter = new Waiter();
+            using var waiter = new Waiter(_channel, $"page.WaitForEventAsync(\"{typeof(T)}\")");
             waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{typeof(T)}\"");
 
             if (pageEvent.Name != PageEvent.Crash.Name)
@@ -458,7 +458,7 @@ namespace Microsoft.Playwright
             }
 
             timeout ??= _defaultTimeout;
-            using var waiter = new Waiter();
+            using var waiter = new Waiter(_channel, $"page.WaitForEventAsync(\"{@event}\")");
             waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{@event}\"");
 
             if (@event != PageEvent.Crash.Name)
