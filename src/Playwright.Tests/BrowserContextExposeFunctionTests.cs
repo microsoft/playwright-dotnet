@@ -124,7 +124,7 @@ namespace Microsoft.Playwright.Tests
             var page = await Context.NewPageAsync();
             await Context.ExposeBindingAsync("clicked", async (BindingSource _, IJSHandle t) =>
             {
-                return result.TrySetResult(await t.AsElement.TextContentAsync());
+                return result.TrySetResult(await t.AsElement().TextContentAsync());
             });
 
             await page.SetContentAsync("<script>\n" +
