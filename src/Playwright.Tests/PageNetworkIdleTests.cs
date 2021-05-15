@@ -27,7 +27,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldNavigateToEmptyPageWithNetworkIdle()
         {
             var response = await Page.GotoAsync(TestConstants.EmptyPage, WaitUntilState.NetworkIdle);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
         }
 
         [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle to succeed navigation")]
@@ -196,7 +196,7 @@ namespace Microsoft.Playwright.Tests
             lastResponseFinished.Stop();
             if (!isSetContent)
             {
-                Assert.Equal(HttpStatusCode.OK, navigationResponse.StatusCode);
+                Assert.Equal((int)HttpStatusCode.OK, navigationResponse.Status);
             }
         }
     }

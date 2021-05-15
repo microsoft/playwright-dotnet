@@ -175,7 +175,7 @@ namespace Microsoft.Playwright.Tests
             // Setup request interception.
             await Page.RouteAsync("**/*", (route) => route.ResumeAsync());
             var response = await Page.ReloadAsync();
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should show custom HTTP headers")]
@@ -361,7 +361,7 @@ namespace Microsoft.Playwright.Tests
             Server.SetRoute("/four-style.css", context => context.Response.WriteAsync("body {box-sizing: border-box; }"));
 
             var response = await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
             Assert.Contains("one-style.html", response.Url);
 
             Assert.Equal(2, requests.Count);
@@ -456,7 +456,7 @@ namespace Microsoft.Playwright.Tests
                 route.ResumeAsync();
             });
             var response = await Page.GotoAsync(TestConstants.EmptyPage + "#hash");
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
             Assert.Equal(TestConstants.EmptyPage, response.Url);
             Assert.Single(requests);
             Assert.Equal(TestConstants.EmptyPage, requests[0].Url);
@@ -470,7 +470,7 @@ namespace Microsoft.Playwright.Tests
             // report URL as-is. @see crbug.com/759388
             await Page.RouteAsync("**/*", (route) => route.ResumeAsync());
             var response = await Page.GotoAsync(TestConstants.ServerUrl + "/some nonexisting page");
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.NotFound, response.Status);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with badly encoded server")]
@@ -480,7 +480,7 @@ namespace Microsoft.Playwright.Tests
             Server.SetRoute("/malformed?rnd=%911", _ => Task.CompletedTask);
             await Page.RouteAsync("**/*", (route) => route.ResumeAsync());
             var response = await Page.GotoAsync(TestConstants.ServerUrl + "/malformed?rnd=%911");
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with encoded server - 2")]
@@ -498,7 +498,7 @@ namespace Microsoft.Playwright.Tests
             var response = await Page.GotoAsync($"data:text/html,<link rel=\"stylesheet\" href=\"{TestConstants.EmptyPage}/fonts?helvetica|arial\"/>");
             Assert.Null(response);
             Assert.Single(requests);
-            Assert.Equal(HttpStatusCode.NotFound, (await requests[0].ResponseAsync()).StatusCode);
+            Assert.Equal((int)HttpStatusCode.NotFound, (await requests[0].ResponseAsync()).Status);
         }
 
         [PlaywrightTest("page-route.spec.ts", @"should not throw ""Invalid Interception Id"" if the request was cancelled")]

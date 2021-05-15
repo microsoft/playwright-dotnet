@@ -36,7 +36,7 @@ namespace Microsoft.Playwright.Tests
                 responseTask);
 
             var response = responseTask.Result;
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
         }
 
         [PlaywrightTest("ignorehttpserrors.spec.ts", "should isolate contexts")]
@@ -49,7 +49,7 @@ namespace Microsoft.Playwright.Tests
                 var page = await context.NewPageAsync();
                 var response = await page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html");
 
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                Assert.Equal((int)HttpStatusCode.OK, response.Status);
             }
 
             await using (var context = await Browser.NewContextAsync())

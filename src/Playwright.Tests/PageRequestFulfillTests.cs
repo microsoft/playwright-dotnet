@@ -36,7 +36,7 @@ namespace Microsoft.Playwright.Tests
                     body: "Yo, page!");
             });
             var response = await Page.GotoAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.Created, response.Status);
             Assert.Equal("bar", response.GetHeaderValue("foo"));
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }
@@ -55,7 +55,7 @@ namespace Microsoft.Playwright.Tests
                 route.FulfillAsync(HttpStatusCode.UpgradeRequired, "Yo, page!");
             });
             var response = await Page.GotoAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.UpgradeRequired, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.UpgradeRequired, response.Status);
             Assert.Equal("Upgrade Required", response.StatusText);
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }
@@ -124,7 +124,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var response = await Page.GotoAsync(TestConstants.EmptyPage);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
             Assert.Equal("true", response.GetHeaderValue("foo"));
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }

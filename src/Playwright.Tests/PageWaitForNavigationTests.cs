@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Tests
                 Page.EvaluateAsync("url => window.location.href = url", TestConstants.ServerUrl + "/grid.html")
             );
             var response = await waitForNavigationResult;
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
             Assert.Contains("grid.html", response.Url);
         }
 
@@ -313,7 +313,7 @@ namespace Microsoft.Playwright.Tests
                 frame.WaitForNavigationAsync(),
                 frame.EvaluateAsync("url => window.location.href = url", TestConstants.ServerUrl + "/grid.html")
             );
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
             Assert.Contains("grid.html", response.Url);
             Assert.Same(frame, response.Frame);
             Assert.Contains("/frames/one-frame.html", Page.Url);

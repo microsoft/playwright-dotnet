@@ -270,7 +270,7 @@ namespace Microsoft.Playwright.Tests
 
             Server.SetAuth("/playground.html", "user", "pass");
             var response = await page.GotoAsync(TestConstants.ServerUrl + "/playground.html");
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, response.Status);
 
             tmp.Dispose();
             await context.DisposeAsync();

@@ -94,8 +94,5 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Contains the URL of the response.</para></summary>
         string Url { get; }
-
-        /// <summary><para>Gets the <see cref="System.Net.HttpStatusCode"/> code of the response.</para></summary>
-        System.Net.HttpStatusCode StatusCode { get; }
     }
 }
