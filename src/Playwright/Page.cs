@@ -247,44 +247,12 @@ namespace Microsoft.Playwright
         public IKeyboard Keyboard
         {
             get => _keyboard;
-            set => throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public ITouchscreen Touchscreen
         {
             get => _touchscreen;
-            set => throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public float DefaultTimeout
-        {
-            get
-            {
-                return _defaultTimeout;
-            }
-
-            set
-            {
-                _defaultTimeout = value;
-                _ = _channel.SetDefaultTimeoutNoReplyAsync(value);
-            }
-        }
-
-        /// <inheritdoc/>
-        public float DefaultNavigationTimeout
-        {
-            get
-            {
-                return _defaultNavigationTimeout;
-            }
-
-            set
-            {
-                _defaultNavigationTimeout = value;
-                _ = _channel.SetDefaultNavigationTimeoutNoReplyAsync(value);
-            }
         }
 
         /// <inheritdoc />
@@ -312,6 +280,26 @@ namespace Microsoft.Playwright
         internal List<Worker> WorkersList { get; } = new List<Worker>();
 
         internal Page Opener => _initializer.Opener?.Object;
+
+        internal float DefaultTimeout
+        {
+            get => _defaultTimeout;
+            set
+            {
+                _defaultTimeout = value;
+                _ = _channel.SetDefaultTimeoutNoReplyAsync(value);
+            }
+        }
+
+        internal float DefaultNavigationTimeout
+        {
+            get => _defaultNavigationTimeout;
+            set
+            {
+                _defaultNavigationTimeout = value;
+                _ = _channel.SetDefaultNavigationTimeoutNoReplyAsync(value);
+            }
+        }
 
         /// <inheritdoc />
         public IFrame Frame(string name)
@@ -942,6 +930,12 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc />
         public Task PauseAsync() => _channel.PauseAsync();
+
+        /// <inheritdoc/>
+        public void SetDefaultNavigationTimeout(float timeout) => DefaultNavigationTimeout = timeout;
+
+        /// <inheritdoc/>
+        public void SetDefaultTimeout(float timeout) => DefaultTimeout = timeout;
 
         internal void NotifyPopup(Page page) => Popup?.Invoke(this, page);
 

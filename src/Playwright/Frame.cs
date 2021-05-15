@@ -763,7 +763,7 @@ namespace Microsoft.Playwright
                 "FrameDetached",
                 new NavigationException("Navigating frame was detached!"),
                 e => e == this);
-            timeout ??= Page?.DefaultNavigationTimeout ?? Playwright.DefaultTimeout;
+            timeout ??= (Page as Page)?.DefaultNavigationTimeout ?? Playwright.DefaultTimeout;
             waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout {timeout}ms exceeded.");
 
             return waiter;

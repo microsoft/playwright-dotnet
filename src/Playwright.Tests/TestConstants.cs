@@ -37,49 +37,13 @@ namespace Microsoft.Playwright.Tests
             this IBrowserType browserType,
             string userDataDir,
             string[] args = null,
-            BrowserContextOptions options = null,
+            LaunchPersistentOptions options = null,
             bool? headless = null)
         {
-            options ??= new BrowserContextOptions();
-            return browserType.LaunchPersistentContextAsync(
-                userDataDir: userDataDir,
-                acceptDownloads: options.AcceptDownloads,
-                args: args,
-                bypassCSP: options.BypassCSP,
-                channel: BrowserChannel.Undefined,
-                chromiumSandbox: null,
-                colorScheme: options.ColorScheme,
-                deviceScaleFactor: options.DeviceScaleFactor,
-                devtools: null,
-                downloadsPath: null,
-                env: null,
-                executablePath: null,
-                extraHTTPHeaders: options.ExtraHTTPHeaders,
-                geolocation: options.Geolocation,
-                handleSIGHUP: null,
-                handleSIGINT: null,
-                handleSIGTERM: null,
-                hasTouch: options.HasTouch,
-                headless: headless,
-                httpCredentials: options.HttpCredentials,
-                ignoreAllDefaultArgs: null,
-                ignoreHTTPSErrors: options.IgnoreHTTPSErrors,
-                isMobile: options.IsMobile,
-                javaScriptEnabled: options.JavaScriptEnabled,
-                locale: options.Locale,
-                offline: options.Offline,
-                permissions: options.Permissions,
-                proxy: options.Proxy,
-                recordHarOmitContent: null,
-                recordHarPath: null,
-                recordVideoDir: null,
-                recordVideoSize: null,
-                slowMo: null,
-                timeout: null,
-                timezoneId: options.TimezoneId,
-                userAgent: options.UserAgent,
-                viewportSize: options.Viewport
-                );
+            options ??= new LaunchPersistentOptions();
+            options.Args ??= args;
+            options.Headless ??= headless;
+            return browserType.LaunchPersistentContextAsync(userDataDir, options);
         }
 
         internal static Task<IBrowser> LaunchDefaultAsync(
@@ -128,24 +92,6 @@ namespace Microsoft.Playwright.Tests
             "        http://localhost:<PORT>/frames/frame.html (uno)",
             "        http://localhost:<PORT>/frames/frame.html (dos)",
             "    http://localhost:<PORT>/frames/frame.html (aframe)"
-        };
-
-        internal static readonly BrowserContextOptions iPhone6 = new BrowserContextOptions()
-        {
-            UserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1",
-            Viewport = new ViewportSize() { Height = 667, Width = 375 },
-            DeviceScaleFactor = 2,
-            IsMobile = true,
-            HasTouch = true,
-        };
-
-        internal static readonly BrowserContextOptions iPhone6Landscape = new BrowserContextOptions()
-        {
-            UserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1",
-            Viewport = new ViewportSize() { Height = 375, Width = 667 },
-            DeviceScaleFactor = 2,
-            IsMobile = true,
-            HasTouch = true,
         };
     }
 }

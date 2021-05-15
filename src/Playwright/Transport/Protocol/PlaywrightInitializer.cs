@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Transport.Protocol
@@ -11,5 +12,7 @@ namespace Microsoft.Playwright.Transport.Protocol
         public BrowserType Firefox { get; set; }
 
         public SelectorsChannel Selectors { get; set; }
+
+        public IEnumerable<DeviceDescriptorEntry> DeviceDescriptors { get; set; }
     }
 }

@@ -54,5 +54,11 @@ namespace Microsoft.Playwright
                 ^ Accuracy.GetHashCode()
                 ^ Latitude.GetHashCode()
                 ^ Longitude.GetHashCode();
+
+        /// <summary>
+        /// Clones the <see cref="Geolocation"/>.
+        /// </summary>
+        /// <returns>A copy of the current <see cref="Geolocation"/>.</returns>
+        public Geolocation Clone() => (Geolocation)MemberwiseClone();
     }
 }

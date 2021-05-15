@@ -72,7 +72,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectDefaultNavigationTimeout()
         {
-            Page.DefaultNavigationTimeout = 1;
+            Page.SetDefaultNavigationTimeout(1);
             string imgPath = "/img.png";
             // stall for image
             Server.SetRoute(imgPath, _ => Task.Delay(Timeout.Infinite));

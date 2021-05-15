@@ -89,7 +89,7 @@ namespace Microsoft.Playwright
         public async Task<IResponse> ResponseAsync() => (await _channel.GetResponseAsync().ConfigureAwait(false))?.Object;
 
         /// <inheritdoc/>
-        public JsonDocument GetPayloadAsJson(JsonDocumentOptions documentOptions = default)
+        public JsonDocument PostDataJSON(JsonDocumentOptions documentOptions = default)
         {
             if (PostData == null)
             {

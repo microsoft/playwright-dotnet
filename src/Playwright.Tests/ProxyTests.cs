@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests
 
             var proxy = new Proxy { Server = $"localhost:{TestConstants.Port}" };
 
-            await using var browser = await BrowserType.LaunchAsync(proxy: proxy);
+            await using var browser = await BrowserType.LaunchAsync(new LaunchOptions { Proxy = proxy });
 
             var page = await browser.NewPageAsync();
             await page.GotoAsync("http://non-existent.com/target.html");

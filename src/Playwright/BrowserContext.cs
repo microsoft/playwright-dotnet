@@ -63,8 +63,7 @@ namespace Microsoft.Playwright
         /// <inheritdoc/>
         public IReadOnlyCollection<IPage> Pages => PagesList;
 
-        /// <inheritdoc/>
-        public float DefaultNavigationTimeout
+        internal float DefaultNavigationTimeout
         {
             get => _defaultNavigationTimeout;
             set
@@ -74,8 +73,7 @@ namespace Microsoft.Playwright
             }
         }
 
-        /// <inheritdoc/>
-        public float DefaultTimeout
+        internal float DefaultTimeout
         {
             get => _defaultTimeout;
             set
@@ -302,6 +300,12 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc/>
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
+
+        /// <inheritdoc/>
+        public void SetDefaultNavigationTimeout(float timeout) => DefaultNavigationTimeout = timeout;
+
+        /// <inheritdoc/>
+        public void SetDefaultTimeout(float timeout) => DefaultTimeout = timeout;
 
         internal void OnRoute(Route route, IRequest request)
         {

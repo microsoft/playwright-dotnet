@@ -160,7 +160,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportViewportOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
+            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
             {
                 Viewport = new ViewportSize
                 {
@@ -181,7 +181,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportDeviceScaleFactorOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
+            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
             {
                 DeviceScaleFactor = 3
             });
@@ -196,7 +196,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportUserAgentOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
+            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
             {
                 UserAgent = "foobar"
             });
@@ -217,7 +217,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportBypassCSPOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
+            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
             {
                 BypassCSP = true
             });
@@ -234,7 +234,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportJavascriptEnabledOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
+            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
             {
                 JavaScriptEnabled = false
             });
@@ -259,7 +259,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRupportHttpCredentialsOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
+            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
             {
                 HttpCredentials = new HttpCredentials
                 {
@@ -280,7 +280,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportOfflineOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserContextOptions
+            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
             {
                 Offline = true
             });
@@ -297,7 +297,7 @@ namespace Microsoft.Playwright.Tests
         {
         }
 
-        private async Task<(TempDirectory tmp, IBrowserContext context, IPage page)> LaunchAsync(BrowserContextOptions options = null)
+        private async Task<(TempDirectory tmp, IBrowserContext context, IPage page)> LaunchAsync(LaunchPersistentOptions options = null)
         {
             var tmp = new TempDirectory();
             var context = await BrowserType.LaunchDefaultPersistentContext(
