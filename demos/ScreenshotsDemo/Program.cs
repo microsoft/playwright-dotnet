@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using PlaywrightSharp;
+using Microsoft.Playwright;
 
 namespace PdfDemo
 {
@@ -14,7 +14,7 @@ namespace PdfDemo
 
             Console.WriteLine("Navigating microsoft");
             var page = await browser.NewPageAsync();
-            await page.GoToAsync("http://www.microsoft.com");
+            await page.GotoAsync("http://www.microsoft.com");
 
             Console.WriteLine("Taking Screenshot");
             await File.WriteAllBytesAsync(Path.Combine(Directory.GetCurrentDirectory(), "microsoft.png"), await page.ScreenshotAsync());
