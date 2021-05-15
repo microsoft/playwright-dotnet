@@ -18,8 +18,8 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PageGobackShouldWork()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
-            await Page.GoToAsync(TestConstants.ServerUrl + "/grid.html");
+            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
 
             var response = await Page.GoBackAsync();
             Assert.True(response.Ok);
@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PageGoBackShouldWorkWithHistoryAPI()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.EvaluateAsync(@"
               history.pushState({ }, '', '/first.html');
               history.pushState({ }, '', '/second.html');
@@ -63,7 +63,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PageReloadShouldWork()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.EvaluateAsync("() => window._foo = 10");
             await Page.ReloadAsync();
             Assert.Null(await Page.EvaluateAsync("() => window._foo"));

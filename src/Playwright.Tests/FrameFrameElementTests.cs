@@ -18,7 +18,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             var frame2 = await FrameUtils.AttachFrameAsync(Page, "frame2", TestConstants.EmptyPage);
             var frame3 = await FrameUtils.AttachFrameAsync(Page, "frame3", TestConstants.EmptyPage);
@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithContentFrame()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var frame = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             var handle = await frame.FrameElementAsync();
             var contentFrame = await handle.ContentFrameAsync();
@@ -52,7 +52,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenDetached()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             await Page.EvalOnSelectorAsync("#frame1", "e => e.remove()");
 

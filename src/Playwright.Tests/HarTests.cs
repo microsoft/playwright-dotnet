@@ -64,7 +64,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveVersionAndCreator()
         {
-            await _page.GoToAsync(TestConstants.EmptyPage);
+            await _page.GotoAsync(TestConstants.EmptyPage);
             var log = await GetLogAsync();
             Assert.Equal("1.2", log.Version);
             Assert.Equal("Playwright", log.Creator.Name);
@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveBrowser()
         {
-            await _page.GoToAsync(TestConstants.EmptyPage);
+            await _page.GotoAsync(TestConstants.EmptyPage);
             var log = await GetLogAsync();
             Assert.Equal(TestConstants.Product.ToLower(), log.Browser.Name);
             Assert.Equal(Browser.Version, log.Browser.Version);
@@ -84,7 +84,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHavePages()
         {
-            await _page.GoToAsync("data:text/html,<title>Hello</title>");
+            await _page.GotoAsync("data:text/html,<title>Hello</title>");
             await _page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             var log = await GetLogAsync();
             Assert.Single(log.Pages);
@@ -108,7 +108,7 @@ namespace Microsoft.Playwright.Tests
             var page = context.Pages.FirstOrDefault();
 
             await TaskUtils.WhenAll(
-                page.GoToAsync("data:text/html,<title>Hello</title>"),
+                page.GotoAsync("data:text/html,<title>Hello</title>"),
                 page.WaitForLoadStateAsync(LoadState.DOMContentLoaded));
 
             await context.CloseAsync();
@@ -124,7 +124,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeRequest()
         {
-            await _page.GoToAsync(TestConstants.EmptyPage);
+            await _page.GotoAsync(TestConstants.EmptyPage);
             var log = await GetLogAsync();
             Assert.Single(log.Entries);
             var entry = log.Entries.First();
@@ -140,7 +140,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeResponse()
         {
-            await _page.GoToAsync(TestConstants.EmptyPage);
+            await _page.GotoAsync(TestConstants.EmptyPage);
             var log = await GetLogAsync();
             Assert.Single(log.Entries);
             var entry = log.Entries.First();
@@ -156,7 +156,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldIncludeRedirecturl()
         {
             Server.SetRedirect("/foo.html", "/empty.html");
-            await _page.GoToAsync(TestConstants.ServerUrl + "/foo.html");
+            await _page.GotoAsync(TestConstants.ServerUrl + "/foo.html");
             var log = await GetLogAsync();
             Assert.Equal(2, log.Entries.Count());
             var entry = log.Entries.First();
@@ -168,7 +168,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeQueryParams()
         {
-            await _page.GoToAsync(TestConstants.ServerUrl + "/har.html?name=value");
+            await _page.GotoAsync(TestConstants.ServerUrl + "/har.html?name=value");
             var log = await GetLogAsync();
             Assert.Equal(
                 new (string Name, string Value)[] { ("name", "value") }.ToJson(),
@@ -179,7 +179,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludePostdata()
         {
-            await _page.GoToAsync(TestConstants.EmptyPage);
+            await _page.GotoAsync(TestConstants.EmptyPage);
             await _page.EvaluateAsync("() => fetch('./post', { method: 'POST', body: 'Hello' })");
             var log = await GetLogAsync();
             Assert.Equal(
@@ -195,7 +195,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeBinaryPostdata()
         {
-            await _page.GoToAsync(TestConstants.EmptyPage);
+            await _page.GotoAsync(TestConstants.EmptyPage);
             await _page.EvaluateAsync("() => fetch('./post', { method: 'POST', body: new Uint8Array(Array.from(Array(16).keys())) })");
             var log = await GetLogAsync();
             Assert.Equal(
@@ -211,7 +211,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeFormParams()
         {
-            await _page.GoToAsync(TestConstants.EmptyPage);
+            await _page.GotoAsync(TestConstants.EmptyPage);
             await _page.SetContentAsync("<form method='POST' action='/post'><input type='text' name='foo' value='bar'><input type='number' name='baz' value='123'><input type='submit'></form>");
             await _page.ClickAsync("input[type=submit]");
             var log = await GetLogAsync();
@@ -249,7 +249,7 @@ namespace Microsoft.Playwright.Tests
                 new Cookie { Name = "name4", Value = "val,ue4", Domain = "localhost", Path = "/" },
             });
 
-            await _page.GoToAsync(TestConstants.EmptyPage);
+            await _page.GotoAsync(TestConstants.EmptyPage);
             var log = await GetLogAsync();
             Assert.Equal(new[]
             {
@@ -277,7 +277,7 @@ namespace Microsoft.Playwright.Tests
                     }));
                 return Task.CompletedTask;
             });
-            await _page.GoToAsync(TestConstants.EmptyPage);
+            await _page.GotoAsync(TestConstants.EmptyPage);
             var log = await GetLogAsync();
             var cookies = log.Entries.First().Response.Cookies;
             Assert.Equal(new HarCookie { Name = "name1", Value = "value1", HttpOnly = true }.ToJson(), cookies.ElementAt(0).ToJson());
@@ -294,7 +294,7 @@ namespace Microsoft.Playwright.Tests
                 ctx.Response.Headers.Add("Set-Cookie", new StringValues(new[] { "name1=val,ue1" }));
                 return Task.CompletedTask;
             });
-            await _page.GoToAsync(TestConstants.EmptyPage);
+            await _page.GotoAsync(TestConstants.EmptyPage);
             var log = await GetLogAsync();
             var cookies = log.Entries.First().Response.Cookies;
             Assert.Equal(new HarCookie { Name = "name1", Value = "val,ue1" }.ToJson(), cookies.First().ToJson());
@@ -309,7 +309,7 @@ namespace Microsoft.Playwright.Tests
                 ctx.Response.Headers.Add("Set-Cookie", new StringValues(new[] { "name1=value1; Secure" }));
                 return Task.CompletedTask;
             });
-            await _page.GoToAsync(TestConstants.EmptyPage);
+            await _page.GotoAsync(TestConstants.EmptyPage);
             var log = await GetLogAsync();
             var cookies = log.Entries.First().Response.Cookies;
             Assert.Equal(new HarCookie { Name = "name1", Value = "value1", Secure = true }.ToJson(), cookies.First().ToJson());
@@ -319,7 +319,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeContent()
         {
-            await _page.GoToAsync(TestConstants.ServerUrl + "/har.html");
+            await _page.GotoAsync(TestConstants.ServerUrl + "/har.html");
             var log = await GetLogAsync();
 
             var content1 = log.Entries.ElementAt(0).Response.Content;
@@ -340,7 +340,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRepresentTheHarFile()
         {
-            await _page.GoToAsync(TestConstants.ServerUrl + "/har.html");
+            await _page.GotoAsync(TestConstants.ServerUrl + "/har.html");
             await _context.CloseAsync();
             var log = GetHarResult(_harPath);
             string serialized = JsonSerializer.Serialize(log, SerializerOptions);

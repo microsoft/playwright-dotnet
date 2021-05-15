@@ -23,7 +23,7 @@ namespace Microsoft.Playwright.Tests
             await using var browser = await BrowserType.ConnectAsync(browserServer.WSEndpoint);
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
 
             await browser.CloseAsync();
 
@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Tests
 
             context = await remote.NewContextAsync();
             page = await context.NewPageAsync();
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             await remote.CloseAsync();
             await browserServer.CloseAsync();
             */

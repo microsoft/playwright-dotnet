@@ -21,7 +21,7 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true)]
         public async Task WebAssemblyShouldWork()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/wasm/table2.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/wasm/table2.html");
             Assert.Equal("42, 83", await Page.EvaluateAsync<string>("() => loadTable()"));
         }
 
@@ -62,7 +62,7 @@ namespace Microsoft.Playwright.Tests
                 return context.Response.WriteAsync(message);
             });
 
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal("SUCCESS", await Page.EvaluateAsync<string>("() => window.testStatus"));
         }
 
@@ -70,7 +70,7 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldPlayVideo()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + (TestConstants.IsWebKit ? "/video_mp4.html" : "/video.html"));
+            await Page.GotoAsync(TestConstants.ServerUrl + (TestConstants.IsWebKit ? "/video_mp4.html" : "/video.html"));
             await Page.EvalOnSelectorAsync("video", "v => v.play()");
             await Page.EvalOnSelectorAsync("video", "v => v.pause()");
         }

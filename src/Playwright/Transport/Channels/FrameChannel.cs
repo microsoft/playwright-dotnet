@@ -65,7 +65,7 @@ namespace Microsoft.Playwright.Transport.Channels
             }
         }
 
-        internal Task<ResponseChannel> GoToAsync(string url, float? timeout, WaitUntilState? waitUntil, string referer, bool isPage)
+        internal Task<ResponseChannel> GotoAsync(string url, float? timeout, WaitUntilState? waitUntil, string referer, bool isPage)
         {
             var args = new Dictionary<string, object>
             {

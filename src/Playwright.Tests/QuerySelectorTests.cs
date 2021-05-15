@@ -30,7 +30,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEmptyArrayIfNothingIsFound()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var elements = await Page.QuerySelectorAllAsync("div");
             Assert.Empty(elements);
         }

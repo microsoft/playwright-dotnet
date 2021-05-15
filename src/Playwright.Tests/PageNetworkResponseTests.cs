@@ -22,7 +22,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnBody()
         {
-            var response = await Page.GoToAsync(TestConstants.ServerUrl + "/pptr.png");
+            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/pptr.png");
             byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
             Assert.Equal(imageBuffer, await response.BodyAsync());
         }
@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReturnBodyWithCompression()
         {
             Server.EnableGzip("/pptr.png");
-            var response = await Page.GoToAsync(TestConstants.ServerUrl + "/pptr.png");
+            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/pptr.png");
             byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
             Assert.Equal(imageBuffer, await response.BodyAsync());
         }
@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
                 return Task.CompletedTask;
             });
 
-            var response = await Page.GoToAsync(TestConstants.EmptyPage);
+            var response = await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Contains("bar", response.GetHeaderValues("foo"));
         }
 
@@ -55,14 +55,14 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnJson()
         {
-            var response = await Page.GoToAsync(TestConstants.ServerUrl + "/simple.json");
+            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/simple.json");
             Assert.Equal("{\"foo\": \"bar\"}", (await response.JsonAsync()).RootElement.GetRawText());
         }
 
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithGenerics()
         {
-            var response = await Page.GoToAsync(TestConstants.ServerUrl + "/simple.json");
+            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/simple.json");
             Assert.Equal("bar", (await response.JsonAsync<TestClass>()).Foo);
         }
 
@@ -80,7 +80,7 @@ namespace Microsoft.Playwright.Tests
                 context.Features.Get<IHttpResponseFeature>().ReasonPhrase = "cool!";
                 return Task.CompletedTask;
             });
-            var response = await Page.GoToAsync(TestConstants.ServerUrl + "/cool");
+            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/cool");
             Assert.Equal("cool!", response.StatusText);
         }
 
@@ -88,7 +88,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnText()
         {
-            var response = await Page.GoToAsync(TestConstants.ServerUrl + "/simple.json");
+            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/simple.json");
             Assert.Equal("{\"foo\": \"bar\"}", (await response.TextAsync()).Trim());
         }
 
@@ -97,7 +97,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReturnUncompressedText()
         {
             Server.EnableGzip("/simple.json");
-            var response = await Page.GoToAsync(TestConstants.ServerUrl + "/simple.json");
+            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/simple.json");
             Assert.Equal("gzip", response.GetHeaderValue("content-encoding"));
             Assert.Equal("{\"foo\": \"bar\"}", (await response.TextAsync()).Trim());
         }
@@ -107,7 +107,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowWhenRequestingBodyOfRedirectedResponse()
         {
             Server.SetRedirect("/foo.html", "/empty.html");
-            var response = await Page.GoToAsync(TestConstants.ServerUrl + "/foo.html");
+            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/foo.html");
             var redirectedFrom = response.Request.RedirectedFrom;
             Assert.NotNull(redirectedFrom);
             var redirected = await redirectedFrom.ResponseAsync();
@@ -121,7 +121,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitUntilResponseCompletes()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             // Setup server to trap request.
             var serverResponseCompletion = new TaskCompletionSource<bool>();
             HttpResponse serverResponse = null;

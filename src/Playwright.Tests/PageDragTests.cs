@@ -18,7 +18,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Skip = "Skipped in Playwright")]
         public async Task ShouldWork()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/drag-n-drop.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/drag-n-drop.html");
             await Page.HoverAsync("#source");
             await Page.Mouse.DownAsync();
             await Page.HoverAsync("#target");

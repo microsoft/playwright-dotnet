@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests
             await Page.AddInitScriptAsync(@"function(){
                 window.injected = 123;
             }");
-            await Page.GoToAsync(TestConstants.ServerUrl + "/tamperable.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/tamperable.html");
             Assert.Equal(123, await Page.EvaluateAsync<int>("() => window.result"));
         }
 
@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.AddInitScriptAsync(scriptPath: TestUtils.GetWebServerFile("injectedfile.js"));
 
-            await Page.GoToAsync(TestConstants.ServerUrl + "/tamperable.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/tamperable.html");
             Assert.Equal(123, await Page.EvaluateAsync<int>("() => window.result"));
         }
 
@@ -45,7 +45,7 @@ namespace Microsoft.Playwright.Tests
             await Page.AddInitScriptAsync(script: @"function(){
                 window.injected = 123;
             }");
-            await Page.GoToAsync(TestConstants.ServerUrl + "/tamperable.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/tamperable.html");
             Assert.Equal(123, await Page.EvaluateAsync<int>("() => window.result"));
         }
 
@@ -67,7 +67,7 @@ namespace Microsoft.Playwright.Tests
             await page.AddInitScriptAsync(script: @"function(){
                 window.injected = window.temp;
             }");
-            await page.GoToAsync(TestConstants.ServerUrl + "/tamperable.html");
+            await page.GotoAsync(TestConstants.ServerUrl + "/tamperable.html");
             Assert.Equal(123, await page.EvaluateAsync<int>("() => window.result"));
         }
 
@@ -80,7 +80,7 @@ namespace Microsoft.Playwright.Tests
 
             var page = await context.NewPageAsync();
 
-            await page.GoToAsync(TestConstants.ServerUrl + "/tamperable.html");
+            await page.GotoAsync(TestConstants.ServerUrl + "/tamperable.html");
             Assert.Equal(123, await page.EvaluateAsync<int>("() => window.result"));
         }
 
@@ -99,7 +99,7 @@ namespace Microsoft.Playwright.Tests
                 window.injected = window.temp;
             }");
 
-            await page.GoToAsync(TestConstants.ServerUrl + "/tamperable.html");
+            await page.GotoAsync(TestConstants.ServerUrl + "/tamperable.html");
             Assert.Equal(123, await page.EvaluateAsync<int>("() => window.result"));
         }
 
@@ -113,7 +113,7 @@ namespace Microsoft.Playwright.Tests
             await Page.AddInitScriptAsync(@"function(){
                 window.script2 = 2;
             }");
-            await Page.GoToAsync(TestConstants.ServerUrl + "/tamperable.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/tamperable.html");
             Assert.Equal(1, await Page.EvaluateAsync<int>("() => window.script1"));
             Assert.Equal(2, await Page.EvaluateAsync<int>("() => window.script2"));
         }
@@ -126,7 +126,7 @@ namespace Microsoft.Playwright.Tests
             await Page.AddInitScriptAsync(@"function(){
                 window.injected = 123;
             }");
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal(123, await Page.EvaluateAsync<int>("() => window.injected"));
 
             // Make sure CSP works.
@@ -146,11 +146,11 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkAfterACrossOriginNavigation()
         {
-            await Page.GoToAsync(TestConstants.CrossProcessUrl);
+            await Page.GotoAsync(TestConstants.CrossProcessUrl);
             await Page.AddInitScriptAsync(@"function(){
                 window.injected = 123;
             }");
-            await Page.GoToAsync(TestConstants.ServerUrl + "/tamperable.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/tamperable.html");
             Assert.Equal(123, await Page.EvaluateAsync<int>("() => window.result"));
         }
     }

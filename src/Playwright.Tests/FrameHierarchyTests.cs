@@ -20,7 +20,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldHandleNestedFrames()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/frames/nested-frames.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/frames/nested-frames.html");
             Assert.Equal(TestConstants.NestedFramesDumpResult, FrameUtils.DumpFrames(Page.MainFrame));
         }
 
@@ -28,7 +28,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendEventsWhenFramesAreManipulatedDynamically()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             // validate frameattached events
             var attachedFrames = new List<IFrame>();
             Page.FrameAttached += (_, e) => attachedFrames.Add(e);
@@ -59,11 +59,11 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendFrameNavigatedWhenNavigatingOnAnchorURLs()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
 
             await TaskUtils.WhenAll(
                 Page.WaitForEventAsync(PageEvent.FrameNavigated),
-                Page.GoToAsync(TestConstants.EmptyPage + "#foo"));
+                Page.GotoAsync(TestConstants.EmptyPage + "#foo"));
 
             Assert.Equal(TestConstants.EmptyPage + "#foo", Page.Url);
         }
@@ -72,9 +72,9 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldPersistMainFrameOnCrossProcessNavigation()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var mainFrame = Page.MainFrame;
-            await Page.GoToAsync(TestConstants.CrossProcessHttpPrefix + "/empty.html");
+            await Page.GotoAsync(TestConstants.CrossProcessHttpPrefix + "/empty.html");
             Assert.Same(mainFrame, Page.MainFrame);
         }
 
@@ -85,7 +85,7 @@ namespace Microsoft.Playwright.Tests
             bool hasEvents = false;
             Page.FrameAttached += (_, _) => hasEvents = true;
             Page.FrameDetached += (_, _) => hasEvents = true;
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.False(hasEvents);
         }
 
@@ -99,7 +99,7 @@ namespace Microsoft.Playwright.Tests
             Page.FrameAttached += (_, e) => attachedFrames.Add(e);
             Page.FrameDetached += (_, e) => detachedFrames.Add(e);
             Page.FrameNavigated += (_, e) => navigatedFrames.Add(e);
-            await Page.GoToAsync(TestConstants.ServerUrl + "/frames/nested-frames.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/frames/nested-frames.html");
             Assert.Equal(4, attachedFrames.Count);
             Assert.Empty(detachedFrames);
             Assert.Equal(5, navigatedFrames.Count);
@@ -107,7 +107,7 @@ namespace Microsoft.Playwright.Tests
             attachedFrames.Clear();
             detachedFrames.Clear();
             navigatedFrames.Clear();
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Empty(attachedFrames);
             Assert.Equal(4, detachedFrames.Count);
             Assert.Single(navigatedFrames);
@@ -123,7 +123,7 @@ namespace Microsoft.Playwright.Tests
             Page.FrameAttached += (_, e) => attachedFrames.Add(e);
             Page.FrameDetached += (_, e) => detachedFrames.Add(e);
             Page.FrameNavigated += (_, e) => navigatedFrames.Add(e);
-            await Page.GoToAsync(TestConstants.ServerUrl + "/frames/frameset.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/frames/frameset.html");
             Assert.Equal(4, attachedFrames.Count);
             Assert.Empty(detachedFrames);
             Assert.Equal(5, navigatedFrames.Count);
@@ -131,7 +131,7 @@ namespace Microsoft.Playwright.Tests
             attachedFrames.Clear();
             detachedFrames.Clear();
             navigatedFrames.Clear();
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Empty(attachedFrames);
             Assert.Equal(4, detachedFrames.Count);
             Assert.Single(navigatedFrames);
@@ -141,7 +141,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportFrameFromInsideShadowDOM()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/shadow.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/shadow.html");
             await Page.EvaluateAsync(@"async url => {
                 const frame = document.createElement('iframe');
                 frame.src = url;

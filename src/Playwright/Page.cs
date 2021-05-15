@@ -345,8 +345,8 @@ namespace Microsoft.Playwright
         }
 
         /// <inheritdoc />
-        public Task<IResponse> GoToAsync(string url, WaitUntilState waitUntil, float? timeout, string referer)
-            => MainFrame.GoToAsync(true, url, waitUntil.EnsureDefaultValue(WaitUntilState.Load), referer, timeout);
+        public Task<IResponse> GotoAsync(string url, WaitUntilState waitUntil, float? timeout, string referer)
+            => MainFrame.GotoAsync(true, url, waitUntil.EnsureDefaultValue(WaitUntilState.Load), referer, timeout);
 
         /// <inheritdoc />
         public Task WaitForURLAsync(string urlString, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined)

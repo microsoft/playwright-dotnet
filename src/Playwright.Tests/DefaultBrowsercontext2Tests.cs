@@ -30,7 +30,7 @@ namespace Microsoft.Playwright.Tests
                 HasTouch = true
             });
 
-            await page.GoToAsync(TestConstants.ServerUrl + "/mobile.html");
+            await page.GotoAsync(TestConstants.ServerUrl + "/mobile.html");
             Assert.True(await page.EvaluateAsync<bool>("() => 'ontouchstart' in window"));
 
             tmp.Dispose();
@@ -51,7 +51,7 @@ namespace Microsoft.Playwright.Tests
                 IsMobile = true,
             });
 
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal(980, await page.EvaluateAsync<int>("() => window.innerWidth"));
 
             tmp.Dispose();
@@ -118,7 +118,7 @@ namespace Microsoft.Playwright.Tests
                 Permissions = new[] { ContextPermissions.Geolocation },
             });
 
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             var geolocation = await page.EvaluateAsync<Geolocation>(@"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
                 resolve({latitude: position.coords.latitude, longitude: position.coords.longitude});
             }))");
@@ -139,7 +139,7 @@ namespace Microsoft.Playwright.Tests
                 IgnoreHTTPSErrors = true
             });
 
-            var response = await page.GoToAsync(TestConstants.HttpsPrefix + "/empty.html");
+            var response = await page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html");
             Assert.True(response.Ok);
 
             tmp.Dispose();
@@ -162,7 +162,7 @@ namespace Microsoft.Playwright.Tests
 
             await TaskUtils.WhenAll(
                 Server.WaitForRequest("/empty.html", r => fooHeader = r.Headers["foo"]),
-                page.GoToAsync(TestConstants.EmptyPage));
+                page.GotoAsync(TestConstants.EmptyPage));
 
             Assert.Equal("bar", fooHeader);
 
@@ -192,14 +192,14 @@ namespace Microsoft.Playwright.Tests
             await using (var browserContext = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path))
             {
                 var page = await browserContext.NewPageAsync();
-                await page.GoToAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(TestConstants.EmptyPage);
                 await page.EvaluateAsync("() => localStorage.hey = 'hello'");
             }
 
             await using (var browserContext2 = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path))
             {
                 var page = await browserContext2.NewPageAsync();
-                await page.GoToAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(TestConstants.EmptyPage);
                 Assert.Equal("hello", await page.EvaluateAsync<string>("() => localStorage.hey"));
             }
 
@@ -207,7 +207,7 @@ namespace Microsoft.Playwright.Tests
             await using (var browserContext2 = await BrowserType.LaunchDefaultPersistentContext(userDataDir2.Path))
             {
                 var page = await browserContext2.NewPageAsync();
-                await page.GoToAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(TestConstants.EmptyPage);
                 Assert.NotEqual("hello", await page.EvaluateAsync<string>("() => localStorage.hey"));
             }
 
@@ -224,7 +224,7 @@ namespace Microsoft.Playwright.Tests
             await using (var browserContext = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path))
             {
                 var page = await browserContext.NewPageAsync();
-                await page.GoToAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(TestConstants.EmptyPage);
                 string documentCookie = await page.EvaluateAsync<string>(@"() => {
                     document.cookie = 'doSomethingOnlyOnce=true; expires=Fri, 31 Dec 9999 23:59:59 GMT';
                     return document.cookie;
@@ -236,7 +236,7 @@ namespace Microsoft.Playwright.Tests
             await using (var browserContext2 = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path))
             {
                 var page = await browserContext2.NewPageAsync();
-                await page.GoToAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(TestConstants.EmptyPage);
                 Assert.Equal("doSomethingOnlyOnce=true", await page.EvaluateAsync<string>("() => document.cookie"));
             }
 
@@ -244,7 +244,7 @@ namespace Microsoft.Playwright.Tests
             await using (var browserContext2 = await BrowserType.LaunchDefaultPersistentContext(userDataDir2.Path))
             {
                 var page = await browserContext2.NewPageAsync();
-                await page.GoToAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(TestConstants.EmptyPage);
                 Assert.NotEqual("doSomethingOnlyOnce=true", await page.EvaluateAsync<string>("() => document.cookie"));
             }
 
@@ -317,7 +317,7 @@ namespace Microsoft.Playwright.Tests
             var (tmp, context, page) = await LaunchAsync();
 
             await page.Coverage.StartJSCoverageAsync();
-            await page.GoToAsync(TestConstants.ServerUrl + "/jscoverage/simple.html", LoadState.NetworkIdle);
+            await page.GotoAsync(TestConstants.ServerUrl + "/jscoverage/simple.html", LoadState.NetworkIdle);
             var coverage = await page.Coverage.StopJSCoverageAsync();
             Assert.Single(coverage);
             Assert.Contains("/jscoverage/simple.html", coverage[0].Url);

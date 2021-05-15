@@ -45,7 +45,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             page = await context.NewPageAsync();
-            var response = await page.GoToAsync(TestConstants.EmptyPage);
+            var response = await page.GotoAsync(TestConstants.EmptyPage);
             Assert.True(response.Ok);
             Assert.True(intercepted);
         }
@@ -83,17 +83,17 @@ namespace Microsoft.Playwright.Tests
                 route.ResumeAsync();
             });
 
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal(new List<int>() { 1 }, intercepted);
 
             intercepted.Clear();
             await context.UnrouteAsync("**/empty.html", handler1);
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal(new List<int>() { 2 }, intercepted);
 
             intercepted.Clear();
             await context.UnrouteAsync("**/empty.html");
-            await page.GoToAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal(new List<int>() { 4 }, intercepted);
         }
 
@@ -113,7 +113,7 @@ namespace Microsoft.Playwright.Tests
                 route.FulfillAsync(HttpStatusCode.OK, "page");
             });
 
-            var response = await page.GoToAsync(TestConstants.EmptyPage);
+            var response = await page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal("page", await response.TextAsync());
         }
 
@@ -133,7 +133,7 @@ namespace Microsoft.Playwright.Tests
                 route.FulfillAsync(HttpStatusCode.OK, "page");
             });
 
-            var response = await page.GoToAsync(TestConstants.EmptyPage);
+            var response = await page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal("context", await response.TextAsync());
         }
     }

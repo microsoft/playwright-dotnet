@@ -19,7 +19,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectTextarea()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             var textarea = await Page.QuerySelectorAsync("textarea");
             await textarea.EvaluateAsync("textarea => textarea.value = 'some value'");
             await textarea.SelectTextAsync();
@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectInput()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             var input = await Page.QuerySelectorAsync("input");
             await input.EvaluateAsync("input => input.value = 'some value'");
             await input.SelectTextAsync();
@@ -59,7 +59,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectPlainDiv()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             var div = await Page.QuerySelectorAsync("div.plain");
             await div.EvaluateAsync("input => input.value = 'some value'");
             await div.SelectTextAsync();
@@ -71,7 +71,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForInvisibleElement()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             var textarea = await Page.QuerySelectorAsync("textarea");
             await textarea.EvaluateAsync("e => e.style.display = 'none'");
 
@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisible()
         {
-            await Page.GoToAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             var textarea = await Page.QuerySelectorAsync("textarea");
             await textarea.EvaluateAsync("textarea => textarea.value = 'some value'");
             await textarea.EvaluateAsync("e => e.style.display = 'none'");

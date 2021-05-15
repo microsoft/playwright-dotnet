@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldImmediatelyResolveTaskIfNodeExists()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var frame = Page.MainFrame;
             await frame.WaitForSelectorAsync("*");
             await frame.EvaluateAsync(AddElement, "div");
@@ -86,7 +86,7 @@ namespace Microsoft.Playwright.Tests
                 await Page.EvaluateAsync("() => 1");
             }
 
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => task);
             Assert.Contains("Execution context was destroyed, most likely because of a navigation", exception.Message);
         }
@@ -109,7 +109,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldResolveTaskWhenNodeIsAdded()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var frame = Page.MainFrame;
             var watchdog = frame.WaitForSelectorAsync("div", WaitForSelectorState.Attached);
             await frame.EvaluateAsync(AddElement, "br");
@@ -124,7 +124,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportLogsWhileWaitingForVisible()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var frame = Page.MainFrame;
             var watchdog = frame.WaitForSelectorAsync("div", timeout: 5000);
 
@@ -164,7 +164,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportLogsWhileWaitingForHidden()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var frame = Page.MainFrame;
 
             await frame.EvaluateAsync(@"() => {
@@ -199,7 +199,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldResolvePromiseWhenNodeIsAddedInShadowDom()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var watchdog = Page.WaitForSelectorAsync("span");
 
             await Page.EvaluateAsync(@"() => {
@@ -225,7 +225,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenNodeIsAddedThroughInnerHTML()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             var watchdog = Page.WaitForSelectorAsync("h3 div", WaitForSelectorState.Attached);
             await Page.EvaluateAsync(AddElement, "span");
             await Page.EvaluateAsync("document.querySelector('span').innerHTML = '<h3><div></div></h3>'");
@@ -236,7 +236,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task PageWaitForSelectorAsyncIsShortcutForMainFrame()
         {
-            await Page.GoToAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             var otherFrame = Page.FirstChildFrame();
             var watchdog = Page.WaitForSelectorAsync("div", WaitForSelectorState.Attached);
