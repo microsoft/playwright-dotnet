@@ -228,7 +228,7 @@ namespace Microsoft.Playwright.Tests
                     clickLoaded.TrySetResult(true);
                 })),
                 clickLoaded.Task,
-                Page.WaitForNavigationAsync(WaitUntilState.DOMContentLoaded).ContinueWith(_ => messages.Add("domcontentloaded")));
+                Page.WaitForNavigationAsync(waitUntil: WaitUntilState.DOMContentLoaded).ContinueWith(_ => messages.Add("domcontentloaded")));
 
             Assert.Equal("route|domcontentloaded|clickload", string.Join("|", messages));
         }

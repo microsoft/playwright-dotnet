@@ -126,6 +126,7 @@ namespace Microsoft.Playwright
         /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
         /// </param>
-        Task<IWorker> WaitForCloseAsync(float? timeout = default);
+        /// <param name="action">Action to perform while waiting</param>
+        Task<IWorker> WaitForCloseAsync(Func<Task> action = default, float? timeout = default);
     }
 }

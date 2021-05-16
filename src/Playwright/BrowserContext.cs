@@ -224,15 +224,15 @@ namespace Microsoft.Playwright
         public Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler = default)
             => UnrouteAsync(null, null, urlFunc, handler);
 
-        public async Task<object> WaitForEventAsync(string @event, float? timeout = null)
+        public async Task<object> WaitForEventAsync(string @event, Func<Task> action = default, float? timeout = null)
         => @event switch
         {
-            ContextEvent.PageEventName => await WaitForEventAsync(ContextEvent.Page, null, timeout).ConfigureAwait(false),
-            ContextEvent.CloseEventName => await WaitForEventAsync(ContextEvent.Close, null, timeout).ConfigureAwait(false),
+            ContextEvent.PageEventName => await WaitForEventAsync(ContextEvent.Page, action, null, timeout).ConfigureAwait(false),
+            ContextEvent.CloseEventName => await WaitForEventAsync(ContextEvent.Close, action, null, timeout).ConfigureAwait(false),
             _ => throw new InvalidOperationException(),
         };
 
-        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<T, bool> predicate, float? timeout)
+        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
         {
             if (playwrightEvent == null)
             {
@@ -248,11 +248,17 @@ namespace Microsoft.Playwright
                 waiter.RejectOnEvent<IBrowserContext>(this, ContextEvent.Close.Name, new TargetClosedException("Context closed"));
             }
 
-            return await waiter.WaitForEventAsync<T>(this, playwrightEvent.Name, null).ConfigureAwait(false);
+            var result = waiter.WaitForEventAsync<T>(this, playwrightEvent.Name, null);
+            if (action != null)
+            {
+                await Task.WhenAll(result, action()).ConfigureAwait(false);
+            }
+
+            return await result.ConfigureAwait(false);
         }
 
-        public Task<IPage> WaitForPageAsync(Func<IPage, bool> predicate = null, float? timeout = null)
-            => WaitForEventAsync(ContextEvent.Page, predicate, timeout);
+        public Task<IPage> WaitForPageAsync(Func<Task> action = default, Func<IPage, bool> predicate = default, float? timeout = default)
+            => WaitForEventAsync(ContextEvent.Page, action, predicate, timeout);
 
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
 

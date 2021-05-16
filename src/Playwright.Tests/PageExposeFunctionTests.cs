@@ -217,7 +217,7 @@ namespace Microsoft.Playwright.Tests
                 });
 
             await TaskUtils.WhenAll(
-                Page.WaitForNavigationAsync(WaitUntilState.Load),
+                Page.WaitForNavigationAsync(waitUntil: WaitUntilState.Load),
                 Page.EvaluateAsync(@"async url => {
                     window['logme']({ foo: 42 });
                     window.location.href = url;

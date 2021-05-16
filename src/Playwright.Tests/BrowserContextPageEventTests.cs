@@ -53,10 +53,10 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
-            var (otherPage, _) = await TaskUtils.WhenAll(
-                context.WaitForEventAsync(ContextEvent.Page),
-                page.EvaluateAsync("url => window.open(url)", "about:blank"));
-
+            var otherPage = await context.WaitForEventAsync(ContextEvent.Page, async () =>
+            {
+                await page.EvaluateAsync("url => window.open(url)", "about:blank");
+            });
             await otherPage.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             Assert.Equal("about:blank", otherPage.Url);
         }
@@ -68,10 +68,10 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
-            var (otherPage, _) = await TaskUtils.WhenAll(
-                context.WaitForEventAsync(ContextEvent.Page),
-                page.EvaluateAsync("() => window.open()"));
-
+            var otherPage = await context.WaitForEventAsync(ContextEvent.Page, async () =>
+            {
+                await page.EvaluateAsync("() => window.open()");
+            });
             await otherPage.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             Assert.Equal("about:blank", otherPage.Url);
         }
@@ -83,10 +83,10 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
-            var (otherPageEvent, _) = await TaskUtils.WhenAll(
-                context.WaitForEventAsync(ContextEvent.Page),
-                page.EvaluateAsync("url => window.open(url)", TestConstants.CrossProcessUrl + "/empty.html"));
-            var otherPage = otherPageEvent;
+            var otherPage = await context.WaitForEventAsync(ContextEvent.Page, async () =>
+            {
+                await page.EvaluateAsync("url => window.open(url)", TestConstants.CrossProcessUrl + "/empty.html");
+            });
 
             Assert.Contains(TestConstants.CrossProcessUrl, otherPage.Url);
             Assert.Equal("Hello world", await otherPage.EvaluateAsync<string>("() => ['Hello', 'world'].join(' ')"));

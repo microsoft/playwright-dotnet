@@ -151,7 +151,7 @@ namespace Microsoft.Playwright.Tests
 
             Assert.Single(Page.Workers);
 
-            var t = worker.WaitForCloseAsync(1);
+            var t = worker.WaitForCloseAsync(timeout: 1);
             await Task.Delay(100);
             await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
             await Assert.ThrowsAsync<TimeoutException>(async () => await t);

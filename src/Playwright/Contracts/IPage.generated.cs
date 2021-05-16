@@ -2221,7 +2221,8 @@ namespace Microsoft.Playwright
         /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
         /// </param>
-        Task<IPage> WaitForCloseAsync(float? timeout = default);
+        /// <param name="action">Action to perform while waiting</param>
+        Task<IPage> WaitForCloseAsync(Func<Task> action = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2241,7 +2242,8 @@ namespace Microsoft.Playwright
         /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
         /// </param>
-        Task<IConsoleMessage> WaitForConsoleMessageAsync(Func<IConsoleMessage, bool> predicate = default, float? timeout = default);
+        /// <param name="action">Action to perform while waiting</param>
+        Task<IConsoleMessage> WaitForConsoleMessageAsync(Func<Task> action = default, Func<IConsoleMessage, bool> predicate = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2260,7 +2262,8 @@ namespace Microsoft.Playwright
         /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
         /// </param>
-        Task<IDownload> WaitForDownloadAsync(Func<IDownload, bool> predicate = default, float? timeout = default);
+        /// <param name="action">Action to perform while waiting</param>
+        Task<IDownload> WaitForDownloadAsync(Func<Task> action = default, Func<IDownload, bool> predicate = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2280,7 +2283,8 @@ namespace Microsoft.Playwright
         /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
         /// </param>
-        Task<object> WaitForEventAsync(string @event, float? timeout = default);
+        /// <param name="action">Action to perform while waiting</param>
+        Task<object> WaitForEventAsync(string @event, Func<Task> action = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2299,7 +2303,8 @@ namespace Microsoft.Playwright
         /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
         /// </param>
-        Task<IFileChooser> WaitForFileChooserAsync(Func<IFileChooser, bool> predicate = default, float? timeout = default);
+        /// <param name="action">Action to perform while waiting</param>
+        Task<IFileChooser> WaitForFileChooserAsync(Func<Task> action = default, Func<IFileChooser, bool> predicate = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2425,6 +2430,7 @@ namespace Microsoft.Playwright
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation.
         /// </param>
+        /// <param name="action">Action to perform while waiting</param>
         /// <param name="waitUntil">
         /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
         /// <list type="bullet">
@@ -2448,7 +2454,7 @@ namespace Microsoft.Playwright
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task<IResponse> WaitForNavigationAsync(string urlString, WaitUntilState waitUntil = default, float? timeout = default);
+        Task<IResponse> WaitForNavigationAsync(string urlString, Func<Task> action = default, WaitUntilState waitUntil = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2480,6 +2486,7 @@ namespace Microsoft.Playwright
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation.
         /// </param>
+        /// <param name="action">Action to perform while waiting</param>
         /// <param name="waitUntil">
         /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
         /// <list type="bullet">
@@ -2503,7 +2510,7 @@ namespace Microsoft.Playwright
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task<IResponse> WaitForNavigationAsync(Regex urlRegex, WaitUntilState waitUntil = default, float? timeout = default);
+        Task<IResponse> WaitForNavigationAsync(Regex urlRegex, Func<Task> action = default, WaitUntilState waitUntil = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2535,6 +2542,7 @@ namespace Microsoft.Playwright
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation.
         /// </param>
+        /// <param name="action">Action to perform while waiting</param>
         /// <param name="waitUntil">
         /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
         /// <list type="bullet">
@@ -2558,7 +2566,7 @@ namespace Microsoft.Playwright
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task<IResponse> WaitForNavigationAsync(Func<string, bool> urlFunc, WaitUntilState waitUntil = default, float? timeout = default);
+        Task<IResponse> WaitForNavigationAsync(Func<string, bool> urlFunc, Func<Task> action = default, WaitUntilState waitUntil = default, float? timeout = default);
         /// <summary>
         /// <para>
         /// Waits for the main frame navigation and returns the main resource response. In case
@@ -2585,6 +2593,7 @@ namespace Microsoft.Playwright
         /// API</a> to change the URL is considered a navigation.
         /// </para>
         /// </remarks>
+        /// <param name="action">Action to perform while waiting</param>
         /// <param name="waitUntil">
         /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
         /// <list type="bullet">
@@ -2608,7 +2617,7 @@ namespace Microsoft.Playwright
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task<IResponse> WaitForNavigationAsync(WaitUntilState waitUntil = default, float? timeout = default);
+        Task<IResponse> WaitForNavigationAsync(Func<Task> action = default, WaitUntilState waitUntil = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2627,7 +2636,8 @@ namespace Microsoft.Playwright
         /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
         /// </param>
-        Task<IPage> WaitForPopupAsync(Func<IPage, bool> predicate = default, float? timeout = default);
+        /// <param name="action">Action to perform while waiting</param>
+        Task<IPage> WaitForPopupAsync(Func<Task> action = default, Func<IPage, bool> predicate = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2645,12 +2655,13 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+        /// <param name="action">Action to perform while waiting</param>
         /// <param name="timeout">
         /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
         /// the timeout. The default value can be changed by using the <see cref="IPage.SetDefaultTimeout"/>
         /// method.
         /// </param>
-        Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, float? timeout = default);
+        Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, Func<Task> action = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2668,12 +2679,13 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="urlOrPredicateRegex">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+        /// <param name="action">Action to perform while waiting</param>
         /// <param name="timeout">
         /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
         /// the timeout. The default value can be changed by using the <see cref="IPage.SetDefaultTimeout"/>
         /// method.
         /// </param>
-        Task<IRequest> WaitForRequestAsync(Regex urlOrPredicateRegex, float? timeout = default);
+        Task<IRequest> WaitForRequestAsync(Regex urlOrPredicateRegex, Func<Task> action = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2691,12 +2703,13 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="urlOrPredicateFunc">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+        /// <param name="action">Action to perform while waiting</param>
         /// <param name="timeout">
         /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
         /// the timeout. The default value can be changed by using the <see cref="IPage.SetDefaultTimeout"/>
         /// method.
         /// </param>
-        Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicateFunc, float? timeout = default);
+        Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicateFunc, Func<Task> action = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2714,12 +2727,13 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="action">Action to perform while waiting</param>
         /// <param name="timeout">
         /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
         /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, float? timeout = default);
+        Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, Func<Task> action = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2737,12 +2751,13 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="urlOrPredicateRegex">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="action">Action to perform while waiting</param>
         /// <param name="timeout">
         /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
         /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task<IResponse> WaitForResponseAsync(Regex urlOrPredicateRegex, float? timeout = default);
+        Task<IResponse> WaitForResponseAsync(Regex urlOrPredicateRegex, Func<Task> action = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2760,12 +2775,13 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="urlOrPredicateFunc">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="action">Action to perform while waiting</param>
         /// <param name="timeout">
         /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
         /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicateFunc, float? timeout = default);
+        Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicateFunc, Func<Task> action = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2977,7 +2993,8 @@ namespace Microsoft.Playwright
         /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
         /// </param>
-        Task<IWebSocket> WaitForWebSocketAsync(Func<IWebSocket, bool> predicate = default, float? timeout = default);
+        /// <param name="action">Action to perform while waiting</param>
+        Task<IWebSocket> WaitForWebSocketAsync(Func<Task> action = default, Func<IWebSocket, bool> predicate = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -2996,7 +3013,8 @@ namespace Microsoft.Playwright
         /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
         /// </param>
-        Task<IWorker> WaitForWorkerAsync(Func<IWorker, bool> predicate = default, float? timeout = default);
+        /// <param name="action">Action to perform while waiting</param>
+        Task<IWorker> WaitForWorkerAsync(Func<Task> action = default, Func<IWorker, bool> predicate = default, float? timeout = default);
 
         /// <summary>
         /// <para>

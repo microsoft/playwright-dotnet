@@ -52,7 +52,7 @@ namespace Microsoft.Playwright.Tests
                 Page.MainFrame,
                 () =>
                 {
-                    var task = Page.WaitForNavigationAsync(WaitUntilState.NetworkIdle);
+                    var task = Page.WaitForNavigationAsync(waitUntil: WaitUntilState.NetworkIdle);
                     Page.GotoAsync(TestConstants.ServerUrl + "/networkidle.html");
                     return task;
                 });
@@ -134,7 +134,7 @@ namespace Microsoft.Playwright.Tests
             }
         }
 
-        private async Task NetworkIdleTestAsync(IFrame frame, Func<Task> action, bool isSetContent = false)
+        private async Task NetworkIdleTestAsync(IFrame frame, Func<Task> action = default, bool isSetContent = false)
         {
             var lastResponseFinished = new Stopwatch();
             var responses = new ConcurrentDictionary<string, TaskCompletionSource<bool>>();
@@ -160,7 +160,7 @@ namespace Microsoft.Playwright.Tests
             Server.SetRoute("/fetch-request-b.js", RequestDelegate);
             var secondFetchResourceRequested = Server.WaitForRequest("/fetch-request-b.js");
 
-            var waitForLoadTask = isSetContent ? Task.CompletedTask : frame.WaitForNavigationAsync(WaitUntilState.Load);
+            var waitForLoadTask = isSetContent ? Task.CompletedTask : frame.WaitForNavigationAsync(waitUntil: WaitUntilState.Load);
 
             var actionTask = action();
 

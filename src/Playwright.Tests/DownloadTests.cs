@@ -58,13 +58,10 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await Browser.NewPageAsync(acceptDownloads: true);
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEventAsync(PageEvent.Download);
-
-            await TaskUtils.WhenAll(
-                downloadTask,
-                page.ClickAsync("a"));
-
-            var download = downloadTask.Result;
+            var download = await page.WaitForEventAsync(PageEvent.Download, async () =>
+            {
+                await page.ClickAsync("a");
+            });
             string path = await download.PathAsync();
 
             Assert.True(new FileInfo(path).Exists);
@@ -77,15 +74,13 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await Browser.NewPageAsync(acceptDownloads: true);
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEventAsync(PageEvent.Download);
-
-            await TaskUtils.WhenAll(
-                downloadTask,
-                page.ClickAsync("a"));
+            var download = await page.WaitForEventAsync(PageEvent.Download, async () =>
+            {
+                await page.ClickAsync("a");
+            });
 
             using var tmpDir = new TempDirectory();
             string userPath = Path.Combine(tmpDir.Path, "download.txt");
-            var download = downloadTask.Result;
             await download.SaveAsAsync(userPath);
 
             Assert.True(new FileInfo(userPath).Exists);
@@ -99,15 +94,14 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await Browser.NewPageAsync(acceptDownloads: true);
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEventAsync(PageEvent.Download);
 
-            await TaskUtils.WhenAll(
-                downloadTask,
-                page.ClickAsync("a"));
+            var download = await page.WaitForEventAsync(PageEvent.Download, async () =>
+            {
+                await page.ClickAsync("a");
+            });
 
             using var tmpDir = new TempDirectory();
             string userPath = Path.Combine(tmpDir.Path, "download.txt");
-            var download = downloadTask.Result;
             await download.SaveAsAsync(userPath);
 
             Assert.True(new FileInfo(userPath).Exists);
@@ -126,15 +120,14 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await Browser.NewPageAsync(acceptDownloads: true);
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEventAsync(PageEvent.Download);
 
-            await TaskUtils.WhenAll(
-                downloadTask,
-                page.ClickAsync("a"));
+            var download = await page.WaitForEventAsync(PageEvent.Download, async () =>
+            {
+                await page.ClickAsync("a");
+            });
 
             using var tmpDir = new TempDirectory();
             string userPath = Path.Combine(tmpDir.Path, "download.txt");
-            var download = downloadTask.Result;
             await download.SaveAsAsync(userPath);
             Assert.True(new FileInfo(userPath).Exists);
             Assert.Equal("Hello world", File.ReadAllText(userPath));
