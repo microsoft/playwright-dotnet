@@ -23,10 +23,8 @@ namespace Microsoft.Playwright
 
         public string Name => _initializer.Name;
 
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
 
-        /// <inheritdoc/>
         IChannel<BindingCall> IChannelOwner<BindingCall>.Channel => _channel;
 
         internal async Task CallAsync(Delegate binding)

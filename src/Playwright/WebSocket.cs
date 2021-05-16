@@ -11,7 +11,6 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    /// <inheritdoc cref="IWebSocket"/>
     public class WebSocket : ChannelOwnerBase, IChannelOwner<WebSocket>, IWebSocket
     {
         private readonly WebSocketChannel _channel;
@@ -34,31 +33,22 @@ namespace Microsoft.Playwright
             _channel.SocketError += (_, e) => SocketError?.Invoke(this, e);
         }
 
-        /// <inheritdoc/>
         public event EventHandler<IWebSocket> Close;
 
-        /// <inheritdoc/>
         public event EventHandler<IWebSocketFrame> FrameSent;
 
-        /// <inheritdoc/>
         public event EventHandler<IWebSocketFrame> FrameReceived;
 
-        /// <inheritdoc/>
         public event EventHandler<string> SocketError;
 
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
 
-        /// <inheritdoc/>
         IChannel<WebSocket> IChannelOwner<WebSocket>.Channel => _channel;
 
-        /// <inheritdoc/>
         public string Url => _initializer.Url;
 
-        /// <inheritdoc/>
         public bool IsClosed { get; internal set; }
 
-        /// <inheritdoc/>
         public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> webSocketEvent, Func<T, bool> predicate = null, float? timeout = null)
         {
             if (webSocketEvent == null)
@@ -85,7 +75,6 @@ namespace Microsoft.Playwright
             return await waiter.WaitForEventAsync(this, webSocketEvent.Name, predicate).ConfigureAwait(false);
         }
 
-        /// <inheritdoc/>
         public async Task<object> WaitForEventAsync(string @event, float? timeout = null)
         {
             if (@event == null)
@@ -112,11 +101,9 @@ namespace Microsoft.Playwright
             return this;
         }
 
-        /// <inheritdoc/>
         public Task<IWebSocketFrame> WaitForFrameReceivedAsync(Func<IWebSocketFrame, bool> predicate = null, float? timeout = null)
             => WaitForEventAsync(WebSocketEvent.FrameReceived, predicate, timeout);
 
-        /// <inheritdoc/>
         public Task<IWebSocketFrame> WaitForFrameSentAsync(Func<IWebSocketFrame, bool> predicate = null, float? timeout = null)
             => WaitForEventAsync(WebSocketEvent.FrameSent, predicate, timeout);
     }

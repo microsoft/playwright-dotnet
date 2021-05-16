@@ -12,7 +12,6 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    /// <inheritdoc cref="IBrowserContext" />
     public class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>, IBrowserContext
     {
         private readonly TaskCompletionSource<bool> _closeTcs = new();
@@ -45,22 +44,16 @@ namespace Microsoft.Playwright
             }
         }
 
-        /// <inheritdoc/>
         public event EventHandler<IBrowserContext> Close;
 
-        /// <inheritdoc/>
         public event EventHandler<IPage> Page;
 
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => Channel;
 
-        /// <inheritdoc/>
         IChannel<BrowserContext> IChannelOwner<BrowserContext>.Channel => Channel;
 
-        /// <inheritdoc/>
         public IBrowser Browser { get; }
 
-        /// <inheritdoc/>
         public IReadOnlyCollection<IPage> Pages => PagesList;
 
         internal float DefaultNavigationTimeout
@@ -95,10 +88,8 @@ namespace Microsoft.Playwright
 
         internal bool RecordVideo { get; set; }
 
-        /// <inheritdoc/>
         public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => Channel.AddCookiesAsync(cookies);
 
-        /// <inheritdoc/>
         public Task AddInitScriptAsync(string script = null, string scriptPath = null)
         {
             if (string.IsNullOrEmpty(script))
@@ -109,13 +100,10 @@ namespace Microsoft.Playwright
             return Channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(script, null));
         }
 
-        /// <inheritdoc/>
         public Task ClearCookiesAsync() => Channel.ClearCookiesAsync();
 
-        /// <inheritdoc/>
         public Task ClearPermissionsAsync() => Channel.ClearPermissionsAsync();
 
-        /// <inheritdoc />
         public async Task CloseAsync()
         {
             try
@@ -135,77 +123,58 @@ namespace Microsoft.Playwright
             }
         }
 
-        /// <inheritdoc/>
         public Task<IReadOnlyCollection<BrowserContextCookiesResult>> GetCookiesAsync(IEnumerable<string> urls = null) => Channel.GetCookiesAsync(urls);
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync(string name, Action callback, bool? handle = null)
             => ExposeBindingAsync(name, _ => callback());
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync(string name, Action<BindingSource> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback)
             => ExposeBindingAsync(name, callback, true);
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
 
-        /// <inheritdoc/>
         public Task ExposeFunctionAsync(string name, Action callback)
             => ExposeBindingAsync(name, (BindingSource _) => callback());
 
-        /// <inheritdoc/>
         public Task ExposeFunctionAsync<T>(string name, Action<T> callback)
             => ExposeBindingAsync(name, (BindingSource _, T t) => callback(t));
 
-        /// <inheritdoc/>
         public Task ExposeFunctionAsync<TResult>(string name, Func<TResult> callback)
             => ExposeBindingAsync(name, (BindingSource _) => callback());
 
-        /// <inheritdoc/>
         public Task ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> callback)
             => ExposeBindingAsync(name, (BindingSource _, T t) => callback(t));
 
-        /// <inheritdoc/>
         public Task ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> callback)
             => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2) => callback(t1, t2));
 
-        /// <inheritdoc/>
         public Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> callback)
             => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3) => callback(t1, t2, t3));
 
-        /// <inheritdoc/>
         public Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback)
             => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => callback(t1, t2, t3, t4));
 
-        /// <inheritdoc/>
         public Task GrantPermissionsAsync(IEnumerable<string> permissions, string origin = null) => Channel.GrantPermissionsAsync(permissions, origin);
 
-        /// <inheritdoc/>
         public async Task<IPage> NewPageAsync()
         {
             if (OwnerPage != null)
@@ -216,29 +185,22 @@ namespace Microsoft.Playwright
             return (await Channel.NewPageAsync().ConfigureAwait(false)).Object;
         }
 
-        /// <inheritdoc cref="RouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
         public Task RouteAsync(string urlString, Action<IRoute> handler)
             => RouteAsync(urlString, null, null, handler);
 
-        /// <inheritdoc cref="RouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
         public Task RouteAsync(Regex urlRegex, Action<IRoute> handler)
             => RouteAsync(null, urlRegex, null, handler);
 
-        /// <inheritdoc cref="RouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
         public Task RouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler)
             => RouteAsync(null, null, urlFunc, handler);
 
-        /// <inheritdoc/>
         public Task SetExtraHttpHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
             => Channel.SetExtraHTTPHeadersAsync(headers);
 
-        /// <inheritdoc/>
         public Task SetGeolocationAsync(Geolocation geolocation) => Channel.SetGeolocationAsync(geolocation);
 
-        /// <inheritdoc/>
         public Task SetOfflineAsync(bool offline) => Channel.SetOfflineAsync(offline);
 
-        /// <inheritdoc/>
         public async Task<string> StorageStateAsync(string path = null)
         {
             string state = JsonSerializer.Serialize(
@@ -253,19 +215,15 @@ namespace Microsoft.Playwright
             return state;
         }
 
-        /// <inheritdoc cref="UnrouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
         public Task UnrouteAsync(string urlString, Action<IRoute> handler = default)
             => UnrouteAsync(urlString, null, null, handler);
 
-        /// <inheritdoc cref="UnrouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
         public Task UnrouteAsync(Regex urlRegex, Action<IRoute> handler = default)
             => UnrouteAsync(null, urlRegex, null, handler);
 
-        /// <inheritdoc cref="UnrouteAsync(string, Regex, Func{string, bool}, Action{IRoute})"/>
         public Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler = default)
             => UnrouteAsync(null, null, urlFunc, handler);
 
-        /// <inheritdoc/>
         public async Task<object> WaitForEventAsync(string @event, float? timeout = null)
         => @event switch
         {
@@ -274,7 +232,6 @@ namespace Microsoft.Playwright
             _ => throw new InvalidOperationException(),
         };
 
-        /// <inheritdoc/>
         public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<T, bool> predicate, float? timeout)
         {
             if (playwrightEvent == null)
@@ -294,17 +251,13 @@ namespace Microsoft.Playwright
             return await waiter.WaitForEventAsync<T>(this, playwrightEvent.Name, null).ConfigureAwait(false);
         }
 
-        /// <inheritdoc/>
         public Task<IPage> WaitForPageAsync(Func<IPage, bool> predicate = null, float? timeout = null)
             => WaitForEventAsync(ContextEvent.Page, predicate, timeout);
 
-        /// <inheritdoc/>
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
 
-        /// <inheritdoc/>
         public void SetDefaultNavigationTimeout(float timeout) => DefaultNavigationTimeout = timeout;
 
-        /// <inheritdoc/>
         public void SetDefaultTimeout(float timeout) => DefaultTimeout = timeout;
 
         internal void OnRoute(Route route, IRequest request)

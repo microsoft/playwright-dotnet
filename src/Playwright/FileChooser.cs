@@ -23,28 +23,21 @@ namespace Microsoft.Playwright
             IsMultiple = multiple;
         }
 
-        /// <inheritdoc />
         public IPage Page { get; set; }
 
-        /// <inheritdoc />
         public IElementHandle Element { get; set; }
 
-        /// <inheritdoc />
         public bool IsMultiple { get; set; }
 
-        /// <inheritdoc />
         public Task SetFilesAsync(string filesString, bool? noWaitAfter = default, float? timeout = default)
             => Element.SetInputFilesAsync(filesString, noWaitAfter, timeout);
 
-        /// <inheritdoc />
         public Task SetFilesAsync(IEnumerable<string> filesString, bool? noWaitAfter = default, float? timeout = default)
             => Element.SetInputFilesAsync(filesString, noWaitAfter, timeout);
 
-        /// <inheritdoc />
         public Task SetFilesAsync(FilePayload filesFilePayload, bool? noWaitAfter = default, float? timeout = default)
             => Element.SetInputFilesAsync(filesFilePayload, noWaitAfter, timeout);
 
-        /// <inheritdoc />
         public Task SetFilesAsync(IEnumerable<FilePayload> filesEnumerableFilePayload, bool? noWaitAfter = default, float? timeout = default)
             => Element.SetInputFilesAsync(filesEnumerableFilePayload, noWaitAfter, timeout);
     }

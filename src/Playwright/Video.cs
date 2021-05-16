@@ -19,21 +19,18 @@ namespace Microsoft.Playwright
             page.Crash += (_, __) => _artifactTcs.TrySetCanceled();
         }
 
-        /// <inheritdoc/>
         public async Task DeleteAsync()
         {
             var artifact = await _artifactTcs.Task.ConfigureAwait(false);
             await artifact.DeleteAsync().ConfigureAwait(false);
         }
 
-        /// <inheritdoc/>
         public async Task<string> PathAsync()
         {
             var artifact = await _artifactTcs.Task.ConfigureAwait(false);
             return artifact.AbsolutePath;
         }
 
-        /// <inheritdoc/>
         public async Task SaveAsAsync(string path)
         {
             var artifact = await _artifactTcs.Task.ConfigureAwait(false);

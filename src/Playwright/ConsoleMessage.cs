@@ -21,22 +21,16 @@ namespace Microsoft.Playwright
             _initializer = initializer;
         }
 
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
 
-        /// <inheritdoc/>
         IChannel<ConsoleMessage> IChannelOwner<ConsoleMessage>.Channel => _channel;
 
-        /// <inheritdoc />
         public string Type => _initializer.Type;
 
-        /// <inheritdoc />
         public IReadOnlyCollection<IJSHandle> Args => _initializer.Args.Select(a => ((JSHandleChannel)a).Object).ToList().AsReadOnly();
 
-        /// <inheritdoc />
         public string Location => _initializer.Location.ToString();
 
-        /// <inheritdoc />
         public string Text => _initializer.Text;
     }
 }

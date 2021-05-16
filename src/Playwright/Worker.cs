@@ -36,16 +36,12 @@ namespace Microsoft.Playwright
             };
         }
 
-        /// <inheritdoc/>
         public event EventHandler<IWorker> Close;
 
-        /// <inheritdoc/>
         public string Url => _initializer.Url;
 
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
 
-        /// <inheritdoc/>
         IChannel<Worker> IChannelOwner<Worker>.Channel => _channel;
 
         internal Page Page { get; set; }

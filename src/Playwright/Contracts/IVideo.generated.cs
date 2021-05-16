@@ -51,6 +51,7 @@ namespace Microsoft.Playwright
     /// When browser context is created with the <c>recordVideo</c> option, each page has
     /// a video object associated with it.
     /// </para>
+    /// <code>Console.WriteLine(await page.Video.GetPathAsync());</code>
     /// </summary>
     public partial interface IVideo
     {

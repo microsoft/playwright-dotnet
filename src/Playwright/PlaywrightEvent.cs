@@ -8,7 +8,6 @@ namespace Microsoft.Playwright
     /// <typeparam name="T"><see cref="EventArgs"/> returned by the event.</typeparam>
     public class PlaywrightEvent<T> : IEvent
     {
-        /// <inheritdoc/>
         public string Name { get; set; }
     }
 }

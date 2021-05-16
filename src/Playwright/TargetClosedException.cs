@@ -7,17 +7,14 @@ namespace Microsoft.Playwright
     /// </summary>
     public class TargetClosedException : PlaywrightException
     {
-        /// <inheritdoc cref="Exception"/>
         public TargetClosedException()
         {
         }
 
-        /// <inheritdoc cref="Exception"/>
         public TargetClosedException(string message) : base(message)
         {
         }
 
-        /// <inheritdoc cref="Exception"/>
         public TargetClosedException(string message, Exception innerException) : base(message, innerException)
         {
         }

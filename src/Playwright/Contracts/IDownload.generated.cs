@@ -60,6 +60,12 @@ namespace Microsoft.Playwright
     /// Download event is emitted once the download starts. Download path becomes available
     /// once download completes:
     /// </para>
+    /// <code>
+    /// var waitForDownloadTask = page.WaitForDownloadAsync();<br/>
+    /// await page.ClickAsync("#downloadButton");<br/>
+    /// var download = await waitForDownloadTask;<br/>
+    /// Console.WriteLine(await download.PathAsync());
+    /// </code>
     /// </summary>
     /// <remarks>
     /// <para>

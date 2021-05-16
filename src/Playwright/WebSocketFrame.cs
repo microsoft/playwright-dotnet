@@ -3,7 +3,6 @@ using System.Text;
 
 namespace Microsoft.Playwright
 {
-    /// <inheritdoc/>
     public class WebSocketFrame : IWebSocketFrame
     {
         internal WebSocketFrame(string payload, bool isBase64)
@@ -18,10 +17,8 @@ namespace Microsoft.Playwright
             }
         }
 
-        /// <inheritdoc/>
         public byte[] Binary { get; set; }
 
-        /// <inheritdoc/>
         public string Text => Encoding.UTF8.GetString(Binary);
     }
 }

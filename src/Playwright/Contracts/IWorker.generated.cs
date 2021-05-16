@@ -53,14 +53,14 @@ namespace Microsoft.Playwright
     /// event is emitted on the worker object when the worker is gone.
     /// </para>
     /// <code>
-    /// Page.Worker += (_, worker) =&gt;<br/>
+    /// page.Worker += (_, worker) =&gt;<br/>
     /// {<br/>
     ///     Console.WriteLine($"Worker created: {worker.Url}");<br/>
     ///     worker.Close += (_, _) =&gt; Console.WriteLine($"Worker closed {worker.Url}");<br/>
     /// };<br/>
     /// <br/>
     /// Console.WriteLine("Current Workers:");<br/>
-    /// foreach(var pageWorker in Page.Workers)<br/>
+    /// foreach(var pageWorker in page.Workers)<br/>
     /// {<br/>
     ///     Console.WriteLine($"\tWorker: {pageWorker.Url}");<br/>
     /// }

@@ -31,13 +31,10 @@ namespace Microsoft.Playwright
         /// </summary>
         public IRequest Request => _initializer.Request;
 
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
 
-        /// <inheritdoc/>
         IChannel<Route> IChannelOwner<Route>.Channel => _channel;
 
-        /// <inheritdoc/>
         public Task FulfillAsync(
             HttpStatusCode status,
             string body = null,
@@ -47,7 +44,6 @@ namespace Microsoft.Playwright
             string path = null)
             => FulfillAsync((int?)status, headers, contentType, body, bodyBytes, path);
 
-        /// <inheritdoc/>
         public Task FulfillAsync(
             int? status = default,
             IEnumerable<KeyValuePair<string, string>> headers = default,
@@ -60,10 +56,8 @@ namespace Microsoft.Playwright
             return _channel.FulfillAsync(normalized);
         }
 
-        /// <inheritdoc/>
         public Task AbortAsync(string errorCode = RequestAbortErrorCode.Failed) => _channel.AbortAsync(errorCode);
 
-        /// <inheritdoc/>
         public Task ResumeAsync(
             string url = default,
             string method = default,

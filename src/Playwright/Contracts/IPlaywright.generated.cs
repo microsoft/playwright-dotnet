@@ -51,6 +51,23 @@ namespace Microsoft.Playwright
     /// Playwright module provides a method to launch a browser instance. The following
     /// is a typical example of using Playwright to drive automation:
     /// </para>
+    /// <code>
+    /// using Microsoft.Playwright;<br/>
+    /// using System.Threading.Tasks;<br/>
+    /// <br/>
+    /// class PlaywrightExample<br/>
+    /// {<br/>
+    ///     public static async Task Main()<br/>
+    ///     {<br/>
+    ///         using var playwright = await Playwright.CreateAsync();<br/>
+    ///         await using var browser = await playwright.Chromium.LaunchAsync();<br/>
+    ///         var page = await browser.NewPageAsync();<br/>
+    /// <br/>
+    ///         await page.GotoAsync("https://www.microsoft.com");<br/>
+    ///         // other actions...<br/>
+    ///     }<br/>
+    /// }
+    /// </code>
     /// </summary>
     public partial interface IPlaywright
     {
@@ -67,6 +84,24 @@ namespace Microsoft.Playwright
         /// Returns a dictionary of devices to be used with <see cref="IBrowser.NewContextAsync"/>
         /// or <see cref="IBrowser.NewPageAsync"/>.
         /// </para>
+        /// <code>
+        /// using Microsoft.Playwright;<br/>
+        /// using System.Threading.Tasks;<br/>
+        /// <br/>
+        /// class PlaywrightExample<br/>
+        /// {<br/>
+        ///     public static async Task Main()<br/>
+        ///     {<br/>
+        ///         using var playwright = await Playwright.CreateAsync();<br/>
+        ///         await using var browser = await playwright.Webkit.LaunchAsync();<br/>
+        ///         await using var context = await browser.NewContextAsync(Playwright.Devices["iPhone 6"]);<br/>
+        /// <br/>
+        ///         var page = await context.NewPageAsync();<br/>
+        ///         await page.GotoAsync("https://www.theverge.com");<br/>
+        ///         // other actions...<br/>
+        ///     }<br/>
+        /// }
+        /// </code>
         /// </summary>
         public IReadOnlyDictionary<string, BrowserContextOptions> Devices { get; }
 

@@ -38,7 +38,6 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    /// <inheritdoc cref="IPage" />
     public class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     {
         private readonly PageChannel _channel;
@@ -116,40 +115,28 @@ namespace Microsoft.Playwright
             _initializer = initializer;
         }
 
-        /// <inheritdoc />
         public event EventHandler<IConsoleMessage> Console;
 
-        /// <inheritdoc />
         public event EventHandler<IPage> Popup;
 
-        /// <inheritdoc />
         public event EventHandler<IRequest> Request;
 
-        /// <inheritdoc />
         public event EventHandler<IWebSocket> WebSocket;
 
-        /// <inheritdoc />
         public event EventHandler<IResponse> Response;
 
-        /// <inheritdoc />
         public event EventHandler<IRequest> RequestFinished;
 
-        /// <inheritdoc />
         public event EventHandler<IRequest> RequestFailed;
 
-        /// <inheritdoc />
         public event EventHandler<IDialog> Dialog;
 
-        /// <inheritdoc />
         public event EventHandler<IFrame> FrameAttached;
 
-        /// <inheritdoc />
         public event EventHandler<IFrame> FrameDetached;
 
-        /// <inheritdoc />
         public event EventHandler<IFrame> FrameNavigated;
 
-        /// <inheritdoc />
         public event EventHandler<IFileChooser> FileChooser
         {
             add
@@ -177,88 +164,64 @@ namespace Microsoft.Playwright
             }
         }
 
-        /// <inheritdoc />
         public event EventHandler<IPage> Load;
 
-        /// <inheritdoc />
         public event EventHandler<IPage> DOMContentLoaded;
 
-        /// <inheritdoc />
         public event EventHandler<IPage> Close;
 
-        /// <inheritdoc />
         public event EventHandler<IPage> Crash;
 
-        /// <inheritdoc />
         public event EventHandler<string> PageError;
 
-        /// <inheritdoc />
         public event EventHandler<IWorker> Worker;
 
-        /// <inheritdoc />
         public event EventHandler<IDownload> Download;
 
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
 
-        /// <inheritdoc/>
         IChannel<Page> IChannelOwner<Page>.Channel => _channel;
 
-        /// <inheritdoc />
         public bool IsClosed { get; private set; }
 
-        /// <inheritdoc />
         IFrame IPage.MainFrame => MainFrame;
 
-        /// <inheritdoc cref="IPage.MainFrame" />
         public Frame MainFrame { get; }
 
-        /// <inheritdoc />
         IBrowserContext IPage.Context => Context;
 
-        /// <inheritdoc cref="IPage.Context" />
         public BrowserContext Context { get; set; }
 
-        /// <inheritdoc />
         public PageViewportSizeResult ViewportSize { get; private set; }
 
-        /// <inheritdoc />
         public IAccessibility Accessibility
         {
             get => _accessibility;
             set => throw new NotSupportedException();
         }
 
-        /// <inheritdoc />
-        /// <inheritdoc />
         public IMouse Mouse
         {
             get => _mouse;
             set => throw new NotSupportedException();
         }
 
-        /// <inheritdoc />
         public string Url => MainFrame.Url;
 
-        /// <inheritdoc />
         public IReadOnlyCollection<IFrame> Frames => _frames.AsReadOnly();
 
-        /// <inheritdoc />
         public IKeyboard Keyboard
         {
             get => _keyboard;
         }
 
-        /// <inheritdoc />
         public ITouchscreen Touchscreen
         {
             get => _touchscreen;
         }
 
-        /// <inheritdoc />
         public IReadOnlyCollection<IWorker> Workers => WorkersList;
 
-        /// <inheritdoc />
         public IVideo Video
         {
             get
@@ -301,32 +264,23 @@ namespace Microsoft.Playwright
             }
         }
 
-        /// <inheritdoc />
         public IFrame Frame(string name)
             => Frames.FirstOrDefault(f => f.Name == name);
 
-        /// <inheritdoc />
         public IFrame FrameByUrl(string urlString) => Frames.FirstOrDefault(f => urlString.UrlMatches(f.Url));
 
-        /// <inheritdoc />
         public IFrame FrameByUrl(Regex urlRegex) => Frames.FirstOrDefault(f => urlRegex.IsMatch(f.Url));
 
-        /// <inheritdoc />
         public IFrame FrameByUrl(Func<string, bool> urlFunc) => Frames.FirstOrDefault(f => urlFunc(f.Url));
 
-        /// <inheritdoc />
         public Task<string> TitleAsync() => MainFrame.TitleAsync();
 
-        /// <inheritdoc />
         public Task BringToFrontAsync() => _channel.BringToFrontAsync();
 
-        /// <inheritdoc />
         public Task<IPage> OpenerAsync() => Task.FromResult<IPage>(Opener?.IsClosed == false ? Opener : null);
 
-        /// <inheritdoc />
         public Task EmulateMediaAsync(ColorScheme? colorScheme) => EmulateMediaAsync(null, colorScheme);
 
-        /// <inheritdoc />
         public Task EmulateMediaAsync(Media? media, ColorScheme? colorScheme)
         {
             var args = new Dictionary<string, object>();
@@ -344,79 +298,60 @@ namespace Microsoft.Playwright
             return _channel.EmulateMediaAsync(args);
         }
 
-        /// <inheritdoc />
         public Task<IResponse> GotoAsync(string url, WaitUntilState waitUntil, float? timeout, string referer)
             => MainFrame.GotoAsync(true, url, waitUntil.EnsureDefaultValue(WaitUntilState.Load), referer, timeout);
 
-        /// <inheritdoc />
         public Task WaitForURLAsync(string urlString, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined)
             => MainFrame.WaitForURLAsync(urlString, timeout, waitUntil);
 
-        /// <inheritdoc />
         public Task WaitForURLAsync(Regex urlRegex, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined)
             => MainFrame.WaitForURLAsync(urlRegex, timeout, waitUntil);
 
-        /// <inheritdoc />
         public Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined)
             => MainFrame.WaitForURLAsync(urlFunc, timeout, waitUntil);
 
-        /// <inheritdoc/>
         public Task<IResponse> WaitForNavigationAsync(string urlString, WaitUntilState waitUntil = default, float? timeout = default)
             => MainFrame.WaitForNavigationAsync(urlString, null, null, waitUntil, timeout);
 
-        /// <inheritdoc />
         public Task<IResponse> WaitForNavigationAsync(WaitUntilState waitUntil, float? timeout)
              => MainFrame.WaitForNavigationAsync(urlString: null, urlRegex: null, urlFunc: null, waitUntil: waitUntil, timeout: timeout);
 
-        /// <inheritdoc />
         public Task<IResponse> WaitForNavigationAsync(Regex urlRegex, WaitUntilState waitUntil, float? timeout)
             => MainFrame.WaitForNavigationAsync(urlString: null, urlRegex: urlRegex, urlFunc: null, waitUntil: default, timeout: timeout);
 
-        /// <inheritdoc />
         public Task<IResponse> WaitForNavigationAsync(Func<string, bool> urlFunc, WaitUntilState waitUntil, float? timeout)
             => MainFrame.WaitForNavigationAsync(urlString: null, urlRegex: null, urlFunc: urlFunc, waitUntil: default, timeout: timeout);
 
-        /// <inheritdoc />
         public Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, float? timeout)
             => WaitForEventAsync(PageEvent.Request, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
 
-        /// <inheritdoc />
         public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicateRegex, float? timeout)
             => WaitForEventAsync(PageEvent.Request, e => urlOrPredicateRegex.IsMatch(e.Url), timeout);
 
-        /// <inheritdoc />
         public Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicateFunc, float? timeout)
             => WaitForEventAsync(PageEvent.Request, e => urlOrPredicateFunc(e), timeout);
 
-        /// <inheritdoc />
         public Task<IPage> WaitForCloseAsync(float? timeout)
             => WaitForEventAsync(PageEvent.Close, null, timeout);
 
-        /// <inheritdoc />
         public Task<IConsoleMessage> WaitForConsoleMessageAsync(Func<IConsoleMessage, bool> predicate, float? timeout)
             => WaitForEventAsync(PageEvent.Console, predicate, timeout);
 
-        /// <inheritdoc />
         public Task<IFileChooser> WaitForFileChooserAsync(Func<IFileChooser, bool> predicate, float? timeout)
             => WaitForEventAsync(PageEvent.FileChooser, predicate, timeout);
 
-        /// <inheritdoc />
         public Task<IPage> WaitForPopupAsync(Func<IPage, bool> predicate, float? timeout)
             => WaitForEventAsync(PageEvent.Popup, predicate, timeout);
 
-        /// <inheritdoc />
         public Task<IDownload> WaitForDownloadAsync(Func<IDownload, bool> predicate, float? timeout)
             => WaitForEventAsync(PageEvent.Download, predicate, timeout);
 
-        /// <inheritdoc />
         public Task<IWebSocket> WaitForWebSocketAsync(Func<IWebSocket, bool> predicate, float? timeout)
             => WaitForEventAsync(PageEvent.WebSocket, predicate, timeout);
 
-        /// <inheritdoc />
         public Task<IWorker> WaitForWorkerAsync(Func<IWorker, bool> predicate, float? timeout)
             => WaitForEventAsync(PageEvent.Worker, predicate, timeout);
 
-        /// <inheritdoc />
         public Task<IJSHandle> WaitForFunctionAsync(
             string expression,
             object arg,
@@ -424,7 +359,6 @@ namespace Microsoft.Playwright
             float? timeout)
             => MainFrame.WaitForFunctionAsync(true, expression, arg, pollingInterval, timeout);
 
-        /// <inheritdoc />
         public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<T, bool> predicate, float? timeout)
         {
             if (pageEvent == null)
@@ -449,7 +383,6 @@ namespace Microsoft.Playwright
             return await waiter.WaitForEventAsync(this, pageEvent.Name, predicate).ConfigureAwait(false);
         }
 
-        /// <inheritdoc />
         public async Task<object> WaitForEventAsync(string @event, float? timeout)
         {
             if (string.IsNullOrEmpty(@event))
@@ -474,7 +407,6 @@ namespace Microsoft.Playwright
             return await waiter.WaitForEventAsync(this, @event).ConfigureAwait(false);
         }
 
-        /// <inheritdoc />
         public async Task CloseAsync(bool? runBeforeUnload)
         {
             try
@@ -491,49 +423,36 @@ namespace Microsoft.Playwright
             }
         }
 
-        /// <inheritdoc />
         public Task<T> EvaluateAsync<T>(string expression, object arg) => MainFrame.EvaluateAsync<T>(true, expression, arg);
 
-        /// <inheritdoc />
         public Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAsync(true, selector, expression, arg);
 
-        /// <inheritdoc />
         public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAsync<T>(true, selector, expression, arg);
 
-        /// <inheritdoc />
         public Task EvalOnSelectorAllAsync(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAllAsync(true, selector, expression, arg);
 
-        /// <inheritdoc />
         public Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAllAsync<T>(true, selector, expression, arg);
 
-        /// <inheritdoc />
         public Task FillAsync(string selector, string value, bool? noWaitAfter, float? timeout)
             => MainFrame.FillAsync(true, selector, value, noWaitAfter, timeout);
 
-        /// <inheritdoc />
         public Task SetInputFilesAsync(string selector, string files, bool? noWaitAfter, float? timeout)
             => SetInputFilesAsync(selector, new[] { files }, noWaitAfter, timeout);
 
-        /// <inheritdoc />
         public Task SetInputFilesAsync(string selector, IEnumerable<string> files, bool? noWaitAfter, float? timeout)
             => MainFrame.SetInputFilesAsync(true, selector, files, noWaitAfter, timeout);
 
-        /// <inheritdoc />
         public Task SetInputFilesAsync(string selector, FilePayload files, bool? noWaitAfter, float? timeout)
             => SetInputFilesAsync(selector, new[] { files }, noWaitAfter, timeout);
 
-        /// <inheritdoc />
         public Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, bool? noWaitAfter, float? timeout)
             => MainFrame.SetInputFilesAsync(true, selector, files, timeout, noWaitAfter);
 
-        /// <inheritdoc />
         public Task TypeAsync(string selector, string text, float? delay, bool? noWaitAfter, float? timeout)
             => MainFrame.TypeAsync(true, selector, text, delay, noWaitAfter, timeout);
 
-        /// <inheritdoc />
         public Task FocusAsync(string selector, float? timeout) => MainFrame.FocusAsync(true, selector, timeout);
 
-        /// <inheritdoc />
         public Task HoverAsync(
             string selector,
             Position position,
@@ -543,31 +462,24 @@ namespace Microsoft.Playwright
             bool? trial)
             => MainFrame.HoverAsync(true, selector, position, modifiers, force ?? false, timeout, trial);
 
-        /// <inheritdoc />
         public Task PressAsync(string selector, string key, float? delay, bool? noWaitAfter, float? timeout)
             => MainFrame.PressAsync(true, selector, key, delay, noWaitAfter, timeout);
 
-        /// <inheritdoc />
         public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, bool? noWaitAfter, float? timeout)
             => MainFrame.SelectOptionAsync(true, selector, null, noWaitAfter, timeout);
 
-        /// <inheritdoc />
         public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string values, bool? noWaitAfter, float? timeout)
             => SelectOptionAsync(selector, new[] { values }, noWaitAfter, timeout);
 
-        /// <inheritdoc />
         public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, bool? noWaitAfter, float? timeout)
             => SelectOptionAsync(selector, new[] { values }, noWaitAfter, timeout);
 
-        /// <inheritdoc />
         public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IElementHandle values, bool? noWaitAfter, float? timeout)
             => SelectOptionAsync(selector, new[] { values }, noWaitAfter, timeout);
 
-        /// <inheritdoc />
         public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<string> values, bool? noWaitAfter, float? timeout)
             => MainFrame.SelectOptionAsync(true, selector, values.Cast<object>().Select(v => v == null ? v : new { value = v }).ToArray(), noWaitAfter, timeout);
 
-        /// <inheritdoc />
         public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, bool? noWaitAfter, float? timeout)
         {
             if (values == null)
@@ -578,21 +490,16 @@ namespace Microsoft.Playwright
             return MainFrame.SelectOptionAsync(true, selector, values.ToArray(), noWaitAfter, timeout);
         }
 
-        /// <inheritdoc />
         public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, bool? noWaitAfter, float? timeout)
             => MainFrame.SelectOptionAsync(true, selector, values.Cast<ElementHandle>().ToArray(), noWaitAfter, timeout);
 
-        /// <inheritdoc />
         public Task WaitForTimeoutAsync(float timeout) => Task.Delay(Convert.ToInt32(timeout));
 
-        /// <inheritdoc />
         public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorState state, float? timeout)
             => MainFrame.WaitForSelectorAsync(true, selector, state.EnsureDefaultValue(WaitForSelectorState.Visible), timeout);
 
-        /// <inheritdoc />
         public Task<JsonElement?> EvaluateAsync(string expression, object arg) => MainFrame.EvaluateAsync(true, expression, arg);
 
-        /// <inheritdoc />
         public async Task<byte[]> ScreenshotAsync(
             string path,
             ScreenshotType type,
@@ -621,36 +528,27 @@ namespace Microsoft.Playwright
             return result;
         }
 
-        /// <inheritdoc />
         public Task SetContentAsync(string html, float? timeout, WaitUntilState waitUntil)
             => MainFrame.SetContentAsync(true, html, waitUntil.EnsureDefaultValue(WaitUntilState.Load), timeout);
 
-        /// <inheritdoc />
         public Task<string> ContentAsync() => MainFrame.ContentAsync(true);
 
-        /// <inheritdoc />
         public Task SetExtraHttpHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
             => _channel.SetExtraHttpHeadersAsync(headers);
 
-        /// <inheritdoc />
         public Task<IElementHandle> QuerySelectorAsync(string selector) => MainFrame.QuerySelectorAsync(true, selector);
 
-        /// <inheritdoc />
         public Task<IReadOnlyCollection<IElementHandle>> QuerySelectorAllAsync(string selector)
             => MainFrame.QuerySelectorAllAsync(true, selector);
 
-        /// <inheritdoc />
         public Task<IJSHandle> EvaluateHandleAsync(string expression, object arg) => MainFrame.EvaluateHandleAsync(expression, arg);
 
-        /// <inheritdoc />
         public Task<IElementHandle> AddScriptTagAsync(string url, string path, string content, string type)
             => MainFrame.AddScriptTagAsync(true, url, path, content, type);
 
-        /// <inheritdoc />
         public Task<IElementHandle> AddStyleTagAsync(string url, string path, string content)
             => MainFrame.AddStyleTagAsync(true, url, path, content);
 
-        /// <inheritdoc />
         public Task ClickAsync(
             string selector,
             MouseButton button,
@@ -664,7 +562,6 @@ namespace Microsoft.Playwright
             bool? trial)
             => MainFrame.ClickAsync(true, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force ?? false, noWaitAfter, trial);
 
-        /// <inheritdoc />
         public Task DblClickAsync(
             string selector,
             MouseButton button,
@@ -677,95 +574,72 @@ namespace Microsoft.Playwright
             bool? trial)
             => MainFrame.DblClickAsync(true, selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), position, modifiers, timeout, force ?? false, noWaitAfter, trial);
 
-        /// <inheritdoc />
         public async Task<IResponse> GoBackAsync(WaitUntilState waitUntil, float? timeout)
             => (await _channel.GoBackAsync(timeout, waitUntil.EnsureDefaultValue(WaitUntilState.Load)).ConfigureAwait(false))?.Object;
 
-        /// <inheritdoc />
         public async Task<IResponse> GoForwardAsync(WaitUntilState waitUntil, float? timeout)
             => (await _channel.GoForwardAsync(timeout, waitUntil.EnsureDefaultValue(WaitUntilState.Load)).ConfigureAwait(false))?.Object;
 
-        /// <inheritdoc />
         public async Task<IResponse> ReloadAsync(WaitUntilState waitUntil, float? timeout)
             => (await _channel.ReloadAsync(timeout, waitUntil.EnsureDefaultValue(WaitUntilState.Load)).ConfigureAwait(false))?.Object;
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync(string name, Action<BindingSource> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback)
             => ExposeBindingAsync(name, (Delegate)callback, true);
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
 
-        /// <inheritdoc/>
         public Task ExposeBindingAsync(string name, Action callback, bool? handle = default)
             => ExposeBindingAsync(name, (Delegate)callback);
 
-        /// <inheritdoc/>
         public Task ExposeFunctionAsync(string name, Action callback)
             => ExposeBindingAsync(name, (BindingSource _) => callback());
 
-        /// <inheritdoc/>
         public Task ExposeFunctionAsync<T>(string name, Action<T> callback)
             => ExposeBindingAsync(name, (BindingSource _, T t) => callback(t));
 
-        /// <inheritdoc/>
         public Task ExposeFunctionAsync<TResult>(string name, Func<TResult> callback)
             => ExposeBindingAsync(name, (BindingSource _) => callback());
 
-        /// <inheritdoc/>
         public Task ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> callback)
             => ExposeBindingAsync(name, (BindingSource _, T t) => callback(t));
 
-        /// <inheritdoc/>
         public Task ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> callback)
             => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2) => callback(t1, t2));
 
-        /// <inheritdoc/>
         public Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> callback)
             => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3) => callback(t1, t2, t3));
 
-        /// <inheritdoc/>
         public Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback)
             => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => callback(t1, t2, t3, t4));
 
-        /// <inheritdoc />
         public Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, float? timeout)
             => WaitForEventAsync(PageEvent.Response, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
 
-        /// <inheritdoc />
         public Task<IResponse> WaitForResponseAsync(Regex urlOrPredicateRegex, float? timeout)
             => WaitForEventAsync(PageEvent.Response, e => urlOrPredicateRegex.IsMatch(e.Url), timeout);
 
-        /// <inheritdoc />
         public Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicateFunc, float? timeout)
             => WaitForEventAsync(PageEvent.Response, e => urlOrPredicateFunc(e), timeout);
 
-        /// <inheritdoc />
         public async Task<byte[]> PdfAsync(
             string path,
             float? scale,
@@ -809,11 +683,9 @@ namespace Microsoft.Playwright
             return result;
         }
 
-        /// <inheritdoc />
         public Task AddInitScriptAsync(string script, string scriptPath)
             => _channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(ScriptsHelper.EvaluationScript(script, scriptPath)));
 
-        /// <inheritdoc />
         public Task RouteAsync(string urlString, Action<IRoute> handler)
             => RouteAsync(
                 new RouteSetting
@@ -822,7 +694,6 @@ namespace Microsoft.Playwright
                     Handler = handler,
                 });
 
-        /// <inheritdoc />
         public Task RouteAsync(Regex urlRegex, Action<IRoute> handler)
             => RouteAsync(
                 new RouteSetting
@@ -831,7 +702,6 @@ namespace Microsoft.Playwright
                     Handler = handler,
                 });
 
-        /// <inheritdoc />
         public Task RouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler)
             => RouteAsync(
                 new RouteSetting
@@ -840,7 +710,6 @@ namespace Microsoft.Playwright
                     Handler = handler,
                 });
 
-        /// <inheritdoc />
         public Task UnrouteAsync(string urlString, Action<IRoute> handler)
             => UnrouteAsync(
                 new RouteSetting
@@ -849,7 +718,6 @@ namespace Microsoft.Playwright
                     Handler = handler,
                 });
 
-        /// <inheritdoc />
         public Task UnrouteAsync(Regex urlString, Action<IRoute> handler)
             => UnrouteAsync(
                 new RouteSetting
@@ -858,7 +726,6 @@ namespace Microsoft.Playwright
                     Handler = handler,
                 });
 
-        /// <inheritdoc />
         public Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler)
             => UnrouteAsync(
                 new RouteSetting
@@ -867,74 +734,55 @@ namespace Microsoft.Playwright
                     Handler = handler,
                 });
 
-        /// <inheritdoc />
         public Task WaitForLoadStateAsync(LoadState state, float? timeout)
             => MainFrame.WaitForLoadStateAsync(state, timeout);
 
-        /// <inheritdoc />
         public Task SetViewportSizeAsync(int width, int height)
         {
             ViewportSize = new PageViewportSizeResult { Width = width, Height = height };
             return _channel.SetViewportSizeAsync(ViewportSize);
         }
 
-        /// <inheritdoc />
         public Task CheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
             => MainFrame.CheckAsync(true, selector, position, force, noWaitAfter, timeout, trial);
 
-        /// <inheritdoc />
         public Task UncheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
             => MainFrame.UncheckAsync(true, selector, position, force, noWaitAfter, timeout, trial);
 
-        /// <inheritdoc />
         public Task DispatchEventAsync(string selector, string type, object eventInit, float? timeout)
              => MainFrame.DispatchEventAsync(true, selector, type, eventInit, timeout);
 
-        /// <inheritdoc />
         public Task<string> GetAttributeAsync(string selector, string name, float? timeout)
              => MainFrame.GetAttributeAsync(true, selector, name, timeout);
 
-        /// <inheritdoc />
         public Task<string> InnerHTMLAsync(string selector, float? timeout)
              => MainFrame.InnerHTMLAsync(true, selector, timeout);
 
-        /// <inheritdoc />
         public Task<string> InnerTextAsync(string selector, float? timeout)
              => MainFrame.InnerTextAsync(true, selector, timeout);
 
-        /// <inheritdoc />
         public Task<string> TextContentAsync(string selector, float? timeout)
              => MainFrame.GetTextContentAsync(true, selector, timeout);
 
-        /// <inheritdoc />
         public Task TapAsync(string selector, Position position, IEnumerable<KeyboardModifier> modifiers, bool? noWaitAfter, bool? force, float? timeout, bool? trial)
             => MainFrame.TapAsync(true, selector, modifiers, position, force, noWaitAfter, timeout, trial);
 
-        /// <inheritdoc />
         public Task<bool> IsCheckedAsync(string selector, float? timeout) => MainFrame.IsCheckedAsync(true, selector, timeout);
 
-        /// <inheritdoc />
         public Task<bool> IsDisabledAsync(string selector, float? timeout) => MainFrame.IsDisabledAsync(true, selector, timeout);
 
-        /// <inheritdoc />
         public Task<bool> IsEditableAsync(string selector, float? timeout) => MainFrame.IsEditableAsync(true, selector, timeout);
 
-        /// <inheritdoc />
         public Task<bool> IsEnabledAsync(string selector, float? timeout) => MainFrame.IsEnabledAsync(true, selector, timeout);
 
-        /// <inheritdoc />
         public Task<bool> IsHiddenAsync(string selector, float? timeout) => MainFrame.IsHiddenAsync(true, selector, timeout);
 
-        /// <inheritdoc />
         public Task<bool> IsVisibleAsync(string selector, float? timeout) => MainFrame.IsVisibleAsync(true, selector, timeout);
 
-        /// <inheritdoc />
         public Task PauseAsync() => _channel.PauseAsync();
 
-        /// <inheritdoc/>
         public void SetDefaultNavigationTimeout(float timeout) => DefaultNavigationTimeout = timeout;
 
-        /// <inheritdoc/>
         public void SetDefaultTimeout(float timeout) => DefaultTimeout = timeout;
 
         internal void NotifyPopup(Page page) => Popup?.Invoke(this, page);

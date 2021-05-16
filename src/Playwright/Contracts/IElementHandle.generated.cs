@@ -51,6 +51,23 @@ namespace Microsoft.Playwright
     /// ElementHandle represents an in-page DOM element. ElementHandles can be created with
     /// the <see cref="IPage.QuerySelectorAsync"/> method.
     /// </para>
+    /// <code>
+    /// using Microsoft.Playwright;<br/>
+    /// using System.Threading.Tasks;<br/>
+    /// <br/>
+    /// class HandleExamples<br/>
+    /// {<br/>
+    ///     public static async Task Run()<br/>
+    ///     {<br/>
+    ///         using var playwright = await Playwright.CreateAsync();<br/>
+    ///         var browser = await playwright.Chromium.LaunchAsync(headless: false);<br/>
+    ///         var page = await browser.NewPageAsync();<br/>
+    ///         await page.GotoAsync("https://www.bing.com");<br/>
+    ///         var handle = await page.QuerySelectorAsync("a");<br/>
+    ///         await handle.ClickAsync();<br/>
+    ///     }<br/>
+    /// }
+    /// </code>
     /// <para>
     /// ElementHandle prevents DOM element from garbage collection unless the handle is
     /// disposed with <see cref="IJSHandle.DisposeAsync"/>. ElementHandles are auto-disposed
@@ -82,6 +99,10 @@ namespace Microsoft.Playwright
         /// Assuming the page is static, it is safe to use bounding box coordinates to perform
         /// input. For example, the following snippet should click the center of the element.
         /// </para>
+        /// <code>
+        /// var box = await elementHandle.BoundingBoxAsync();<br/>
+        /// await page.Mouse.ClickAsync(box.X + box.Width / 2, box.Y + box.Height / 2);
+        /// </code>
         /// </summary>
         Task<ElementHandleBoundingBoxResult> BoundingBoxAsync();
 
@@ -288,6 +309,7 @@ namespace Microsoft.Playwright
         /// the visibility state of the element, <c>click</c> is dispatched. This is equivalent
         /// to calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click">element.click()</a>.
         /// </para>
+        /// <code>await elementHandle.DispatchEventAsync("click");</code>
         /// <para>
         /// Under the hood, it creates an instance of an event based on the given <paramref
         /// name="type"/>, initializes it with <paramref name="eventInit"/> properties and dispatches
@@ -310,6 +332,13 @@ namespace Microsoft.Playwright
         /// You can also specify <c>JSHandle</c> as the property value if you want live objects
         /// to be passed into the event:
         /// </para>
+        /// <code>
+        /// var handle = await page.EvaluateHandleAsync("() =&gt; new DataTransfer()");<br/>
+        /// await handle.AsElement.DispatchEventAsync("dragstart", new Dictionary&lt;string, object&gt;<br/>
+        /// {<br/>
+        ///     { "dataTransfer", dataTransfer }<br/>
+        /// });
+        /// </code>
         /// </summary>
         /// <param name="type">DOM event type: <c>"click"</c>, <c>"dragstart"</c>, etc.</param>
         /// <param name="eventInit">Optional event-specific initialization properties.</param>
@@ -328,6 +357,11 @@ namespace Microsoft.Playwright
         /// would wait for the promise to resolve and return its value.
         /// </para>
         /// <para>Examples:</para>
+        /// <code>
+        /// var tweetHandle = await page.QuerySelectorAsync(".tweet");<br/>
+        /// Assert.Equals("100", await tweetHandle.EvalOnSelectorAsync(".like", "node =&gt; node.innerText"));<br/>
+        /// Assert.Equals("10", await tweetHandle.EvalOnSelectorAsync(".retweets", "node =&gt; node.innerText"));
+        /// </code>
         /// </summary>
         /// <param name="selector">
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
@@ -354,6 +388,10 @@ namespace Microsoft.Playwright
         /// would wait for the promise to resolve and return its value.
         /// </para>
         /// <para>Examples:</para>
+        /// <code>
+        /// var feedHandle = await page.QuerySelectorAsync(".feed");<br/>
+        /// Assert.Equals(new [] { "Hello!", "Hi!" }, await feedHandle.EvalOnSelectorAllAsync&lt;string[]&gt;(".tweet", "nodes =&gt; nodes.map(n =&gt; n.innerText)"));
+        /// </code>
         /// </summary>
         /// <param name="selector">
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
@@ -637,6 +675,19 @@ namespace Microsoft.Playwright
         /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
         /// been selected.
         /// </para>
+        /// <code>
+        /// // single selection matching the value<br/>
+        /// await handle.SelectOptionAsync(new[] { "blue" });<br/>
+        /// // single selection matching the label<br/>
+        /// await handle.SelectOptionAsync(new[] { new SelectOptionValue() { Label = "blue" } });<br/>
+        /// // multiple selection<br/>
+        /// await handle.SelectOptionAsync(new[] { "red", "green", "blue" });<br/>
+        /// // multiple selection for blue, red and second option<br/>
+        /// await handle.SelectOptionAsync(new[] {<br/>
+        ///     new SelectOptionValue() { Label = "blue" },<br/>
+        ///     new SelectOptionValue() { Index = 2 },<br/>
+        ///     new SelectOptionValue() { Value = "red" }});
+        /// </code>
         /// </summary>
         /// <param name="values">
         /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
@@ -769,7 +820,16 @@ namespace Microsoft.Playwright
         /// and <c>keyup</c> event for each character in the text.
         /// </para>
         /// <para>To press a special key, like <c>Control</c> or <c>ArrowDown</c>, use <see cref="IElementHandle.PressAsync"/>.</para>
+        /// <code>
+        /// await elementHandle.TypeAsync("Hello"); // Types instantly<br/>
+        /// await elementHandle.TypeAsync("World", delay: 100); // Types slower, like a user
+        /// </code>
         /// <para>An example of typing into a text field and then submitting the form:</para>
+        /// <code>
+        /// var elementHandle = await page.QuerySelectorAsync("input");<br/>
+        /// await elementHandle.TypeAsync("some text");<br/>
+        /// await elementHandle.PressAsync("Enter");
+        /// </code>
         /// </summary>
         /// <param name="text">A text to type into a focused element.</param>
         /// <param name="delay">Time to wait between key presses in milliseconds. Defaults to 0.</param>
@@ -893,6 +953,12 @@ namespace Microsoft.Playwright
         /// the condition for the <paramref name="timeout"/> milliseconds, the function will
         /// throw.
         /// </para>
+        /// <code>
+        /// await page.SetContentAsync("&lt;div&gt;&lt;span&gt;&lt;/span&gt;&lt;/div&gt;");<br/>
+        /// var div = await page.QuerySelectorAsync("div");<br/>
+        /// // Waiting for the "span" selector relative to the div.<br/>
+        /// var span = await page.WaitForSelectorAsync("span", WaitForSelectorState.Attached);
+        /// </code>
         /// </summary>
         /// <remarks>
         /// <para>

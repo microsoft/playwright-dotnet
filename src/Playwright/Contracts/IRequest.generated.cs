@@ -86,6 +86,12 @@ namespace Microsoft.Playwright
         /// event.
         /// </para>
         /// <para>Example of logging of all the failed requests:</para>
+        /// <code>
+        /// page.RequestFailed += (_, request) =&gt;<br/>
+        /// {<br/>
+        ///     Console.WriteLine(request.Failure);<br/>
+        /// };
+        /// </code>
         /// </summary>
         string Failure { get; }
 
@@ -116,13 +122,22 @@ namespace Microsoft.Playwright
         /// the whole redirect chain by repeatedly calling <c>redirectedFrom()</c>.
         /// </para>
         /// <para>For example, if the website <c>http://example.com</c> redirects to <c>https://example.com</c>:</para>
+        /// <code>
+        /// var response = await page.GotoAsync("http://www.microsoft.com");<br/>
+        /// Console.WriteLine(response.Request.RedirectedFrom?.Url); // http://www.microsoft.com
+        /// </code>
         /// <para>If the website <c>https://google.com</c> has no redirects:</para>
+        /// <code>
+        /// var response = await page.GotoAsync("https://www.google.com");<br/>
+        /// Console.WriteLine(response.Request.RedirectedFrom?.Url); // null
+        /// </code>
         /// </summary>
         IRequest RedirectedFrom { get; }
 
         /// <summary>
         /// <para>New request issued by the browser if the server responded with redirect.</para>
         /// <para>This method is the opposite of <see cref="IRequest.RedirectedFrom"/>:</para>
+        /// <code>Console.WriteLine(request.RedirectedFrom?.RedirectedTo == request); // True</code>
         /// </summary>
         IRequest RedirectedTo { get; }
 
@@ -151,6 +166,12 @@ namespace Microsoft.Playwright
         /// finishes. Find more information at <a href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceResourceTiming">Resource
         /// Timing API</a>.
         /// </para>
+        /// <code>
+        /// var waitForEventTask = page.WaitForEventAsync(PageEvent.RequestFinished);<br/>
+        /// await page.GotoAsync("https://www.microsoft.com");<br/>
+        /// var request = await waitForEventTask;<br/>
+        /// Console.WriteLine(request.Timing.ResponseEnd);
+        /// </code>
         /// </summary>
         RequestTimingResult Timing { get; }
 

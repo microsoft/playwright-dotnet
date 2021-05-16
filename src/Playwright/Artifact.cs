@@ -20,13 +20,10 @@ namespace Microsoft.Playwright
             AbsolutePath = initializer.AbsolutePath;
         }
 
-        /// <inheritdoc/>
         Connection IChannelOwner.Connection => _connection;
 
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
 
-        /// <inheritdoc/>
         IChannel<Artifact> IChannelOwner<Artifact>.Channel => _channel;
 
         internal string AbsolutePath { get; }

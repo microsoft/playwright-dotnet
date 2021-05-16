@@ -32,19 +32,16 @@ namespace Microsoft.Playwright
         /// </summary>
         public string Value { get; set; }
 
-        /// <inheritdoc/>
         public bool Equals(NameValueEntry other)
             => other != null &&
                 Name == other.Name &&
                 Value == other.Value;
 
-        /// <inheritdoc/>
         public override int GetHashCode()
             => 412870874 +
                 EqualityComparer<string>.Default.GetHashCode(Name) +
                 EqualityComparer<string>.Default.GetHashCode(Value);
 
-        /// <inheritdoc/>
         public override bool Equals(object obj) => Equals(obj as NameValueEntry);
     }
 }

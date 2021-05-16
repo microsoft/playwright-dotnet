@@ -52,6 +52,28 @@ namespace Microsoft.Playwright
     /// event.
     /// </para>
     /// <para>An example of using <c>Dialog</c> class:</para>
+    /// <code>
+    /// using Microsoft.Playwright;<br/>
+    /// using System.Threading.Tasks;<br/>
+    /// <br/>
+    /// class DialogExample<br/>
+    /// {<br/>
+    ///     public static async Task Run()<br/>
+    ///     {<br/>
+    ///         using var playwright = await Playwright.CreateAsync();<br/>
+    ///         await using var browser = await playwright.Chromium.LaunchAsync();<br/>
+    ///         var page = await browser.NewPageAsync();<br/>
+    /// <br/>
+    ///         page.Dialog += async (_, dialog) =&gt;<br/>
+    ///         {<br/>
+    ///             System.Console.WriteLine(dialog.Message);<br/>
+    ///             await dialog.DismissAsync();<br/>
+    ///         };<br/>
+    /// <br/>
+    ///         await page.EvaluateAsync("alert('1');");<br/>
+    ///     }<br/>
+    /// }
+    /// </code>
     /// </summary>
     /// <remarks>
     /// <para>

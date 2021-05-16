@@ -11,7 +11,6 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    /// <inheritdoc cref="IRequest" />
     public class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
     {
         private readonly RequestChannel _channel;
@@ -41,54 +40,38 @@ namespace Microsoft.Playwright
             }
         }
 
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
 
-        /// <inheritdoc/>
         IChannel<Request> IChannelOwner<Request>.Channel => _channel;
 
-        /// <inheritdoc/>
         public string Failure { get; internal set; }
 
-        /// <inheritdoc/>
         public IFrame Frame => _initializer.Frame;
 
-        /// <inheritdoc/>
         public IEnumerable<KeyValuePair<string, string>> Headers { get; }
 
-        /// <inheritdoc/>
         public bool IsNavigationRequest => _initializer.IsNavigationRequest;
 
-        /// <inheritdoc/>
         public string Method => _initializer.Method.Method;
 
-        /// <inheritdoc/>
         public string PostData => PostDataBuffer == null ? null : Encoding.UTF8.GetString(PostDataBuffer);
 
-        /// <inheritdoc/>
         public byte[] PostDataBuffer { get; }
 
-        /// <inheritdoc/>
         public IRequest RedirectedFrom { get; }
 
-        /// <inheritdoc/>
         public IRequest RedirectedTo { get; internal set; }
 
-        /// <inheritdoc/>
         public string ResourceType => _initializer.ResourceType;
 
-        /// <inheritdoc/>
         public RequestTimingResult Timing { get; internal set; }
 
-        /// <inheritdoc/>
         public string Url => _initializer.Url;
 
         internal Request FinalRequest => RedirectedTo != null ? ((Request)RedirectedTo).FinalRequest : this;
 
-        /// <inheritdoc/>
         public async Task<IResponse> ResponseAsync() => (await _channel.GetResponseAsync().ConfigureAwait(false))?.Object;
 
-        /// <inheritdoc/>
         public JsonDocument PostDataJSON(JsonDocumentOptions documentOptions = default)
         {
             if (PostData == null)
