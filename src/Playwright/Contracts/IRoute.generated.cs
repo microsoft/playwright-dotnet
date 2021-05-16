@@ -89,7 +89,17 @@ namespace Microsoft.Playwright
         /// </param>
         Task AbortAsync(string errorCode = default);
 
-        /// <summary><para>Continues route's request with optional overrides.</para></summary>
+        /// <summary>
+        /// <para>Continues route's request with optional overrides.</para>
+        /// <code>
+        /// await page.RouteAsync("**/*", route =&gt;<br/>
+        /// {<br/>
+        ///     var headers = new Dictionary&lt;string, string&gt;(route.Request.Headers) { { "foo", "bar" } };<br/>
+        ///     headers.Remove("origin");<br/>
+        ///     route.ResumeAsync(headers);<br/>
+        /// });
+        /// </code>
+        /// </summary>
         /// <param name="url">If set changes the request URL. New URL must have same protocol as original one.</param>
         /// <param name="method">If set changes the request method (e.g. GET or POST)</param>
         /// <param name="postData">If set changes the post data of request</param>
@@ -99,7 +109,14 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>Fulfills route's request with given response.</para>
         /// <para>An example of fulfilling all requests with 404 responses:</para>
+        /// <code>
+        /// await page.RouteAsync("**/*", route =&gt; route.FulfillAsync(<br/>
+        ///     status: 404,<br/>
+        ///     contentType: "text/plain", <br/>
+        ///     body: "Not Found!"));
+        /// </code>
         /// <para>An example of serving static file:</para>
+        /// <code>await page.RouteAsync("**/xhr_endpoint", route =&gt; route.FulfillAsync(path: "mock_data.json"));</code>
         /// </summary>
         /// <param name="status">Response status code, defaults to <c>200</c>.</param>
         /// <param name="headers">Response headers. Header values will be converted to a string.</param>

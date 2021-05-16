@@ -30,7 +30,6 @@ namespace Microsoft.Playwright
         /// </summary>
         public string Stack { get; set; }
 
-        /// <inheritdoc/>
         public override string ToString()
         {
             string result = $"{Name}: {Message}";

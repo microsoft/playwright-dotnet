@@ -58,8 +58,32 @@ namespace Microsoft.Playwright
     /// generated from a real keyboard.
     /// </para>
     /// <para>An example of holding down <c>Shift</c> in order to select and delete some text:</para>
+    /// <code>
+    /// await page.Keyboard.TypeAsync("Hello World!");<br/>
+    /// await page.Keyboard.PressAsync("ArrowLeft");<br/>
+    /// <br/>
+    /// await page.Keyboard.DownAsync("Shift");<br/>
+    /// for (int i = 0; i &lt; " World".Length; i++)<br/>
+    ///     await page.Keyboard.PressAsync("ArrowLeft");<br/>
+    /// <br/>
+    /// await page.Keyboard.UpAsync("Shift");<br/>
+    /// <br/>
+    /// await page.Keyboard.PressAsync("Backspace");<br/>
+    /// // Result text will end up saying "Hello!"
+    /// </code>
     /// <para>An example of pressing uppercase <c>A</c></para>
+    /// <code>
+    /// await page.Keyboard.PressAsync("Shift+KeyA");<br/>
+    /// // or <br/>
+    /// await page.Keyboard.PressAsync("Shift+A");
+    /// </code>
     /// <para>An example to trigger select-all with the keyboard</para>
+    /// <code>
+    /// // on Windows and Linux<br/>
+    /// await page.Keyboard.PressAsync("Control+A");<br/>
+    /// // on macOS<br/>
+    /// await page.Keyboard.PressAsync("Meta+A");
+    /// </code>
     /// </summary>
     public partial interface IKeyboard
     {
@@ -118,6 +142,7 @@ namespace Microsoft.Playwright
         /// Dispatches only <c>input</c> event, does not emit the <c>keydown</c>, <c>keyup</c>
         /// or <c>keypress</c> events.
         /// </para>
+        /// <code>await page.Keyboard.PressAsync("嗨");</code>
         /// </summary>
         /// <remarks>
         /// <para>
@@ -159,6 +184,16 @@ namespace Microsoft.Playwright
         /// as well. When specified with the modifier, modifier is pressed and being held while
         /// the subsequent key is being pressed.
         /// </para>
+        /// <code>
+        /// await page.GotoAsync("https://keycode.info");<br/>
+        /// await page.Keyboard.PressAsync("A");<br/>
+        /// await page.ScreenshotAsync("A.png");<br/>
+        /// await page.Keyboard.PressAsync("ArrowLeft");<br/>
+        /// await page.ScreenshotAsync("ArrowLeft.png");<br/>
+        /// await page.Keyboard.PressAsync("Shift+O");<br/>
+        /// await page.ScreenshotAsync("O.png");<br/>
+        /// await browser.CloseAsync();
+        /// </code>
         /// <para>Shortcut for <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.</para>
         /// </summary>
         /// <param name="key">
@@ -177,6 +212,10 @@ namespace Microsoft.Playwright
         /// each character in the text.
         /// </para>
         /// <para>To press a special key, like <c>Control</c> or <c>ArrowDown</c>, use <see cref="IKeyboard.PressAsync"/>.</para>
+        /// <code>
+        /// await page.Keyboard.TypeAsync("Hello"); // types instantly<br/>
+        /// await page.Keyboard.TypeAsync("World"); // types slower, like a user
+        /// </code>
         /// </summary>
         /// <remarks>
         /// <para>

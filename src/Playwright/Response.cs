@@ -10,7 +10,6 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    /// <inheritdoc cref="IResponse" />
     public class Response : ChannelOwnerBase, IChannelOwner<Response>, IResponse
     {
         private readonly ResponseChannel _channel;
@@ -32,54 +31,40 @@ namespace Microsoft.Playwright
             }
         }
 
-        /// <inheritdoc />
         public IFrame Frame => _initializer.Request.Object.Frame;
 
-        /// <inheritdoc />
         public IEnumerable<KeyValuePair<string, string>> Headers => _headers;
 
-        /// <inheritdoc />
         public bool Ok => Status is 0 or >= 200 and <= 299;
 
-        /// <inheritdoc />
         public IRequest Request => _initializer.Request.Object;
 
-        /// <inheritdoc />
         public int Status => _initializer.Status;
 
-        /// <inheritdoc />
         public string StatusText => _initializer.StatusText;
 
-        /// <inheritdoc />
         public string Url => _initializer.Url;
 
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
 
-        /// <inheritdoc/>
         IChannel<Response> IChannelOwner<Response>.Channel => _channel;
 
-        /// <inheritdoc />
         public async Task<byte[]> BodyAsync() => Convert.FromBase64String(await _channel.GetBodyAsync().ConfigureAwait(false));
 
-        /// <inheritdoc />
         public Task<string> FinishedAsync() => _channel.FinishedAsync();
 
-        /// <inheritdoc />
         public async Task<T> JsonAsync<T>()
         {
             string content = await TextAsync().ConfigureAwait(false);
             return JsonSerializer.Deserialize<T>(content, _channel.Connection.GetDefaultJsonSerializerOptions());
         }
 
-        /// <inheritdoc/>
         public async Task<JsonDocument> JsonAsync(JsonDocumentOptions options = default)
         {
             string content = await TextAsync().ConfigureAwait(false);
             return JsonDocument.Parse(content, options);
         }
 
-        /// <inheritdoc />
         public async Task<string> TextAsync()
         {
             byte[] content = await BodyAsync().ConfigureAwait(false);

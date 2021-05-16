@@ -51,6 +51,12 @@ namespace Microsoft.Playwright
     /// <see cref="IFileChooser"/> objects are dispatched by the page in the <see cref="IPage.FileChooser"/>
     /// event.
     /// </para>
+    /// <code>
+    /// var waitForFileChooserTask = page.WaitForFileChooserAsync();<br/>
+    /// await page.ClickAsync("upload");<br/>
+    /// var fileChooser = await waitForFileChooserTask;<br/>
+    /// await fileChooser.SetFilesAsync("temp.txt");
+    /// </code>
     /// </summary>
     public partial interface IFileChooser
     {

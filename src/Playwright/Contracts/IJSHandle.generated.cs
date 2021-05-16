@@ -51,6 +51,7 @@ namespace Microsoft.Playwright
     /// JSHandle represents an in-page JavaScript object. JSHandles can be created with
     /// the <see cref="IPage.EvaluateHandleAsync"/> method.
     /// </para>
+    /// <code>var windowHandle = await page.EvaluateHandleAsync("() =&gt; window");</code>
     /// <para>
     /// JSHandle prevents the referenced JavaScript object being garbage collected unless
     /// the handle is exposed with <see cref="IJSHandle.DisposeAsync"/>. JSHandles are auto-disposed
@@ -82,6 +83,10 @@ namespace Microsoft.Playwright
         /// would wait for the promise to resolve and return its value.
         /// </para>
         /// <para>Examples:</para>
+        /// <code>
+        /// var tweetHandle = await page.QuerySelectorAsync(".tweet .retweets");<br/>
+        /// Assert.Equals("10 retweets", await tweetHandle.EvaluateAsync("node =&gt; node.innerText"));
+        /// </code>
         /// </summary>
         /// <param name="expression">
         /// JavaScript expression to be evaluated in the browser context. If it looks like a
@@ -118,6 +123,13 @@ namespace Microsoft.Playwright
         /// The method returns a map with **own property names** as keys and JSHandle instances
         /// for the property values.
         /// </para>
+        /// <code>
+        /// var handle = await page.EvaluateHandleAsync("() =&gt; ({window, document}");<br/>
+        /// var properties = await handle.GetPropertiesAsync();<br/>
+        /// var windowHandle = properties["window"];<br/>
+        /// var documentHandle = properties["document"];<br/>
+        /// await handle.DisposeAsync();
+        /// </code>
         /// </summary>
         Task<Dictionary<string, IJSHandle>> GetPropertiesAsync();
 

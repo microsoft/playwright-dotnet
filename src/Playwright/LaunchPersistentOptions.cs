@@ -9,55 +9,38 @@ namespace Microsoft.Playwright
     /// </summary>
     public class LaunchPersistentOptions : LaunchOptionsBase
     {
-        /// <inheritdoc path="/param[@name='acceptDownloads']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public bool? AcceptDownloads { get; set; }
 
-        /// <inheritdoc path="/param[@name='viewport']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public ViewportSize Viewport { get; set; }
 
-        /// <inheritdoc path="/param[@name='userAgent']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public string UserAgent { get; set; }
 
-        /// <inheritdoc path="/param[@name='bypassCSP']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public bool? BypassCSP { get; set; }
 
-        /// <inheritdoc path="/param[@name='javascriptEnabled']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public bool? JavaScriptEnabled { get; set; }
 
-        /// <inheritdoc path="/param[@name='timezoneId']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public string TimezoneId { get; set; }
 
-        /// <inheritdoc path="/param[@name='geolocation']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public Geolocation Geolocation { get; set; }
 
-        /// <inheritdoc path="/param[@name='permissions']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public string[] Permissions { get; set; }
 
-        /// <inheritdoc path="/param[@name='isMobile']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public bool? IsMobile { get; set; }
 
-        /// <inheritdoc path="/param[@name='offline']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public bool? Offline { get; set; }
 
-        /// <inheritdoc path="/param[@name='deviceScaleFactor']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public float? DeviceScaleFactor { get; set; }
 
-        /// <inheritdoc path="/param[@name='httpCredentials']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public HttpCredentials HttpCredentials { get; set; }
 
-        /// <inheritdoc path="/param[@name='hasTouch']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public bool? HasTouch { get; set; }
 
-        /// <inheritdoc path="/param[@name='colorScheme']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public ColorScheme ColorScheme { get; set; }
 
-        /// <inheritdoc path="/param[@name='locale']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public string Locale { get; set; }
 
-        /// <inheritdoc path="/param[@name='extraHTTPHeaders']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public Dictionary<string, string> ExtraHTTPHeaders { get; set; }
 
-        /// <inheritdoc path="/param[@name='screenSize']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public ScreenSize ScreenSize { get; set; }
 
         /// <summary>

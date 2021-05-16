@@ -7,7 +7,6 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    /// <inheritdoc cref="IBrowserType" />
     public class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrowserType
     {
         /// <summary>
@@ -34,19 +33,14 @@ namespace Microsoft.Playwright
             _channel = new BrowserTypeChannel(guid, parent.Connection, this);
         }
 
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
 
-        /// <inheritdoc/>
         IChannel<BrowserType> IChannelOwner<BrowserType>.Channel => _channel;
 
-        /// <inheritdoc />
         public string ExecutablePath => _initializer.ExecutablePath;
 
-        /// <inheritdoc />
         public string Name => _initializer.Name;
 
-        /// <inheritdoc/>
         public async Task<IBrowser> LaunchAsync(LaunchOptions options)
         {
             options ??= new LaunchOptions();
@@ -71,22 +65,21 @@ namespace Microsoft.Playwright
                 options.IgnoreAllDefaultArgs).ConfigureAwait(false)).Object;
         }
 
-        /// <inheritdoc/>
         public async Task<IBrowser> LaunchAsync(
-            bool? headless = default,
-            BrowserChannel channel = default,
-            string executablePath = default,
             IEnumerable<string> args = default,
-            Proxy proxy = default,
-            string downloadsPath = default,
+            BrowserChannel channel = default,
             bool? chromiumSandbox = default,
-            IEnumerable<KeyValuePair<string, object>> firefoxUserPrefs = default,
+            bool? devtools = default,
+            string downloadsPath = default,
+            IEnumerable<KeyValuePair<string, string>> env = default,
+            string executablePath = default,
             bool? handleSIGINT = default,
             bool? handleSIGTERM = default,
             bool? handleSIGHUP = default,
+            bool? headless = default,
+            Proxy proxy = default,
             float? timeout = default,
-            IEnumerable<KeyValuePair<string, string>> env = default,
-            bool? devtools = default,
+            IEnumerable<KeyValuePair<string, object>> firefoxUserPrefs = default,
             float? slowMo = default,
             IEnumerable<string> ignoreDefaultArgs = default,
             bool? ignoreAllDefaultArgs = default)
@@ -109,7 +102,6 @@ namespace Microsoft.Playwright
                 ignoreDefaultArgs,
                 ignoreAllDefaultArgs).ConfigureAwait(false)).Object;
 
-        /// <inheritdoc/>
         public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchOptions options)
         {
             if (userDataDir is null)
@@ -144,7 +136,6 @@ namespace Microsoft.Playwright
                 ignoreAllDefaultArgs: options.IgnoreAllDefaultArgs).ConfigureAwait(false)).Object;
         }
 
-        /// <inheritdoc/>
         public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options)
         {
             if (string.IsNullOrEmpty(userDataDir))
@@ -196,23 +187,24 @@ namespace Microsoft.Playwright
                 options.IgnoreAllDefaultArgs).ConfigureAwait(false)).Object;
         }
 
-        /// <inheritdoc/>
         public async Task<IBrowserContext> LaunchPersistentContextAsync(
             string userDataDir,
-            bool? headless = default,
-            BrowserChannel channel = default,
-            string executablePath = default,
             IEnumerable<string> args = default,
-            Proxy proxy = default,
-            string downloadsPath = default,
+            BrowserChannel channel = default,
             bool? chromiumSandbox = default,
+            bool? devtools = default,
+            string downloadsPath = default,
+            IEnumerable<KeyValuePair<string, string>> env = default,
+            string executablePath = default,
             bool? handleSIGINT = default,
             bool? handleSIGTERM = default,
             bool? handleSIGHUP = default,
+            bool? headless = default,
+            Proxy proxy = default,
             float? timeout = default,
-            IEnumerable<KeyValuePair<string, string>> env = default,
-            bool? devtools = default,
             float? slowMo = default,
+            IEnumerable<string> ignoreDefaultArgs = default,
+            bool? ignoreAllDefaultArgs = default,
             bool? acceptDownloads = default,
             bool? ignoreHTTPSErrors = default,
             bool? bypassCSP = default,
@@ -234,9 +226,7 @@ namespace Microsoft.Playwright
             string recordHarPath = default,
             bool? recordHarOmitContent = default,
             string recordVideoDir = default,
-            RecordVideoSize recordVideoSize = default,
-            IEnumerable<string> ignoreDefaultArgs = default,
-            bool? ignoreAllDefaultArgs = default) =>
+            RecordVideoSize recordVideoSize = default) =>
             (await _channel.LaunchPersistentContextAsync(
                 userDataDir,
                 headless,

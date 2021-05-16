@@ -54,13 +54,39 @@ namespace Microsoft.Playwright
     /// multiple <see cref="IPage"/> instances.
     /// </para>
     /// <para>This example creates a page, navigates it to a URL, and then saves a screenshot:</para>
+    /// <code>
+    /// using Microsoft.Playwright;<br/>
+    /// using System.Threading.Tasks;<br/>
+    /// <br/>
+    /// class PageExamples<br/>
+    /// {<br/>
+    ///     public static async Task Run()<br/>
+    ///     {<br/>
+    ///         using var playwright = await Playwright.CreateAsync();<br/>
+    ///         await using var browser = await playwright.Webkit.LaunchAsync();<br/>
+    ///         var page = await browser.NewPageAsync();<br/>
+    ///         await page.GotoAsync("https://www.theverge.com");<br/>
+    ///         await page.ScreenshotAsync("theverge.png");<br/>
+    ///     }<br/>
+    /// }
+    /// </code>
     /// <para>
     /// The Page class emits various events (described below) which can be handled using
     /// any of Node's native <a href="https://nodejs.org/api/events.html#events_class_eventemitter"><c>EventEmitter</c></a>
     /// methods, such as <c>on</c>, <c>once</c> or <c>removeListener</c>.
     /// </para>
     /// <para>This example logs a message for a single page <c>load</c> event:</para>
+    /// <code>page.Load += (_, _) =&gt; Console.WriteLine("Page loaded!");</code>
     /// <para>To unsubscribe from events use the <c>removeListener</c> method:</para>
+    /// <code>
+    /// void PageLoadHandler(object _, IPage p) {<br/>
+    ///     Console.WriteLine("Page loaded!");<br/>
+    /// };<br/>
+    /// <br/>
+    /// page.Load += PageLoadHandler;<br/>
+    /// // Do some work...<br/>
+    /// page.Load -= PageLoadHandler;
+    /// </code>
     /// </summary>
     public partial interface IPage
     {
@@ -74,6 +100,15 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>The arguments passed into <c>console.log</c> appear as arguments on the event handler.</para>
         /// <para>An example of handling <c>console</c> event:</para>
+        /// <code>
+        /// page.Console += async (_, msg) =&gt;<br/>
+        /// {<br/>
+        ///     foreach (var arg in msg.Args)<br/>
+        ///         Console.WriteLine(await arg.JsonValueAsync&lt;object&gt;());<br/>
+        /// };<br/>
+        /// <br/>
+        /// await page.EvaluateAsync("console.log('hello', 5, { foo: 'bar' })");
+        /// </code>
         /// </summary>
         event EventHandler<IConsoleMessage> Console;
 
@@ -83,6 +118,16 @@ namespace Microsoft.Playwright
         /// too much memory. When the page crashes, ongoing and subsequent operations will throw.
         /// </para>
         /// <para>The most common way to deal with crashes is to catch an exception:</para>
+        /// <code>
+        /// try {<br/>
+        ///   // Crash might happen during a click.<br/>
+        ///   await page.ClickAsync("button");<br/>
+        ///   // Or while waiting for an event.<br/>
+        ///   await page.WaitForPopupAsync(() -&gt; {});<br/>
+        /// } catch (PlaywrightException e) {<br/>
+        ///   // When the page crashes, exception message contains "crash".<br/>
+        /// }
+        /// </code>
         /// </summary>
         event EventHandler<IPage> Crash;
 
@@ -132,6 +177,12 @@ namespace Microsoft.Playwright
         /// type=file&gt;</c>. Playwright can respond to it via setting the input files using
         /// <see cref="IFileChooser.SetFilesAsync"/> that can be uploaded after that.
         /// </para>
+        /// <code>
+        /// page.FileChooser += (_, fileChooser) =&gt;<br/>
+        /// {<br/>
+        ///     fileChooser.SetFilesAsync(@"C:\temp\myfile.pdf");<br/>
+        /// };
+        /// </code>
         /// </summary>
         event EventHandler<IFileChooser> FileChooser;
 
@@ -167,6 +218,12 @@ namespace Microsoft.Playwright
         /// this event will fire when the network request to "http://example.com" is done and
         /// its response has started loading in the popup.
         /// </para>
+        /// <code>
+        /// var waitForPopupTask = page.WaitForPopupAsync();<br/>
+        /// await page.EvaluateAsync("() =&gt; window.open('https://microsoft.com')");<br/>
+        /// var popup = await waitForPopupTask;<br/>
+        /// Console.WriteLine(await popup.EvaluateAsync&lt;string&gt;("location.href"));
+        /// </code>
         /// </summary>
         /// <remarks>
         /// <para>
@@ -240,6 +297,7 @@ namespace Microsoft.Playwright
         /// were run. This is useful to amend the JavaScript environment, e.g. to seed <c>Math.random</c>.
         /// </para>
         /// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
+        /// <code>await page.AddInitScriptAsync(scriptPath: "./preload.js");</code>
         /// </summary>
         /// <remarks>
         /// <para>
@@ -543,6 +601,7 @@ namespace Microsoft.Playwright
         /// the visibility state of the element, <c>click</c> is dispatched. This is equivalent
         /// to calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click">element.click()</a>.
         /// </para>
+        /// <code>await page.DispatchEventAsync("button#submit", "click");</code>
         /// <para>
         /// Under the hood, it creates an instance of an event based on the given <paramref
         /// name="type"/>, initializes it with <paramref name="eventInit"/> properties and dispatches
@@ -565,6 +624,10 @@ namespace Microsoft.Playwright
         /// You can also specify <c>JSHandle</c> as the property value if you want live objects
         /// to be passed into the event:
         /// </para>
+        /// <code>
+        /// var dataTransfer = await page.EvaluateHandleAsync("() =&gt; new DataTransfer()");<br/>
+        /// await page.DispatchEventAsync("#source", "dragstart", new { dataTransfer });
+        /// </code>
         /// </summary>
         /// <param name="selector">
         /// A selector to search for element. If there are multiple elements satisfying the
@@ -586,6 +649,33 @@ namespace Microsoft.Playwright
         /// and/or the <c>'prefers-colors-scheme'</c> media feature, using the <c>colorScheme</c>
         /// argument.
         /// </para>
+        /// <code>
+        /// await page.EvaluateAsync("() =&gt; matchMedia('screen').matches");<br/>
+        /// // → true<br/>
+        /// await page.EvaluateAsync("() =&gt; matchMedia('print').matches");<br/>
+        /// // → false<br/>
+        /// <br/>
+        /// await page.EmulateMediaAsync(Media.Print);<br/>
+        /// await page.EvaluateAsync("() =&gt; matchMedia('screen').matches");<br/>
+        /// // → false<br/>
+        /// await page.EvaluateAsync("() =&gt; matchMedia('print').matches");<br/>
+        /// // → true<br/>
+        /// <br/>
+        /// await page.EmulateMediaAsync(Media.Screen);<br/>
+        /// await page.EvaluateAsync("() =&gt; matchMedia('screen').matches");<br/>
+        /// // → true<br/>
+        /// await page.EvaluateAsync("() =&gt; matchMedia('print').matches");<br/>
+        /// // → false
+        /// </code>
+        /// <code>
+        /// await page.EmulateMediaAsync(colorScheme: ColorScheme.Dark);<br/>
+        /// await page.EvaluateAsync("matchMedia('(prefers-color-scheme: dark)').matches");<br/>
+        /// // → true<br/>
+        /// await page.EvaluateAsync("matchMedia('(prefers-color-scheme: light)').matches");<br/>
+        /// // → false<br/>
+        /// await page.EvaluateAsync("matchMedia('(prefers-color-scheme: no-preference)').matches");<br/>
+        /// // → false
+        /// </code>
         /// </summary>
         /// <param name="media">
         /// Changes the CSS media type of the page. The only allowed values are <c>'screen'</c>,
@@ -609,6 +699,11 @@ namespace Microsoft.Playwright
         /// would wait for the promise to resolve and return its value.
         /// </para>
         /// <para>Examples:</para>
+        /// <code>
+        /// var searchValue = await page.EvalOnSelectorAsync&lt;string&gt;("#search", "el =&gt; el.value");<br/>
+        /// var preloadHref = await page.EvalOnSelectorAsync&lt;string&gt;("link[rel=preload]", "el =&gt; el.href");<br/>
+        /// var html = await page.EvalOnSelectorAsync(".main-container", "(e, suffix) =&gt; e.outerHTML + suffix", "hello");
+        /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.EvalOnSelectorAsync"/>.</para>
         /// </summary>
         /// <param name="selector">
@@ -634,6 +729,7 @@ namespace Microsoft.Playwright
         /// would wait for the promise to resolve and return its value.
         /// </para>
         /// <para>Examples:</para>
+        /// <code>var divsCount = await page.EvalOnSelectorAllAsync&lt;bool&gt;("div", "(divs, min) =&gt; divs.length &gt;= min", 10);</code>
         /// </summary>
         /// <param name="selector">
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
@@ -661,11 +757,21 @@ namespace Microsoft.Playwright
         /// are not serializable by <c>JSON</c>: <c>-0</c>, <c>NaN</c>, <c>Infinity</c>, <c>-Infinity</c>.
         /// </para>
         /// <para>Passing argument to <paramref name="expression"/>:</para>
+        /// <code>
+        /// var result = await page.EvaluateAsync&lt;int&gt;("([x, y]) =&gt; Promise.resolve(x * y)", new[] { 7, 8 });<br/>
+        /// Console.WriteLine(result);
+        /// </code>
         /// <para>A string can also be passed in instead of a function:</para>
+        /// <code>Console.WriteLine(await page.EvaluateAsync&lt;int&gt;("1 + 2")); // prints "3"</code>
         /// <para>
         /// <see cref="IElementHandle"/> instances can be passed as an argument to the <see
         /// cref="IPage.EvaluateAsync"/>:
         /// </para>
+        /// <code>
+        /// var bodyHandle = await page.QuerySelectorAsync("body");<br/>
+        /// var html = await page.EvaluateAsync&lt;string&gt;("([body, suffix]) =&gt; body.innerHTML + suffix", new object [] { bodyHandle, "hello" });<br/>
+        /// await bodyHandle.DisposeAsync();
+        /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.EvaluateAsync"/>.</para>
         /// </summary>
         /// <param name="expression">
@@ -687,8 +793,19 @@ namespace Microsoft.Playwright
         /// <see cref="Task"/>, then <see cref="IPage.EvaluateHandleAsync"/> would wait for
         /// the promise to resolve and return its value.
         /// </para>
+        /// <code>
+        /// // Handle for the window object.<br/>
+        /// var aWindowHandle = await page.EvaluateHandleAsync("() =&gt; Promise.resolve(window)");
+        /// </code>
         /// <para>A string can also be passed in instead of a function:</para>
+        /// <code>var docHandle = await page.EvalueHandleAsync("document"); // Handle for the `document`</code>
         /// <para><see cref="IJSHandle"/> instances can be passed as an argument to the <see cref="IPage.EvaluateHandleAsync"/>:</para>
+        /// <code>
+        /// var handle = await page.EvaluateHandleAsync("() =&gt; document.body");<br/>
+        /// var resultHandle = await page.EvaluateHandleAsync("([body, suffix]) =&gt; body.innerHTML + suffix", new object[] { handle, "hello" });<br/>
+        /// Console.WriteLine(await resultHandle.JsonValueAsync&lt;string&gt;());<br/>
+        /// await resultHandle.DisposeAsync();
+        /// </code>
         /// </summary>
         /// <param name="expression">
         /// JavaScript expression to be evaluated in the browser context. If it looks like a
@@ -713,7 +830,48 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>See <see cref="IBrowserContext.ExposeBindingAsync"/> for the context-wide version.</para>
         /// <para>An example of exposing page URL to all frames in a page:</para>
+        /// <code>
+        /// using Microsoft.Playwright;<br/>
+        /// using System.Threading.Tasks;<br/>
+        /// <br/>
+        /// class PageExamples<br/>
+        /// {<br/>
+        ///   public static async Task Main()<br/>
+        ///   {<br/>
+        ///       using var playwright = await Playwright.CreateAsync();<br/>
+        ///       await using var browser = await playwright.Webkit.LaunchAsync(headless: false);<br/>
+        ///       var page = await browser.NewPageAsync();<br/>
+        /// <br/>
+        ///       await page.ExposeBindingAsync("pageUrl", (source) =&gt; source.Page.Url);<br/>
+        ///       await page.SetContentAsync("&lt;script&gt;\n" +<br/>
+        ///       "  async function onClick() {\n" +<br/>
+        ///       "    document.querySelector('div').textContent = await window.pageURL();\n" +<br/>
+        ///       "  }\n" +<br/>
+        ///       "&lt;/script&gt;\n" +<br/>
+        ///       "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>
+        ///       "&lt;div&gt;&lt;/div&gt;");<br/>
+        /// <br/>
+        ///       await page.ClickAsync("button");<br/>
+        ///   }<br/>
+        /// }
+        /// </code>
         /// <para>An example of passing an element handle:</para>
+        /// <code>
+        /// var result = new TaskCompletionSource&lt;string&gt;();<br/>
+        /// await page.ExposeBindingAsync("clicked", async (BindingSource _, IJSHandle t) =&gt;<br/>
+        /// {<br/>
+        ///     return result.TrySetResult(await t.AsElement.TextContentAsync());<br/>
+        /// });<br/>
+        /// <br/>
+        /// await page.SetContentAsync("&lt;script&gt;\n" +<br/>
+        ///   "  document.addEventListener('click', event =&gt; window.clicked(event.target));\n" +<br/>
+        ///   "&lt;/script&gt;\n" +<br/>
+        ///   "&lt;div&gt;Click me&lt;/div&gt;\n" +<br/>
+        ///   "&lt;div&gt;Or click me&lt;/div&gt;\n");<br/>
+        /// <br/>
+        /// await page.ClickAsync("div");<br/>
+        /// Console.WriteLine(await result.Task);
+        /// </code>
         /// </summary>
         /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
         /// <param name="name">Name of the function on the window object.</param>
@@ -735,6 +893,41 @@ namespace Microsoft.Playwright
         /// <para>If the <paramref name="callback"/> returns a <see cref="Task"/>, it will be awaited.</para>
         /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
         /// <para>An example of adding an <c>sha1</c> function to the page:</para>
+        /// <code>
+        /// using Microsoft.Playwright;<br/>
+        /// using System;<br/>
+        /// using System.Security.Cryptography;<br/>
+        /// using System.Threading.Tasks;<br/>
+        /// <br/>
+        /// class PageExamples<br/>
+        /// {<br/>
+        ///   public static async Task Main()<br/>
+        ///   {<br/>
+        ///       using var playwright = await Playwright.CreateAsync();<br/>
+        ///       await using var browser = await playwright.Webkit.LaunchAsync(headless: false); <br/>
+        ///       var page = await browser.NewPageAsync();<br/>
+        /// <br/>
+        ///       // NOTE: md5 is inherently insecure, and we strongly discourage using<br/>
+        ///       // this in production in any shape or form<br/>
+        ///       await page.ExposeFunctionAsync("sha1", (string input) =&gt;<br/>
+        ///       {<br/>
+        ///           return Convert.ToBase64String(<br/>
+        ///               MD5.Create().ComputeHash(System.Text.Encoding.UTF8.GetBytes(input)));<br/>
+        ///       });<br/>
+        /// <br/>
+        ///       await page.SetContentAsync("&lt;script&gt;\n" +<br/>
+        ///       "  async function onClick() {\n" +<br/>
+        ///       "    document.querySelector('div').textContent = await window.sha1('PLAYWRIGHT');\n" +<br/>
+        ///       "  }\n" +<br/>
+        ///       "&lt;/script&gt;\n" +<br/>
+        ///       "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>
+        ///       "&lt;div&gt;&lt;/div&gt;");<br/>
+        /// <br/>
+        ///       await page.ClickAsync("button");<br/>
+        ///       Console.WriteLine(await page.TextContentAsync("div"));<br/>
+        ///   }<br/>
+        /// }
+        /// </code>
         /// </summary>
         /// <remarks><para>Functions installed via <see cref="IPage.ExposeFunctionAsync"/> survive navigations.</para></remarks>
         /// <param name="name">Name of the function on the window object</param>
@@ -804,6 +997,8 @@ namespace Microsoft.Playwright
         /// Returns frame matching the specified criteria. Either <c>name</c> or <c>url</c>
         /// must be specified.
         /// </para>
+        /// <code>var frame = page.Frame("frame-name");</code>
+        /// <code>var frame = page.FrameByUrl(".*domain.*");</code>
         /// </summary>
         /// <param name="name">Frame name specified in the <c>iframe</c>'s <c>name</c> attribute.</param>
         IFrame Frame(string name);
@@ -1203,6 +1398,11 @@ namespace Microsoft.Playwright
         /// a pdf with <c>screen</c> media, call <see cref="IPage.EmulateMediaAsync"/> before
         /// calling <c>page.pdf()</c>:
         /// </para>
+        /// <code>
+        /// // Generates a PDF with 'screen' media type<br/>
+        /// await page.EmulateMediaAsync(Media.Screen);<br/>
+        /// await page.PdfAsync("page.pdf");
+        /// </code>
         /// <para>
         /// The <paramref name="width"/>, <paramref name="height"/>, and <paramref name="margin"/>
         /// options accept values labeled with units. Unlabeled values are treated as pixels.
@@ -1326,6 +1526,17 @@ namespace Microsoft.Playwright
         /// as well. When specified with the modifier, modifier is pressed and being held while
         /// the subsequent key is being pressed.
         /// </para>
+        /// <code>
+        /// await using var browser = await playwright.Webkit.LaunchAsync(headless: false);<br/>
+        /// var page = await browser.NewPageAsync();<br/>
+        /// await page.GotoAsync("https://keycode.info");<br/>
+        /// await page.PressAsync("body", "A");<br/>
+        /// await page.ScreenshotAsync("A.png");<br/>
+        /// await page.PressAsync("body", "ArrowLeft");<br/>
+        /// await page.ScreenshotAsync("ArrowLeft.png");<br/>
+        /// await page.PressAsync("body", "Shift+O");<br/>
+        /// await page.ScreenshotAsync("O.png");
+        /// </code>
         /// </summary>
         /// <param name="selector">
         /// A selector to search for element. If there are multiple elements satisfying the
@@ -1418,11 +1629,32 @@ namespace Microsoft.Playwright
         /// it's continued, fulfilled or aborted.
         /// </para>
         /// <para>An example of a naive handler that aborts all image requests:</para>
+        /// <code>
+        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
+        /// var page = await browser.NewPageAsync();<br/>
+        /// await page.RouteAsync("**/*.{png,jpg,jpeg}", async r =&gt; await r.AbortAsync());<br/>
+        /// await page.GotoAsync("https://www.microsoft.com");
+        /// </code>
         /// <para>or the same snippet using a regex pattern instead:</para>
+        /// <code>
+        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
+        /// var page = await browser.NewPageAsync();<br/>
+        /// await page.RouteAsync(new Regex("(\\.png$)|(\\.jpg$)"), async r =&gt; await r.AbortAsync());<br/>
+        /// await page.GotoAsync("https://www.microsoft.com");
+        /// </code>
         /// <para>
         /// It is possible to examine the request to decide the route action. For example, mocking
         /// all requests that contain some post data, and leaving all other requests as is:
         /// </para>
+        /// <code>
+        /// await page.RouteAsync("/api/**", async r =&gt;<br/>
+        /// {<br/>
+        ///   if (r.Request.PostData.Contains("my-string"))<br/>
+        ///       await r.FulfillAsync(body: "mocked-data");<br/>
+        ///   else<br/>
+        ///       await r.ResumeAsync();<br/>
+        /// });
+        /// </code>
         /// <para>
         /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync"/>)
         /// when request matches both handlers.
@@ -1447,11 +1679,32 @@ namespace Microsoft.Playwright
         /// it's continued, fulfilled or aborted.
         /// </para>
         /// <para>An example of a naive handler that aborts all image requests:</para>
+        /// <code>
+        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
+        /// var page = await browser.NewPageAsync();<br/>
+        /// await page.RouteAsync("**/*.{png,jpg,jpeg}", async r =&gt; await r.AbortAsync());<br/>
+        /// await page.GotoAsync("https://www.microsoft.com");
+        /// </code>
         /// <para>or the same snippet using a regex pattern instead:</para>
+        /// <code>
+        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
+        /// var page = await browser.NewPageAsync();<br/>
+        /// await page.RouteAsync(new Regex("(\\.png$)|(\\.jpg$)"), async r =&gt; await r.AbortAsync());<br/>
+        /// await page.GotoAsync("https://www.microsoft.com");
+        /// </code>
         /// <para>
         /// It is possible to examine the request to decide the route action. For example, mocking
         /// all requests that contain some post data, and leaving all other requests as is:
         /// </para>
+        /// <code>
+        /// await page.RouteAsync("/api/**", async r =&gt;<br/>
+        /// {<br/>
+        ///   if (r.Request.PostData.Contains("my-string"))<br/>
+        ///       await r.FulfillAsync(body: "mocked-data");<br/>
+        ///   else<br/>
+        ///       await r.ResumeAsync();<br/>
+        /// });
+        /// </code>
         /// <para>
         /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync"/>)
         /// when request matches both handlers.
@@ -1476,11 +1729,32 @@ namespace Microsoft.Playwright
         /// it's continued, fulfilled or aborted.
         /// </para>
         /// <para>An example of a naive handler that aborts all image requests:</para>
+        /// <code>
+        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
+        /// var page = await browser.NewPageAsync();<br/>
+        /// await page.RouteAsync("**/*.{png,jpg,jpeg}", async r =&gt; await r.AbortAsync());<br/>
+        /// await page.GotoAsync("https://www.microsoft.com");
+        /// </code>
         /// <para>or the same snippet using a regex pattern instead:</para>
+        /// <code>
+        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
+        /// var page = await browser.NewPageAsync();<br/>
+        /// await page.RouteAsync(new Regex("(\\.png$)|(\\.jpg$)"), async r =&gt; await r.AbortAsync());<br/>
+        /// await page.GotoAsync("https://www.microsoft.com");
+        /// </code>
         /// <para>
         /// It is possible to examine the request to decide the route action. For example, mocking
         /// all requests that contain some post data, and leaving all other requests as is:
         /// </para>
+        /// <code>
+        /// await page.RouteAsync("/api/**", async r =&gt;<br/>
+        /// {<br/>
+        ///   if (r.Request.PostData.Contains("my-string"))<br/>
+        ///       await r.FulfillAsync(body: "mocked-data");<br/>
+        ///   else<br/>
+        ///       await r.ResumeAsync();<br/>
+        /// });
+        /// </code>
         /// <para>
         /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync"/>)
         /// when request matches both handlers.
@@ -1543,6 +1817,14 @@ namespace Microsoft.Playwright
         /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
         /// been selected.
         /// </para>
+        /// <code>
+        /// // single selection matching the value<br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
+        /// // single selection matching both the value and the label<br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
+        /// // multiple <br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
+        /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
         /// </summary>
         /// <param name="selector">
@@ -1684,6 +1966,11 @@ namespace Microsoft.Playwright
         /// phones to change size, so you should set the viewport size before navigating to
         /// the page.
         /// </para>
+        /// <code>
+        /// var page = await browser.NewPageAsync();<br/>
+        /// await page.SetViewportSizeAsync(640, 480);<br/>
+        /// await page.GotoAsync("https://www.microsoft.com");
+        /// </code>
         /// </summary>
         /// <param name="width">
         /// </param>
@@ -1790,6 +2077,10 @@ namespace Microsoft.Playwright
         /// events. To fill values in form fields, use <see cref="IPage.FillAsync"/>.
         /// </para>
         /// <para>To press a special key, like <c>Control</c> or <c>ArrowDown</c>, use <see cref="IKeyboard.PressAsync"/>.</para>
+        /// <code>
+        /// await page.TypeAsync("#mytextarea", "hello"); // types instantly<br/>
+        /// await page.TypeAsync("#mytextarea", "world"); // types slower, like a user
+        /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.TypeAsync"/>.</para>
         /// </summary>
         /// <param name="selector">
@@ -1977,6 +2268,11 @@ namespace Microsoft.Playwright
         /// when the predicate returns truthy value. Will throw an error if the page is closed
         /// before the event is fired. Returns the event data value.
         /// </para>
+        /// <code>
+        /// var waitTask = page.WaitForEventAsync(PageEvent.FrameNavigated);<br/>
+        /// await page.ClickAsync("button");<br/>
+        /// var frame = await waitTask;
+        /// </code>
         /// </summary>
         /// <param name="event">Event name, same one typically passed into <c>*.on(event)</c>.</param>
         /// <param name="timeout">
@@ -2014,10 +2310,30 @@ namespace Microsoft.Playwright
         /// The <see cref="IPage.WaitForFunctionAsync"/> can be used to observe viewport size
         /// change:
         /// </para>
+        /// <code>
+        /// using Microsoft.Playwright;<br/>
+        /// using System.Threading.Tasks;<br/>
+        /// <br/>
+        /// class FrameExamples<br/>
+        /// {<br/>
+        ///   public static async Task WaitForFunction()<br/>
+        ///   {<br/>
+        ///     using var playwright = await Playwright.CreateAsync();<br/>
+        ///     await using var browser = await playwright.Webkit.LaunchAsync();<br/>
+        ///     var page = await browser.NewPageAsync();<br/>
+        ///     await page.SetViewportSizeAsync(50, 50);<br/>
+        ///     await page.MainFrame.WaitForFunctionAsync("window.innerWidth &lt; 100");<br/>
+        ///   }<br/>
+        /// }
+        /// </code>
         /// <para>
         /// To pass an argument to the predicate of <see cref="IPage.WaitForFunctionAsync"/>
         /// function:
         /// </para>
+        /// <code>
+        /// var selector = ".foo";<br/>
+        /// await page.WaitForFunctionAsync("selector =&gt; !!document.querySelector(selector)", selector);
+        /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.WaitForFunctionAsync"/>.</para>
         /// </summary>
         /// <param name="expression">
@@ -2045,6 +2361,17 @@ namespace Microsoft.Playwright
         /// The navigation must have been committed when this method is called. If current document
         /// has already reached the required state, resolves immediately.
         /// </para>
+        /// <code>
+        /// await page.ClickAsync("button"); // Click triggers navigation.<br/>
+        /// await page.WaitForLoadStateAsync(); // The promise resolves after 'load' event.
+        /// </code>
+        /// <code>
+        /// var popupTask = page.WaitForPopupAsync();<br/>
+        /// await page.ClickAsync("button"); // click triggers the popup/<br/>
+        /// var popup = await popupTask;<br/>
+        /// await popup.WaitForLoadStateAsync(LoadState.DOMContentLoaded);<br/>
+        /// Console.WriteLine(await popup.TitleAsync()); // popup is ready to use.
+        /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.WaitForLoadStateAsync"/>.</para>
         /// </summary>
         /// <param name="state">
@@ -2081,6 +2408,11 @@ namespace Microsoft.Playwright
         /// target has an <c>onclick</c> handler that triggers navigation from a <c>setTimeout</c>.
         /// Consider this example:
         /// </para>
+        /// <code>
+        /// await Task.WhenAll(page.WaitForNavigationAsync(),<br/>
+        ///     frame.ClickAsync("a.delayed-navigation")); // clicking the link will indirectly cause a navigation<br/>
+        /// // The method continues after navigation has finished
+        /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.WaitForNavigationAsync"/>.</para>
         /// </summary>
         /// <remarks>
@@ -2131,6 +2463,11 @@ namespace Microsoft.Playwright
         /// target has an <c>onclick</c> handler that triggers navigation from a <c>setTimeout</c>.
         /// Consider this example:
         /// </para>
+        /// <code>
+        /// await Task.WhenAll(page.WaitForNavigationAsync(),<br/>
+        ///     frame.ClickAsync("a.delayed-navigation")); // clicking the link will indirectly cause a navigation<br/>
+        /// // The method continues after navigation has finished
+        /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.WaitForNavigationAsync"/>.</para>
         /// </summary>
         /// <remarks>
@@ -2181,6 +2518,11 @@ namespace Microsoft.Playwright
         /// target has an <c>onclick</c> handler that triggers navigation from a <c>setTimeout</c>.
         /// Consider this example:
         /// </para>
+        /// <code>
+        /// await Task.WhenAll(page.WaitForNavigationAsync(),<br/>
+        ///     frame.ClickAsync("a.delayed-navigation")); // clicking the link will indirectly cause a navigation<br/>
+        /// // The method continues after navigation has finished
+        /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.WaitForNavigationAsync"/>.</para>
         /// </summary>
         /// <remarks>
@@ -2230,6 +2572,11 @@ namespace Microsoft.Playwright
         /// target has an <c>onclick</c> handler that triggers navigation from a <c>setTimeout</c>.
         /// Consider this example:
         /// </para>
+        /// <code>
+        /// await Task.WhenAll(page.WaitForNavigationAsync(),<br/>
+        ///     frame.ClickAsync("a.delayed-navigation")); // clicking the link will indirectly cause a navigation<br/>
+        /// // The method continues after navigation has finished
+        /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.WaitForNavigationAsync"/>.</para>
         /// </summary>
         /// <remarks>
@@ -2287,6 +2634,15 @@ namespace Microsoft.Playwright
         /// Waits for the matching request and returns it.  See <a href="./events.md#waiting-for-event">waiting
         /// for event</a> for more details about events.
         /// </para>
+        /// <code>
+        /// // Waits for the next response with the specified url<br/>
+        /// await Task.WhenAll(page.WaitForRequestAsync("https://example.com/resource"),<br/>
+        ///     page.ClickAsync("button.triggers-request"));<br/>
+        /// <br/>
+        /// // Waits for the next request matching some conditions<br/>
+        /// await Task.WhenAll(page.WaitForRequestAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; "GET" == r.Method),<br/>
+        ///     page.ClickAsync("button.triggers-request"));
+        /// </code>
         /// </summary>
         /// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
         /// <param name="timeout">
@@ -2301,6 +2657,15 @@ namespace Microsoft.Playwright
         /// Waits for the matching request and returns it.  See <a href="./events.md#waiting-for-event">waiting
         /// for event</a> for more details about events.
         /// </para>
+        /// <code>
+        /// // Waits for the next response with the specified url<br/>
+        /// await Task.WhenAll(page.WaitForRequestAsync("https://example.com/resource"),<br/>
+        ///     page.ClickAsync("button.triggers-request"));<br/>
+        /// <br/>
+        /// // Waits for the next request matching some conditions<br/>
+        /// await Task.WhenAll(page.WaitForRequestAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; "GET" == r.Method),<br/>
+        ///     page.ClickAsync("button.triggers-request"));
+        /// </code>
         /// </summary>
         /// <param name="urlOrPredicateRegex">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
         /// <param name="timeout">
@@ -2315,6 +2680,15 @@ namespace Microsoft.Playwright
         /// Waits for the matching request and returns it.  See <a href="./events.md#waiting-for-event">waiting
         /// for event</a> for more details about events.
         /// </para>
+        /// <code>
+        /// // Waits for the next response with the specified url<br/>
+        /// await Task.WhenAll(page.WaitForRequestAsync("https://example.com/resource"),<br/>
+        ///     page.ClickAsync("button.triggers-request"));<br/>
+        /// <br/>
+        /// // Waits for the next request matching some conditions<br/>
+        /// await Task.WhenAll(page.WaitForRequestAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; "GET" == r.Method),<br/>
+        ///     page.ClickAsync("button.triggers-request"));
+        /// </code>
         /// </summary>
         /// <param name="urlOrPredicateFunc">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
         /// <param name="timeout">
@@ -2329,6 +2703,15 @@ namespace Microsoft.Playwright
         /// Returns the matched response. See <a href="./events.md#waiting-for-event">waiting
         /// for event</a> for more details about events.
         /// </para>
+        /// <code>
+        /// // Waits for the next response with the specified url<br/>
+        /// await Task.WhenAll(page.WaitForResponseAsync("https://example.com/resource"),<br/>
+        ///     page.ClickAsync("button.triggers-response"));<br/>
+        /// <br/>
+        /// // Waits for the next response matching some conditions<br/>
+        /// await Task.WhenAll(page.WaitForResponseAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; r.Status == 200),<br/>
+        ///     page.ClickAsync("button.triggers-response"));
+        /// </code>
         /// </summary>
         /// <param name="urlOrPredicateString">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
         /// <param name="timeout">
@@ -2343,6 +2726,15 @@ namespace Microsoft.Playwright
         /// Returns the matched response. See <a href="./events.md#waiting-for-event">waiting
         /// for event</a> for more details about events.
         /// </para>
+        /// <code>
+        /// // Waits for the next response with the specified url<br/>
+        /// await Task.WhenAll(page.WaitForResponseAsync("https://example.com/resource"),<br/>
+        ///     page.ClickAsync("button.triggers-response"));<br/>
+        /// <br/>
+        /// // Waits for the next response matching some conditions<br/>
+        /// await Task.WhenAll(page.WaitForResponseAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; r.Status == 200),<br/>
+        ///     page.ClickAsync("button.triggers-response"));
+        /// </code>
         /// </summary>
         /// <param name="urlOrPredicateRegex">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
         /// <param name="timeout">
@@ -2357,6 +2749,15 @@ namespace Microsoft.Playwright
         /// Returns the matched response. See <a href="./events.md#waiting-for-event">waiting
         /// for event</a> for more details about events.
         /// </para>
+        /// <code>
+        /// // Waits for the next response with the specified url<br/>
+        /// await Task.WhenAll(page.WaitForResponseAsync("https://example.com/resource"),<br/>
+        ///     page.ClickAsync("button.triggers-response"));<br/>
+        /// <br/>
+        /// // Waits for the next response matching some conditions<br/>
+        /// await Task.WhenAll(page.WaitForResponseAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; r.Status == 200),<br/>
+        ///     page.ClickAsync("button.triggers-response"));
+        /// </code>
         /// </summary>
         /// <param name="urlOrPredicateFunc">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
         /// <param name="timeout">
@@ -2379,6 +2780,30 @@ namespace Microsoft.Playwright
         /// for the <paramref name="timeout"/> milliseconds, the function will throw.
         /// </para>
         /// <para>This method works across navigations:</para>
+        /// <code>
+        /// using Microsoft.Playwright;<br/>
+        /// using System;<br/>
+        /// using System.Threading.Tasks;<br/>
+        /// <br/>
+        /// class FrameExamples<br/>
+        /// {<br/>
+        ///   public static async Task Images()<br/>
+        ///   {<br/>
+        ///       using var playwright = await Playwright.CreateAsync();<br/>
+        ///       await using var browser = await playwright.Chromium.LaunchAsync();<br/>
+        ///       var page = await browser.NewPageAsync();<br/>
+        /// <br/>
+        ///       foreach (var currentUrl in new[] { "https://www.google.com", "https://bbc.com" })<br/>
+        ///       {<br/>
+        ///           await page.GotoAsync(currentUrl);<br/>
+        ///           var element = await page.WaitForSelectorAsync("img");<br/>
+        ///           Console.WriteLine($"Loaded image: {await element.GetAttributeAsync("src")}");<br/>
+        ///       }<br/>
+        /// <br/>
+        ///       await browser.CloseAsync();<br/>
+        ///   }<br/>
+        /// }
+        /// </code>
         /// </summary>
         /// <param name="selector">
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
@@ -2415,6 +2840,10 @@ namespace Microsoft.Playwright
         /// using the timer in production are going to be flaky. Use signals such as network
         /// events, selectors becoming visible and others instead.
         /// </para>
+        /// <code>
+        /// // Wait for 1 second<br/>
+        /// await page.WaitForTimeoutAsync(1000);
+        /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.WaitForTimeoutAsync"/>.</para>
         /// </summary>
         /// <param name="timeout">A timeout to wait for</param>
@@ -2422,6 +2851,10 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>Waits for the main frame to navigate to the given URL.</para>
+        /// <code>
+        /// await page.ClickAsync("a.delayed-navigation"); // clicking the link will indirectly cause a navigation<br/>
+        /// await page.WaitForURLAsync("**/target.html");
+        /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.WaitForURLAsync"/>.</para>
         /// </summary>
         /// <param name="urlString">
@@ -2455,6 +2888,10 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>Waits for the main frame to navigate to the given URL.</para>
+        /// <code>
+        /// await page.ClickAsync("a.delayed-navigation"); // clicking the link will indirectly cause a navigation<br/>
+        /// await page.WaitForURLAsync("**/target.html");
+        /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.WaitForURLAsync"/>.</para>
         /// </summary>
         /// <param name="urlRegex">
@@ -2488,6 +2925,10 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>Waits for the main frame to navigate to the given URL.</para>
+        /// <code>
+        /// await page.ClickAsync("a.delayed-navigation"); // clicking the link will indirectly cause a navigation<br/>
+        /// await page.WaitForURLAsync("**/target.html");
+        /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.WaitForURLAsync"/>.</para>
         /// </summary>
         /// <param name="urlFunc">

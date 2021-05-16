@@ -56,6 +56,17 @@ namespace Microsoft.Playwright
     /// Playwright allows creation of "incognito" browser contexts with <c>browser.newContext()</c>
     /// method. "Incognito" browser contexts don't write any browsing data to disk.
     /// </para>
+    /// <code>
+    /// using var playwright = await Playwright.CreateAsync();<br/>
+    /// var browser = await playwright.Firefox.LaunchAsync(headless: false);<br/>
+    /// // Create a new incognito browser context<br/>
+    /// var context = await browser.NewContextAsync();<br/>
+    /// // Create a new page inside context.<br/>
+    /// var page = await context.NewPageAsync();<br/>
+    /// await page.GotoAsync("https://bing.com");<br/>
+    /// // Dispose context once it is no longer needed.<br/>
+    /// await context.CloseAsync();
+    /// </code>
     /// </summary>
     public partial interface IBrowserContext
     {
@@ -84,6 +95,12 @@ namespace Microsoft.Playwright
         /// this event will fire when the network request to "http://example.com" is done and
         /// its response has started loading in the popup.
         /// </para>
+        /// <code>
+        /// var popupTask = context.WaitForPageAsync();<br/>
+        /// await page.ClickAsync("a");<br/>
+        /// var popup = await popupTask;<br/>
+        /// Console.WriteLine(await popup.EvaluateAsync&lt;string&gt;("location.href"));
+        /// </code>
         /// </summary>
         /// <remarks>
         /// <para>
@@ -98,6 +115,7 @@ namespace Microsoft.Playwright
         /// Adds cookies into this browser context. All pages within this context will have
         /// these cookies installed. Cookies can be obtained via <see cref="IBrowserContext.GetCookiesAsync"/>.
         /// </para>
+        /// <code>await context.AddCookiesAsync(new[] { cookie1, cookie2 });</code>
         /// </summary>
         /// <param name="cookies">
         /// </param>
@@ -117,6 +135,7 @@ namespace Microsoft.Playwright
         /// were run. This is useful to amend the JavaScript environment, e.g. to seed <c>Math.random</c>.
         /// </para>
         /// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
+        /// <code>await context.AddInitScriptAsync(scriptPath: "preload.js");</code>
         /// </summary>
         /// <remarks>
         /// <para>
@@ -139,7 +158,17 @@ namespace Microsoft.Playwright
         /// <summary><para>Clears context cookies.</para></summary>
         Task ClearCookiesAsync();
 
-        /// <summary><para>Clears all permission overrides for the browser context.</para></summary>
+        /// <summary>
+        /// <para>Clears all permission overrides for the browser context.</para>
+        /// <code>
+        /// var context = await browser.NewContextAsync();<br/>
+        /// await context.GrantPermissionsAsync(new[] { "clipboard-read" });<br/>
+        /// // Alternatively, you can use the helper class ContextPermissions <br/>
+        /// //  to specify the permissions...<br/>
+        /// // do stuff ...<br/>
+        /// await context.ClearPermissionsAsync();
+        /// </code>
+        /// </summary>
         Task ClearPermissionsAsync();
 
         /// <summary>
@@ -175,7 +204,51 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>See <see cref="IPage.ExposeBindingAsync"/> for page-only version.</para>
         /// <para>An example of exposing page URL to all frames in all pages in the context:</para>
+        /// <code>
+        /// using Microsoft.Playwright;<br/>
+        /// using System.Threading.Tasks;<br/>
+        /// <br/>
+        /// class Program<br/>
+        /// {<br/>
+        ///     public static async Task Main()<br/>
+        ///     {<br/>
+        ///         using var playwright = await Playwright.CreateAsync();<br/>
+        ///         var browser = await playwright.Webkit.LaunchAsync(headless: false);<br/>
+        ///         var context = await browser.NewContextAsync();<br/>
+        /// <br/>
+        ///         await context.ExposeBindingAsync("pageURL", source =&gt; source.Page.Url);<br/>
+        ///         var page = await context.NewPageAsync();<br/>
+        ///         await page.SetContentAsync("&lt;script&gt;\n" +<br/>
+        ///         "  async function onClick() {\n" +<br/>
+        ///         "    document.querySelector('div').textContent = await window.pageURL();\n" +<br/>
+        ///         "  }\n" +<br/>
+        ///         "&lt;/script&gt;\n" +<br/>
+        ///         "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>
+        ///         "&lt;div&gt;&lt;/div&gt;");<br/>
+        ///         await page.ClickAsync("button");<br/>
+        ///     }<br/>
+        /// }
+        /// </code>
         /// <para>An example of passing an element handle:</para>
+        /// <code>
+        /// var result = new TaskCompletionSource&lt;string&gt;();<br/>
+        /// var page = await Context.NewPageAsync();<br/>
+        /// await Context.ExposeBindingAsync("clicked", async (BindingSource _, IJSHandle t) =&gt;<br/>
+        /// {<br/>
+        ///     return result.TrySetResult(await t.AsElement.TextContentAsync());<br/>
+        /// });<br/>
+        /// <br/>
+        /// await page.SetContentAsync("&lt;script&gt;\n" +<br/>
+        ///   "  document.addEventListener('click', event =&gt; window.clicked(event.target));\n" +<br/>
+        ///   "&lt;/script&gt;\n" +<br/>
+        ///   "&lt;div&gt;Click me&lt;/div&gt;\n" +<br/>
+        ///   "&lt;div&gt;Or click me&lt;/div&gt;\n");<br/>
+        /// <br/>
+        /// await page.ClickAsync("div");<br/>
+        /// // Note: it makes sense to await the result here, because otherwise, the context <br/>
+        /// //  gets closed and the binding function will throw an exception.<br/>
+        /// Assert.Equal("Click me", await result.Task);
+        /// </code>
         /// </summary>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
@@ -196,6 +269,42 @@ namespace Microsoft.Playwright
         /// <para>If the <paramref name="callback"/> returns a <see cref="Task"/>, it will be awaited.</para>
         /// <para>See <see cref="IPage.ExposeFunctionAsync"/> for page-only version.</para>
         /// <para>An example of adding an <c>md5</c> function to all pages in the context:</para>
+        /// <code>
+        /// using Microsoft.Playwright;<br/>
+        /// using System;<br/>
+        /// using System.Security.Cryptography;<br/>
+        /// using System.Threading.Tasks;<br/>
+        /// <br/>
+        /// class BrowserContextExamples<br/>
+        /// {<br/>
+        ///     public static async Task AddMd5FunctionToAllPagesInContext()<br/>
+        ///     {<br/>
+        ///         using var playwright = await Playwright.CreateAsync();<br/>
+        ///         var browser = await playwright.Webkit.LaunchAsync(headless: false);<br/>
+        ///         var context = await browser.NewContextAsync();<br/>
+        /// <br/>
+        ///         // NOTE: md5 is inherently insecure, and we strongly discourage using<br/>
+        ///         // this in production in any shape or form<br/>
+        ///         await context.ExposeFunctionAsync("sha1", (string input) =&gt;<br/>
+        ///         {<br/>
+        ///             return Convert.ToBase64String(<br/>
+        ///                 MD5.Create().ComputeHash(System.Text.Encoding.UTF8.GetBytes(input)));<br/>
+        ///         });<br/>
+        /// <br/>
+        ///         var page = await context.NewPageAsync();<br/>
+        ///         await page.SetContentAsync("&lt;script&gt;\n" +<br/>
+        ///         "  async function onClick() {\n" +<br/>
+        ///         "    document.querySelector('div').textContent = await window.sha1('PLAYWRIGHT');\n" +<br/>
+        ///         "  }\n" +<br/>
+        ///         "&lt;/script&gt;\n" +<br/>
+        ///         "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>
+        ///         "&lt;div&gt;&lt;/div&gt;");<br/>
+        /// <br/>
+        ///         await page.ClickAsync("button");<br/>
+        ///         Console.WriteLine(await page.TextContentAsync("div"));<br/>
+        ///     }<br/>
+        /// }
+        /// </code>
         /// </summary>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
@@ -245,11 +354,34 @@ namespace Microsoft.Playwright
         /// pattern will stall unless it's continued, fulfilled or aborted.
         /// </para>
         /// <para>An example of a naive handler that aborts all image requests:</para>
+        /// <code>
+        /// var context = await browser.NewContextAsync();<br/>
+        /// var page = await context.NewPageAsync();<br/>
+        /// await context.RouteAsync("**/*.{png,jpg,jpeg}", r =&gt; r.AbortAsync());<br/>
+        /// await page.GotoAsync("https://theverge.com");<br/>
+        /// await browser.CloseAsync();
+        /// </code>
         /// <para>or the same snippet using a regex pattern instead:</para>
+        /// <code>
+        /// var context = await browser.NewContextAsync();<br/>
+        /// var page = await context.NewPageAsync();<br/>
+        /// await context.RouteAsync(new Regex("(\\.png$)|(\\.jpg$)"), r =&gt; r.AbortAsync());<br/>
+        /// await page.GotoAsync("https://theverge.com");<br/>
+        /// await browser.CloseAsync();
+        /// </code>
         /// <para>
         /// It is possible to examine the request to decide the route action. For example, mocking
         /// all requests that contain some post data, and leaving all other requests as is:
         /// </para>
+        /// <code>
+        /// await page.RouteAsync("/api/**", async r =&gt;<br/>
+        /// {<br/>
+        ///     if (r.Request.PostData.Contains("my-string"))<br/>
+        ///         await r.FulfillAsync(body: "mocked-data");<br/>
+        ///     else<br/>
+        ///         await r.ResumeAsync();<br/>
+        /// });
+        /// </code>
         /// <para>
         /// Page routes (set up with <see cref="IPage.RouteAsync"/>) take precedence over browser
         /// context routes when request matches both handlers.
@@ -271,11 +403,34 @@ namespace Microsoft.Playwright
         /// pattern will stall unless it's continued, fulfilled or aborted.
         /// </para>
         /// <para>An example of a naive handler that aborts all image requests:</para>
+        /// <code>
+        /// var context = await browser.NewContextAsync();<br/>
+        /// var page = await context.NewPageAsync();<br/>
+        /// await context.RouteAsync("**/*.{png,jpg,jpeg}", r =&gt; r.AbortAsync());<br/>
+        /// await page.GotoAsync("https://theverge.com");<br/>
+        /// await browser.CloseAsync();
+        /// </code>
         /// <para>or the same snippet using a regex pattern instead:</para>
+        /// <code>
+        /// var context = await browser.NewContextAsync();<br/>
+        /// var page = await context.NewPageAsync();<br/>
+        /// await context.RouteAsync(new Regex("(\\.png$)|(\\.jpg$)"), r =&gt; r.AbortAsync());<br/>
+        /// await page.GotoAsync("https://theverge.com");<br/>
+        /// await browser.CloseAsync();
+        /// </code>
         /// <para>
         /// It is possible to examine the request to decide the route action. For example, mocking
         /// all requests that contain some post data, and leaving all other requests as is:
         /// </para>
+        /// <code>
+        /// await page.RouteAsync("/api/**", async r =&gt;<br/>
+        /// {<br/>
+        ///     if (r.Request.PostData.Contains("my-string"))<br/>
+        ///         await r.FulfillAsync(body: "mocked-data");<br/>
+        ///     else<br/>
+        ///         await r.ResumeAsync();<br/>
+        /// });
+        /// </code>
         /// <para>
         /// Page routes (set up with <see cref="IPage.RouteAsync"/>) take precedence over browser
         /// context routes when request matches both handlers.
@@ -297,11 +452,34 @@ namespace Microsoft.Playwright
         /// pattern will stall unless it's continued, fulfilled or aborted.
         /// </para>
         /// <para>An example of a naive handler that aborts all image requests:</para>
+        /// <code>
+        /// var context = await browser.NewContextAsync();<br/>
+        /// var page = await context.NewPageAsync();<br/>
+        /// await context.RouteAsync("**/*.{png,jpg,jpeg}", r =&gt; r.AbortAsync());<br/>
+        /// await page.GotoAsync("https://theverge.com");<br/>
+        /// await browser.CloseAsync();
+        /// </code>
         /// <para>or the same snippet using a regex pattern instead:</para>
+        /// <code>
+        /// var context = await browser.NewContextAsync();<br/>
+        /// var page = await context.NewPageAsync();<br/>
+        /// await context.RouteAsync(new Regex("(\\.png$)|(\\.jpg$)"), r =&gt; r.AbortAsync());<br/>
+        /// await page.GotoAsync("https://theverge.com");<br/>
+        /// await browser.CloseAsync();
+        /// </code>
         /// <para>
         /// It is possible to examine the request to decide the route action. For example, mocking
         /// all requests that contain some post data, and leaving all other requests as is:
         /// </para>
+        /// <code>
+        /// await page.RouteAsync("/api/**", async r =&gt;<br/>
+        /// {<br/>
+        ///     if (r.Request.PostData.Contains("my-string"))<br/>
+        ///         await r.FulfillAsync(body: "mocked-data");<br/>
+        ///     else<br/>
+        ///         await r.ResumeAsync();<br/>
+        /// });
+        /// </code>
         /// <para>
         /// Page routes (set up with <see cref="IPage.RouteAsync"/>) take precedence over browser
         /// context routes when request matches both handlers.
@@ -381,6 +559,13 @@ namespace Microsoft.Playwright
         /// Sets the context's geolocation. Passing <c>null</c> or <c>undefined</c> emulates
         /// position unavailable.
         /// </para>
+        /// <code>
+        /// await context.SetGeolocationAsync(new Geolocation()<br/>
+        /// {<br/>
+        ///     Latitude = 59.95f,<br/>
+        ///     Longitude = 30.31667f<br/>
+        /// });
+        /// </code>
         /// </summary>
         /// <remarks>
         /// <para>
@@ -453,6 +638,11 @@ namespace Microsoft.Playwright
         /// when the predicate returns truthy value. Will throw an error if the context closes
         /// before the event is fired. Returns the event data value.
         /// </para>
+        /// <code>
+        /// var waitForPageEvent = context.WaitForPageAsync();<br/>
+        /// await page.ClickAsync("button");<br/>
+        /// var page = await waitForPageEvent;
+        /// </code>
         /// </summary>
         /// <param name="event">Event name, same one would pass into <c>browserContext.on(event)</c>.</param>
         /// <param name="timeout">

@@ -16,7 +16,6 @@ namespace Microsoft.Playwright
 
         internal static Selectors SharedSelectors { get; } = new Selectors();
 
-        /// <inheritdoc/>
         public async Task RegisterAsync(string name, string script, string scriptPath, bool? contentScript = null)
         {
             script = ScriptsHelper.EvaluationScript(script, scriptPath, false);

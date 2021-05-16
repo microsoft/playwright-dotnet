@@ -9,7 +9,6 @@ namespace Microsoft.Playwright
     /// </summary>
     public class LaunchOptions : LaunchOptionsBase
     {
-        /// <inheritdoc path="/param[@name='firefoxUserPrefs']" cref="IBrowserType.LaunchPersistentContextAsync(string, bool?, BrowserChannel, string, IEnumerable{string}, Proxy, string, bool?, bool?, bool?, bool?, float?, IEnumerable{KeyValuePair{string, string}}, bool?, float?, bool?, bool?, bool?, ViewportSize, ScreenSize, string, float?, bool?, bool?, bool?, string, Geolocation, string, IEnumerable{string}, IEnumerable{KeyValuePair{string, string}}, bool?, HttpCredentials, Microsoft.Playwright.ColorScheme, string, bool?, string, RecordVideoSize, IEnumerable{string}, bool?)" />
         public IEnumerable<KeyValuePair<string, object>> FirefoxUserPrefs { get; set; }
 
         /// <summary>

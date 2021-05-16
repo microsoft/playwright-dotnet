@@ -10,7 +10,6 @@ namespace Microsoft.Playwright
     /// </summary>
     public static class ContextPermissions
     {
-#pragma warning disable CS1591, SA1600 // Missing XML comment for publicly visible type or member
         public const string Geolocation = "geolocation";
 
         public const string MIDI = "midi";
@@ -42,6 +41,5 @@ namespace Microsoft.Playwright
         public const string ClipboardWrite = "clipboard-write";
 
         public const string PaymentHandler = "payment-handler";
-#pragma warning restore CS1591, SA1600 // Missing XML comment for publicly visible type or member
     }
 }

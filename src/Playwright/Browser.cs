@@ -8,7 +8,6 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    /// <inheritdoc cref="IBrowser"/>
     public class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
     {
         private readonly BrowserInitializer _initializer;
@@ -23,29 +22,22 @@ namespace Microsoft.Playwright
             _initializer = initializer;
         }
 
-        /// <inheritdoc/>
         public event EventHandler<IBrowser> Disconnected;
 
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => Channel;
 
-        /// <inheritdoc/>
         IChannel<Browser> IChannelOwner<Browser>.Channel => Channel;
 
-        /// <inheritdoc/>
         public IReadOnlyCollection<IBrowserContext> Contexts => BrowserContextsList.ToArray();
 
-        /// <inheritdoc/>
         public bool IsConnected { get; private set; }
 
-        /// <inheritdoc/>
         public string Version => _initializer.Version;
 
         internal Microsoft.Playwright.Transport.Channels.BrowserChannel Channel { get; }
 
         internal List<BrowserContext> BrowserContextsList { get; } = new List<BrowserContext>();
 
-        /// <inheritdoc/>
         public async Task CloseAsync()
         {
             if (!_isClosedOrClosing)
@@ -57,7 +49,6 @@ namespace Microsoft.Playwright
             await _closedTcs.Task.ConfigureAwait(false);
         }
 
-        /// <inheritdoc/>
         public async Task<IBrowserContext> NewContextAsync(
             bool? acceptDownloads,
             bool? ignoreHTTPSErrors,
@@ -117,7 +108,6 @@ namespace Microsoft.Playwright
             return context;
         }
 
-        /// <inheritdoc/>
         public async Task<IPage> NewPageAsync(
             bool? acceptDownloads,
             bool? ignoreHTTPSErrors,
@@ -177,10 +167,8 @@ namespace Microsoft.Playwright
             return page;
         }
 
-        /// <inheritdoc/>
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
 
-        /// <inheritdoc/>
         public Task<IBrowserContext> NewContextAsync(BrowserContextOptions options)
         {
             options ??= new BrowserContextOptions();
@@ -212,7 +200,6 @@ namespace Microsoft.Playwright
                 options.StorageStatePath);
         }
 
-        /// <inheritdoc/>
         public Task<IPage> NewPageAsync(BrowserContextOptions options)
         {
             options ??= new BrowserContextOptions();

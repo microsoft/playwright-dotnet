@@ -14,10 +14,8 @@ namespace Microsoft.Playwright
             _channel = new SelectorsChannel(guid, parent.Connection, this);
         }
 
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
 
-        /// <inheritdoc/>
         IChannel<SelectorsOwner> IChannelOwner<SelectorsOwner>.Channel => _channel;
 
         internal Task RegisterAsync(SelectorsRegisterParams registration) => _channel.RegisterAsync(registration);

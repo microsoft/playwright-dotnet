@@ -9,7 +9,6 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    /// <inheritdoc cref="IPlaywright" />
     [SuppressMessage("Microsoft.Design", "CA1724", Justification = "Playwright is the entrypoint for all languages.")]
     public sealed class Playwright : ChannelOwnerBase, IPlaywright, IChannelOwner<Playwright>
     {
@@ -40,31 +39,22 @@ namespace Microsoft.Playwright
             _ = (Selectors as Selectors).AddChannelAsync(initializer.Selectors.Object);
         }
 
-        /// <inheritdoc cref="IDisposable.Dispose"/>
         ~Playwright() => Dispose(false);
 
-        /// <inheritdoc/>
         Connection IChannelOwner.Connection => _connection;
 
-        /// <inheritdoc/>
         ChannelBase IChannelOwner.Channel => _channel;
 
-        /// <inheritdoc/>
         IChannel<Playwright> IChannelOwner<Playwright>.Channel => _channel;
 
-        /// <inheritdoc/>
         public IBrowserType Chromium { get => _initializer.Chromium; set => throw new NotSupportedException(); }
 
-        /// <inheritdoc/>
         public IBrowserType Firefox { get => _initializer.Firefox; set => throw new NotSupportedException(); }
 
-        /// <inheritdoc/>
         public IBrowserType Webkit { get => _initializer.Webkit; set => throw new NotSupportedException(); }
 
-        /// <inheritdoc/>
         public ISelectors Selectors { get => Microsoft.Playwright.Selectors.SharedSelectors; set => throw new NotSupportedException(); }
 
-        /// <inheritdoc/>
         public IReadOnlyDictionary<string, BrowserContextOptions> Devices => _devices;
 
         internal Connection Connection { get; set; }
@@ -127,7 +117,6 @@ namespace Microsoft.Playwright
         public static Task InstallAsync(string browsersPath = null, string driverExecutablePath = null)
             => Connection.InstallAsync(driverExecutablePath, browsersPath);
 
-        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true);

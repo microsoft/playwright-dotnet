@@ -65,7 +65,5 @@ namespace Microsoft.Playwright
         MsedgeDev,
         [EnumMember(Value = "msedge-canary")]
         MsedgeCanary,
-        [EnumMember(Value = "firefox-stable")]
-        FirefoxStable,
     }
 }
