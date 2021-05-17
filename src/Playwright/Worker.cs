@@ -63,7 +63,7 @@ namespace Microsoft.Playwright
 
         public async Task<IWorker> WaitForCloseAsync(Func<Task> action = default, float? timeout = default)
         {
-            using var waiter = new Waiter();
+            using var waiter = new Waiter(_channel, "worker.WaitForCloseAsync");
             var waiterResult = waiter.GetWaitForEventTask<IWorker>(this, nameof(Close), null);
             var result = waiterResult.Task.WithTimeout(Convert.ToInt32(timeout ?? 0));
             if (action != null)

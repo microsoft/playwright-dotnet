@@ -57,7 +57,7 @@ namespace Microsoft.Playwright
             }
 
             timeout ??= _page.DefaultTimeout;
-            using var waiter = new Waiter();
+            using var waiter = new Waiter(_channel, $"webSocket.WaitForEventAsync(\"{typeof(T)}\")");
             waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{typeof(T)}\"");
 
             if (webSocketEvent.Name != WebSocketEvent.SocketError.Name)
@@ -89,7 +89,7 @@ namespace Microsoft.Playwright
             }
 
             timeout ??= _page.DefaultTimeout;
-            using var waiter = new Waiter();
+            using var waiter = new Waiter(_channel, $"webSocket.WaitForEventAsync(\"{@event}\")");
             waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{@event}\"");
 
             if (@event != WebSocketEvent.SocketError.Name)

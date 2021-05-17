@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright
 {
@@ -14,7 +15,24 @@ namespace Microsoft.Playwright
         private readonly List<Task> _failures = new();
         private readonly List<Action> _dispose = new();
         private readonly CancellationTokenSource _cts = new();
+        private readonly string _waitId = Guid.NewGuid().ToString();
+
         private bool _disposed;
+        private ChannelBase _channel;
+        private string _error;
+
+        internal Waiter(ChannelBase channel, string apiName)
+        {
+            _channel = channel;
+            var beforeArgs = new { info = new { apiName = apiName, waitId = _waitId, phase = "before" } };
+            var connection = _channel.Connection;
+            Forget(connection.SendMessageToServerAsync(channel.Guid, "waitForEventInfo", beforeArgs));
+            _dispose.Add(() =>
+            {
+                var afterArgs = new { info = new { waitId = _waitId, phase = "after", error = _error } };
+                Forget(_channel.Connection.SendMessageToServerAsync(channel.Guid, "waitForEventInfo", afterArgs));
+            });
+        }
 
         public void Dispose()
         {
@@ -31,7 +49,12 @@ namespace Microsoft.Playwright
             }
         }
 
-        internal void Log(string log) => _logs.Add(log);
+        internal void Log(string log)
+        {
+            _logs.Add(log);
+            var logArgs = new { info = new { waitId = _waitId, phase = "log", message = log } };
+            Forget(_channel.Connection.SendMessageToServerAsync(_channel.Guid, "waitForEventInfo", logArgs));
+        }
 
         internal void RejectOnEvent<T>(
             object eventSource,
@@ -119,12 +142,14 @@ namespace Microsoft.Playwright
             catch (TimeoutException ex)
             {
                 dispose?.Invoke();
+                _error = ex.ToString();
                 Dispose();
                 throw new TimeoutException(ex.Message + FormatLogRecording(_logs), ex);
             }
             catch (Exception ex)
             {
                 dispose?.Invoke();
+                _error = ex.ToString();
                 Dispose();
                 throw new PlaywrightException(ex.Message + FormatLogRecording(_logs), ex);
             }
@@ -153,6 +178,10 @@ namespace Microsoft.Playwright
             {
                 _dispose.Add(dispose);
             }
+        }
+
+        private void Forget(Task task)
+        {
         }
     }
 }

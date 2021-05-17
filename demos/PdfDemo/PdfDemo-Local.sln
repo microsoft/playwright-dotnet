@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfDemo-Local", "PdfDemo-Local.csproj", "{A4AEC544-D521-4CD4-9A8F-F6926DEFC233}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightSharp", "..\..\src\PlaywrightSharp\PlaywrightSharp.csproj", "{800C93D8-233A-4175-AC0A-BCA9D4801795}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright", "..\..\src\Playwright\Playwright.csproj", "{800C93D8-233A-4175-AC0A-BCA9D4801795}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
