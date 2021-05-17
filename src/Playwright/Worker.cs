@@ -61,11 +61,20 @@ namespace Microsoft.Playwright
                 arg: arg.ToEvaluateArgument())
             .ConfigureAwait(false))?.Object;
 
-        public async Task<IWorker> WaitForCloseAsync(float? timeout)
+        public async Task<IWorker> WaitForCloseAsync(Func<Task> action = default, float? timeout = default)
         {
             using var waiter = new Waiter();
             var waiterResult = waiter.GetWaitForEventTask<IWorker>(this, nameof(Close), null);
-            await waiterResult.Task.WithTimeout(Convert.ToInt32(timeout ?? 0)).ConfigureAwait(false);
+            var result = waiterResult.Task.WithTimeout(Convert.ToInt32(timeout ?? 0));
+            if (action != null)
+            {
+                await Task.WhenAll(result, action()).ConfigureAwait(false);
+            }
+            else
+            {
+                await result.ConfigureAwait(false);
+            }
+
             return this;
         }
     }

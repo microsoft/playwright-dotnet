@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 namespace Microsoft.Playwright
 {
-    /// <summary>
-    /// Page events for <see cref="IPage.WaitForEventAsync{T}(PlaywrightEvent{T}, Func{T, bool}, float?)"/>.
-    /// </summary>
     public static class PageEvent
     {
         /// <summary>

@@ -38,7 +38,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithPredicate()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var task = Page.WaitForEventAsync(PageEvent.Request, e => e.Url == TestConstants.ServerUrl + "/digits/2.png");
+            var task = Page.WaitForEventAsync(PageEvent.Request, predicate: e => e.Url == TestConstants.ServerUrl + "/digits/2.png");
             var (requestEvent, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync<string>(@"() => {
@@ -55,7 +55,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRespectTimeout()
         {
             var exception = await Assert.ThrowsAsync<TimeoutException>(
-                () => Page.WaitForEventAsync(PageEvent.Request, _ => false, 1));
+                () => Page.WaitForEventAsync(PageEvent.Request, predicate: _ => false, timeout: 1));
         }
 
         [PlaywrightTest("page-wait-for-request.spec.ts", "should respect default timeout")]
@@ -64,7 +64,7 @@ namespace Microsoft.Playwright.Tests
         {
             Page.SetDefaultTimeout(1);
             var exception = await Assert.ThrowsAsync<TimeoutException>(
-                () => Page.WaitForEventAsync(PageEvent.Request, _ => false));
+                () => Page.WaitForEventAsync(PageEvent.Request, predicate: _ => false));
         }
 
         [PlaywrightTest("page-wait-for-request.spec.ts", "should work with no timeout")]
@@ -72,7 +72,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithNoTimeout()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var task = Page.WaitForRequestAsync(TestConstants.ServerUrl + "/digits/2.png", 0);
+            var task = Page.WaitForRequestAsync(TestConstants.ServerUrl + "/digits/2.png", timeout: 0);
             var (request, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync(@"() => setTimeout(() => {

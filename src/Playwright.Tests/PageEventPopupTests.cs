@@ -65,15 +65,14 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldEmitForImmediatelyClosedPopupsWithLocation()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
-            await TaskUtils.WhenAll(
-                popupTask,
-                Page.EvaluateAsync<string>(@"() => {
+            var popup = await Page.WaitForEventAsync(PageEvent.Popup, async () =>
+            {
+                await Page.EvaluateAsync<string>(@"() => {
                     const win = window.open(window.location.href);
                     win.close();
-                }")
-            );
-            Assert.NotNull(popupTask.Result);
+                }");
+            });
+            Assert.NotNull(popup);
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should be able to capture alert")]

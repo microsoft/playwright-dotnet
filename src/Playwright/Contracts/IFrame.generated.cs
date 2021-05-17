@@ -1375,6 +1375,7 @@ namespace Microsoft.Playwright
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation.
         /// </param>
+        /// <param name="action">Action to perform while waiting</param>
         /// <param name="waitUntil">
         /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
         /// <list type="bullet">
@@ -1398,7 +1399,7 @@ namespace Microsoft.Playwright
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task<IResponse> WaitForNavigationAsync(string urlString, WaitUntilState waitUntil = default, float? timeout = default);
+        Task<IResponse> WaitForNavigationAsync(string urlString, Func<Task> action = default, WaitUntilState waitUntil = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -1429,6 +1430,7 @@ namespace Microsoft.Playwright
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation.
         /// </param>
+        /// <param name="action">Action to perform while waiting</param>
         /// <param name="waitUntil">
         /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
         /// <list type="bullet">
@@ -1452,7 +1454,7 @@ namespace Microsoft.Playwright
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task<IResponse> WaitForNavigationAsync(Regex urlRegex, WaitUntilState waitUntil = default, float? timeout = default);
+        Task<IResponse> WaitForNavigationAsync(Regex urlRegex, Func<Task> action = default, WaitUntilState waitUntil = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -1483,6 +1485,7 @@ namespace Microsoft.Playwright
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation.
         /// </param>
+        /// <param name="action">Action to perform while waiting</param>
         /// <param name="waitUntil">
         /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
         /// <list type="bullet">
@@ -1506,7 +1509,7 @@ namespace Microsoft.Playwright
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task<IResponse> WaitForNavigationAsync(Func<string, bool> urlFunc, WaitUntilState waitUntil = default, float? timeout = default);
+        Task<IResponse> WaitForNavigationAsync(Func<string, bool> urlFunc, Func<Task> action = default, WaitUntilState waitUntil = default, float? timeout = default);
         /// <summary>
         /// <para>
         /// Waits for the frame navigation and returns the main resource response. In case of
@@ -1532,6 +1535,7 @@ namespace Microsoft.Playwright
         /// API</a> to change the URL is considered a navigation.
         /// </para>
         /// </remarks>
+        /// <param name="action">Action to perform while waiting</param>
         /// <param name="waitUntil">
         /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
         /// <list type="bullet">
@@ -1555,7 +1559,7 @@ namespace Microsoft.Playwright
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
-        Task<IResponse> WaitForNavigationAsync(WaitUntilState waitUntil = default, float? timeout = default);
+        Task<IResponse> WaitForNavigationAsync(Func<Task> action = default, WaitUntilState waitUntil = default, float? timeout = default);
 
         /// <summary>
         /// <para>

@@ -116,10 +116,10 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldHaveLocationForConsoleAPICalls()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var (messageEvent, _) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Console),
-                Page.GotoAsync(TestConstants.ServerUrl + "/consolelog.html")
-            );
+            var messageEvent = await Page.WaitForEventAsync(PageEvent.Console, async () =>
+            {
+                await Page.GotoAsync(TestConstants.ServerUrl + "/consolelog.html");
+            });
             Assert.Equal("yellow", messageEvent.Text);
             Assert.Equal("log", messageEvent.Type);
             string location = messageEvent.Location;

@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 namespace Microsoft.Playwright
 {
-    /// <summary>
-    /// WebSocket events for <see cref="IWebSocket.WaitForEventAsync{T}(PlaywrightEvent{T}, Func{T, bool}, float?)"/>.
-    /// </summary>
     public static class WebSocketEvent
     {
         /// <summary>

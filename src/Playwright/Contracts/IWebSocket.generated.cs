@@ -80,7 +80,8 @@ namespace Microsoft.Playwright
         /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
         /// </param>
-        Task<object> WaitForEventAsync(string @event, float? timeout = default);
+        /// <param name="action">Action to perform while waiting</param>
+        Task<object> WaitForEventAsync(string @event, Func<Task> action = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -99,7 +100,8 @@ namespace Microsoft.Playwright
         /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
         /// </param>
-        Task<IWebSocketFrame> WaitForFrameReceivedAsync(Func<IWebSocketFrame, bool> predicate = default, float? timeout = default);
+        /// <param name="action">Action to perform while waiting</param>
+        Task<IWebSocketFrame> WaitForFrameReceivedAsync(Func<Task> action = default, Func<IWebSocketFrame, bool> predicate = default, float? timeout = default);
 
         /// <summary>
         /// <para>
@@ -118,6 +120,7 @@ namespace Microsoft.Playwright
         /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
         /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
         /// </param>
-        Task<IWebSocketFrame> WaitForFrameSentAsync(Func<IWebSocketFrame, bool> predicate = default, float? timeout = default);
+        /// <param name="action">Action to perform while waiting</param>
+        Task<IWebSocketFrame> WaitForFrameSentAsync(Func<Task> action = default, Func<IWebSocketFrame, bool> predicate = default, float? timeout = default);
     }
 }

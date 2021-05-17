@@ -49,7 +49,7 @@ namespace Microsoft.Playwright
 
         public bool IsClosed { get; internal set; }
 
-        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> webSocketEvent, Func<T, bool> predicate = null, float? timeout = null)
+        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> webSocketEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
         {
             if (webSocketEvent == null)
             {
@@ -72,10 +72,16 @@ namespace Microsoft.Playwright
 
             waiter.RejectOnEvent<IPage>(_page, PageEvent.Close.Name, new TargetClosedException("Page closed"));
 
-            return await waiter.WaitForEventAsync(this, webSocketEvent.Name, predicate).ConfigureAwait(false);
+            var result = waiter.WaitForEventAsync(this, webSocketEvent.Name, predicate);
+            if (action != null)
+            {
+                await Task.WhenAll(result, action()).ConfigureAwait(false);
+            }
+
+            return await result.ConfigureAwait(false);
         }
 
-        public async Task<object> WaitForEventAsync(string @event, float? timeout = null)
+        public async Task<object> WaitForEventAsync(string @event, Func<Task> action = default, float? timeout = default)
         {
             if (@event == null)
             {
@@ -97,14 +103,23 @@ namespace Microsoft.Playwright
             }
 
             waiter.RejectOnEvent<EventArgs>(_page, PageEvent.Close.Name, new TargetClosedException("Page closed"));
-            await waiter.WaitForEventAsync(this, @event).ConfigureAwait(false);
+            var result = waiter.WaitForEventAsync(this, @event);
+            if (action != null)
+            {
+                await Task.WhenAll(result, action()).ConfigureAwait(false);
+            }
+            else
+            {
+                await result.ConfigureAwait(false);
+            }
+
             return this;
         }
 
-        public Task<IWebSocketFrame> WaitForFrameReceivedAsync(Func<IWebSocketFrame, bool> predicate = null, float? timeout = null)
-            => WaitForEventAsync(WebSocketEvent.FrameReceived, predicate, timeout);
+        public Task<IWebSocketFrame> WaitForFrameReceivedAsync(Func<Task> action = default, Func<IWebSocketFrame, bool> predicate = default, float? timeout = default)
+            => WaitForEventAsync(WebSocketEvent.FrameReceived, action, predicate, timeout);
 
-        public Task<IWebSocketFrame> WaitForFrameSentAsync(Func<IWebSocketFrame, bool> predicate = null, float? timeout = null)
-            => WaitForEventAsync(WebSocketEvent.FrameSent, predicate, timeout);
+        public Task<IWebSocketFrame> WaitForFrameSentAsync(Func<Task> action = default, Func<IWebSocketFrame, bool> predicate = default, float? timeout = default)
+            => WaitForEventAsync(WebSocketEvent.FrameSent, action, predicate, timeout);
     }
 }

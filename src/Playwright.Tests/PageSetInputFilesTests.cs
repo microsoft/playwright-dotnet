@@ -192,10 +192,10 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAcceptSingleFile()
         {
             await Page.SetContentAsync("<input type=file oninput='javascript:console.timeStamp()'>");
-            var fileChooser = await TaskUtils.WhenAll(
-               Page.WaitForEventAsync(PageEvent.FileChooser),
-               Page.ClickAsync("input")
-            );
+            var fileChooser = await Page.WaitForEventAsync(PageEvent.FileChooser, async () =>
+            {
+                await Page.ClickAsync("input");
+            });
 
             Assert.Same(Page, fileChooser.Page);
             Assert.NotNull(fileChooser.Element);

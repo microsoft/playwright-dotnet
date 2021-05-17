@@ -167,16 +167,17 @@ namespace Microsoft.Playwright.Tests
                 }, err => {});
             }");
 
-            await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Console, e => e.Text.Contains("lat=0 lng=10")),
-                Context.SetGeolocationAsync(new Geolocation { Latitude = 0, Longitude = 10 }));
+            await Page.WaitForEventAsync(PageEvent.Console, async () =>
+            {
+                await Context.SetGeolocationAsync(new Geolocation { Latitude = 0, Longitude = 10 });
+            }, predicate: e => e.Text.Contains("lat=0 lng=10"));
 
             await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Console, e => e.Text.Contains("lat=20 lng=30")),
+                Page.WaitForEventAsync(PageEvent.Console, predicate: e => e.Text.Contains("lat=20 lng=30")),
                 Context.SetGeolocationAsync(new Geolocation { Latitude = 20, Longitude = 30 }));
 
             await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Console, e => e.Text.Contains("lat=40 lng=50")),
+                Page.WaitForEventAsync(PageEvent.Console, predicate: e => e.Text.Contains("lat=40 lng=50")),
                 Context.SetGeolocationAsync(new Geolocation { Latitude = 40, Longitude = 50 }));
 
             string allMessages = string.Join("|", messages);

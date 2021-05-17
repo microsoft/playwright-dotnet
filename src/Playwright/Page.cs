@@ -310,47 +310,47 @@ namespace Microsoft.Playwright
         public Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined)
             => MainFrame.WaitForURLAsync(urlFunc, timeout, waitUntil);
 
-        public Task<IResponse> WaitForNavigationAsync(string urlString, WaitUntilState waitUntil = default, float? timeout = default)
-            => MainFrame.WaitForNavigationAsync(urlString, null, null, waitUntil, timeout);
+        public Task<IResponse> WaitForNavigationAsync(string urlString, Func<Task> action = default, WaitUntilState waitUntil = WaitUntilState.Undefined, float? timeout = default)
+            => MainFrame.WaitForNavigationAsync(urlString, null, null, waitUntil, timeout, action: action);
 
-        public Task<IResponse> WaitForNavigationAsync(WaitUntilState waitUntil, float? timeout)
-             => MainFrame.WaitForNavigationAsync(urlString: null, urlRegex: null, urlFunc: null, waitUntil: waitUntil, timeout: timeout);
+        public Task<IResponse> WaitForNavigationAsync(Func<Task> action = default, WaitUntilState waitUntil = WaitUntilState.Undefined, float? timeout = default)
+             => MainFrame.WaitForNavigationAsync(urlString: null, urlRegex: null, urlFunc: null, waitUntil: waitUntil, timeout: timeout, action: action);
 
-        public Task<IResponse> WaitForNavigationAsync(Regex urlRegex, WaitUntilState waitUntil, float? timeout)
-            => MainFrame.WaitForNavigationAsync(urlString: null, urlRegex: urlRegex, urlFunc: null, waitUntil: default, timeout: timeout);
+        public Task<IResponse> WaitForNavigationAsync(Regex urlRegex, Func<Task> action = default, WaitUntilState waitUntil = WaitUntilState.Undefined, float? timeout = default)
+            => MainFrame.WaitForNavigationAsync(urlString: null, urlRegex: urlRegex, urlFunc: null, waitUntil: default, timeout: timeout, action: action);
 
-        public Task<IResponse> WaitForNavigationAsync(Func<string, bool> urlFunc, WaitUntilState waitUntil, float? timeout)
-            => MainFrame.WaitForNavigationAsync(urlString: null, urlRegex: null, urlFunc: urlFunc, waitUntil: default, timeout: timeout);
+        public Task<IResponse> WaitForNavigationAsync(Func<string, bool> urlFunc, Func<Task> action = default, WaitUntilState waitUntil = WaitUntilState.Undefined, float? timeout = default)
+            => MainFrame.WaitForNavigationAsync(urlString: null, urlRegex: null, urlFunc: urlFunc, waitUntil: default, timeout: timeout, action: action);
 
-        public Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, float? timeout)
-            => WaitForEventAsync(PageEvent.Request, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
+        public Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, Func<Task> action = default, float? timeout = default)
+            => WaitForEventAsync(PageEvent.Request, action, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
 
-        public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicateRegex, float? timeout)
-            => WaitForEventAsync(PageEvent.Request, e => urlOrPredicateRegex.IsMatch(e.Url), timeout);
+        public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicateRegex, Func<Task> action = default, float? timeout = default)
+            => WaitForEventAsync(PageEvent.Request, action, e => urlOrPredicateRegex.IsMatch(e.Url), timeout);
 
-        public Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicateFunc, float? timeout)
-            => WaitForEventAsync(PageEvent.Request, e => urlOrPredicateFunc(e), timeout);
+        public Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicateFunc, Func<Task> action = default, float? timeout = default)
+            => WaitForEventAsync(PageEvent.Request, action, e => urlOrPredicateFunc(e), timeout);
 
-        public Task<IPage> WaitForCloseAsync(float? timeout)
-            => WaitForEventAsync(PageEvent.Close, null, timeout);
+        public Task<IPage> WaitForCloseAsync(Func<Task> action = default, float? timeout = default)
+            => WaitForEventAsync(PageEvent.Close, action, null, timeout);
 
-        public Task<IConsoleMessage> WaitForConsoleMessageAsync(Func<IConsoleMessage, bool> predicate, float? timeout)
-            => WaitForEventAsync(PageEvent.Console, predicate, timeout);
+        public Task<IConsoleMessage> WaitForConsoleMessageAsync(Func<Task> action = default, Func<IConsoleMessage, bool> predicate = default, float? timeout = default)
+            => WaitForEventAsync(PageEvent.Console, action, predicate, timeout);
 
-        public Task<IFileChooser> WaitForFileChooserAsync(Func<IFileChooser, bool> predicate, float? timeout)
-            => WaitForEventAsync(PageEvent.FileChooser, predicate, timeout);
+        public Task<IFileChooser> WaitForFileChooserAsync(Func<Task> action = default, Func<IFileChooser, bool> predicate = default, float? timeout = default)
+            => WaitForEventAsync(PageEvent.FileChooser, action, predicate, timeout);
 
-        public Task<IPage> WaitForPopupAsync(Func<IPage, bool> predicate, float? timeout)
-            => WaitForEventAsync(PageEvent.Popup, predicate, timeout);
+        public Task<IPage> WaitForPopupAsync(Func<Task> action = default, Func<IPage, bool> predicate = default, float? timeout = default)
+            => WaitForEventAsync(PageEvent.Popup, action, predicate, timeout);
 
-        public Task<IDownload> WaitForDownloadAsync(Func<IDownload, bool> predicate, float? timeout)
-            => WaitForEventAsync(PageEvent.Download, predicate, timeout);
+        public Task<IDownload> WaitForDownloadAsync(Func<Task> action = default, Func<IDownload, bool> predicate = default, float? timeout = default)
+            => WaitForEventAsync(PageEvent.Download, action, predicate, timeout);
 
-        public Task<IWebSocket> WaitForWebSocketAsync(Func<IWebSocket, bool> predicate, float? timeout)
-            => WaitForEventAsync(PageEvent.WebSocket, predicate, timeout);
+        public Task<IWebSocket> WaitForWebSocketAsync(Func<Task> action = default, Func<IWebSocket, bool> predicate = default, float? timeout = default)
+            => WaitForEventAsync(PageEvent.WebSocket, action, predicate, timeout);
 
-        public Task<IWorker> WaitForWorkerAsync(Func<IWorker, bool> predicate, float? timeout)
-            => WaitForEventAsync(PageEvent.Worker, predicate, timeout);
+        public Task<IWorker> WaitForWorkerAsync(Func<Task> action = default, Func<IWorker, bool> predicate = default, float? timeout = default)
+            => WaitForEventAsync(PageEvent.Worker, action, predicate, timeout);
 
         public Task<IJSHandle> WaitForFunctionAsync(
             string expression,
@@ -359,7 +359,7 @@ namespace Microsoft.Playwright
             float? timeout)
             => MainFrame.WaitForFunctionAsync(true, expression, arg, pollingInterval, timeout);
 
-        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<T, bool> predicate, float? timeout)
+        public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
         {
             if (pageEvent == null)
             {
@@ -380,10 +380,16 @@ namespace Microsoft.Playwright
                 waiter.RejectOnEvent<IPage>(this, PageEvent.Close.Name, new TargetClosedException("Page closed"));
             }
 
-            return await waiter.WaitForEventAsync(this, pageEvent.Name, predicate).ConfigureAwait(false);
+            var result = waiter.WaitForEventAsync(this, pageEvent.Name, predicate);
+            if (action != null)
+            {
+                await Task.WhenAll(result, action()).ConfigureAwait(false);
+            }
+
+            return await result.ConfigureAwait(false);
         }
 
-        public async Task<object> WaitForEventAsync(string @event, float? timeout)
+        public async Task<object> WaitForEventAsync(string @event, Func<Task> action = default, float? timeout = default)
         {
             if (string.IsNullOrEmpty(@event))
             {
@@ -404,7 +410,13 @@ namespace Microsoft.Playwright
                 waiter.RejectOnEvent<EventArgs>(this, PageEvent.Close.Name, new TargetClosedException("Page closed"));
             }
 
-            return await waiter.WaitForEventAsync(this, @event).ConfigureAwait(false);
+            var result = waiter.WaitForEventAsync(this, @event);
+            if (action != null)
+            {
+                await Task.WhenAll(result, action()).ConfigureAwait(false);
+            }
+
+            return await result.ConfigureAwait(false);
         }
 
         public async Task CloseAsync(bool? runBeforeUnload)
@@ -631,14 +643,14 @@ namespace Microsoft.Playwright
         public Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback)
             => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => callback(t1, t2, t3, t4));
 
-        public Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, float? timeout)
-            => WaitForEventAsync(PageEvent.Response, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
+        public Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, Func<Task> action = default, float? timeout = default)
+            => WaitForEventAsync(PageEvent.Response, action, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
 
-        public Task<IResponse> WaitForResponseAsync(Regex urlOrPredicateRegex, float? timeout)
-            => WaitForEventAsync(PageEvent.Response, e => urlOrPredicateRegex.IsMatch(e.Url), timeout);
+        public Task<IResponse> WaitForResponseAsync(Regex urlOrPredicateRegex, Func<Task> action = default, float? timeout = default)
+            => WaitForEventAsync(PageEvent.Response, action, e => urlOrPredicateRegex.IsMatch(e.Url), timeout);
 
-        public Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicateFunc, float? timeout)
-            => WaitForEventAsync(PageEvent.Response, e => urlOrPredicateFunc(e), timeout);
+        public Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicateFunc, Func<Task> action = default, float? timeout = default)
+            => WaitForEventAsync(PageEvent.Response, action, e => urlOrPredicateFunc(e), timeout);
 
         public async Task<byte[]> PdfAsync(
             string path,
