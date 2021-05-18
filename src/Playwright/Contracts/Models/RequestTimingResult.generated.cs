@@ -132,5 +132,6 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("responseEnd")]
         public float ResponseEnd { get; set; }
+
     }
 }

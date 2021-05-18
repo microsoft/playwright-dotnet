@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Tests
             }");
 
             Assert.Equal("username=John Doe", documentCookie);
-            var cookie = (await page.Context.GetCookiesAsync()).Single();
+            var cookie = (await page.Context.CookiesAsync()).Single();
             Assert.Equal("username", cookie.Name);
             Assert.Equal("John Doe", cookie.Value);
             Assert.Equal("localhost", cookie.Domain);
@@ -64,7 +64,7 @@ namespace Microsoft.Playwright.Tests
 
             Assert.Equal("username=John Doe", await page.EvaluateAsync<string>(@"() => document.cookie"));
 
-            var cookie = (await page.Context.GetCookiesAsync()).Single();
+            var cookie = (await page.Context.CookiesAsync()).Single();
             Assert.Equal("username", cookie.Name);
             Assert.Equal("John Doe", cookie.Value);
             Assert.Equal("localhost", cookie.Domain);
@@ -105,7 +105,7 @@ namespace Microsoft.Playwright.Tests
 
             await context.ClearCookiesAsync();
             await page.ReloadAsync();
-            Assert.Empty(await page.Context.GetCookiesAsync());
+            Assert.Empty(await page.Context.CookiesAsync());
             Assert.Empty(await page.EvaluateAsync<string>(@"() => document.cookie"));
 
             tmp.Dispose();
@@ -132,7 +132,7 @@ namespace Microsoft.Playwright.Tests
             await page.FirstChildFrame().EvaluateAsync<string>("document.cookie = 'username=John Doe'");
             await page.WaitForTimeoutAsync(2000);
             bool allowsThirdPart = !TestConstants.IsWebKit;
-            var cookies = await context.GetCookiesAsync(new[] { TestConstants.CrossProcessUrl + "/grid.html" });
+            var cookies = await context.CookiesAsync(new[] { TestConstants.CrossProcessUrl + "/grid.html" });
 
             if (allowsThirdPart)
             {

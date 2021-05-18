@@ -59,5 +59,6 @@ namespace Microsoft.Playwright
         /// <summary><para>File content</para></summary>
         [JsonPropertyName("buffer")]
         public byte[] Buffer { get; set; }
+
     }
 }

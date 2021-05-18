@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Tests
 
             await context.RouteAsync("**/empty.html", (route) =>
             {
-                route.ResumeAsync();
+                route.ContinueAsync();
                 intercepted = true;
             });
 
@@ -199,7 +199,7 @@ namespace Microsoft.Playwright.Tests
 
             await context.RouteAsync("**/empty.html", (route) =>
             {
-                route.ResumeAsync();
+                route.ContinueAsync();
                 intercepted = true;
             });
 

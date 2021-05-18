@@ -1743,5 +1743,6 @@ namespace Microsoft.Playwright
         /// </list>
         /// </param>
         Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = default, WaitUntilState waitUntil = default);
+
     }
 }

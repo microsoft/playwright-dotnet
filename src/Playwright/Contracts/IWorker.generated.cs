@@ -128,5 +128,6 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="action">Action to perform while waiting</param>
         Task<IWorker> WaitForCloseAsync(Func<Task> action = default, float? timeout = default);
+
     }
 }

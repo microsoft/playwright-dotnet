@@ -30,7 +30,7 @@ namespace Microsoft.Playwright.Tests
             });
             Assert.Equal("cookie1=1", await Page.EvaluateAsync<string>("document.cookie"));
             await Context.ClearCookiesAsync();
-            Assert.Empty(await Context.GetCookiesAsync());
+            Assert.Empty(await Context.CookiesAsync());
             await Page.ReloadAsync();
             Assert.Empty(await Page.EvaluateAsync<string>("document.cookie"));
         }
@@ -60,16 +60,16 @@ namespace Microsoft.Playwright.Tests
                 }
             });
 
-            Assert.Single(await Context.GetCookiesAsync());
-            Assert.Single(await anotherContext.GetCookiesAsync());
+            Assert.Single(await Context.CookiesAsync());
+            Assert.Single(await anotherContext.CookiesAsync());
 
             await Context.ClearCookiesAsync();
-            Assert.Empty((await Context.GetCookiesAsync()));
-            Assert.Single((await anotherContext.GetCookiesAsync()));
+            Assert.Empty((await Context.CookiesAsync()));
+            Assert.Single((await anotherContext.CookiesAsync()));
 
             await anotherContext.ClearCookiesAsync();
-            Assert.Empty(await Context.GetCookiesAsync());
-            Assert.Empty(await anotherContext.GetCookiesAsync());
+            Assert.Empty(await Context.CookiesAsync());
+            Assert.Empty(await anotherContext.CookiesAsync());
         }
     }
 }

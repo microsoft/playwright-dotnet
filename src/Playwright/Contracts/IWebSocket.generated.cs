@@ -122,5 +122,6 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="action">Action to perform while waiting</param>
         Task<IWebSocketFrame> WaitForFrameSentAsync(Func<Task> action = default, Func<IWebSocketFrame, bool> predicate = default, float? timeout = default);
+
     }
 }

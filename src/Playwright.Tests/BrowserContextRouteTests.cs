@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Tests
                 Assert.Same(page.MainFrame, route.Request.Frame);
                 Assert.Equal("about:blank", page.MainFrame.Url);
 
-                route.ResumeAsync();
+                route.ContinueAsync();
             });
 
             page = await context.NewPageAsync();
@@ -61,26 +61,26 @@ namespace Microsoft.Playwright.Tests
             Action<IRoute> handler1 = (route) =>
             {
                 intercepted.Add(1);
-                route.ResumeAsync();
+                route.ContinueAsync();
             };
 
             await context.RouteAsync("**/empty.html", handler1);
             await context.RouteAsync("**/empty.html", (route) =>
             {
                 intercepted.Add(2);
-                route.ResumeAsync();
+                route.ContinueAsync();
             });
 
             await context.RouteAsync("**/empty.html", (route) =>
             {
                 intercepted.Add(3);
-                route.ResumeAsync();
+                route.ContinueAsync();
             });
 
             await context.RouteAsync("**/*", (route) =>
             {
                 intercepted.Add(4);
-                route.ResumeAsync();
+                route.ContinueAsync();
             });
 
             await page.GotoAsync(TestConstants.EmptyPage);

@@ -297,5 +297,6 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Returns browser name. For example: <c>'chromium'</c>, <c>'webkit'</c> or <c>'firefox'</c>.</para></summary>
         string Name { get; }
+
     }
 }

@@ -94,5 +94,6 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Contains the URL of the response.</para></summary>
         string Url { get; }
+
     }
 }

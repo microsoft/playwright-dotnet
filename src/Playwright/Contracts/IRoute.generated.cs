@@ -96,7 +96,7 @@ namespace Microsoft.Playwright
         /// {<br/>
         ///     var headers = new Dictionary&lt;string, string&gt;(route.Request.Headers) { { "foo", "bar" } };<br/>
         ///     headers.Remove("origin");<br/>
-        ///     route.ResumeAsync(headers);<br/>
+        ///     route.ContinueAsync(headers);<br/>
         /// });
         /// </code>
         /// </summary>
@@ -104,7 +104,7 @@ namespace Microsoft.Playwright
         /// <param name="method">If set changes the request method (e.g. GET or POST)</param>
         /// <param name="postData">If set changes the post data of request</param>
         /// <param name="headers">If set changes the request HTTP headers. Header values will be converted to a string.</param>
-        Task ResumeAsync(string url = default, string method = default, byte[] postData = default, IEnumerable<KeyValuePair<string, string>> headers = default);
+        Task ContinueAsync(string url = default, string method = default, byte[] postData = default, IEnumerable<KeyValuePair<string, string>> headers = default);
 
         /// <summary>
         /// <para>Fulfills route's request with given response.</para>
@@ -132,5 +132,6 @@ namespace Microsoft.Playwright
 
         /// <summary><para>A request to be routed.</para></summary>
         IRequest Request { get; }
+
     }
 }

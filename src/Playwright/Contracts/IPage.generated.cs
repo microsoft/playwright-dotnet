@@ -1652,7 +1652,7 @@ namespace Microsoft.Playwright
         ///   if (r.Request.PostData.Contains("my-string"))<br/>
         ///       await r.FulfillAsync(body: "mocked-data");<br/>
         ///   else<br/>
-        ///       await r.ResumeAsync();<br/>
+        ///       await r.ContinueAsync();<br/>
         /// });
         /// </code>
         /// <para>
@@ -1702,7 +1702,7 @@ namespace Microsoft.Playwright
         ///   if (r.Request.PostData.Contains("my-string"))<br/>
         ///       await r.FulfillAsync(body: "mocked-data");<br/>
         ///   else<br/>
-        ///       await r.ResumeAsync();<br/>
+        ///       await r.ContinueAsync();<br/>
         /// });
         /// </code>
         /// <para>
@@ -1752,7 +1752,7 @@ namespace Microsoft.Playwright
         ///   if (r.Request.PostData.Contains("my-string"))<br/>
         ///       await r.FulfillAsync(body: "mocked-data");<br/>
         ///   else<br/>
-        ///       await r.ResumeAsync();<br/>
+        ///       await r.ContinueAsync();<br/>
         /// });
         /// </code>
         /// <para>
@@ -3024,5 +3024,6 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <remarks><para>This does not contain ServiceWorkers</para></remarks>
         IReadOnlyCollection<IWorker> Workers { get; }
+
     }
 }

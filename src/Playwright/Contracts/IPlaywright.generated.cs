@@ -128,5 +128,6 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         public IBrowserType Webkit { get; }
+
     }
 }
