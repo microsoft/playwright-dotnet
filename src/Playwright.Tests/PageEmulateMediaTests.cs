@@ -20,11 +20,11 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmulateSchemeWork()
         {
-            await Page.EmulateMediaAsync(ColorScheme.Light);
+            await Page.EmulateMediaAsync(colorScheme: ColorScheme.Light);
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
 
-            await Page.EmulateMediaAsync(ColorScheme.Dark);
+            await Page.EmulateMediaAsync(colorScheme: ColorScheme.Dark);
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
         }
@@ -36,7 +36,7 @@ namespace Microsoft.Playwright.Tests
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
 
-            await Page.EmulateMediaAsync(ColorScheme.Dark);
+            await Page.EmulateMediaAsync(colorScheme: ColorScheme.Dark);
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
 
@@ -53,12 +53,12 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkDuringNavigation()
         {
-            await Page.EmulateMediaAsync(ColorScheme.Light);
+            await Page.EmulateMediaAsync(colorScheme: ColorScheme.Light);
             var navigated = Page.GotoAsync(TestConstants.EmptyPage);
 
             for (int i = 0; i < 9; i++)
             {
-                await Page.EmulateMediaAsync(i % 2 == 0 ? ColorScheme.Dark : ColorScheme.Light);
+                await Page.EmulateMediaAsync(colorScheme: i % 2 == 0 ? ColorScheme.Dark : ColorScheme.Light);
                 await Task.Delay(1);
             }
             await navigated;

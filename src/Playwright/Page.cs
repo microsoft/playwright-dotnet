@@ -279,8 +279,6 @@ namespace Microsoft.Playwright
 
         public Task<IPage> OpenerAsync() => Task.FromResult<IPage>(Opener?.IsClosed == false ? Opener : null);
 
-        public Task EmulateMediaAsync(ColorScheme? colorScheme) => EmulateMediaAsync(null, colorScheme);
-
         public Task EmulateMediaAsync(Media? media, ColorScheme? colorScheme)
         {
             var args = new Dictionary<string, object>();
