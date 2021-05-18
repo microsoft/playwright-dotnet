@@ -279,18 +279,16 @@ namespace Microsoft.Playwright
 
         public Task<IPage> OpenerAsync() => Task.FromResult<IPage>(Opener?.IsClosed == false ? Opener : null);
 
-        public Task EmulateMediaAsync(ColorScheme? colorScheme) => EmulateMediaAsync(null, colorScheme);
-
-        public Task EmulateMediaAsync(Media? media, ColorScheme? colorScheme)
+        public Task EmulateMediaAsync(Media media = default, ColorScheme colorScheme = default)
         {
             var args = new Dictionary<string, object>();
 
-            if (media != null)
+            if (media != 0)
             {
                 args["media"] = media == Media.Undefined ? "null" : media;
             }
 
-            if (colorScheme != null)
+            if (colorScheme != 0)
             {
                 args["colorScheme"] = colorScheme == ColorScheme.Undefined ? "null" : colorScheme;
             }

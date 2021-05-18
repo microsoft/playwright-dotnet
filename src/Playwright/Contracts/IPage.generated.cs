@@ -686,7 +686,7 @@ namespace Microsoft.Playwright
         /// <c>'dark'</c>, <c>'no-preference'</c>. Passing <c>null</c> disables color scheme
         /// emulation.
         /// </param>
-        Task EmulateMediaAsync(Media? media = default, ColorScheme? colorScheme = default);
+        Task EmulateMediaAsync(Media media = default, ColorScheme colorScheme = default);
 
         /// <summary>
         /// <para>
