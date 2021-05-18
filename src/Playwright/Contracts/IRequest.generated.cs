@@ -190,6 +190,5 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="documentOptions">Optional Json options that control custom behaviour when parsing the JSON.</param>
         JsonDocument PostDataJSON(JsonDocumentOptions documentOptions = default);
-
     }
 }

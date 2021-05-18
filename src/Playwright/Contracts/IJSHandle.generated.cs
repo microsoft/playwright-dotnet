@@ -150,6 +150,5 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         Task<T> JsonValueAsync<T>();
-
     }
 }

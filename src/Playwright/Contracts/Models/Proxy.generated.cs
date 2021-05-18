@@ -74,6 +74,5 @@ namespace Microsoft.Playwright
         /// <summary><para>Optional password to use if HTTP proxy requires authentication.</para></summary>
         [JsonPropertyName("password")]
         public string Password { get; set; }
-
     }
 }

@@ -311,6 +311,5 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Returns the browser version.</para></summary>
         string Version { get; }
-
     }
 }

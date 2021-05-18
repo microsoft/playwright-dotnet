@@ -66,6 +66,5 @@ namespace Microsoft.Playwright
         /// <param name="y">
         /// </param>
         Task TapAsync(float x, float y);
-
     }
 }

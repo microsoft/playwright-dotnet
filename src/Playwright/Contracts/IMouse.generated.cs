@@ -116,6 +116,5 @@ namespace Microsoft.Playwright
         /// <param name="button">Defaults to <c>left</c>.</param>
         /// <param name="clickCount">defaults to 1. See <see cref="UIEvent.detail"/>.</param>
         Task UpAsync(MouseButton button = default, int? clickCount = default);
-
     }
 }

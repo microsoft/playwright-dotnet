@@ -59,6 +59,5 @@ namespace Microsoft.Playwright
         /// <summary><para>Non-negative accuracy value. Defaults to <c>0</c>.</para></summary>
         [JsonPropertyName("accuracy")]
         public float? Accuracy { get; set; }
-
     }
 }
