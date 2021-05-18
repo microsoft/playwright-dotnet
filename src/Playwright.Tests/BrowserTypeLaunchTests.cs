@@ -65,28 +65,11 @@ namespace Microsoft.Playwright.Tests
         {
         }
 
-        /// <summary>
-        /// Should curante the message coming from Playwright
-        /// </summary>
-        /// <returns></returns>
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldCurateTheLaunchError()
-        {
-            // Set an invalid location
-            using var playwright = await Microsoft.Playwright.Playwright.CreateAsync(browsersPath: Path.Combine(typeof(Microsoft.Playwright.Playwright).Assembly.Location));
-            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => playwright[TestConstants.Product].LaunchAsync());
-
-            Assert.Contains("Failed to launch", exception.Message);
-            Assert.Contains("Try re-installing the browsers running `playwright.cmd install` in windows or `./playwright.sh install` in MacOS or Linux.", exception.Message);
-            Assert.DoesNotContain("npm install playwright", exception.Message);
-            Environment.SetEnvironmentVariable(EnvironmentVariables.BrowsersPathEnvironmentVariable, null);
-        }
-
         [PlaywrightTest("browsertype-launch.spec.ts", "should reject if executable path is invalid")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectIfExecutablePathIsInvalid()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(executablePath: "random-invalid-path"));
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { ExecutablePath = "random-invalid-path" }));
 
             Assert.Contains("Failed to launch", exception.Message);
         }
@@ -142,7 +125,7 @@ namespace Microsoft.Playwright.Tests
                 ["Foo"] = "Var"
             };
 
-            await using var browser = await BrowserType.LaunchAsync(env: env);
+            await using var browser = await BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { Env = env });
         }
 
         /// <summary>
@@ -160,7 +143,7 @@ namespace Microsoft.Playwright.Tests
                 "--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4"
             };
 
-            await using var browser = await BrowserType.LaunchAsync(ignoreAllDefaultArgs: true, args: args);
+            await using var browser = await BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { IgnoreAllDefaultArgs = true, Args = args });
         }
     }
 }

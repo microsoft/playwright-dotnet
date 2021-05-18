@@ -19,7 +19,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
+            var popupTask = Page.WaitForPopupAsync();
             await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync("() => window.open('about:blank')")
@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithWindowFeatures()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
+            var popupTask = Page.WaitForPopupAsync();
             await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync<string>("() => window.open('about:blank', 'Title', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top=0,left=0')")
@@ -49,7 +49,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldEmitForImmediatelyClosedPopups()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
+            var popupTask = Page.WaitForPopupAsync();
             await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync<string>(@"() => {
@@ -65,7 +65,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldEmitForImmediatelyClosedPopupsWithLocation()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var popup = await Page.WaitForEventAsync(PageEvent.Popup, async () =>
+            var popup = await Page.WaitForPopupAsync(new PageWaitForPopupOptions(), async () =>
             {
                 await Page.EvaluateAsync<string>(@"() => {
                     const win = window.open(window.location.href);
@@ -79,7 +79,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToCaptureAlert()
         {
-            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
+            var popupTask = Page.WaitForPopupAsync();
             var evaluateTask = Page.EvaluateAsync<string>(@"() => {
                 const win = window.open('');
                 win.alert('hello');
@@ -98,7 +98,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithEmptyUrl()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
+            var popupTask = Page.WaitForPopupAsync();
             await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync("() => window.open('')")
@@ -113,7 +113,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithNoopenerAndNoUrl()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
+            var popupTask = Page.WaitForPopupAsync();
             await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync("() => window.open(undefined, null, 'noopener')")
@@ -129,7 +129,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithNoopenerAndAboutBlank()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
+            var popupTask = Page.WaitForPopupAsync();
             await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync("() => window.open('about:blank', null, 'noopener')")
@@ -144,7 +144,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithNoopenerAndUrl()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
+            var popupTask = Page.WaitForPopupAsync();
             await TaskUtils.WhenAll(
                 popupTask,
                 Page.EvaluateAsync("url => window.open(url, null, 'noopener')", TestConstants.EmptyPage)
@@ -160,7 +160,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync("<a target=_blank rel=\"opener\" href=\"/one-style.html\">yo</a>");
-            var popupTask = Page.WaitForEventAsync(PageEvent.Popup).ContinueWith(async task =>
+            var popupTask = Page.WaitForPopupAsync().ContinueWith(async task =>
             {
                 var popup = task.Result;
                 await popup.WaitForLoadStateAsync();
@@ -182,7 +182,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
-            var popupTask = Page.WaitForEventAsync(PageEvent.Popup).ContinueWith(async task =>
+            var popupTask = Page.WaitForPopupAsync().ContinueWith(async task =>
             {
                 var popup = task.Result;
                 await popup.WaitForLoadStateAsync();
@@ -203,7 +203,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
-            var popupTask = Page.WaitForEventAsync(PageEvent.Popup).ContinueWith(async task =>
+            var popupTask = Page.WaitForPopupAsync().ContinueWith(async task =>
             {
                 var popup = task.Result;
                 await popup.WaitForLoadStateAsync();
@@ -224,7 +224,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
-            var popupTask = Page.WaitForEventAsync(PageEvent.Popup).ContinueWith(async task =>
+            var popupTask = Page.WaitForPopupAsync().ContinueWith(async task =>
             {
                 var popup = task.Result;
                 await popup.WaitForLoadStateAsync();

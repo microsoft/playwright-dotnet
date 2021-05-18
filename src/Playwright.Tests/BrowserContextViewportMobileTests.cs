@@ -67,9 +67,9 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldDetectTouchWhenApplyingViewportWithTouches()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = new ViewportSize
+                ViewportSize = new ViewportSize
                 {
                     Width = 800,
                     Height = 600,
@@ -79,7 +79,7 @@ namespace Microsoft.Playwright.Tests
 
             var page = await context.NewPageAsync();
             await page.GotoAsync(TestConstants.EmptyPage);
-            await page.AddScriptTagAsync(url: TestConstants.ServerUrl + "/modernizr.js");
+            await page.AddScriptTagAsync(new PageAddScriptTagOptions { Url = TestConstants.ServerUrl + "/modernizr.js" });
             Assert.True(await page.EvaluateAsync<bool>("() => Modernizr.touchevents"));
         }
 
@@ -102,9 +102,9 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldSupportWindowOrientationEmulation()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = new ViewportSize
+                ViewportSize = new ViewportSize
                 {
                     Width = 300,
                     Height = 400,
@@ -123,9 +123,9 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldFireOrientationChangeEvent()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = new ViewportSize
+                ViewportSize = new ViewportSize
                 {
                     Width = 300,
                     Height = 400,
@@ -154,9 +154,9 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task DefaultMobileViewportsTo980Width()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = new ViewportSize
+                ViewportSize = new ViewportSize
                 {
                     Width = 320,
                     Height = 480,
@@ -173,9 +173,9 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task RespectMetaViewportTag()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = new ViewportSize
+                ViewportSize = new ViewportSize
                 {
                     Width = 320,
                     Height = 480,

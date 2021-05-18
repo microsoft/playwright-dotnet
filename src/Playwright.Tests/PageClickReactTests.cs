@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
 
             await Page.SetContentAsync("<div onclick='window.alert(123)'>Click me</div>");
 
-            var exception = await Assert.ThrowsAsync<TimeoutException>(() => Page.ClickAsync("div", timeout: 3000));
+            var exception = await Assert.ThrowsAsync<TimeoutException>(() => Page.ClickAsync("div", new PageClickOptions { Timeout = 3000 }));
             Assert.Contains("Timeout 3000ms exceeded", exception.Message);
             var dialog = await dialogTask;
             await dialog.DismissAsync();

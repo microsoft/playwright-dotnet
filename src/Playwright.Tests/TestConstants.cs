@@ -37,10 +37,10 @@ namespace Microsoft.Playwright.Tests
             this IBrowserType browserType,
             string userDataDir,
             string[] args = null,
-            LaunchPersistentOptions options = null,
+            BrowserTypeLaunchPersistentContextOptions options = null,
             bool? headless = null)
         {
-            options ??= new LaunchPersistentOptions();
+            options ??= new BrowserTypeLaunchPersistentContextOptions();
             options.Args ??= args;
             options.Headless ??= headless;
             return browserType.LaunchPersistentContextAsync(userDataDir, options);
@@ -48,32 +48,36 @@ namespace Microsoft.Playwright.Tests
 
         internal static Task<IBrowser> LaunchDefaultAsync(
             this IBrowserType browserType,
-            BrowserContextOptions options = null,
+            BrowserNewContextOptions options = null,
             string downloadsPath = null,
             string[] args = null)
         {
-            options ??= new BrowserContextOptions();
-            return browserType.LaunchAsync(
-                    args: args,
-                    downloadsPath: downloadsPath,
-                    slowMo: Convert.ToInt32(Environment.GetEnvironmentVariable("SLOW_MO")),
-                    headless: Convert.ToBoolean(Environment.GetEnvironmentVariable("HEADLESS") ?? "true"),
-                    timeout: 0
-                );
+            options ??= new BrowserNewContextOptions();
+            return browserType.LaunchAsync(new BrowserTypeLaunchOptions
+                {
+                    Args = args,
+                    DownloadsPath = downloadsPath,
+                    SlowMo = Convert.ToInt32(Environment.GetEnvironmentVariable("SLOW_MO")),
+                    Headless = Convert.ToBoolean(Environment.GetEnvironmentVariable("HEADLESS") ?? "true"),
+                    Timeout = 0
+                }
+            );
         }
 
         internal static Task<IBrowser> LaunchDefaultHeadful(
            this IBrowserType browserType,
-           BrowserContextOptions options = null,
+           BrowserNewContextOptions options = null,
            string downloadsPath = null)
         {
-            options ??= new BrowserContextOptions();
-            return browserType.LaunchAsync(
-                    downloadsPath: downloadsPath,
-                    slowMo: Convert.ToInt32(Environment.GetEnvironmentVariable("SLOW_MO")),
-                    headless: false,
-                    timeout: 0
-                );
+            options ??= new BrowserNewContextOptions();
+            return browserType.LaunchAsync(new BrowserTypeLaunchOptions
+                {
+                    DownloadsPath = downloadsPath,
+                    SlowMo = Convert.ToInt32(Environment.GetEnvironmentVariable("SLOW_MO")),
+                    Headless = false,
+                    Timeout = 0
+                }
+            );
         }
 
         public static string FileToUpload => TestUtils.GetWebServerFile("file-to-upload.txt");

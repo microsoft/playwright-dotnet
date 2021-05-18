@@ -3,10 +3,6 @@ using System.Collections.Generic;
 
 namespace Microsoft.Playwright
 {
-    /// <summary>
-    /// Paper format.
-    /// </summary>
-    /// <seealso cref="IPage.PdfAsync(string, float?, bool?, string, string, bool?, bool?, string, string, string, string, Margin, bool?)"/>
     public static class PaperFormat
     {
         /// <summary>

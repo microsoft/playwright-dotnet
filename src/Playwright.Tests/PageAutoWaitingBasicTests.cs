@@ -203,7 +203,7 @@ namespace Microsoft.Playwright.Tests
             Server.SetRoute("/empty.html", _ => Task.CompletedTask);
 
             await Page.SetContentAsync($@"<a href=""{ TestConstants.EmptyPage}"" target=target>empty.html</a>");
-            await Page.ClickAsync("a", noWaitAfter: true);
+            await Page.ClickAsync("a", new PageClickOptions { NoWaitAfter = true });
         }
 
         [PlaywrightTest("page-autowaiting-basic.spec.ts", "should work with waitForLoadState(load)")]
@@ -228,7 +228,7 @@ namespace Microsoft.Playwright.Tests
                     clickLoaded.TrySetResult(true);
                 })),
                 clickLoaded.Task,
-                Page.WaitForNavigationAsync(waitUntil: WaitUntilState.DOMContentLoaded).ContinueWith(_ => messages.Add("domcontentloaded")));
+                Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { WaitUntil = WaitUntilState.DOMContentLoaded }).ContinueWith(_ => messages.Add("domcontentloaded")));
 
             Assert.Equal("route|domcontentloaded|clickload", string.Join("|", messages));
         }

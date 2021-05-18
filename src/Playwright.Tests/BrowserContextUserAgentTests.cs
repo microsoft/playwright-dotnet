@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests
                 Assert.Contains("Mozilla", await page.EvaluateAsync<string>("() => navigator.userAgent"));
             }
 
-            await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { UserAgent = "foobar" }))
+            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions { UserAgent = "foobar" }))
             {
                 var page = await context.NewPageAsync();
 
@@ -46,7 +46,7 @@ namespace Microsoft.Playwright.Tests
                 Assert.Contains("Mozilla", await page.EvaluateAsync<string>("navigator.userAgent"));
             }
 
-            await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { UserAgent = "foobar" }))
+            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions { UserAgent = "foobar" }))
             {
                 var page = await context.NewPageAsync();
 
@@ -69,7 +69,7 @@ namespace Microsoft.Playwright.Tests
                 Assert.DoesNotContain("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
             }
 
-            await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { UserAgent = "iPhone" }))
+            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions { UserAgent = "iPhone" }))
             {
                 var page = await context.NewPageAsync();
                 await page.GotoAsync(TestConstants.ServerUrl + "/mobile.html");
@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldMakeACopyOfDefaultOptions()
         {
-            var options = new BrowserContextOptions
+            var options = new BrowserNewContextOptions
             {
                 UserAgent = "foobar"
             };

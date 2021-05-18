@@ -430,7 +430,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["y"] = y,
                 });
 
-        internal Task SetExtraHttpHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
+        internal Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "setExtraHTTPHeaders",

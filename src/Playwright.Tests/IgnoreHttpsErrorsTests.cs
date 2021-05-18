@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldWork()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions { IgnoreHTTPSErrors = true });
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
             var page = await context.NewPageAsync();
             var requestTask = HttpsServer.WaitForRequest(
                 "/empty.html",
@@ -44,7 +44,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldIsolateContexts()
         {
-            await using (var context = await Browser.NewContextAsync(new BrowserContextOptions { IgnoreHTTPSErrors = true }))
+            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true }))
             {
                 var page = await context.NewPageAsync();
                 var response = await page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html");
@@ -68,9 +68,9 @@ namespace Microsoft.Playwright.Tests
             {
                 await context.Response.WriteAsync($"<iframe src='{TestConstants.EmptyPage}'></iframe>");
             });
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions { IgnoreHTTPSErrors = true });
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.HttpsPrefix + "/mixedcontent.html", WaitUntilState.DOMContentLoaded);
+            await page.GotoAsync(TestConstants.HttpsPrefix + "/mixedcontent.html", new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
             Assert.Equal(2, page.Frames.Count);
             Assert.Equal(3, await page.MainFrame.EvaluateAsync<int>("1 + 2"));
             Assert.Equal(5, await page.FirstChildFrame().EvaluateAsync<int>("2 + 3"));
@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldWorkWithWebSocket()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions { IgnoreHTTPSErrors = true });
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
             var page = await context.NewPageAsync();
             string value = await page.EvaluateAsync<string>(@"endpoint => {
                 let cb;

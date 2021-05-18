@@ -104,13 +104,13 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             await context.RouteAsync("**/empty.html", (route) =>
             {
-                route.FulfillAsync(HttpStatusCode.OK, body: "context");
+                route.FulfillAsync(new RouteFulfillOptions { Status = (int)HttpStatusCode.OK, Body = "context" });
             });
 
             var page = await context.NewPageAsync();
             await page.RouteAsync("**/empty.html", (route) =>
             {
-                route.FulfillAsync(HttpStatusCode.OK, body: "page");
+                route.FulfillAsync(new RouteFulfillOptions { Status = (int)HttpStatusCode.OK, Body = "page" });
             });
 
             var response = await page.GotoAsync(TestConstants.EmptyPage);
@@ -124,13 +124,13 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             await context.RouteAsync("**/empty.html", (route) =>
             {
-                route.FulfillAsync(HttpStatusCode.OK, body: "context");
+                route.FulfillAsync(new RouteFulfillOptions { Status = (int)HttpStatusCode.OK, Body = "context" });
             });
 
             var page = await context.NewPageAsync();
             await page.RouteAsync("**/non-empty.html", (route) =>
             {
-                route.FulfillAsync(HttpStatusCode.OK, body: "page");
+                route.FulfillAsync(new RouteFulfillOptions { Status = (int)HttpStatusCode.OK, Body = "page" });
             });
 
             var response = await page.GotoAsync(TestConstants.EmptyPage);

@@ -10,7 +10,7 @@ namespace ScreenshotsDemo
         static async Task Main(string[] args)
         {
             using var playwright = await Playwright.CreateAsync();
-            await using var browser = await playwright.Chromium.LaunchAsync(new LaunchOptions { Headless = true });
+            await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true });
 
             Console.WriteLine("Navigating microsoft");
             var page = await browser.NewPageAsync();
@@ -22,6 +22,4 @@ namespace ScreenshotsDemo
             Console.WriteLine("Export completed");
         }
     }
-
-
 }

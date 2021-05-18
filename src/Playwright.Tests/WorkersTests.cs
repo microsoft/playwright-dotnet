@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReportConsoleLogs()
         {
             var (message, _) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Console),
+                Page.WaitForConsoleMessageAsync(),
                 Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], {type: 'application/javascript'})))")
             );
 
@@ -151,7 +151,7 @@ namespace Microsoft.Playwright.Tests
 
             Assert.Single(Page.Workers);
 
-            var t = worker.WaitForCloseAsync(timeout: 1);
+            var t = worker.WaitForCloseAsync(new WorkerWaitForCloseOptions { Timeout = 1 });
             await Task.Delay(100);
             await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
             await Assert.ThrowsAsync<TimeoutException>(async () => await t);
@@ -222,7 +222,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatNumberUsingContextLocale()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions { Locale = "ru-RU" });
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { Locale = "ru-RU" });
             var page = await context.NewPageAsync();
             await page.GotoAsync(TestConstants.EmptyPage);
             var (worker, _) = await TaskUtils.WhenAll(

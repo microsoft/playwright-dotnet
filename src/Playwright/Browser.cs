@@ -8,7 +8,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    public class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
+    internal partial class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
     {
         private readonly BrowserInitializer _initializer;
         private readonly TaskCompletionSource<bool> _closedTcs = new TaskCompletionSource<bool>();
@@ -168,68 +168,6 @@ namespace Microsoft.Playwright
         }
 
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
-
-        public Task<IBrowserContext> NewContextAsync(BrowserContextOptions options)
-        {
-            options ??= new BrowserContextOptions();
-            return NewContextAsync(
-                options.AcceptDownloads,
-                options.IgnoreHTTPSErrors,
-                options.BypassCSP,
-                options.Viewport,
-                options.ScreenSize,
-                options.UserAgent,
-                options.DeviceScaleFactor,
-                options.IsMobile,
-                options.HasTouch,
-                options.JavaScriptEnabled,
-                options.TimezoneId,
-                options.Geolocation,
-                options.Locale,
-                options.Permissions,
-                options.ExtraHTTPHeaders,
-                options.Offline,
-                options.HttpCredentials,
-                options.ColorScheme,
-                options.RecordHarPath,
-                options.RecordHarOmitContent,
-                options.RecordVideoDir,
-                options.RecordVideoSize,
-                options.Proxy,
-                options.StorageState,
-                options.StorageStatePath);
-        }
-
-        public Task<IPage> NewPageAsync(BrowserContextOptions options)
-        {
-            options ??= new BrowserContextOptions();
-            return NewPageAsync(
-                options.AcceptDownloads,
-                options.IgnoreHTTPSErrors,
-                options.BypassCSP,
-                options.Viewport,
-                options.ScreenSize,
-                options.UserAgent,
-                options.DeviceScaleFactor,
-                options.IsMobile,
-                options.HasTouch,
-                options.JavaScriptEnabled,
-                options.TimezoneId,
-                options.Geolocation,
-                options.Locale,
-                options.Permissions,
-                options.ExtraHTTPHeaders,
-                options.Offline,
-                options.HttpCredentials,
-                options.ColorScheme,
-                options.RecordHarPath,
-                options.RecordHarOmitContent,
-                options.RecordVideoDir,
-                options.RecordVideoSize,
-                options.Proxy,
-                options.StorageState,
-                options.StorageStatePath);
-        }
 
         private void DidClose()
         {

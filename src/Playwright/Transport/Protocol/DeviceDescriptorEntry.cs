@@ -4,6 +4,6 @@ namespace Microsoft.Playwright.Transport.Protocol
     {
         public string Name { get; set; }
 
-        public BrowserContextOptions Descriptor { get; set; }
+        public BrowserNewContextOptions Descriptor { get; set; }
     }
 }

@@ -121,12 +121,8 @@ namespace Microsoft.Playwright
         string Url { get; }
 
         /// <summary><para>Performs action and waits for the Worker to close.</para></summary>
-        /// <param name="timeout">
-        /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
-        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
-        /// </param>
+        /// <param name="options">Call options</param>
         /// <param name="action">Action to perform while waiting</param>
-        Task<IWorker> WaitForCloseAsync(Func<Task> action = default, float? timeout = default);
+        Task<IWorker> WaitForCloseAsync(WorkerWaitForCloseOptions options = default, Func<Task> action = default);
     }
 }

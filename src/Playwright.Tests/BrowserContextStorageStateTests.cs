@@ -26,7 +26,7 @@ namespace Microsoft.Playwright.Tests
             var page1 = await Context.NewPageAsync();
             await page1.RouteAsync("**/*", (route) =>
             {
-                route.FulfillAsync(body: "<html></html>");
+                route.FulfillAsync(new RouteFulfillOptions { Body = "<html></html>" });
             });
 
             await page1.GotoAsync("https://www.example.com");
@@ -60,7 +60,7 @@ namespace Microsoft.Playwright.Tests
             var page1 = await Context.NewPageAsync();
             await page1.RouteAsync("**/*", (route) =>
             {
-                route.FulfillAsync(body: "<html></html>");
+                route.FulfillAsync(new RouteFulfillOptions { Body = "<html></html>" });
             });
 
             await page1.GotoAsync("https://www.example.com");
@@ -71,14 +71,14 @@ namespace Microsoft.Playwright.Tests
             }");
             using var tempDir = new TempDirectory();
             string path = Path.Combine(tempDir.Path, "storage-state.json");
-            string storage = await Context.StorageStateAsync(path);
+            string storage = await Context.StorageStateAsync(new BrowserContextStorageStateOptions { Path = path });
             Assert.Equal(storage, File.ReadAllText(path));
 
-            await using var context = await Browser.NewContextAsync(storageStatePath: path);
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { StorageStatePath = path });
             var page2 = await context.NewPageAsync();
             await page1.RouteAsync("**/*", (route) =>
             {
-                route.FulfillAsync(body: "<html></html>");
+                route.FulfillAsync(new RouteFulfillOptions { Body = "<html></html>" });
             });
 
             await page1.GotoAsync("https://www.example.com");

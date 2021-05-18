@@ -200,11 +200,8 @@ namespace Microsoft.Playwright
         /// Name of the key to press or a character to generate, such as <c>ArrowLeft</c> or
         /// <c>a</c>.
         /// </param>
-        /// <param name="delay">
-        /// Time to wait between <c>keydown</c> and <c>keyup</c> in milliseconds. Defaults to
-        /// 0.
-        /// </param>
-        Task PressAsync(string key, float? delay = default);
+        /// <param name="options">Call options</param>
+        Task PressAsync(string key, KeyboardPressOptions options = default);
 
         /// <summary>
         /// <para>
@@ -228,8 +225,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="text">A text to type into a focused element.</param>
-        /// <param name="delay">Time to wait between key presses in milliseconds. Defaults to 0.</param>
-        Task TypeAsync(string text, float? delay = default);
+        /// <param name="options">Call options</param>
+        Task TypeAsync(string text, KeyboardTypeOptions options = default);
 
         /// <summary><para>Dispatches a <c>keyup</c> event.</para></summary>
         /// <param name="key">

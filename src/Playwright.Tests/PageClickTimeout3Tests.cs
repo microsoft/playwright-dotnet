@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Tests
             }");
 
             var exception = await Assert.ThrowsAsync<TimeoutException>(()
-                => button.ClickAsync(timeout: 5000));
+                => button.ClickAsync(new ElementHandleClickOptions { Timeout = 5000 }));
 
             Assert.Contains("Timeout 5000ms exceeded.", exception.Message);
         }

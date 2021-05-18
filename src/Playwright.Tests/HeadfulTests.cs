@@ -101,7 +101,7 @@ namespace Microsoft.Playwright.Tests
             await using var browser = await BrowserType.LaunchDefaultHeadful();
             var page = await browser.NewPageAsync();
             await page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
-            await page.ClickAsync("body", button: MouseButton.Right);
+            await page.ClickAsync("body", new PageClickOptions { Button = MouseButton.Right });
         }
 
         [PlaywrightTest("headful.spec.ts", "should(not) block third party cookies")]
@@ -156,7 +156,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldNotOverrideViewportSizeWhenPassedNull()
         {
             await using var browser = await BrowserType.LaunchDefaultHeadful();
-            var context = await browser.NewContextAsync(new BrowserContextOptions { Viewport = ViewportSize.NoViewport });
+            var context = await browser.NewContextAsync(new BrowserNewContextOptions { ViewportSize = ViewportSize.NoViewport });
             var page = await context.NewPageAsync();
             await page.GotoAsync(TestConstants.EmptyPage);
             var popupTask = page.WaitForEventAsync(PageEvent.Popup);
@@ -178,7 +178,7 @@ namespace Microsoft.Playwright.Tests
         public async Task PageBringToFrontShouldWork()
         {
             await using var browser = await BrowserType.LaunchDefaultHeadful();
-            var context = await browser.NewContextAsync(new BrowserContextOptions { Viewport = ViewportSize.NoViewport });
+            var context = await browser.NewContextAsync(new BrowserNewContextOptions { ViewportSize = ViewportSize.NoViewport });
             var page1 = await context.NewPageAsync();
             await page1.SetContentAsync("Page1");
             var page2 = await context.NewPageAsync();

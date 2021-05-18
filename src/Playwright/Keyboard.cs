@@ -3,7 +3,7 @@ using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright
 {
-    internal class Keyboard : IKeyboard
+    internal partial class Keyboard : IKeyboard
     {
         private readonly PageChannel _channel;
 

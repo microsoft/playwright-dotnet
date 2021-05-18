@@ -82,9 +82,9 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkWithPageScale()
         {
-            var context = await Browser.NewContextAsync(new BrowserContextOptions
+            var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = new ViewportSize
+                ViewportSize = new ViewportSize
                 {
                     Height = 400,
                     Width = 400,

@@ -35,7 +35,7 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync("**/*", (route) =>
             {
                 var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["FOO"] = "bar" };
-                route.ContinueAsync(headers: headers);
+                route.ContinueAsync(new RouteContinueOptions { Headers = headers });
             });
             await Page.GotoAsync(TestConstants.EmptyPage);
             var requestTask = Server.WaitForRequest("/sleep.zzz", request => request.Headers["foo"]);
@@ -51,7 +51,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAmendMethodOnMainRequest()
         {
             var methodTask = Server.WaitForRequest("/empty.html", r => r.Method);
-            await Page.RouteAsync("**/*", (route) => route.ContinueAsync(method: HttpMethod.Post.Method));
+            await Page.RouteAsync("**/*", (route) => route.ContinueAsync(new RouteContinueOptions { Method = HttpMethod.Post.Method }));
             await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal("POST", await methodTask);
         }
@@ -63,7 +63,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.RouteAsync("**/*", (route) =>
             {
-                route.ContinueAsync(postData: Encoding.UTF8.GetBytes("doggo"));
+                route.ContinueAsync(new RouteContinueOptions { PostData = Encoding.UTF8.GetBytes("doggo") });
             });
             var requestTask = Server.WaitForRequest("/sleep.zzz", request =>
             {

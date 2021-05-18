@@ -74,13 +74,8 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="y">
         /// </param>
-        /// <param name="button">Defaults to <c>left</c>.</param>
-        /// <param name="clickCount">defaults to 1. See <see cref="UIEvent.detail"/>.</param>
-        /// <param name="delay">
-        /// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
-        /// to 0.
-        /// </param>
-        Task ClickAsync(float x, float y, MouseButton button = default, int? clickCount = default, float? delay = default);
+        /// <param name="options">Call options</param>
+        Task ClickAsync(float x, float y, MouseClickOptions options = default);
 
         /// <summary>
         /// <para>
@@ -92,29 +87,23 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="y">
         /// </param>
-        /// <param name="button">Defaults to <c>left</c>.</param>
-        /// <param name="delay">
-        /// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
-        /// to 0.
-        /// </param>
-        Task DblClickAsync(float x, float y, MouseButton button = default, float? delay = default);
+        /// <param name="options">Call options</param>
+        Task DblClickAsync(float x, float y, MouseDblClickOptions options = default);
 
         /// <summary><para>Dispatches a <c>mousedown</c> event.</para></summary>
-        /// <param name="button">Defaults to <c>left</c>.</param>
-        /// <param name="clickCount">defaults to 1. See <see cref="UIEvent.detail"/>.</param>
-        Task DownAsync(MouseButton button = default, int? clickCount = default);
+        /// <param name="options">Call options</param>
+        Task DownAsync(MouseDownOptions options = default);
 
         /// <summary><para>Dispatches a <c>mousemove</c> event.</para></summary>
         /// <param name="x">
         /// </param>
         /// <param name="y">
         /// </param>
-        /// <param name="steps">defaults to 1. Sends intermediate <c>mousemove</c> events.</param>
-        Task MoveAsync(float x, float y, int? steps = default);
+        /// <param name="options">Call options</param>
+        Task MoveAsync(float x, float y, MouseMoveOptions options = default);
 
         /// <summary><para>Dispatches a <c>mouseup</c> event.</para></summary>
-        /// <param name="button">Defaults to <c>left</c>.</param>
-        /// <param name="clickCount">defaults to 1. See <see cref="UIEvent.detail"/>.</param>
-        Task UpAsync(MouseButton button = default, int? clickCount = default);
+        /// <param name="options">Call options</param>
+        Task UpAsync(MouseUpOptions options = default);
     }
 }

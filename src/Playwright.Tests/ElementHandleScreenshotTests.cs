@@ -200,7 +200,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync(@"<div style='width: 50px; height: 0'></div>");
             var elementHandle = await Page.QuerySelectorAsync("div");
-            var exception = await Assert.ThrowsAsync<TimeoutException>(() => elementHandle.ScreenshotAsync(timeout: 3000));
+            var exception = await Assert.ThrowsAsync<TimeoutException>(() => elementHandle.ScreenshotAsync(new ElementHandleScreenshotOptions { Timeout = 3000 }));
             Assert.Contains("Timeout 3000ms exceeded", exception.Message);
             Assert.Contains("element is not visible", exception.Message);
         }
@@ -241,9 +241,9 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkWithAMobileViewport()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = new ViewportSize
+                ViewportSize = new ViewportSize
                 {
                     Width = 320,
                     Height = 480,
@@ -263,9 +263,9 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkWithDeviceScaleFactor()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = new ViewportSize
+                ViewportSize = new ViewportSize
                 {
                     Width = 320,
                     Height = 480,
@@ -295,9 +295,9 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTakeScreenshotsWhenDefaultViewportIsNull()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = ViewportSize.NoViewport
+                ViewportSize = ViewportSize.NoViewport
             });
             var page = await context.NewPageAsync();
             await page.SetContentAsync("<div style='height: 10000px; background: red'></div>");
@@ -319,15 +319,15 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTakeFullPageScreenshotsWhenDefaultViewportIsNull()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = ViewportSize.NoViewport
+                ViewportSize = ViewportSize.NoViewport
             });
             var page = await context.NewPageAsync();
             await page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
             var sizeBefore = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
 
-            byte[] screenshot = await page.ScreenshotAsync(fullPage: true);
+            byte[] screenshot = await page.ScreenshotAsync(new PageScreenshotOptions { FullPage = true });
             Assert.NotNull(screenshot);
             Assert.NotEmpty(screenshot);
 
@@ -339,13 +339,13 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRestoreDefaultViewportAfterFullPageScreenshot()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = new ViewportSize { Width = 456, Height = 789 },
+                ViewportSize = new ViewportSize { Width = 456, Height = 789 },
             });
             var page = await context.NewPageAsync();
             await TestUtils.VerifyViewportAsync(page, 456, 789);
-            byte[] screenshot = await page.ScreenshotAsync(fullPage: true);
+            byte[] screenshot = await page.ScreenshotAsync(new PageScreenshotOptions { FullPage = true });
             Assert.NotNull(screenshot);
             Assert.NotEmpty(screenshot);
 
@@ -369,9 +369,9 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTakeElementScreenshotWhenDefaultViewportIsNullAndRestoreBack()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = ViewportSize.NoViewport,
+                ViewportSize = ViewportSize.NoViewport,
             });
             var page = await context.NewPageAsync();
 
@@ -430,7 +430,7 @@ namespace Microsoft.Playwright.Tests
             var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(3)");
             using var tmpDir = new TempDirectory();
             string outputPath = Path.Combine(tmpDir.Path, "these", "are", "directories", "screenshot.png");
-            await elementHandle.ScreenshotAsync(outputPath);
+            await elementHandle.ScreenshotAsync(new ElementHandleScreenshotOptions { Path = outputPath });
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-bounding-box.png", outputPath));
         }
     }

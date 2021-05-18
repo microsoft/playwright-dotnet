@@ -99,7 +99,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickWithDisabledJavascript()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions { JavaScriptEnabled = false });
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { JavaScriptEnabled = false });
             var page = await context.NewPageAsync();
             await page.GotoAsync(TestConstants.ServerUrl + "/wrappedlink.html");
             await TaskUtils.WhenAll(
@@ -134,7 +134,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
             const string text = "This is the text that we are going to try to select. Let's see how it goes.";
             await Page.FillAsync("textarea", text);
-            await Page.ClickAsync("textarea", clickCount: 3);
+            await Page.ClickAsync("textarea", new PageClickOptions { ClickCount = 3 });
             Assert.Equal(text, await Page.EvaluateAsync<string>(@"() => {
                 const textarea = document.querySelector('textarea');
                 return textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
@@ -188,7 +188,7 @@ namespace Microsoft.Playwright.Tests
             await Page.EvalOnSelectorAsync("button", "b => b.style.display = 'none'");
 
             var exception = await Assert.ThrowsAsync<PlaywrightException>(()
-                => Page.ClickAsync("button", force: true));
+                => Page.ClickAsync("button", new PageClickOptions { Force = true }));
 
             Assert.Contains("Element is not visible", exception.Message);
             Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("result"));
@@ -200,7 +200,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "b => b.style.display = 'none'");
-            var clickTask = Page.ClickAsync("button", timeout: 0);
+            var clickTask = Page.ClickAsync("button", new PageClickOptions { Timeout = 0 });
 
             await GiveItAChanceToClick(Page);
 
@@ -219,7 +219,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "b => b.style.visibility = 'hidden'");
-            var clickTask = Page.ClickAsync("button", timeout: 0);
+            var clickTask = Page.ClickAsync("button", new PageClickOptions { Timeout = 0 });
 
             await GiveItAChanceToClick(Page);
 
@@ -238,7 +238,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "b => b.parentElement.style.display = 'none'");
-            var clickTask = Page.ClickAsync("button", timeout: 0);
+            var clickTask = Page.ClickAsync("button", new PageClickOptions { Timeout = 0 });
 
             await GiveItAChanceToClick(Page);
 
@@ -303,9 +303,9 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotHangWithTouchEnabledViewports()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = Playwright.Devices["iPhone 6"].Viewport,
+                ViewportSize = Playwright.Devices["iPhone 6"].ViewportSize,
                 HasTouch = Playwright.Devices["iPhone 6"].HasTouch,
             });
 
@@ -374,7 +374,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldFireContextmenuEventOnRightClick()
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/input/scrollable.html");
-            await Page.ClickAsync("#button-8", button: MouseButton.Right);
+            await Page.ClickAsync("#button-8", new PageClickOptions { Button = MouseButton.Right });
             Assert.Equal("context menu", await Page.EvaluateAsync<string>("document.querySelector('#button-8').textContent"));
         }
 
@@ -418,9 +418,9 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonWithDeviceScaleFactorSet()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = new ViewportSize
+                ViewportSize = new ViewportSize
                 {
                     Width = 400,
                     Height = 400,
@@ -444,7 +444,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '8px'");
-            await Page.ClickAsync("button", position: new Position { X = 20, Y = 10 });
+            await Page.ClickAsync("button", new PageClickOptions { Position = new Position { X = 20, Y = 10 } });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
             Assert.Equal(TestConstants.IsWebKit ? 20 + 8 : 20, await Page.EvaluateAsync<int>("offsetX"));
@@ -458,7 +458,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '2em'");
             await Page.EvalOnSelectorAsync("button", "button => button.style.fontSize = '12px'");
-            await Page.ClickAsync("button", position: new Position { X = 20, Y = 10 });
+            await Page.ClickAsync("button", new PageClickOptions { Position = new Position { X = 20, Y = 10 } });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
             Assert.Equal(TestConstants.IsWebKit ? 12 * 2 + 20 : 20, await Page.EvaluateAsync<int>("offsetX"));
@@ -472,7 +472,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '8px'");
             await Page.EvalOnSelectorAsync("button", "button => button.style.height = button.style.width = '2000px'");
-            await Page.ClickAsync("button", position: new Position { X = 1900, Y = 1910 });
+            await Page.ClickAsync("button", new PageClickOptions { Position = new Position { X = 1900, Y = 1910 } });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
             Assert.Equal(TestConstants.IsWebKit ? 1900 + 8 : 1900, await Page.EvaluateAsync<int>("offsetX"));
@@ -496,7 +496,7 @@ namespace Microsoft.Playwright.Tests
                 button.style.borderWidth = '8px';
             }");
 
-            await Page.ClickAsync("button", position: new Position { X = 1900, Y = 1910 });
+            await Page.ClickAsync("button", new PageClickOptions { Position = new Position { X = 1900, Y = 1910 } });
             Assert.Equal("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
             Assert.Equal(TestConstants.IsWebKit ? 1900 + 8 : 1900, await Page.EvaluateAsync<int>("offsetX"));
@@ -507,9 +507,9 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldClickTheButtonWithOffsetWithPageScale()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = new ViewportSize
+                ViewportSize = new ViewportSize
                 {
                     Width = 400,
                     Height = 400,
@@ -525,7 +525,7 @@ namespace Microsoft.Playwright.Tests
                 document.body.style.margin = '0';
             }");
 
-            await page.ClickAsync("button", position: new Position { X = 20, Y = 10 });
+            await page.ClickAsync("button", new PageClickOptions { Position = new Position { X = 20, Y = 10 } });
             Assert.Equal("Clicked", await page.EvaluateAsync<string>("window.result"));
 
             var point = TestConstants.Product switch
@@ -618,7 +618,7 @@ namespace Microsoft.Playwright.Tests
                 document.body.appendChild(flyOver);
             }");
 
-            var clickTask = Page.ClickAsync("button", trial: true);
+            var clickTask = Page.ClickAsync("button", new PageClickOptions { Trial = true });
             Assert.False(clickTask.IsCompleted);
 
             await Page.EvalOnSelectorAsync(".flyover", "flyOver => flyOver.style.left = '0'");
@@ -637,7 +637,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
             await Page.EvalOnSelectorAsync("button", @"button => button.disabled = true");
-            var exception = await Assert.ThrowsAsync<TimeoutException>(() => Page.ClickAsync("button", trial: true, timeout: 500));
+            var exception = await Assert.ThrowsAsync<TimeoutException>(() => Page.ClickAsync("button", new PageClickOptions { Trial = true, Timeout = 500 }));
             Assert.Contains("click action (trial run)", exception.Message);
             Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("window.result"));
         }
@@ -647,7 +647,7 @@ namespace Microsoft.Playwright.Tests
         public async Task TrialRunShouldNotClick()
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.ClickAsync("button", trial: true);
+            await Page.ClickAsync("button", new PageClickOptions { Trial = true });
             Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("window.result"));
         }
 
@@ -663,7 +663,7 @@ namespace Microsoft.Playwright.Tests
                     window['double'] = true;
                 });
             }");
-            await Page.DblClickAsync("button", trial: true);
+            await Page.DblClickAsync("button", new PageDblClickOptions { Trial = true });
             Assert.False(await Page.EvaluateAsync<bool>("double"));
             Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("window.result"));
         }
@@ -685,7 +685,7 @@ namespace Microsoft.Playwright.Tests
                 document.body.appendChild(blocker);
             }");
 
-            await button.ClickAsync(force: true);
+            await button.ClickAsync(new ElementHandleClickOptions { Force = true });
             Assert.Equal("Was not clicked", await Page.EvaluateAsync<string>("window.result"));
         }
 
@@ -795,14 +795,14 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldUpdateModifiersCorrectly()
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
-            await Page.ClickAsync("button", modifiers: new[] { KeyboardModifier.Shift });
+            await Page.ClickAsync("button", new PageClickOptions { Modifiers = new[] { KeyboardModifier.Shift } });
             Assert.True(await Page.EvaluateAsync<bool>("shiftKey"));
-            await Page.ClickAsync("button", modifiers: Array.Empty<KeyboardModifier>());
+            await Page.ClickAsync("button", new PageClickOptions { Modifiers = Array.Empty<KeyboardModifier>() });
             Assert.False(await Page.EvaluateAsync<bool>("shiftKey"));
 
             await Page.Keyboard.DownAsync("Shift");
 
-            await Page.ClickAsync("button", modifiers: Array.Empty<KeyboardModifier>());
+            await Page.ClickAsync("button", new PageClickOptions { Modifiers = Array.Empty<KeyboardModifier>() });
             Assert.False(await Page.EvaluateAsync<bool>("shiftKey"));
 
             await Page.ClickAsync("button");
@@ -835,7 +835,7 @@ namespace Microsoft.Playwright.Tests
             await Page.EvaluateAsync("() => addButton()");
             var handle = await Page.QuerySelectorAsync("button");
             await Page.EvaluateAsync("() => stopButton(true)");
-            var clickTask = handle.ClickAsync(force: true);
+            var clickTask = handle.ClickAsync(new ElementHandleClickOptions { Force = true });
             var exception = await Assert.ThrowsAsync<PlaywrightException>(() => clickTask);
             Assert.Null(await Page.EvaluateAsync<bool?>("window.clicked"));
             Assert.Contains("Element is not attached to the DOM", exception.Message);
@@ -935,7 +935,7 @@ namespace Microsoft.Playwright.Tests
                   </div>");
 
             var handle = await Page.QuerySelectorAsync("button");
-            var clickTask = handle.ClickAsync(force: true);
+            var clickTask = handle.ClickAsync(new ElementHandleClickOptions { Force = true });
             await handle.EvaluateAsync("button => button.className = 'animated'");
             var exception = await Assert.ThrowsAsync<PlaywrightException>(() => clickTask);
             Assert.Null(await Page.EvaluateAsync<bool?>("window.clicked"));

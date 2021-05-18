@@ -103,7 +103,7 @@ namespace Microsoft.Playwright
         /// }
         /// </code>
         /// </summary>
-        public IReadOnlyDictionary<string, BrowserContextOptions> Devices { get; }
+        public IReadOnlyDictionary<string, BrowserNewContextOptions> Devices { get; }
 
         /// <summary>
         /// <para>

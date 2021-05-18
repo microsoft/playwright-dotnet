@@ -112,8 +112,7 @@ namespace Microsoft.Playwright
         /// process tree, unless <paramref name="interestingOnly"/> is set to <c>false</c>.
         /// </para>
         /// </remarks>
-        /// <param name="interestingOnly">Prune uninteresting nodes from the tree. Defaults to <c>true</c>.</param>
-        /// <param name="root">The root DOM element for the snapshot. Defaults to the whole page.</param>
-        Task<AccessibilitySnapshotResult> SnapshotAsync(bool? interestingOnly = default, IElementHandle root = default);
+        /// <param name="options">Call options</param>
+        Task<AccessibilitySnapshotResult> SnapshotAsync(AccessibilitySnapshotOptions options = default);
     }
 }

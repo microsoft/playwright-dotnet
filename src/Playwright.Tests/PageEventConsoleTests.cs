@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Tests
             }
             Page.Console += EventHandler;
             await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Console),
+                Page.WaitForConsoleMessageAsync(),
                 Page.EvaluateAsync("() => console.log('hello', 5, { foo: 'bar'})"));
 
             Assert.Equal("hello 5 JSHandle@object", message.Text);
@@ -93,7 +93,7 @@ namespace Microsoft.Playwright.Tests
             Page.Console += EventHandler;
             await TaskUtils.WhenAll(
                 Page.EvaluateAsync("() => console.error(window)"),
-                Page.WaitForEventAsync(PageEvent.Console)
+                Page.WaitForConsoleMessageAsync()
             );
             Assert.Equal("JSHandle@object", message.Text);
         }
@@ -104,7 +104,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync("about:blank");
             var (messageEvent, _) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Console),
+                Page.WaitForConsoleMessageAsync(),
                 Page.EvaluateAsync("async url => fetch(url).catch (e => { })", TestConstants.EmptyPage)
             );
             Assert.Contains("Access-Control-Allow-Origin", messageEvent.Text);
@@ -116,7 +116,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldHaveLocationForConsoleAPICalls()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var messageEvent = await Page.WaitForEventAsync(PageEvent.Console, async () =>
+            var messageEvent = await Page.WaitForConsoleMessageAsync(new PageWaitForConsoleMessageOptions(), async () =>
             {
                 await Page.GotoAsync(TestConstants.ServerUrl + "/consolelog.html");
             });
@@ -131,7 +131,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
             var (popup, _) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Popup),
+                Page.WaitForPopupAsync(),
                 Page.EvaluateAsync<bool>(@"async () =>
                 {
                     // 1. Create a popup that Playwright is not connected to.

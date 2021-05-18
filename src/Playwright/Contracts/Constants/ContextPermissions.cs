@@ -4,10 +4,6 @@ using System.Text;
 
 namespace Microsoft.Playwright
 {
-    /// <summary>
-    /// Contains all the constants relevant to permissions.
-    /// <seealso cref="IBrowserContext.GrantPermissionsAsync(IEnumerable{string}, string)"/>
-    /// </summary>
     public static class ContextPermissions
     {
         public const string Geolocation = "geolocation";

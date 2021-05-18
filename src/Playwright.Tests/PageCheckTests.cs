@@ -98,7 +98,7 @@ namespace Microsoft.Playwright.Tests
         public async Task TrialRunShouldNotCheck()
         {
             await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
-            await Page.CheckAsync("input", trial: true);
+            await Page.CheckAsync("input", new PageCheckOptions { Trial = true });
             Assert.False(await Page.EvaluateAsync<bool>("window['checkbox'].checked"));
         }
 
@@ -107,7 +107,7 @@ namespace Microsoft.Playwright.Tests
         public async Task TrialRunShouldNotUncheck()
         {
             await Page.SetContentAsync("<input id='checkbox' type='checkbox' checked></input>");
-            await Page.CheckAsync("input", trial: true);
+            await Page.CheckAsync("input", new PageCheckOptions { Trial = true });
             Assert.True(await Page.EvaluateAsync<bool>("window['checkbox'].checked"));
         }
     }

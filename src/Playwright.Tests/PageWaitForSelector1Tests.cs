@@ -38,7 +38,7 @@ namespace Microsoft.Playwright.Tests
             var frame = Page.MainFrame;
             await frame.WaitForSelectorAsync("*");
             await frame.EvaluateAsync(AddElement, "div");
-            await frame.WaitForSelectorAsync("div", WaitForSelectorState.Attached);
+            await frame.WaitForSelectorAsync("div", new FrameWaitForSelectorOptions { State = WaitForSelectorState.Attached });
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "elementHandle.waitForSelector should immediately resolve if node exists")]
@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<span>extra</span><div><span>target</span></div>");
             var div = await Page.QuerySelectorAsync("div");
-            var span = await div.WaitForSelectorAsync("span", WaitForSelectorState.Attached);
+            var span = await div.WaitForSelectorAsync("span", new ElementHandleWaitForSelectorOptions { State = WaitForSelectorState.Attached });
             Assert.Equal("target", await span.EvaluateAsync<string>("e => e.textContent"));
         }
 
@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<div></div>");
             var div = await Page.QuerySelectorAsync("div");
-            var task = div.WaitForSelectorAsync("span", WaitForSelectorState.Attached);
+            var task = div.WaitForSelectorAsync("span", new ElementHandleWaitForSelectorOptions { State = WaitForSelectorState.Attached });
             await div.EvaluateAsync("div => div.innerHTML = '<span>target</span>'");
             var span = await task;
             Assert.Equal("target", await span.EvaluateAsync<string>("e => e.textContent"));
@@ -69,7 +69,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<div></div>");
             var div = await Page.QuerySelectorAsync("div");
-            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => div.WaitForSelectorAsync("span", WaitForSelectorState.Attached, 100));
+            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => div.WaitForSelectorAsync("span", new ElementHandleWaitForSelectorOptions { State = WaitForSelectorState.Attached, Timeout = 100 }));
             Assert.Contains("Timeout 100ms exceeded.", exception.Message);
         }
 
@@ -111,7 +111,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
             var frame = Page.MainFrame;
-            var watchdog = frame.WaitForSelectorAsync("div", WaitForSelectorState.Attached);
+            var watchdog = frame.WaitForSelectorAsync("div", new FrameWaitForSelectorOptions { State = WaitForSelectorState.Attached });
             await frame.EvaluateAsync(AddElement, "br");
             await frame.EvaluateAsync(AddElement, "div");
             var eHandle = await watchdog;
@@ -126,7 +126,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
             var frame = Page.MainFrame;
-            var watchdog = frame.WaitForSelectorAsync("div", timeout: 5000);
+            var watchdog = frame.WaitForSelectorAsync("div", new FrameWaitForSelectorOptions { Timeout = 5000 });
 
             await frame.EvaluateAsync(@"() => {
               const div = document.createElement('div');
@@ -175,7 +175,7 @@ namespace Microsoft.Playwright.Tests
               document.body.appendChild(div);
             }");
 
-            var watchdog = frame.WaitForSelectorAsync("div", WaitForSelectorState.Hidden, 5000);
+            var watchdog = frame.WaitForSelectorAsync("div", new FrameWaitForSelectorOptions { State = WaitForSelectorState.Hidden, Timeout = 5000 });
             await GiveItTimeToLogAsync(frame);
 
             await frame.EvaluateAsync(@"() => {
@@ -226,7 +226,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWhenNodeIsAddedThroughInnerHTML()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var watchdog = Page.WaitForSelectorAsync("h3 div", WaitForSelectorState.Attached);
+            var watchdog = Page.WaitForSelectorAsync("h3 div", new PageWaitForSelectorOptions { State = WaitForSelectorState.Attached });
             await Page.EvaluateAsync(AddElement, "span");
             await Page.EvaluateAsync("document.querySelector('span').innerHTML = '<h3><div></div></h3>'");
             await watchdog;
@@ -239,7 +239,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.EmptyPage);
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
             var otherFrame = Page.FirstChildFrame();
-            var watchdog = Page.WaitForSelectorAsync("div", WaitForSelectorState.Attached);
+            var watchdog = Page.WaitForSelectorAsync("div", new PageWaitForSelectorOptions { State = WaitForSelectorState.Attached });
             await otherFrame.EvaluateAsync(AddElement, "div");
             await Page.EvaluateAsync(AddElement, "div");
             var eHandle = await watchdog;
@@ -254,7 +254,7 @@ namespace Microsoft.Playwright.Tests
             await FrameUtils.AttachFrameAsync(Page, "frame2", TestConstants.EmptyPage);
             var frame1 = Page.FirstChildFrame();
             var frame2 = Page.Frames.ElementAt(2);
-            var waitForSelectorPromise = frame2.WaitForSelectorAsync("div", WaitForSelectorState.Attached);
+            var waitForSelectorPromise = frame2.WaitForSelectorAsync("div", new FrameWaitForSelectorOptions { State = WaitForSelectorState.Attached });
             await frame1.EvaluateAsync(AddElement, "div");
             await frame2.EvaluateAsync(AddElement, "div");
             var eHandle = await waitForSelectorPromise;

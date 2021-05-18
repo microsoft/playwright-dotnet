@@ -103,9 +103,9 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldPropagateDefaultViewportToThePage()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = new ViewportSize
+                ViewportSize = new ViewportSize
                 {
                     Width = 456,
                     Height = 789
@@ -126,7 +126,7 @@ namespace Microsoft.Playwright.Tests
                 Height = 789
             };
 
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions { Viewport = viewport });
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { ViewportSize = viewport });
 
             viewport.Width = 567;
 
@@ -139,7 +139,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectDeviceScaleFactor()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 DeviceScaleFactor = 3
             });
@@ -152,9 +152,9 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowDeviceScaleFactorWithViewportDisabled()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new BrowserContextOptions
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = ViewportSize.NoViewport,
+                ViewportSize = ViewportSize.NoViewport,
                 DeviceScaleFactor = 3,
             }));
             Assert.Equal("\"deviceScaleFactor\" option is not supported with null \"viewport\"", exception.Message);
@@ -164,9 +164,9 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowIsMobileWithViewportDisabled()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new BrowserContextOptions
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = ViewportSize.NoViewport,
+                ViewportSize = ViewportSize.NoViewport,
                 IsMobile = true,
             }));
             Assert.Equal("\"isMobile\" option is not supported with null \"viewport\"", exception.Message);
@@ -256,7 +256,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldDisableJavascript()
         {
-            await using (var context = await Browser.NewContextAsync(javaScriptEnabled: false))
+            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions { JavaScriptEnabled = false }))
             {
                 var page = await context.NewPageAsync();
                 await page.GotoAsync("data:text/html, <script>var something = 'forbidden'</script>");
@@ -280,7 +280,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToNavigateAfterDisablingJavascript()
         {
-            await using var context = await Browser.NewContextAsync(javaScriptEnabled: false);
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { JavaScriptEnabled = false });
             var page = await context.NewPageAsync();
             await page.GotoAsync(TestConstants.EmptyPage);
         }
@@ -289,7 +289,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithOfflineOption()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions { Offline = true });
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { Offline = true });
             var page = await context.NewPageAsync();
             await Assert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync(TestConstants.EmptyPage));
             await context.SetOfflineAsync(false);

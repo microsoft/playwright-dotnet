@@ -20,11 +20,11 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmulateSchemeWork()
         {
-            await Page.EmulateMediaAsync(colorScheme: ColorScheme.Light);
+            await Page.EmulateMediaAsync(new PageEmulateMediaOptions { ColorScheme = ColorScheme.Light });
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
 
-            await Page.EmulateMediaAsync(colorScheme: ColorScheme.Dark);
+            await Page.EmulateMediaAsync(new PageEmulateMediaOptions { ColorScheme = ColorScheme.Dark });
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
         }
@@ -36,11 +36,11 @@ namespace Microsoft.Playwright.Tests
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
 
-            await Page.EmulateMediaAsync(colorScheme: ColorScheme.Dark);
+            await Page.EmulateMediaAsync(new PageEmulateMediaOptions { ColorScheme = ColorScheme.Dark });
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
 
-            await Page.EmulateMediaAsync(colorScheme: ColorScheme.Undefined);
+            await Page.EmulateMediaAsync(new PageEmulateMediaOptions { ColorScheme = ColorScheme.Undefined });
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
         }
@@ -53,12 +53,12 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkDuringNavigation()
         {
-            await Page.EmulateMediaAsync(colorScheme: ColorScheme.Light);
+            await Page.EmulateMediaAsync(new PageEmulateMediaOptions { ColorScheme = ColorScheme.Light });
             var navigated = Page.GotoAsync(TestConstants.EmptyPage);
 
             for (int i = 0; i < 9; i++)
             {
-                await Page.EmulateMediaAsync(colorScheme: i % 2 == 0 ? ColorScheme.Dark : ColorScheme.Light);
+                await Page.EmulateMediaAsync(new PageEmulateMediaOptions { ColorScheme = i % 2 == 0 ? ColorScheme.Dark : ColorScheme.Light });
                 await Task.Delay(1);
             }
             await navigated;
@@ -70,7 +70,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkInPopup()
         {
-            await using (var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 ColorScheme = ColorScheme.Dark,
             }))
@@ -89,7 +89,7 @@ namespace Microsoft.Playwright.Tests
                 Assert.False(await popup.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
             }
 
-            await using (var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 ColorScheme = ColorScheme.Light,
             }))
@@ -113,7 +113,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkInCrossProcessIframe()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 ColorScheme = ColorScheme.Dark,
             });
@@ -132,13 +132,13 @@ namespace Microsoft.Playwright.Tests
         {
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
-            await Page.EmulateMediaAsync(Media.Print);
+            await Page.EmulateMediaAsync(new PageEmulateMediaOptions { Media = Media.Print });
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
             await Page.EmulateMediaAsync();
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
-            await Page.EmulateMediaAsync(Media.Undefined);
+            await Page.EmulateMediaAsync(new PageEmulateMediaOptions { Media = Media.Undefined });
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
         }

@@ -37,7 +37,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    public class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
+    internal partial class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     {
         private readonly FrameChannel _channel;
         private readonly List<LoadState> _loadStates = new List<LoadState>();
@@ -188,18 +188,6 @@ namespace Microsoft.Playwright
 
         public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg) => EvalOnSelectorAsync<T>(false, selector, expression, arg);
 
-        public Task<IResponse> WaitForNavigationAsync(string urlString, Func<Task> action = default, WaitUntilState waitUntil = default, float? timeout = default)
-            => WaitForNavigationAsync(urlString, null, null, waitUntil, timeout, action);
-
-        public Task<IResponse> WaitForNavigationAsync(Func<Task> action = default, WaitUntilState waitUntil = WaitUntilState.Undefined, float? timeout = default)
-            => WaitForNavigationAsync(null, null, null, waitUntil, timeout, action);
-
-        public Task<IResponse> WaitForNavigationAsync(Regex urlRegex, Func<Task> action = default, WaitUntilState waitUntil = WaitUntilState.Undefined, float? timeout = default)
-            => WaitForNavigationAsync(null, urlRegex, null, waitUntil, timeout, action);
-
-        public Task<IResponse> WaitForNavigationAsync(Func<string, bool> urlFunc, Func<Task> action = default, WaitUntilState waitUntil = WaitUntilState.Undefined, float? timeout = default)
-            => WaitForNavigationAsync(null, null, urlFunc, waitUntil, timeout, action);
-
         public Task FocusAsync(string selector, float? timeout) => FocusAsync(false, selector, timeout);
 
         public Task SetInputFilesAsync(string selector, string files, bool? noWaitAfter, float? timeout)
@@ -338,12 +326,12 @@ namespace Microsoft.Playwright
             => WaitForURLAsync(null, null, urlFunc, timeout, waitUntil);
 
         internal async Task<IResponse> WaitForNavigationAsync(
-            string urlString,
-            Regex urlRegex,
-            Func<string, bool> urlFunc,
-            WaitUntilState waitUntil,
-            float? timeout,
-            Func<Task> action)
+            Func<Task> action = default,
+            string urlString = default,
+            Regex urlRegex = default,
+            Func<string, bool> urlFunc = default,
+            WaitUntilState waitUntil = default,
+            float? timeout = default)
         {
             waitUntil = waitUntil.EnsureDefaultValue(WaitUntilState.Load);
             var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", timeout);
@@ -689,7 +677,7 @@ namespace Microsoft.Playwright
                 return WaitForLoadStateAsync(waitUntil.EnsureDefaultValue(WaitUntilState.Load).ToLoadState(), timeout);
             }
 
-            return WaitForNavigationAsync(urlString, urlRegex, urlFunc, waitUntil, timeout, null);
+            return WaitForNavigationAsync(null, urlString, urlRegex, urlFunc, waitUntil, timeout);
         }
 
         private Waiter SetupNavigationWaiter(string apiName, float? timeout)

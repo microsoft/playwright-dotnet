@@ -10,7 +10,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    internal class Worker : ChannelOwnerBase, IChannelOwner<Worker>, IWorker
+    internal partial class Worker : ChannelOwnerBase, IChannelOwner<Worker>, IWorker
     {
         private readonly WorkerChannel _channel;
         private readonly WorkerInitializer _initializer;

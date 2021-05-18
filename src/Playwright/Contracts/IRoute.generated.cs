@@ -100,11 +100,8 @@ namespace Microsoft.Playwright
         /// });
         /// </code>
         /// </summary>
-        /// <param name="url">If set changes the request URL. New URL must have same protocol as original one.</param>
-        /// <param name="method">If set changes the request method (e.g. GET or POST)</param>
-        /// <param name="postData">If set changes the post data of request</param>
-        /// <param name="headers">If set changes the request HTTP headers. Header values will be converted to a string.</param>
-        Task ContinueAsync(string url = default, string method = default, byte[] postData = default, IEnumerable<KeyValuePair<string, string>> headers = default);
+        /// <param name="options">Call options</param>
+        Task ContinueAsync(RouteContinueOptions options = default);
 
         /// <summary>
         /// <para>Fulfills route's request with given response.</para>
@@ -118,17 +115,8 @@ namespace Microsoft.Playwright
         /// <para>An example of serving static file:</para>
         /// <code>await page.RouteAsync("**/xhr_endpoint", route =&gt; route.FulfillAsync(path: "mock_data.json"));</code>
         /// </summary>
-        /// <param name="status">Response status code, defaults to <c>200</c>.</param>
-        /// <param name="headers">Response headers. Header values will be converted to a string.</param>
-        /// <param name="contentType">If set, equals to setting <c>Content-Type</c> response header.</param>
-        /// <param name="body">Optional response body as text.</param>
-        /// <param name="bodyBytes">Optional response body as raw bytes.</param>
-        /// <param name="path">
-        /// File path to respond with. The content type will be inferred from file extension.
-        /// If <c>path</c> is a relative path, then it is resolved relative to the current working
-        /// directory.
-        /// </param>
-        Task FulfillAsync(int? status = default, IEnumerable<KeyValuePair<string, string>> headers = default, string contentType = default, string body = default, byte[] bodyBytes = default, string path = default);
+        /// <param name="options">Call options</param>
+        Task FulfillAsync(RouteFulfillOptions options = default);
 
         /// <summary><para>A request to be routed.</para></summary>
         IRequest Request { get; }

@@ -85,14 +85,7 @@ namespace Microsoft.Playwright
         /// Name that is used in selectors as a prefix, e.g. <c>{name: 'foo'}</c> enables <c>foo=myselectorbody</c>
         /// selectors. May only contain <c>[a-zA-Z0-9_]</c> characters.
         /// </param>
-        /// <param name="script">Script that evaluates to a selector engine instance.</param>
-        /// <param name="scriptPath">Instead of specifying <paramref name="script"/>, gives the file name to load from.</param>
-        /// <param name="contentScript">
-        /// Whether to run this selector engine in isolated JavaScript environment. This environment
-        /// has access to the same DOM, but not any JavaScript objects from the frame's scripts.
-        /// Defaults to <c>false</c>. Note that running as a content script is not guaranteed
-        /// when this engine is used together with other registered engines.
-        /// </param>
-        Task RegisterAsync(string name, string script = null, string scriptPath = null, bool? contentScript = default);
+        /// <param name="options">Call options</param>
+        Task RegisterAsync(string name, SelectorsRegisterOptions options = default);
     }
 }

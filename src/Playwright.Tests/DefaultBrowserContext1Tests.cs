@@ -160,9 +160,9 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportViewportOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
+            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
             {
-                Viewport = new ViewportSize
+                ViewportSize = new ViewportSize
                 {
                     Width = 456,
                     Height = 789
@@ -181,7 +181,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportDeviceScaleFactorOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
+            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
             {
                 DeviceScaleFactor = 3
             });
@@ -196,7 +196,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportUserAgentOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
+            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
             {
                 UserAgent = "foobar"
             });
@@ -217,13 +217,13 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportBypassCSPOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
+            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
             {
                 BypassCSP = true
             });
 
             await page.GotoAsync(TestConstants.ServerUrl + "/csp.html");
-            await page.AddScriptTagAsync(content: "window.__injected = 42;");
+            await page.AddScriptTagAsync(new PageAddScriptTagOptions { Content = "window.__injected = 42;" });
             Assert.Equal(42, await page.EvaluateAsync<int>("window.__injected"));
 
             tmp.Dispose();
@@ -234,7 +234,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportJavascriptEnabledOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
+            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
             {
                 JavaScriptEnabled = false
             });
@@ -259,7 +259,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRupportHttpCredentialsOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
+            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
             {
                 HttpCredentials = new HttpCredentials
                 {
@@ -280,7 +280,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportOfflineOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
+            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
             {
                 Offline = true
             });
@@ -297,7 +297,7 @@ namespace Microsoft.Playwright.Tests
         {
         }
 
-        private async Task<(TempDirectory tmp, IBrowserContext context, IPage page)> LaunchAsync(LaunchPersistentOptions options = null)
+        private async Task<(TempDirectory tmp, IBrowserContext context, IPage page)> LaunchAsync(BrowserTypeLaunchPersistentContextOptions options = null)
         {
             var tmp = new TempDirectory();
             var context = await BrowserType.LaunchDefaultPersistentContext(

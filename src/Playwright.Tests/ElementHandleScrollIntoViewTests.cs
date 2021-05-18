@@ -93,7 +93,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<div style=\"display: none\">Hello</div>");
             var div = await Page.QuerySelectorAsync("div");
-            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => div.ScrollIntoViewIfNeededAsync(3000));
+            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => div.ScrollIntoViewIfNeededAsync(new ElementHandleScrollIntoViewIfNeededOptions { Timeout = 3000 }));
             Assert.Contains("element is not visible", exception.Message);
         }
 

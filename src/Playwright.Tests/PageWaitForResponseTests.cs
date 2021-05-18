@@ -37,7 +37,10 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRespectTimeout()
         {
             var exception = await Assert.ThrowsAsync<TimeoutException>(
-                () => Page.WaitForEventAsync(PageEvent.Response, predicate: _ => false, timeout: 1));
+                () => Page.WaitForResponseAsync(_ => false, new PageWaitForResponseOptions
+                    {
+                        Timeout = 1,
+                    }));
         }
 
         [PlaywrightTest("page-wait-for-response.spec.ts", "should respect default timeout")]
@@ -46,7 +49,7 @@ namespace Microsoft.Playwright.Tests
         {
             Page.SetDefaultTimeout(1);
             var exception = await Assert.ThrowsAsync<TimeoutException>(
-                () => Page.WaitForEventAsync(PageEvent.Response, predicate: _ => false));
+                () => Page.WaitForResponseAsync(_ => false));
         }
 
         [PlaywrightTest("page-wait-for-response.spec.ts", "should work with predicate")]
@@ -54,7 +57,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithPredicate()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var task = Page.WaitForEventAsync(PageEvent.Response, predicate: e => e.Url == TestConstants.ServerUrl + "/digits/2.png");
+            var task = Page.WaitForResponseAsync(e => e.Url == TestConstants.ServerUrl + "/digits/2.png");
             var (responseEvent, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync<string>(@"() => {
@@ -71,7 +74,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithNoTimeout()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var task = Page.WaitForResponseAsync(TestConstants.ServerUrl + "/digits/2.png", timeout: 0);
+            var task = Page.WaitForResponseAsync(TestConstants.ServerUrl + "/digits/2.png", new PageWaitForResponseOptions { Timeout = 0 });
             var (response, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync(@"() => setTimeout(() => {

@@ -12,7 +12,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    public class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>, IBrowserContext
+    internal partial class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>, IBrowserContext
     {
         private readonly TaskCompletionSource<bool> _closeTcs = new();
         private readonly Dictionary<string, Delegate> _bindings = new();
@@ -194,7 +194,7 @@ namespace Microsoft.Playwright
         public Task RouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler)
             => RouteAsync(null, null, urlFunc, handler);
 
-        public Task SetExtraHttpHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
+        public Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
             => Channel.SetExtraHTTPHeadersAsync(headers);
 
         public Task SetGeolocationAsync(Geolocation geolocation) => Channel.SetGeolocationAsync(geolocation);
@@ -231,6 +231,12 @@ namespace Microsoft.Playwright
             ContextEvent.CloseEventName => await WaitForEventAsync(ContextEvent.Close, action, null, timeout).ConfigureAwait(false),
             _ => throw new InvalidOperationException(),
         };
+
+        public Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, BrowserContextWaitForEventOptions options = default, Func<Task> action = default)
+        {
+            options ??= new BrowserContextWaitForEventOptions();
+            return WaitForEventAsync(playwrightEvent, action, null, options.Timeout);
+        }
 
         public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
         {
@@ -280,7 +286,7 @@ namespace Microsoft.Playwright
                 }
             }
 
-            _ = route.ContinueAsync();
+            _ = route.ContinueAsync(new RouteContinueOptions { });
         }
 
         private Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler)

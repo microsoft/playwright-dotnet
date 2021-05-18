@@ -7,7 +7,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    public class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrowserType
+    internal partial class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrowserType
     {
         /// <summary>
         /// Browser type Chromium.
@@ -40,30 +40,6 @@ namespace Microsoft.Playwright
         public string ExecutablePath => _initializer.ExecutablePath;
 
         public string Name => _initializer.Name;
-
-        public async Task<IBrowser> LaunchAsync(LaunchOptions options)
-        {
-            options ??= new LaunchOptions();
-
-            return (await _channel.LaunchAsync(
-                options.Headless,
-                options.Channel,
-                options.ExecutablePath,
-                options.Args,
-                options.Proxy,
-                options.DownloadsPath,
-                options.ChromiumSandbox,
-                options.FirefoxUserPrefs,
-                options.HandleSIGINT,
-                options.HandleSIGTERM,
-                options.HandleSIGHUP,
-                options.Timeout,
-                options.Env,
-                options.Devtools,
-                options.SlowMo,
-                options.IgnoreDefaultArgs,
-                options.IgnoreAllDefaultArgs).ConfigureAwait(false)).Object;
-        }
 
         public async Task<IBrowser> LaunchAsync(
             IEnumerable<string> args = default,
@@ -101,91 +77,6 @@ namespace Microsoft.Playwright
                 slowMo,
                 ignoreDefaultArgs,
                 ignoreAllDefaultArgs).ConfigureAwait(false)).Object;
-
-        public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchOptions options)
-        {
-            if (userDataDir is null)
-            {
-                throw new ArgumentNullException(nameof(userDataDir));
-            }
-
-            options ??= new LaunchOptions();
-
-            return (await _channel.LaunchPersistentContextAsync(
-                userDataDir,
-                headless: options.Headless,
-                channel: options.Channel,
-                executablePath: options.ExecutablePath,
-                args: options.Args,
-                proxy: options.Proxy,
-                downloadsPath: options.DownloadsPath,
-                chromiumSandbox: options.ChromiumSandbox,
-                handleSIGINT: options.HandleSIGINT,
-                handleSIGTERM: options.HandleSIGTERM,
-                handleSIGHUP: options.HandleSIGHUP,
-                timeout: options.Timeout,
-                env: options.Env,
-                devtools: options.Devtools,
-                slowMo: options.SlowMo,
-                ignoreHTTPSErrors: options.IgnoreHTTPSErrors,
-                recordHarPath: options.RecordHarPath,
-                recordHarOmitContent: options.RecordHarOmitContent,
-                recordVideoDir: options.RecordVideoDir,
-                recordVideoSize: options.RecordVideoSize,
-                ignoreDefaultArgs: options.IgnoreDefaultArgs,
-                ignoreAllDefaultArgs: options.IgnoreAllDefaultArgs).ConfigureAwait(false)).Object;
-        }
-
-        public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, LaunchPersistentOptions options)
-        {
-            if (string.IsNullOrEmpty(userDataDir))
-            {
-                throw new ArgumentException($"'{nameof(userDataDir)}' cannot be null or empty.", nameof(userDataDir));
-            }
-
-            options ??= new LaunchPersistentOptions();
-
-            return (await _channel.LaunchPersistentContextAsync(
-                userDataDir,
-                options.Headless,
-                options.Channel,
-                options.ExecutablePath,
-                options.Args,
-                options.Proxy,
-                options.DownloadsPath,
-                options.ChromiumSandbox,
-                options.HandleSIGINT,
-                options.HandleSIGTERM,
-                options.HandleSIGHUP,
-                options.Timeout,
-                options.Env,
-                options.Devtools,
-                options.SlowMo,
-                options.AcceptDownloads,
-                options.IgnoreHTTPSErrors,
-                options.BypassCSP,
-                options.Viewport,
-                options.ScreenSize,
-                options.UserAgent,
-                options.DeviceScaleFactor,
-                options.IsMobile,
-                options.HasTouch,
-                options.JavaScriptEnabled,
-                options.TimezoneId,
-                options.Geolocation,
-                options.Locale,
-                options.Permissions,
-                options.ExtraHTTPHeaders,
-                options.Offline,
-                options.HttpCredentials,
-                options.ColorScheme,
-                options.RecordHarPath,
-                options.RecordHarOmitContent,
-                options.RecordVideoDir,
-                options.RecordVideoSize,
-                options.IgnoreDefaultArgs,
-                options.IgnoreAllDefaultArgs).ConfigureAwait(false)).Object;
-        }
 
         public async Task<IBrowserContext> LaunchPersistentContextAsync(
             string userDataDir,

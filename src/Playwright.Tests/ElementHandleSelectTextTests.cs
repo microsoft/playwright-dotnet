@@ -75,7 +75,7 @@ namespace Microsoft.Playwright.Tests
             var textarea = await Page.QuerySelectorAsync("textarea");
             await textarea.EvaluateAsync("e => e.style.display = 'none'");
 
-            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => textarea.SelectTextAsync(3000));
+            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => textarea.SelectTextAsync(new ElementHandleSelectTextOptions { Timeout = 3000 }));
             Assert.Contains("element is not visible", exception.Message);
         }
 
@@ -88,7 +88,7 @@ namespace Microsoft.Playwright.Tests
             await textarea.EvaluateAsync("textarea => textarea.value = 'some value'");
             await textarea.EvaluateAsync("e => e.style.display = 'none'");
 
-            var task = textarea.SelectTextAsync(3000);
+            var task = textarea.SelectTextAsync(new ElementHandleSelectTextOptions { Timeout = 3000 });
             await Page.EvaluateAsync("() => new Promise(f => setTimeout(f, 1000))");
             Assert.False(task.IsCompleted);
             await textarea.EvaluateAsync("e => e.style.display = 'block'");

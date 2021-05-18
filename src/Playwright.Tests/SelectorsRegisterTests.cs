@@ -104,16 +104,16 @@ namespace Microsoft.Playwright.Tests
                 }
             })";
 
-            exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Playwright.Selectors.RegisterAsync("$", createDummySelector));
+            exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Playwright.Selectors.RegisterAsync("$", new SelectorsRegisterOptions { Script = createDummySelector }));
             Assert.Contains("Selector engine name may only contain [a-zA-Z0-9_] characters", exception.Message);
 
             await TestUtils.RegisterEngineAsync(Playwright, "dummy", createDummySelector);
             await TestUtils.RegisterEngineAsync(Playwright, "duMMy", createDummySelector);
 
-            exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Playwright.Selectors.RegisterAsync("dummy", createDummySelector));
+            exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Playwright.Selectors.RegisterAsync("dummy", new SelectorsRegisterOptions { Script = createDummySelector }));
             Assert.Contains("\"dummy\" selector engine has been already registered", exception.Message);
 
-            exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Playwright.Selectors.RegisterAsync("css", createDummySelector));
+            exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Playwright.Selectors.RegisterAsync("css", new SelectorsRegisterOptions { Script = createDummySelector }));
             Assert.Contains("\"css\" is a predefined selector engine", exception.Message);
         }
     }

@@ -45,7 +45,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.EmptyPage);
 
             var (popup, _) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Popup),
+                Page.WaitForPopupAsync(),
                 Page.EvaluateAsync("url => window.__popup = window.open(url)", TestConstants.EmptyPage));
 
             var divHandle = await Page.EvaluateHandleAsync(@"() => {
