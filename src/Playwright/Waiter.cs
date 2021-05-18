@@ -16,9 +16,9 @@ namespace Microsoft.Playwright
         private readonly List<Action> _dispose = new();
         private readonly CancellationTokenSource _cts = new();
         private readonly string _waitId = Guid.NewGuid().ToString();
+        private readonly ChannelBase _channel;
 
         private bool _disposed;
-        private ChannelBase _channel;
         private string _error;
 
         internal Waiter(ChannelBase channel, string apiName)
@@ -26,11 +26,13 @@ namespace Microsoft.Playwright
             _channel = channel;
             var beforeArgs = new { info = new { apiName = apiName, waitId = _waitId, phase = "before" } };
             var connection = _channel.Connection;
-            Forget(connection.SendMessageToServerAsync(channel.Guid, "waitForEventInfo", beforeArgs));
+
+            _ = connection.SendMessageToServerAsync(channel.Guid, "waitForEventInfo", beforeArgs, waitForResponse: false);
             _dispose.Add(() =>
             {
                 var afterArgs = new { info = new { waitId = _waitId, phase = "after", error = _error } };
-                Forget(_channel.Connection.SendMessageToServerAsync(channel.Guid, "waitForEventInfo", afterArgs));
+
+                _ = _channel.Connection.SendMessageToServerAsync(channel.Guid, "waitForEventInfo", afterArgs, waitForResponse: false);
             });
         }
 
@@ -53,7 +55,7 @@ namespace Microsoft.Playwright
         {
             _logs.Add(log);
             var logArgs = new { info = new { waitId = _waitId, phase = "log", message = log } };
-            Forget(_channel.Connection.SendMessageToServerAsync(_channel.Guid, "waitForEventInfo", logArgs));
+            _ = _channel.Connection.SendMessageToServerAsync(_channel.Guid, "waitForEventInfo", logArgs);
         }
 
         internal void RejectOnEvent<T>(
@@ -178,10 +180,6 @@ namespace Microsoft.Playwright
             {
                 _dispose.Add(dispose);
             }
-        }
-
-        private void Forget(Task task)
-        {
         }
     }
 }
