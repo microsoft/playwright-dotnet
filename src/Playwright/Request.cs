@@ -72,7 +72,7 @@ namespace Microsoft.Playwright
 
         public async Task<IResponse> ResponseAsync() => (await _channel.GetResponseAsync().ConfigureAwait(false))?.Object;
 
-        public JsonDocument PostDataJSON(JsonDocumentOptions documentOptions = default)
+        public JsonDocument PostDataJSON()
         {
             if (PostData == null)
             {
@@ -99,7 +99,7 @@ namespace Microsoft.Playwright
                 return null;
             }
 
-            return JsonDocument.Parse(content, documentOptions);
+            return JsonDocument.Parse(content);
         }
     }
 }

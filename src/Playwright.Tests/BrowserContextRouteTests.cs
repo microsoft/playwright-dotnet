@@ -104,13 +104,13 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             await context.RouteAsync("**/empty.html", (route) =>
             {
-                route.FulfillAsync(HttpStatusCode.OK, "context");
+                route.FulfillAsync(HttpStatusCode.OK, body: "context");
             });
 
             var page = await context.NewPageAsync();
             await page.RouteAsync("**/empty.html", (route) =>
             {
-                route.FulfillAsync(HttpStatusCode.OK, "page");
+                route.FulfillAsync(HttpStatusCode.OK, body: "page");
             });
 
             var response = await page.GotoAsync(TestConstants.EmptyPage);
@@ -124,13 +124,13 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             await context.RouteAsync("**/empty.html", (route) =>
             {
-                route.FulfillAsync(HttpStatusCode.OK, "context");
+                route.FulfillAsync(HttpStatusCode.OK, body: "context");
             });
 
             var page = await context.NewPageAsync();
             await page.RouteAsync("**/non-empty.html", (route) =>
             {
-                route.FulfillAsync(HttpStatusCode.OK, "page");
+                route.FulfillAsync(HttpStatusCode.OK, body: "page");
             });
 
             var response = await page.GotoAsync(TestConstants.EmptyPage);

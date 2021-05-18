@@ -98,7 +98,7 @@ namespace Microsoft.Playwright.Tests
                 int slash = route.Request.Url.LastIndexOf("/");
                 string name = route.Request.Url.Substring(slash + 1);
 
-                route.FulfillAsync(HttpStatusCode.OK, "responseFromInterception:" + name, contentType: "text/css");
+                route.FulfillAsync(HttpStatusCode.OK, body: "responseFromInterception:" + name, contentType: "text/css");
             });
 
             string swResponse2 = await Page.EvaluateAsync<string>("() => fetchDummy('foo')");

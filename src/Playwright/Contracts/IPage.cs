@@ -8,9 +8,6 @@ namespace Microsoft.Playwright
 {
     public partial interface IPage
     {
-        /// <inheritdoc cref="EmulateMediaAsync(Media?, ColorScheme?)"/>
-        Task EmulateMediaAsync(ColorScheme? colorScheme);
-
         /// <inheritdoc cref="EvaluateAsync{T}(string, object)"/>
         public Task<JsonElement?> EvaluateAsync(string expression, object arg = default);
 

@@ -37,12 +37,12 @@ namespace Microsoft.Playwright
 
         public Task FulfillAsync(
             HttpStatusCode status,
-            string body = null,
-            byte[] bodyBytes = null,
-            string contentType = null,
-            IEnumerable<KeyValuePair<string, string>> headers = null,
-            string path = null)
-            => FulfillAsync((int?)status, headers, contentType, body, bodyBytes, path);
+            IEnumerable<KeyValuePair<string, string>> headers = default,
+            string contentType = default,
+            string body = default,
+            byte[] bodyBytes = default,
+            string path = default)
+            => FulfillAsync((int?)status, headers: headers, contentType: contentType, body: body, bodyBytes: bodyBytes, path: path);
 
         public Task FulfillAsync(
             int? status = default,
