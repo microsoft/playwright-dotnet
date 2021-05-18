@@ -58,7 +58,7 @@ namespace Microsoft.Playwright
 
         public Task AbortAsync(string errorCode = RequestAbortErrorCode.Failed) => _channel.AbortAsync(errorCode);
 
-        public Task ResumeAsync(
+        public Task ContinueAsync(
             string url = default,
             string method = default,
             byte[] postData = default,

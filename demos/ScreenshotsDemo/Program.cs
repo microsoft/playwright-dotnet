@@ -22,4 +22,6 @@ namespace ScreenshotsDemo
             Console.WriteLine("Export completed");
         }
     }
+
+
 }

@@ -63,5 +63,6 @@ namespace Microsoft.Playwright
         /// <summary><para>Left margin, accepts values labeled with units. Defaults to <c>0</c>.</para></summary>
         [JsonPropertyName("left")]
         public string Left { get; set; }
+
     }
 }

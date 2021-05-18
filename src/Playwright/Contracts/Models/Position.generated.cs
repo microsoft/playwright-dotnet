@@ -55,5 +55,6 @@ namespace Microsoft.Playwright
         /// <summary><para></para></summary>
         [JsonPropertyName("y")]
         public float Y { get; set; }
+
     }
 }

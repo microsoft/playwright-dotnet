@@ -113,7 +113,7 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// Adds cookies into this browser context. All pages within this context will have
-        /// these cookies installed. Cookies can be obtained via <see cref="IBrowserContext.GetCookiesAsync"/>.
+        /// these cookies installed. Cookies can be obtained via <see cref="IBrowserContext.CookiesAsync"/>.
         /// </para>
         /// <code>await context.AddCookiesAsync(new[] { cookie1, cookie2 });</code>
         /// </summary>
@@ -187,7 +187,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="urls">Optional list of URLs.</param>
-        Task<IReadOnlyCollection<BrowserContextCookiesResult>> GetCookiesAsync(IEnumerable<string> urls = default);
+        Task<IReadOnlyCollection<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls = default);
 
         /// <summary>
         /// <para>
@@ -379,7 +379,7 @@ namespace Microsoft.Playwright
         ///     if (r.Request.PostData.Contains("my-string"))<br/>
         ///         await r.FulfillAsync(body: "mocked-data");<br/>
         ///     else<br/>
-        ///         await r.ResumeAsync();<br/>
+        ///         await r.ContinueAsync();<br/>
         /// });
         /// </code>
         /// <para>
@@ -428,7 +428,7 @@ namespace Microsoft.Playwright
         ///     if (r.Request.PostData.Contains("my-string"))<br/>
         ///         await r.FulfillAsync(body: "mocked-data");<br/>
         ///     else<br/>
-        ///         await r.ResumeAsync();<br/>
+        ///         await r.ContinueAsync();<br/>
         /// });
         /// </code>
         /// <para>
@@ -477,7 +477,7 @@ namespace Microsoft.Playwright
         ///     if (r.Request.PostData.Contains("my-string"))<br/>
         ///         await r.FulfillAsync(body: "mocked-data");<br/>
         ///     else<br/>
-        ///         await r.ResumeAsync();<br/>
+        ///         await r.ContinueAsync();<br/>
         /// });
         /// </code>
         /// <para>
@@ -672,5 +672,6 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="action">Action to perform while waiting</param>
         Task<IPage> WaitForPageAsync(Func<Task> action = default, Func<IPage, bool> predicate = default, float? timeout = default);
+
     }
 }

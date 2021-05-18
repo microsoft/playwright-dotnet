@@ -115,5 +115,6 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Returns downloaded url.</para></summary>
         string Url { get; }
+
     }
 }

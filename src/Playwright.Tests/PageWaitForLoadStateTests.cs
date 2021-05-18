@@ -129,7 +129,7 @@ namespace Microsoft.Playwright.Tests
             {
                 routeReachedTask.TrySetResult(true);
                 await requestTask.Task;
-                await route.ResumeAsync();
+                await route.ContinueAsync();
             });
 
             await frame.GotoAsync(TestConstants.ServerUrl + "/one-style.html", WaitUntilState.DOMContentLoaded);

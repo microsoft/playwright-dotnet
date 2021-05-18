@@ -123,7 +123,7 @@ namespace Microsoft.Playwright
             }
         }
 
-        public Task<IReadOnlyCollection<BrowserContextCookiesResult>> GetCookiesAsync(IEnumerable<string> urls = null) => Channel.GetCookiesAsync(urls);
+        public Task<IReadOnlyCollection<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls = null) => Channel.CookiesAsync(urls);
 
         public Task ExposeBindingAsync(string name, Action callback, bool? handle = null)
             => ExposeBindingAsync(name, _ => callback());
@@ -280,7 +280,7 @@ namespace Microsoft.Playwright
                 }
             }
 
-            _ = route.ResumeAsync();
+            _ = route.ContinueAsync();
         }
 
         private Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler)

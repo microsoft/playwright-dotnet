@@ -157,7 +157,7 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync(TestConstants.CrossProcessUrl + "/something", (route) =>
             {
                 playwrightRequest = route.Request;
-                route.ResumeAsync(headers: route.Request.Headers.ToDictionary(x => x.Key, x => x.Value));
+                route.ContinueAsync(headers: route.Request.Headers.ToDictionary(x => x.Key, x => x.Value));
             });
 
             string textAfterRoute = await Page.EvaluateAsync<string>(@"async url => {

@@ -156,5 +156,6 @@ namespace Microsoft.Playwright
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
         Task SetFilesAsync(IEnumerable<FilePayload> filesEnumerableFilePayload, bool? noWaitAfter = default, float? timeout = default);
+
     }
 }

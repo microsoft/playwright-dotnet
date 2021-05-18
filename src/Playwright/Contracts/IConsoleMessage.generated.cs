@@ -77,5 +77,6 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         string Type { get; }
+
     }
 }

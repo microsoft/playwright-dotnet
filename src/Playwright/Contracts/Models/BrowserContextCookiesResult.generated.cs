@@ -47,7 +47,7 @@ using System.Threading.Tasks;
 namespace Microsoft.Playwright
 {
     /// <summary>
-    /// Result of calling <see cref="IBrowserContext.GetCookiesAsync"/>.
+    /// Result of calling <see cref="IBrowserContext.CookiesAsync"/>.
     /// </summary>
     public partial class BrowserContextCookiesResult
     {
@@ -82,5 +82,6 @@ namespace Microsoft.Playwright
         /// <summary><para></para></summary>
         [JsonPropertyName("sameSite")]
         public SameSiteAttribute SameSite { get; set; }
+
     }
 }

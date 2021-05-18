@@ -63,5 +63,6 @@ namespace Microsoft.Playwright
         /// <summary><para>height of clipping area</para></summary>
         [JsonPropertyName("height")]
         public float Height { get; set; }
+
     }
 }

@@ -149,7 +149,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["offline"] = offline,
                 });
 
-        internal async Task<IReadOnlyCollection<BrowserContextCookiesResult>> GetCookiesAsync(IEnumerable<string> urls)
+        internal async Task<IReadOnlyCollection<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls)
         {
             return (await Connection.SendMessageToServerAsync(
                 Guid,

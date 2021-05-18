@@ -130,7 +130,7 @@ namespace Microsoft.Playwright.Tests
             await page.WaitForTimeoutAsync(2000);
             bool allowsThirdParty = TestConstants.IsChromium || TestConstants.IsFirefox;
             Assert.Equal(allowsThirdParty ? "username=John Doe" : string.Empty, documentCookie);
-            var cookies = await page.Context.GetCookiesAsync(new[] { TestConstants.CrossProcessUrl + "/grid.html" });
+            var cookies = await page.Context.CookiesAsync(new[] { TestConstants.CrossProcessUrl + "/grid.html" });
 
             if (allowsThirdParty)
             {

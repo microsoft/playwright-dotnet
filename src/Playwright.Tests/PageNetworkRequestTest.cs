@@ -117,7 +117,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
             Server.SetRoute("/post", _ => Task.CompletedTask);
-            await Page.RouteAsync("/post", (route) => route.ResumeAsync());
+            await Page.RouteAsync("/post", (route) => route.ContinueAsync());
             IRequest request = null;
             Page.Request += (_, e) => request = e;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: new Uint8Array(Array.from(Array(256).keys())) })");

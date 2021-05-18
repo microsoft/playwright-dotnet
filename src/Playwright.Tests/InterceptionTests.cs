@@ -52,7 +52,7 @@ namespace Microsoft.Playwright.Tests
 
             var page = await context.NewPageAsync();
 
-            await page.RouteAsync("**/*", (route) => route.ResumeAsync());
+            await page.RouteAsync("**/*", (route) => route.ContinueAsync());
             var response = await page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html");
             Assert.Equal((int)HttpStatusCode.OK, response.Status);
         }
@@ -66,7 +66,7 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync("**/*", (route) =>
             {
                 requests.Add(route.Request.Url.Split('/').Last(), route.Request);
-                route.ResumeAsync();
+                route.ContinueAsync();
             });
 
             Server.SetRedirect("/rrredirect", "/frames/one-frame.html");
