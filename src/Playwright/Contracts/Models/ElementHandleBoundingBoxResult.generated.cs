@@ -66,6 +66,5 @@ namespace Microsoft.Playwright
         /// <summary><para>the height of the element in pixels.</para></summary>
         [JsonPropertyName("height")]
         public float Height { get; set; }
-
     }
 }

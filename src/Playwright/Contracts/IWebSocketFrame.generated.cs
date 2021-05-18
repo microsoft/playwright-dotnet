@@ -60,6 +60,5 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Returns text payload.</para></summary>
         string Text { get; }
-
     }
 }

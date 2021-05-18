@@ -58,6 +58,5 @@ namespace Microsoft.Playwright
         /// <summary><para>page height in pixels.</para></summary>
         [JsonPropertyName("height")]
         public int Height { get; set; }
-
     }
 }

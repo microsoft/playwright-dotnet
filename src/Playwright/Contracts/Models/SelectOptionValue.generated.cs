@@ -59,6 +59,5 @@ namespace Microsoft.Playwright
         /// <summary><para>Matches by the index. Optional.</para></summary>
         [JsonPropertyName("index")]
         public int? Index { get; set; }
-
     }
 }

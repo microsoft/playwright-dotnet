@@ -55,6 +55,5 @@ namespace Microsoft.Playwright
         /// <summary><para>Video frame height.</para></summary>
         [JsonPropertyName("height")]
         public int Height { get; set; }
-
     }
 }

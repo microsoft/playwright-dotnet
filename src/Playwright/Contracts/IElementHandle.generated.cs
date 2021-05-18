@@ -993,6 +993,5 @@ namespace Microsoft.Playwright
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </param>
         Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorState state = default, float? timeout = default);
-
     }
 }

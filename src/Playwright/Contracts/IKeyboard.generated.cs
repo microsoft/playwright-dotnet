@@ -237,6 +237,5 @@ namespace Microsoft.Playwright
         /// <c>a</c>.
         /// </param>
         Task UpAsync(string key);
-
     }
 }

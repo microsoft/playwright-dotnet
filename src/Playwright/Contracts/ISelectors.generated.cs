@@ -94,6 +94,5 @@ namespace Microsoft.Playwright
         /// when this engine is used together with other registered engines.
         /// </param>
         Task RegisterAsync(string name, string script = null, string scriptPath = null, bool? contentScript = default);
-
     }
 }

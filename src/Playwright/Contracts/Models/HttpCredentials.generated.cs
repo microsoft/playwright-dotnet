@@ -55,6 +55,5 @@ namespace Microsoft.Playwright
         /// <summary><para></para></summary>
         [JsonPropertyName("password")]
         public string Password { get; set; }
-
     }
 }

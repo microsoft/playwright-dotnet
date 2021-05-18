@@ -82,6 +82,5 @@ namespace Microsoft.Playwright
         /// <summary><para></para></summary>
         [JsonPropertyName("sameSite")]
         public SameSiteAttribute SameSite { get; set; }
-
     }
 }

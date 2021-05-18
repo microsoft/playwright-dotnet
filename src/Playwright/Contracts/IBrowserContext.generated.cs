@@ -672,6 +672,5 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="action">Action to perform while waiting</param>
         Task<IPage> WaitForPageAsync(Func<Task> action = default, Func<IPage, bool> predicate = default, float? timeout = default);
-
     }
 }

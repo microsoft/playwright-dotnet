@@ -159,6 +159,5 @@ namespace Microsoft.Playwright
         /// <summary><para>Child nodes, if any, if applicable.</para></summary>
         [JsonPropertyName("children")]
         public IEnumerable<AccessibilitySnapshotResult> Children { get; set; }
-
     }
 }

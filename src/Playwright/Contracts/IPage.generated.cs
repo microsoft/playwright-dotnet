@@ -3024,6 +3024,5 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <remarks><para>This does not contain ServiceWorkers</para></remarks>
         IReadOnlyCollection<IWorker> Workers { get; }
-
     }
 }

@@ -132,6 +132,5 @@ namespace Microsoft.Playwright
 
         /// <summary><para>A request to be routed.</para></summary>
         IRequest Request { get; }
-
     }
 }

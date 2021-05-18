@@ -76,6 +76,5 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="path">Path where the video should be saved.</param>
         Task SaveAsAsync(string path);
-
     }
 }
