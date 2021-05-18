@@ -27,12 +27,12 @@ namespace Microsoft.Playwright
             var beforeArgs = new { info = new { apiName = apiName, waitId = _waitId, phase = "before" } };
             var connection = _channel.Connection;
 
-            _ = connection.SendMessageToServerAsync(channel.Guid, "waitForEventInfo", beforeArgs, waitForResponse: false);
+            _ = connection.SendMessageToServerAsync(channel.Guid, "waitForEventInfo", beforeArgs);
             _dispose.Add(() =>
             {
                 var afterArgs = new { info = new { waitId = _waitId, phase = "after", error = _error } };
 
-                _ = _channel.Connection.SendMessageToServerAsync(channel.Guid, "waitForEventInfo", afterArgs, waitForResponse: false);
+                _ = _channel.Connection.SendMessageToServerAsync(channel.Guid, "waitForEventInfo", afterArgs);
             });
         }
 
