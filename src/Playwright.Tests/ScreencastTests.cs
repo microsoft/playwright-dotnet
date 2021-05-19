@@ -44,10 +44,10 @@ namespace Microsoft.Playwright.Tests
         {
             using var tempDirectory = new TempDirectory();
             var context = await Browser.NewContextAsync(new BrowserNewContextOptions
-                {
-                    RecordVideoDir = tempDirectory.Path,
-                    RecordVideoSize = new RecordVideoSize() { Height = 100, Width = 100 }
-                });
+            {
+                RecordVideoDir = tempDirectory.Path,
+                RecordVideoSize = new RecordVideoSize() { Height = 100, Width = 100 }
+            });
 
             var page = await context.NewPageAsync();
             await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
@@ -63,10 +63,10 @@ namespace Microsoft.Playwright.Tests
         {
             using var tempDirectory = new TempDirectory();
             var context = await Browser.NewContextAsync(new BrowserNewContextOptions
-                {
-                    RecordVideoDir = tempDirectory.Path,
-                    RecordVideoSize = new RecordVideoSize { Height = 100, Width = 100 }
-                });
+            {
+                RecordVideoDir = tempDirectory.Path,
+                RecordVideoSize = new RecordVideoSize { Height = 100, Width = 100 }
+            });
 
             var page = await context.NewPageAsync();
             await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
@@ -83,10 +83,10 @@ namespace Microsoft.Playwright.Tests
         {
             using var tempDirectory = new TempDirectory();
             var context = await Browser.NewContextAsync(new BrowserNewContextOptions
-                {
-                    RecordVideoDir = tempDirectory.Path,
-                    RecordVideoSize = new RecordVideoSize() { Height = 100, Width = 100 }
-                });
+            {
+                RecordVideoDir = tempDirectory.Path,
+                RecordVideoSize = new RecordVideoSize() { Height = 100, Width = 100 }
+            });
 
             var page = await context.NewPageAsync();
             string path = await page.Video.PathAsync();
@@ -145,10 +145,10 @@ namespace Microsoft.Playwright.Tests
             using var userDirectory = new TempDirectory();
             using var tempDirectory = new TempDirectory();
             var context = await BrowserType.LaunchPersistentContextAsync(userDirectory.Path, new BrowserTypeLaunchPersistentContextOptions
-                {
-                    RecordVideoDir = tempDirectory.Path,
-                    RecordVideoSize = new RecordVideoSize() { Height = 100, Width = 100 },
-                });
+            {
+                RecordVideoDir = tempDirectory.Path,
+                RecordVideoSize = new RecordVideoSize() { Height = 100, Width = 100 },
+            });
 
             var page = await context.NewPageAsync();
             await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");

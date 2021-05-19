@@ -39,15 +39,15 @@ namespace Microsoft.Playwright.Tests
             await Page.SetViewportSizeAsync(500, 500);
             await Page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
             byte[] screenshot = await Page.ScreenshotAsync(new PageScreenshotOptions
+            {
+                Clip = new Clip
                 {
-                    Clip = new Clip
-                    {
-                        X = 50,
-                        Y = 100,
-                        Width = 150,
-                        Height = 100
-                    }
+                    X = 50,
+                    Y = 100,
+                    Width = 150,
+                    Height = 100
                 }
+            }
             );
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-clip-rect.png", screenshot));
         }
@@ -60,16 +60,16 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
             await Page.EvaluateAsync("() => window.scrollBy(150, 200)");
             byte[] screenshot = await Page.ScreenshotAsync(new PageScreenshotOptions
+            {
+                FullPage = true,
+                Clip = new Clip
                 {
-                    FullPage = true,
-                    Clip = new Clip
-                    {
-                        X = 50,
-                        Y = 100,
-                        Width = 150,
-                        Height = 100,
-                    }
-                });
+                    X = 50,
+                    Y = 100,
+                    Width = 150,
+                    Height = 100,
+                }
+            });
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-clip-rect.png", screenshot));
         }
 
@@ -80,15 +80,15 @@ namespace Microsoft.Playwright.Tests
             await Page.SetViewportSizeAsync(500, 500);
             await Page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
             byte[] screenshot = await Page.ScreenshotAsync(new PageScreenshotOptions
+            {
+                Clip = new Clip
                 {
-                    Clip = new Clip
-                    {
-                        X = 50,
-                        Y = 450,
-                        Width = 1000,
-                        Height = 100,
-                    }
-                });
+                    X = 50,
+                    Y = 450,
+                    Width = 1000,
+                    Height = 100,
+                }
+            });
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-offscreen-clip.png", screenshot));
         }
 
@@ -99,15 +99,15 @@ namespace Microsoft.Playwright.Tests
             await Page.SetViewportSizeAsync(500, 500);
             await Page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
             var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Page.ScreenshotAsync(new PageScreenshotOptions
+            {
+                Clip = new Clip
                 {
-                    Clip = new Clip
-                    {
-                        X = 50,
-                        Y = 650,
-                        Width = 100,
-                        Height = 100,
-                    }
-                }));
+                    X = 50,
+                    Y = 650,
+                    Width = 100,
+                    Height = 100,
+                }
+            }));
 
             Assert.Contains("Clipped area is either empty or outside the resulting image", exception.Message);
         }
@@ -123,15 +123,15 @@ namespace Microsoft.Playwright.Tests
             for (int i = 0; i < 3; ++i)
             {
                 tasks.Add(Page.ScreenshotAsync(new PageScreenshotOptions
+                {
+                    Clip = new Clip
                     {
-                        Clip = new Clip
-                        {
-                            X = 50 * i,
-                            Y = 0,
-                            Width = 50,
-                            Height = 50
-                        }
-                    }));
+                        X = 50 * i,
+                        Y = 0,
+                        Width = 50,
+                        Height = 50
+                    }
+                }));
             }
 
             await TaskUtils.WhenAll(tasks);
@@ -144,7 +144,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetViewportSizeAsync(500, 500);
             await Page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
-        byte[] screenshot = await Page.ScreenshotAsync(new PageScreenshotOptions { FullPage = true });
+            byte[] screenshot = await Page.ScreenshotAsync(new PageScreenshotOptions { FullPage = true });
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-grid-fullpage.png", screenshot));
         }
 
@@ -154,7 +154,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetViewportSizeAsync(500, 500);
             await Page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
-        await Page.ScreenshotAsync(new PageScreenshotOptions { FullPage = true });
+            await Page.ScreenshotAsync(new PageScreenshotOptions { FullPage = true });
 
             Assert.Equal(500, Page.ViewportSize.Width);
             Assert.Equal(500, Page.ViewportSize.Height);
@@ -184,15 +184,15 @@ namespace Microsoft.Playwright.Tests
             for (int i = 0; i < n; i++)
             {
                 screenshotTasks.Add(pageTasks[i].Result.ScreenshotAsync(new PageScreenshotOptions
+                {
+                    Clip = new Clip
                     {
-                        Clip = new Clip
-                        {
-                            X = 50 * (i % 2),
-                            Y = 0,
-                            Width = 50,
-                            Height = 50
-                        }
-                    }));
+                        X = 50 * (i % 2),
+                        Y = 0,
+                        Width = 50,
+                        Height = 50
+                    }
+                }));
             }
 
             await TaskUtils.WhenAll(screenshotTasks);
@@ -229,10 +229,10 @@ namespace Microsoft.Playwright.Tests
             await Page.SetViewportSizeAsync(100, 100);
             await Page.GotoAsync(TestConstants.EmptyPage);
             byte[] screenshot = await Page.ScreenshotAsync(new PageScreenshotOptions
-                {
-                    OmitBackground = true,
-                    Type = ScreenshotType.Jpeg,
-                });
+            {
+                OmitBackground = true,
+                Type = ScreenshotType.Jpeg,
+            });
             Assert.True(ScreenshotHelper.PixelMatch("white.jpg", screenshot));
         }
 
@@ -241,15 +241,15 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithOddClipSizeOnRetinaDisplays()
         {
             byte[] screenshot = await Page.ScreenshotAsync(new PageScreenshotOptions
+            {
+                Clip = new Clip
                 {
-                    Clip = new Clip
-                    {
-                        X = 0,
-                        Y = 0,
-                        Width = 11,
-                        Height = 11
-                    }
-                });
+                    X = 0,
+                    Y = 0,
+                    Width = 11,
+                    Height = 11
+                }
+            });
 
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-clip-odd-size.png", screenshot));
         }
@@ -290,15 +290,15 @@ namespace Microsoft.Playwright.Tests
             var page = await context.NewPageAsync();
             await page.GotoAsync(TestConstants.ServerUrl + "/overflow.html");
             byte[] screenshot = await page.ScreenshotAsync(new PageScreenshotOptions
+            {
+                Clip = new Clip
                 {
-                    Clip = new Clip
-                    {
-                        X = 10,
-                        Y = 10,
-                        Width = 100,
-                        Height = 150
-                    }
-                });
+                    X = 10,
+                    Y = 10,
+                    Width = 100,
+                    Height = 150
+                }
+            });
 
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-mobile-clip.png", screenshot));
         }
@@ -318,7 +318,7 @@ namespace Microsoft.Playwright.Tests
             });
             var page = await context.NewPageAsync();
             await page.GotoAsync(TestConstants.ServerUrl + "/overflow-large.html");
-        byte[] screenshot = await page.ScreenshotAsync(new PageScreenshotOptions { FullPage = true });
+            byte[] screenshot = await page.ScreenshotAsync(new PageScreenshotOptions { FullPage = true });
 
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-mobile-fullpage.png", screenshot));
         }

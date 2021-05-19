@@ -38,9 +38,9 @@ namespace Microsoft.Playwright.Tests
         {
             var exception = await Assert.ThrowsAsync<TimeoutException>(
                 () => Page.WaitForResponseAsync(_ => false, new PageWaitForResponseOptions
-                    {
-                        Timeout = 1,
-                    }));
+                {
+                    Timeout = 1,
+                }));
         }
 
         [PlaywrightTest("page-wait-for-response.spec.ts", "should respect default timeout")]

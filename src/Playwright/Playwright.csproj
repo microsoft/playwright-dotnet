@@ -9,7 +9,7 @@
     <DebugType>embedded</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <DocumentationFile>bin\$(Configuration)\netstandard2.0\PlaywrightSharp.xml</DocumentationFile>
+    <DocumentationFile>Microsoft.Playwright.xml</DocumentationFile>
     <RunWithWarnings>true</RunWithWarnings>
     <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
     <CodeAnalysisRuleSet>../Playwright.ruleset</CodeAnalysisRuleSet>

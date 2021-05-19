@@ -124,7 +124,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRespectTimeout()
         {
             var exception = await Assert.ThrowsAsync<TimeoutException>(async ()
-                => await Page.WaitForSelectorAsync("div", new PageWaitForSelectorOptions { State = WaitForSelectorState.Attached , Timeout = 3000 }));
+                => await Page.WaitForSelectorAsync("div", new PageWaitForSelectorOptions { State = WaitForSelectorState.Attached, Timeout = 3000 }));
 
             Assert.Contains("Timeout 3000ms exceeded", exception.Message);
             Assert.Contains("waiting for selector \"div\"", exception.Message);
