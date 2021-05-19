@@ -27,15 +27,15 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync("**/*", (route) =>
             {
                 route.FulfillAsync(new RouteFulfillOptions
+                {
+                    Status = (int)HttpStatusCode.Created,
+                    Headers = new Dictionary<string, string>
                     {
-                        Status = (int)HttpStatusCode.Created,
-                        Headers = new Dictionary<string, string>
-                        {
-                            ["foo"] = "bar"
-                        },
-                        ContentType = "text/html",
-                        Body = "Yo, page!",
-                    });
+                        ["foo"] = "bar"
+                    },
+                    ContentType = "text/html",
+                    Body = "Yo, page!",
+                });
             });
             var response = await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal((int)HttpStatusCode.Created, response.Status);
@@ -70,10 +70,10 @@ namespace Microsoft.Playwright.Tests
             {
                 byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
                 route.FulfillAsync(new RouteFulfillOptions
-                    {
-                        ContentType = "image/png",
-                        BodyBytes = imageBuffer,
-                    });
+                {
+                    ContentType = "image/png",
+                    BodyBytes = imageBuffer,
+                });
             });
             await Page.EvaluateAsync(@"PREFIX => {
                 const img = document.createElement('img');
@@ -98,10 +98,10 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync("**/*", (route) =>
             {
                 route.FulfillAsync(new RouteFulfillOptions
-                    {
-                        ContentType = "shouldBeIgnored",
-                        Path = TestUtils.GetWebServerFile("pptr.png"),
-                    });
+                {
+                    ContentType = "shouldBeIgnored",
+                    Path = TestUtils.GetWebServerFile("pptr.png"),
+                });
             });
 
             await Page.EvaluateAsync(@"PREFIX => {
@@ -121,14 +121,14 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync("**/*", (route) =>
             {
                 route.FulfillAsync(new RouteFulfillOptions
+                {
+                    Status = (int)HttpStatusCode.OK,
+                    Headers = new Dictionary<string, string>
                     {
-                        Status = (int)HttpStatusCode.OK,
-                        Headers = new Dictionary<string, string>
-                        {
-                            ["foo"] = "true"
-                        },
-                        Body = "Yo, page!",
-                    });
+                        ["foo"] = "true"
+                    },
+                    Body = "Yo, page!",
+                });
             });
 
             var response = await Page.GotoAsync(TestConstants.EmptyPage);
@@ -190,11 +190,11 @@ namespace Microsoft.Playwright.Tests
             {
                 interceptedRequest = route.Request;
                 route.FulfillAsync(new RouteFulfillOptions
-                    {
-                        Headers = new Dictionary<string, string> { ["Access-Control-Allow-Origin"] = "*" },
-                        ContentType = "text/plain",
-                        Body = "done",
-                    });
+                {
+                    Headers = new Dictionary<string, string> { ["Access-Control-Allow-Origin"] = "*" },
+                    ContentType = "text/plain",
+                    Body = "done",
+                });
             });
 
             string text = await Page.EvaluateAsync<string>(@"async url => {

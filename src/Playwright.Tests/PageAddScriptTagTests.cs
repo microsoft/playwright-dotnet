@@ -55,7 +55,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithAContentAndTypeModule()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            await Page.AddScriptTagAsync(new PageAddScriptTagOptions{ Content = "import num from '/es6/es6module.js'; window.__es6injected = num;", Type = "module" });
+            await Page.AddScriptTagAsync(new PageAddScriptTagOptions { Content = "import num from '/es6/es6module.js'; window.__es6injected = num;", Type = "module" });
             await Page.WaitForFunctionAsync("window.__es6injected");
             Assert.Equal(42, await Page.EvaluateAsync<int>("() => __es6injected"));
         }

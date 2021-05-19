@@ -54,13 +54,13 @@ namespace Microsoft.Playwright.Tests
         {
             options ??= new BrowserNewContextOptions();
             return browserType.LaunchAsync(new BrowserTypeLaunchOptions
-                {
-                    Args = args,
-                    DownloadsPath = downloadsPath,
-                    SlowMo = Convert.ToInt32(Environment.GetEnvironmentVariable("SLOW_MO")),
-                    Headless = Convert.ToBoolean(Environment.GetEnvironmentVariable("HEADLESS") ?? "true"),
-                    Timeout = 0
-                }
+            {
+                Args = args,
+                DownloadsPath = downloadsPath,
+                SlowMo = Convert.ToInt32(Environment.GetEnvironmentVariable("SLOW_MO")),
+                Headless = Convert.ToBoolean(Environment.GetEnvironmentVariable("HEADLESS") ?? "true"),
+                Timeout = 0
+            }
             );
         }
 
@@ -71,12 +71,12 @@ namespace Microsoft.Playwright.Tests
         {
             options ??= new BrowserNewContextOptions();
             return browserType.LaunchAsync(new BrowserTypeLaunchOptions
-                {
-                    DownloadsPath = downloadsPath,
-                    SlowMo = Convert.ToInt32(Environment.GetEnvironmentVariable("SLOW_MO")),
-                    Headless = false,
-                    Timeout = 0
-                }
+            {
+                DownloadsPath = downloadsPath,
+                SlowMo = Convert.ToInt32(Environment.GetEnvironmentVariable("SLOW_MO")),
+                Headless = false,
+                Timeout = 0
+            }
             );
         }
 

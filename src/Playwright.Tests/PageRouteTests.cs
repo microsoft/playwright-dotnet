@@ -551,13 +551,13 @@ namespace Microsoft.Playwright.Tests
                 }
 
                 _ = route.FulfillAsync(new RouteFulfillOptions
+                {
+                    Status = (int)HttpStatusCode.MovedPermanently,
+                    Headers = new Dictionary<string, string>
                     {
-                        Status = (int)HttpStatusCode.MovedPermanently,
-                        Headers = new Dictionary<string, string>
-                        {
-                            ["location"] = "/final",
-                        }
-                    });
+                        ["location"] = "/final",
+                    }
+                });
             });
 
             string text = await Page.EvaluateAsync<string>(@"async url => {
@@ -580,12 +580,12 @@ namespace Microsoft.Playwright.Tests
                     : new Dictionary<string, string>();
 
                 _ = route.FulfillAsync(new RouteFulfillOptions
-                    {
-                        ContentType = "application/json",
-                        Headers = headers,
-                        Status = (int)HttpStatusCode.OK,
-                        Body = "[\"electric\", \"cars\"]"
-                    });
+                {
+                    ContentType = "application/json",
+                    Headers = headers,
+                    Status = (int)HttpStatusCode.OK,
+                    Body = "[\"electric\", \"cars\"]"
+                });
             });
 
             string[] resp = await Page.EvaluateAsync<string[]>(@"async () => {
@@ -611,12 +611,12 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync("**/cars*", (route) =>
             {
                 _ = route.FulfillAsync(new RouteFulfillOptions
-                    {
-                        ContentType = "application/json",
-                        Headers = new Dictionary<string, string> { ["access-control-allow-origin"] = "*" },
-                        Status = (int)HttpStatusCode.OK,
-                        Body = "[\"electric\", \"cars\"]"
-                    });
+                {
+                    ContentType = "application/json",
+                    Headers = new Dictionary<string, string> { ["access-control-allow-origin"] = "*" },
+                    Status = (int)HttpStatusCode.OK,
+                    Body = "[\"electric\", \"cars\"]"
+                });
             });
 
             string[] resp = await Page.EvaluateAsync<string[]>(@"async () => {
@@ -640,12 +640,12 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync("**/cars*", (route) =>
             {
                 _ = route.FulfillAsync(new RouteFulfillOptions
-                    {
-                        ContentType = "application/json",
-                        Headers = new Dictionary<string, string> { ["access-control-allow-origin"] = "*" },
-                        Status = (int)HttpStatusCode.OK,
-                        Body = $"[\"{ route.Request.Method.ToString().ToUpper() }\", \"electric\", \"cars\"]"
-                    });
+                {
+                    ContentType = "application/json",
+                    Headers = new Dictionary<string, string> { ["access-control-allow-origin"] = "*" },
+                    Status = (int)HttpStatusCode.OK,
+                    Body = $"[\"{ route.Request.Method.ToString().ToUpper() }\", \"electric\", \"cars\"]"
+                });
             });
 
             string[] resp = await Page.EvaluateAsync<string[]>(@"async () => {
