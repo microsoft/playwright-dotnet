@@ -32,16 +32,16 @@ namespace Microsoft.Playwright
 
         public bool IsMultiple { get; set; }
 
-        public Task SetFilesAsync(string filesString, bool? noWaitAfter = default, float? timeout = default)
+        public Task SetFilesAsync(string filesString, bool? noWaitAfter, float? timeout)
             => ElementImpl.SetInputFilesAsync(filesString, noWaitAfter, timeout);
 
-        public Task SetFilesAsync(IEnumerable<string> filesString, bool? noWaitAfter = default, float? timeout = default)
+        public Task SetFilesAsync(IEnumerable<string> filesString, bool? noWaitAfter, float? timeout)
             => ElementImpl.SetInputFilesAsync(filesString, noWaitAfter, timeout);
 
-        public Task SetFilesAsync(FilePayload filesFilePayload, bool? noWaitAfter = default, float? timeout = default)
+        public Task SetFilesAsync(FilePayload filesFilePayload, bool? noWaitAfter, float? timeout)
             => ElementImpl.SetInputFilesAsync(filesFilePayload, noWaitAfter, timeout);
 
-        public Task SetFilesAsync(IEnumerable<FilePayload> filesEnumerableFilePayload, bool? noWaitAfter = default, float? timeout = default)
+        public Task SetFilesAsync(IEnumerable<FilePayload> filesEnumerableFilePayload, bool? noWaitAfter, float? timeout)
             => ElementImpl.SetInputFilesAsync(filesEnumerableFilePayload, noWaitAfter, timeout);
     }
 }

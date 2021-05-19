@@ -216,6 +216,36 @@ namespace Microsoft.Playwright
             return ScreenshotAsync(path: options.Path, type: options.Type, quality: options.Quality, fullPage: options.FullPage, clip: options.Clip, omitBackground: options.OmitBackground, timeout: options.Timeout);
         }
 
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string values, PageSelectOptionOptions options = default)
+        {
+            options ??= new PageSelectOptionOptions();
+            return SelectOptionAsync(selector, values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IElementHandle values, PageSelectOptionOptions options = default)
+        {
+            options ??= new PageSelectOptionOptions();
+            return SelectOptionAsync(selector, values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<string> values, PageSelectOptionOptions options = default)
+        {
+            options ??= new PageSelectOptionOptions();
+            return SelectOptionAsync(selector, values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, PageSelectOptionOptions options = default)
+        {
+            options ??= new PageSelectOptionOptions();
+            return SelectOptionAsync(selector, values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, PageSelectOptionOptions options = default)
+        {
+            options ??= new PageSelectOptionOptions();
+            return SelectOptionAsync(selector, values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
         public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, PageSelectOptionOptions options = default)
         {
             options ??= new PageSelectOptionOptions();
@@ -226,6 +256,24 @@ namespace Microsoft.Playwright
         {
             options ??= new PageSetContentOptions();
             return SetContentAsync(html, timeout: options.Timeout, waitUntil: options.WaitUntil);
+        }
+
+        public Task SetInputFilesAsync(string selector, string files, PageSetInputFilesOptions options = default)
+        {
+            options ??= new PageSetInputFilesOptions();
+            return SetInputFilesAsync(selector, files, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task SetInputFilesAsync(string selector, IEnumerable<string> files, PageSetInputFilesOptions options = default)
+        {
+            options ??= new PageSetInputFilesOptions();
+            return SetInputFilesAsync(selector, files, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task SetInputFilesAsync(string selector, FilePayload files, PageSetInputFilesOptions options = default)
+        {
+            options ??= new PageSetInputFilesOptions();
+            return SetInputFilesAsync(selector, files, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
         public Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, PageSetInputFilesOptions options = default)

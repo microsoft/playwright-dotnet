@@ -96,6 +96,36 @@ namespace Microsoft.Playwright
             return ScrollIntoViewIfNeededAsync(timeout: options.Timeout);
         }
 
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string values, ElementHandleSelectOptionOptions options = default)
+        {
+            options ??= new ElementHandleSelectOptionOptions();
+            return SelectOptionAsync(values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(IElementHandle values, ElementHandleSelectOptionOptions options = default)
+        {
+            options ??= new ElementHandleSelectOptionOptions();
+            return SelectOptionAsync(values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<string> values, ElementHandleSelectOptionOptions options = default)
+        {
+            options ??= new ElementHandleSelectOptionOptions();
+            return SelectOptionAsync(values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(SelectOptionValue values, ElementHandleSelectOptionOptions options = default)
+        {
+            options ??= new ElementHandleSelectOptionOptions();
+            return SelectOptionAsync(values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, ElementHandleSelectOptionOptions options = default)
+        {
+            options ??= new ElementHandleSelectOptionOptions();
+            return SelectOptionAsync(values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
         public Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, ElementHandleSelectOptionOptions options = default)
         {
             options ??= new ElementHandleSelectOptionOptions();
@@ -106,6 +136,24 @@ namespace Microsoft.Playwright
         {
             options ??= new ElementHandleSelectTextOptions();
             return SelectTextAsync(timeout: options.Timeout);
+        }
+
+        public Task SetInputFilesAsync(string files, ElementHandleSetInputFilesOptions options = default)
+        {
+            options ??= new ElementHandleSetInputFilesOptions();
+            return SetInputFilesAsync(files, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task SetInputFilesAsync(IEnumerable<string> files, ElementHandleSetInputFilesOptions options = default)
+        {
+            options ??= new ElementHandleSetInputFilesOptions();
+            return SetInputFilesAsync(files, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task SetInputFilesAsync(FilePayload files, ElementHandleSetInputFilesOptions options = default)
+        {
+            options ??= new ElementHandleSetInputFilesOptions();
+            return SetInputFilesAsync(files, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
         public Task SetInputFilesAsync(IEnumerable<FilePayload> files, ElementHandleSetInputFilesOptions options = default)
