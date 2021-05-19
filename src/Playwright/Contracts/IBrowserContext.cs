@@ -48,30 +48,30 @@ namespace Microsoft.Playwright
     /// </summary>
     public partial interface IBrowserContext : IAsyncDisposable
     {
-        Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default);
+        Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, BrowserContextWaitForEventOptions options = default, Func<Task> action = default);
 
-        /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
+        /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
         Task ExposeBindingAsync(string name, Action<BindingSource> callback);
 
-        /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
+        /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
         Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback);
 
-        /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
+        /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
         Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback);
 
-        /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
+        /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
         Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback);
 
-        /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
+        /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
         Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback);
 
-        /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
+        /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
         Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback);
 
-        /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
+        /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
         Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback);
 
-        /// <inheritdoc cref="ExposeBindingAsync(string, Action, bool?)"/>
+        /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
         Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback);
 
         /// <inheritdoc cref="ExposeFunctionAsync(string, Action)"/>

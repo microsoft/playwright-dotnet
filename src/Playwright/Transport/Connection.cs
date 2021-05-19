@@ -54,28 +54,24 @@ namespace Microsoft.Playwright.Transport
         private int _lastId;
         private string _reason = string.Empty;
 
-        public Connection(
-            ILoggerFactory loggerFactory,
-            TransportTaskScheduler scheduler,
-            string driverExecutablePath = null,
-            string browsersPath = null)
+        public Connection()
         {
-            if (!string.IsNullOrEmpty(browsersPath))
+            _loggerFactory = LoggerFactory.Create(builder =>
             {
-                Environment.SetEnvironmentVariable(EnvironmentVariables.BrowsersPathEnvironmentVariable, Path.GetFullPath(browsersPath));
-            }
+                builder.SetMinimumLevel(LogLevel.Debug);
+                builder.AddFilter((f, _) => f == "PlaywrightSharp.Playwright");
+            });
 
-            _loggerFactory = loggerFactory;
-            _logger = _loggerFactory?.CreateLogger<Connection>();
+            _logger = _loggerFactory.CreateLogger<Connection>();
             var debugLogger = _loggerFactory?.CreateLogger<Playwright>();
 
             _rootObject = new ChannelOwnerBase(null, this, string.Empty);
 
-            _playwrightServerProcess = GetProcess(driverExecutablePath);
+            _playwrightServerProcess = GetProcess();
             _playwrightServerProcess.StartInfo.Arguments = "run-driver";
             _playwrightServerProcess.Start();
             _playwrightServerProcess.Exited += (_, _) => Close("Process exited");
-            _transport = new StdIOTransport(_playwrightServerProcess, _loggerFactory, scheduler);
+            _transport = new StdIOTransport(_playwrightServerProcess, _loggerFactory);
             _transport.MessageReceived += Transport_MessageReceived;
             _transport.LogReceived += (_, e) => debugLogger?.LogInformation(e.Message);
             _transport.TransportClosed += (_, e) => Close(e.CloseReason);
@@ -92,6 +88,7 @@ namespace Microsoft.Playwright.Transport
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+            _loggerFactory.Dispose();
         }
 
         internal static async Task InstallAsync(string driverPath = null, string browsersPath = null)

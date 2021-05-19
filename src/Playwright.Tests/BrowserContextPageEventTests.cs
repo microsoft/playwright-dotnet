@@ -53,7 +53,7 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
-            var otherPage = await context.WaitForEventAsync(ContextEvent.Page, async () =>
+            var otherPage = await context.WaitForEventAsync(ContextEvent.Page, new BrowserContextWaitForEventOptions(), async () =>
             {
                 await page.EvaluateAsync("url => window.open(url)", "about:blank");
             });
@@ -68,7 +68,7 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
-            var otherPage = await context.WaitForEventAsync(ContextEvent.Page, async () =>
+            var otherPage = await context.WaitForEventAsync(ContextEvent.Page, new BrowserContextWaitForEventOptions(), async () =>
             {
                 await page.EvaluateAsync("() => window.open()");
             });
@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
-            var otherPage = await context.WaitForEventAsync(ContextEvent.Page, async () =>
+            var otherPage = await context.WaitForEventAsync(ContextEvent.Page, new BrowserContextWaitForEventOptions(), async () =>
             {
                 await page.EvaluateAsync("url => window.open(url)", TestConstants.CrossProcessUrl + "/empty.html");
             });
@@ -207,7 +207,7 @@ namespace Microsoft.Playwright.Tests
             var popupEventTask = context.WaitForEventAsync(ContextEvent.Page);
             await TaskUtils.WhenAll(
               popupEventTask,
-              page.ClickAsync("a", modifiers: new[] { KeyboardModifier.Shift }));
+              page.ClickAsync("a", new PageClickOptions { Modifiers = new[] { KeyboardModifier.Shift } }));
 
             Assert.Null(await popupEventTask.Result.OpenerAsync());
         }
@@ -226,7 +226,7 @@ namespace Microsoft.Playwright.Tests
             var popupEventTask = context.WaitForEventAsync(ContextEvent.Page);
             await TaskUtils.WhenAll(
               popupEventTask,
-              page.ClickAsync("a", modifiers: new[] { TestConstants.IsMacOSX ? KeyboardModifier.Meta : KeyboardModifier.Control }));
+              page.ClickAsync("a", new PageClickOptions { Modifiers = new[] { TestConstants.IsMacOSX ? KeyboardModifier.Meta : KeyboardModifier.Control } }));
 
             Assert.Null(await popupEventTask.Result.OpenerAsync());
         }

@@ -75,13 +75,9 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="event">Event name, same one would pass into <c>webSocket.on(event)</c>.</param>
-        /// <param name="timeout">
-        /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
-        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
-        /// </param>
+        /// <param name="options">Call options</param>
         /// <param name="action">Action to perform while waiting</param>
-        Task<object> WaitForEventAsync(string @event, Func<Task> action = default, float? timeout = default);
+        Task<object> WaitForEventAsync(string @event, WebSocketWaitForEventOptions options = default, Func<Task> action = default);
 
         /// <summary>
         /// <para>
@@ -91,17 +87,9 @@ namespace Microsoft.Playwright
         /// if the WebSocket or Page is closed before the frame is received.
         /// </para>
         /// </summary>
-        /// <param name="predicate">
-        /// Receives the <see cref="IWebSocketFrame"/> object and resolves to truthy value when
-        /// the waiting should resolve.
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
-        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
-        /// </param>
+        /// <param name="options">Call options</param>
         /// <param name="action">Action to perform while waiting</param>
-        Task<IWebSocketFrame> WaitForFrameReceivedAsync(Func<Task> action = default, Func<IWebSocketFrame, bool> predicate = default, float? timeout = default);
+        Task<IWebSocketFrame> WaitForFrameReceivedAsync(WebSocketWaitForFrameReceivedOptions options = default, Func<Task> action = default);
 
         /// <summary>
         /// <para>
@@ -111,16 +99,8 @@ namespace Microsoft.Playwright
         /// if the WebSocket or Page is closed before the frame is sent.
         /// </para>
         /// </summary>
-        /// <param name="predicate">
-        /// Receives the <see cref="IWebSocketFrame"/> object and resolves to truthy value when
-        /// the waiting should resolve.
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
-        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
-        /// </param>
+        /// <param name="options">Call options</param>
         /// <param name="action">Action to perform while waiting</param>
-        Task<IWebSocketFrame> WaitForFrameSentAsync(Func<Task> action = default, Func<IWebSocketFrame, bool> predicate = default, float? timeout = default);
+        Task<IWebSocketFrame> WaitForFrameSentAsync(WebSocketWaitForFrameSentOptions options = default, Func<Task> action = default);
     }
 }

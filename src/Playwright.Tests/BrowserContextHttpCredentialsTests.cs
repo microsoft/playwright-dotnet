@@ -38,7 +38,7 @@ namespace Microsoft.Playwright.Tests
         {
             // Use unique user/password since Chromium caches credentials per origin.
             Server.SetAuth("/empty.html", "user", "pass");
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 HttpCredentials = new HttpCredentials
                 {
@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.Tests
         {
             // Use unique user/password since Chromium caches credentials per origin.
             Server.SetAuth("/empty.html", "user", "pass");
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 HttpCredentials = new HttpCredentials
                 {
@@ -77,7 +77,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReturnResourceBody()
         {
             Server.SetAuth("/playground.html", "user", "pass");
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 HttpCredentials = new HttpCredentials
                 {

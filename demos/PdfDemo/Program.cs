@@ -11,15 +11,8 @@ namespace PdfDemo
     {
         static async Task Main(string[] args)
         {
-            ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
-            {
-                builder.SetMinimumLevel(LogLevel.Debug);
-                builder.AddDebug();
-                builder.AddFilter((f, _) => f == "PlaywrightSharp.Playwright");
-            });
-
-            using var playwright = await Playwright.CreateAsync(loggerFactory, debug: "pw:api");
-            await using var browser = await playwright.Chromium.LaunchAsync(new LaunchOptions { Headless = true });
+            using var playwright = await Playwright.CreateAsync();
+            await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true });
 
             var page = await browser.NewPageAsync();
             Console.WriteLine("Navigating google");

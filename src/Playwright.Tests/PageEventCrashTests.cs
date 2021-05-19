@@ -61,7 +61,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<div>This page should crash</div>");
             Server.SetRoute("/one-style.css", _ => Task.Delay(2000));
             var task = Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
-            await Page.WaitForNavigationAsync(waitUntil: WaitUntilState.DOMContentLoaded);
+            await Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
 
             await CrashAsync(Page);
             var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => task);

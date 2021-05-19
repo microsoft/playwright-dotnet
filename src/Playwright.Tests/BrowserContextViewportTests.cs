@@ -87,7 +87,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportTouchWithNullViewport()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions { Viewport = null, HasTouch = true });
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { ViewportSize = null, HasTouch = true });
             var page = await context.NewPageAsync();
             await page.GotoAsync(TestConstants.ServerUrl + "/mobile.html");
             Assert.True(await page.EvaluateAsync<bool>("'ontouchstart' in window"));

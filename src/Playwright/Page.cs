@@ -38,7 +38,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    public class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
+    internal partial class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     {
         private readonly PageChannel _channel;
         private readonly List<Frame> _frames = new();
@@ -68,7 +68,7 @@ namespace Microsoft.Playwright
             _frames.Add(MainFrame);
             ViewportSize = initializer.ViewportSize;
             IsClosed = initializer.IsClosed;
-            _accessibility = new Accesibility(_channel);
+            _accessibility = new Accessibility(_channel);
             _keyboard = new Keyboard(_channel);
             _touchscreen = new Touchscreen(_channel);
             _mouse = new Mouse(_channel);
@@ -308,17 +308,8 @@ namespace Microsoft.Playwright
         public Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined)
             => MainFrame.WaitForURLAsync(urlFunc, timeout, waitUntil);
 
-        public Task<IResponse> WaitForNavigationAsync(string urlString, Func<Task> action = default, WaitUntilState waitUntil = WaitUntilState.Undefined, float? timeout = default)
-            => MainFrame.WaitForNavigationAsync(urlString, null, null, waitUntil, timeout, action: action);
-
-        public Task<IResponse> WaitForNavigationAsync(Func<Task> action = default, WaitUntilState waitUntil = WaitUntilState.Undefined, float? timeout = default)
-             => MainFrame.WaitForNavigationAsync(urlString: null, urlRegex: null, urlFunc: null, waitUntil: waitUntil, timeout: timeout, action: action);
-
-        public Task<IResponse> WaitForNavigationAsync(Regex urlRegex, Func<Task> action = default, WaitUntilState waitUntil = WaitUntilState.Undefined, float? timeout = default)
-            => MainFrame.WaitForNavigationAsync(urlString: null, urlRegex: urlRegex, urlFunc: null, waitUntil: default, timeout: timeout, action: action);
-
-        public Task<IResponse> WaitForNavigationAsync(Func<string, bool> urlFunc, Func<Task> action = default, WaitUntilState waitUntil = WaitUntilState.Undefined, float? timeout = default)
-            => MainFrame.WaitForNavigationAsync(urlString: null, urlRegex: null, urlFunc: urlFunc, waitUntil: default, timeout: timeout, action: action);
+        public Task<IResponse> WaitForNavigationAsync(Func<Task> action = default, string urlString = default, Regex urlRegex = default, Func<string, bool> urlFunc = default, WaitUntilState waitUntil = default, float? timeout = default)
+            => MainFrame.WaitForNavigationAsync(action, urlString, urlRegex, urlFunc, waitUntil, timeout);
 
         public Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, Func<Task> action = default, float? timeout = default)
             => WaitForEventAsync(PageEvent.Request, action, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
@@ -356,6 +347,12 @@ namespace Microsoft.Playwright
             float? pollingInterval,
             float? timeout)
             => MainFrame.WaitForFunctionAsync(true, expression, arg, pollingInterval, timeout);
+
+        public Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, PageWaitForEventOptions options = default, Func<Task> action = default)
+        {
+            options ??= new PageWaitForEventOptions();
+            return WaitForEventAsync(pageEvent, action, null, options.Timeout);
+        }
 
         public async Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
         {
@@ -543,8 +540,8 @@ namespace Microsoft.Playwright
 
         public Task<string> ContentAsync() => MainFrame.ContentAsync(true);
 
-        public Task SetExtraHttpHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
-            => _channel.SetExtraHttpHeadersAsync(headers);
+        public Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
+            => _channel.SetExtraHTTPHeadersAsync(headers);
 
         public Task<IElementHandle> QuerySelectorAsync(string selector) => MainFrame.QuerySelectorAsync(true, selector);
 

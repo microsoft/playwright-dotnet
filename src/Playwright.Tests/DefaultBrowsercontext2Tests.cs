@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportHasTouchOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
+            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
             {
                 HasTouch = true
             });
@@ -41,9 +41,9 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkInPersistentContext()
         {
-            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
+            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
             {
-                Viewport = new ViewportSize
+                ViewportSize = new ViewportSize
                 {
                     Width = 320,
                     Height = 480,
@@ -62,7 +62,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportColorSchemeOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
+            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
             {
                 ColorScheme = ColorScheme.Dark,
             });
@@ -78,7 +78,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportTimezoneIdOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
+            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
             {
                 TimezoneId = "America/Jamaica",
             });
@@ -93,7 +93,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportLocaleOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
+            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
             {
                 Locale = "fr-CH",
             });
@@ -108,7 +108,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportGeolocationAndPermissionsOptions()
         {
-            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
+            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
             {
                 Geolocation = new Geolocation
                 {
@@ -134,7 +134,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldSupportIgnoreHTTPSErrorsOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
+            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
             {
                 IgnoreHTTPSErrors = true
             });
@@ -150,7 +150,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportExtraHTTPHeadersOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new LaunchPersistentOptions
+            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
             {
                 ExtraHTTPHeaders = new Dictionary<string, string>
                 {
@@ -364,7 +364,7 @@ namespace Microsoft.Playwright.Tests
             await context.DisposeAsync();
         }
 
-        private async Task<(TempDirectory tmp, IBrowserContext context, IPage page)> LaunchAsync(LaunchPersistentOptions options = null)
+        private async Task<(TempDirectory tmp, IBrowserContext context, IPage page)> LaunchAsync(BrowserTypeLaunchPersistentContextOptions options = null)
         {
             var tmp = new TempDirectory();
             var context = await BrowserType.LaunchDefaultPersistentContext(tmp.Path, null, options);

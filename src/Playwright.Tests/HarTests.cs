@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Tests
         public override async Task InitializeAsync()
         {
             _harPath = Path.Combine(_tempDir.Path, "test.har");
-            _context = await Browser.NewContextAsync(recordHarPath: _harPath, ignoreHTTPSErrors: true);
+            _context = await Browser.NewContextAsync(new BrowserNewContextOptions { RecordHarPath = _harPath, IgnoreHTTPSErrors = true });
             _page = await _context.NewPageAsync();
 
             await base.InitializeAsync();
@@ -104,7 +104,7 @@ namespace Microsoft.Playwright.Tests
             using var _persistentContextDir = new TempDirectory();
             string harFilePath = Path.Combine(harPath.Path, "test.har");
 
-            var context = await BrowserType.LaunchPersistentContextAsync(_persistentContextDir.Path, recordHarPath: harFilePath);
+            var context = await BrowserType.LaunchPersistentContextAsync(_persistentContextDir.Path, new BrowserTypeLaunchPersistentContextOptions { RecordHarPath = harFilePath });
             var page = context.Pages.FirstOrDefault();
 
             await TaskUtils.WhenAll(

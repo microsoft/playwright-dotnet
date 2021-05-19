@@ -51,7 +51,7 @@ namespace Microsoft.Playwright.Tests
         {
             Server.SetRoute("/frames/script.js", _ => Task.Delay(10000));
             string url = TestConstants.ServerUrl + "/frames/child-redirect.html";
-            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.GotoAsync(url, WaitUntilState.NetworkIdle, 5000));
+            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.GotoAsync(url, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle, Timeout = 5000 }));
 
             Assert.Contains("Timeout 5000ms", exception.Message);
             Assert.Contains($"navigating to \"{url}\", waiting until \"networkidle\"", exception.Message);

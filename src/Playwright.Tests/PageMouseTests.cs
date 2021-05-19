@@ -144,7 +144,7 @@ namespace Microsoft.Playwright.Tests
                     window.result.push([event.clientX, event.clientY]);
                 });
             }");
-            await Page.Mouse.MoveAsync(200, 300, steps: 5);
+            await Page.Mouse.MoveAsync(200, 300, new MouseMoveOptions { Steps = 5 });
             Assert.Equal(
                 new[]
                 {
@@ -161,9 +161,9 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldWorkWithMobileViewportsAndCrossProcessNavigations()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = new ViewportSize { Width = 360, Height = 640 },
+                ViewportSize = new ViewportSize { Width = 360, Height = 640 },
                 IsMobile = true,
             });
             var page = await context.NewPageAsync();

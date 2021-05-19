@@ -44,7 +44,7 @@ namespace Microsoft.Playwright.Tests
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
-            Page = await Browser.NewPageAsync(hasTouch: true);
+            Page = await Browser.NewPageAsync(new BrowserNewPageOptions { HasTouch = true });
         }
 
         [PlaywrightTest("tap.spec.ts", "should send all of the correct events")]
@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.Tests
 
             await Page.TapAsync("#a");
             var handle = await TrackEventsAsync("#b");
-            await Page.TapAsync("#b", trial: true);
+            await Page.TapAsync("#b", new PageTapOptions { Trial = true });
 
             Assert.Empty(await handle.JsonValueAsync<string[]>());
         }
@@ -180,7 +180,7 @@ namespace Microsoft.Playwright.Tests
                     })");
 
             await Page.EvaluateAsync("() => void 0");
-            await Page.TapAsync("body", modifiers: new[] { KeyboardModifier.Alt });
+            await Page.TapAsync("body", new PageTapOptions { Modifiers = new[] { KeyboardModifier.Alt } });
             Assert.True((await altKeyTask));
         }
 

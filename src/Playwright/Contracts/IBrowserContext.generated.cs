@@ -252,12 +252,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
-        /// <param name="handle">
-        /// Whether to pass the argument as a handle, instead of passing by value. When passing
-        /// a handle, only one argument is supported. When passing by value, multiple arguments
-        /// are supported.
-        /// </param>
-        Task ExposeBindingAsync(string name, Action callback, bool? handle = default);
+        /// <param name="options">Call options</param>
+        Task ExposeBindingAsync(string name, Action callback, BrowserContextExposeBindingOptions options = default);
 
         /// <summary>
         /// <para>
@@ -338,8 +334,8 @@ namespace Microsoft.Playwright
         /// <item><description><c>'payment-handler'</c></description></item>
         /// </list>
         /// </param>
-        /// <param name="origin">The <see cref="origin"/> to grant permissions to, e.g. "https://example.com".</param>
-        Task GrantPermissionsAsync(IEnumerable<string> permissions, string origin = default);
+        /// <param name="options">Call options</param>
+        Task GrantPermissionsAsync(IEnumerable<string> permissions, BrowserContextGrantPermissionsOptions options = default);
 
         /// <summary><para>Creates a new page in the browser context.</para></summary>
         Task<IPage> NewPageAsync();
@@ -389,12 +385,12 @@ namespace Microsoft.Playwright
         /// <para>To remove a route with its handler you can use <see cref="IBrowserContext.UnrouteAsync"/>.</para>
         /// </summary>
         /// <remarks><para>Enabling routing disables http cache.</para></remarks>
-        /// <param name="urlString">
+        /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while routing.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
-        Task RouteAsync(string urlString, Action<IRoute> handler);
+        Task RouteAsync(string url, Action<IRoute> handler);
 
         /// <summary>
         /// <para>
@@ -438,12 +434,12 @@ namespace Microsoft.Playwright
         /// <para>To remove a route with its handler you can use <see cref="IBrowserContext.UnrouteAsync"/>.</para>
         /// </summary>
         /// <remarks><para>Enabling routing disables http cache.</para></remarks>
-        /// <param name="urlRegex">
+        /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while routing.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
-        Task RouteAsync(Regex urlRegex, Action<IRoute> handler);
+        Task RouteAsync(Regex url, Action<IRoute> handler);
 
         /// <summary>
         /// <para>
@@ -487,12 +483,12 @@ namespace Microsoft.Playwright
         /// <para>To remove a route with its handler you can use <see cref="IBrowserContext.UnrouteAsync"/>.</para>
         /// </summary>
         /// <remarks><para>Enabling routing disables http cache.</para></remarks>
-        /// <param name="urlFunc">
+        /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while routing.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
-        Task RouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler);
+        Task RouteAsync(Func<string, bool> url, Action<IRoute> handler);
 
         /// <summary>
         /// <para>
@@ -537,14 +533,14 @@ namespace Microsoft.Playwright
         /// <para>
         /// The extra HTTP headers will be sent with every request initiated by any page in
         /// the context. These headers are merged with page-specific extra HTTP headers set
-        /// with <see cref="IPage.SetExtraHttpHeadersAsync"/>. If page overrides a particular
+        /// with <see cref="IPage.SetExtraHTTPHeadersAsync"/>. If page overrides a particular
         /// header, page-specific header value will be used instead of the browser context header
         /// value.
         /// </para>
         /// </summary>
         /// <remarks>
         /// <para>
-        /// <see cref="IBrowserContext.SetExtraHttpHeadersAsync"/> does not guarantee the order
+        /// <see cref="IBrowserContext.SetExtraHTTPHeadersAsync"/> does not guarantee the order
         /// of headers in the outgoing requests.
         /// </para>
         /// </remarks>
@@ -552,7 +548,7 @@ namespace Microsoft.Playwright
         /// An object containing additional HTTP headers to be sent with every request. All
         /// header values must be strings.
         /// </param>
-        Task SetExtraHttpHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers);
+        Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers);
 
         /// <summary>
         /// <para>
@@ -586,12 +582,8 @@ namespace Microsoft.Playwright
         /// storage snapshot.
         /// </para>
         /// </summary>
-        /// <param name="path">
-        /// The file path to save the storage state to. If <paramref name="path"/> is a relative
-        /// path, then it is resolved relative to current working directory. If no path is provided,
-        /// storage state is still returned, but won't be saved to the disk.
-        /// </param>
-        Task<string> StorageStateAsync(string path = default);
+        /// <param name="options">Call options</param>
+        Task<string> StorageStateAsync(BrowserContextStorageStateOptions options = default);
 
         /// <summary>
         /// <para>
@@ -599,12 +591,12 @@ namespace Microsoft.Playwright
         /// name="handler"/> is not specified, removes all routes for the <paramref name="url"/>.
         /// </para>
         /// </summary>
-        /// <param name="urlString">
+        /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> used to register
         /// a routing with <see cref="IBrowserContext.RouteAsync"/>.
         /// </param>
         /// <param name="handler">Optional handler function used to register a routing with <see cref="IBrowserContext.RouteAsync"/>.</param>
-        Task UnrouteAsync(string urlString, Action<IRoute> handler = default);
+        Task UnrouteAsync(string url, Action<IRoute> handler = default);
 
         /// <summary>
         /// <para>
@@ -612,12 +604,12 @@ namespace Microsoft.Playwright
         /// name="handler"/> is not specified, removes all routes for the <paramref name="url"/>.
         /// </para>
         /// </summary>
-        /// <param name="urlRegex">
+        /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> used to register
         /// a routing with <see cref="IBrowserContext.RouteAsync"/>.
         /// </param>
         /// <param name="handler">Optional handler function used to register a routing with <see cref="IBrowserContext.RouteAsync"/>.</param>
-        Task UnrouteAsync(Regex urlRegex, Action<IRoute> handler = default);
+        Task UnrouteAsync(Regex url, Action<IRoute> handler = default);
 
         /// <summary>
         /// <para>
@@ -625,12 +617,12 @@ namespace Microsoft.Playwright
         /// name="handler"/> is not specified, removes all routes for the <paramref name="url"/>.
         /// </para>
         /// </summary>
-        /// <param name="urlFunc">
+        /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> used to register
         /// a routing with <see cref="IBrowserContext.RouteAsync"/>.
         /// </param>
         /// <param name="handler">Optional handler function used to register a routing with <see cref="IBrowserContext.RouteAsync"/>.</param>
-        Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler = default);
+        Task UnrouteAsync(Func<string, bool> url, Action<IRoute> handler = default);
 
         /// <summary>
         /// <para>
@@ -645,13 +637,9 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="event">Event name, same one would pass into <c>browserContext.on(event)</c>.</param>
-        /// <param name="timeout">
-        /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
-        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
-        /// </param>
+        /// <param name="options">Call options</param>
         /// <param name="action">Action to perform while waiting</param>
-        Task<object> WaitForEventAsync(string @event, Func<Task> action = default, float? timeout = default);
+        Task<object> WaitForEventAsync(string @event, BrowserContextWaitForEventOptions options = default, Func<Task> action = default);
 
         /// <summary>
         /// <para>
@@ -661,16 +649,8 @@ namespace Microsoft.Playwright
         /// an error if the context closes before new <see cref="IPage"/> is created.
         /// </para>
         /// </summary>
-        /// <param name="predicate">
-        /// Receives the <see cref="IPage"/> object and resolves to truthy value when the waiting
-        /// should resolve.
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
-        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
-        /// </param>
+        /// <param name="options">Call options</param>
         /// <param name="action">Action to perform while waiting</param>
-        Task<IPage> WaitForPageAsync(Func<Task> action = default, Func<IPage, bool> predicate = default, float? timeout = default);
+        Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions options = default, Func<Task> action = default);
     }
 }

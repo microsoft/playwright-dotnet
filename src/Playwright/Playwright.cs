@@ -21,7 +21,7 @@ namespace Microsoft.Playwright
         private readonly PlaywrightInitializer _initializer;
         private readonly PlaywrightChannel _channel;
         private readonly Connection _connection;
-        private readonly Dictionary<string, BrowserContextOptions> _devices = new(StringComparer.InvariantCultureIgnoreCase);
+        private readonly Dictionary<string, BrowserNewContextOptions> _devices = new(StringComparer.InvariantCultureIgnoreCase);
 
         internal Playwright(IChannelOwner parent, string guid, PlaywrightInitializer initializer, ILoggerFactory loggerFactory)
              : base(parent, guid)
@@ -55,7 +55,7 @@ namespace Microsoft.Playwright
 
         public ISelectors Selectors { get => Microsoft.Playwright.Selectors.SharedSelectors; set => throw new NotSupportedException(); }
 
-        public IReadOnlyDictionary<string, BrowserContextOptions> Devices => _devices;
+        public IReadOnlyDictionary<string, BrowserNewContextOptions> Devices => _devices;
 
         internal Connection Connection { get; set; }
 
@@ -75,35 +75,14 @@ namespace Microsoft.Playwright
             };
 
         /// <summary>
-        /// Launches a Playwright server.
+        /// Launches Playwright.
         /// </summary>
-        /// <param name="loggerFactory">Logger.</param>
-        /// <param name="scheduler">Task scheduler for long running tasks.</param>
-        /// <param name="driverExecutablePath">Playwright driver path.</param>
-        /// <param name="browsersPath">Specify a shared folder that playwright will use to download browsers and to look for browsers when launching browser instances.
-        /// It is a shortcut to the PLAYWRIGHT_BROWSERS_PATH environment variable.
-        /// </param>
-        /// <param name="debug">Enables the playwright driver log. Pass `pw:api` to get the Playwright API log.
-        /// It is a shortcut to the DEBUG=pw:api environment variable.
-        /// </param>
         /// <returns>A <see cref="Task"/> that completes when the playwright driver is ready to be used.</returns>
-        public static async Task<IPlaywright> CreateAsync(
-            ILoggerFactory loggerFactory = null,
-            TransportTaskScheduler scheduler = null,
-            string driverExecutablePath = null,
-            string browsersPath = null,
-            string debug = null)
+        public static async Task<IPlaywright> CreateAsync()
         {
-            if (!string.IsNullOrEmpty(debug))
-            {
-                Environment.SetEnvironmentVariable("DEBUG", debug);
-            }
-
-            var connection = new Connection(loggerFactory, scheduler, driverExecutablePath, browsersPath);
-
+            var connection = new Connection();
             var playwright = await connection.WaitForObjectWithKnownNameAsync<Playwright>("Playwright").ConfigureAwait(false);
             playwright.Connection = connection;
-
             return playwright;
         }
 

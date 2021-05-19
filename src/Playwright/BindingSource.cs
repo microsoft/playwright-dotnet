@@ -1,8 +1,5 @@
 namespace Microsoft.Playwright
 {
-    /// <summary>
-    /// <see cref="IBrowserContext.ExposeBindingAsync(string, System.Action, bool?)"/> caller information.
-    /// </summary>
     public class BindingSource
     {
         /// <summary>

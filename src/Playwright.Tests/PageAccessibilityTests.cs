@@ -520,7 +520,7 @@ namespace Microsoft.Playwright.Tests
                     Role = "button",
                     Name = "My Button"
                 },
-                (await Page.Accessibility.SnapshotAsync(root: button)));
+                (await Page.Accessibility.SnapshotAsync(new AccessibilitySnapshotOptions { Root = button })));
         }
 
         [PlaywrightTest("page-accessibility.spec.ts", "should work an input")]
@@ -537,7 +537,7 @@ namespace Microsoft.Playwright.Tests
                     Name = "My Input",
                     Value = "My Value"
                 },
-                (await Page.Accessibility.SnapshotAsync(root: input)));
+                (await Page.Accessibility.SnapshotAsync(new AccessibilitySnapshotOptions { Root = input })));
         }
 
         [PlaywrightTest("page-accessibility.spec.ts", "should work on a menu")]
@@ -579,7 +579,7 @@ namespace Microsoft.Playwright.Tests
             };
 
             var compareLogic = new CompareLogic();
-            var result = compareLogic.Compare(nodeToCheck, (await Page.Accessibility.SnapshotAsync(root: menu)));
+            var result = compareLogic.Compare(nodeToCheck, (await Page.Accessibility.SnapshotAsync(new AccessibilitySnapshotOptions { Root = menu })));
             Assert.True(result.AreEqual, result.DifferencesString);
         }
 
@@ -591,7 +591,7 @@ namespace Microsoft.Playwright.Tests
             var button = await Page.QuerySelectorAsync("button");
             await Page.EvalOnSelectorAsync("button", "button => button.remove()");
 
-            Assert.Null(await Page.Accessibility.SnapshotAsync(root: button));
+            Assert.Null(await Page.Accessibility.SnapshotAsync(new AccessibilitySnapshotOptions { Root = button }));
         }
 
         [PlaywrightTest("page-accessibility.spec.ts", "should show uninteresting nodes")]
@@ -610,7 +610,7 @@ namespace Microsoft.Playwright.Tests
             ");
 
             var root = await Page.QuerySelectorAsync("#root");
-            var snapshot = (await Page.Accessibility.SnapshotAsync(false, root));
+            var snapshot = (await Page.Accessibility.SnapshotAsync(new AccessibilitySnapshotOptions { InterestingOnly = false, Root = root }));
             Assert.Equal("textbox", snapshot.Role);
             Assert.Contains("hello", snapshot.Value.ToString());
             Assert.Contains("world", snapshot.Value.ToString());

@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
-            var waitForNavigationResult = Page.WaitForNavigationAsync("**/frame.html", timeout: 5000);
+            var waitForNavigationResult = Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { UrlString = "**/frame.html", Timeout = 5000 });
 
             await Page.GotoAsync(TestConstants.EmptyPage);
 
@@ -59,12 +59,12 @@ namespace Microsoft.Playwright.Tests
 
             var waitForRequestTask = Server.WaitForRequest("/one-style.css");
             var navigationTask = Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
-            var domContentLoadedTask = Page.WaitForNavigationAsync(waitUntil: WaitUntilState.DOMContentLoaded);
+            var domContentLoadedTask = Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
 
             bool bothFired = false;
             var bothFiredTask = TaskUtils.WhenAll(
                 domContentLoadedTask,
-                Page.WaitForNavigationAsync(waitUntil: WaitUntilState.Load)).ContinueWith(_ => bothFired = true);
+                Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { WaitUntil = WaitUntilState.Load })).ContinueWith(_ => bothFired = true);
 
             await waitForRequestTask.WithTimeout(TestConstants.DefaultTaskTimeout);
             await domContentLoadedTask.WithTimeout(TestConstants.DefaultTaskTimeout);
@@ -227,16 +227,18 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithUrlMatch()
         {
             IResponse response1 = null;
-            var response1Task = Page.WaitForNavigationAsync(new Regex("one-style\\.html")).ContinueWith(t => response1 = t.Result);
+            var response1Task = Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { UrlRegex = new Regex("one-style\\.html") }).ContinueWith(t => response1 = t.Result);
             IResponse response2 = null;
-            var response2Task = Page.WaitForNavigationAsync(new Regex("\\/frame.html")).ContinueWith(t => response2 = t.Result);
+            var response2Task = Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { UrlRegex = new Regex("\\/frame.html") }).ContinueWith(t => response2 = t.Result);
             IResponse response3 = null;
-            var response3Task = Page.WaitForNavigationAsync(
-                (url) =>
+            var response3Task = Page.WaitForNavigationAsync(new PageWaitForNavigationOptions
+            {
+                UrlFunc = (url) =>
                 {
                     var query = new Uri(url).Query.ParseQueryString();
                     return query.ContainsKey("foo") && query["foo"] == "bar";
-                }).ContinueWith(t => response3 = t.Result);
+                }
+            }).ContinueWith(t => response3 = t.Result);
 
             Assert.Null(response1);
             Assert.Null(response2);
@@ -272,7 +274,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
             bool resolved = false;
-            var waitTask = Page.WaitForNavigationAsync(new Regex("third\\.html")).ContinueWith(_ => resolved = true);
+            var waitTask = Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { UrlRegex = new Regex("third\\.html") }).ContinueWith(_ => resolved = true);
 
             Assert.False(resolved);
 
@@ -292,7 +294,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkForCrossProcessNavigations()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var waitTask = Page.WaitForNavigationAsync(waitUntil: WaitUntilState.DOMContentLoaded);
+            var waitTask = Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
 
             string url = TestConstants.CrossProcessHttpPrefix + "/empty.html";
             var gotoTask = Page.GotoAsync(url);

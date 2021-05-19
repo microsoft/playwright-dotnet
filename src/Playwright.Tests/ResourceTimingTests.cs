@@ -79,7 +79,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Skip = "Fix me #1058")]
         public async Task ShouldWorkForSSL()
         {
-            var page = await Browser.NewPageAsync(ignoreHTTPSErrors: true);
+            var page = await Browser.NewPageAsync(new BrowserNewPageOptions { IgnoreHTTPSErrors = true });
             var (request, _) = await TaskUtils.WhenAll(
                 page.WaitForEventAsync(PageEvent.RequestFinished),
                 page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html"));

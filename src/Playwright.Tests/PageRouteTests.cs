@@ -117,7 +117,7 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync("**/*", (route) =>
             {
                 var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["foo"] = "bar" };
-                route.ContinueAsync(headers: headers);
+                route.ContinueAsync(new RouteContinueOptions { Headers = headers });
             });
             await Page.GotoAsync(TestConstants.ServerUrl + "/rrredirect");
         }
@@ -130,7 +130,7 @@ namespace Microsoft.Playwright.Tests
             {
                 var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["foo"] = "bar" };
                 headers.Remove("origin");
-                route.ContinueAsync(headers: headers);
+                route.ContinueAsync(new RouteContinueOptions { Headers = headers });
             });
 
             var originRequestHeader = Server.WaitForRequest("/empty.html", request => request.Headers["origin"]);
@@ -182,7 +182,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldShowCustomHTTPHeaders()
         {
-            await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string>
+            await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
             {
                 ["foo"] = "bar"
             });
@@ -215,7 +215,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCustomRefererHeaders()
         {
-            await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string> { ["referer"] = TestConstants.EmptyPage });
+            await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = TestConstants.EmptyPage });
             await Page.RouteAsync("**/*", (route) =>
             {
                 Assert.Equal(TestConstants.EmptyPage, route.Request.GetHeaderValue("referer"));
@@ -270,7 +270,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendReferer()
         {
-            await Page.SetExtraHttpHeadersAsync(new Dictionary<string, string> { ["referer"] = "http://google.com/" });
+            await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = "http://google.com/" });
             await Page.RouteAsync("**/*", (route) => route.ContinueAsync());
             var requestTask = Server.WaitForRequest("/grid.html", request => request.Headers["referer"]);
             await TaskUtils.WhenAll(
@@ -550,11 +550,13 @@ namespace Microsoft.Playwright.Tests
                     return;
                 }
 
-                _ = route.FulfillAsync(
-                    status: HttpStatusCode.MovedPermanently,
-                    headers: new Dictionary<string, string>
+                _ = route.FulfillAsync(new RouteFulfillOptions
                     {
-                        ["location"] = "/final",
+                        Status = (int)HttpStatusCode.MovedPermanently,
+                        Headers = new Dictionary<string, string>
+                        {
+                            ["location"] = "/final",
+                        }
                     });
             });
 
@@ -577,11 +579,13 @@ namespace Microsoft.Playwright.Tests
                     ? new Dictionary<string, string> { ["access-control-allow-origin"] = "*" }
                     : new Dictionary<string, string>();
 
-                _ = route.FulfillAsync(
-                    contentType: "application/json",
-                    headers: headers,
-                    status: HttpStatusCode.OK,
-                    body: "[\"electric\", \"cars\"]");
+                _ = route.FulfillAsync(new RouteFulfillOptions
+                    {
+                        ContentType = "application/json",
+                        Headers = headers,
+                        Status = (int)HttpStatusCode.OK,
+                        Body = "[\"electric\", \"cars\"]"
+                    });
             });
 
             string[] resp = await Page.EvaluateAsync<string[]>(@"async () => {
@@ -606,11 +610,13 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.RouteAsync("**/cars*", (route) =>
             {
-                _ = route.FulfillAsync(
-                    contentType: "application/json",
-                    headers: new Dictionary<string, string> { ["access-control-allow-origin"] = "*" },
-                    status: HttpStatusCode.OK,
-                    body: "[\"electric\", \"cars\"]");
+                _ = route.FulfillAsync(new RouteFulfillOptions
+                    {
+                        ContentType = "application/json",
+                        Headers = new Dictionary<string, string> { ["access-control-allow-origin"] = "*" },
+                        Status = (int)HttpStatusCode.OK,
+                        Body = "[\"electric\", \"cars\"]"
+                    });
             });
 
             string[] resp = await Page.EvaluateAsync<string[]>(@"async () => {
@@ -633,11 +639,13 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.RouteAsync("**/cars*", (route) =>
             {
-                _ = route.FulfillAsync(
-                    contentType: "application/json",
-                    headers: new Dictionary<string, string> { ["access-control-allow-origin"] = "*" },
-                    status: HttpStatusCode.OK,
-                    body: $"[\"{ route.Request.Method.ToString().ToUpper() }\", \"electric\", \"cars\"]");
+                _ = route.FulfillAsync(new RouteFulfillOptions
+                    {
+                        ContentType = "application/json",
+                        Headers = new Dictionary<string, string> { ["access-control-allow-origin"] = "*" },
+                        Status = (int)HttpStatusCode.OK,
+                        Body = $"[\"{ route.Request.Method.ToString().ToUpper() }\", \"electric\", \"cars\"]"
+                    });
             });
 
             string[] resp = await Page.EvaluateAsync<string[]>(@"async () => {

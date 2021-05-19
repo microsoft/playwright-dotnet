@@ -205,7 +205,7 @@ namespace Microsoft.Playwright.Tests
                 }", TestConstants.Port));
 
             await frameReceivedTcs.Task;
-            var frameSentTask = ws.WaitForEventAsync(WebSocketEvent.FrameSent);
+            var frameSentTask = ws.WaitForFrameSentAsync();
             await Page.EvaluateAsync("window.ws.close()");
             var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => frameSentTask);
             Assert.Contains("Socket closed", exception.Message);
@@ -230,7 +230,7 @@ namespace Microsoft.Playwright.Tests
                     window.ws = new WebSocket('ws://localhost:' + port + '/ws');
                 }", TestConstants.Port));
 
-            var frameSentTask = ws.WaitForEventAsync(WebSocketEvent.FrameSent);
+            var frameSentTask = ws.WaitForFrameSentAsync();
             await Page.CloseAsync();
             var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => frameSentTask.WithTimeout(TestConstants.DefaultTaskTimeout));
             Assert.Contains("Page closed", exception.Message);

@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
-            var task = Page.WaitForURLAsync("**/frame.html", timeout: 2500);
+            var task = Page.WaitForURLAsync("**/frame.html", new PageWaitForURLOptions { Timeout = 2500 });
             await Page.GotoAsync(TestConstants.EmptyPage);
             var exception = await Assert.ThrowsAsync<TimeoutException>(() => task);
             Assert.Contains("Timeout 2500ms exceeded.", exception.Message);
@@ -52,9 +52,9 @@ namespace Microsoft.Playwright.Tests
 
             var waitForRequestTask = Server.WaitForRequest("/one-style.css");
             var navigationTask = Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
-            var domContentLoadedTask = Page.WaitForURLAsync("**/one-style.html", waitUntil: WaitUntilState.DOMContentLoaded);
+            var domContentLoadedTask = Page.WaitForURLAsync("**/one-style.html", new PageWaitForURLOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
             var bothFiredTask = Task.WhenAll(
-                Page.WaitForURLAsync("**/one-style.html", waitUntil: WaitUntilState.Load),
+                Page.WaitForURLAsync("**/one-style.html", new PageWaitForURLOptions { WaitUntil = WaitUntilState.Load }),
                 domContentLoadedTask);
 
             await waitForRequestTask;

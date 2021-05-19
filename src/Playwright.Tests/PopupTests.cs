@@ -19,7 +19,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldInheritUserAgentFromBrowserContext()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions { UserAgent = "hey" });
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { UserAgent = "hey" });
             var page = await context.NewPageAsync();
             await page.GotoAsync(TestConstants.EmptyPage);
             var requestTcs = new TaskCompletionSource<string>();
@@ -64,7 +64,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldInheritExtraHeadersFromBrowserContext()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 ExtraHTTPHeaders = new Dictionary<string, string>
                 {
@@ -106,7 +106,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldInheritHttpCredentialsFromBrowserContext()
         {
             Server.SetAuth("/title.html", "user", "pass");
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 HttpCredentials = new HttpCredentials() { Username = "user", Password = "pass" },
             });
@@ -126,9 +126,9 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldInheritTouchSupportFromBrowserContext()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = new ViewportSize { Width = 400, Height = 500 },
+                ViewportSize = new ViewportSize { Width = 400, Height = 500 },
                 HasTouch = true,
             });
             var page = await context.NewPageAsync();
@@ -146,9 +146,9 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldInheritViewportSizeFromBrowserContext()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = new ViewportSize { Width = 400, Height = 500 },
+                ViewportSize = new ViewportSize { Width = 400, Height = 500 },
             });
             var page = await context.NewPageAsync();
             await page.GotoAsync(TestConstants.EmptyPage);
@@ -165,9 +165,9 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldUseViewportSizeFromWindowFeatures()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserContextOptions
+            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Viewport = new ViewportSize { Width = 700, Height = 700 },
+                ViewportSize = new ViewportSize { Width = 700, Height = 700 },
             });
             var page = await context.NewPageAsync();
             await page.GotoAsync(TestConstants.EmptyPage);

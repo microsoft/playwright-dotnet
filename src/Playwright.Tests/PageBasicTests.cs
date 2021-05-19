@@ -85,7 +85,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldProvideAccessToTheOpenerPage()
         {
             var (popupEvent, _) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Popup),
+                Page.WaitForPopupAsync(),
                 Page.EvaluateAsync("() => window.open('about:blank')")
             );
             var opener = await popupEvent.OpenerAsync();
@@ -97,7 +97,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReturnNullIfParentPageHasBeenClosed()
         {
             var (popupEvent, _) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Popup),
+                Page.WaitForPopupAsync(),
                 Page.EvaluateAsync("() => window.open('about:blank')")
             );
             await Page.CloseAsync();
@@ -180,7 +180,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithWindowClose()
         {
-            var newPageTask = Page.WaitForEventAsync(PageEvent.Popup);
+            var newPageTask = Page.WaitForPopupAsync();
             await Page.EvaluateAsync<string>("() => window['newPage'] = window.open('about:blank')");
             var newPage = await newPageTask;
             var closedTsc = new TaskCompletionSource<bool>();

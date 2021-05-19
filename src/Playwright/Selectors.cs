@@ -5,7 +5,7 @@ using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright
 {
-    internal class Selectors : ISelectors
+    internal partial class Selectors : ISelectors
     {
         private readonly List<SelectorsOwner> _channels = new List<SelectorsOwner>();
         private readonly List<SelectorsRegisterParams> _registrations = new List<SelectorsRegisterParams>();
@@ -16,9 +16,9 @@ namespace Microsoft.Playwright
 
         internal static Selectors SharedSelectors { get; } = new Selectors();
 
-        public async Task RegisterAsync(string name, string script, string scriptPath, bool? contentScript = null)
+        public async Task RegisterAsync(string name, string script, string path, bool? contentScript = null)
         {
-            script = ScriptsHelper.EvaluationScript(script, scriptPath, false);
+            script = ScriptsHelper.EvaluationScript(script, path, false);
 
             var registerParam = new SelectorsRegisterParams
             {

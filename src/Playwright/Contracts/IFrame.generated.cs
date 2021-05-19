@@ -105,17 +105,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>Adds a <c>&lt;script&gt;</c> tag into the page with the desired url or content.</para>
         /// </summary>
-        /// <param name="url">URL of a script to be added.</param>
-        /// <param name="path">
-        /// Path to the JavaScript file to be injected into frame. If <c>path</c> is a relative
-        /// path, then it is resolved relative to the current working directory.
-        /// </param>
-        /// <param name="content">Raw JavaScript content to be injected into frame.</param>
-        /// <param name="type">
-        /// Script type. Use 'module' in order to load a Javascript ES6 module. See <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script">script</a>
-        /// for more details.
-        /// </param>
-        Task<IElementHandle> AddScriptTagAsync(string url = default, string path = default, string content = default, string type = default);
+        /// <param name="options">Call options</param>
+        Task<IElementHandle> AddScriptTagAsync(FrameAddScriptTagOptions options = default);
 
         /// <summary>
         /// <para>
@@ -127,13 +118,8 @@ namespace Microsoft.Playwright
         /// or a <c>&lt;style type="text/css"&gt;</c> tag with the content.
         /// </para>
         /// </summary>
-        /// <param name="url">URL of the <c>&lt;link&gt;</c> tag.</param>
-        /// <param name="path">
-        /// Path to the CSS file to be injected into frame. If <c>path</c> is a relative path,
-        /// then it is resolved relative to the current working directory.
-        /// </param>
-        /// <param name="content">Raw CSS content to be injected into frame.</param>
-        Task<IElementHandle> AddStyleTagAsync(string url = default, string path = default, string content = default);
+        /// <param name="options">Call options</param>
+        Task<IElementHandle> AddStyleTagAsync(FrameAddStyleTagOptions options = default);
 
         /// <summary>
         /// <para>
@@ -173,31 +159,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="position">
-        /// A point to use relative to the top-left corner of element padding box. If not specified,
-        /// uses some visible point of the element.
-        /// </param>
-        /// <param name="force">
-        /// Whether to bypass the <a href="./actionability.md">actionability</a> checks. Defaults
-        /// to <c>false</c>.
-        /// </param>
-        /// <param name="noWaitAfter">
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        /// <param name="trial">
-        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
-        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
-        /// element is ready for the action without performing it.
-        /// </param>
-        Task CheckAsync(string selector, Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default, bool? trial = default);
+        /// <param name="options">Call options</param>
+        Task CheckAsync(string selector, FrameCheckOptions options = default);
 
         IReadOnlyCollection<IFrame> ChildFrames { get; }
 
@@ -237,42 +200,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="button">Defaults to <c>left</c>.</param>
-        /// <param name="clickCount">defaults to 1. See <see cref="UIEvent.detail"/>.</param>
-        /// <param name="delay">
-        /// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
-        /// to 0.
-        /// </param>
-        /// <param name="position">
-        /// A point to use relative to the top-left corner of element padding box. If not specified,
-        /// uses some visible point of the element.
-        /// </param>
-        /// <param name="modifiers">
-        /// Modifier keys to press. Ensures that only these modifiers are pressed during the
-        /// operation, and then restores current modifiers back. If not specified, currently
-        /// pressed modifiers are used.
-        /// </param>
-        /// <param name="force">
-        /// Whether to bypass the <a href="./actionability.md">actionability</a> checks. Defaults
-        /// to <c>false</c>.
-        /// </param>
-        /// <param name="noWaitAfter">
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        /// <param name="trial">
-        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
-        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
-        /// element is ready for the action without performing it.
-        /// </param>
-        Task ClickAsync(string selector, MouseButton button = default, int? clickCount = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default, bool? trial = default);
+        /// <param name="options">Call options</param>
+        Task ClickAsync(string selector, FrameClickOptions options = default);
 
         /// <summary><para>Gets the full HTML contents of the frame, including the doctype.</para></summary>
         Task<string> ContentAsync();
@@ -320,41 +249,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="button">Defaults to <c>left</c>.</param>
-        /// <param name="delay">
-        /// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
-        /// to 0.
-        /// </param>
-        /// <param name="position">
-        /// A point to use relative to the top-left corner of element padding box. If not specified,
-        /// uses some visible point of the element.
-        /// </param>
-        /// <param name="modifiers">
-        /// Modifier keys to press. Ensures that only these modifiers are pressed during the
-        /// operation, and then restores current modifiers back. If not specified, currently
-        /// pressed modifiers are used.
-        /// </param>
-        /// <param name="force">
-        /// Whether to bypass the <a href="./actionability.md">actionability</a> checks. Defaults
-        /// to <c>false</c>.
-        /// </param>
-        /// <param name="noWaitAfter">
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        /// <param name="trial">
-        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
-        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
-        /// element is ready for the action without performing it.
-        /// </param>
-        Task DblClickAsync(string selector, MouseButton button = default, float? delay = default, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default, bool? trial = default);
+        /// <param name="options">Call options</param>
+        Task DblClickAsync(string selector, FrameDblClickOptions options = default);
 
         /// <summary>
         /// <para>
@@ -398,12 +294,8 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="type">DOM event type: <c>"click"</c>, <c>"dragstart"</c>, etc.</param>
         /// <param name="eventInit">Optional event-specific initialization properties.</param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task DispatchEventAsync(string selector, string type, object eventInit = default, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task DispatchEventAsync(string selector, string type, object eventInit = default, FrameDispatchEventOptions options = default);
 
         /// <summary>
         /// <para>Returns the return value of <paramref name="expression"/>.</para>
@@ -556,18 +448,8 @@ namespace Microsoft.Playwright
         /// Value to fill for the <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or <c>[contenteditable]</c>
         /// element.
         /// </param>
-        /// <param name="noWaitAfter">
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task FillAsync(string selector, string value, bool? noWaitAfter = default, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task FillAsync(string selector, string value, FrameFillOptions options = default);
 
         /// <summary>
         /// <para>
@@ -581,12 +463,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task FocusAsync(string selector, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task FocusAsync(string selector, FrameFocusOptions options = default);
 
         /// <summary>
         /// <para>
@@ -616,12 +494,8 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="name">Attribute name to get the value for.</param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task<string> GetAttributeAsync(string selector, string name, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task<string> GetAttributeAsync(string selector, string name, FrameGetAttributeOptions options = default);
 
         /// <summary>
         /// <para>
@@ -654,34 +528,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="url">URL to navigate frame to. The url should include scheme, e.g. <c>https://</c>.</param>
-        /// <param name="waitUntil">
-        /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
-        /// <list type="bullet">
-        /// <item><description>
-        /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
-        /// event is fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
-        /// fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'networkidle'</c> - consider operation to be finished when there are no network
-        /// connections for at least <c>500</c> ms.
-        /// </description></item>
-        /// </list>
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        /// <param name="referer">
-        /// Referer header value. If provided it will take preference over the referer header
-        /// value set by <see cref="IPage.SetExtraHttpHeadersAsync"/>.
-        /// </param>
-        Task<IResponse> GotoAsync(string url, WaitUntilState waitUntil = default, float? timeout = default, string referer = default);
+        /// <param name="options">Call options</param>
+        Task<IResponse> GotoAsync(string url, FrameGotoOptions options = default);
 
         /// <summary>
         /// <para>
@@ -719,30 +567,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="position">
-        /// A point to use relative to the top-left corner of element padding box. If not specified,
-        /// uses some visible point of the element.
-        /// </param>
-        /// <param name="modifiers">
-        /// Modifier keys to press. Ensures that only these modifiers are pressed during the
-        /// operation, and then restores current modifiers back. If not specified, currently
-        /// pressed modifiers are used.
-        /// </param>
-        /// <param name="force">
-        /// Whether to bypass the <a href="./actionability.md">actionability</a> checks. Defaults
-        /// to <c>false</c>.
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        /// <param name="trial">
-        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
-        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
-        /// element is ready for the action without performing it.
-        /// </param>
-        Task HoverAsync(string selector, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? force = default, float? timeout = default, bool? trial = default);
+        /// <param name="options">Call options</param>
+        Task HoverAsync(string selector, FrameHoverOptions options = default);
 
         /// <summary><para>Returns <c>element.innerHTML</c>.</para></summary>
         /// <param name="selector">
@@ -750,12 +576,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task<string> InnerHTMLAsync(string selector, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task<string> InnerHTMLAsync(string selector, FrameInnerHTMLOptions options = default);
 
         /// <summary><para>Returns <c>element.innerText</c>.</para></summary>
         /// <param name="selector">
@@ -763,12 +585,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task<string> InnerTextAsync(string selector, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task<string> InnerTextAsync(string selector, FrameInnerTextOptions options = default);
 
         /// <summary>
         /// <para>
@@ -781,12 +599,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task<bool> IsCheckedAsync(string selector, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task<bool> IsCheckedAsync(string selector, FrameIsCheckedOptions options = default);
 
         /// <summary><para>Returns <c>true</c> if the frame has been detached, or <c>false</c> otherwise.</para></summary>
         bool IsDetached { get; }
@@ -797,12 +611,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task<bool> IsDisabledAsync(string selector, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task<bool> IsDisabledAsync(string selector, FrameIsDisabledOptions options = default);
 
         /// <summary><para>Returns whether the element is <a href="./actionability.md#editable">editable</a>.</para></summary>
         /// <param name="selector">
@@ -810,12 +620,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task<bool> IsEditableAsync(string selector, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task<bool> IsEditableAsync(string selector, FrameIsEditableOptions options = default);
 
         /// <summary><para>Returns whether the element is <a href="./actionability.md#enabled">enabled</a>.</para></summary>
         /// <param name="selector">
@@ -823,12 +629,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task<bool> IsEnabledAsync(string selector, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task<bool> IsEnabledAsync(string selector, FrameIsEnabledOptions options = default);
 
         /// <summary>
         /// <para>
@@ -841,12 +643,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task<bool> IsHiddenAsync(string selector, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task<bool> IsHiddenAsync(string selector, FrameIsHiddenOptions options = default);
 
         /// <summary>
         /// <para>
@@ -859,12 +657,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task<bool> IsVisibleAsync(string selector, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task<bool> IsVisibleAsync(string selector, FrameIsVisibleOptions options = default);
 
         /// <summary>
         /// <para>Returns frame's name attribute as specified in the tag.</para>
@@ -925,22 +719,8 @@ namespace Microsoft.Playwright
         /// Name of the key to press or a character to generate, such as <c>ArrowLeft</c> or
         /// <c>a</c>.
         /// </param>
-        /// <param name="delay">
-        /// Time to wait between <c>keydown</c> and <c>keyup</c> in milliseconds. Defaults to
-        /// 0.
-        /// </param>
-        /// <param name="noWaitAfter">
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task PressAsync(string selector, string key, float? delay = default, bool? noWaitAfter = default, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task PressAsync(string selector, string key, FramePressOptions options = default);
 
         /// <summary>
         /// <para>Returns the ElementHandle pointing to the frame element.</para>
@@ -1006,44 +786,12 @@ namespace Microsoft.Playwright
         /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
         /// Option is considered matching if all specified properties match.
         /// </param>
-        /// <param name="noWaitAfter">
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, bool? noWaitAfter = default, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, FrameSelectOptionOptions options = default);
 
         /// <param name="html">HTML markup to assign to the page.</param>
-        /// <param name="timeout">
-        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        /// <param name="waitUntil">
-        /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
-        /// <list type="bullet">
-        /// <item><description>
-        /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
-        /// event is fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
-        /// fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'networkidle'</c> - consider operation to be finished when there are no network
-        /// connections for at least <c>500</c> ms.
-        /// </description></item>
-        /// </list>
-        /// </param>
-        Task SetContentAsync(string html, float? timeout = default, WaitUntilState waitUntil = default);
+        /// <param name="options">Call options</param>
+        Task SetContentAsync(string html, FrameSetContentOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1063,18 +811,8 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="files">
         /// </param>
-        /// <param name="noWaitAfter">
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, bool? noWaitAfter = default, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, FrameSetInputFilesOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1118,36 +856,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="position">
-        /// A point to use relative to the top-left corner of element padding box. If not specified,
-        /// uses some visible point of the element.
-        /// </param>
-        /// <param name="modifiers">
-        /// Modifier keys to press. Ensures that only these modifiers are pressed during the
-        /// operation, and then restores current modifiers back. If not specified, currently
-        /// pressed modifiers are used.
-        /// </param>
-        /// <param name="noWaitAfter">
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
-        /// </param>
-        /// <param name="force">
-        /// Whether to bypass the <a href="./actionability.md">actionability</a> checks. Defaults
-        /// to <c>false</c>.
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        /// <param name="trial">
-        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
-        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
-        /// element is ready for the action without performing it.
-        /// </param>
-        Task TapAsync(string selector, Position position = default, IEnumerable<KeyboardModifier> modifiers = default, bool? noWaitAfter = default, bool? force = default, float? timeout = default, bool? trial = default);
+        /// <param name="options">Call options</param>
+        Task TapAsync(string selector, FrameTapOptions options = default);
 
         /// <summary><para>Returns <c>element.textContent</c>.</para></summary>
         /// <param name="selector">
@@ -1155,12 +865,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task<string> TextContentAsync(string selector, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task<string> TextContentAsync(string selector, FrameTextContentOptions options = default);
 
         /// <summary><para>Returns the page title.</para></summary>
         Task<string> TitleAsync();
@@ -1183,19 +889,8 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="text">A text to type into a focused element.</param>
-        /// <param name="delay">Time to wait between key presses in milliseconds. Defaults to 0.</param>
-        /// <param name="noWaitAfter">
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task TypeAsync(string selector, string text, float? delay = default, bool? noWaitAfter = default, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task TypeAsync(string selector, string text, FrameTypeOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1235,31 +930,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="position">
-        /// A point to use relative to the top-left corner of element padding box. If not specified,
-        /// uses some visible point of the element.
-        /// </param>
-        /// <param name="force">
-        /// Whether to bypass the <a href="./actionability.md">actionability</a> checks. Defaults
-        /// to <c>false</c>.
-        /// </param>
-        /// <param name="noWaitAfter">
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        /// <param name="trial">
-        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
-        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
-        /// element is ready for the action without performing it.
-        /// </param>
-        Task UncheckAsync(string selector, Position position = default, bool? force = default, bool? noWaitAfter = default, float? timeout = default, bool? trial = default);
+        /// <param name="options">Call options</param>
+        Task UncheckAsync(string selector, FrameUncheckOptions options = default);
 
         /// <summary><para>Returns frame's url.</para></summary>
         string Url { get; }
@@ -1301,17 +973,8 @@ namespace Microsoft.Playwright
         /// expression.
         /// </param>
         /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-        /// <param name="pollingInterval">
-        /// If specified, then it is treated as an interval in milliseconds at which the function
-        /// would be executed. By default if the option is not specified <paramref name="expression"/>
-        /// is executed in <c>requestAnimationFrame</c> callback.
-        /// </param>
-        /// <param name="timeout">
-        /// maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
-        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
-        /// </param>
-        Task<IJSHandle> WaitForFunctionAsync(string expression, object arg = default, float? pollingInterval = default, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task<IJSHandle> WaitForFunctionAsync(string expression, object arg = default, FrameWaitForFunctionOptions options = default);
 
         /// <summary>
         /// <para>Waits for the required load state to be reached.</para>
@@ -1338,13 +1001,8 @@ namespace Microsoft.Playwright
         /// </description></item>
         /// </list>
         /// </param>
-        /// <param name="timeout">
-        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task WaitForLoadStateAsync(LoadState state = default, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task WaitForLoadStateAsync(LoadState state = default, FrameWaitForLoadStateOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1371,195 +1029,9 @@ namespace Microsoft.Playwright
         /// API</a> to change the URL is considered a navigation.
         /// </para>
         /// </remarks>
-        /// <param name="urlString">
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while waiting for the navigation.
-        /// </param>
+        /// <param name="options">Call options</param>
         /// <param name="action">Action to perform while waiting</param>
-        /// <param name="waitUntil">
-        /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
-        /// <list type="bullet">
-        /// <item><description>
-        /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
-        /// event is fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
-        /// fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'networkidle'</c> - consider operation to be finished when there are no network
-        /// connections for at least <c>500</c> ms.
-        /// </description></item>
-        /// </list>
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task<IResponse> WaitForNavigationAsync(string urlString, Func<Task> action = default, WaitUntilState waitUntil = default, float? timeout = default);
-
-        /// <summary>
-        /// <para>
-        /// Waits for the frame navigation and returns the main resource response. In case of
-        /// multiple redirects, the navigation will resolve with the response of the last redirect.
-        /// In case of navigation to a different anchor or navigation due to History API usage,
-        /// the navigation will resolve with <c>null</c>.
-        /// </para>
-        /// <para>
-        /// This method waits for the frame to navigate to a new URL. It is useful for when
-        /// you run code which will indirectly cause the frame to navigate. Consider this example:
-        /// </para>
-        /// <code>
-        /// await Task.WhenAll(<br/>
-        ///     frame.WaitForNavigationAsync(),<br/>
-        ///     // clicking the link will indirectly cause a navigation<br/>
-        ///     frame.ClickAsync("a.delayed-navigation"));<br/>
-        /// // Resolves after navigation has finished
-        /// </code>
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// Usage of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API">History
-        /// API</a> to change the URL is considered a navigation.
-        /// </para>
-        /// </remarks>
-        /// <param name="urlRegex">
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while waiting for the navigation.
-        /// </param>
-        /// <param name="action">Action to perform while waiting</param>
-        /// <param name="waitUntil">
-        /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
-        /// <list type="bullet">
-        /// <item><description>
-        /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
-        /// event is fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
-        /// fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'networkidle'</c> - consider operation to be finished when there are no network
-        /// connections for at least <c>500</c> ms.
-        /// </description></item>
-        /// </list>
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task<IResponse> WaitForNavigationAsync(Regex urlRegex, Func<Task> action = default, WaitUntilState waitUntil = default, float? timeout = default);
-
-        /// <summary>
-        /// <para>
-        /// Waits for the frame navigation and returns the main resource response. In case of
-        /// multiple redirects, the navigation will resolve with the response of the last redirect.
-        /// In case of navigation to a different anchor or navigation due to History API usage,
-        /// the navigation will resolve with <c>null</c>.
-        /// </para>
-        /// <para>
-        /// This method waits for the frame to navigate to a new URL. It is useful for when
-        /// you run code which will indirectly cause the frame to navigate. Consider this example:
-        /// </para>
-        /// <code>
-        /// await Task.WhenAll(<br/>
-        ///     frame.WaitForNavigationAsync(),<br/>
-        ///     // clicking the link will indirectly cause a navigation<br/>
-        ///     frame.ClickAsync("a.delayed-navigation"));<br/>
-        /// // Resolves after navigation has finished
-        /// </code>
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// Usage of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API">History
-        /// API</a> to change the URL is considered a navigation.
-        /// </para>
-        /// </remarks>
-        /// <param name="urlFunc">
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while waiting for the navigation.
-        /// </param>
-        /// <param name="action">Action to perform while waiting</param>
-        /// <param name="waitUntil">
-        /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
-        /// <list type="bullet">
-        /// <item><description>
-        /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
-        /// event is fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
-        /// fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'networkidle'</c> - consider operation to be finished when there are no network
-        /// connections for at least <c>500</c> ms.
-        /// </description></item>
-        /// </list>
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task<IResponse> WaitForNavigationAsync(Func<string, bool> urlFunc, Func<Task> action = default, WaitUntilState waitUntil = default, float? timeout = default);
-        /// <summary>
-        /// <para>
-        /// Waits for the frame navigation and returns the main resource response. In case of
-        /// multiple redirects, the navigation will resolve with the response of the last redirect.
-        /// In case of navigation to a different anchor or navigation due to History API usage,
-        /// the navigation will resolve with <c>null</c>.
-        /// </para>
-        /// <para>
-        /// This method waits for the frame to navigate to a new URL. It is useful for when
-        /// you run code which will indirectly cause the frame to navigate. Consider this example:
-        /// </para>
-        /// <code>
-        /// await Task.WhenAll(<br/>
-        ///     frame.WaitForNavigationAsync(),<br/>
-        ///     // clicking the link will indirectly cause a navigation<br/>
-        ///     frame.ClickAsync("a.delayed-navigation"));<br/>
-        /// // Resolves after navigation has finished
-        /// </code>
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// Usage of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API">History
-        /// API</a> to change the URL is considered a navigation.
-        /// </para>
-        /// </remarks>
-        /// <param name="action">Action to perform while waiting</param>
-        /// <param name="waitUntil">
-        /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
-        /// <list type="bullet">
-        /// <item><description>
-        /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
-        /// event is fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
-        /// fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'networkidle'</c> - consider operation to be finished when there are no network
-        /// connections for at least <c>500</c> ms.
-        /// </description></item>
-        /// </list>
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task<IResponse> WaitForNavigationAsync(Func<Task> action = default, WaitUntilState waitUntil = default, float? timeout = default);
+        Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default, Func<Task> action = default);
 
         /// <summary>
         /// <para>
@@ -1601,29 +1073,8 @@ namespace Microsoft.Playwright
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="state">
-        /// Defaults to <c>'visible'</c>. Can be either:
-        /// <list type="bullet">
-        /// <item><description><c>'attached'</c> - wait for element to be present in DOM.</description></item>
-        /// <item><description><c>'detached'</c> - wait for element to not be present in DOM.</description></item>
-        /// <item><description>
-        /// <c>'visible'</c> - wait for element to have non-empty bounding box and no <c>visibility:hidden</c>.
-        /// Note that element without any content or with <c>display:none</c> has an empty bounding
-        /// box and is not considered visible.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'hidden'</c> - wait for element to be either detached from DOM, or have an empty
-        /// bounding box or <c>visibility:hidden</c>. This is opposite to the <c>'visible'</c>
-        /// option.
-        /// </description></item>
-        /// </list>
-        /// </param>
-        /// <param name="timeout">
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorState state = default, float? timeout = default);
+        /// <param name="options">Call options</param>
+        Task<IElementHandle> WaitForSelectorAsync(string selector, FrameWaitForSelectorOptions options = default);
 
         /// <summary>
         /// <para>Waits for the given <paramref name="timeout"/> in milliseconds.</para>
@@ -1643,34 +1094,12 @@ namespace Microsoft.Playwright
         /// await frame.WaitForURLAsync("**/target.html");
         /// </code>
         /// </summary>
-        /// <param name="urlString">
+        /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        /// <param name="waitUntil">
-        /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
-        /// <list type="bullet">
-        /// <item><description>
-        /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
-        /// event is fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
-        /// fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'networkidle'</c> - consider operation to be finished when there are no network
-        /// connections for at least <c>500</c> ms.
-        /// </description></item>
-        /// </list>
-        /// </param>
-        Task WaitForURLAsync(string urlString, float? timeout = default, WaitUntilState waitUntil = default);
+        /// <param name="options">Call options</param>
+        Task WaitForURLAsync(string url, FrameWaitForURLOptions options = default);
 
         /// <summary>
         /// <para>Waits for the frame to navigate to the given URL.</para>
@@ -1679,34 +1108,12 @@ namespace Microsoft.Playwright
         /// await frame.WaitForURLAsync("**/target.html");
         /// </code>
         /// </summary>
-        /// <param name="urlRegex">
+        /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        /// <param name="waitUntil">
-        /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
-        /// <list type="bullet">
-        /// <item><description>
-        /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
-        /// event is fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
-        /// fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'networkidle'</c> - consider operation to be finished when there are no network
-        /// connections for at least <c>500</c> ms.
-        /// </description></item>
-        /// </list>
-        /// </param>
-        Task WaitForURLAsync(Regex urlRegex, float? timeout = default, WaitUntilState waitUntil = default);
+        /// <param name="options">Call options</param>
+        Task WaitForURLAsync(Regex url, FrameWaitForURLOptions options = default);
 
         /// <summary>
         /// <para>Waits for the frame to navigate to the given URL.</para>
@@ -1715,33 +1122,11 @@ namespace Microsoft.Playwright
         /// await frame.WaitForURLAsync("**/target.html");
         /// </code>
         /// </summary>
-        /// <param name="urlFunc">
+        /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation.
         /// </param>
-        /// <param name="timeout">
-        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </param>
-        /// <param name="waitUntil">
-        /// When to consider operation succeeded, defaults to <c>load</c>. Events can be either:
-        /// <list type="bullet">
-        /// <item><description>
-        /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
-        /// event is fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
-        /// fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'networkidle'</c> - consider operation to be finished when there are no network
-        /// connections for at least <c>500</c> ms.
-        /// </description></item>
-        /// </list>
-        /// </param>
-        Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = default, WaitUntilState waitUntil = default);
+        /// <param name="options">Call options</param>
+        Task WaitForURLAsync(Func<string, bool> url, FrameWaitForURLOptions options = default);
     }
 }

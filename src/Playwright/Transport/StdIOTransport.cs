@@ -16,15 +16,14 @@ namespace Microsoft.Playwright.Transport
         private readonly List<byte> _data = new();
         private int? _currentMessageSize;
 
-        internal StdIOTransport(Process process, ILoggerFactory loggerFactory, TransportTaskScheduler scheduler = null)
+        internal StdIOTransport(Process process, ILoggerFactory loggerFactory)
         {
             _process = process;
             _logger = loggerFactory?.CreateLogger<StdIOTransport>();
-            scheduler ??= ScheduleTransportTask;
             process.ErrorDataReceived += (_, e) => LogReceived?.Invoke(this, new LogReceivedEventArgs(e.Data));
             process.BeginErrorReadLine();
 
-            scheduler(GetResponseAsync, _readerCancellationSource.Token);
+            ScheduleTransportTask(GetResponseAsync, _readerCancellationSource.Token);
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>

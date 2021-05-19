@@ -26,7 +26,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldTimeoutWaitingForButtonToBeEnabled()
         {
             await Page.SetContentAsync("<button onclick=\"javascript: window.__CLICKED = true;\" disabled><span>Click target</span></button>");
-            var clickTask = Page.ClickAsync("text=Click target", timeout: 3000);
+            var clickTask = Page.ClickAsync("text=Click target", new PageClickOptions { Timeout = 3000 });
             Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
 
             var exception = await Assert.ThrowsAsync<TimeoutException>(() => clickTask);
