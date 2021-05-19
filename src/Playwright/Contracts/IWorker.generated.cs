@@ -119,10 +119,5 @@ namespace Microsoft.Playwright
         Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = default);
 
         string Url { get; }
-
-        /// <summary><para>Performs action and waits for the Worker to close.</para></summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IWorker> WaitForCloseAsync(WorkerWaitForCloseOptions options = default, Func<Task> action = default);
     }
 }

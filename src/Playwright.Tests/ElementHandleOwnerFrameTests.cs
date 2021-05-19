@@ -94,7 +94,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkForAdoptedElements()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForPopupAsync();
+            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
             await TaskUtils.WhenAll(
               popupTask,
               Page.EvaluateAsync("url => window.__popup = window.open(url)", TestConstants.EmptyPage));

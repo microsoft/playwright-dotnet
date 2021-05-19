@@ -53,7 +53,7 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
-            var otherPage = await context.WaitForEventAsync(ContextEvent.Page, new BrowserContextWaitForEventOptions(), async () =>
+            var otherPage = await context.RunAndWaitForEventAsync(ContextEvent.Page, async () =>
             {
                 await page.EvaluateAsync("url => window.open(url)", "about:blank");
             });
@@ -68,7 +68,7 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
-            var otherPage = await context.WaitForEventAsync(ContextEvent.Page, new BrowserContextWaitForEventOptions(), async () =>
+            var otherPage = await context.RunAndWaitForEventAsync(ContextEvent.Page, async () =>
             {
                 await page.EvaluateAsync("() => window.open()");
             });
@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
-            var otherPage = await context.WaitForEventAsync(ContextEvent.Page, new BrowserContextWaitForEventOptions(), async () =>
+            var otherPage = await context.RunAndWaitForEventAsync(ContextEvent.Page, async () =>
             {
                 await page.EvaluateAsync("url => window.open(url)", TestConstants.CrossProcessUrl + "/empty.html");
             });

@@ -65,17 +65,5 @@ namespace Microsoft.Playwright
             options ??= new BrowserContextStorageStateOptions();
             return StorageStateAsync(path: options.Path);
         }
-
-        public Task<object> WaitForEventAsync(string @event, BrowserContextWaitForEventOptions options = default, Func<Task> action = default)
-        {
-            options ??= new BrowserContextWaitForEventOptions();
-            return WaitForEventAsync(@event, action, timeout: options.Timeout);
-        }
-
-        public Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions options = default, Func<Task> action = default)
-        {
-            options ??= new BrowserContextWaitForPageOptions();
-            return WaitForPageAsync(action, predicate: options.Predicate, timeout: options.Timeout);
-        }
     }
 }

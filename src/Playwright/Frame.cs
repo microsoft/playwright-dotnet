@@ -326,7 +326,6 @@ namespace Microsoft.Playwright
             => WaitForURLAsync(null, null, urlFunc, timeout, waitUntil);
 
         internal async Task<IResponse> WaitForNavigationAsync(
-            Func<Task> action = default,
             string urlString = default,
             Regex urlRegex = default,
             Func<string, bool> urlFunc = default,
@@ -353,11 +352,6 @@ namespace Microsoft.Playwright
                     waiter.Log($"  navigated to \"{e.Url}\"");
                     return UrlMatches(e.Url, urlString, urlRegex, urlFunc);
                 });
-
-            if (action != null)
-            {
-                await Task.WhenAll(navigatedEventTask, action()).ConfigureAwait(false);
-            }
 
             var navigatedEvent = await navigatedEventTask.ConfigureAwait(false);
 
@@ -677,7 +671,7 @@ namespace Microsoft.Playwright
                 return WaitForLoadStateAsync(waitUntil.EnsureDefaultValue(WaitUntilState.Load).ToLoadState(), timeout);
             }
 
-            return WaitForNavigationAsync(null, urlString, urlRegex, urlFunc, waitUntil, timeout);
+            return WaitForNavigationAsync(urlString, urlRegex, urlFunc, waitUntil, timeout);
         }
 
         private Waiter SetupNavigationWaiter(string apiName, float? timeout)

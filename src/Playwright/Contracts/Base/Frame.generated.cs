@@ -222,10 +222,10 @@ namespace Microsoft.Playwright
             return WaitForLoadStateAsync(state, timeout: options.Timeout);
         }
 
-        public Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default, Func<Task> action = default)
+        public Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default)
         {
             options ??= new FrameWaitForNavigationOptions();
-            return WaitForNavigationAsync(action, urlString: options.UrlString, urlRegex: options.UrlRegex, urlFunc: options.UrlFunc, waitUntil: options.WaitUntil, timeout: options.Timeout);
+            return WaitForNavigationAsync(urlString: options.UrlString, urlRegex: options.UrlRegex, urlFunc: options.UrlFunc, waitUntil: options.WaitUntil, timeout: options.Timeout);
         }
 
         public Task<IElementHandle> WaitForSelectorAsync(string selector, FrameWaitForSelectorOptions options = default)
