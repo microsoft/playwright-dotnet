@@ -108,12 +108,10 @@ namespace Microsoft.Playwright.Tests
             ");
             Assert.Equal(TestConstants.ServerUrl + "/second.html", Page.Url);
 
-            await Page.ClickAsync("a#back");
-            await Page.WaitForURLAsync("**/first.html");
+            await Task.WhenAll(Page.WaitForURLAsync("**/first.html"), Page.ClickAsync("a#back"));
             Assert.Equal(TestConstants.ServerUrl + "/first.html", Page.Url);
 
-            await Page.ClickAsync("a#forward");
-            await Page.WaitForURLAsync("**/second.html");
+            await Task.WhenAll(Page.WaitForURLAsync("**/second.html"), Page.ClickAsync("a#forward"));
             Assert.Equal(TestConstants.ServerUrl + "/second.html", Page.Url);
         }
 
