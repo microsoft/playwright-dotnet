@@ -66,7 +66,7 @@ namespace Microsoft.Playwright
         [JsonPropertyName("channel")]
         public BrowserChannel Channel { get; set; }
 
-        /// <summary><para>Enable Chromium sandboxing. Defaults to <c>true</c>.</para></summary>
+        /// <summary><para>Enable Chromium sandboxing. Defaults to <c>false</c>.</para></summary>
         [JsonPropertyName("chromiumSandbox")]
         public bool? ChromiumSandbox { get; set; }
 
