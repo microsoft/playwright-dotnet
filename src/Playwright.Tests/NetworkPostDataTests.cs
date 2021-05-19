@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
                       return fetch(request);
                     }}");
 
-            Task.WaitAll(task, actualTask);
+            await Task.WhenAll(task, actualTask);
 
             string expectedJsonValue = JsonSerializer.Serialize(value, new JsonSerializerOptions
             {
@@ -67,7 +67,7 @@ namespace Microsoft.Playwright.Tests
                       return fetch(request);
                     }", TestConstants.ServerUrl + "/title.html");
 
-            Task.WaitAll(task, actualTask);
+            await Task.WhenAll(task, actualTask);
 
             var request = task.Result;
             Assert.Equal(42, request.PostDataJSON().RootElement.GetProperty("value").GetInt32());
@@ -89,7 +89,7 @@ namespace Microsoft.Playwright.Tests
                       return fetch(request);
                     }", TestConstants.ServerUrl + "/title.html");
 
-            Task.WaitAll(task, actualTask);
+            await Task.WhenAll(task, actualTask);
 
             var request = task.Result;
             Assert.ThrowsAny<JsonException>(() => request.PostDataJSON());
@@ -111,7 +111,7 @@ namespace Microsoft.Playwright.Tests
                       return fetch(request);
                     }", TestConstants.ServerUrl + "/title.html");
 
-            Task.WaitAll(task, actualTask);
+            await Task.WhenAll(task, actualTask);
 
             var request = task.Result;
             Assert.Equal(42, request.PostDataJSON().RootElement.GetProperty("value").GetInt32());
