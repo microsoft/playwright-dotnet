@@ -6,11 +6,11 @@ namespace Microsoft.Playwright
 {
     public partial interface IElementHandle
     {
-        Task SetInputFilesAsync(string files, bool? noWaitAfter = default, float? timeout = default);
+        Task SetInputFilesAsync(string files, ElementHandleSetInputFilesOptions options = default);
 
-        Task SetInputFilesAsync(IEnumerable<string> files, bool? noWaitAfter = default, float? timeout = default);
+        Task SetInputFilesAsync(IEnumerable<string> files, ElementHandleSetInputFilesOptions options = default);
 
-        Task SetInputFilesAsync(FilePayload files, bool? noWaitAfter = default, float? timeout = default);
+        Task SetInputFilesAsync(FilePayload files, ElementHandleSetInputFilesOptions options = default);
 
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string values, bool? noWaitAfter = default, float? timeout = default);
 

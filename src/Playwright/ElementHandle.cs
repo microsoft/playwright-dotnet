@@ -84,6 +84,15 @@ namespace Microsoft.Playwright
             return result;
         }
 
+        public Task SetInputFilesAsync(string files, ElementHandleSetInputFilesOptions options = null)
+            => SetInputFilesAsync(new[] { files }, options);
+
+        public Task SetInputFilesAsync(IEnumerable<string> files, ElementHandleSetInputFilesOptions options = null)
+            => SetInputFilesAsync(files.Select(x => new FilePayload() { Name = x }), options);
+
+        public Task SetInputFilesAsync(FilePayload files, ElementHandleSetInputFilesOptions options = null)
+            => SetInputFilesAsync(new[] { files }, options);
+
         public Task FillAsync(string value, bool? noWaitAfter, float? timeout) => _channel.FillAsync(value, noWaitAfter, timeout);
 
         public async Task<IFrame> ContentFrameAsync() => (await _channel.ContentFrameAsync().ConfigureAwait(false))?.Object;
@@ -124,18 +133,6 @@ namespace Microsoft.Playwright
             float? timeout,
             bool? trial)
             => _channel.DblClickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), modifiers, position, timeout, force ?? false, noWaitAfter, trial);
-
-        public Task SetInputFilesAsync(string files, bool? noWaitAfter, float? timeout)
-            => SetInputFilesAsync(new[] { files }, noWaitAfter, timeout);
-
-        public Task SetInputFilesAsync(IEnumerable<string> files, bool? noWaitAfter, float? timeout)
-            => _channel.SetInputFilesAsync(files.Select(f => f.ToFilePayload()).ToArray(), noWaitAfter, timeout);
-
-        public Task SetInputFilesAsync(FilePayload files, bool? noWaitAfter, float? timeout)
-            => SetInputFilesAsync(new[] { files }, noWaitAfter, timeout);
-
-        public Task SetInputFilesAsync(IEnumerable<FilePayload> files, bool? noWaitAfter, float? timeout)
-            => _channel.SetInputFilesAsync(files, noWaitAfter, timeout);
 
         public async Task<IElementHandle> QuerySelectorAsync(string selector)
             => (await _channel.QuerySelectorAsync(selector).ConfigureAwait(false))?.Object;
@@ -230,5 +227,8 @@ namespace Microsoft.Playwright
                 _ => throw new ArgumentException($"path: unsupported mime type \"{mimeType}\""),
             };
         }
+
+        internal Task SetInputFilesAsync(IEnumerable<FilePayload> files, bool? noWaitAfter, float? timeout)
+            => _channel.SetInputFilesAsync(files, noWaitAfter, timeout);
     }
 }

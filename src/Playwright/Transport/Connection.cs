@@ -147,7 +147,7 @@ namespace Microsoft.Playwright.Transport
             for (int i = 0; i < st.FrameCount; ++i)
             {
                 StackFrame sf = st.GetFrame(i);
-                var fileName = sf.GetFileName();
+                string fileName = sf.GetFileName();
                 if (string.IsNullOrEmpty(fileName) || fileName.Contains("/Playwright/") || fileName.Contains("\\Playwright\\"))
                 {
                     continue;

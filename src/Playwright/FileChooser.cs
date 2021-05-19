@@ -33,13 +33,13 @@ namespace Microsoft.Playwright
         public bool IsMultiple { get; set; }
 
         public Task SetFilesAsync(string filesString, bool? noWaitAfter = default, float? timeout = default)
-            => ElementImpl.SetInputFilesAsync(filesString, noWaitAfter, timeout);
+            => ElementImpl.SetInputFilesAsync(filesString, new ElementHandleSetInputFilesOptions() { NoWaitAfter = noWaitAfter, Timeout = timeout });
 
         public Task SetFilesAsync(IEnumerable<string> filesString, bool? noWaitAfter = default, float? timeout = default)
-            => ElementImpl.SetInputFilesAsync(filesString, noWaitAfter, timeout);
+            => ElementImpl.SetInputFilesAsync(filesString, new ElementHandleSetInputFilesOptions() { NoWaitAfter = noWaitAfter, Timeout = timeout });
 
         public Task SetFilesAsync(FilePayload filesFilePayload, bool? noWaitAfter = default, float? timeout = default)
-            => ElementImpl.SetInputFilesAsync(filesFilePayload, noWaitAfter, timeout);
+            => ElementImpl.SetInputFilesAsync(filesFilePayload, new ElementHandleSetInputFilesOptions() { NoWaitAfter = noWaitAfter, Timeout = timeout });
 
         public Task SetFilesAsync(IEnumerable<FilePayload> filesEnumerableFilePayload, bool? noWaitAfter = default, float? timeout = default)
             => ElementImpl.SetInputFilesAsync(filesEnumerableFilePayload, noWaitAfter, timeout);
