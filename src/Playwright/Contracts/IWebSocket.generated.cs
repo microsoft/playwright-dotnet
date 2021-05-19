@@ -66,41 +66,5 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Contains the URL of the WebSocket.</para></summary>
         string Url { get; }
-
-        /// <summary>
-        /// <para>
-        /// Waits for event to fire and passes its value into the predicate function. Returns
-        /// when the predicate returns truthy value. Will throw an error if the webSocket is
-        /// closed before the event is fired. Returns the event data value.
-        /// </para>
-        /// </summary>
-        /// <param name="event">Event name, same one would pass into <c>webSocket.on(event)</c>.</param>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<object> WaitForEventAsync(string @event, WebSocketWaitForEventOptions options = default, Func<Task> action = default);
-
-        /// <summary>
-        /// <para>
-        /// Performs action and waits for a frame to be sent. If predicate is provided, it passes
-        /// <see cref="IWebSocketFrame"/> value into the <c>predicate</c> function and waits
-        /// for <c>predicate(webSocketFrame)</c> to return a truthy value. Will throw an error
-        /// if the WebSocket or Page is closed before the frame is received.
-        /// </para>
-        /// </summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IWebSocketFrame> WaitForFrameReceivedAsync(WebSocketWaitForFrameReceivedOptions options = default, Func<Task> action = default);
-
-        /// <summary>
-        /// <para>
-        /// Performs action and waits for a frame to be sent. If predicate is provided, it passes
-        /// <see cref="IWebSocketFrame"/> value into the <c>predicate</c> function and waits
-        /// for <c>predicate(webSocketFrame)</c> to return a truthy value. Will throw an error
-        /// if the WebSocket or Page is closed before the frame is sent.
-        /// </para>
-        /// </summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IWebSocketFrame> WaitForFrameSentAsync(WebSocketWaitForFrameSentOptions options = default, Func<Task> action = default);
     }
 }

@@ -258,36 +258,6 @@ namespace Microsoft.Playwright
             return UncheckAsync(selector, position: options.Position, force: options.Force, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout, trial: options.Trial);
         }
 
-        public Task<IPage> WaitForCloseAsync(PageWaitForCloseOptions options = default, Func<Task> action = default)
-        {
-            options ??= new PageWaitForCloseOptions();
-            return WaitForCloseAsync(action, timeout: options.Timeout);
-        }
-
-        public Task<IConsoleMessage> WaitForConsoleMessageAsync(PageWaitForConsoleMessageOptions options = default, Func<Task> action = default)
-        {
-            options ??= new PageWaitForConsoleMessageOptions();
-            return WaitForConsoleMessageAsync(action, predicate: options.Predicate, timeout: options.Timeout);
-        }
-
-        public Task<IDownload> WaitForDownloadAsync(PageWaitForDownloadOptions options = default, Func<Task> action = default)
-        {
-            options ??= new PageWaitForDownloadOptions();
-            return WaitForDownloadAsync(action, predicate: options.Predicate, timeout: options.Timeout);
-        }
-
-        public Task<object> WaitForEventAsync(string @event, PageWaitForEventOptions options = default, Func<Task> action = default)
-        {
-            options ??= new PageWaitForEventOptions();
-            return WaitForEventAsync(@event, action, timeout: options.Timeout);
-        }
-
-        public Task<IFileChooser> WaitForFileChooserAsync(PageWaitForFileChooserOptions options = default, Func<Task> action = default)
-        {
-            options ??= new PageWaitForFileChooserOptions();
-            return WaitForFileChooserAsync(action, predicate: options.Predicate, timeout: options.Timeout);
-        }
-
         public Task<IJSHandle> WaitForFunctionAsync(string expression, object arg = default, PageWaitForFunctionOptions options = default)
         {
             options ??= new PageWaitForFunctionOptions();
@@ -300,52 +270,46 @@ namespace Microsoft.Playwright
             return WaitForLoadStateAsync(state, timeout: options.Timeout);
         }
 
-        public Task<IResponse> WaitForNavigationAsync(PageWaitForNavigationOptions options = default, Func<Task> action = default)
+        public Task<IResponse> WaitForNavigationAsync(PageWaitForNavigationOptions options = default)
         {
             options ??= new PageWaitForNavigationOptions();
-            return WaitForNavigationAsync(action, urlString: options.UrlString, urlRegex: options.UrlRegex, urlFunc: options.UrlFunc, waitUntil: options.WaitUntil, timeout: options.Timeout);
+            return WaitForNavigationAsync(urlString: options.UrlString, urlRegex: options.UrlRegex, urlFunc: options.UrlFunc, waitUntil: options.WaitUntil, timeout: options.Timeout);
         }
 
-        public Task<IPage> WaitForPopupAsync(PageWaitForPopupOptions options = default, Func<Task> action = default)
-        {
-            options ??= new PageWaitForPopupOptions();
-            return WaitForPopupAsync(action, predicate: options.Predicate, timeout: options.Timeout);
-        }
-
-        public Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions options = default, Func<Task> action = default)
+        public Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions options = default)
         {
             options ??= new PageWaitForRequestOptions();
-            return WaitForRequestAsync(urlOrPredicate, action, timeout: options.Timeout);
+            return WaitForRequestAsync(urlOrPredicate, timeout: options.Timeout);
         }
 
-        public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, PageWaitForRequestOptions options = default, Func<Task> action = default)
+        public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, PageWaitForRequestOptions options = default)
         {
             options ??= new PageWaitForRequestOptions();
-            return WaitForRequestAsync(urlOrPredicate, action, timeout: options.Timeout);
+            return WaitForRequestAsync(urlOrPredicate, timeout: options.Timeout);
         }
 
-        public Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicate, PageWaitForRequestOptions options = default, Func<Task> action = default)
+        public Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicate, PageWaitForRequestOptions options = default)
         {
             options ??= new PageWaitForRequestOptions();
-            return WaitForRequestAsync(urlOrPredicate, action, timeout: options.Timeout);
+            return WaitForRequestAsync(urlOrPredicate, timeout: options.Timeout);
         }
 
-        public Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions options = default, Func<Task> action = default)
+        public Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions options = default)
         {
             options ??= new PageWaitForResponseOptions();
-            return WaitForResponseAsync(urlOrPredicate, action, timeout: options.Timeout);
+            return WaitForResponseAsync(urlOrPredicate, timeout: options.Timeout);
         }
 
-        public Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, PageWaitForResponseOptions options = default, Func<Task> action = default)
+        public Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, PageWaitForResponseOptions options = default)
         {
             options ??= new PageWaitForResponseOptions();
-            return WaitForResponseAsync(urlOrPredicate, action, timeout: options.Timeout);
+            return WaitForResponseAsync(urlOrPredicate, timeout: options.Timeout);
         }
 
-        public Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicate, PageWaitForResponseOptions options = default, Func<Task> action = default)
+        public Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicate, PageWaitForResponseOptions options = default)
         {
             options ??= new PageWaitForResponseOptions();
-            return WaitForResponseAsync(urlOrPredicate, action, timeout: options.Timeout);
+            return WaitForResponseAsync(urlOrPredicate, timeout: options.Timeout);
         }
 
         public Task<IElementHandle> WaitForSelectorAsync(string selector, PageWaitForSelectorOptions options = default)
@@ -370,18 +334,6 @@ namespace Microsoft.Playwright
         {
             options ??= new PageWaitForURLOptions();
             return WaitForURLAsync(url, timeout: options.Timeout, waitUntil: options.WaitUntil);
-        }
-
-        public Task<IWebSocket> WaitForWebSocketAsync(PageWaitForWebSocketOptions options = default, Func<Task> action = default)
-        {
-            options ??= new PageWaitForWebSocketOptions();
-            return WaitForWebSocketAsync(action, predicate: options.Predicate, timeout: options.Timeout);
-        }
-
-        public Task<IWorker> WaitForWorkerAsync(PageWaitForWorkerOptions options = default, Func<Task> action = default)
-        {
-            options ??= new PageWaitForWorkerOptions();
-            return WaitForWorkerAsync(action, predicate: options.Predicate, timeout: options.Timeout);
         }
     }
 }

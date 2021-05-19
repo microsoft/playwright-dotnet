@@ -8,6 +8,10 @@ namespace Microsoft.Playwright
 {
     public partial interface IPage
     {
+        Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, PageWaitForEventOptions<T> options = default);
+
+        Task<T> RunAndWaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<Task> action, PageRunAndWaitForEventOptions<T> options = default);
+
         public Task<JsonElement?> EvaluateAsync(string expression, object arg = default);
 
         public Task EvalOnSelectorAllAsync(string selector, string expression, object arg);
@@ -31,8 +35,6 @@ namespace Microsoft.Playwright
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, bool? noWaitAfter = default, float? timeout = default);
 
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, bool? noWaitAfter = default, float? timeout = default);
-
-        Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, PageWaitForEventOptions options = default, Func<Task> action = default);
 
         Task ExposeBindingAsync(string name, Action<BindingSource> callback);
 

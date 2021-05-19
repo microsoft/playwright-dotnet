@@ -1030,8 +1030,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default, Func<Task> action = default);
+        Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default);
 
         /// <summary>
         /// <para>

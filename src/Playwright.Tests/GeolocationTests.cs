@@ -167,20 +167,26 @@ namespace Microsoft.Playwright.Tests
                 }, err => {});
             }");
 
-            await Page.WaitForConsoleMessageAsync(new PageWaitForConsoleMessageOptions
-            {
-                Predicate = e => e.Text.Contains("lat=0 lng=10")
-            }, async () =>
+            await Page.RunAndWaitForEventAsync(PageEvent.Console, async () =>
             {
                 await Context.SetGeolocationAsync(new Geolocation { Latitude = 0, Longitude = 10 });
+            }, new PageRunAndWaitForEventOptions<IConsoleMessage>
+            {
+                Predicate = e => e.Text.Contains("lat=0 lng=10")
             });
 
             await TaskUtils.WhenAll(
-                Page.WaitForConsoleMessageAsync(new PageWaitForConsoleMessageOptions { Predicate = e => e.Text.Contains("lat=20 lng=30") }),
+                Page.WaitForEventAsync(PageEvent.Console, new PageWaitForEventOptions<IConsoleMessage>
+                {
+                    Predicate = e => e.Text.Contains("lat=20 lng=30")
+                }),
                 Context.SetGeolocationAsync(new Geolocation { Latitude = 20, Longitude = 30 }));
 
             await TaskUtils.WhenAll(
-                Page.WaitForConsoleMessageAsync(new PageWaitForConsoleMessageOptions { Predicate = e => e.Text.Contains("lat=40 lng=50") }),
+                Page.WaitForEventAsync(PageEvent.Console, new PageWaitForEventOptions<IConsoleMessage>
+                {
+                    Predicate = e => e.Text.Contains("lat=40 lng=50")
+                }),
                 Context.SetGeolocationAsync(new Geolocation { Latitude = 40, Longitude = 50 }));
 
             string allMessages = string.Join("|", messages);
@@ -200,7 +206,7 @@ namespace Microsoft.Playwright.Tests
                 Latitude = 10,
             });
 
-            var popupTask = Page.WaitForPopupAsync();
+            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
 
             await TaskUtils.WhenAll(
                 popupTask,

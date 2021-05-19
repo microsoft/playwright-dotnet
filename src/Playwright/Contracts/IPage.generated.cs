@@ -1739,65 +1739,6 @@ namespace Microsoft.Playwright
 
         PageViewportSizeResult ViewportSize { get; }
 
-        /// <summary><para>Performs action and waits for the Page to close.</para></summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IPage> WaitForCloseAsync(PageWaitForCloseOptions options = default, Func<Task> action = default);
-
-        /// <summary>
-        /// <para>
-        /// Performs action and waits for a <see cref="IConsoleMessage"/> to be logged by in
-        /// the page. If predicate is provided, it passes <see cref="IConsoleMessage"/> value
-        /// into the <c>predicate</c> function and waits for <c>predicate(message)</c> to return
-        /// a truthy value. Will throw an error if the page is closed before the console event
-        /// is fired.
-        /// </para>
-        /// </summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IConsoleMessage> WaitForConsoleMessageAsync(PageWaitForConsoleMessageOptions options = default, Func<Task> action = default);
-
-        /// <summary>
-        /// <para>
-        /// Performs action and waits for a new <see cref="IDownload"/>. If predicate is provided,
-        /// it passes <see cref="IDownload"/> value into the <c>predicate</c> function and waits
-        /// for <c>predicate(download)</c> to return a truthy value. Will throw an error if
-        /// the page is closed before the download event is fired.
-        /// </para>
-        /// </summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IDownload> WaitForDownloadAsync(PageWaitForDownloadOptions options = default, Func<Task> action = default);
-
-        /// <summary>
-        /// <para>
-        /// Waits for event to fire and passes its value into the predicate function. Returns
-        /// when the predicate returns truthy value. Will throw an error if the page is closed
-        /// before the event is fired. Returns the event data value.
-        /// </para>
-        /// <code>
-        /// var waitTask = page.WaitForEventAsync(PageEvent.FrameNavigated);<br/>
-        /// await page.ClickAsync("button");<br/>
-        /// var frame = await waitTask;
-        /// </code>
-        /// </summary>
-        /// <param name="event">Event name, same one typically passed into <c>*.on(event)</c>.</param>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<object> WaitForEventAsync(string @event, PageWaitForEventOptions options = default, Func<Task> action = default);
-
-        /// <summary>
-        /// <para>
-        /// Performs action and waits for a new <see cref="IFileChooser"/> to be created. If
-        /// predicate is provided, it passes <see cref="IFileChooser"/> value into the <c>predicate</c>
-        /// function and waits for <c>predicate(fileChooser)</c> to return a truthy value. Will
-        /// throw an error if the page is closed before the file chooser is opened.
-        /// </para>
-        /// </summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IFileChooser> WaitForFileChooserAsync(PageWaitForFileChooserOptions options = default, Func<Task> action = default);
-
         /// <summary>
         /// <para>
         /// Returns when the <paramref name="expression"/> returns a truthy value. It resolves
@@ -1905,20 +1846,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IResponse> WaitForNavigationAsync(PageWaitForNavigationOptions options = default, Func<Task> action = default);
-
-        /// <summary>
-        /// <para>
-        /// Performs action and waits for a popup <see cref="IPage"/>. If predicate is provided,
-        /// it passes <see cref="Popup"/> value into the <c>predicate</c> function and waits
-        /// for <c>predicate(page)</c> to return a truthy value. Will throw an error if the
-        /// page is closed before the popup event is fired.
-        /// </para>
-        /// </summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IPage> WaitForPopupAsync(PageWaitForPopupOptions options = default, Func<Task> action = default);
+        Task<IResponse> WaitForNavigationAsync(PageWaitForNavigationOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1937,8 +1865,7 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
         /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions options = default, Func<Task> action = default);
+        Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1957,8 +1884,7 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
         /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, PageWaitForRequestOptions options = default, Func<Task> action = default);
+        Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, PageWaitForRequestOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1977,8 +1903,7 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
         /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicate, PageWaitForRequestOptions options = default, Func<Task> action = default);
+        Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicate, PageWaitForRequestOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1997,8 +1922,7 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
         /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions options = default, Func<Task> action = default);
+        Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions options = default);
 
         /// <summary>
         /// <para>
@@ -2017,8 +1941,7 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
         /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, PageWaitForResponseOptions options = default, Func<Task> action = default);
+        Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, PageWaitForResponseOptions options = default);
 
         /// <summary>
         /// <para>
@@ -2037,8 +1960,7 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
         /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicate, PageWaitForResponseOptions options = default, Func<Task> action = default);
+        Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicate, PageWaitForResponseOptions options = default);
 
         /// <summary>
         /// <para>
@@ -2145,30 +2067,6 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="options">Call options</param>
         Task WaitForURLAsync(Func<string, bool> url, PageWaitForURLOptions options = default);
-
-        /// <summary>
-        /// <para>
-        /// Performs action and waits for a new <see cref="IWebSocket"/>. If predicate is provided,
-        /// it passes <see cref="IWebSocket"/> value into the <c>predicate</c> function and
-        /// waits for <c>predicate(webSocket)</c> to return a truthy value. Will throw an error
-        /// if the page is closed before the WebSocket event is fired.
-        /// </para>
-        /// </summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IWebSocket> WaitForWebSocketAsync(PageWaitForWebSocketOptions options = default, Func<Task> action = default);
-
-        /// <summary>
-        /// <para>
-        /// Performs action and waits for a new <see cref="IWorker"/>. If predicate is provided,
-        /// it passes <see cref="IWorker"/> value into the <c>predicate</c> function and waits
-        /// for <c>predicate(worker)</c> to return a truthy value. Will throw an error if the
-        /// page is closed before the worker event is fired.
-        /// </para>
-        /// </summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IWorker> WaitForWorkerAsync(PageWaitForWorkerOptions options = default, Func<Task> action = default);
 
         /// <summary>
         /// <para>

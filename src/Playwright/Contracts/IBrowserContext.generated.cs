@@ -623,34 +623,5 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="handler">Optional handler function used to register a routing with <see cref="IBrowserContext.RouteAsync"/>.</param>
         Task UnrouteAsync(Func<string, bool> url, Action<IRoute> handler = default);
-
-        /// <summary>
-        /// <para>
-        /// Waits for event to fire and passes its value into the predicate function. Returns
-        /// when the predicate returns truthy value. Will throw an error if the context closes
-        /// before the event is fired. Returns the event data value.
-        /// </para>
-        /// <code>
-        /// var waitForPageEvent = context.WaitForPageAsync();<br/>
-        /// await page.ClickAsync("button");<br/>
-        /// var page = await waitForPageEvent;
-        /// </code>
-        /// </summary>
-        /// <param name="event">Event name, same one would pass into <c>browserContext.on(event)</c>.</param>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<object> WaitForEventAsync(string @event, BrowserContextWaitForEventOptions options = default, Func<Task> action = default);
-
-        /// <summary>
-        /// <para>
-        /// Performs action and waits for a new <see cref="IPage"/> to be created in the context.
-        /// If predicate is provided, it passes <see cref="IPage"/> value into the <c>predicate</c>
-        /// function and waits for <c>predicate(event)</c> to return a truthy value. Will throw
-        /// an error if the context closes before new <see cref="IPage"/> is created.
-        /// </para>
-        /// </summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions options = default, Func<Task> action = default);
     }
 }
