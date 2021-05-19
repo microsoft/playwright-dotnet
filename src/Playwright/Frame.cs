@@ -190,18 +190,6 @@ namespace Microsoft.Playwright
 
         public Task FocusAsync(string selector, float? timeout) => FocusAsync(false, selector, timeout);
 
-        public Task SetInputFilesAsync(string selector, string files, bool? noWaitAfter, float? timeout)
-            => SetInputFilesAsync(selector, new[] { files }, noWaitAfter, timeout);
-
-        public Task SetInputFilesAsync(string selector, IEnumerable<string> files, bool? noWaitAfter, float? timeout)
-            => SetInputFilesAsync(false, selector, files, noWaitAfter, timeout);
-
-        public Task SetInputFilesAsync(string selector, FilePayload files, bool? noWaitAfter, float? timeout)
-            => SetInputFilesAsync(selector, new[] { files }, noWaitAfter, timeout);
-
-        public Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, bool? noWaitAfter, float? timeout)
-            => SetInputFilesAsync(false, selector, files, timeout, noWaitAfter);
-
         public Task HoverAsync(
             string selector,
             Position position,
@@ -220,20 +208,32 @@ namespace Microsoft.Playwright
         public Task PressAsync(string selector, string key, float? delay, bool? noWaitAfter, float? timeout)
             => PressAsync(false, selector, key, delay, noWaitAfter, timeout);
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, bool? noWaitAfter, float? timeout)
-            => SelectOptionAsync(false, selector, null, noWaitAfter, timeout);
+        public Task SetInputFilesAsync(string selector, string files, FrameSetInputFilesOptions options = null)
+            => SetInputFilesAsync(selector, new[] { files }, options);
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string values, bool? noWaitAfter, float? timeout)
-            => SelectOptionAsync(selector, new[] { values }, noWaitAfter, timeout);
+        public Task SetInputFilesAsync(string selector, IEnumerable<string> files, FrameSetInputFilesOptions options = null)
+            => SetInputFilesAsync(false, selector, files.Select(x => new FilePayload() { Name = x }), options?.Timeout, options?.NoWaitAfter);
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, bool? noWaitAfter, float? timeout)
-            => SelectOptionAsync(selector, new[] { values }, noWaitAfter, timeout);
+        public Task SetInputFilesAsync(string selector, FilePayload files, FrameSetInputFilesOptions options = null)
+            => SetInputFilesAsync(false, selector, new[] { files }, options?.Timeout, options?.NoWaitAfter);
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IElementHandle values, bool? noWaitAfter, float? timeout)
-            => SelectOptionAsync(selector, new[] { values }, noWaitAfter, timeout);
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string values, FrameSelectOptionOptions options = null)
+            => throw new NotImplementedException();
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<string> values, bool? noWaitAfter, float? timeout)
-            => SelectOptionAsync(false, selector, values.Cast<object>().Select(v => v == null ? v : new { value = v }).ToArray(), noWaitAfter, timeout);
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<string> values, FrameSelectOptionOptions options = null)
+            => throw new NotImplementedException();
+
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, FrameSelectOptionOptions options = null)
+            => throw new NotImplementedException();
+
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IElementHandle values, FrameSelectOptionOptions options = null)
+            => throw new NotImplementedException();
+
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, FrameSelectOptionOptions options = null)
+            => throw new NotImplementedException();
+
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, FrameSelectOptionOptions options = null)
+            => throw new NotImplementedException();
 
         public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, bool? noWaitAfter, float? timeout)
         {
@@ -476,8 +476,8 @@ namespace Microsoft.Playwright
             return (await _channel.AddStyleTagAsync(url, path, content, isPageCall).ConfigureAwait(false)).Object;
         }
 
-        internal Task SetInputFilesAsync(bool isPageCall, string selector, IEnumerable<string> files, bool? noWaitAfter, float? timeout)
-            => _channel.SetInputFilesAsync(selector, files.Select(f => f.ToFilePayload()).ToArray(), timeout, noWaitAfter, isPageCall);
+        internal Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, float? timeout = null, bool? noWaitAfter = null)
+            => SetInputFilesAsync(false, selector, files, timeout, noWaitAfter);
 
         internal Task SetInputFilesAsync(bool isPageCall, string selector, IEnumerable<FilePayload> files, float? timeout = null, bool? noWaitAfter = null)
             => _channel.SetInputFilesAsync(selector, files, timeout, noWaitAfter, isPageCall);
@@ -669,6 +669,9 @@ namespace Microsoft.Playwright
 
         internal Task<bool> IsVisibleAsync(bool isPageCall, string selector, float? timeout)
             => _channel.IsVisibleAsync(selector, timeout, isPageCall);
+
+        internal Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<string> values, bool? noWaitAfter, float? timeout)
+            => SelectOptionAsync(false, selector, values.Cast<object>().Select(v => v == null ? v : new { value = v }).ToArray(), noWaitAfter, timeout);
 
         private Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, float? timeout, WaitUntilState waitUntil)
         {

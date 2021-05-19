@@ -178,23 +178,20 @@ namespace Microsoft.Playwright
 
         public Task SelectTextAsync(float? timeout) => _channel.SelectTextAsync(timeout);
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string values, bool? noWaitAfter, float? timeout)
-            => SelectOptionAsync(new[] { values }, noWaitAfter, timeout);
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string values, ElementHandleSelectOptionOptions options)
+            => SelectOptionAsync(new[] { values }, options);
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<string> values, bool? noWaitAfter, float? timeout)
-            => _channel.SelectOptionAsync(values.Cast<object>().Select(v => v == null ? v : new { value = v }).ToArray(), noWaitAfter, timeout);
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<string> values, ElementHandleSelectOptionOptions options)
+            => _channel.SelectOptionAsync(values.Cast<object>().Select(v => v == null ? v : new { value = v }).ToArray(), options?.NoWaitAfter, options?.Timeout);
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(IElementHandle values, bool? noWaitAfter, float? timeout)
-            => SelectOptionAsync(new[] { values }, noWaitAfter, timeout);
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(IElementHandle values, ElementHandleSelectOptionOptions options)
+            => SelectOptionAsync(new[] { values }, options);
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, bool? noWaitAfter, float? timeout)
-            => _channel.SelectOptionAsync(values.Cast<ElementHandle>(), noWaitAfter, timeout);
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, ElementHandleSelectOptionOptions options)
+            => _channel.SelectOptionAsync(values.Cast<ElementHandle>(), noWaitAfter: options?.NoWaitAfter, timeout: options?.Timeout);
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(SelectOptionValue values, bool? noWaitAfter, float? timeout)
-            => SelectOptionAsync(new[] { values }, noWaitAfter, timeout);
-
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, bool? noWaitAfter, float? timeout)
-            => _channel.SelectOptionAsync(values, noWaitAfter, timeout);
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(SelectOptionValue values, ElementHandleSelectOptionOptions options)
+            => SelectOptionAsync(new[] { values }, options);
 
         public Task CheckAsync(Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
             => _channel.CheckAsync(position, timeout, force ?? false, noWaitAfter, trial);
@@ -230,5 +227,8 @@ namespace Microsoft.Playwright
 
         internal Task SetInputFilesAsync(IEnumerable<FilePayload> files, bool? noWaitAfter, float? timeout)
             => _channel.SetInputFilesAsync(files, noWaitAfter, timeout);
+
+        internal Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, bool? noWaitAfter, float? timeout)
+            => _channel.SelectOptionAsync(values, noWaitAfter, timeout);
     }
 }

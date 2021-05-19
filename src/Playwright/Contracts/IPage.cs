@@ -14,23 +14,23 @@ namespace Microsoft.Playwright
 
         Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg = default);
 
-        Task SetInputFilesAsync(string selector, string files, bool? noWaitAfter = default, float? timeout = default);
+        Task SetInputFilesAsync(string selector, string files, PageSetInputFilesOptions options = default);
 
-        Task SetInputFilesAsync(string selector, IEnumerable<string> files, bool? noWaitAfter = default, float? timeout = default);
+        Task SetInputFilesAsync(string selector, IEnumerable<string> files, PageSetInputFilesOptions options = default);
 
-        Task SetInputFilesAsync(string selector, FilePayload files, bool? noWaitAfter = default, float? timeout = default);
+        Task SetInputFilesAsync(string selector, FilePayload files, PageSetInputFilesOptions options = default);
 
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string values, bool? noWaitAfter = default, float? timeout = default);
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string values, PageSelectOptionOptions options = default);
 
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<string> values, bool? noWaitAfter = default, float? timeout = default);
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<string> values, PageSelectOptionOptions options = default);
 
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, bool? noWaitAfter = default, float? timeout = default);
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, PageSelectOptionOptions options = default);
 
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IElementHandle values, bool? noWaitAfter = default, float? timeout = default);
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IElementHandle values, PageSelectOptionOptions options = default);
 
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, bool? noWaitAfter = default, float? timeout = default);
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, PageSelectOptionOptions options = default);
 
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, bool? noWaitAfter = default, float? timeout = default);
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, PageSelectOptionOptions options = default);
 
         Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, PageWaitForEventOptions options = default, Func<Task> action = default);
 

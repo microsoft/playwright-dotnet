@@ -443,17 +443,14 @@ namespace Microsoft.Playwright
         public Task FillAsync(string selector, string value, bool? noWaitAfter, float? timeout)
             => MainFrame.FillAsync(true, selector, value, noWaitAfter, timeout);
 
-        public Task SetInputFilesAsync(string selector, string files, bool? noWaitAfter, float? timeout)
-            => SetInputFilesAsync(selector, new[] { files }, noWaitAfter, timeout);
+        public Task SetInputFilesAsync(string selector, string files, PageSetInputFilesOptions options)
+            => SetInputFilesAsync(selector, new[] { files }, options);
 
-        public Task SetInputFilesAsync(string selector, IEnumerable<string> files, bool? noWaitAfter, float? timeout)
-            => MainFrame.SetInputFilesAsync(true, selector, files, noWaitAfter, timeout);
+        public Task SetInputFilesAsync(string selector, IEnumerable<string> files, PageSetInputFilesOptions options)
+            => MainFrame.SetInputFilesAsync(true, selector, files.Select(x => new FilePayload() { Name = x }), timeout: options?.Timeout, noWaitAfter: options?.NoWaitAfter);
 
-        public Task SetInputFilesAsync(string selector, FilePayload files, bool? noWaitAfter, float? timeout)
-            => SetInputFilesAsync(selector, new[] { files }, noWaitAfter, timeout);
-
-        public Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, bool? noWaitAfter, float? timeout)
-            => MainFrame.SetInputFilesAsync(true, selector, files, timeout, noWaitAfter);
+        public Task SetInputFilesAsync(string selector, FilePayload files, PageSetInputFilesOptions options)
+            => SetInputFilesAsync(selector, new[] { files }, options);
 
         public Task TypeAsync(string selector, string text, float? delay, bool? noWaitAfter, float? timeout)
             => MainFrame.TypeAsync(true, selector, text, delay, noWaitAfter, timeout);
@@ -472,33 +469,23 @@ namespace Microsoft.Playwright
         public Task PressAsync(string selector, string key, float? delay, bool? noWaitAfter, float? timeout)
             => MainFrame.PressAsync(true, selector, key, delay, noWaitAfter, timeout);
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, bool? noWaitAfter, float? timeout)
-            => MainFrame.SelectOptionAsync(true, selector, null, noWaitAfter, timeout);
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string values, PageSelectOptionOptions options)
+            => SelectOptionAsync(selector, new[] { values }, options);
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string values, bool? noWaitAfter, float? timeout)
-            => SelectOptionAsync(selector, new[] { values }, noWaitAfter, timeout);
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, PageSelectOptionOptions options)
+            => SelectOptionAsync(selector, new[] { values }, options);
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, bool? noWaitAfter, float? timeout)
-            => SelectOptionAsync(selector, new[] { values }, noWaitAfter, timeout);
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IElementHandle values, PageSelectOptionOptions options)
+            => SelectOptionAsync(selector, new[] { values }, options);
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IElementHandle values, bool? noWaitAfter, float? timeout)
-            => SelectOptionAsync(selector, new[] { values }, noWaitAfter, timeout);
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, PageSelectOptionOptions options)
+            => MainFrame.SelectOptionAsync(true, selector, null, noWaitAfter: options?.NoWaitAfter, timeout: options?.Timeout);
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<string> values, bool? noWaitAfter, float? timeout)
-            => MainFrame.SelectOptionAsync(true, selector, values.Cast<object>().Select(v => v == null ? v : new { value = v }).ToArray(), noWaitAfter, timeout);
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<string> values, PageSelectOptionOptions options = default)
+            => MainFrame.SelectOptionAsync(true, selector, values.Cast<object>().Select(v => v == null ? v : new { value = v }).ToArray(), noWaitAfter: options?.NoWaitAfter, timeout: options?.Timeout);
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, bool? noWaitAfter, float? timeout)
-        {
-            if (values == null)
-            {
-                throw new ArgumentException("values should not be null", nameof(values));
-            }
-
-            return MainFrame.SelectOptionAsync(true, selector, values.ToArray(), noWaitAfter, timeout);
-        }
-
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, bool? noWaitAfter, float? timeout)
-            => MainFrame.SelectOptionAsync(true, selector, values.Cast<ElementHandle>().ToArray(), noWaitAfter, timeout);
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, PageSelectOptionOptions options)
+            => MainFrame.SelectOptionAsync(true, selector, values.Cast<ElementHandle>().ToArray(), noWaitAfter: options.NoWaitAfter, timeout: options?.Timeout);
 
         public Task WaitForTimeoutAsync(float timeout) => Task.Delay(Convert.ToInt32(timeout));
 
@@ -796,6 +783,19 @@ namespace Microsoft.Playwright
 
         internal void OnFrameNavigated(Frame frame)
             => FrameNavigated?.Invoke(this, frame);
+
+        internal Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, bool? noWaitAfter = default, float? timeout = default)
+            => MainFrame.SetInputFilesAsync(true, selector, files, timeout: timeout, noWaitAfter: noWaitAfter);
+
+        internal Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, bool? noWaitAfter, float? timeout)
+        {
+            if (values == null)
+            {
+                throw new ArgumentException("values should not be null", nameof(values));
+            }
+
+            return MainFrame.SelectOptionAsync(true, selector, values.ToArray(), noWaitAfter, timeout);
+        }
 
         private Task RouteAsync(RouteSetting setting)
         {
