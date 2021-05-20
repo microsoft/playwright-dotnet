@@ -82,7 +82,11 @@ namespace Microsoft.Playwright
         /// You can use <paramref name="ignoreDefaultArgs"/> to filter out <c>--mute-audio</c>
         /// from default arguments:
         /// </para>
-        /// <code>var browser = await playwright.Chromium.LaunchAsync(ignoreDefaultArgs: new[] { "--mute-audio" })</code>
+        /// <code>
+        /// var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions {<br/>
+        ///     IgnoreDefaultArgs = new[] { "--mute-audio" }<br/>
+        /// })
+        /// </code>
         /// <para>
         /// > **Chromium-only** Playwright can also be used to control the Google Chrome or
         /// Microsoft Edge browsers, but it works best with the version of Chromium it is bundled

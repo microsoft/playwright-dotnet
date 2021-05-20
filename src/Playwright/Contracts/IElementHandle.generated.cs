@@ -60,7 +60,7 @@ namespace Microsoft.Playwright
     ///     public static async Task Run()<br/>
     ///     {<br/>
     ///         using var playwright = await Playwright.CreateAsync();<br/>
-    ///         var browser = await playwright.Chromium.LaunchAsync(headless: false);<br/>
+    ///         var browser = await playwright.Chromium.LaunchAsync();<br/>
     ///         var page = await browser.NewPageAsync();<br/>
     ///         await page.GotoAsync("https://www.bing.com");<br/>
     ///         var handle = await page.QuerySelectorAsync("a");<br/>
@@ -244,7 +244,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// <code>
         /// var handle = await page.EvaluateHandleAsync("() =&gt; new DataTransfer()");<br/>
-        /// await handle.AsElement.DispatchEventAsync("dragstart", new Dictionary&lt;string, object&gt;<br/>
+        /// await handle.AsElement().DispatchEventAsync("dragstart", new Dictionary&lt;string, object&gt;<br/>
         /// {<br/>
         ///     { "dataTransfer", dataTransfer }<br/>
         /// });

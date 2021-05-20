@@ -123,7 +123,7 @@ namespace Microsoft.Playwright
         ///   // Crash might happen during a click.<br/>
         ///   await page.ClickAsync("button");<br/>
         ///   // Or while waiting for an event.<br/>
-        ///   await page.WaitForPopupAsync(() -&gt; {});<br/>
+        ///   await page.WaitForEventAsync(PageEvent.Popup);<br/>
         /// } catch (PlaywrightException e) {<br/>
         ///   // When the page crashes, exception message contains "crash".<br/>
         /// }
@@ -219,9 +219,10 @@ namespace Microsoft.Playwright
         /// its response has started loading in the popup.
         /// </para>
         /// <code>
-        /// var waitForPopupTask = page.WaitForPopupAsync();<br/>
-        /// await page.EvaluateAsync("() =&gt; window.open('https://microsoft.com')");<br/>
-        /// var popup = await waitForPopupTask;<br/>
+        /// var popup = await page.RunAndWaitForEventAsync(PageEvent.Popup, async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.EvaluateAsync("() =&gt; window.open('https://microsoft.com')");<br/>
+        /// });<br/>
         /// Console.WriteLine(await popup.EvaluateAsync&lt;string&gt;("location.href"));
         /// </code>
         /// </summary>
@@ -297,7 +298,7 @@ namespace Microsoft.Playwright
         /// were run. This is useful to amend the JavaScript environment, e.g. to seed <c>Math.random</c>.
         /// </para>
         /// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
-        /// <code>await page.AddInitScriptAsync(scriptPath: "./preload.js");</code>
+        /// <code>await page.AddInitScriptAsync(new PageAddInitScriptOption { ScriptPath = "./preload.js" });</code>
         /// </summary>
         /// <remarks>
         /// <para>
@@ -544,20 +545,20 @@ namespace Microsoft.Playwright
         /// await page.EvaluateAsync("() =&gt; matchMedia('print').matches");<br/>
         /// // → false<br/>
         /// <br/>
-        /// await page.EmulateMediaAsync(Media.Print);<br/>
+        /// await page.EmulateMediaAsync(new PageEmulateMediaOptions { Media = Media.Print });<br/>
         /// await page.EvaluateAsync("() =&gt; matchMedia('screen').matches");<br/>
         /// // → false<br/>
         /// await page.EvaluateAsync("() =&gt; matchMedia('print').matches");<br/>
         /// // → true<br/>
         /// <br/>
-        /// await page.EmulateMediaAsync(Media.Screen);<br/>
+        /// await page.EmulateMediaAsync(new PageEmulateMediaOptions { Media = Media.Screen });<br/>
         /// await page.EvaluateAsync("() =&gt; matchMedia('screen').matches");<br/>
         /// // → true<br/>
         /// await page.EvaluateAsync("() =&gt; matchMedia('print').matches");<br/>
         /// // → false
         /// </code>
         /// <code>
-        /// await page.EmulateMediaAsync(colorScheme: ColorScheme.Dark);<br/>
+        /// await page.EmulateMediaAsync(new PageEmulateMediaOptions { ColorScheme = ColorScheme.Dark });<br/>
         /// await page.EvaluateAsync("matchMedia('(prefers-color-scheme: dark)').matches");<br/>
         /// // → true<br/>
         /// await page.EvaluateAsync("matchMedia('(prefers-color-scheme: light)').matches");<br/>
@@ -720,7 +721,10 @@ namespace Microsoft.Playwright
         ///   public static async Task Main()<br/>
         ///   {<br/>
         ///       using var playwright = await Playwright.CreateAsync();<br/>
-        ///       await using var browser = await playwright.Webkit.LaunchAsync(headless: false);<br/>
+        ///       await using var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions<br/>
+        ///       {<br/>
+        ///           Headless: false<br/>
+        ///       });<br/>
         ///       var page = await browser.NewPageAsync();<br/>
         /// <br/>
         ///       await page.ExposeBindingAsync("pageUrl", (source) =&gt; source.Page.Url);<br/>
@@ -741,7 +745,7 @@ namespace Microsoft.Playwright
         /// var result = new TaskCompletionSource&lt;string&gt;();<br/>
         /// await page.ExposeBindingAsync("clicked", async (BindingSource _, IJSHandle t) =&gt;<br/>
         /// {<br/>
-        ///     return result.TrySetResult(await t.AsElement.TextContentAsync());<br/>
+        ///     return result.TrySetResult(await t.AsElement().TextContentAsync());<br/>
         /// });<br/>
         /// <br/>
         /// await page.SetContentAsync("&lt;script&gt;\n" +<br/>
@@ -781,7 +785,10 @@ namespace Microsoft.Playwright
         ///   public static async Task Main()<br/>
         ///   {<br/>
         ///       using var playwright = await Playwright.CreateAsync();<br/>
-        ///       await using var browser = await playwright.Webkit.LaunchAsync(headless: false); <br/>
+        ///       await using var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions<br/>
+        ///       {<br/>
+        ///           Headless: false<br/>
+        ///       }); <br/>
         ///       var page = await browser.NewPageAsync();<br/>
         /// <br/>
         ///       // NOTE: md5 is inherently insecure, and we strongly discourage using<br/>
@@ -1135,8 +1142,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// <code>
         /// // Generates a PDF with 'screen' media type<br/>
-        /// await page.EmulateMediaAsync(Media.Screen);<br/>
-        /// await page.PdfAsync("page.pdf");
+        /// await page.EmulateMediaAsync(new PageEmulateMediaOptions { Media = Media.Screen });<br/>
+        /// await page.PdfAsync(new PagePdfOptions { Path = "page.pdf" });
         /// </code>
         /// <para>
         /// The <paramref name="width"/>, <paramref name="height"/>, and <paramref name="margin"/>
@@ -1219,7 +1226,6 @@ namespace Microsoft.Playwright
         /// the subsequent key is being pressed.
         /// </para>
         /// <code>
-        /// await using var browser = await playwright.Webkit.LaunchAsync(headless: false);<br/>
         /// var page = await browser.NewPageAsync();<br/>
         /// await page.GotoAsync("https://keycode.info");<br/>
         /// await page.PressAsync("body", "A");<br/>
@@ -1286,14 +1292,12 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>An example of a naive handler that aborts all image requests:</para>
         /// <code>
-        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
         /// var page = await browser.NewPageAsync();<br/>
         /// await page.RouteAsync("**/*.{png,jpg,jpeg}", async r =&gt; await r.AbortAsync());<br/>
         /// await page.GotoAsync("https://www.microsoft.com");
         /// </code>
         /// <para>or the same snippet using a regex pattern instead:</para>
         /// <code>
-        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
         /// var page = await browser.NewPageAsync();<br/>
         /// await page.RouteAsync(new Regex("(\\.png$)|(\\.jpg$)"), async r =&gt; await r.AbortAsync());<br/>
         /// await page.GotoAsync("https://www.microsoft.com");
@@ -1306,7 +1310,7 @@ namespace Microsoft.Playwright
         /// await page.RouteAsync("/api/**", async r =&gt;<br/>
         /// {<br/>
         ///   if (r.Request.PostData.Contains("my-string"))<br/>
-        ///       await r.FulfillAsync(body: "mocked-data");<br/>
+        ///       await r.FulfillAsync(new RouteFulfillOptions { Body = "mocked-data" });<br/>
         ///   else<br/>
         ///       await r.ContinueAsync();<br/>
         /// });
@@ -1336,14 +1340,12 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>An example of a naive handler that aborts all image requests:</para>
         /// <code>
-        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
         /// var page = await browser.NewPageAsync();<br/>
         /// await page.RouteAsync("**/*.{png,jpg,jpeg}", async r =&gt; await r.AbortAsync());<br/>
         /// await page.GotoAsync("https://www.microsoft.com");
         /// </code>
         /// <para>or the same snippet using a regex pattern instead:</para>
         /// <code>
-        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
         /// var page = await browser.NewPageAsync();<br/>
         /// await page.RouteAsync(new Regex("(\\.png$)|(\\.jpg$)"), async r =&gt; await r.AbortAsync());<br/>
         /// await page.GotoAsync("https://www.microsoft.com");
@@ -1356,7 +1358,7 @@ namespace Microsoft.Playwright
         /// await page.RouteAsync("/api/**", async r =&gt;<br/>
         /// {<br/>
         ///   if (r.Request.PostData.Contains("my-string"))<br/>
-        ///       await r.FulfillAsync(body: "mocked-data");<br/>
+        ///       await r.FulfillAsync(new RouteFulfillOptions { Body = "mocked-data" });<br/>
         ///   else<br/>
         ///       await r.ContinueAsync();<br/>
         /// });
@@ -1386,14 +1388,12 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>An example of a naive handler that aborts all image requests:</para>
         /// <code>
-        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
         /// var page = await browser.NewPageAsync();<br/>
         /// await page.RouteAsync("**/*.{png,jpg,jpeg}", async r =&gt; await r.AbortAsync());<br/>
         /// await page.GotoAsync("https://www.microsoft.com");
         /// </code>
         /// <para>or the same snippet using a regex pattern instead:</para>
         /// <code>
-        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
         /// var page = await browser.NewPageAsync();<br/>
         /// await page.RouteAsync(new Regex("(\\.png$)|(\\.jpg$)"), async r =&gt; await r.AbortAsync());<br/>
         /// await page.GotoAsync("https://www.microsoft.com");
@@ -1406,7 +1406,7 @@ namespace Microsoft.Playwright
         /// await page.RouteAsync("/api/**", async r =&gt;<br/>
         /// {<br/>
         ///   if (r.Request.PostData.Contains("my-string"))<br/>
-        ///       await r.FulfillAsync(body: "mocked-data");<br/>
+        ///       await r.FulfillAsync(new RouteFulfillOptions { Body = "mocked-data" });<br/>
         ///   else<br/>
         ///       await r.ContinueAsync();<br/>
         /// });
@@ -2063,9 +2063,10 @@ namespace Microsoft.Playwright
         /// await page.WaitForLoadStateAsync(); // The promise resolves after 'load' event.
         /// </code>
         /// <code>
-        /// var popupTask = page.WaitForPopupAsync();<br/>
-        /// await page.ClickAsync("button"); // click triggers the popup/<br/>
-        /// var popup = await popupTask;<br/>
+        /// var popup = await page.RunAndWaitForEventAsync(PageEvent.Popup, async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button"); // click triggers the popup/<br/>
+        /// });<br/>
         /// await popup.WaitForLoadStateAsync(LoadState.DOMContentLoaded);<br/>
         /// Console.WriteLine(await popup.TitleAsync()); // popup is ready to use.
         /// </code>

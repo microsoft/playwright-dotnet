@@ -167,9 +167,10 @@ namespace Microsoft.Playwright
         /// Timing API</a>.
         /// </para>
         /// <code>
-        /// var waitForEventTask = page.WaitForEventAsync(PageEvent.RequestFinished);<br/>
-        /// await page.GotoAsync("https://www.microsoft.com");<br/>
-        /// var request = await waitForEventTask;<br/>
+        /// var request = await page.RunAndWaitForEventAsync(PageEvent.RequestFinished, async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.GotoAsync("https://www.microsoft.com");<br/>
+        /// });<br/>
         /// Console.WriteLine(request.Timing.ResponseEnd);
         /// </code>
         /// </summary>

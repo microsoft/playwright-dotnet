@@ -113,7 +113,7 @@ namespace Microsoft.Playwright
         ///     body: "Not Found!"));
         /// </code>
         /// <para>An example of serving static file:</para>
-        /// <code>await page.RouteAsync("**/xhr_endpoint", route =&gt; route.FulfillAsync(path: "mock_data.json"));</code>
+        /// <code>await page.RouteAsync("**/xhr_endpoint", route =&gt; route.FulfillAsync(new RouteFulfillOptions { Path = "mock_data.json" }));</code>
         /// </summary>
         /// <param name="options">Call options</param>
         Task FulfillAsync(RouteFulfillOptions options = default);
