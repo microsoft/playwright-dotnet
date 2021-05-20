@@ -68,4 +68,8 @@
   <Target Name="EnsurePrerequisitsRan" BeforeTargets="InstallBrowsers">
     <Error Text="Playwright prerequisites are missing. Ensure you've ran `dotnet run -p ./src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj -- download-drivers --basepath .`" Condition="!Exists('$(MSBuildProjectDirectory)\Drivers\unix$(NativeFolder)')" />
   </Target>
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
 </Project>
