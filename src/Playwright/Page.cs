@@ -759,7 +759,7 @@ namespace Microsoft.Playwright
 
         public Task<bool> IsVisibleAsync(string selector, float? timeout) => MainFrame.IsVisibleAsync(true, selector, timeout);
 
-        public Task PauseAsync() => _channel.PauseAsync();
+        public Task PauseAsync() => Context.Channel.PauseAsync();
 
         public void SetDefaultNavigationTimeout(float timeout) => DefaultNavigationTimeout = timeout;
 
