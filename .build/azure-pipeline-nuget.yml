@@ -24,4 +24,13 @@ steps:
   inputs:
     command: 'pack'
     packagesToPack: '**/Playwright.csproj'
+    packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
     versioningScheme: 'off'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/nuget'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+- task: MicroBuildCleanup@1
