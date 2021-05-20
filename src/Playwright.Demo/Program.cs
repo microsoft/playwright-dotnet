@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 
@@ -21,32 +22,33 @@ namespace PlaywrightSharp.Demo
         static async Task GettingStarted()
         {
             using var playwright = await Playwright.CreateAsync();
-            var chromium = playwright.Chromium;
-            var browser = await chromium.LaunchAsync(new BrowserTypeLaunchOptions() { Headless = false });
+            await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions() { Headless = false });
             var page = await browser.NewPageAsync();
             await page.GotoAsync("https://example.com");
             Console.ReadLine();
-            await page.ScreenshotAsync("bing.png");
+            await page.ScreenshotAsync(new PageScreenshotOptions() { Path = "bing.png" });
         }
 
         static async Task GeolocationExample()
         {
             using var playwright = await Playwright.CreateAsync();
-            await using var browser = await playwright.Webkit.LaunchAsync(headless: false);
+            await using var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions() { Headless = false });
 
-            var context = await browser.NewContextAsync(
-                isMobile: true,
-                locale: "en-US",
-                geolocation: new Geolocation { Longitude = 12.492507f, Latitude = 41.889938f },
-                permissions: new[] { ContextPermissions.Geolocation });
+            var context = await browser.NewContextAsync(new BrowserNewContextOptions()
+            {
+                IsMobile = true,
+                Locale = "en-US",
+                Geolocation = new Geolocation { Longitude = 12.492507f, Latitude = 41.889938f },
+                Permissions = new[] { ContextPermissions.Geolocation }
+            });
 
             var page = await context.NewPageAsync();
-            await page.GoToAsync("https://www.bing.com/maps");
+            await page.GotoAsync("https://www.bing.com/maps");
 
             await page.ClickAsync(".bnp_btn_accept");
             await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
-            await page.ScreenshotAsync("colosseum-iphone.png");
+            await page.ScreenshotAsync(new PageScreenshotOptions() { Path = "colosseum-iphone.png" });
         }
 
         static async Task EvaluateInBrowserContext()
@@ -56,8 +58,8 @@ namespace PlaywrightSharp.Demo
 
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GoToAsync("https://www.bing.com/");
-            var dimensions = await page.EvaluateAsync<Rect>(@"() => {
+            await page.GotoAsync("https://www.bing.com/");
+            var dimensions = await page.EvaluateAsync<Size>(@"() => {
     return {
         width: document.documentElement.clientWidth,
         height: document.documentElement.clientHeight,
@@ -76,10 +78,10 @@ namespace PlaywrightSharp.Demo
             await page.RouteAsync("**", (route) =>
             {
                 Console.WriteLine($"Route intercepted: ${route.Request.Url}");
-                route.ResumeAsync();
+                route.ContinueAsync();
             });
 
-            await page.GoToAsync("http://todomvc.com");
+            await page.GotoAsync("http://todomvc.com");
         }
     }
 }
