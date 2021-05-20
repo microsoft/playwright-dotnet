@@ -58,7 +58,7 @@ namespace Microsoft.Playwright
     /// </para>
     /// <code>
     /// using var playwright = await Playwright.CreateAsync();<br/>
-    /// var browser = await playwright.Firefox.LaunchAsync(headless: false);<br/>
+    /// var browser = await playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });<br/>
     /// // Create a new incognito browser context<br/>
     /// var context = await browser.NewContextAsync();<br/>
     /// // Create a new page inside context.<br/>
@@ -96,9 +96,10 @@ namespace Microsoft.Playwright
         /// its response has started loading in the popup.
         /// </para>
         /// <code>
-        /// var popupTask = context.WaitForPageAsync();<br/>
-        /// await page.ClickAsync("a");<br/>
-        /// var popup = await popupTask;<br/>
+        /// var popup = await context.RunAndWaitForEventAsync(BrowserContextEvent.Page, async =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("a");<br/>
+        /// });<br/>
         /// Console.WriteLine(await popup.EvaluateAsync&lt;string&gt;("location.href"));
         /// </code>
         /// </summary>
@@ -135,7 +136,7 @@ namespace Microsoft.Playwright
         /// were run. This is useful to amend the JavaScript environment, e.g. to seed <c>Math.random</c>.
         /// </para>
         /// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
-        /// <code>await context.AddInitScriptAsync(scriptPath: "preload.js");</code>
+        /// <code>await context.AddInitScriptAsync(new BrowserContextAddInitScriptOptions { ScriptPath = "preload.js" });</code>
         /// </summary>
         /// <remarks>
         /// <para>
@@ -213,7 +214,7 @@ namespace Microsoft.Playwright
         ///     public static async Task Main()<br/>
         ///     {<br/>
         ///         using var playwright = await Playwright.CreateAsync();<br/>
-        ///         var browser = await playwright.Webkit.LaunchAsync(headless: false);<br/>
+        ///         var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });<br/>
         ///         var context = await browser.NewContextAsync();<br/>
         /// <br/>
         ///         await context.ExposeBindingAsync("pageURL", source =&gt; source.Page.Url);<br/>
@@ -235,7 +236,7 @@ namespace Microsoft.Playwright
         /// var page = await Context.NewPageAsync();<br/>
         /// await Context.ExposeBindingAsync("clicked", async (BindingSource _, IJSHandle t) =&gt;<br/>
         /// {<br/>
-        ///     return result.TrySetResult(await t.AsElement.TextContentAsync());<br/>
+        ///     return result.TrySetResult(await t.AsElement().TextContentAsync());<br/>
         /// });<br/>
         /// <br/>
         /// await page.SetContentAsync("&lt;script&gt;\n" +<br/>
@@ -276,7 +277,7 @@ namespace Microsoft.Playwright
         ///     public static async Task AddMd5FunctionToAllPagesInContext()<br/>
         ///     {<br/>
         ///         using var playwright = await Playwright.CreateAsync();<br/>
-        ///         var browser = await playwright.Webkit.LaunchAsync(headless: false);<br/>
+        ///         var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });<br/>
         ///         var context = await browser.NewContextAsync();<br/>
         /// <br/>
         ///         // NOTE: md5 is inherently insecure, and we strongly discourage using<br/>

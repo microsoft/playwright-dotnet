@@ -52,9 +52,10 @@ namespace Microsoft.Playwright
     /// event.
     /// </para>
     /// <code>
-    /// var waitForFileChooserTask = page.WaitForFileChooserAsync();<br/>
-    /// await page.ClickAsync("upload");<br/>
-    /// var fileChooser = await waitForFileChooserTask;<br/>
+    /// var fileChooser = await page.RunAndWaitForEventAsync(Page.FileChooser, async () =&gt;<br/>
+    /// {<br/>
+    ///     await page.ClickAsync("upload");<br/>
+    /// });<br/>
     /// await fileChooser.SetFilesAsync("temp.txt");
     /// </code>
     /// </summary>
