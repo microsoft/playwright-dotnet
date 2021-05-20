@@ -1,7 +1,6 @@
 trigger: none # We don't want CI builds, just a manual release process
 
-pool:
-  vmImage: ubuntu-latest
+pool: $(PlaywrightPoolName)
 
 steps:
 - task: MicroBuildSigningPlugin@3
