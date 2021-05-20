@@ -48,6 +48,19 @@ namespace Microsoft.Playwright
 {
     public class ElementHandleTapOptions
     {
+        public ElementHandleTapOptions() { }
+
+        public ElementHandleTapOptions(ElementHandleTapOptions clone)
+        {
+            if (clone == null) return;
+            Position = clone.Position;
+            Modifiers = clone.Modifiers;
+            Force = clone.Force;
+            NoWaitAfter = clone.NoWaitAfter;
+            Timeout = clone.Timeout;
+            Trial = clone.Trial;
+        }
+
         /// <summary>
         /// <para>
         /// A point to use relative to the top-left corner of element padding box. If not specified,

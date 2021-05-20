@@ -48,6 +48,51 @@ namespace Microsoft.Playwright
 {
     public class BrowserTypeLaunchPersistentContextOptions
     {
+        public BrowserTypeLaunchPersistentContextOptions() { }
+
+        public BrowserTypeLaunchPersistentContextOptions(BrowserTypeLaunchPersistentContextOptions clone)
+        {
+            if (clone == null) return;
+            Args = clone.Args;
+            Channel = clone.Channel;
+            ChromiumSandbox = clone.ChromiumSandbox;
+            Devtools = clone.Devtools;
+            DownloadsPath = clone.DownloadsPath;
+            Env = clone.Env;
+            ExecutablePath = clone.ExecutablePath;
+            HandleSIGINT = clone.HandleSIGINT;
+            HandleSIGTERM = clone.HandleSIGTERM;
+            HandleSIGHUP = clone.HandleSIGHUP;
+            Headless = clone.Headless;
+            Proxy = clone.Proxy;
+            Timeout = clone.Timeout;
+            SlowMo = clone.SlowMo;
+            IgnoreDefaultArgs = clone.IgnoreDefaultArgs;
+            IgnoreAllDefaultArgs = clone.IgnoreAllDefaultArgs;
+            AcceptDownloads = clone.AcceptDownloads;
+            IgnoreHTTPSErrors = clone.IgnoreHTTPSErrors;
+            BypassCSP = clone.BypassCSP;
+            ViewportSize = clone.ViewportSize;
+            ScreenSize = clone.ScreenSize;
+            UserAgent = clone.UserAgent;
+            DeviceScaleFactor = clone.DeviceScaleFactor;
+            IsMobile = clone.IsMobile;
+            HasTouch = clone.HasTouch;
+            JavaScriptEnabled = clone.JavaScriptEnabled;
+            TimezoneId = clone.TimezoneId;
+            Geolocation = clone.Geolocation;
+            Locale = clone.Locale;
+            Permissions = clone.Permissions;
+            ExtraHTTPHeaders = clone.ExtraHTTPHeaders;
+            Offline = clone.Offline;
+            HttpCredentials = clone.HttpCredentials;
+            ColorScheme = clone.ColorScheme;
+            RecordHarPath = clone.RecordHarPath;
+            RecordHarOmitContent = clone.RecordHarOmitContent;
+            RecordVideoDir = clone.RecordVideoDir;
+            RecordVideoSize = clone.RecordVideoSize;
+        }
+
         /// <summary>
         /// <para>
         /// Additional arguments to pass to the browser instance. The list of Chromium flags

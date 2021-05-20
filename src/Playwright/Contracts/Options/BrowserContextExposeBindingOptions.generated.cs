@@ -48,6 +48,14 @@ namespace Microsoft.Playwright
 {
     public class BrowserContextExposeBindingOptions
     {
+        public BrowserContextExposeBindingOptions() { }
+
+        public BrowserContextExposeBindingOptions(BrowserContextExposeBindingOptions clone)
+        {
+            if (clone == null) return;
+            Handle = clone.Handle;
+        }
+
         /// <summary>
         /// <para>
         /// Whether to pass the argument as a handle, instead of passing by value. When passing

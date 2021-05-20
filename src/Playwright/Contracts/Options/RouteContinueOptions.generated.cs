@@ -48,6 +48,17 @@ namespace Microsoft.Playwright
 {
     public class RouteContinueOptions
     {
+        public RouteContinueOptions() { }
+
+        public RouteContinueOptions(RouteContinueOptions clone)
+        {
+            if (clone == null) return;
+            Url = clone.Url;
+            Method = clone.Method;
+            PostData = clone.PostData;
+            Headers = clone.Headers;
+        }
+
         /// <summary><para>If set changes the request URL. New URL must have same protocol as original one.</para></summary>
         [JsonPropertyName("url")]
         public string Url { get; set; }

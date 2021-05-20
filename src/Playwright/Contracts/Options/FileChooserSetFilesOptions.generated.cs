@@ -48,6 +48,15 @@ namespace Microsoft.Playwright
 {
     public class FileChooserSetFilesOptions
     {
+        public FileChooserSetFilesOptions() { }
+
+        public FileChooserSetFilesOptions(FileChooserSetFilesOptions clone)
+        {
+            if (clone == null) return;
+            NoWaitAfter = clone.NoWaitAfter;
+            Timeout = clone.Timeout;
+        }
+
         /// <summary>
         /// <para>
         /// Actions that initiate navigations are waiting for these navigations to happen and

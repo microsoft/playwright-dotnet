@@ -48,6 +48,15 @@ namespace Microsoft.Playwright
 {
     public class AccessibilitySnapshotOptions
     {
+        public AccessibilitySnapshotOptions() { }
+
+        public AccessibilitySnapshotOptions(AccessibilitySnapshotOptions clone)
+        {
+            if (clone == null) return;
+            InterestingOnly = clone.InterestingOnly;
+            Root = clone.Root;
+        }
+
         /// <summary><para>Prune uninteresting nodes from the tree. Defaults to <c>true</c>.</para></summary>
         [JsonPropertyName("interestingOnly")]
         public bool? InterestingOnly { get; set; }

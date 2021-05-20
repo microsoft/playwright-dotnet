@@ -48,6 +48,16 @@ namespace Microsoft.Playwright
 {
     public class FrameAddStyleTagOptions
     {
+        public FrameAddStyleTagOptions() { }
+
+        public FrameAddStyleTagOptions(FrameAddStyleTagOptions clone)
+        {
+            if (clone == null) return;
+            Url = clone.Url;
+            Path = clone.Path;
+            Content = clone.Content;
+        }
+
         /// <summary><para>URL of the <c>&lt;link&gt;</c> tag.</para></summary>
         [JsonPropertyName("url")]
         public string Url { get; set; }

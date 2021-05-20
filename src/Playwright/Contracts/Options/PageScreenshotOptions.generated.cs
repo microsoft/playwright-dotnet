@@ -48,6 +48,20 @@ namespace Microsoft.Playwright
 {
     public class PageScreenshotOptions
     {
+        public PageScreenshotOptions() { }
+
+        public PageScreenshotOptions(PageScreenshotOptions clone)
+        {
+            if (clone == null) return;
+            Path = clone.Path;
+            Type = clone.Type;
+            Quality = clone.Quality;
+            FullPage = clone.FullPage;
+            Clip = clone.Clip;
+            OmitBackground = clone.OmitBackground;
+            Timeout = clone.Timeout;
+        }
+
         /// <summary>
         /// <para>
         /// The file path to save the image to. The screenshot type will be inferred from file

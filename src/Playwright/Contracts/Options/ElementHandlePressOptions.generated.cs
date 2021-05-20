@@ -48,6 +48,16 @@ namespace Microsoft.Playwright
 {
     public class ElementHandlePressOptions
     {
+        public ElementHandlePressOptions() { }
+
+        public ElementHandlePressOptions(ElementHandlePressOptions clone)
+        {
+            if (clone == null) return;
+            Delay = clone.Delay;
+            NoWaitAfter = clone.NoWaitAfter;
+            Timeout = clone.Timeout;
+        }
+
         /// <summary>
         /// <para>
         /// Time to wait between <c>keydown</c> and <c>keyup</c> in milliseconds. Defaults to

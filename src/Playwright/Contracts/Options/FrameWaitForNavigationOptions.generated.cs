@@ -48,6 +48,18 @@ namespace Microsoft.Playwright
 {
     public class FrameWaitForNavigationOptions
     {
+        public FrameWaitForNavigationOptions() { }
+
+        public FrameWaitForNavigationOptions(FrameWaitForNavigationOptions clone)
+        {
+            if (clone == null) return;
+            UrlString = clone.UrlString;
+            UrlRegex = clone.UrlRegex;
+            UrlFunc = clone.UrlFunc;
+            WaitUntil = clone.WaitUntil;
+            Timeout = clone.Timeout;
+        }
+
         /// <summary>
         /// <para>
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match

@@ -48,6 +48,16 @@ namespace Microsoft.Playwright
 {
     public class MouseClickOptions
     {
+        public MouseClickOptions() { }
+
+        public MouseClickOptions(MouseClickOptions clone)
+        {
+            if (clone == null) return;
+            Button = clone.Button;
+            ClickCount = clone.ClickCount;
+            Delay = clone.Delay;
+        }
+
         /// <summary><para>Defaults to <c>left</c>.</para></summary>
         [JsonPropertyName("button")]
         public MouseButton Button { get; set; }

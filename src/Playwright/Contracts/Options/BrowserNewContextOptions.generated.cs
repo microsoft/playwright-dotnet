@@ -48,6 +48,38 @@ namespace Microsoft.Playwright
 {
     public class BrowserNewContextOptions
     {
+        public BrowserNewContextOptions() { }
+
+        public BrowserNewContextOptions(BrowserNewContextOptions clone)
+        {
+            if (clone == null) return;
+            AcceptDownloads = clone.AcceptDownloads;
+            IgnoreHTTPSErrors = clone.IgnoreHTTPSErrors;
+            BypassCSP = clone.BypassCSP;
+            ViewportSize = clone.ViewportSize;
+            ScreenSize = clone.ScreenSize;
+            UserAgent = clone.UserAgent;
+            DeviceScaleFactor = clone.DeviceScaleFactor;
+            IsMobile = clone.IsMobile;
+            HasTouch = clone.HasTouch;
+            JavaScriptEnabled = clone.JavaScriptEnabled;
+            TimezoneId = clone.TimezoneId;
+            Geolocation = clone.Geolocation;
+            Locale = clone.Locale;
+            Permissions = clone.Permissions;
+            ExtraHTTPHeaders = clone.ExtraHTTPHeaders;
+            Offline = clone.Offline;
+            HttpCredentials = clone.HttpCredentials;
+            ColorScheme = clone.ColorScheme;
+            RecordHarPath = clone.RecordHarPath;
+            RecordHarOmitContent = clone.RecordHarOmitContent;
+            RecordVideoDir = clone.RecordVideoDir;
+            RecordVideoSize = clone.RecordVideoSize;
+            Proxy = clone.Proxy;
+            StorageState = clone.StorageState;
+            StorageStatePath = clone.StorageStatePath;
+        }
+
         /// <summary>
         /// <para>
         /// Whether to automatically download all the attachments. Defaults to <c>false</c>

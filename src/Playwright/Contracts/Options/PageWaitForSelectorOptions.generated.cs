@@ -48,6 +48,15 @@ namespace Microsoft.Playwright
 {
     public class PageWaitForSelectorOptions
     {
+        public PageWaitForSelectorOptions() { }
+
+        public PageWaitForSelectorOptions(PageWaitForSelectorOptions clone)
+        {
+            if (clone == null) return;
+            State = clone.State;
+            Timeout = clone.Timeout;
+        }
+
         /// <summary>
         /// <para>Defaults to <c>'visible'</c>. Can be either:</para>
         /// <list type="bullet">

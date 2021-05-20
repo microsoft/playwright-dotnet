@@ -48,6 +48,14 @@ namespace Microsoft.Playwright
 {
     public class KeyboardTypeOptions
     {
+        public KeyboardTypeOptions() { }
+
+        public KeyboardTypeOptions(KeyboardTypeOptions clone)
+        {
+            if (clone == null) return;
+            Delay = clone.Delay;
+        }
+
         /// <summary><para>Time to wait between key presses in milliseconds. Defaults to 0.</para></summary>
         [JsonPropertyName("delay")]
         public float? Delay { get; set; }

@@ -48,6 +48,16 @@ namespace Microsoft.Playwright
 {
     public class FrameTypeOptions
     {
+        public FrameTypeOptions() { }
+
+        public FrameTypeOptions(FrameTypeOptions clone)
+        {
+            if (clone == null) return;
+            Delay = clone.Delay;
+            NoWaitAfter = clone.NoWaitAfter;
+            Timeout = clone.Timeout;
+        }
+
         /// <summary><para>Time to wait between key presses in milliseconds. Defaults to 0.</para></summary>
         [JsonPropertyName("delay")]
         public float? Delay { get; set; }
