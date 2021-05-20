@@ -48,6 +48,15 @@ namespace Microsoft.Playwright
 {
     public class PageGoForwardOptions
     {
+        public PageGoForwardOptions() { }
+
+        public PageGoForwardOptions(PageGoForwardOptions clone)
+        {
+            if (clone == null) return;
+            WaitUntil = clone.WaitUntil;
+            Timeout = clone.Timeout;
+        }
+
         /// <summary>
         /// <para>When to consider operation succeeded, defaults to <c>load</c>. Events can be either:</para>
         /// <list type="bullet">

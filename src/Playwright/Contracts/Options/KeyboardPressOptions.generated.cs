@@ -48,6 +48,14 @@ namespace Microsoft.Playwright
 {
     public class KeyboardPressOptions
     {
+        public KeyboardPressOptions() { }
+
+        public KeyboardPressOptions(KeyboardPressOptions clone)
+        {
+            if (clone == null) return;
+            Delay = clone.Delay;
+        }
+
         /// <summary>
         /// <para>
         /// Time to wait between <c>keydown</c> and <c>keyup</c> in milliseconds. Defaults to

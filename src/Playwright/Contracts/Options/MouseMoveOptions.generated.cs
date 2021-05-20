@@ -48,6 +48,14 @@ namespace Microsoft.Playwright
 {
     public class MouseMoveOptions
     {
+        public MouseMoveOptions() { }
+
+        public MouseMoveOptions(MouseMoveOptions clone)
+        {
+            if (clone == null) return;
+            Steps = clone.Steps;
+        }
+
         /// <summary><para>defaults to 1. Sends intermediate <c>mousemove</c> events.</para></summary>
         [JsonPropertyName("steps")]
         public int? Steps { get; set; }

@@ -48,6 +48,15 @@ namespace Microsoft.Playwright
 {
     public class PageSelectOptionOptions
     {
+        public PageSelectOptionOptions() { }
+
+        public PageSelectOptionOptions(PageSelectOptionOptions clone)
+        {
+            if (clone == null) return;
+            NoWaitAfter = clone.NoWaitAfter;
+            Timeout = clone.Timeout;
+        }
+
         /// <summary>
         /// <para>
         /// Actions that initiate navigations are waiting for these navigations to happen and

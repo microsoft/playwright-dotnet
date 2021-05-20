@@ -48,6 +48,26 @@ namespace Microsoft.Playwright
 {
     public class PagePdfOptions
     {
+        public PagePdfOptions() { }
+
+        public PagePdfOptions(PagePdfOptions clone)
+        {
+            if (clone == null) return;
+            Path = clone.Path;
+            Scale = clone.Scale;
+            DisplayHeaderFooter = clone.DisplayHeaderFooter;
+            HeaderTemplate = clone.HeaderTemplate;
+            FooterTemplate = clone.FooterTemplate;
+            PrintBackground = clone.PrintBackground;
+            Landscape = clone.Landscape;
+            PageRanges = clone.PageRanges;
+            Format = clone.Format;
+            Width = clone.Width;
+            Height = clone.Height;
+            Margin = clone.Margin;
+            PreferCSSPageSize = clone.PreferCSSPageSize;
+        }
+
         /// <summary>
         /// <para>
         /// The file path to save the PDF to. If <paramref name="path"/> is a relative path,

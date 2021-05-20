@@ -48,6 +48,14 @@ namespace Microsoft.Playwright
 {
     public class PageCloseOptions
     {
+        public PageCloseOptions() { }
+
+        public PageCloseOptions(PageCloseOptions clone)
+        {
+            if (clone == null) return;
+            RunBeforeUnload = clone.RunBeforeUnload;
+        }
+
         /// <summary>
         /// <para>
         /// Defaults to <c>false</c>. Whether to run the <a href="https://developer.mozilla.org/en-US/docs/Web/Events/beforeunload">before

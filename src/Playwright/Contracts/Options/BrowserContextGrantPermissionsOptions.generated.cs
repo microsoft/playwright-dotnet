@@ -48,6 +48,14 @@ namespace Microsoft.Playwright
 {
     public class BrowserContextGrantPermissionsOptions
     {
+        public BrowserContextGrantPermissionsOptions() { }
+
+        public BrowserContextGrantPermissionsOptions(BrowserContextGrantPermissionsOptions clone)
+        {
+            if (clone == null) return;
+            Origin = clone.Origin;
+        }
+
         /// <summary><para>The <see cref="origin"/> to grant permissions to, e.g. "https://example.com".</para></summary>
         [JsonPropertyName("origin")]
         public string Origin { get; set; }

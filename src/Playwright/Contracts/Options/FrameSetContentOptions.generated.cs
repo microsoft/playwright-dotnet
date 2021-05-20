@@ -48,6 +48,15 @@ namespace Microsoft.Playwright
 {
     public class FrameSetContentOptions
     {
+        public FrameSetContentOptions() { }
+
+        public FrameSetContentOptions(FrameSetContentOptions clone)
+        {
+            if (clone == null) return;
+            Timeout = clone.Timeout;
+            WaitUntil = clone.WaitUntil;
+        }
+
         /// <summary>
         /// <para>
         /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to

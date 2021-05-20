@@ -48,6 +48,16 @@ namespace Microsoft.Playwright
 {
     public class PageTypeOptions
     {
+        public PageTypeOptions() { }
+
+        public PageTypeOptions(PageTypeOptions clone)
+        {
+            if (clone == null) return;
+            Delay = clone.Delay;
+            NoWaitAfter = clone.NoWaitAfter;
+            Timeout = clone.Timeout;
+        }
+
         /// <summary><para>Time to wait between key presses in milliseconds. Defaults to 0.</para></summary>
         [JsonPropertyName("delay")]
         public float? Delay { get; set; }

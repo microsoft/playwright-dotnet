@@ -48,6 +48,18 @@ namespace Microsoft.Playwright
 {
     public class PageUncheckOptions
     {
+        public PageUncheckOptions() { }
+
+        public PageUncheckOptions(PageUncheckOptions clone)
+        {
+            if (clone == null) return;
+            Position = clone.Position;
+            Force = clone.Force;
+            NoWaitAfter = clone.NoWaitAfter;
+            Timeout = clone.Timeout;
+            Trial = clone.Trial;
+        }
+
         /// <summary>
         /// <para>
         /// A point to use relative to the top-left corner of element padding box. If not specified,

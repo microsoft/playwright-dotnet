@@ -48,6 +48,14 @@ namespace Microsoft.Playwright
 {
     public class PageIsDisabledOptions
     {
+        public PageIsDisabledOptions() { }
+
+        public PageIsDisabledOptions(PageIsDisabledOptions clone)
+        {
+            if (clone == null) return;
+            Timeout = clone.Timeout;
+        }
+
         /// <summary>
         /// <para>
         /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
