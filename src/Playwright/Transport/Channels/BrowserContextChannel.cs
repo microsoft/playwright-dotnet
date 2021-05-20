@@ -85,6 +85,9 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close");
 
+        internal Task PauseAsync()
+            => Connection.SendMessageToServerAsync(Guid, "pause", null);
+
         internal Task SetDefaultNavigationTimeoutNoReplyAsync(float timeout)
             => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,

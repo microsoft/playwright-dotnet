@@ -354,9 +354,6 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["delay"] = delay,
                 });
 
-        internal Task PauseAsync()
-            => Connection.SendMessageToServerAsync(Guid, "pause", null);
-
         internal Task PressAsync(string key, float delay)
             => Connection.SendMessageToServerAsync(
                 Guid,
