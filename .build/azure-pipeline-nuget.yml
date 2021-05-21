@@ -15,7 +15,8 @@ parameters:
     - real
 
 stages:
-- stage: Build, Package and Sign
+- stage: BuildPackageSign
+  displayName: Build, Package & Sign
   jobs:
   - job: Configure
     steps:
