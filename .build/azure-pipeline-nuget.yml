@@ -49,10 +49,6 @@ stages:
         packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
         versioningScheme: 'off'
 
-  - job: StageNuGetPackages
-    displayName: Stage Nuget Packages
-    dependsOn: BuildPackage
-    steps:
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)/nuget'
@@ -66,10 +62,19 @@ stages:
     condition: and(succeeded(), eq('${{parameters.doRelease}}', true))
 
     steps:
+    - checkout: none
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'drop'
+        downloadPath: '$(System.ArtifactsDirectory)'
+        extractTars: true
+
     - task: NuGetCommand@2
       inputs:
         command: 'push'
-        packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+        packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg;!$(System.ArtifactsDirectory)/**/*.symbols.nupkg'
         nuGetFeedType: 'external'
         publishFeedCredentials: 'NuGet-Playwright'
 
