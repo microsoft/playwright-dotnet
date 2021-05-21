@@ -6,6 +6,14 @@ parameters:
     default: false
     type: boolean
 
+  - name: signType
+    displayName: Sign Type
+    default: 'test'
+    type: string
+    values:
+    - test
+    - real
+
 stages:
 - stage: Build, Package and Sign
   jobs:
@@ -13,7 +21,7 @@ stages:
     steps:
     - task: MicroBuildSigningPlugin@3
       inputs:
-        signType: '$(SignType)'
+        signType: '${{ parameters.signType }}'
         feedSource: 'https://devdiv.pkgs.visualstudio.com/DefaultCollection/_packaging/MicroBuildToolset/nuget/v3/index.json'
 
   - job: BuildPackage
