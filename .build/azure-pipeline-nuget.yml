@@ -1,43 +1,70 @@
 trigger: none # We don't want CI builds, just a manual release process
-
 pool: $(PlaywrightPoolName)
+parameters:
+  - name: doRelease
+    displayName: Push the Release to NuGet.org
+    default: false
+    type: boolean
 
-steps:
-- task: MicroBuildSigningPlugin@3
-  inputs:
-    signType: '$(SignType)'
-    feedSource: 'https://devdiv.pkgs.visualstudio.com/DefaultCollection/_packaging/MicroBuildToolset/nuget/v3/index.json'
+stages:
+- stage: Build, Package and Sign
+  jobs:
+  - job: Configure
+    steps:
+    - task: MicroBuildSigningPlugin@3
+      inputs:
+        signType: '$(SignType)'
+        feedSource: 'https://devdiv.pkgs.visualstudio.com/DefaultCollection/_packaging/MicroBuildToolset/nuget/v3/index.json'
 
-# We need to download the browsers first, so we can build
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'run'
-    arguments: '-p $(Build.SourcesDirectory)/src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj -- download-drivers --basepath $(Build.SourcesDirectory)'
+  - job: BuildPackage
+    displayName: Build & Package
+    steps:
+        
+      # We need to download the browsers first, so we can build
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'run'
+        arguments: '-p $(Build.SourcesDirectory)/src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj -- download-drivers --basepath $(Build.SourcesDirectory)'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    projects: '**/Playwright.csproj'
-    arguments: '-c $(BuildConfiguration)'
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'build'
+        projects: '**/Playwright.csproj'
+        arguments: '-c $(BuildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'pack'
-    packagesToPack: '**/Playwright.csproj'
-    packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
-    versioningScheme: 'off'
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'pack'
+        packagesToPack: '**/Playwright.csproj'
+        packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
+        versioningScheme: 'off'
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/nuget'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+  - job: StageNuGetPackages
+    displayName: Stage Nuget Packages
+    steps:
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/nuget'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
 
-- task: NuGetCommand@2
-  inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-    nuGetFeedType: 'external'
-    publishFeedCredentials: 'NuGet-Playwright'
+- stage: Release
+  jobs:
+  - job: ReleaseNuget
+    displayName: Publish on Nuget.org
+    condition: and(succeeded(), eq('${{parameters.doRelease}}', true))
 
-- task: MicroBuildCleanup@1
+    steps:
+    - task: NuGetCommand@2
+      inputs:
+        command: 'push'
+        packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+        nuGetFeedType: 'external'
+        publishFeedCredentials: 'NuGet-Playwright'
+
+- stage: Cleanup
+  jobs:
+  - job: Cleanup
+    condition: always() # we always want to make sure the cleanup task runs
+    steps:
+    - task: MicroBuildCleanup@1
