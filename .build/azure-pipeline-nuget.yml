@@ -2,6 +2,7 @@ trigger: none # We don't want CI builds, just a manual release process
 pool: $(PlaywrightPoolName)
 parameters:
   - name: doRelease
+    displayName: Push the Release to NuGet.org
     default: false
     type: boolean
 
