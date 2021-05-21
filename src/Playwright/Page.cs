@@ -94,7 +94,17 @@ namespace Microsoft.Playwright
             _channel.Route += Channel_Route;
             _channel.FrameAttached += Channel_FrameAttached;
             _channel.FrameDetached += Channel_FrameDetached;
-            _channel.Dialog += (_, e) => Dialog?.Invoke(this, e);
+            _channel.Dialog += (_, e) =>
+            {
+                if (Dialog == null)
+                {
+                    _ = e.DismissAsync().ConfigureAwait(false);
+                }
+                else
+                {
+                    Dialog?.Invoke(this, e);
+                }
+            };
             _channel.Console += (_, e) => Console?.Invoke(this, e);
             _channel.DOMContentLoaded += (_, e) => DOMContentLoaded?.Invoke(this, this);
             _channel.Download += (_, e) => Download?.Invoke(this, new Download(e.Url, e.SuggestedFilename, e.Artifact.Object));

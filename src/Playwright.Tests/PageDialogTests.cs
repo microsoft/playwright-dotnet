@@ -112,5 +112,13 @@ namespace Microsoft.Playwright.Tests
             await alertTask;
             await context.CloseAsync();
         }
+
+        [PlaywrightTest("page-dialog.spec.ts", "should auto-dismiss the prompt without listeners")]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldAutoDismissThePrompt()
+        {
+            string result = await Page.EvaluateAsync<string>("prompt('question?')");
+            Assert.Null(result);
+        }
     }
 }
