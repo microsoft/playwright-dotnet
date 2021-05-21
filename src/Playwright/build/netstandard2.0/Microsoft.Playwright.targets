@@ -12,6 +12,13 @@
     <Message Text="[Playwright] Copying drivers from $(MSBuildThisFileDirectory) to $(OutputPath)..." />
     <Copy SourceFiles="@(_CopyItems)" DestinationFiles="@(_CopyItems->'$(OutDir).playwright\%(RecursiveDir)%(Filename)%(Extension)')"/>
   </Target>
+  <Target Name="CopyPlaywrightFilesToOutput" AfterTargets="CopyFilesToOutputDirectory">
+    <ItemGroup>
+      <_CopyItems Include="$(MSBuildThisFileDirectory)..\..\Drivers\**" />
+    </ItemGroup>
+    <Message Text="[Playwright] Copying drivers from $(MSBuildThisFileDirectory) to $(OutputPath)..." />
+    <Copy SourceFiles="@(_CopyItems)" DestinationFiles="@(_CopyItems-&gt;'$(OutDir).playwright\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
   <Target Name="InstallBrowsers" AfterTargets="CopyPlaywrightFilesToOutput">
     <Message Text="[Playwright] Install browsers..."/>
     <Message Text="[Playwright] $(MSBuildThisFileDirectory)"/>
