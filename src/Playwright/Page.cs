@@ -385,7 +385,7 @@ namespace Microsoft.Playwright
 
             timeout ??= _defaultTimeout;
             using var waiter = new Waiter(_channel, $"page.WaitForEventAsync(\"{typeof(T)}\")");
-            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{typeof(T)}\"");
+            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{pageEvent.Name}\"");
 
             if (pageEvent.Name != PageEvent.Crash.Name)
             {

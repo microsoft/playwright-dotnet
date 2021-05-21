@@ -79,14 +79,15 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToCaptureAlert()
         {
-            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
+            var dialogTc = new TaskCompletionSource<IDialog>();
+            Page.Popup += (_, popup) => popup.WaitForEventAsync(PageEvent.Dialog).ContinueWith(t => dialogTc.TrySetResult(t.Result));
+
             var evaluateTask = Page.EvaluateAsync<string>(@"() => {
                 const win = window.open('');
                 win.alert('hello');
             }");
 
-            var popup = await popupTask;
-            var dialog = await popup.WaitForEventAsync(PageEvent.Dialog);
+            var dialog = await dialogTc.Task;
 
             Assert.Equal("hello", dialog.Message);
             await dialog.DismissAsync();

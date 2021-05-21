@@ -354,3 +354,4 @@ src/Playwright.sln.DotSettings
 src/Playwright/Drivers
 src/Playwright/playwright
 src/Playwright.Tests/Screenshots/**/test.png
+src/Playwright/Microsoft.Playwright.xml
