@@ -15,8 +15,8 @@ namespace Microsoft.Playwright.Tests
             const int pixelThreshold = 10;
             const decimal totalTolerance = 0.05m;
 
-            var baseImage = Image.Load(Path.Combine(TestUtils.FindParentDirectory("Screenshots"), TestConstants.Product, screenShotFile));
-            var compareImage = Image.Load(screenshot);
+            var baseImage = Image.Load<Rgb24>(Path.Combine(TestUtils.FindParentDirectory("Screenshots"), TestConstants.Product, screenShotFile));
+            var compareImage = Image.Load<Rgb24>(screenshot);
 
             //Just for debugging purpose
             compareImage.Save(Path.Combine(TestUtils.FindParentDirectory("Screenshots"), TestConstants.Product, "test.png"));
@@ -26,8 +26,6 @@ namespace Microsoft.Playwright.Tests
                 return false;
             }
 
-            var rgb1 = default(Rgb24);
-            var rgb2 = default(Rgb24);
             int invalidPixelsCount = 0;
 
             for (int y = 0; y < baseImage.Height; y++)
@@ -37,12 +35,10 @@ namespace Microsoft.Playwright.Tests
                     var pixelA = baseImage[x, y];
                     var pixelB = compareImage[x, y];
 
-                    pixelA.ToRgb24(ref rgb1);
-                    pixelB.ToRgb24(ref rgb2);
 
-                    if (Math.Abs(rgb1.R - rgb2.R) > pixelThreshold ||
-                        Math.Abs(rgb1.G - rgb2.G) > pixelThreshold ||
-                        Math.Abs(rgb1.B - rgb2.B) > pixelThreshold)
+                    if (Math.Abs(pixelA.R - pixelB.R) > pixelThreshold ||
+                        Math.Abs(pixelA.G - pixelB.G) > pixelThreshold ||
+                        Math.Abs(pixelA.B - pixelB.B) > pixelThreshold)
                     {
                         invalidPixelsCount++;
                     }
