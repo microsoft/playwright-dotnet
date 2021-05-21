@@ -81,7 +81,6 @@ namespace Microsoft.Playwright.Tests
         {
             var dialogTc = new TaskCompletionSource<IDialog>();
             Page.Popup += (_, popup) => popup.WaitForEventAsync(PageEvent.Dialog).ContinueWith(t => dialogTc.TrySetResult(t.Result));
-            var popupTask = Page.WaitForPopupAsync();
 
             var evaluateTask = Page.EvaluateAsync<string>(@"() => {
                 const win = window.open('');
