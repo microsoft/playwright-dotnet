@@ -17,6 +17,7 @@ stages:
         feedSource: 'https://devdiv.pkgs.visualstudio.com/DefaultCollection/_packaging/MicroBuildToolset/nuget/v3/index.json'
 
   - job: BuildPackage
+    dependsOn: Configure
     displayName: Build & Package
     steps:
         
@@ -41,6 +42,7 @@ stages:
 
   - job: StageNuGetPackages
     displayName: Stage Nuget Packages
+    dependsOn: BuildPackage
     steps:
     - task: PublishBuildArtifacts@1
       inputs:
