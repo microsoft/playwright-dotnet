@@ -4,9 +4,9 @@ PlaywrightSharp is a .Net library to automate [Chromium](https://www.chromium.or
 
 |          | Linux | macOS | Windows |
 |   :---   | :---: | :---: | :---:   |
-| Chromium <!-- GEN:chromium-version -->90.0.4421.0<!-- GEN:stop --> | ✅ | ✅ | ✅ |
+| Chromium <!-- GEN:chromium-version -->92.0.4498.0<!-- GEN:stop --> | ✅ | ✅ | ✅ |
 | WebKit 14.0 | ✅ | ✅ | ✅ |
-| Firefox <!-- GEN:firefox-version -->86.0b10<!-- GEN:stop --> | ✅ | ✅ | ✅ |
+| Firefox <!-- GEN:firefox-version -->89.0b6<!-- GEN:stop --> | ✅ | ✅ | ✅ |
 
 Headless execution is supported for all browsers on all platforms.
 
