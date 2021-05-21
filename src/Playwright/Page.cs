@@ -98,7 +98,7 @@ namespace Microsoft.Playwright
             {
                 if (Dialog == null)
                 {
-                    _ = e.DismissAsync().ConfigureAwait(false);
+                    _ = e.DismissAsync();
                 }
                 else
                 {
