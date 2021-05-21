@@ -7,9 +7,9 @@ Playwright is a .NET library to automate [Chromium](https://www.chromium.org/Hom
 
 |          | Linux | macOS | Windows |
 |   :---   | :---: | :---: | :---:   |
-| Chromium 92.0.4498.0 | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| WebKit 14.2 | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| Firefox 89.0b6 | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| <!-- GEN:chromium-version -->92.0.4498.0<!-- GEN:stop --> | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| <!-- GEN:webkit-version -->14.2<!-- GEN:stop --> | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| <!-- GEN:firefox-version -->89.0b6<!-- GEN:stop --> | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
 Headless execution is supported for all the browsers on all platforms. Check out [system requirements](https://playwright.dev/docs/intro/#system-requirements) for details.
 
