@@ -65,10 +65,8 @@ stages:
     - task: DownloadBuildArtifacts@1
       inputs:
         buildType: 'current'
-        downloadType: 'single'
-        artifactName: 'drop'
+        downloadType: 'specific'
         downloadPath: '$(System.ArtifactsDirectory)'
-        extractTars: true
 
     - task: NuGetCommand@2
       inputs:
