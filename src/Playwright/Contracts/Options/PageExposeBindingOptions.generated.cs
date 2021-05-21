@@ -48,6 +48,14 @@ namespace Microsoft.Playwright
 {
     public class PageExposeBindingOptions
     {
+        public PageExposeBindingOptions() { }
+
+        public PageExposeBindingOptions(PageExposeBindingOptions clone)
+        {
+            if (clone == null) return;
+            Handle = clone.Handle;
+        }
+
         /// <summary>
         /// <para>
         /// Whether to pass the argument as a handle, instead of passing by value. When passing

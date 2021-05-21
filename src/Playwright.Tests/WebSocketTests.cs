@@ -184,56 +184,5 @@ namespace Microsoft.Playwright.Tests
             await Page.EvaluateAsync("window.ws.close();");
             Assert.Null(socketError);
         }
-
-        [PlaywrightTest("web-socket.spec.ts", "should reject waitForEvent on socket close")]
-        [Fact]
-        public async Task ShouldRejectWaitForEventOnSocketClose()
-        {
-            var frameReceivedTcs = new TaskCompletionSource<bool>();
-            IWebSocket ws = null;
-
-            Page.WebSocket += (_, e) =>
-            {
-                ws = e;
-                e.FrameReceived += (_, _) => frameReceivedTcs.TrySetResult(true);
-            };
-
-            await TaskUtils.WhenAll(
-                frameReceivedTcs.Task,
-                Page.EvaluateAsync(@"port => {
-                    window.ws = new WebSocket('ws://localhost:' + port + '/ws');
-                }", TestConstants.Port));
-
-            await frameReceivedTcs.Task;
-            var frameSentTask = ws.WaitForFrameSentAsync();
-            await Page.EvaluateAsync("window.ws.close()");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => frameSentTask);
-            Assert.Contains("Socket closed", exception.Message);
-        }
-
-        [PlaywrightTest("web-socket.spec.ts", "should reject waitForEvent on page close")]
-        [Fact]
-        public async Task ShouldRejectWaitForEventOnPageClose()
-        {
-            var frameReceivedTcs = new TaskCompletionSource<bool>();
-            IWebSocket ws = null;
-
-            Page.WebSocket += (_, e) =>
-            {
-                ws = e;
-                e.FrameReceived += (_, _) => frameReceivedTcs.TrySetResult(true);
-            };
-
-            await TaskUtils.WhenAll(
-                frameReceivedTcs.Task,
-                Page.EvaluateAsync(@"port => {
-                    window.ws = new WebSocket('ws://localhost:' + port + '/ws');
-                }", TestConstants.Port));
-
-            var frameSentTask = ws.WaitForFrameSentAsync();
-            await Page.CloseAsync();
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => frameSentTask.WithTimeout(TestConstants.DefaultTaskTimeout));
-            Assert.Contains("Page closed", exception.Message);
-        }
     }
 }

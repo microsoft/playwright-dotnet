@@ -48,6 +48,30 @@ namespace Microsoft.Playwright
 {
     public class BrowserTypeLaunchOptions
     {
+        public BrowserTypeLaunchOptions() { }
+
+        public BrowserTypeLaunchOptions(BrowserTypeLaunchOptions clone)
+        {
+            if (clone == null) return;
+            Args = clone.Args;
+            Channel = clone.Channel;
+            ChromiumSandbox = clone.ChromiumSandbox;
+            Devtools = clone.Devtools;
+            DownloadsPath = clone.DownloadsPath;
+            Env = clone.Env;
+            ExecutablePath = clone.ExecutablePath;
+            HandleSIGINT = clone.HandleSIGINT;
+            HandleSIGTERM = clone.HandleSIGTERM;
+            HandleSIGHUP = clone.HandleSIGHUP;
+            Headless = clone.Headless;
+            Proxy = clone.Proxy;
+            Timeout = clone.Timeout;
+            FirefoxUserPrefs = clone.FirefoxUserPrefs;
+            SlowMo = clone.SlowMo;
+            IgnoreDefaultArgs = clone.IgnoreDefaultArgs;
+            IgnoreAllDefaultArgs = clone.IgnoreAllDefaultArgs;
+        }
+
         /// <summary>
         /// <para>
         /// Additional arguments to pass to the browser instance. The list of Chromium flags
@@ -66,7 +90,7 @@ namespace Microsoft.Playwright
         [JsonPropertyName("channel")]
         public BrowserChannel Channel { get; set; }
 
-        /// <summary><para>Enable Chromium sandboxing. Defaults to <c>true</c>.</para></summary>
+        /// <summary><para>Enable Chromium sandboxing. Defaults to <c>false</c>.</para></summary>
         [JsonPropertyName("chromiumSandbox")]
         public bool? ChromiumSandbox { get; set; }
 

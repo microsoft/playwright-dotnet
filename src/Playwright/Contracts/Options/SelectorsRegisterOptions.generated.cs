@@ -48,6 +48,16 @@ namespace Microsoft.Playwright
 {
     public class SelectorsRegisterOptions
     {
+        public SelectorsRegisterOptions() { }
+
+        public SelectorsRegisterOptions(SelectorsRegisterOptions clone)
+        {
+            if (clone == null) return;
+            Script = clone.Script;
+            Path = clone.Path;
+            ContentScript = clone.ContentScript;
+        }
+
         /// <summary><para>Script that evaluates to a selector engine instance.</para></summary>
         [JsonPropertyName("script")]
         public string Script { get; set; }

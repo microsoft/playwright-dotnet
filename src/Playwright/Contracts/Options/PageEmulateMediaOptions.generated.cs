@@ -48,6 +48,15 @@ namespace Microsoft.Playwright
 {
     public class PageEmulateMediaOptions
     {
+        public PageEmulateMediaOptions() { }
+
+        public PageEmulateMediaOptions(PageEmulateMediaOptions clone)
+        {
+            if (clone == null) return;
+            Media = clone.Media;
+            ColorScheme = clone.ColorScheme;
+        }
+
         /// <summary>
         /// <para>
         /// Changes the CSS media type of the page. The only allowed values are <c>'screen'</c>,

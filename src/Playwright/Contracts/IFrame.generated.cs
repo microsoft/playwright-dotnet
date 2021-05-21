@@ -787,11 +787,269 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string values, FrameSelectOptionOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// This method waits for an element matching <paramref name="selector"/>, waits for
+        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
+        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// </para>
+        /// <para>
+        /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
+        /// an error. However, if the element is inside the <c>&lt;label&gt;</c> element that
+        /// has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// the control will be used instead.
+        /// </para>
+        /// <para>Returns the array of option values that have been successfully selected.</para>
+        /// <para>
+        /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
+        /// been selected.
+        /// </para>
+        /// <code>
+        /// // single selection matching the value<br/>
+        /// await frame.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
+        /// // single selection matching both the value and the label<br/>
+        /// await frame.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
+        /// // multiple selection<br/>
+        /// await frame.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
+        /// </code>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="values">
+        /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
+        /// all matching options are selected, otherwise only the first option matching one
+        /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+        /// Option is considered matching if all specified properties match.
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IElementHandle values, FrameSelectOptionOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// This method waits for an element matching <paramref name="selector"/>, waits for
+        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
+        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// </para>
+        /// <para>
+        /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
+        /// an error. However, if the element is inside the <c>&lt;label&gt;</c> element that
+        /// has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// the control will be used instead.
+        /// </para>
+        /// <para>Returns the array of option values that have been successfully selected.</para>
+        /// <para>
+        /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
+        /// been selected.
+        /// </para>
+        /// <code>
+        /// // single selection matching the value<br/>
+        /// await frame.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
+        /// // single selection matching both the value and the label<br/>
+        /// await frame.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
+        /// // multiple selection<br/>
+        /// await frame.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
+        /// </code>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="values">
+        /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
+        /// all matching options are selected, otherwise only the first option matching one
+        /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+        /// Option is considered matching if all specified properties match.
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<string> values, FrameSelectOptionOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// This method waits for an element matching <paramref name="selector"/>, waits for
+        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
+        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// </para>
+        /// <para>
+        /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
+        /// an error. However, if the element is inside the <c>&lt;label&gt;</c> element that
+        /// has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// the control will be used instead.
+        /// </para>
+        /// <para>Returns the array of option values that have been successfully selected.</para>
+        /// <para>
+        /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
+        /// been selected.
+        /// </para>
+        /// <code>
+        /// // single selection matching the value<br/>
+        /// await frame.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
+        /// // single selection matching both the value and the label<br/>
+        /// await frame.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
+        /// // multiple selection<br/>
+        /// await frame.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
+        /// </code>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="values">
+        /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
+        /// all matching options are selected, otherwise only the first option matching one
+        /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+        /// Option is considered matching if all specified properties match.
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, FrameSelectOptionOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// This method waits for an element matching <paramref name="selector"/>, waits for
+        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
+        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// </para>
+        /// <para>
+        /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
+        /// an error. However, if the element is inside the <c>&lt;label&gt;</c> element that
+        /// has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// the control will be used instead.
+        /// </para>
+        /// <para>Returns the array of option values that have been successfully selected.</para>
+        /// <para>
+        /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
+        /// been selected.
+        /// </para>
+        /// <code>
+        /// // single selection matching the value<br/>
+        /// await frame.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
+        /// // single selection matching both the value and the label<br/>
+        /// await frame.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
+        /// // multiple selection<br/>
+        /// await frame.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
+        /// </code>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="values">
+        /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
+        /// all matching options are selected, otherwise only the first option matching one
+        /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+        /// Option is considered matching if all specified properties match.
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, FrameSelectOptionOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// This method waits for an element matching <paramref name="selector"/>, waits for
+        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
+        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// </para>
+        /// <para>
+        /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
+        /// an error. However, if the element is inside the <c>&lt;label&gt;</c> element that
+        /// has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// the control will be used instead.
+        /// </para>
+        /// <para>Returns the array of option values that have been successfully selected.</para>
+        /// <para>
+        /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
+        /// been selected.
+        /// </para>
+        /// <code>
+        /// // single selection matching the value<br/>
+        /// await frame.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
+        /// // single selection matching both the value and the label<br/>
+        /// await frame.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
+        /// // multiple selection<br/>
+        /// await frame.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
+        /// </code>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="values">
+        /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
+        /// all matching options are selected, otherwise only the first option matching one
+        /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+        /// Option is considered matching if all specified properties match.
+        /// </param>
+        /// <param name="options">Call options</param>
         Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, FrameSelectOptionOptions options = default);
 
         /// <param name="html">HTML markup to assign to the page.</param>
         /// <param name="options">Call options</param>
         Task SetContentAsync(string html, FrameSetContentOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+        /// element</a>.
+        /// </para>
+        /// <para>
+        /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
+        /// are relative paths, then they are resolved relative to the the current working directory.
+        /// For empty array, clears the selected files.
+        /// </para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to search for element. If there are multiple elements satisfying the
+        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="files">
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task SetInputFilesAsync(string selector, string files, FrameSetInputFilesOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+        /// element</a>.
+        /// </para>
+        /// <para>
+        /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
+        /// are relative paths, then they are resolved relative to the the current working directory.
+        /// For empty array, clears the selected files.
+        /// </para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to search for element. If there are multiple elements satisfying the
+        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="files">
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task SetInputFilesAsync(string selector, IEnumerable<string> files, FrameSetInputFilesOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+        /// element</a>.
+        /// </para>
+        /// <para>
+        /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
+        /// are relative paths, then they are resolved relative to the the current working directory.
+        /// For empty array, clears the selected files.
+        /// </para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to search for element. If there are multiple elements satisfying the
+        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="files">
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task SetInputFilesAsync(string selector, FilePayload files, FrameSetInputFilesOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1030,8 +1288,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default, Func<Task> action = default);
+        Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default);
 
         /// <summary>
         /// <para>

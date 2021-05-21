@@ -48,6 +48,14 @@ namespace Microsoft.Playwright
 {
     public class BrowserContextStorageStateOptions
     {
+        public BrowserContextStorageStateOptions() { }
+
+        public BrowserContextStorageStateOptions(BrowserContextStorageStateOptions clone)
+        {
+            if (clone == null) return;
+            Path = clone.Path;
+        }
+
         /// <summary>
         /// <para>
         /// The file path to save the storage state to. If <paramref name="path"/> is a relative

@@ -48,6 +48,15 @@ namespace Microsoft.Playwright
 {
     public class FrameWaitForFunctionOptions
     {
+        public FrameWaitForFunctionOptions() { }
+
+        public FrameWaitForFunctionOptions(FrameWaitForFunctionOptions clone)
+        {
+            if (clone == null) return;
+            PollingInterval = clone.PollingInterval;
+            Timeout = clone.Timeout;
+        }
+
         /// <summary>
         /// <para>
         /// If specified, then it is treated as an interval in milliseconds at which the function

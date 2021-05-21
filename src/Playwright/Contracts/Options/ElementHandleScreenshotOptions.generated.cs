@@ -48,6 +48,18 @@ namespace Microsoft.Playwright
 {
     public class ElementHandleScreenshotOptions
     {
+        public ElementHandleScreenshotOptions() { }
+
+        public ElementHandleScreenshotOptions(ElementHandleScreenshotOptions clone)
+        {
+            if (clone == null) return;
+            Path = clone.Path;
+            Type = clone.Type;
+            Quality = clone.Quality;
+            OmitBackground = clone.OmitBackground;
+            Timeout = clone.Timeout;
+        }
+
         /// <summary>
         /// <para>
         /// The file path to save the image to. The screenshot type will be inferred from file

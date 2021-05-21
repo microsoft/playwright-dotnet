@@ -212,7 +212,7 @@ namespace Microsoft.Playwright.Tests
             await Page.EvaluateAsync("() => makeMultiple()");
             var result = await Page.SelectOptionAsync("select", new[] { "blue", "black", "magenta" });
             Assert.True(result.All(r => new[] { "blue", "black", "magenta" }.Contains(r)));
-            await Page.SelectOptionAsync("select");
+            await Page.SelectOptionAsync("select", new string[] { });
             Assert.True(await Page.EvalOnSelectorAsync<bool?>("select", "select => Array.from(select.options).every(option => !option.selected)"));
         }
 
@@ -223,7 +223,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
             await Page.EvaluateAsync("() => makeMultiple()");
             await Page.SelectOptionAsync("select", new[] { "blue", "black", "magenta" });
-            await Page.SelectOptionAsync("select");
+            await Page.SelectOptionAsync("select", new string[] { });
             Assert.True(await Page.EvalOnSelectorAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected)"));
         }
 

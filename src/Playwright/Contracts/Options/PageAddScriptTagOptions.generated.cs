@@ -48,6 +48,17 @@ namespace Microsoft.Playwright
 {
     public class PageAddScriptTagOptions
     {
+        public PageAddScriptTagOptions() { }
+
+        public PageAddScriptTagOptions(PageAddScriptTagOptions clone)
+        {
+            if (clone == null) return;
+            Url = clone.Url;
+            Path = clone.Path;
+            Content = clone.Content;
+            Type = clone.Type;
+        }
+
         /// <summary><para>URL of a script to be added.</para></summary>
         [JsonPropertyName("url")]
         public string Url { get; set; }

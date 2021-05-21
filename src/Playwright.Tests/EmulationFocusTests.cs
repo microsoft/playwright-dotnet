@@ -35,7 +35,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldFocusPopupsByDefault()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            var popupTask = Page.WaitForPopupAsync();
+            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
 
             await TaskUtils.WhenAll(
                 popupTask,

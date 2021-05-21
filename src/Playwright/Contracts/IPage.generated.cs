@@ -123,7 +123,7 @@ namespace Microsoft.Playwright
         ///   // Crash might happen during a click.<br/>
         ///   await page.ClickAsync("button");<br/>
         ///   // Or while waiting for an event.<br/>
-        ///   await page.WaitForPopupAsync(() -&gt; {});<br/>
+        ///   await page.WaitForEventAsync(PageEvent.Popup);<br/>
         /// } catch (PlaywrightException e) {<br/>
         ///   // When the page crashes, exception message contains "crash".<br/>
         /// }
@@ -219,9 +219,10 @@ namespace Microsoft.Playwright
         /// its response has started loading in the popup.
         /// </para>
         /// <code>
-        /// var waitForPopupTask = page.WaitForPopupAsync();<br/>
-        /// await page.EvaluateAsync("() =&gt; window.open('https://microsoft.com')");<br/>
-        /// var popup = await waitForPopupTask;<br/>
+        /// var popup = await page.RunAndWaitForEventAsync(PageEvent.Popup, async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.EvaluateAsync("() =&gt; window.open('https://microsoft.com')");<br/>
+        /// });<br/>
         /// Console.WriteLine(await popup.EvaluateAsync&lt;string&gt;("location.href"));
         /// </code>
         /// </summary>
@@ -297,7 +298,7 @@ namespace Microsoft.Playwright
         /// were run. This is useful to amend the JavaScript environment, e.g. to seed <c>Math.random</c>.
         /// </para>
         /// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
-        /// <code>await page.AddInitScriptAsync(scriptPath: "./preload.js");</code>
+        /// <code>await page.AddInitScriptAsync(new PageAddInitScriptOption { ScriptPath = "./preload.js" });</code>
         /// </summary>
         /// <remarks>
         /// <para>
@@ -544,20 +545,20 @@ namespace Microsoft.Playwright
         /// await page.EvaluateAsync("() =&gt; matchMedia('print').matches");<br/>
         /// // → false<br/>
         /// <br/>
-        /// await page.EmulateMediaAsync(Media.Print);<br/>
+        /// await page.EmulateMediaAsync(new PageEmulateMediaOptions { Media = Media.Print });<br/>
         /// await page.EvaluateAsync("() =&gt; matchMedia('screen').matches");<br/>
         /// // → false<br/>
         /// await page.EvaluateAsync("() =&gt; matchMedia('print').matches");<br/>
         /// // → true<br/>
         /// <br/>
-        /// await page.EmulateMediaAsync(Media.Screen);<br/>
+        /// await page.EmulateMediaAsync(new PageEmulateMediaOptions { Media = Media.Screen });<br/>
         /// await page.EvaluateAsync("() =&gt; matchMedia('screen').matches");<br/>
         /// // → true<br/>
         /// await page.EvaluateAsync("() =&gt; matchMedia('print').matches");<br/>
         /// // → false
         /// </code>
         /// <code>
-        /// await page.EmulateMediaAsync(colorScheme: ColorScheme.Dark);<br/>
+        /// await page.EmulateMediaAsync(new PageEmulateMediaOptions { ColorScheme = ColorScheme.Dark });<br/>
         /// await page.EvaluateAsync("matchMedia('(prefers-color-scheme: dark)').matches");<br/>
         /// // → true<br/>
         /// await page.EvaluateAsync("matchMedia('(prefers-color-scheme: light)').matches");<br/>
@@ -720,7 +721,10 @@ namespace Microsoft.Playwright
         ///   public static async Task Main()<br/>
         ///   {<br/>
         ///       using var playwright = await Playwright.CreateAsync();<br/>
-        ///       await using var browser = await playwright.Webkit.LaunchAsync(headless: false);<br/>
+        ///       await using var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions<br/>
+        ///       {<br/>
+        ///           Headless: false<br/>
+        ///       });<br/>
         ///       var page = await browser.NewPageAsync();<br/>
         /// <br/>
         ///       await page.ExposeBindingAsync("pageUrl", (source) =&gt; source.Page.Url);<br/>
@@ -741,7 +745,7 @@ namespace Microsoft.Playwright
         /// var result = new TaskCompletionSource&lt;string&gt;();<br/>
         /// await page.ExposeBindingAsync("clicked", async (BindingSource _, IJSHandle t) =&gt;<br/>
         /// {<br/>
-        ///     return result.TrySetResult(await t.AsElement.TextContentAsync());<br/>
+        ///     return result.TrySetResult(await t.AsElement().TextContentAsync());<br/>
         /// });<br/>
         /// <br/>
         /// await page.SetContentAsync("&lt;script&gt;\n" +<br/>
@@ -781,7 +785,10 @@ namespace Microsoft.Playwright
         ///   public static async Task Main()<br/>
         ///   {<br/>
         ///       using var playwright = await Playwright.CreateAsync();<br/>
-        ///       await using var browser = await playwright.Webkit.LaunchAsync(headless: false); <br/>
+        ///       await using var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions<br/>
+        ///       {<br/>
+        ///           Headless: false<br/>
+        ///       }); <br/>
         ///       var page = await browser.NewPageAsync();<br/>
         /// <br/>
         ///       // NOTE: md5 is inherently insecure, and we strongly discourage using<br/>
@@ -1135,8 +1142,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// <code>
         /// // Generates a PDF with 'screen' media type<br/>
-        /// await page.EmulateMediaAsync(Media.Screen);<br/>
-        /// await page.PdfAsync("page.pdf");
+        /// await page.EmulateMediaAsync(new PageEmulateMediaOptions { Media = Media.Screen });<br/>
+        /// await page.PdfAsync(new PagePdfOptions { Path = "page.pdf" });
         /// </code>
         /// <para>
         /// The <paramref name="width"/>, <paramref name="height"/>, and <paramref name="margin"/>
@@ -1219,7 +1226,6 @@ namespace Microsoft.Playwright
         /// the subsequent key is being pressed.
         /// </para>
         /// <code>
-        /// await using var browser = await playwright.Webkit.LaunchAsync(headless: false);<br/>
         /// var page = await browser.NewPageAsync();<br/>
         /// await page.GotoAsync("https://keycode.info");<br/>
         /// await page.PressAsync("body", "A");<br/>
@@ -1286,14 +1292,12 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>An example of a naive handler that aborts all image requests:</para>
         /// <code>
-        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
         /// var page = await browser.NewPageAsync();<br/>
         /// await page.RouteAsync("**/*.{png,jpg,jpeg}", async r =&gt; await r.AbortAsync());<br/>
         /// await page.GotoAsync("https://www.microsoft.com");
         /// </code>
         /// <para>or the same snippet using a regex pattern instead:</para>
         /// <code>
-        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
         /// var page = await browser.NewPageAsync();<br/>
         /// await page.RouteAsync(new Regex("(\\.png$)|(\\.jpg$)"), async r =&gt; await r.AbortAsync());<br/>
         /// await page.GotoAsync("https://www.microsoft.com");
@@ -1306,7 +1310,7 @@ namespace Microsoft.Playwright
         /// await page.RouteAsync("/api/**", async r =&gt;<br/>
         /// {<br/>
         ///   if (r.Request.PostData.Contains("my-string"))<br/>
-        ///       await r.FulfillAsync(body: "mocked-data");<br/>
+        ///       await r.FulfillAsync(new RouteFulfillOptions { Body = "mocked-data" });<br/>
         ///   else<br/>
         ///       await r.ContinueAsync();<br/>
         /// });
@@ -1336,14 +1340,12 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>An example of a naive handler that aborts all image requests:</para>
         /// <code>
-        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
         /// var page = await browser.NewPageAsync();<br/>
         /// await page.RouteAsync("**/*.{png,jpg,jpeg}", async r =&gt; await r.AbortAsync());<br/>
         /// await page.GotoAsync("https://www.microsoft.com");
         /// </code>
         /// <para>or the same snippet using a regex pattern instead:</para>
         /// <code>
-        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
         /// var page = await browser.NewPageAsync();<br/>
         /// await page.RouteAsync(new Regex("(\\.png$)|(\\.jpg$)"), async r =&gt; await r.AbortAsync());<br/>
         /// await page.GotoAsync("https://www.microsoft.com");
@@ -1356,7 +1358,7 @@ namespace Microsoft.Playwright
         /// await page.RouteAsync("/api/**", async r =&gt;<br/>
         /// {<br/>
         ///   if (r.Request.PostData.Contains("my-string"))<br/>
-        ///       await r.FulfillAsync(body: "mocked-data");<br/>
+        ///       await r.FulfillAsync(new RouteFulfillOptions { Body = "mocked-data" });<br/>
         ///   else<br/>
         ///       await r.ContinueAsync();<br/>
         /// });
@@ -1386,14 +1388,12 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>An example of a naive handler that aborts all image requests:</para>
         /// <code>
-        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
         /// var page = await browser.NewPageAsync();<br/>
         /// await page.RouteAsync("**/*.{png,jpg,jpeg}", async r =&gt; await r.AbortAsync());<br/>
         /// await page.GotoAsync("https://www.microsoft.com");
         /// </code>
         /// <para>or the same snippet using a regex pattern instead:</para>
         /// <code>
-        /// await using var browser = await playwright.Webkit.LaunchAsync();<br/>
         /// var page = await browser.NewPageAsync();<br/>
         /// await page.RouteAsync(new Regex("(\\.png$)|(\\.jpg$)"), async r =&gt; await r.AbortAsync());<br/>
         /// await page.GotoAsync("https://www.microsoft.com");
@@ -1406,7 +1406,7 @@ namespace Microsoft.Playwright
         /// await page.RouteAsync("/api/**", async r =&gt;<br/>
         /// {<br/>
         ///   if (r.Request.PostData.Contains("my-string"))<br/>
-        ///       await r.FulfillAsync(body: "mocked-data");<br/>
+        ///       await r.FulfillAsync(new RouteFulfillOptions { Body = "mocked-data" });<br/>
         ///   else<br/>
         ///       await r.ContinueAsync();<br/>
         /// });
@@ -1431,6 +1431,211 @@ namespace Microsoft.Playwright
         /// <summary><para>Returns the buffer with the captured screenshot.</para></summary>
         /// <param name="options">Call options</param>
         Task<byte[]> ScreenshotAsync(PageScreenshotOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// This method waits for an element matching <paramref name="selector"/>, waits for
+        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
+        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// </para>
+        /// <para>
+        /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
+        /// an error. However, if the element is inside the <c>&lt;label&gt;</c> element that
+        /// has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// the control will be used instead.
+        /// </para>
+        /// <para>Returns the array of option values that have been successfully selected.</para>
+        /// <para>
+        /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
+        /// been selected.
+        /// </para>
+        /// <code>
+        /// // single selection matching the value<br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
+        /// // single selection matching both the value and the label<br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
+        /// // multiple <br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
+        /// </code>
+        /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to search for element. If there are multiple elements satisfying the
+        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="values">
+        /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
+        /// all matching options are selected, otherwise only the first option matching one
+        /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+        /// Option is considered matching if all specified properties match.
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string values, PageSelectOptionOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// This method waits for an element matching <paramref name="selector"/>, waits for
+        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
+        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// </para>
+        /// <para>
+        /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
+        /// an error. However, if the element is inside the <c>&lt;label&gt;</c> element that
+        /// has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// the control will be used instead.
+        /// </para>
+        /// <para>Returns the array of option values that have been successfully selected.</para>
+        /// <para>
+        /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
+        /// been selected.
+        /// </para>
+        /// <code>
+        /// // single selection matching the value<br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
+        /// // single selection matching both the value and the label<br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
+        /// // multiple <br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
+        /// </code>
+        /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to search for element. If there are multiple elements satisfying the
+        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="values">
+        /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
+        /// all matching options are selected, otherwise only the first option matching one
+        /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+        /// Option is considered matching if all specified properties match.
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IElementHandle values, PageSelectOptionOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// This method waits for an element matching <paramref name="selector"/>, waits for
+        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
+        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// </para>
+        /// <para>
+        /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
+        /// an error. However, if the element is inside the <c>&lt;label&gt;</c> element that
+        /// has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// the control will be used instead.
+        /// </para>
+        /// <para>Returns the array of option values that have been successfully selected.</para>
+        /// <para>
+        /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
+        /// been selected.
+        /// </para>
+        /// <code>
+        /// // single selection matching the value<br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
+        /// // single selection matching both the value and the label<br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
+        /// // multiple <br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
+        /// </code>
+        /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to search for element. If there are multiple elements satisfying the
+        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="values">
+        /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
+        /// all matching options are selected, otherwise only the first option matching one
+        /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+        /// Option is considered matching if all specified properties match.
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<string> values, PageSelectOptionOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// This method waits for an element matching <paramref name="selector"/>, waits for
+        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
+        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// </para>
+        /// <para>
+        /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
+        /// an error. However, if the element is inside the <c>&lt;label&gt;</c> element that
+        /// has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// the control will be used instead.
+        /// </para>
+        /// <para>Returns the array of option values that have been successfully selected.</para>
+        /// <para>
+        /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
+        /// been selected.
+        /// </para>
+        /// <code>
+        /// // single selection matching the value<br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
+        /// // single selection matching both the value and the label<br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
+        /// // multiple <br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
+        /// </code>
+        /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to search for element. If there are multiple elements satisfying the
+        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="values">
+        /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
+        /// all matching options are selected, otherwise only the first option matching one
+        /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+        /// Option is considered matching if all specified properties match.
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, PageSelectOptionOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// This method waits for an element matching <paramref name="selector"/>, waits for
+        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
+        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// </para>
+        /// <para>
+        /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
+        /// an error. However, if the element is inside the <c>&lt;label&gt;</c> element that
+        /// has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// the control will be used instead.
+        /// </para>
+        /// <para>Returns the array of option values that have been successfully selected.</para>
+        /// <para>
+        /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
+        /// been selected.
+        /// </para>
+        /// <code>
+        /// // single selection matching the value<br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
+        /// // single selection matching both the value and the label<br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
+        /// // multiple <br/>
+        /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
+        /// </code>
+        /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to search for element. If there are multiple elements satisfying the
+        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="values">
+        /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
+        /// all matching options are selected, otherwise only the first option matching one
+        /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+        /// Option is considered matching if all specified properties match.
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, PageSelectOptionOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1523,6 +1728,69 @@ namespace Microsoft.Playwright
         /// header values must be strings.
         /// </param>
         Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers);
+
+        /// <summary>
+        /// <para>
+        /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+        /// element</a>.
+        /// </para>
+        /// <para>
+        /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
+        /// are relative paths, then they are resolved relative to the the current working directory.
+        /// For empty array, clears the selected files.
+        /// </para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to search for element. If there are multiple elements satisfying the
+        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="files">
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task SetInputFilesAsync(string selector, string files, PageSetInputFilesOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+        /// element</a>.
+        /// </para>
+        /// <para>
+        /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
+        /// are relative paths, then they are resolved relative to the the current working directory.
+        /// For empty array, clears the selected files.
+        /// </para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to search for element. If there are multiple elements satisfying the
+        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="files">
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task SetInputFilesAsync(string selector, IEnumerable<string> files, PageSetInputFilesOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+        /// element</a>.
+        /// </para>
+        /// <para>
+        /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
+        /// are relative paths, then they are resolved relative to the the current working directory.
+        /// For empty array, clears the selected files.
+        /// </para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to search for element. If there are multiple elements satisfying the
+        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="files">
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task SetInputFilesAsync(string selector, FilePayload files, PageSetInputFilesOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1739,65 +2007,6 @@ namespace Microsoft.Playwright
 
         PageViewportSizeResult ViewportSize { get; }
 
-        /// <summary><para>Performs action and waits for the Page to close.</para></summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IPage> WaitForCloseAsync(PageWaitForCloseOptions options = default, Func<Task> action = default);
-
-        /// <summary>
-        /// <para>
-        /// Performs action and waits for a <see cref="IConsoleMessage"/> to be logged by in
-        /// the page. If predicate is provided, it passes <see cref="IConsoleMessage"/> value
-        /// into the <c>predicate</c> function and waits for <c>predicate(message)</c> to return
-        /// a truthy value. Will throw an error if the page is closed before the console event
-        /// is fired.
-        /// </para>
-        /// </summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IConsoleMessage> WaitForConsoleMessageAsync(PageWaitForConsoleMessageOptions options = default, Func<Task> action = default);
-
-        /// <summary>
-        /// <para>
-        /// Performs action and waits for a new <see cref="IDownload"/>. If predicate is provided,
-        /// it passes <see cref="IDownload"/> value into the <c>predicate</c> function and waits
-        /// for <c>predicate(download)</c> to return a truthy value. Will throw an error if
-        /// the page is closed before the download event is fired.
-        /// </para>
-        /// </summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IDownload> WaitForDownloadAsync(PageWaitForDownloadOptions options = default, Func<Task> action = default);
-
-        /// <summary>
-        /// <para>
-        /// Waits for event to fire and passes its value into the predicate function. Returns
-        /// when the predicate returns truthy value. Will throw an error if the page is closed
-        /// before the event is fired. Returns the event data value.
-        /// </para>
-        /// <code>
-        /// var waitTask = page.WaitForEventAsync(PageEvent.FrameNavigated);<br/>
-        /// await page.ClickAsync("button");<br/>
-        /// var frame = await waitTask;
-        /// </code>
-        /// </summary>
-        /// <param name="event">Event name, same one typically passed into <c>*.on(event)</c>.</param>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<object> WaitForEventAsync(string @event, PageWaitForEventOptions options = default, Func<Task> action = default);
-
-        /// <summary>
-        /// <para>
-        /// Performs action and waits for a new <see cref="IFileChooser"/> to be created. If
-        /// predicate is provided, it passes <see cref="IFileChooser"/> value into the <c>predicate</c>
-        /// function and waits for <c>predicate(fileChooser)</c> to return a truthy value. Will
-        /// throw an error if the page is closed before the file chooser is opened.
-        /// </para>
-        /// </summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IFileChooser> WaitForFileChooserAsync(PageWaitForFileChooserOptions options = default, Func<Task> action = default);
-
         /// <summary>
         /// <para>
         /// Returns when the <paramref name="expression"/> returns a truthy value. It resolves
@@ -1854,9 +2063,10 @@ namespace Microsoft.Playwright
         /// await page.WaitForLoadStateAsync(); // The promise resolves after 'load' event.
         /// </code>
         /// <code>
-        /// var popupTask = page.WaitForPopupAsync();<br/>
-        /// await page.ClickAsync("button"); // click triggers the popup/<br/>
-        /// var popup = await popupTask;<br/>
+        /// var popup = await page.RunAndWaitForEventAsync(PageEvent.Popup, async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button"); // click triggers the popup/<br/>
+        /// });<br/>
         /// await popup.WaitForLoadStateAsync(LoadState.DOMContentLoaded);<br/>
         /// Console.WriteLine(await popup.TitleAsync()); // popup is ready to use.
         /// </code>
@@ -1905,20 +2115,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IResponse> WaitForNavigationAsync(PageWaitForNavigationOptions options = default, Func<Task> action = default);
-
-        /// <summary>
-        /// <para>
-        /// Performs action and waits for a popup <see cref="IPage"/>. If predicate is provided,
-        /// it passes <see cref="Popup"/> value into the <c>predicate</c> function and waits
-        /// for <c>predicate(page)</c> to return a truthy value. Will throw an error if the
-        /// page is closed before the popup event is fired.
-        /// </para>
-        /// </summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IPage> WaitForPopupAsync(PageWaitForPopupOptions options = default, Func<Task> action = default);
+        Task<IResponse> WaitForNavigationAsync(PageWaitForNavigationOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1937,8 +2134,7 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
         /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions options = default, Func<Task> action = default);
+        Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1957,8 +2153,7 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
         /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, PageWaitForRequestOptions options = default, Func<Task> action = default);
+        Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, PageWaitForRequestOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1977,8 +2172,7 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
         /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicate, PageWaitForRequestOptions options = default, Func<Task> action = default);
+        Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicate, PageWaitForRequestOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1997,8 +2191,7 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
         /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions options = default, Func<Task> action = default);
+        Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions options = default);
 
         /// <summary>
         /// <para>
@@ -2017,8 +2210,7 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
         /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, PageWaitForResponseOptions options = default, Func<Task> action = default);
+        Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, PageWaitForResponseOptions options = default);
 
         /// <summary>
         /// <para>
@@ -2037,8 +2229,7 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
         /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicate, PageWaitForResponseOptions options = default, Func<Task> action = default);
+        Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicate, PageWaitForResponseOptions options = default);
 
         /// <summary>
         /// <para>
@@ -2145,30 +2336,6 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="options">Call options</param>
         Task WaitForURLAsync(Func<string, bool> url, PageWaitForURLOptions options = default);
-
-        /// <summary>
-        /// <para>
-        /// Performs action and waits for a new <see cref="IWebSocket"/>. If predicate is provided,
-        /// it passes <see cref="IWebSocket"/> value into the <c>predicate</c> function and
-        /// waits for <c>predicate(webSocket)</c> to return a truthy value. Will throw an error
-        /// if the page is closed before the WebSocket event is fired.
-        /// </para>
-        /// </summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IWebSocket> WaitForWebSocketAsync(PageWaitForWebSocketOptions options = default, Func<Task> action = default);
-
-        /// <summary>
-        /// <para>
-        /// Performs action and waits for a new <see cref="IWorker"/>. If predicate is provided,
-        /// it passes <see cref="IWorker"/> value into the <c>predicate</c> function and waits
-        /// for <c>predicate(worker)</c> to return a truthy value. Will throw an error if the
-        /// page is closed before the worker event is fired.
-        /// </para>
-        /// </summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IWorker> WaitForWorkerAsync(PageWaitForWorkerOptions options = default, Func<Task> action = default);
 
         /// <summary>
         /// <para>

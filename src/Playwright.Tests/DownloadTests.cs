@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var download = await page.WaitForEventAsync(PageEvent.Download, new PageWaitForEventOptions(), async () =>
+            var download = await page.RunAndWaitForEventAsync(PageEvent.Download, async () =>
             {
                 await page.ClickAsync("a");
             });
@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var download = await page.WaitForEventAsync(PageEvent.Download, new PageWaitForEventOptions(), async () =>
+            var download = await page.RunAndWaitForEventAsync(PageEvent.Download, async () =>
             {
                 await page.ClickAsync("a");
             });
@@ -95,7 +95,7 @@ namespace Microsoft.Playwright.Tests
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
 
-            var download = await page.WaitForEventAsync(PageEvent.Download, new PageWaitForEventOptions(), async () =>
+            var download = await page.RunAndWaitForEventAsync(PageEvent.Download, async () =>
             {
                 await page.ClickAsync("a");
             });
@@ -121,7 +121,7 @@ namespace Microsoft.Playwright.Tests
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
 
-            var download = await page.WaitForEventAsync(PageEvent.Download, new PageWaitForEventOptions(), async () =>
+            var download = await page.RunAndWaitForEventAsync(PageEvent.Download, async () =>
             {
                 await page.ClickAsync("a");
             });

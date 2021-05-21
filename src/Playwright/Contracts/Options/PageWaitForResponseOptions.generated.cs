@@ -48,6 +48,14 @@ namespace Microsoft.Playwright
 {
     public class PageWaitForResponseOptions
     {
+        public PageWaitForResponseOptions() { }
+
+        public PageWaitForResponseOptions(PageWaitForResponseOptions clone)
+        {
+            if (clone == null) return;
+            Timeout = clone.Timeout;
+        }
+
         /// <summary>
         /// <para>
         /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable

@@ -58,7 +58,7 @@ namespace Microsoft.Playwright
     /// </para>
     /// <code>
     /// using var playwright = await Playwright.CreateAsync();<br/>
-    /// var browser = await playwright.Firefox.LaunchAsync(headless: false);<br/>
+    /// var browser = await playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });<br/>
     /// // Create a new incognito browser context<br/>
     /// var context = await browser.NewContextAsync();<br/>
     /// // Create a new page inside context.<br/>
@@ -96,9 +96,10 @@ namespace Microsoft.Playwright
         /// its response has started loading in the popup.
         /// </para>
         /// <code>
-        /// var popupTask = context.WaitForPageAsync();<br/>
-        /// await page.ClickAsync("a");<br/>
-        /// var popup = await popupTask;<br/>
+        /// var popup = await context.RunAndWaitForEventAsync(BrowserContextEvent.Page, async =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("a");<br/>
+        /// });<br/>
         /// Console.WriteLine(await popup.EvaluateAsync&lt;string&gt;("location.href"));
         /// </code>
         /// </summary>
@@ -135,7 +136,7 @@ namespace Microsoft.Playwright
         /// were run. This is useful to amend the JavaScript environment, e.g. to seed <c>Math.random</c>.
         /// </para>
         /// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
-        /// <code>await context.AddInitScriptAsync(scriptPath: "preload.js");</code>
+        /// <code>await context.AddInitScriptAsync(new BrowserContextAddInitScriptOptions { ScriptPath = "preload.js" });</code>
         /// </summary>
         /// <remarks>
         /// <para>
@@ -213,7 +214,7 @@ namespace Microsoft.Playwright
         ///     public static async Task Main()<br/>
         ///     {<br/>
         ///         using var playwright = await Playwright.CreateAsync();<br/>
-        ///         var browser = await playwright.Webkit.LaunchAsync(headless: false);<br/>
+        ///         var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });<br/>
         ///         var context = await browser.NewContextAsync();<br/>
         /// <br/>
         ///         await context.ExposeBindingAsync("pageURL", source =&gt; source.Page.Url);<br/>
@@ -235,7 +236,7 @@ namespace Microsoft.Playwright
         /// var page = await Context.NewPageAsync();<br/>
         /// await Context.ExposeBindingAsync("clicked", async (BindingSource _, IJSHandle t) =&gt;<br/>
         /// {<br/>
-        ///     return result.TrySetResult(await t.AsElement.TextContentAsync());<br/>
+        ///     return result.TrySetResult(await t.AsElement().TextContentAsync());<br/>
         /// });<br/>
         /// <br/>
         /// await page.SetContentAsync("&lt;script&gt;\n" +<br/>
@@ -276,7 +277,7 @@ namespace Microsoft.Playwright
         ///     public static async Task AddMd5FunctionToAllPagesInContext()<br/>
         ///     {<br/>
         ///         using var playwright = await Playwright.CreateAsync();<br/>
-        ///         var browser = await playwright.Webkit.LaunchAsync(headless: false);<br/>
+        ///         var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });<br/>
         ///         var context = await browser.NewContextAsync();<br/>
         /// <br/>
         ///         // NOTE: md5 is inherently insecure, and we strongly discourage using<br/>
@@ -623,34 +624,5 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="handler">Optional handler function used to register a routing with <see cref="IBrowserContext.RouteAsync"/>.</param>
         Task UnrouteAsync(Func<string, bool> url, Action<IRoute> handler = default);
-
-        /// <summary>
-        /// <para>
-        /// Waits for event to fire and passes its value into the predicate function. Returns
-        /// when the predicate returns truthy value. Will throw an error if the context closes
-        /// before the event is fired. Returns the event data value.
-        /// </para>
-        /// <code>
-        /// var waitForPageEvent = context.WaitForPageAsync();<br/>
-        /// await page.ClickAsync("button");<br/>
-        /// var page = await waitForPageEvent;
-        /// </code>
-        /// </summary>
-        /// <param name="event">Event name, same one would pass into <c>browserContext.on(event)</c>.</param>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<object> WaitForEventAsync(string @event, BrowserContextWaitForEventOptions options = default, Func<Task> action = default);
-
-        /// <summary>
-        /// <para>
-        /// Performs action and waits for a new <see cref="IPage"/> to be created in the context.
-        /// If predicate is provided, it passes <see cref="IPage"/> value into the <c>predicate</c>
-        /// function and waits for <c>predicate(event)</c> to return a truthy value. Will throw
-        /// an error if the context closes before new <see cref="IPage"/> is created.
-        /// </para>
-        /// </summary>
-        /// <param name="options">Call options</param>
-        /// <param name="action">Action to perform while waiting</param>
-        Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions options = default, Func<Task> action = default);
     }
 }

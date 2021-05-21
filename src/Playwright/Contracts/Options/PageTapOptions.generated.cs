@@ -48,6 +48,19 @@ namespace Microsoft.Playwright
 {
     public class PageTapOptions
     {
+        public PageTapOptions() { }
+
+        public PageTapOptions(PageTapOptions clone)
+        {
+            if (clone == null) return;
+            Position = clone.Position;
+            Modifiers = clone.Modifiers;
+            NoWaitAfter = clone.NoWaitAfter;
+            Force = clone.Force;
+            Timeout = clone.Timeout;
+            Trial = clone.Trial;
+        }
+
         /// <summary>
         /// <para>
         /// A point to use relative to the top-left corner of element padding box. If not specified,

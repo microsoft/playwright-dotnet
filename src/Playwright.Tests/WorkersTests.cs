@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReportConsoleLogs()
         {
             var (message, _) = await TaskUtils.WhenAll(
-                Page.WaitForConsoleMessageAsync(),
+                Page.WaitForEventAsync(PageEvent.Console),
                 Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], {type: 'application/javascript'})))")
             );
 
@@ -123,38 +123,6 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
             Assert.True(destroyed);
             Assert.Empty(Page.Workers);
-        }
-
-        [Fact]
-        public async Task WorkerShouldWaitOnClose()
-        {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            var workerCreatedTask = Page.WaitForEventAsync(PageEvent.Worker);
-            await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
-            var worker = await workerCreatedTask;
-
-            Assert.Single(Page.Workers);
-
-            var t = worker.WaitForCloseAsync();
-            await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
-            await t;
-            Assert.Empty(Page.Workers);
-        }
-
-        [Fact]
-        public async Task WorkerShouldFailOnTimeout()
-        {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            var workerCreatedTask = Page.WaitForEventAsync(PageEvent.Worker);
-            await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
-            var worker = await workerCreatedTask;
-
-            Assert.Single(Page.Workers);
-
-            var t = worker.WaitForCloseAsync(new WorkerWaitForCloseOptions { Timeout = 1 });
-            await Task.Delay(100);
-            await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
-            await Assert.ThrowsAsync<TimeoutException>(async () => await t);
         }
 
         [PlaywrightTest("workers.spec.ts", "should clear upon cross-process navigation")]

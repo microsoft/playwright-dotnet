@@ -86,7 +86,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.EmptyPage);
 
             await TaskUtils.WhenAll(
-                Page.WaitForPopupAsync(),
+                Page.WaitForEventAsync(PageEvent.Popup),
                 Page.EvaluateAsync("() => window._popup = window.open(window.location.href)"));
         }
     }

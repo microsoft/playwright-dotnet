@@ -168,6 +168,36 @@ namespace Microsoft.Playwright
             return PressAsync(selector, key, delay: options.Delay, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string values, FrameSelectOptionOptions options = default)
+        {
+            options ??= new FrameSelectOptionOptions();
+            return SelectOptionAsync(selector, values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IElementHandle values, FrameSelectOptionOptions options = default)
+        {
+            options ??= new FrameSelectOptionOptions();
+            return SelectOptionAsync(selector, values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<string> values, FrameSelectOptionOptions options = default)
+        {
+            options ??= new FrameSelectOptionOptions();
+            return SelectOptionAsync(selector, values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, FrameSelectOptionOptions options = default)
+        {
+            options ??= new FrameSelectOptionOptions();
+            return SelectOptionAsync(selector, values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, FrameSelectOptionOptions options = default)
+        {
+            options ??= new FrameSelectOptionOptions();
+            return SelectOptionAsync(selector, values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
         public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, FrameSelectOptionOptions options = default)
         {
             options ??= new FrameSelectOptionOptions();
@@ -178,6 +208,24 @@ namespace Microsoft.Playwright
         {
             options ??= new FrameSetContentOptions();
             return SetContentAsync(html, timeout: options.Timeout, waitUntil: options.WaitUntil);
+        }
+
+        public Task SetInputFilesAsync(string selector, string files, FrameSetInputFilesOptions options = default)
+        {
+            options ??= new FrameSetInputFilesOptions();
+            return SetInputFilesAsync(selector, files, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task SetInputFilesAsync(string selector, IEnumerable<string> files, FrameSetInputFilesOptions options = default)
+        {
+            options ??= new FrameSetInputFilesOptions();
+            return SetInputFilesAsync(selector, files, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
+        }
+
+        public Task SetInputFilesAsync(string selector, FilePayload files, FrameSetInputFilesOptions options = default)
+        {
+            options ??= new FrameSetInputFilesOptions();
+            return SetInputFilesAsync(selector, files, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
         public Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, FrameSetInputFilesOptions options = default)
@@ -222,10 +270,10 @@ namespace Microsoft.Playwright
             return WaitForLoadStateAsync(state, timeout: options.Timeout);
         }
 
-        public Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default, Func<Task> action = default)
+        public Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default)
         {
             options ??= new FrameWaitForNavigationOptions();
-            return WaitForNavigationAsync(action, urlString: options.UrlString, urlRegex: options.UrlRegex, urlFunc: options.UrlFunc, waitUntil: options.WaitUntil, timeout: options.Timeout);
+            return WaitForNavigationAsync(urlString: options.UrlString, urlRegex: options.UrlRegex, urlFunc: options.UrlFunc, waitUntil: options.WaitUntil, timeout: options.Timeout);
         }
 
         public Task<IElementHandle> WaitForSelectorAsync(string selector, FrameWaitForSelectorOptions options = default)

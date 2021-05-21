@@ -48,6 +48,19 @@ namespace Microsoft.Playwright
 {
     public class RouteFulfillOptions
     {
+        public RouteFulfillOptions() { }
+
+        public RouteFulfillOptions(RouteFulfillOptions clone)
+        {
+            if (clone == null) return;
+            Status = clone.Status;
+            Headers = clone.Headers;
+            ContentType = clone.ContentType;
+            Body = clone.Body;
+            BodyBytes = clone.BodyBytes;
+            Path = clone.Path;
+        }
+
         /// <summary><para>Response status code, defaults to <c>200</c>.</para></summary>
         [JsonPropertyName("status")]
         public int? Status { get; set; }

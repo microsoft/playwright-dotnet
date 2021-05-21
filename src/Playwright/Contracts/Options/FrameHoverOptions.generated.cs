@@ -48,6 +48,18 @@ namespace Microsoft.Playwright
 {
     public class FrameHoverOptions
     {
+        public FrameHoverOptions() { }
+
+        public FrameHoverOptions(FrameHoverOptions clone)
+        {
+            if (clone == null) return;
+            Position = clone.Position;
+            Modifiers = clone.Modifiers;
+            Force = clone.Force;
+            Timeout = clone.Timeout;
+            Trial = clone.Trial;
+        }
+
         /// <summary>
         /// <para>
         /// A point to use relative to the top-left corner of element padding box. If not specified,

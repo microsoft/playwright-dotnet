@@ -48,6 +48,16 @@ namespace Microsoft.Playwright
 {
     public class PagePressOptions
     {
+        public PagePressOptions() { }
+
+        public PagePressOptions(PagePressOptions clone)
+        {
+            if (clone == null) return;
+            Delay = clone.Delay;
+            NoWaitAfter = clone.NoWaitAfter;
+            Timeout = clone.Timeout;
+        }
+
         /// <summary>
         /// <para>
         /// Time to wait between <c>keydown</c> and <c>keyup</c> in milliseconds. Defaults to
