@@ -18,17 +18,14 @@ stages:
 - stage: BuildPackageSign
   displayName: Build, Package & Sign
   jobs:
-  - job: Configure
+  - job: BuildPackage
+    displayName: Build & Package
     steps:
+
     - task: MicroBuildSigningPlugin@3
       inputs:
         signType: '${{ parameters.signType }}'
         feedSource: 'https://devdiv.pkgs.visualstudio.com/DefaultCollection/_packaging/MicroBuildToolset/nuget/v3/index.json'
-
-  - job: BuildPackage
-    dependsOn: Configure
-    displayName: Build & Package
-    steps:
         
       # We need to download the browsers first, so we can build
     - task: DotNetCoreCLI@2
@@ -49,15 +46,13 @@ stages:
         packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
         versioningScheme: 'off'
 
-  - job: StageNuGetPackages
-    displayName: Stage Nuget Packages
-    dependsOn: BuildPackage
-    steps:
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)/nuget'
         ArtifactName: 'drop'
         publishLocation: 'Container'
+
+    - task: MicroBuildCleanup@1
 
 - stage: Release
   jobs:
@@ -66,16 +61,18 @@ stages:
     condition: and(succeeded(), eq('${{parameters.doRelease}}', true))
 
     steps:
+    - checkout: none
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'drop'
+        downloadPath: '$(System.ArtifactsDirectory)'
+        extractTars: true
+
     - task: NuGetCommand@2
       inputs:
         command: 'push'
-        packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+        packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg;!$(System.ArtifactsDirectory)/**/*.symbols.nupkg'
         nuGetFeedType: 'external'
         publishFeedCredentials: 'NuGet-Playwright'
-
-- stage: Cleanup
-  jobs:
-  - job: Cleanup
-    condition: always() # we always want to make sure the cleanup task runs
-    steps:
-    - task: MicroBuildCleanup@1
