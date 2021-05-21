@@ -21,6 +21,7 @@
     <NoWarn>1701;1702;CS0067;1734</NoWarn>
     <AssemblyName>Microsoft.Playwright</AssemblyName>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <Import Project="../Common/Dependencies.props" />
   <Import Project="../Common/SignAssembly.props" />
@@ -44,6 +45,9 @@
     <None Include="Drivers\win-x64\**" Pack="true" PackagePath="Drivers\win-x64\native" />
     <None Include="Drivers\win-x86\**" Pack="true" PackagePath="Drivers\win-x86\native" />
     <None Include="build\**" Pack="true" PackagePath="build" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
   <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <DriverFiles Include="Drivers\win-x64\**">
