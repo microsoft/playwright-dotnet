@@ -118,8 +118,7 @@ namespace PlaywrightSharp.Tooling
         private async Task DownloadDriverAsync(DirectoryInfo destinationDirectory, string driverVersion, string platform, string runtime)
         {
             Console.WriteLine("Downloading driver for " + platform);
-            string suffix = driverVersion.Contains("next") ? "/next" : string.Empty;
-            string cdn = $"https://playwright.azureedge.net/builds/driver/next";
+            string cdn = "https://playwright.azureedge.net/builds/driver/next";
 
             using var client = new HttpClient();
             string url = $"{cdn}/playwright-{driverVersion}-{platform}.zip";
