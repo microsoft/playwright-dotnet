@@ -174,10 +174,11 @@ end_of_line = lf
 [*.{cmd, bat}]
 end_of_line = crlf
 
-[*.generated.cs]
+[Playwright/API/Generated/**.cs]
 dotnet_diagnostic.CS1591.severity = none
 dotnet_diagnostic.CS1574.severity = none # This should be removed when we finish
 dotnet_diagnostic.CS0419.severity = none # This should be removed when we finish
+dotnet_diagnostic.SA1201.severity = none
 
 [*.cs]
 # Docs are generated in Playwright

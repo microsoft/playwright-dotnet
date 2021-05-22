@@ -1,0 +1,18 @@
+[*.cs]
+dotnet_diagnostic.CA1711.severity = none
+dotnet_diagnostic.CA1724.severity = none
+dotnet_diagnostic.CS0419.severity = none # This should be removed when we finish
+dotnet_diagnostic.CS1574.severity = none # This should be removed when we finish
+dotnet_diagnostic.CS1591.severity = none
+dotnet_diagnostic.RCS1139.severity = none
+dotnet_diagnostic.SA1121.severity = none
+dotnet_diagnostic.SA1201.severity = none
+dotnet_diagnostic.SA1502.severity = none
+dotnet_diagnostic.SA1503.severity = none
+dotnet_diagnostic.SA1602.severity = none
+dotnet_diagnostic.SA1604.severity = none
+dotnet_diagnostic.SA1606.severity = none
+dotnet_diagnostic.SA1614.severity = none
+dotnet_diagnostic.SA1615.severity = none
+dotnet_diagnostic.SA1618.severity = none
+dotnet_diagnostic.SA1629.severity = none

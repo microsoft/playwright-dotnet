@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Contracts.Constants;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.BaseTests;
 using Microsoft.Playwright.Tests.TestServer;
@@ -28,7 +27,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Single(requests);
             Assert.Equal(TestConstants.EmptyPage, requests[0].Url);
-            Assert.Equal(ResourceTypes.Document, requests[0].ResourceType, true);
+            Assert.Equal("document", requests[0].ResourceType, true);
             Assert.Equal(HttpMethod.Get.Method, requests[0].Method);
             Assert.NotNull(await requests[0].ResponseAsync());
             Assert.Equal(Page.MainFrame, requests[0].Frame);
@@ -70,7 +69,7 @@ namespace Microsoft.Playwright.Tests
             Assert.Single(failedRequests);
             Assert.Contains("one-style.css", failedRequests[0].Url);
             Assert.Null(await failedRequests[0].ResponseAsync());
-            Assert.Equal(ResourceTypes.Stylesheet, failedRequests[0].ResourceType, true);
+            Assert.Equal("stylesheet", failedRequests[0].ResourceType, true);
 
             string error = string.Empty;
 
