@@ -55,7 +55,7 @@ namespace Microsoft.Playwright
     /// using Microsoft.Playwright;<br/>
     /// using System.Threading.Tasks;<br/>
     /// <br/>
-    /// class Example<br/>
+    /// class Program<br/>
     /// {<br/>
     ///     public static async Task Main()<br/>
     ///     {<br/>
