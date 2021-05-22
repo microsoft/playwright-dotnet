@@ -21,7 +21,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Context.GrantPermissionsAsync(new[] { ContextPermissions.Geolocation });
+            await Context.GrantPermissionsAsync(new[] { "geolocation" });
             await Page.GotoAsync(TestConstants.EmptyPage);
             await Context.SetGeolocationAsync(new Geolocation
             {
@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateContexts()
         {
-            await Context.GrantPermissionsAsync(new[] { ContextPermissions.Geolocation });
+            await Context.GrantPermissionsAsync(new[] { "geolocation" });
             await Context.SetGeolocationAsync(new Geolocation
             {
                 Longitude = 10,
@@ -68,7 +68,7 @@ namespace Microsoft.Playwright.Tests
 
             await using var context2 = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
-                Permissions = new[] { ContextPermissions.Geolocation },
+                Permissions = new[] { "geolocation" },
                 Geolocation = new Geolocation { Latitude = 20, Longitude = 20 },
             });
 
@@ -131,7 +131,7 @@ namespace Microsoft.Playwright.Tests
                     Latitude = 10,
                     Longitude = 10
                 },
-                Permissions = new[] { ContextPermissions.Geolocation },
+                Permissions = new[] { "geolocation" },
             };
 
             await using var context = await Browser.NewContextAsync(options);
@@ -148,7 +148,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task WatchPositionShouldBeNotified()
         {
-            await Context.GrantPermissionsAsync(new[] { ContextPermissions.Geolocation });
+            await Context.GrantPermissionsAsync(new[] { "geolocation" });
             await Page.GotoAsync(TestConstants.EmptyPage);
 
             var messages = new List<string>();
@@ -199,7 +199,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldUseContextOptionsForPopup()
         {
-            await Context.GrantPermissionsAsync(new[] { ContextPermissions.Geolocation });
+            await Context.GrantPermissionsAsync(new[] { "geolocation" });
             await Context.SetGeolocationAsync(new Geolocation
             {
                 Longitude = 10,

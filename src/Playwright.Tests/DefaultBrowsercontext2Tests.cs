@@ -115,7 +115,7 @@ namespace Microsoft.Playwright.Tests
                     Latitude = 10,
                     Longitude = 10,
                 },
-                Permissions = new[] { ContextPermissions.Geolocation },
+                Permissions = new[] { "geolocation" },
             });
 
             await page.GotoAsync(TestConstants.EmptyPage);

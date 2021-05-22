@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using Microsoft.Playwright.Contracts.Constants;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.Attributes;
 using Microsoft.Playwright.Tests.BaseTests;
@@ -36,7 +35,7 @@ namespace Microsoft.Playwright.Tests
                 Assert.Equal(HttpMethod.Get.Method, route.Request.Method);
                 Assert.Null(route.Request.PostData);
                 Assert.True(route.Request.IsNavigationRequest);
-                Assert.Equal(ResourceTypes.Document, route.Request.ResourceType, true);
+                Assert.Equal("document", route.Request.ResourceType, true);
                 Assert.Same(route.Request.Frame, Page.MainFrame);
                 Assert.Equal("about:blank", route.Request.Frame.Url);
                 route.ContinueAsync();
@@ -319,7 +318,7 @@ namespace Microsoft.Playwright.Tests
 
             Assert.Contains("non-existing-page.html", requests[0].Url);
             Assert.Single(requests);
-            Assert.Equal(ResourceTypes.Document, requests[0].ResourceType, true);
+            Assert.Equal("document", requests[0].ResourceType, true);
             Assert.True(requests[0].IsNavigationRequest);
 
             var chain = new List<IRequest>();
@@ -365,13 +364,13 @@ namespace Microsoft.Playwright.Tests
             Assert.Contains("one-style.html", response.Url);
 
             Assert.Equal(2, requests.Count);
-            Assert.Equal(ResourceTypes.Document, requests[0].ResourceType, true);
+            Assert.Equal("document", requests[0].ResourceType, true);
             Assert.Contains("one-style.html", requests[0].Url);
 
             var request = requests[1];
             foreach (string url in new[] { "/one-style.css", "/two-style.css", "/three-style.css", "/four-style.css" })
             {
-                Assert.Equal(ResourceTypes.Stylesheet, request.ResourceType, true);
+                Assert.Equal("stylesheet", request.ResourceType, true);
                 Assert.Contains(url, request.Url);
                 request = request.RedirectedTo;
             }
