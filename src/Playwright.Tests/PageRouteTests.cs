@@ -152,7 +152,7 @@ namespace Microsoft.Playwright.Tests
             });
             await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
             Assert.Contains("/one-style.css", requests[1].Url);
-            Assert.Contains("/one-style.html", requests[1].GetHeaderValue("referer"));
+            Assert.Contains("/one-style.html", requests[1].Headers["referer"]);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should properly return navigation response when URL has cookies")]
@@ -187,7 +187,7 @@ namespace Microsoft.Playwright.Tests
             });
             await Page.RouteAsync("**/*", (route) =>
             {
-                Assert.Equal("bar", route.Request.GetHeaderValue("foo"));
+                Assert.Equal("bar", route.Request.Headers["foo"]);
                 route.ContinueAsync();
             });
             var response = await Page.GotoAsync(TestConstants.EmptyPage);
@@ -217,7 +217,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = TestConstants.EmptyPage });
             await Page.RouteAsync("**/*", (route) =>
             {
-                Assert.Equal(TestConstants.EmptyPage, route.Request.GetHeaderValue("referer"));
+                Assert.Equal(TestConstants.EmptyPage, route.Request.Headers["referer"]);
                 route.ContinueAsync();
             });
             var response = await Page.GotoAsync(TestConstants.EmptyPage);

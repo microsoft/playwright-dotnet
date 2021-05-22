@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.Tests
             });
             var response = await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal((int)HttpStatusCode.Created, response.Status);
-            Assert.Equal("bar", response.GetHeaderValue("foo"));
+            Assert.Equal("bar", response.Headers["foo"]);
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }
 
@@ -133,7 +133,7 @@ namespace Microsoft.Playwright.Tests
 
             var response = await Page.GotoAsync(TestConstants.EmptyPage);
             Assert.Equal((int)HttpStatusCode.OK, response.Status);
-            Assert.Equal("true", response.GetHeaderValue("foo"));
+            Assert.Equal("true", response.Headers["foo"]);
             Assert.Equal("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
         }
 
@@ -203,7 +203,7 @@ namespace Microsoft.Playwright.Tests
             }", TestConstants.CrossProcessUrl + "/something");
 
             Assert.Equal("done", text);
-            Assert.Equal(TestConstants.ServerUrl, interceptedRequest.GetHeaderValue("origin"));
+            Assert.Equal(TestConstants.ServerUrl, interceptedRequest.Headers["origin"]);
         }
     }
 }

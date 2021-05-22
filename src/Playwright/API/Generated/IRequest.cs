@@ -89,7 +89,7 @@ namespace Microsoft.Playwright
         IFrame Frame { get; }
 
         /// <summary><para>An object with HTTP headers associated with the request. All header names are lower-case.</para></summary>
-        IEnumerable<KeyValuePair<string, string>> Headers { get; }
+        Dictionary<string, string> Headers { get; }
 
         /// <summary><para>Whether this request is driving frame's navigation.</para></summary>
         bool IsNavigationRequest { get; }

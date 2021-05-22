@@ -54,7 +54,7 @@ namespace Microsoft.Playwright
         /// are lower-case.
         /// </para>
         /// </summary>
-        IEnumerable<KeyValuePair<string, string>> Headers { get; }
+        Dictionary<string, string> Headers { get; }
 
         /// <summary>
         /// <para>Returns the JSON representation of response body.</para>

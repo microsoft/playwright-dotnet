@@ -30,13 +30,16 @@ namespace Microsoft.Playwright
                 _initializer.RedirectedFrom.Object.RedirectedTo = this;
             }
 
-            if (initializer.Headers != null)
+            Headers = new Dictionary<string, string>();
+            foreach (var kv in initializer.Headers)
             {
-                Headers = initializer.Headers.Select(x => new KeyValuePair<string, string>(x.Name, x.Value)).ToArray();
-            }
-            else
-            {
-                Headers = Array.Empty<KeyValuePair<string, string>>();
+                var name = kv.Name.ToLower();
+
+                // There are case-sensitive dupes :/
+                if (!Headers.ContainsKey(name))
+                {
+                    Headers.Add(kv.Name.ToLower(), kv.Value);
+                }
             }
         }
 
@@ -48,7 +51,7 @@ namespace Microsoft.Playwright
 
         public IFrame Frame => _initializer.Frame;
 
-        public IEnumerable<KeyValuePair<string, string>> Headers { get; }
+        public Dictionary<string, string> Headers { get; }
 
         public bool IsNavigationRequest => _initializer.IsNavigationRequest;
 
@@ -80,8 +83,9 @@ namespace Microsoft.Playwright
             }
 
             string content = PostData;
-
-            if ("application/x-www-form-urlencoded".Equals(this.GetHeaderValue("content-type"), StringComparison.OrdinalIgnoreCase))
+            string contentType = string.Empty;
+            Headers.TryGetValue("content-type", out contentType);
+            if (contentType == "application/x-www-form-urlencoded")
             {
                 var parsed = HttpUtility.ParseQueryString(PostData);
                 var dictionary = new Dictionary<string, string>();
