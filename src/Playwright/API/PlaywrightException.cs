@@ -22,17 +22,23 @@
  * SOFTWARE.
  */
 
-using System.Text.Json;
-using System.Threading.Tasks;
+using System;
+using System.Runtime.Serialization;
 
 namespace Microsoft.Playwright
 {
-    /// <summary>
-    /// Partial <see cref="IResponse"/>.
-    /// </summary>
-    public partial interface IResponse
+    public class PlaywrightException : Exception
     {
-        /// <inheritdoc cref="JsonAsync{T}"/>
-        Task<JsonDocument> JsonAsync(JsonDocumentOptions options = default);
+        public PlaywrightException()
+        {
+        }
+
+        public PlaywrightException(string message) : base(message)
+        {
+        }
+
+        public PlaywrightException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }

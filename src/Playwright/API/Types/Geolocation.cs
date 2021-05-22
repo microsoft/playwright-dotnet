@@ -22,17 +22,44 @@
  * SOFTWARE.
  */
 
-using System.Text.Json;
-using System.Threading.Tasks;
+using System;
 
 namespace Microsoft.Playwright
 {
     /// <summary>
-    /// Partial <see cref="IResponse"/>.
+    /// <see cref="Geolocation"/>.
     /// </summary>
-    public partial interface IResponse
+    public partial class Geolocation : IEquatable<Geolocation>
     {
-        /// <inheritdoc cref="JsonAsync{T}"/>
-        Task<JsonDocument> JsonAsync(JsonDocumentOptions options = default);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Geolocation"/> class.
+        /// </summary>
+        public Geolocation()
+        {
+            Accuracy = 0;
+        }
+
+        /// <inheritdoc/>
+        public bool Equals(Geolocation other) =>
+            other != null &&
+            other.Accuracy == Accuracy &&
+            other.Latitude == Latitude &&
+            other.Longitude == Latitude;
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj) => Equals(obj as Geolocation);
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+            => 711844202
+                ^ Accuracy.GetHashCode()
+                ^ Latitude.GetHashCode()
+                ^ Longitude.GetHashCode();
+
+        /// <summary>
+        /// Clones the <see cref="Geolocation"/>.
+        /// </summary>
+        /// <returns>A copy of the current <see cref="Geolocation"/>.</returns>
+        public Geolocation Clone() => (Geolocation)MemberwiseClone();
     }
 }

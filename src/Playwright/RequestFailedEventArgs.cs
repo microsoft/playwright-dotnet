@@ -6,7 +6,7 @@ namespace Microsoft.Playwright
     /// Arguments used by <see cref="IPage"/> events.
     /// </summary>
     /// <seealso cref="IPage.RequestFailed"/>
-    public class RequestFailedEventArgs : EventArgs
+    internal class RequestFailedEventArgs : EventArgs
     {
         /// <summary>
         /// Gets the request.

@@ -5,10 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
-    /// <summary>
-    /// JSON converter for <see cref="HttpMethod"/>.
-    /// </summary>
-    public class HttpMethodConverter : JsonConverter<HttpMethod>
+    internal class HttpMethodConverter : JsonConverter<HttpMethod>
     {
         /// <inheritdoc/>
         public override bool CanConvert(Type typeToConvert) => typeof(HttpMethod) == typeToConvert;

@@ -11,7 +11,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    public class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
+    internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
     {
         private readonly RequestChannel _channel;
         private readonly RequestInitializer _initializer;

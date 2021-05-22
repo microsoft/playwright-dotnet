@@ -9,10 +9,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Transport
 {
-    /// <summary>
-    /// Base Channel owner class.
-    /// </summary>
-    public class ChannelOwnerBase : IChannelOwner
+    internal class ChannelOwnerBase : IChannelOwner
     {
         private readonly Connection _connection;
         private readonly ConcurrentDictionary<string, IChannelOwner> _objects = new ConcurrentDictionary<string, IChannelOwner>();

@@ -249,7 +249,7 @@ namespace Microsoft.Playwright
 
             if (playwrightEvent.Name != ContextEvent.Close.Name)
             {
-                waiter.RejectOnEvent<IBrowserContext>(this, ContextEvent.Close.Name, new TargetClosedException("Context closed"));
+                waiter.RejectOnEvent<IBrowserContext>(this, ContextEvent.Close.Name, new PlaywrightException("Context closed"));
             }
 
             var result = waiter.WaitForEventAsync<T>(this, playwrightEvent.Name, null);

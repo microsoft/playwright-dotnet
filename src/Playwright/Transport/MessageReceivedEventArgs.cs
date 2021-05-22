@@ -2,11 +2,7 @@ using System;
 
 namespace Microsoft.Playwright.Transport
 {
-    /// <summary>
-    /// Message received event arguments.
-    /// <see cref="IConnectionTransport.MessageReceived"/>.
-    /// </summary>
-    public class MessageReceivedEventArgs : EventArgs
+    internal class MessageReceivedEventArgs : EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageReceivedEventArgs"/> class.

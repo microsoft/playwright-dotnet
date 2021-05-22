@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Tests
             var page = await (await browser.NewContextAsync()).NewPageAsync();
             var neverResolves = page.EvaluateHandleAsync("() => new Promise(r => {})");
             await browser.CloseAsync();
-            var exception = await Assert.ThrowsAsync<TargetClosedException>(() => neverResolves);
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => neverResolves);
             Assert.Contains("Protocol error", exception.Message);
 
         }

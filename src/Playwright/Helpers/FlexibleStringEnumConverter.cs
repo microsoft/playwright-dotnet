@@ -12,7 +12,7 @@ namespace Microsoft.Playwright.Helpers
     /// It converts a string to an enum, using a default value as a fallback.
     /// </summary>
     /// <typeparam name="T">Type to convert to.</typeparam>
-    public class FlexibleStringEnumConverter<T> : JsonConverter<T>
+    internal class FlexibleStringEnumConverter<T> : JsonConverter<T>
     {
         private readonly Type _enumType = typeof(T);
         private readonly Dictionary<string, EnumInfo> _transformedToRaw;

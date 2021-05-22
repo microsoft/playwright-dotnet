@@ -3,33 +3,16 @@ using System.Collections.Generic;
 
 namespace Microsoft.Playwright
 {
-    /// <summary>
-    /// Name value entry.
-    /// </summary>
-    public class NameValueEntry : IEquatable<NameValueEntry>
+    internal class NameValueEntry : IEquatable<NameValueEntry>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NameValueEntry"/> class.
-        /// </summary>
         public NameValueEntry()
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NameValueEntry"/> class.
-        /// </summary>
-        /// <param name="name">Entry name.</param>
-        /// <param name="value">Entry value.</param>
         public NameValueEntry(string name, string value) => (Name, Value) = (name, value);
 
-        /// <summary>
-        /// Name.
-        /// </summary>
         public string Name { get; set; }
 
-        /// <summary>
-        /// Value.
-        /// </summary>
         public string Value { get; set; }
 
         public bool Equals(NameValueEntry other)

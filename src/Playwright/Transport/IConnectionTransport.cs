@@ -6,7 +6,7 @@ namespace Microsoft.Playwright.Transport
     /// <summary>
     /// Transport interface.
     /// </summary>
-    public interface IConnectionTransport
+    internal interface IConnectionTransport
     {
         /// <summary>
         /// Occurs when a message is received.

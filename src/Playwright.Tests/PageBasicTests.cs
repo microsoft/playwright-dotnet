@@ -21,11 +21,11 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRejectAllPromisesWhenPageIsClosed()
         {
             var newPage = await Context.NewPageAsync();
-            var exception = await Assert.ThrowsAsync<TargetClosedException>(() => TaskUtils.WhenAll(
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => TaskUtils.WhenAll(
                 newPage.EvaluateAsync<string>("() => new Promise(r => { })"),
                 newPage.CloseAsync()
             ));
-            Assert.Contains("Protocol error", Assert.IsType<TargetClosedException>(exception).Message);
+            Assert.Contains("Protocol error", Assert.IsType<PlaywrightException>(exception).Message);
         }
 
         [PlaywrightTest("page-basic.spec.ts", "async stacks should work")]

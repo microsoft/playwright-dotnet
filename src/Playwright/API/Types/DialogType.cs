@@ -22,17 +22,34 @@
  * SOFTWARE.
  */
 
-using System.Text.Json;
-using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace Microsoft.Playwright
 {
     /// <summary>
-    /// Partial <see cref="IResponse"/>.
+    /// Dialog type.
     /// </summary>
-    public partial interface IResponse
+    /// <seealso cref="IDialog"/>
+    public static class DialogType
     {
-        /// <inheritdoc cref="JsonAsync{T}"/>
-        Task<JsonDocument> JsonAsync(JsonDocumentOptions options = default);
+        /// <summary>
+        /// Alert dialog.
+        /// </summary>
+        public const string Alert = "alert";
+
+        /// <summary>
+        /// Prompt dialog.
+        /// </summary>
+        public const string Prompt = "prompt";
+
+        /// <summary>
+        /// Confirm dialog.
+        /// </summary>
+        public const string Confirm = "confirm";
+
+        /// <summary>
+        /// Before unload dialog.
+        /// </summary>
+        public const string BeforeUnload = "beforeunload";
     }
 }

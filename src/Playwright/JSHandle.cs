@@ -9,7 +9,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    public class JSHandle : ChannelOwnerBase, IChannelOwner<JSHandle>, IJSHandle
+    internal class JSHandle : ChannelOwnerBase, IChannelOwner<JSHandle>, IJSHandle
     {
         private readonly JSHandleChannel _channel;
 

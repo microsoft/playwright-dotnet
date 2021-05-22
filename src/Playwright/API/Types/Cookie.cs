@@ -22,17 +22,19 @@
  * SOFTWARE.
  */
 
-using System.Text.Json;
-using System.Threading.Tasks;
-
 namespace Microsoft.Playwright
 {
     /// <summary>
-    /// Partial <see cref="IResponse"/>.
+    /// <see cref="Cookie"/>.
     /// </summary>
-    public partial interface IResponse
+    public partial class Cookie
     {
-        /// <inheritdoc cref="JsonAsync{T}"/>
-        Task<JsonDocument> JsonAsync(JsonDocumentOptions options = default);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Cookie"/> class.
+        /// </summary>
+        public Cookie()
+        {
+            SameSite = SameSiteAttribute.None;
+        }
     }
 }

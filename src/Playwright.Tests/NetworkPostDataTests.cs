@@ -21,7 +21,7 @@ namespace Microsoft.Playwright.Tests
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
         /// <playwright-it>should return correct postData buffer for utf-8 body</playwright-it>
-        [Fact(Timeout = Microsoft.Playwright.Playwright.DefaultTimeout)]
+        [Fact(Timeout = 30_000)]
         public async Task ShouldReturnCorrectPostdataBufferForUtf8Body()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -52,7 +52,7 @@ namespace Microsoft.Playwright.Tests
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
         /// <playwright-it>should return post data w/o content-type</playwright-it>
-        [Fact(Timeout = Microsoft.Playwright.Playwright.DefaultTimeout)]
+        [Fact(Timeout = 30_000)]
         public async Task ShouldReturnPostDataWOContentType()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -75,7 +75,7 @@ namespace Microsoft.Playwright.Tests
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
         /// <playwright-it>should throw on invalid JSON in post data</playwright-it>
-        [Fact(Timeout = Microsoft.Playwright.Playwright.DefaultTimeout)]
+        [Fact(Timeout = 30_000)]
         public async Task ShouldThrowOnInvalidJSONInPostData()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -97,7 +97,7 @@ namespace Microsoft.Playwright.Tests
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
         /// <playwright-it>should return post data for PUT requests</playwright-it>
-        [Fact(Timeout = Microsoft.Playwright.Playwright.DefaultTimeout)]
+        [Fact(Timeout = 30_000)]
         public async Task ShouldReturnPostDataForPUTRequests()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);

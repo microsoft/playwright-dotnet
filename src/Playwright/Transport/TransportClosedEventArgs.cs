@@ -2,10 +2,7 @@ using System;
 
 namespace Microsoft.Playwright.Transport
 {
-    /// <summary>
-    /// See <see cref="IConnectionTransport.TransportClosed"/>.
-    /// </summary>
-    public class TransportClosedEventArgs : EventArgs
+    internal class TransportClosedEventArgs : EventArgs
     {
         /// <summary>
         /// Close reason.
