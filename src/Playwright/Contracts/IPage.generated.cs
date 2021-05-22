@@ -718,26 +718,26 @@ namespace Microsoft.Playwright
         /// <br/>
         /// class PageExamples<br/>
         /// {<br/>
-        ///   public static async Task Main()<br/>
-        ///   {<br/>
-        ///       using var playwright = await Playwright.CreateAsync();<br/>
-        ///       await using var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions<br/>
-        ///       {<br/>
-        ///           Headless: false<br/>
-        ///       });<br/>
-        ///       var page = await browser.NewPageAsync();<br/>
+        ///     public static async Task Main()<br/>
+        ///     {<br/>
+        ///         using var playwright = await Playwright.CreateAsync();<br/>
+        ///         await using var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions<br/>
+        ///         {<br/>
+        ///             Headless: false<br/>
+        ///         });<br/>
+        ///         var page = await browser.NewPageAsync();<br/>
         /// <br/>
-        ///       await page.ExposeBindingAsync("pageUrl", (source) =&gt; source.Page.Url);<br/>
-        ///       await page.SetContentAsync("&lt;script&gt;\n" +<br/>
-        ///       "  async function onClick() {\n" +<br/>
-        ///       "    document.querySelector('div').textContent = await window.pageURL();\n" +<br/>
-        ///       "  }\n" +<br/>
-        ///       "&lt;/script&gt;\n" +<br/>
-        ///       "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>
-        ///       "&lt;div&gt;&lt;/div&gt;");<br/>
+        ///         await page.ExposeBindingAsync("pageUrl", (source) =&gt; source.Page.Url);<br/>
+        ///         await page.SetContentAsync("&lt;script&gt;\n" +<br/>
+        ///         "  async function onClick() {\n" +<br/>
+        ///         "    document.querySelector('div').textContent = await window.pageURL();\n" +<br/>
+        ///         "  }\n" +<br/>
+        ///         "&lt;/script&gt;\n" +<br/>
+        ///         "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>
+        ///         "&lt;div&gt;&lt;/div&gt;");<br/>
         /// <br/>
-        ///       await page.ClickAsync("button");<br/>
-        ///   }<br/>
+        ///         await page.ClickAsync("button");<br/>
+        ///     }<br/>
         /// }
         /// </code>
         /// <para>An example of passing an element handle:</para>
@@ -782,34 +782,34 @@ namespace Microsoft.Playwright
         /// <br/>
         /// class PageExamples<br/>
         /// {<br/>
-        ///   public static async Task Main()<br/>
-        ///   {<br/>
-        ///       using var playwright = await Playwright.CreateAsync();<br/>
-        ///       await using var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions<br/>
-        ///       {<br/>
-        ///           Headless: false<br/>
-        ///       }); <br/>
-        ///       var page = await browser.NewPageAsync();<br/>
+        ///     public static async Task Main()<br/>
+        ///     {<br/>
+        ///         using var playwright = await Playwright.CreateAsync();<br/>
+        ///         await using var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions<br/>
+        ///         {<br/>
+        ///             Headless: false<br/>
+        ///         });<br/>
+        ///         var page = await browser.NewPageAsync();<br/>
         /// <br/>
-        ///       // NOTE: md5 is inherently insecure, and we strongly discourage using<br/>
-        ///       // this in production in any shape or form<br/>
-        ///       await page.ExposeFunctionAsync("sha1", (string input) =&gt;<br/>
-        ///       {<br/>
-        ///           return Convert.ToBase64String(<br/>
-        ///               MD5.Create().ComputeHash(System.Text.Encoding.UTF8.GetBytes(input)));<br/>
-        ///       });<br/>
+        ///         // NOTE: md5 is inherently insecure, and we strongly discourage using<br/>
+        ///         // this in production in any shape or form<br/>
+        ///         await page.ExposeFunctionAsync("sha1", (string input) =&gt;<br/>
+        ///         {<br/>
+        ///             return Convert.ToBase64String(<br/>
+        ///                 MD5.Create().ComputeHash(System.Text.Encoding.UTF8.GetBytes(input)));<br/>
+        ///         });<br/>
         /// <br/>
-        ///       await page.SetContentAsync("&lt;script&gt;\n" +<br/>
-        ///       "  async function onClick() {\n" +<br/>
-        ///       "    document.querySelector('div').textContent = await window.sha1('PLAYWRIGHT');\n" +<br/>
-        ///       "  }\n" +<br/>
-        ///       "&lt;/script&gt;\n" +<br/>
-        ///       "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>
-        ///       "&lt;div&gt;&lt;/div&gt;");<br/>
+        ///         await page.SetContentAsync("&lt;script&gt;\n" +<br/>
+        ///         "  async function onClick() {\n" +<br/>
+        ///         "    document.querySelector('div').textContent = await window.sha1('PLAYWRIGHT');\n" +<br/>
+        ///         "  }\n" +<br/>
+        ///         "&lt;/script&gt;\n" +<br/>
+        ///         "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>
+        ///         "&lt;div&gt;&lt;/div&gt;");<br/>
         /// <br/>
-        ///       await page.ClickAsync("button");<br/>
-        ///       Console.WriteLine(await page.TextContentAsync("div"));<br/>
-        ///   }<br/>
+        ///         await page.ClickAsync("button");<br/>
+        ///         Console.WriteLine(await page.TextContentAsync("div"));<br/>
+        ///     }<br/>
         /// }
         /// </code>
         /// </summary>

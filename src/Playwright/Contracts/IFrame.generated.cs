@@ -1310,19 +1310,19 @@ namespace Microsoft.Playwright
         /// <br/>
         /// class FrameExamples<br/>
         /// {<br/>
-        ///   public static async Task Main()<br/>
-        ///   {<br/>
-        ///     using var playwright = await Playwright.CreateAsync();<br/>
-        ///     await using var browser = await playwright.Chromium.LaunchAsync();<br/>
-        ///     var page = await browser.NewPageAsync();<br/>
-        /// <br/>
-        ///     foreach (var currentUrl in new[] { "https://www.google.com", "https://bbc.com" })<br/>
+        ///     public static async Task Main()<br/>
         ///     {<br/>
-        ///       await page.GotoAsync(currentUrl);<br/>
-        ///       element = await page.MainFrame.WaitForSelectorAsync("img");<br/>
-        ///       Console.WriteLine($"Loaded image: {await element.GetAttributeAsync("src")}");<br/>
+        ///         using var playwright = await Playwright.CreateAsync();<br/>
+        ///         await using var browser = await playwright.Chromium.LaunchAsync();<br/>
+        ///         var page = await browser.NewPageAsync();<br/>
+        /// <br/>
+        ///         foreach (var currentUrl in new[] { "https://www.google.com", "https://bbc.com" })<br/>
+        ///         {<br/>
+        ///             await page.GotoAsync(currentUrl);<br/>
+        ///             element = await page.MainFrame.WaitForSelectorAsync("img");<br/>
+        ///             Console.WriteLine($"Loaded image: {await element.GetAttributeAsync("src")}");<br/>
+        ///         }<br/>
         ///     }<br/>
-        ///   }<br/>
         /// }
         /// </code>
         /// </summary>
