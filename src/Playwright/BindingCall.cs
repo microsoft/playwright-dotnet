@@ -68,7 +68,7 @@ namespace Microsoft.Playwright
                     }
                 }
 
-                await _channel.ResolveAsync(result).ConfigureAwait(false);
+                await _channel.ResolveAsync(ScriptsHelper.SerializedArgument(result)).ConfigureAwait(false);
             }
             catch (TargetInvocationException ex)
             {

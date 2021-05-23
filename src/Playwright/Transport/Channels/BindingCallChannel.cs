@@ -17,7 +17,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 "resolve",
                 new Dictionary<string, object>
                 {
-                    ["result"] = ScriptsHelper.SerializedArgument(result),
+                    ["result"] = result,
                 });
 
         internal Task RejectAsync(Exception ex)

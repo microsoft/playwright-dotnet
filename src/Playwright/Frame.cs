@@ -441,7 +441,7 @@ namespace Microsoft.Playwright
             => _channel.DispatchEventAsync(
                     selector,
                     type,
-                    eventInit == null ? EvaluateArgument.Undefined : ScriptsHelper.SerializedArgument(eventInit),
+                    eventInit = ScriptsHelper.SerializedArgument(eventInit),
                     timeout,
                     isPageCall);
 
@@ -534,113 +534,57 @@ namespace Microsoft.Playwright
                 timeout: timeout,
                 isPage: isPageCall).ConfigureAwait(false))?.Object;
 
-        internal async Task<IJSHandle> EvaluateHandleAsync(bool isPageCall, string script)
+        internal async Task<IJSHandle> EvaluateHandleAsync(bool isPageCall, string script, object args = null)
             => (await _channel.EvaluateExpressionHandleAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: EvaluateArgument.Undefined,
+                arg: ScriptsHelper.SerializedArgument(args),
                 isPage: isPageCall).ConfigureAwait(false))?.Object;
 
-        internal async Task<IJSHandle> EvaluateHandleAsync(bool isPageCall, string script, object args)
-            => (await _channel.EvaluateExpressionHandleAsync(
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
-                arg: args,
-                isPage: isPageCall,
-                serializeArgument: true).ConfigureAwait(false))?.Object;
-
-        internal async Task<T> EvaluateAsync<T>(bool isPageCall, string script)
-            => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
-                arg: EvaluateArgument.Undefined,
-                isPage: isPageCall).ConfigureAwait(false));
-
-        internal async Task<JsonElement?> EvaluateAsync(bool isPageCall, string script)
+        internal async Task<JsonElement?> EvaluateAsync(bool isPageCall, string script, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: EvaluateArgument.Undefined,
+                arg: ScriptsHelper.SerializedArgument(arg),
                 isPage: isPageCall).ConfigureAwait(false));
 
-        internal async Task<JsonElement?> EvaluateAsync(bool isPageCall, string script, object args)
-            => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
-                arg: args,
-                isPage: isPageCall,
-                serializeArgument: true).ConfigureAwait(false));
-
-        internal async Task<T> EvaluateAsync<T>(bool isPageCall, string script, object args)
+        internal async Task<T> EvaluateAsync<T>(bool isPageCall, string script, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: args,
-                isPage: isPageCall,
-                serializeArgument: true).ConfigureAwait(false));
-
-        internal async Task<T> EvalOnSelectorAsync<T>(bool isPageCall, string selector, string script)
-            => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
-                selector: selector,
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
-                arg: EvaluateArgument.Undefined,
+                arg: ScriptsHelper.SerializedArgument(arg),
                 isPage: isPageCall).ConfigureAwait(false));
 
-        internal async Task<JsonElement?> EvalOnSelectorAsync(bool isPageCall, string selector, string script)
+        internal async Task<JsonElement?> EvalOnSelectorAsync(bool isPageCall, string selector, string script, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: EvaluateArgument.Undefined,
+                arg: ScriptsHelper.SerializedArgument(arg),
                 isPage: isPageCall).ConfigureAwait(false));
 
-        internal async Task<JsonElement?> EvalOnSelectorAsync(bool isPageCall, string selector, string script, object args)
-            => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAsync(
-                selector: selector,
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
-                arg: ScriptsHelper.SerializedArgument(args),
-                isPage: isPageCall).ConfigureAwait(false));
-
-        internal async Task<T> EvalOnSelectorAsync<T>(bool isPageCall, string selector, string script, object args)
+        internal async Task<T> EvalOnSelectorAsync<T>(bool isPageCall, string selector, string script, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: ScriptsHelper.SerializedArgument(args),
+                arg: ScriptsHelper.SerializedArgument(arg),
                 isPage: isPageCall).ConfigureAwait(false));
 
-        internal async Task<T> EvalOnSelectorAllAsync<T>(bool isPageCall, string selector, string script)
-            => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAllAsync(
-                selector: selector,
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
-                arg: EvaluateArgument.Undefined,
-                isPage: isPageCall).ConfigureAwait(false));
-
-        internal async Task<JsonElement?> EvalOnSelectorAllAsync(bool isPageCall, string selector, string script)
+        internal async Task<JsonElement?> EvalOnSelectorAllAsync(bool isPageCall, string selector, string script, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: EvaluateArgument.Undefined,
+                arg: ScriptsHelper.SerializedArgument(arg),
                 isPage: isPageCall).ConfigureAwait(false));
 
-        internal async Task<JsonElement?> EvalOnSelectorAllAsync(bool isPageCall, string selector, string script, object args)
-            => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAllAsync(
-                selector: selector,
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
-                arg: ScriptsHelper.SerializedArgument(args),
-                isPage: isPageCall).ConfigureAwait(false));
-
-        internal async Task<T> EvalOnSelectorAllAsync<T>(bool isPageCall, string selector, string script, object args)
+        internal async Task<T> EvalOnSelectorAllAsync<T>(bool isPageCall, string selector, string script, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
                 script: script,
                 isFunction: script.IsJavascriptFunction(),
-                arg: ScriptsHelper.SerializedArgument(args),
+                arg: ScriptsHelper.SerializedArgument(arg),
                 isPage: isPageCall).ConfigureAwait(false));
 
         internal async Task<IResponse> GotoAsync(bool isPage, string url, WaitUntilState? waitUntil, string referer, float? timeout)

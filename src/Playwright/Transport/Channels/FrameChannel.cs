@@ -100,26 +100,8 @@ namespace Microsoft.Playwright.Transport.Channels
             string script,
             bool isFunction,
             object arg,
-            bool isPage,
-            bool serializeArgument = false)
+            bool isPage)
         {
-            JsonSerializerOptions serializerOptions;
-
-            if (serializeArgument)
-            {
-                serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
-                arg = new EvaluateArgument
-                {
-                    Handles = new List<EvaluateArgumentGuidElement>(),
-                    Value = arg,
-                };
-                serializerOptions.Converters.Add(new EvaluateArgumentConverter());
-            }
-            else
-            {
-                serializerOptions = Connection.GetDefaultJsonSerializerOptions(false);
-            }
-
             return Connection.SendMessageToServerAsync<JSHandleChannel>(
                 Guid,
                 "evaluateExpressionHandle",
@@ -129,8 +111,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["isFunction"] = isFunction,
                     ["arg"] = arg,
                     ["isPage"] = isPage,
-                },
-                serializerOptions: serializerOptions);
+                });
         }
 
         internal Task<JSHandleChannel> WaitForFunctionAsync(
@@ -139,26 +120,8 @@ namespace Microsoft.Playwright.Transport.Channels
             object arg,
             bool isPage,
             float? timeout,
-            float? polling,
-            bool serializeArgument = false)
+            float? polling)
         {
-            JsonSerializerOptions serializerOptions;
-
-            if (serializeArgument)
-            {
-                serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
-                arg = new EvaluateArgument
-                {
-                    Handles = new List<EvaluateArgumentGuidElement>(),
-                    Value = arg,
-                };
-                serializerOptions.Converters.Add(new EvaluateArgumentConverter());
-            }
-            else
-            {
-                serializerOptions = Connection.GetDefaultJsonSerializerOptions(false);
-            }
-
             var args = new Dictionary<string, object>
             {
                 ["expression"] = expression,
@@ -180,34 +143,15 @@ namespace Microsoft.Playwright.Transport.Channels
             return Connection.SendMessageToServerAsync<JSHandleChannel>(
                 Guid,
                 "waitForFunction",
-                args,
-                serializerOptions: serializerOptions);
+                args);
         }
 
         internal Task<JsonElement?> EvaluateExpressionAsync(
             string script,
             bool isFunction,
             object arg,
-            bool isPage,
-            bool serializeArgument = false)
+            bool isPage)
         {
-            JsonSerializerOptions serializerOptions;
-
-            if (serializeArgument)
-            {
-                serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
-                arg = new EvaluateArgument
-                {
-                    Handles = new List<EvaluateArgumentGuidElement>(),
-                    Value = arg,
-                };
-                serializerOptions.Converters.Add(new EvaluateArgumentConverter());
-            }
-            else
-            {
-                serializerOptions = Connection.GetDefaultJsonSerializerOptions(false);
-            }
-
             return Connection.SendMessageToServerAsync<JsonElement?>(
                 Guid,
                 "evaluateExpression",
@@ -217,24 +161,10 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["isFunction"] = isFunction,
                     ["arg"] = arg,
                     ["isPage"] = isPage,
-                },
-                serializerOptions: serializerOptions);
+                });
         }
 
-        internal Task<JSHandleChannel> EvalOnSelectorAsync(string selector, string script, bool isFunction, object arg, bool isPage)
-            => Connection.SendMessageToServerAsync<JSHandleChannel>(
-                Guid,
-                "evalOnSelector",
-                new Dictionary<string, object>
-                {
-                    ["selector"] = selector,
-                    ["expression"] = script,
-                    ["isFunction"] = isFunction,
-                    ["arg"] = arg,
-                    ["isPage"] = isPage,
-                });
-
-        internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, bool isFunction, EvaluateArgument arg, bool isPage)
+        internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, bool isFunction, object arg, bool isPage)
             => Connection.SendMessageToServerAsync<JsonElement?>(
                 Guid,
                 "evalOnSelector",
@@ -247,20 +177,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["isPage"] = isPage,
                 });
 
-        internal Task<JSHandleChannel> EvalOnSelectorAllAsync(string selector, string script, bool isFunction, object arg, bool isPage)
-            => Connection.SendMessageToServerAsync<JSHandleChannel>(
-                Guid,
-                "evalOnSelectorAll",
-                new Dictionary<string, object>
-                {
-                    ["selector"] = selector,
-                    ["expression"] = script,
-                    ["isFunction"] = isFunction,
-                    ["arg"] = arg,
-                    ["isPage"] = isPage,
-                });
-
-        internal Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, bool isFunction, EvaluateArgument arg, bool isPage)
+        internal Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, bool isFunction, object arg, bool isPage)
             => Connection.SendMessageToServerAsync<JsonElement?>(
                 Guid,
                 "evalOnSelectorAll",

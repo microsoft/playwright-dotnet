@@ -143,33 +143,33 @@ namespace Microsoft.Playwright
         public async Task<IReadOnlyCollection<IElementHandle>> QuerySelectorAllAsync(string selector)
             => (await _channel.QuerySelectorAllAsync(selector).ConfigureAwait(false)).Select(e => ((ElementHandleChannel)e).Object).ToList().AsReadOnly();
 
-        public async Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg)
+        public async Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script: expression,
                 isFunction: expression.IsJavascriptFunction(),
-                arg: arg.ToEvaluateArgument()).ConfigureAwait(false));
+                arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
-        public async Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg)
+        public async Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script: expression,
                 isFunction: expression.IsJavascriptFunction(),
-                arg: arg.ToEvaluateArgument()).ConfigureAwait(false));
+                arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
-        public async Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg)
+        public async Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
                 script: expression,
                 isFunction: expression.IsJavascriptFunction(),
-                arg: arg.ToEvaluateArgument()).ConfigureAwait(false));
+                arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         public Task FocusAsync() => _channel.FocusAsync();
 
-        public Task DispatchEventAsync(string type, object eventInit)
+        public Task DispatchEventAsync(string type, object eventInit = null)
             => _channel.DispatchEventAsync(
                 type,
-                eventInit == null ? EvaluateArgument.Undefined : ScriptsHelper.SerializedArgument(eventInit));
+                eventInit = ScriptsHelper.SerializedArgument(eventInit));
 
         public Task<string> GetAttributeAsync(string name) => _channel.GetAttributeAsync(name);
 
