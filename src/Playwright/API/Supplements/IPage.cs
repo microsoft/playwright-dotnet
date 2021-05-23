@@ -36,11 +36,11 @@ namespace Microsoft.Playwright
 
         Task<T> RunAndWaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<Task> action, PageRunAndWaitForEventOptions<T> options = default);
 
-        public Task<JsonElement?> EvaluateAsync(string expression, object arg = default);
-
-        public Task EvalOnSelectorAllAsync(string selector, string expression, object arg);
+        Task<JsonElement?> EvaluateAsync(string expression, object arg = default);
 
         Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg = default);
+
+        Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression, object arg = default);
 
         Task ExposeBindingAsync(string name, Action<BindingSource> callback);
 

@@ -193,17 +193,6 @@ namespace Microsoft.Playwright.Tests
             Assert.Empty(result);
         }
 
-        [PlaywrightTest("page-select-option.spec.ts", "should not allow null items")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public async Task ShouldNotAllowNullItems()
-        {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
-            await Page.EvaluateAsync("() => makeMultiple()");
-            var exception = await Assert.ThrowsAsync<PlaywrightException>(
-                () => Page.SelectOptionAsync("select", new[] { "blue", null, "black", "magenta" }));
-            Assert.Contains("got null", exception.Message);
-        }
-
         [PlaywrightTest("page-select-option.spec.ts", "should unselect with null")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldUnselectWithNull()

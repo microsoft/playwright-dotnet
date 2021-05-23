@@ -60,7 +60,7 @@ namespace Microsoft.Playwright
         /// <para>Returns the JSON representation of response body.</para>
         /// <para>This method will throw if the response body is not parsable via <c>JSON.parse</c>.</para>
         /// </summary>
-        Task<T> JsonAsync<T>();
+        Task<JsonDocument> JsonAsync();
 
         /// <summary>
         /// <para>
