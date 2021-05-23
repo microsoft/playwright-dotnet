@@ -69,7 +69,7 @@ namespace Microsoft.Playwright.Tests
                 _ => "None"
             };
 
-            Assert.Contains(response.Request.GetHeaderValues("user-agent"), (f) => f.Contains(expected));
+            Assert.Contains(expected, response.Request.Headers["user-agent"]);
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "Request.headers", "should get the same headers as the server")]

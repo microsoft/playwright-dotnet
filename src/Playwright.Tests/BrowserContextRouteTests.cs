@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Tests
                 intercepted = true;
 
                 Assert.Contains("empty.html", route.Request.Url);
-                Assert.False(string.IsNullOrEmpty(route.Request.GetHeaderValue("user-agent")));
+                Assert.False(string.IsNullOrEmpty(route.Request.Headers["user-agent"]));
                 Assert.Equal(HttpMethod.Get.Method, route.Request.Method);
                 Assert.Null(route.Request.PostData);
                 Assert.True(route.Request.IsNavigationRequest);

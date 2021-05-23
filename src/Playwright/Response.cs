@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -14,7 +15,6 @@ namespace Microsoft.Playwright
     {
         private readonly ResponseChannel _channel;
         private readonly ResponseInitializer _initializer;
-        private readonly Dictionary<string, string> _headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         internal Response(IChannelOwner parent, string guid, ResponseInitializer initializer) : base(parent, guid)
         {
@@ -22,18 +22,22 @@ namespace Microsoft.Playwright
             _initializer = initializer;
             _initializer.Request.Object.Timing = _initializer.Timing;
 
-            if (initializer.Headers != null)
+            Headers = new Dictionary<string, string>();
+            foreach (var kv in initializer.Headers)
             {
-                foreach (var kv in initializer.Headers)
+                var name = kv.Name.ToLower();
+
+                // There are case-sensitive dupes :/
+                if (!Headers.ContainsKey(name))
                 {
-                    _headers[kv.Name] = kv.Value;
+                    Headers.Add(kv.Name.ToLower(), kv.Value);
                 }
             }
         }
 
         public IFrame Frame => _initializer.Request.Object.Frame;
 
-        public IEnumerable<KeyValuePair<string, string>> Headers => _headers;
+        public Dictionary<string, string> Headers { get; }
 
         public bool Ok => Status is 0 or >= 200 and <= 299;
 
