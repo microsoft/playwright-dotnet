@@ -33,7 +33,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 {
                     ["expression"] = script,
                     ["isFunction"] = isFunction,
-                    ["arg"] = ScriptsHelper.SerializedArgument(arg),
+                    ["arg"] = arg,
                 });
 
         internal Task<JsonElement?> EvaluateExpressionAsync(
@@ -41,23 +41,6 @@ namespace Microsoft.Playwright.Transport.Channels
             bool isFunction,
             object arg)
         {
-            JsonSerializerOptions serializerOptions;
-
-            if (!(arg is EvaluateArgument))
-            {
-                serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
-                arg = new EvaluateArgument
-                {
-                    Handles = new List<EvaluateArgumentGuidElement>(),
-                    Value = arg,
-                };
-                serializerOptions.Converters.Add(new EvaluateArgumentConverter());
-            }
-            else
-            {
-                serializerOptions = Connection.GetDefaultJsonSerializerOptions(false);
-            }
-
             return Connection.SendMessageToServerAsync<JsonElement?>(
                 Guid,
                 "evaluateExpression",
@@ -66,8 +49,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["expression"] = script,
                     ["isFunction"] = isFunction,
                     ["arg"] = arg,
-                },
-                serializerOptions: serializerOptions);
+                });
         }
     }
 }

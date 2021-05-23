@@ -143,7 +143,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["selector"] = selector,
                     ["expression"] = script,
                     ["isFunction"] = isFunction,
-                    ["arg"] = ScriptsHelper.SerializedArgument(arg),
+                    ["arg"] = arg,
                 });
 
         internal Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, bool isFunction, object arg)
@@ -155,7 +155,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["selector"] = selector,
                     ["expression"] = script,
                     ["isFunction"] = isFunction,
-                    ["arg"] = ScriptsHelper.SerializedArgument(arg),
+                    ["arg"] = arg,
                 });
 
         internal Task<FrameChannel> ContentFrameAsync() => Connection.SendMessageToServerAsync<FrameChannel>(Guid, "contentFrame", null);

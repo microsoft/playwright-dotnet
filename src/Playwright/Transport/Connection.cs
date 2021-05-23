@@ -122,8 +122,7 @@ namespace Microsoft.Playwright.Transport
             string guid,
             string method,
             object args,
-            bool ignoreNullValues = true,
-            JsonSerializerOptions serializerOptions = null)
+            bool ignoreNullValues = true)
         {
             if (IsClosed)
             {
@@ -165,7 +164,7 @@ namespace Microsoft.Playwright.Transport
                     Metadata = metadata,
                 };
 
-                string messageString = JsonSerializer.Serialize(message, serializerOptions ?? GetDefaultJsonSerializerOptions(ignoreNullValues));
+                string messageString = JsonSerializer.Serialize(message, GetDefaultJsonSerializerOptions(ignoreNullValues));
                 _logger?.LogInformation($"pw:channel:command {messageString}");
 
                 return _transport.SendAsync(messageString);

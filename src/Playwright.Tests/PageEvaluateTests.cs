@@ -29,6 +29,13 @@ namespace Microsoft.Playwright.Tests
             Assert.Equal(21, result);
         }
 
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        public async Task ShouldSerializeArguments()
+        {
+            int result = await Page.EvaluateAsync<int>("a => a.m * a.n", new { m = 7, n = 3 });
+            Assert.Equal(21, result);
+        }
+
         [PlaywrightTest("page-evaluate.spec.ts", "should transfer NaN")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTransferNaN()

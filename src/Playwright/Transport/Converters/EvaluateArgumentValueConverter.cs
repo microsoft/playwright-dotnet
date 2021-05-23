@@ -13,17 +13,13 @@ namespace Microsoft.Playwright.Transport.Converters
 {
     internal class EvaluateArgumentValueConverter<T> : JsonConverter<T>
     {
-        private readonly EvaluateArgument _parentObject;
         private readonly List<object> _visited = new List<object>();
 
         public EvaluateArgumentValueConverter()
         {
         }
 
-        internal EvaluateArgumentValueConverter(EvaluateArgument parentObject)
-        {
-            _parentObject = parentObject;
-        }
+        public List<EvaluateArgumentGuidElement> Handles { get; } = new List<EvaluateArgumentGuidElement>();
 
         public override bool CanConvert(Type type) => true;
 
@@ -42,6 +38,10 @@ namespace Microsoft.Playwright.Transport.Converters
 
         public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
         {
+        }
+
+        public object Serialize(object value)
+        {
             if (_visited.Contains(value))
             {
                 throw new JsonException("Argument is a circular structure");
@@ -49,57 +49,32 @@ namespace Microsoft.Playwright.Transport.Converters
 
             if (value == null)
             {
-                writer.WriteStartObject();
-                writer.WriteString("v", "null");
-                writer.WriteEndObject();
-
-                return;
+                return new { v = "null" };
             }
 
             if (value is double nan && double.IsNaN(nan))
             {
-                writer.WriteStartObject();
-                writer.WriteString("v", "NaN");
-                writer.WriteEndObject();
-
-                return;
+                return new { v = "NaN" };
             }
 
             if (value is double infinity && double.IsPositiveInfinity(infinity))
             {
-                writer.WriteStartObject();
-                writer.WriteString("v", "Infinity");
-                writer.WriteEndObject();
-
-                return;
+                return new { v = "Infinity" };
             }
 
             if (value is double negativeInfinity && double.IsNegativeInfinity(negativeInfinity))
             {
-                writer.WriteStartObject();
-                writer.WriteString("v", "-Infinity");
-                writer.WriteEndObject();
-
-                return;
+                return new { v = "-Infinity" };
             }
 
             if (value is double negativeZero && negativeZero.IsNegativeZero())
             {
-                writer.WriteStartObject();
-                writer.WriteString("v", "-0");
-                writer.WriteEndObject();
-
-                return;
+                return new { v = "-0" };
             }
 
             if (value.GetType() == typeof(string))
             {
-                writer.WriteStartObject();
-                writer.WritePropertyName("s");
-                JsonSerializer.Serialize(writer, value);
-                writer.WriteEndObject();
-
-                return;
+                return new { s = value };
             }
 
             if (
@@ -114,127 +89,62 @@ namespace Microsoft.Playwright.Transport.Converters
                 value.GetType() == typeof(short?) ||
                 value.GetType() == typeof(double?))
             {
-                writer.WriteStartObject();
-                writer.WritePropertyName("n");
-                JsonSerializer.Serialize(writer, value);
-                writer.WriteEndObject();
-
-                return;
+                return new { n = value };
             }
 
             if (value.GetType() == typeof(bool) || value.GetType() == typeof(bool?))
             {
-                writer.WriteStartObject();
-                writer.WritePropertyName("b");
-                JsonSerializer.Serialize(writer, value);
-                writer.WriteEndObject();
-
-                return;
+                return new { b = value };
             }
 
             if (value is DateTime date)
             {
-                writer.WriteStartObject();
-                writer.WritePropertyName("d");
-                JsonSerializer.Serialize(writer, date);
-                writer.WriteEndObject();
-
-                return;
+                return new { d = date };
             }
 
             if (value is IDictionary dictionary && dictionary.Keys.OfType<string>().Any())
             {
-                writer.WriteStartObject();
-                writer.WritePropertyName("o");
-                writer.WriteStartArray();
-
                 _visited.Add(value);
+
+                var o = new List<object>();
                 foreach (object key in dictionary.Keys)
                 {
-                    writer.WriteStartObject();
                     object obj = dictionary[key];
-                    writer.WriteString("k", key.ToString());
-                    writer.WritePropertyName("v");
-
-                    if (obj == null)
-                    {
-                        writer.WriteStartObject();
-                        writer.WriteString("v", "null");
-                        writer.WriteEndObject();
-                    }
-                    else
-                    {
-                        JsonSerializer.Serialize(writer, obj, options);
-                    }
-
-                    writer.WriteEndObject();
+                    o.Add(new { k = key.ToString(), v = Serialize(obj) });
                 }
 
                 _visited.Remove(value);
-
-                writer.WriteEndArray();
-                writer.WriteEndObject();
-                return;
+                return new { o = o };
             }
 
             if (value is IEnumerable array)
             {
-                writer.WriteStartObject();
-                writer.WritePropertyName("a");
-                writer.WriteStartArray();
-
+                var a = new List<object>();
                 foreach (object item in array)
                 {
-                    JsonSerializer.Serialize(writer, item, options);
+                    a.Add(Serialize(item));
                 }
 
-                writer.WriteEndArray();
-                writer.WriteEndObject();
-
-                return;
+                return new { a = a };
             }
 
             if (value is IChannelOwner channelOwner)
             {
-                _parentObject.Handles.Add(new EvaluateArgumentGuidElement { Guid = channelOwner.Channel.Guid });
-
-                writer.WriteStartObject();
-                writer.WriteNumber("h", _parentObject.Handles.Count - 1);
-                writer.WriteEndObject();
-
-                return;
+                Handles.Add(new EvaluateArgumentGuidElement { Guid = channelOwner.Channel.Guid });
+                return new { h = Handles.Count - 1 };
             }
 
-            writer.WriteStartObject();
-            writer.WritePropertyName("o");
-            writer.WriteStartArray();
-
             _visited.Add(value);
+
+            var entries = new List<object>();
             foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(value))
             {
-                writer.WriteStartObject();
                 object obj = propertyDescriptor.GetValue(value);
-                writer.WriteString("k", propertyDescriptor.Name);
-                writer.WritePropertyName("v");
-
-                if (obj == null)
-                {
-                    writer.WriteStartObject();
-                    writer.WriteString("v", "null");
-                    writer.WriteEndObject();
-                }
-                else
-                {
-                    JsonSerializer.Serialize(writer, obj, options);
-                }
-
-                writer.WriteEndObject();
+                entries.Add(new { k = propertyDescriptor.Name, v = Serialize(obj) });
             }
 
             _visited.Remove(value);
-
-            writer.WriteEndArray();
-            writer.WriteEndObject();
+            return new { o = entries };
         }
 
         private static object ParseEvaluateResult(JsonElement result, Type t, JsonSerializerOptions options)
