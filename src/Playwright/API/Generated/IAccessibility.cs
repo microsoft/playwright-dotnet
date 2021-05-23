@@ -103,6 +103,6 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="options">Call options</param>
-        Task<AccessibilitySnapshotResult> SnapshotAsync(AccessibilitySnapshotOptions options = default);
+        Task<JsonElement?> SnapshotAsync(AccessibilitySnapshotOptions options = default);
     }
 }
