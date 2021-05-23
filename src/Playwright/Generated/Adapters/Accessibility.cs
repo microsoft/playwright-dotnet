@@ -38,7 +38,7 @@ namespace Microsoft.Playwright
 {
     internal partial class Accessibility
     {
-        public Task<AccessibilitySnapshotResult> SnapshotAsync(AccessibilitySnapshotOptions options = default)
+        public Task<JsonElement?> SnapshotAsync(AccessibilitySnapshotOptions options = default)
         {
             options ??= new AccessibilitySnapshotOptions();
             return SnapshotAsync(interestingOnly: options.InterestingOnly, root: options.Root);
