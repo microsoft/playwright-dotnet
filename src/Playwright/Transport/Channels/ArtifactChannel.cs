@@ -15,7 +15,7 @@ namespace Microsoft.Playwright.Transport.Channels
         internal Task SaveAsAsync(string path) => Connection.SendMessageToServerAsync(Guid, "saveAs", new { path });
 
         internal async Task<string> GetFailureAsync()
-            => (await Connection.SendMessageToServerAsync(Guid, "failure", treatErrorPropertyAsError: false).ConfigureAwait(false))?.GetProperty("error").ToString();
+            => (await Connection.SendMessageToServerAsync(Guid, "failure").ConfigureAwait(false))?.GetProperty("error").ToString();
 
         internal Task DeleteAsync() => Connection.SendMessageToServerAsync(Guid, "delete", null);
 
