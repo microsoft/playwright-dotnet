@@ -23,42 +23,42 @@ namespace Microsoft.Playwright
             }
         }
 
-        public class SpecialType : EvaluateArgumentValueElement
+        internal class SpecialType : EvaluateArgumentValueElement
         {
             public object V { get; set; }
         }
 
-        public class Datetime : EvaluateArgumentValueElement
+        internal class Datetime : EvaluateArgumentValueElement
         {
             public DateTime? D { get; set; }
         }
 
-        public class String : EvaluateArgumentValueElement
+        internal class String : EvaluateArgumentValueElement
         {
             public string S { get; set; }
         }
 
-        public class Number : EvaluateArgumentValueElement
+        internal class Number : EvaluateArgumentValueElement
         {
             public object N { get; set; }
         }
 
-        public class Boolean : EvaluateArgumentValueElement
+        internal class Boolean : EvaluateArgumentValueElement
         {
             public bool B { get; set; }
         }
 
-        public class Array : EvaluateArgumentValueElement
+        internal class Array : EvaluateArgumentValueElement
         {
             public object[] A { get; set; }
         }
 
-        public class Object : EvaluateArgumentValueElement
+        internal class Object : EvaluateArgumentValueElement
         {
             public KeyValueObject[] O { get; set; }
         }
 
-        public class Handle : EvaluateArgumentValueElement
+        internal class Handle : EvaluateArgumentValueElement
         {
             public int? H { get; set; }
         }

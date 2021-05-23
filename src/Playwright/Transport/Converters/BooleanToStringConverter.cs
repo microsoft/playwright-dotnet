@@ -4,10 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Converters
 {
-    /// <summary>
-    /// JSON converter for Mixed state.
-    /// </summary>
-    public class BooleanToStringConverter : JsonConverter<string>
+    internal class BooleanToStringConverter : JsonConverter<string>
     {
         /// <inheritdoc/>
         public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

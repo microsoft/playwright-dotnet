@@ -22,17 +22,12 @@
  * SOFTWARE.
  */
 
-using System.Text.Json;
-using System.Threading.Tasks;
+using System;
 
 namespace Microsoft.Playwright
 {
-    /// <summary>
-    /// Partial <see cref="IResponse"/>.
-    /// </summary>
-    public partial interface IResponse
+    public class PlaywrightEvent<T> : IEvent
     {
-        /// <inheritdoc cref="JsonAsync{T}"/>
-        Task<JsonDocument> JsonAsync(JsonDocumentOptions options = default);
+        public string Name { get; set; }
     }
 }

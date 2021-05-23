@@ -7,10 +7,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    /// <summary>
-    /// Used by <see cref="IPage.Console"/>.
-    /// </summary>
-    public class ConsoleMessage : ChannelOwnerBase, IChannelOwner<ConsoleMessage>, IConsoleMessage
+    internal class ConsoleMessage : ChannelOwnerBase, IChannelOwner<ConsoleMessage>, IConsoleMessage
     {
         private readonly ConsoleMessageChannel _channel;
         private readonly ConsoleMessageInitializer _initializer;

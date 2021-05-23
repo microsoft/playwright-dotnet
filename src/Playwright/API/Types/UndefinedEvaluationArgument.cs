@@ -22,17 +22,37 @@
  * SOFTWARE.
  */
 
-using System.Text.Json;
-using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright.Contracts.Models
 {
     /// <summary>
-    /// Partial <see cref="IResponse"/>.
+    /// Represents an `Undefined` argument.
     /// </summary>
-    public partial interface IResponse
+    public sealed class UndefinedEvaluationArgument : IEquatable<UndefinedEvaluationArgument>
     {
-        /// <inheritdoc cref="JsonAsync{T}"/>
-        Task<JsonDocument> JsonAsync(JsonDocumentOptions options = default);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UndefinedEvaluationArgument"/> class.
+        /// </summary>
+        private UndefinedEvaluationArgument()
+        {
+            // NOOP
+        }
+
+        /// <summary>
+        /// Gets a representation of the <c>Undefined</c> argument.
+        /// </summary>
+        public static UndefinedEvaluationArgument Undefined { get; } = new UndefinedEvaluationArgument();
+
+        /// <inheritdoc/>
+        public bool Equals(UndefinedEvaluationArgument other) => ReferenceEquals(this, other);
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj) => Equals(obj as UndefinedEvaluationArgument);
+
+        /// <inheritdoc/>
+        public override int GetHashCode() => base.GetHashCode();
     }
 }

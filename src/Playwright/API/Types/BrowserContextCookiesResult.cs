@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 using System;
@@ -36,7 +37,30 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class BrowserContextRunAndWaitForEventOptions<T> : BrowserContextWaitForEventOptions<T>
+    public partial class BrowserContextCookiesResult : IEquatable<BrowserContextCookiesResult>
     {
+        public bool Equals(BrowserContextCookiesResult other)
+            => other != null &&
+                Name == other.Name &&
+                Value == other.Value &&
+                Domain == other.Domain &&
+                Path == other.Path &&
+                Expires == other.Expires &&
+                HttpOnly == other.HttpOnly &&
+                Secure == other.Secure &&
+                SameSite == other.SameSite;
+
+        public override bool Equals(object obj) => Equals(obj as BrowserContextCookiesResult);
+
+        public override int GetHashCode()
+            => 412870874 +
+                EqualityComparer<string>.Default.GetHashCode(Name) +
+                EqualityComparer<string>.Default.GetHashCode(Value) +
+                EqualityComparer<string>.Default.GetHashCode(Domain) +
+                EqualityComparer<string>.Default.GetHashCode(Path) +
+                EqualityComparer<float>.Default.GetHashCode(Expires) +
+                EqualityComparer<bool>.Default.GetHashCode(HttpOnly) +
+                EqualityComparer<bool>.Default.GetHashCode(Secure) +
+                EqualityComparer<SameSiteAttribute>.Default.GetHashCode(SameSite);
     }
 }

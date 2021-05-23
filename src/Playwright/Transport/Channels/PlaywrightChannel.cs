@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
-    internal class PlaywrightChannel : Channel<Playwright>
+    internal class PlaywrightChannel : Channel<PlaywrightImpl>
     {
-        public PlaywrightChannel(string guid, Connection connection, Playwright owner) : base(guid, connection, owner)
+        public PlaywrightChannel(string guid, Connection connection, PlaywrightImpl owner) : base(guid, connection, owner)
         {
         }
     }

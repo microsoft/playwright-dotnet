@@ -389,12 +389,12 @@ namespace Microsoft.Playwright
 
             if (pageEvent.Name != PageEvent.Crash.Name)
             {
-                waiter.RejectOnEvent<IPage>(this, PageEvent.Crash.Name, new TargetClosedException("Page crashed"));
+                waiter.RejectOnEvent<IPage>(this, PageEvent.Crash.Name, new PlaywrightException("Page crashed"));
             }
 
             if (pageEvent.Name != PageEvent.Close.Name)
             {
-                waiter.RejectOnEvent<IPage>(this, PageEvent.Close.Name, new TargetClosedException("Page closed"));
+                waiter.RejectOnEvent<IPage>(this, PageEvent.Close.Name, new PlaywrightException("Page closed"));
             }
 
             var result = waiter.WaitForEventAsync(this, pageEvent.Name, predicate);
@@ -875,7 +875,7 @@ namespace Microsoft.Playwright
         {
             foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.PageEvent != (isCrash ? PageEvent.Crash : PageEvent.Close)))
             {
-                waitTcs.TrySetException(new TargetClosedException(isCrash ? "Page crashed" : "Page closed"));
+                waitTcs.TrySetException(new PlaywrightException(isCrash ? "Page crashed" : "Page closed"));
             }
 
             _waitForCancellationTcs.Clear();

@@ -22,17 +22,34 @@
  * SOFTWARE.
  */
 
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
     /// <summary>
-    /// Partial <see cref="IResponse"/>.
+    /// Represents the Proxy configuration.
     /// </summary>
-    public partial interface IResponse
+    public partial class Proxy
     {
-        /// <inheritdoc cref="JsonAsync{T}"/>
-        Task<JsonDocument> JsonAsync(JsonDocumentOptions options = default);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Proxy"/> class.
+        /// </summary>
+        public Proxy()
+        {
+            Server = null;
+            Bypass = string.Empty;
+            Username = string.Empty;
+            Password = string.Empty;
+        }
     }
 }

@@ -21,8 +21,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright.Tests", "Playwri
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright", "Playwright\Playwright.csproj", "{EAB878F1-E9FE-4C0B-8DF5-AE58522F8D0A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright.Demo", "Playwright.Demo\Playwright.Demo.csproj", "{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5C6D57B1-C82A-48D6-9EBD-73B712CAE476}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightSharpTool", "tools\PlaywrightSharpTool\PlaywrightSharpTool.csproj", "{795BA2A6-D983-4D96-B817-6921A145AB56}"
@@ -49,10 +47,6 @@ Global
 		{EAB878F1-E9FE-4C0B-8DF5-AE58522F8D0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAB878F1-E9FE-4C0B-8DF5-AE58522F8D0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAB878F1-E9FE-4C0B-8DF5-AE58522F8D0A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB3348E3-9759-4B90-9C8C-391F44AD5F8F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{795BA2A6-D983-4D96-B817-6921A145AB56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{795BA2A6-D983-4D96-B817-6921A145AB56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{795BA2A6-D983-4D96-B817-6921A145AB56}.Release|Any CPU.ActiveCfg = Release|Any CPU

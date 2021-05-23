@@ -11,7 +11,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    public class Response : ChannelOwnerBase, IChannelOwner<Response>, IResponse
+    internal class Response : ChannelOwnerBase, IChannelOwner<Response>, IResponse
     {
         private readonly ResponseChannel _channel;
         private readonly ResponseInitializer _initializer;

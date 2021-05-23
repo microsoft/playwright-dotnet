@@ -61,7 +61,6 @@ namespace PlaywrightSharp.Tooling
             try
             {
                 string readmePath = Path.Combine(basePath, "README.md");
-                string readmeInDocsPath = Path.Combine(basePath, "docfx_project", "documentation", "index.md");
                 string playwrightVersion = driverVersion.Contains("-") ? driverVersion.Substring(0, driverVersion.IndexOf("-")) : driverVersion;
 
                 var regex = new Regex("<!-- GEN:(.*?) -->(.*?)<!-- GEN:stop -->", RegexOptions.Compiled);
@@ -85,8 +84,6 @@ namespace PlaywrightSharp.Tooling
                 var browserMatches = regex.Matches(readme);
                 string readmeText = await File.ReadAllTextAsync(readmePath).ConfigureAwait(false);
                 await File.WriteAllTextAsync(readmePath, ReplaceBrowserVersion(readmeText, browserMatches)).ConfigureAwait(false);
-                string readmeInDicsText = await File.ReadAllTextAsync(readmeInDocsPath).ConfigureAwait(false);
-                await File.WriteAllTextAsync(readmeInDocsPath, ReplaceBrowserVersion(readmeInDicsText, browserMatches)).ConfigureAwait(false);
             }
             catch (Exception e)
             {

@@ -357,7 +357,7 @@ namespace Microsoft.Playwright
 
             if (navigatedEvent.Error != null)
             {
-                var ex = new NavigationException(navigatedEvent.Error);
+                var ex = new PlaywrightException(navigatedEvent.Error);
                 var tcs = new TaskCompletionSource<bool>();
                 tcs.TrySetException(ex);
                 await waiter.WaitForPromiseAsync(tcs.Task).ConfigureAwait(false);
@@ -677,14 +677,14 @@ namespace Microsoft.Playwright
         private Waiter SetupNavigationWaiter(string apiName, float? timeout)
         {
             var waiter = new Waiter(_channel, apiName);
-            waiter.RejectOnEvent<IPage>(Page, PageEvent.Close.Name, new NavigationException("Navigation failed because page was closed!"));
-            waiter.RejectOnEvent<IPage>(Page, PageEvent.Crash.Name, new NavigationException("Navigation failed because page was crashed!"));
+            waiter.RejectOnEvent<IPage>(Page, PageEvent.Close.Name, new PlaywrightException("Navigation failed because page was closed!"));
+            waiter.RejectOnEvent<IPage>(Page, PageEvent.Crash.Name, new PlaywrightException("Navigation failed because page was crashed!"));
             waiter.RejectOnEvent<IFrame>(
                 Page,
                 "FrameDetached",
-                new NavigationException("Navigating frame was detached!"),
+                new PlaywrightException("Navigating frame was detached!"),
                 e => e == this);
-            timeout ??= (Page as Page)?.DefaultNavigationTimeout ?? Playwright.DefaultTimeout;
+            timeout ??= (Page as Page)?.DefaultNavigationTimeout ?? PlaywrightImpl.DefaultTimeout;
             waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout {timeout}ms exceeded.");
 
             return waiter;

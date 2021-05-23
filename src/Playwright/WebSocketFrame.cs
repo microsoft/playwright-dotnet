@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Microsoft.Playwright
 {
-    public class WebSocketFrame : IWebSocketFrame
+    internal class WebSocketFrame : IWebSocketFrame
     {
         internal WebSocketFrame(string payload, bool isBase64)
         {

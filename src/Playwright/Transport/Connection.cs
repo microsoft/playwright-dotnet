@@ -63,7 +63,7 @@ namespace Microsoft.Playwright.Transport
             });
 
             _logger = _loggerFactory.CreateLogger<Connection>();
-            var debugLogger = _loggerFactory?.CreateLogger<Playwright>();
+            var debugLogger = _loggerFactory?.CreateLogger<PlaywrightImpl>();
 
             _rootObject = new ChannelOwnerBase(null, this, string.Empty);
 
@@ -225,7 +225,7 @@ namespace Microsoft.Playwright.Transport
 
             if (IsClosed)
             {
-                throw new TargetClosedException(_reason);
+                throw new PlaywrightException(_reason);
             }
 
             var tcs = new TaskCompletionSource<IChannelOwner>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -388,7 +388,7 @@ namespace Microsoft.Playwright.Transport
                     result = new BindingCall(parent, guid, initializer?.ToObject<BindingCallInitializer>(GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.Playwright:
-                    result = new Playwright(parent, guid, initializer?.ToObject<PlaywrightInitializer>(GetDefaultJsonSerializerOptions()), _loggerFactory);
+                    result = new PlaywrightImpl(parent, guid, initializer?.ToObject<PlaywrightInitializer>(GetDefaultJsonSerializerOptions()), _loggerFactory);
                     break;
                 case ChannelOwnerType.Browser:
                     var browserInitializer = initializer?.ToObject<BrowserInitializer>(GetDefaultJsonSerializerOptions());
@@ -458,12 +458,12 @@ namespace Microsoft.Playwright.Transport
             {
                 foreach (var callback in _callbacks)
                 {
-                    callback.Value.TaskCompletionSource.TrySetException(new TargetClosedException(reason));
+                    callback.Value.TaskCompletionSource.TrySetException(new PlaywrightException(reason));
                 }
 
                 foreach (var callback in _waitingForObject)
                 {
-                    callback.Value.TrySetException(new TargetClosedException(reason));
+                    callback.Value.TrySetException(new PlaywrightException(reason));
                 }
 
                 Dispose();
@@ -485,12 +485,12 @@ namespace Microsoft.Playwright.Transport
 
             if (error.Message.Contains("Browser closed") || error.Message.Contains("Target closed") || error.Message.Contains("The page has been closed."))
             {
-                return new TargetClosedException(error.Message);
+                return new PlaywrightException(error.Message);
             }
 
             if (error.Message.Contains("Navigation failed because"))
             {
-                return new NavigationException(error.Message);
+                return new PlaywrightException(error.Message);
             }
 
             string message = error.Message
@@ -513,12 +513,12 @@ namespace Microsoft.Playwright.Transport
 
             if (message.Contains("Browser closed") || message.Contains("Target closed") || message.Contains("The page has been closed."))
             {
-                return new TargetClosedException(message);
+                return new PlaywrightException(message);
             }
 
             if (message.Contains("Navigation failed because"))
             {
-                return new NavigationException(message);
+                return new PlaywrightException(message);
             }
 
             return new PlaywrightException(message);
