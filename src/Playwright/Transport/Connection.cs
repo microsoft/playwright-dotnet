@@ -115,17 +115,15 @@ namespace Microsoft.Playwright.Transport
             string guid,
             string method,
             object args = null,
-            bool ignoreNullValues = true,
-            bool treatErrorPropertyAsError = true)
-            => SendMessageToServerAsync<JsonElement?>(guid, method, args, ignoreNullValues, treatErrorPropertyAsError: treatErrorPropertyAsError);
+            bool ignoreNullValues = true)
+            => SendMessageToServerAsync<JsonElement?>(guid, method, args, ignoreNullValues);
 
         internal async Task<T> SendMessageToServerAsync<T>(
             string guid,
             string method,
             object args,
             bool ignoreNullValues = true,
-            JsonSerializerOptions serializerOptions = null,
-            bool treatErrorPropertyAsError = true)
+            JsonSerializerOptions serializerOptions = null)
         {
             if (IsClosed)
             {
@@ -137,7 +135,6 @@ namespace Microsoft.Playwright.Transport
             var callback = new ConnectionCallback
             {
                 TaskCompletionSource = tcs,
-                TreatErrorPropertyAsError = treatErrorPropertyAsError,
             };
 
             _callbacks.TryAdd(id, callback);
@@ -330,10 +327,6 @@ namespace Microsoft.Playwright.Transport
                     if (message.Error != null)
                     {
                         callback.TaskCompletionSource.TrySetException(CreateException(message.Error.Error));
-                    }
-                    else if (callback.TreatErrorPropertyAsError && message.Result?.TryGetProperty("error", out var _) == true)
-                    {
-                        callback.TaskCompletionSource.TrySetException(CreateException(message.Result?.GetProperty("error").ToString()));
                     }
                     else
                     {

@@ -13,8 +13,5 @@ namespace Microsoft.Playwright.Transport
         public object Params { get; set; }
 
         public object Metadata { get; set; }
-
-        [JsonIgnore]
-        public bool TreatErrorPropertyAsError { get; set; }
     }
 }
