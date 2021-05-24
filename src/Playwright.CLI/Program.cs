@@ -33,7 +33,7 @@ namespace Microsoft.Playwright.CLI
 
             pwProcess.WaitForExit();
             Console.WriteLine(pwProcess.StandardOutput.ReadToEnd());
-            
+
         }
 
         private static string GetFullPath()
