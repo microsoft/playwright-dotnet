@@ -114,15 +114,13 @@ namespace Microsoft.Playwright.Transport
         internal Task<JsonElement?> SendMessageToServerAsync(
             string guid,
             string method,
-            object args = null,
-            bool ignoreNullValues = true)
-            => SendMessageToServerAsync<JsonElement?>(guid, method, args, ignoreNullValues);
+            object args = null)
+            => SendMessageToServerAsync<JsonElement?>(guid, method, args);
 
         internal async Task<T> SendMessageToServerAsync<T>(
             string guid,
             string method,
-            object args,
-            bool ignoreNullValues = true)
+            object args)
         {
             if (IsClosed)
             {
@@ -164,7 +162,7 @@ namespace Microsoft.Playwright.Transport
                     Metadata = metadata,
                 };
 
-                string messageString = JsonSerializer.Serialize(message, GetDefaultJsonSerializerOptions(ignoreNullValues));
+                string messageString = JsonSerializer.Serialize(message, GetDefaultJsonSerializerOptions());
                 _logger?.LogInformation($"pw:channel:command {messageString}");
 
                 return _transport.SendAsync(messageString);
@@ -200,9 +198,9 @@ namespace Microsoft.Playwright.Transport
             return result;
         }
 
-        internal JsonSerializerOptions GetDefaultJsonSerializerOptions(bool ignoreNullValues = false)
+        internal JsonSerializerOptions GetDefaultJsonSerializerOptions()
         {
-            var options = JsonExtensions.GetNewDefaultSerializerOptions(ignoreNullValues);
+            var options = JsonExtensions.GetNewDefaultSerializerOptions();
             options.Converters.Add(new ElementHandleToGuidConverter(this));
             options.Converters.Add(new ChannelOwnerToGuidConverter(this));
             options.Converters.Add(new ChannelToGuidConverter(this));

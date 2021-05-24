@@ -64,11 +64,11 @@ namespace Microsoft.Playwright.Helpers
             return document.RootElement.ToObject<T>(options ?? DefaultJsonSerializerOptions);
         }
 
-        internal static JsonSerializerOptions GetNewDefaultSerializerOptions(bool ignoreNullValues = false)
+        internal static JsonSerializerOptions GetNewDefaultSerializerOptions()
             => new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                IgnoreNullValues = ignoreNullValues,
+                IgnoreNullValues = true,
                 Converters =
                 {
                     new MixedStateConverter(),

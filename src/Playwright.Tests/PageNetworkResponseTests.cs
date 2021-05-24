@@ -159,10 +159,5 @@ namespace Microsoft.Playwright.Tests
             serverResponseCompletion.SetResult(true);
             Assert.Equal("hello world!", await responseText);
         }
-
-        class TestClass
-        {
-            public string foo { get; set; }
-        }
     }
 }

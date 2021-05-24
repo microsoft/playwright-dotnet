@@ -47,7 +47,7 @@ namespace Microsoft.Playwright
 
         internal static T ParseEvaluateResult<T>(JsonElement? result)
         {
-            var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
+            var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions();
             serializerOptions.Converters.Add(new EvaluateArgumentValueConverter<T>());
 
             return result == null ? default : result.Value.ToObject<T>(serializerOptions);
