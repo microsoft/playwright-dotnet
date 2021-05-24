@@ -208,7 +208,7 @@ namespace Microsoft.Playwright.Transport.Converters
 
                     foreach (var kv in keyValues)
                     {
-                        var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
+                        var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions();
                         var type = ValueKindToType(kv.V);
 
                         serializerOptions.Converters.Add(GetNewConverter(type));
@@ -220,7 +220,7 @@ namespace Microsoft.Playwright.Transport.Converters
                         return dynamicResult;
                     }
 
-                    var defaultConverter = JsonExtensions.GetNewDefaultSerializerOptions(false);
+                    var defaultConverter = JsonExtensions.GetNewDefaultSerializerOptions();
                     string serialized = JsonSerializer.Serialize(dicResult, defaultConverter);
 
                     return JsonSerializer.Deserialize<T>(serialized, defaultConverter);
@@ -230,7 +230,7 @@ namespace Microsoft.Playwright.Transport.Converters
 
                 foreach (var kv in keyValues)
                 {
-                    var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
+                    var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions();
 
                     var property = t.GetProperties().FirstOrDefault(prop => string.Equals(prop.Name, kv.K, StringComparison.OrdinalIgnoreCase));
                     serializerOptions.Converters.Add(GetNewConverter(property.PropertyType));
@@ -262,7 +262,7 @@ namespace Microsoft.Playwright.Transport.Converters
 
             if (result.ValueKind == JsonValueKind.Array)
             {
-                var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions(false);
+                var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions();
                 serializerOptions.Converters.Add(GetNewConverter(t.GetElementType()));
 
                 var resultArray = new ArrayList();

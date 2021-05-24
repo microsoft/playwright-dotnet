@@ -56,8 +56,7 @@ namespace Microsoft.Playwright.Transport.Channels
             return Connection.SendMessageToServerAsync(
                 Guid,
                 "continue",
-                args,
-                true);
+                args);
         }
     }
 }

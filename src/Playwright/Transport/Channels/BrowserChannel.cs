@@ -182,8 +182,7 @@ namespace Microsoft.Playwright.Transport.Channels
             return Connection.SendMessageToServerAsync<BrowserContextChannel>(
                 Guid,
                 "newContext",
-                args,
-                true);
+                args);
         }
 
         internal Task CloseAsync() => Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "close", null);

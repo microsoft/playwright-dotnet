@@ -170,8 +170,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 new Dictionary<string, object>
                 {
                     ["cookies"] = cookies,
-                },
-                true);
+                });
 
         internal Task GrantPermissionsAsync(IEnumerable<string> permissions, string origin)
         {
@@ -185,7 +184,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 args["origin"] = origin;
             }
 
-            return Connection.SendMessageToServerAsync<PageChannel>(Guid, "grantPermissions", args, true);
+            return Connection.SendMessageToServerAsync<PageChannel>(Guid, "grantPermissions", args);
         }
 
         internal Task ClearPermissionsAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "clearPermissions", null);
@@ -197,8 +196,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 new Dictionary<string, object>
                 {
                     ["geolocation"] = geolocation,
-                },
-                true);
+                });
 
         internal Task ClearCookiesAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "clearCookies", null);
 

@@ -121,8 +121,7 @@ namespace Microsoft.Playwright.Transport.Channels
             return Connection.SendMessageToServerAsync<BrowserChannel>(
                 Guid,
                 "launch",
-                args,
-                false);
+                args);
         }
 
         internal Task<BrowserContextChannel> LaunchPersistentContextAsync(
@@ -368,7 +367,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
             channelArgs.Add("sdkLanguage", "csharp");
 
-            return Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "launchPersistentContext", channelArgs, false);
+            return Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "launchPersistentContext", channelArgs);
         }
     }
 }
