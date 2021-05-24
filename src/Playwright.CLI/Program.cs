@@ -9,7 +9,7 @@ namespace Microsoft.Playwright.CLI
 {
     class Program
     {
-        private const string BrowsersEnvironmentVariableName = "PW_CLI_BROWSERSPATH";
+        private const string DriverEnvironmentPath = "PW_CLI_DRIVERPATH";
 
         static void Main(string[] args)
         {
@@ -38,7 +38,7 @@ namespace Microsoft.Playwright.CLI
 
         private static string GetFullPath()
         {
-            string envPath = Environment.GetEnvironmentVariable(BrowsersEnvironmentVariableName);
+            string envPath = Environment.GetEnvironmentVariable(DriverEnvironmentPath);
             if (!string.IsNullOrEmpty(envPath))
             {
                 if (!Directory.Exists(envPath))
