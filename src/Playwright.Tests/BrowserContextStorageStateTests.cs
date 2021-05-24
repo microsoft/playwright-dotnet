@@ -44,7 +44,7 @@ namespace Microsoft.Playwright.Tests
 
             // TODO: think about IVT-in the StorageState and serializing
             string expected = @"{""cookies"":[],""origins"":[{""origin"":""https://www.example.com"",""localStorage"":[{""name"":""name1"",""value"":""value1""}]},{""origin"":""https://www.domain.com"",""localStorage"":[{""name"":""name2"",""value"":""value2""}]}]}";
-            Assert.Equal(storage, expected);
+            Assert.Equal(expected, storage);
         }
 
         [PlaywrightTest("browsercontext-storage-state.spec.ts", "should set local storage")]

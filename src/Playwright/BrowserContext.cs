@@ -203,9 +203,10 @@ namespace Microsoft.Playwright
 
         public async Task<string> StorageStateAsync(string path = null)
         {
+            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
             string state = JsonSerializer.Serialize(
                 await Channel.GetStorageStateAsync().ConfigureAwait(false),
-                Channel.Connection.GetDefaultJsonSerializerOptions());
+                options);
 
             if (!string.IsNullOrEmpty(path))
             {

@@ -32,10 +32,10 @@ namespace Microsoft.Playwright
 {
     public partial interface IFrame
     {
-        public Task<JsonElement?> EvaluateAsync(string expression, object arg = default);
-
-        public Task EvalOnSelectorAllAsync(string selector, string expression, object arg);
+        Task<JsonElement?> EvaluateAsync(string expression, object arg = default);
 
         Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg = default);
+
+        Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression, object arg = default);
     }
 }
