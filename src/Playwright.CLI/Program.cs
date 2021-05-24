@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -8,14 +9,45 @@ namespace Microsoft.Playwright.CLI
 {
     class Program
     {
+        private const string BrowsersEnvironmentVariableName = "PW_CLI_BROWSERSPATH";
+
         static void Main(string[] args)
         {
-            Console.WriteLine($"Assumed path: {GetFullPath()}");
-            Console.WriteLine("Hello World!");
+            string pwPath = GetFullPath();
+            var playwrightStartInfo = new ProcessStartInfo(pwPath, string.Join(' ', args))
+            {
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardError = true,
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true
+            };
+
+            var pwProcess = new Process()
+            {
+                StartInfo = playwrightStartInfo,
+            };
+
+            playwrightStartInfo.EnvironmentVariables.Add("PW_CLI_TARGET_LANG", "csharp");
+            pwProcess.Start();
+
+            pwProcess.WaitForExit();
+            Console.WriteLine(pwProcess.StandardOutput.ReadToEnd());
+            
         }
 
         private static string GetFullPath()
         {
+            string envPath = Environment.GetEnvironmentVariable(BrowsersEnvironmentVariableName);
+            if (!string.IsNullOrEmpty(envPath))
+            {
+                if (!Directory.Exists(envPath))
+                {
+                    Console.Error.WriteLine($"The path specified in the environment variable is invalid: {envPath}");
+                }
+                return envPath;
+            }
+
             var version = Assembly.GetEntryAssembly().GetName().Version;
 
             var assumedRootDirectory = new DirectoryInfo(
@@ -39,13 +71,12 @@ namespace Microsoft.Playwright.CLI
                 {
                     // fallback to the first folder we find
                     path = assumedRootDirectory.GetDirectories().FirstOrDefault()?.FullName;
-                    if(string.IsNullOrEmpty(path))
+                    if (string.IsNullOrEmpty(path))
                     {
                         throw new Exception("not found");
                     }
                 }
             }
-
 
             var assumedPath = new DirectoryInfo(Path.Combine(path, "Drivers"));
             return GetDriverPath(assumedPath.FullName);
@@ -58,20 +89,20 @@ namespace Microsoft.Playwright.CLI
             {
                 if (RuntimeInformation.OSArchitecture == Architecture.X64)
                 {
-                    return Path.Combine(driversDirectory, "win-x64", "playwright.cmd");
+                    return Path.Combine(driversDirectory, "win-x64", "native", "playwright.cmd");
                 }
                 else
                 {
-                    return Path.Combine(driversDirectory, "win-x86", "playwright.cmd");
+                    return Path.Combine(driversDirectory, "win-x86", "native", "playwright.cmd");
                 }
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return Path.Combine(driversDirectory, "osx", "playwright.sh");
+                return Path.Combine(driversDirectory, "osx", "native", "playwright.sh");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return Path.Combine(driversDirectory, "unix", "playwright.sh");
+                return Path.Combine(driversDirectory, "unix", "native", "playwright.sh");
             }
 
             throw new Exception("Unknown platform");
