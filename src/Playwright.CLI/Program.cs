@@ -30,10 +30,9 @@ namespace Microsoft.Playwright.CLI
 
             playwrightStartInfo.EnvironmentVariables.Add("PW_CLI_TARGET_LANG", "csharp");
             pwProcess.Start();
-
             pwProcess.WaitForExit();
-            Console.WriteLine(pwProcess.StandardOutput.ReadToEnd());
 
+            Console.WriteLine(pwProcess.StandardOutput.ReadToEnd());
         }
 
         private static string GetFullPath()
@@ -41,11 +40,13 @@ namespace Microsoft.Playwright.CLI
             string envPath = Environment.GetEnvironmentVariable(DriverEnvironmentPath);
             if (!string.IsNullOrEmpty(envPath))
             {
+                envPath = Path.Join(envPath, "Drivers");
                 if (!Directory.Exists(envPath))
                 {
-                    Console.Error.WriteLine($"The path specified in the environment variable is invalid: {envPath}");
+                    Console.Error.WriteLine($"The path specified in the environment variable ({envPath}) does not contain the Drivers folder.");
                 }
-                return envPath;
+
+                return GetDriverPath(envPath);
             }
 
             var version = Assembly.GetEntryAssembly().GetName().Version;
