@@ -72,7 +72,7 @@ namespace Microsoft.Playwright.CLI
                 envPath = Path.Join(envPath, "Drivers");
                 if (!Directory.Exists(envPath))
                 {
-                    Console.Error.WriteLine($"The path specified in the environment variable ({envPath}) does not contain the Drivers folder.");
+                    Console.Error.WriteLine($"The path specified in the environment variable {DriverEnvironmentPath} ({envPath}) does not contain the Drivers folder.");
                 }
 
                 return GetDriverPath(envPath);
