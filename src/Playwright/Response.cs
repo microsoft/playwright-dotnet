@@ -69,10 +69,10 @@ namespace Microsoft.Playwright
 
         public Task<string> FinishedAsync() => _channel.FinishedAsync();
 
-        public async Task<JsonDocument> JsonAsync()
+        public async Task<JsonElement?> JsonAsync()
         {
             string content = await TextAsync().ConfigureAwait(false);
-            return JsonDocument.Parse(content);
+            return JsonDocument.Parse(content).RootElement;
         }
 
         public async Task<string> TextAsync()
