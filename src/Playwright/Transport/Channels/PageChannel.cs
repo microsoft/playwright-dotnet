@@ -233,51 +233,24 @@ namespace Microsoft.Playwright.Transport.Channels
         internal Task<ResponseChannel> GoBackAsync(float? timeout, WaitUntilState? waitUntil)
         {
             var args = new Dictionary<string, object>();
-
-            if (timeout != null)
-            {
-                args["timeout"] = timeout;
-            }
-
-            if (waitUntil != null)
-            {
-                args["waitUntil"] = waitUntil;
-            }
-
+            args["timeout"] = timeout;
+            args["waitUntil"] = waitUntil;
             return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "goBack", args);
         }
 
         internal Task<ResponseChannel> GoForwardAsync(float? timeout, WaitUntilState? waitUntil)
         {
             var args = new Dictionary<string, object>();
-
-            if (timeout != null)
-            {
-                args["timeout"] = timeout;
-            }
-
-            if (waitUntil != null)
-            {
-                args["waitUntil"] = waitUntil;
-            }
-
+            args["timeout"] = timeout;
+            args["waitUntil"] = waitUntil;
             return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "goForward", args);
         }
 
         internal Task<ResponseChannel> ReloadAsync(float? timeout, WaitUntilState? waitUntil)
         {
             var args = new Dictionary<string, object>();
-
-            if (timeout != null)
-            {
-                args["timeout"] = timeout;
-            }
-
-            if (waitUntil != null)
-            {
-                args["waitUntil"] = waitUntil;
-            }
-
+            args["timeout"] = timeout;
+            args["waitUntil"] = waitUntil;
             return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "reload", args);
         }
 
@@ -292,15 +265,9 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal async Task<JsonElement?> AccessibilitySnapshotAsync(bool? interestingOnly, IChannel<ElementHandle> root)
         {
-            var args = new Dictionary<string, object>
-            {
-                ["interestingOnly"] = interestingOnly ?? true,
-            };
-
-            if (root != null)
-            {
-                args["root"] = root;
-            }
+            var args = new Dictionary<string, object>();
+            args["interestingOnly"] = interestingOnly;
+            args["root"] = root;
 
             if ((await Connection.SendMessageToServerAsync(Guid, "accessibilitySnapshot", args).ConfigureAwait(false)).Value.TryGetProperty("rootAXNode", out var jsonElement))
             {
@@ -341,7 +308,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["key"] = key,
                 });
 
-        internal Task TypeAsync(string text, float delay)
+        internal Task TypeAsync(string text, float? delay)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "keyboardType",
@@ -351,7 +318,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["delay"] = delay,
                 });
 
-        internal Task PressAsync(string key, float delay)
+        internal Task PressAsync(string key, float? delay)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "keyboardPress",
@@ -370,7 +337,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["text"] = text,
                 });
 
-        internal Task MouseDownAsync(MouseButton button, int clickCount)
+        internal Task MouseDownAsync(MouseButton? button, int? clickCount)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "mouseDown",
@@ -391,7 +358,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["steps"] = steps,
                 });
 
-        internal Task MouseUpAsync(MouseButton button, int clickCount)
+        internal Task MouseUpAsync(MouseButton? button, int? clickCount)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "mouseUp",
@@ -401,7 +368,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["clickCount"] = clickCount,
                 });
 
-        internal Task MouseClickAsync(float x, float y, float delay, MouseButton button, int clickCount)
+        internal Task MouseClickAsync(float x, float y, float? delay, MouseButton? button, int? clickCount)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "mouseClick",
@@ -435,44 +402,21 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal async Task<string> ScreenshotAsync(
             string path,
-            bool fullPage,
+            bool? fullPage,
             Clip clip,
-            bool omitBackground,
+            bool? omitBackground,
             ScreenshotType? type,
             int? quality,
             float? timeout)
         {
-            var args = new Dictionary<string, object>
-            {
-                ["fullPage"] = fullPage,
-                ["omitBackground"] = omitBackground,
-            };
-
-            if (clip != null)
-            {
-                args["clip"] = clip;
-            }
-
-            if (path != null)
-            {
-                args["path"] = path;
-            }
-
-            if (type != null)
-            {
-                args["type"] = type;
-            }
-
-            if (timeout != null)
-            {
-                args["timeout"] = timeout;
-            }
-
-            if (quality != null)
-            {
-                args["quality"] = quality;
-            }
-
+            var args = new Dictionary<string, object>();
+            args["fullPage"] = fullPage;
+            args["omitBackground"] = omitBackground;
+            args["clip"] = clip;
+            args["path"] = path;
+            args["type"] = type;
+            args["timeout"] = timeout;
+            args["quality"] = quality;
             return (await Connection.SendMessageToServerAsync(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").ToString();
         }
 
@@ -496,63 +440,32 @@ namespace Microsoft.Playwright.Transport.Channels
                 });
 
         internal async Task<string> PdfAsync(
-            float scale,
-            bool displayHeaderFooter,
+            float? scale,
+            bool? displayHeaderFooter,
             string headerTemplate,
             string footerTemplate,
-            bool printBackground,
-            bool landscape,
+            bool? printBackground,
+            bool? landscape,
             string pageRanges,
             string format,
             string width,
             string height,
             Margin margin,
-            bool preferCSSPageSize)
+            bool? preferCSSPageSize)
         {
-            var args = new Dictionary<string, object>
-            {
-                ["scale"] = scale,
-                ["displayHeaderFooter"] = displayHeaderFooter,
-                ["printBackground"] = printBackground,
-                ["landscape"] = landscape,
-                ["preferCSSPageSize"] = preferCSSPageSize,
-            };
-
-            if (pageRanges != null)
-            {
-                args["pageRanges"] = pageRanges;
-            }
-
-            if (headerTemplate != null)
-            {
-                args["headerTemplate"] = headerTemplate;
-            }
-
-            if (footerTemplate != null)
-            {
-                args["footerTemplate"] = footerTemplate;
-            }
-
-            if (margin != null)
-            {
-                args["margin"] = margin;
-            }
-
-            if (!string.IsNullOrEmpty(width))
-            {
-                args["width"] = width;
-            }
-
-            if (format != null)
-            {
-                args["format"] = format;
-            }
-
-            if (!string.IsNullOrEmpty(height))
-            {
-                args["height"] = height;
-            }
-
+            var args = new Dictionary<string, object>();
+            args["scale"] = scale;
+            args["displayHeaderFooter"] = displayHeaderFooter;
+            args["printBackground"] = printBackground;
+            args["landscape"] = landscape;
+            args["preferCSSPageSize"] = preferCSSPageSize;
+            args["pageRanges"] = pageRanges;
+            args["headerTemplate"] = headerTemplate;
+            args["footerTemplate"] = footerTemplate;
+            args["margin"] = margin;
+            args["width"] = width;
+            args["format"] = format;
+            args["height"] = height;
             return (await Connection.SendMessageToServerAsync(Guid, "pdf", args).ConfigureAwait(false))?.GetProperty("pdf").ToString();
         }
     }

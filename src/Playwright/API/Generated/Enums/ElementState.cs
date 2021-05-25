@@ -38,7 +38,6 @@ namespace Microsoft.Playwright
 {
     public enum ElementState
     {
-        Undefined = 0,
         [EnumMember(Value = "visible")]
         Visible,
         [EnumMember(Value = "hidden")]

@@ -55,7 +55,7 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Defaults to <c>left</c>.</para></summary>
         [JsonPropertyName("button")]
-        public MouseButton Button { get; set; }
+        public MouseButton? Button { get; set; }
 
         /// <summary>
         /// <para>

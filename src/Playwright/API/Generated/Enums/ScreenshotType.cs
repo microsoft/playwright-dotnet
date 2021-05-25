@@ -38,7 +38,6 @@ namespace Microsoft.Playwright
 {
     public enum ScreenshotType
     {
-        Undefined = 0,
         [EnumMember(Value = "png")]
         Png,
         [EnumMember(Value = "jpeg")]

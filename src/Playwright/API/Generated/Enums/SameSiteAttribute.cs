@@ -38,7 +38,6 @@ namespace Microsoft.Playwright
 {
     public enum SameSiteAttribute
     {
-        Undefined = 0,
         [EnumMember(Value = "Strict")]
         Strict,
         [EnumMember(Value = "Lax")]

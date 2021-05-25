@@ -50,30 +50,34 @@ namespace Microsoft.Playwright
 
         internal IChannel<ElementHandle> ElementChannel => _channel;
 
-        public async Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorState state, float? timeout)
+        public async Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout)
             => (await _channel.WaitForSelectorAsync(
                 selector: selector,
-                state: state.EnsureDefaultValue(WaitForSelectorState.Visible),
+                state: state,
                 timeout: timeout).ConfigureAwait(false))?.Object;
 
         public Task WaitForElementStateAsync(ElementState state, float? timeout)
             => _channel.WaitForElementStateAsync(state, timeout);
 
         public Task PressAsync(string key, float? delay, bool? noWaitAfter, float? timeout)
-            => _channel.PressAsync(key, delay ?? 0, timeout, noWaitAfter);
+            => _channel.PressAsync(key, delay, timeout, noWaitAfter);
 
         public Task TypeAsync(string text, float? delay, bool? noWaitAfter, float? timeout)
-            => _channel.TypeAsync(text, delay ?? 0, timeout, noWaitAfter);
+            => _channel.TypeAsync(text, delay, timeout, noWaitAfter);
 
         public async Task<byte[]> ScreenshotAsync(
             string path,
-            ScreenshotType type,
+            ScreenshotType? type,
             int? quality,
             bool? omitBackground,
             float? timeout)
         {
-            type = !string.IsNullOrEmpty(path) ? DetermineScreenshotType(path) : type.EnsureDefaultValue(ScreenshotType.Png);
-            byte[] result = Convert.FromBase64String(await _channel.ScreenshotAsync(path, omitBackground ?? false, type, quality, timeout).ConfigureAwait(false));
+            if (type == null && !string.IsNullOrEmpty(path))
+            {
+                type = DetermineScreenshotType(path);
+            }
+
+            byte[] result = Convert.FromBase64String(await _channel.ScreenshotAsync(path, omitBackground, type, quality, timeout).ConfigureAwait(false));
 
             if (!string.IsNullOrEmpty(path))
             {
@@ -94,7 +98,7 @@ namespace Microsoft.Playwright
             bool? force,
             float? timeout,
             bool? trial)
-            => _channel.HoverAsync(modifiers, position, timeout, force ?? false, trial);
+            => _channel.HoverAsync(modifiers, position, timeout, force, trial);
 
         public Task ScrollIntoViewIfNeededAsync(float? timeout) => _channel.ScrollIntoViewIfNeededAsync(timeout);
 
@@ -103,7 +107,7 @@ namespace Microsoft.Playwright
         public Task<ElementHandleBoundingBoxResult> BoundingBoxAsync() => _channel.BoundingBoxAsync();
 
         public Task ClickAsync(
-            MouseButton button,
+            MouseButton? button,
             int? clickCount,
             float? delay,
             Position position,
@@ -112,10 +116,10 @@ namespace Microsoft.Playwright
             bool? noWaitAfter,
             float? timeout,
             bool? trial)
-            => _channel.ClickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force ?? false, noWaitAfter, trial);
+            => _channel.ClickAsync(delay, button, clickCount, modifiers, position, timeout, force, noWaitAfter, trial);
 
         public Task DblClickAsync(
-            MouseButton button,
+            MouseButton? button,
             float? delay,
             Position position,
             IEnumerable<KeyboardModifier> modifiers,
@@ -123,7 +127,7 @@ namespace Microsoft.Playwright
             bool? noWaitAfter,
             float? timeout,
             bool? trial)
-            => _channel.DblClickAsync(delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), modifiers, position, timeout, force ?? false, noWaitAfter, trial);
+            => _channel.DblClickAsync(delay, button, modifiers, position, timeout, force, noWaitAfter, trial);
 
         public Task SetInputFilesAsync(string files, bool? noWaitAfter, float? timeout)
             => SetInputFilesAsync(new[] { files }, noWaitAfter, timeout);
@@ -200,13 +204,13 @@ namespace Microsoft.Playwright
             => _channel.SelectOptionAsync(values, noWaitAfter, timeout);
 
         public Task CheckAsync(Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
-            => _channel.CheckAsync(position, timeout, force ?? false, noWaitAfter, trial);
+            => _channel.CheckAsync(position, timeout, force, noWaitAfter, trial);
 
         public Task UncheckAsync(Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
             => _channel.UncheckAsync(position, timeout, force, noWaitAfter, trial);
 
         public Task TapAsync(Position position, IEnumerable<KeyboardModifier> modifiers, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
-            => _channel.TapAsync(position, modifiers, timeout, force ?? false, noWaitAfter, trial);
+            => _channel.TapAsync(position, modifiers, timeout, force, noWaitAfter, trial);
 
         public Task<bool> IsCheckedAsync() => _channel.IsCheckedAsync();
 

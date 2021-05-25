@@ -1250,7 +1250,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// </param>
         /// <param name="options">Call options</param>
-        Task WaitForLoadStateAsync(LoadState state = default, FrameWaitForLoadStateOptions options = default);
+        Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions options = default);
 
         /// <summary>
         /// <para>

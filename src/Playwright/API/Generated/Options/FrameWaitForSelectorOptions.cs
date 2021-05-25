@@ -65,7 +65,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// </summary>
         [JsonPropertyName("state")]
-        public WaitForSelectorState State { get; set; }
+        public WaitForSelectorState? State { get; set; }
 
         /// <summary>
         /// <para>

@@ -50,7 +50,7 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Defaults to <c>left</c>.</para></summary>
         [JsonPropertyName("button")]
-        public MouseButton Button { get; set; }
+        public MouseButton? Button { get; set; }
 
         /// <summary><para>defaults to 1. See <see cref="UIEvent.detail"/>.</para></summary>
         [JsonPropertyName("clickCount")]

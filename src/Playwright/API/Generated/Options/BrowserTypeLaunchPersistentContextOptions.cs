@@ -94,12 +94,16 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
+        /// Supported values are "chrome", "chrome-beta", "chrome-dev", "chrome-canary", "msedge",
+        /// "msedge-beta", "msedge-dev", "msedge-canary".
+        /// </para>
+        /// <para>
         /// Browser distribution channel. Read more about using <a href="./browsers.md#google-chrome--microsoft-edge">Google
         /// Chrome and Microsoft Edge</a>.
         /// </para>
         /// </summary>
         [JsonPropertyName("channel")]
-        public BrowserChannel Channel { get; set; }
+        public string Channel { get; set; }
 
         /// <summary><para>Enable Chromium sandboxing. Defaults to <c>false</c>.</para></summary>
         [JsonPropertyName("chromiumSandbox")]
@@ -322,7 +326,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("colorScheme")]
-        public ColorScheme ColorScheme { get; set; }
+        public ColorScheme? ColorScheme { get; set; }
 
         /// <summary>
         /// <para>

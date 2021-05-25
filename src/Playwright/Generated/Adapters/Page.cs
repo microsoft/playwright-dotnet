@@ -302,7 +302,7 @@ namespace Microsoft.Playwright
             return WaitForFunctionAsync(expression, arg, pollingInterval: options.PollingInterval, timeout: options.Timeout);
         }
 
-        public Task WaitForLoadStateAsync(LoadState state = default, PageWaitForLoadStateOptions options = default)
+        public Task WaitForLoadStateAsync(LoadState? state = default, PageWaitForLoadStateOptions options = default)
         {
             options ??= new PageWaitForLoadStateOptions();
             return WaitForLoadStateAsync(state, timeout: options.Timeout);

@@ -38,7 +38,6 @@ namespace Microsoft.Playwright
 {
     public enum MixedState
     {
-        Undefined = 0,
         [EnumMember(Value = "On")]
         On,
         [EnumMember(Value = "Off")]

@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Transport.Channels
         internal Task<BrowserContextChannel> NewContextAsync(
             bool? acceptDownloads = null,
             bool? bypassCSP = null,
-            ColorScheme colorScheme = ColorScheme.Undefined,
+            ColorScheme? colorScheme = null,
             float? deviceScaleFactor = null,
             IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null,
             Geolocation geolocation = null,
@@ -53,82 +53,26 @@ namespace Microsoft.Playwright.Transport.Channels
             ViewportSize viewportSize = default)
         {
             var args = new Dictionary<string, object>();
-
-            if (acceptDownloads.HasValue)
-            {
-                args.Add("acceptDownloads", acceptDownloads.Value);
-            }
-
-            if (bypassCSP.HasValue)
-            {
-                args.Add("bypassCSP", bypassCSP.Value);
-            }
-
-            if (colorScheme != ColorScheme.Undefined)
-            {
-                args.Add("colorScheme", colorScheme);
-            }
-
-            if (deviceScaleFactor.HasValue)
-            {
-                args.Add("deviceScaleFactor", deviceScaleFactor.Value);
-            }
+            args.Add("acceptDownloads", acceptDownloads);
+            args.Add("bypassCSP", bypassCSP);
+            args.Add("colorScheme", colorScheme);
+            args.Add("deviceScaleFactor", deviceScaleFactor);
 
             if (extraHTTPHeaders != null)
             {
                 args["extraHTTPHeaders"] = extraHTTPHeaders.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray();
             }
 
-            if (geolocation != null)
-            {
-                args.Add("geolocation", geolocation);
-            }
-
-            if (hasTouch.HasValue)
-            {
-                args.Add("hasTouch", hasTouch.Value);
-            }
-
-            if (httpCredentials != null)
-            {
-                args.Add("httpCredentials", httpCredentials);
-            }
-
-            if (ignoreHTTPSErrors.HasValue)
-            {
-                args.Add("ignoreHTTPSErrors", ignoreHTTPSErrors.Value);
-            }
-
-            if (isMobile.HasValue)
-            {
-                args.Add("isMobile", isMobile.Value);
-            }
-
-            if (javaScriptEnabled.HasValue)
-            {
-                args.Add("javaScriptEnabled", javaScriptEnabled.Value);
-            }
-
-            if (!string.IsNullOrEmpty(locale))
-            {
-                args.Add("locale", locale);
-            }
-
-            if (offline.HasValue)
-            {
-                args.Add("offline", offline.Value);
-            }
-
-            if (permissions != null)
-            {
-                args.Add("permissions", permissions);
-            }
-
-            if (proxy != null)
-            {
-                args.Add("proxy", proxy);
-            }
-
+            args.Add("geolocation", geolocation);
+            args.Add("hasTouch", hasTouch);
+            args.Add("httpCredentials", httpCredentials);
+            args.Add("ignoreHTTPSErrors", ignoreHTTPSErrors);
+            args.Add("isMobile", isMobile);
+            args.Add("javaScriptEnabled", javaScriptEnabled);
+            args.Add("locale", locale);
+            args.Add("offline", offline);
+            args.Add("permissions", permissions);
+            args.Add("proxy", proxy);
             if (!string.IsNullOrEmpty(recordHarPath))
             {
                 args.Add("recordHar", new
@@ -138,8 +82,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 });
             }
 
-            if (!string.IsNullOrEmpty(recordVideoDir)
-                && recordVideoDir != null)
+            if (!string.IsNullOrEmpty(recordVideoDir))
             {
                 args.Add("recordVideo", new Dictionary<string, object>()
                 {
@@ -148,31 +91,16 @@ namespace Microsoft.Playwright.Transport.Channels
                 });
             }
 
-            if (!string.IsNullOrEmpty(storageState))
-            {
-                args.Add("storageState", storageState);
-            }
-
-            if (!string.IsNullOrEmpty(storageStatePath))
-            {
-                args.Add("storageStatePath", storageStatePath);
-            }
-
-            if (!string.IsNullOrEmpty(timezoneId))
-            {
-                args.Add("timezoneId", timezoneId);
-            }
-
-            if (!string.IsNullOrEmpty(userAgent))
-            {
-                args.Add("userAgent", userAgent);
-            }
+            args.Add("storageState", storageState);
+            args.Add("storageStatePath", storageStatePath);
+            args.Add("timezoneId", timezoneId);
+            args.Add("userAgent", userAgent);
 
             if (ViewportSize.NoViewport.Equals(viewportSize))
             {
                 args.Add("noDefaultViewport", true);
             }
-            else if (viewportSize != null && !ViewportSize.Default.Equals(viewportSize))
+            else
             {
                 args.Add("viewport", viewportSize);
             }
@@ -189,25 +117,11 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal Task StartTracingAsync(IPage page, bool screenshots, string path, IEnumerable<string> categories)
         {
-            var args = new Dictionary<string, object>
-            {
-                ["screenshots"] = screenshots,
-            };
-
-            if (path != null)
-            {
-                args["path"] = path;
-            }
-
-            if (page != null)
-            {
-                args["page"] = page;
-            }
-
-            if (categories != null)
-            {
-                args["categories"] = categories;
-            }
+            var args = new Dictionary<string, object>();
+            args["screenshots"] = screenshots;
+            args["path"] = path;
+            args["page"] = page;
+            args["categories"] = categories;
 
             return Connection.SendMessageToServerAsync(Guid, "crStartTracing", args);
         }

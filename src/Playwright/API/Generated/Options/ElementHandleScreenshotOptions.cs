@@ -63,7 +63,7 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Specify screenshot type, defaults to <c>png</c>.</para></summary>
         [JsonPropertyName("type")]
-        public ScreenshotType Type { get; set; }
+        public ScreenshotType? Type { get; set; }
 
         /// <summary><para>The quality of the image, between 0-100. Not applicable to <c>png</c> images.</para></summary>
         [JsonPropertyName("quality")]
