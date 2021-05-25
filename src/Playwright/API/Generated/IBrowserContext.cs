@@ -178,7 +178,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="urls">Optional list of URLs.</param>
-        Task<IReadOnlyCollection<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls = default);
+        Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls = default);
 
         /// <summary>
         /// <para>
@@ -332,7 +332,7 @@ namespace Microsoft.Playwright
         Task<IPage> NewPageAsync();
 
         /// <summary><para>Returns all open pages in the context.</para></summary>
-        IReadOnlyCollection<IPage> Pages { get; }
+        IReadOnlyList<IPage> Pages { get; }
 
         /// <summary>
         /// <para>

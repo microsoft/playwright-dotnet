@@ -152,7 +152,7 @@ namespace Microsoft.Playwright
         /// <param name="options">Call options</param>
         Task CheckAsync(string selector, FrameCheckOptions options = default);
 
-        IReadOnlyCollection<IFrame> ChildFrames { get; }
+        IReadOnlyList<IFrame> ChildFrames { get; }
 
         /// <summary>
         /// <para>
@@ -738,7 +738,7 @@ namespace Microsoft.Playwright
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        Task<IReadOnlyCollection<IElementHandle>> QuerySelectorAllAsync(string selector);
+        Task<IReadOnlyList<IElementHandle>> QuerySelectorAllAsync(string selector);
 
         /// <summary>
         /// <para>
@@ -777,7 +777,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string values, FrameSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, string values, FrameSelectOptionOptions options = default);
 
         /// <summary>
         /// <para>
@@ -816,7 +816,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IElementHandle values, FrameSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle values, FrameSelectOptionOptions options = default);
 
         /// <summary>
         /// <para>
@@ -855,7 +855,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<string> values, FrameSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, FrameSelectOptionOptions options = default);
 
         /// <summary>
         /// <para>
@@ -894,7 +894,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, FrameSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, FrameSelectOptionOptions options = default);
 
         /// <summary>
         /// <para>
@@ -933,7 +933,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, FrameSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, FrameSelectOptionOptions options = default);
 
         /// <summary>
         /// <para>
@@ -972,7 +972,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, FrameSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, FrameSelectOptionOptions options = default);
 
         /// <param name="html">HTML markup to assign to the page.</param>
         /// <param name="options">Call options</param>

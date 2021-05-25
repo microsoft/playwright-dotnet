@@ -238,7 +238,9 @@ namespace Microsoft.Playwright
         /// <para>
         /// HTTP Error responses, such as 404 or 503, are still successful responses from HTTP
         /// standpoint, so request will complete with <see cref="IPage.RequestFinished"/> event
-        /// and not with <see cref="IPage.RequestFailed"/>.
+        /// and not with <see cref="IPage.RequestFailed"/>. A request will only be considered
+        /// failed when the client cannot get an HTTP response from the server, e.g. due to
+        /// network error net::ERR_FAILED.
         /// </para>
         /// </remarks>
         event EventHandler<IRequest> RequestFailed;
@@ -885,7 +887,7 @@ namespace Microsoft.Playwright
         IFrame FrameByUrl(Func<string, bool> url);
 
         /// <summary><para>An array of all frames attached to the page.</para></summary>
-        IReadOnlyCollection<IFrame> Frames { get; }
+        IReadOnlyList<IFrame> Frames { get; }
 
         /// <summary><para>Returns element attribute value.</para></summary>
         /// <param name="selector">
@@ -1263,7 +1265,7 @@ namespace Microsoft.Playwright
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        Task<IReadOnlyCollection<IElementHandle>> QuerySelectorAllAsync(string selector);
+        Task<IReadOnlyList<IElementHandle>> QuerySelectorAllAsync(string selector);
 
         /// <summary>
         /// <para>
@@ -1461,7 +1463,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string values, PageSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, string values, PageSelectOptionOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1502,7 +1504,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IElementHandle values, PageSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle values, PageSelectOptionOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1543,7 +1545,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<string> values, PageSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, PageSelectOptionOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1584,7 +1586,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, PageSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, PageSelectOptionOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1625,7 +1627,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, PageSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, PageSelectOptionOptions options = default);
 
         /// <summary>
         /// <para>
@@ -1666,7 +1668,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, PageSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, PageSelectOptionOptions options = default);
 
         /// <param name="html">HTML markup to assign to the page.</param>
         /// <param name="options">Call options</param>
@@ -2334,6 +2336,6 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <remarks><para>This does not contain ServiceWorkers</para></remarks>
-        IReadOnlyCollection<IWorker> Workers { get; }
+        IReadOnlyList<IWorker> Workers { get; }
     }
 }

@@ -94,7 +94,7 @@ namespace Microsoft.Playwright
 
         IChannel<Frame> IChannelOwner<Frame>.Channel => _channel;
 
-        public IReadOnlyCollection<IFrame> ChildFrames => ChildFramesList;
+        public IReadOnlyList<IFrame> ChildFrames => ChildFramesList;
 
         public string Name { get; internal set; }
 
@@ -117,24 +117,24 @@ namespace Microsoft.Playwright
 
         public Task WaitForTimeoutAsync(float timeout) => Task.Delay(Convert.ToInt32(timeout));
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string value, bool? noWaitAfter, float? timeout)
+        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, string value, bool? noWaitAfter, float? timeout)
             => SelectOptionAsync(selector, new[] { new SelectOptionValue { Value = value } }, noWaitAfter, timeout);
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<string> values, bool? noWaitAfter, float? timeout)
+        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, bool? noWaitAfter, float? timeout)
             => SelectOptionAsync(selector, values.Select(v => new SelectOptionValue { Value = v }), noWaitAfter, timeout);
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue value, bool? noWaitAfter, float? timeout)
+        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue value, bool? noWaitAfter, float? timeout)
             => SelectOptionAsync(selector, new[] { value }, noWaitAfter, timeout);
 
-        public async Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, bool? noWaitAfter, float? timeout)
+        public async Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, bool? noWaitAfter, float? timeout)
         {
             return (await _channel.SelectOptionAsync(selector, values, noWaitAfter, timeout).ConfigureAwait(false)).ToList().AsReadOnly();
         }
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IElementHandle value, bool? noWaitAfter, float? timeout)
+        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle value, bool? noWaitAfter, float? timeout)
             => SelectOptionAsync(selector, new ElementHandle[] { (ElementHandle)value }, noWaitAfter, timeout);
 
-        public async Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, bool? noWaitAfter, float? timeout)
+        public async Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, bool? noWaitAfter, float? timeout)
         {
             return (await _channel.SelectOptionAsync(selector, values.Select(v => (ElementHandle)v), noWaitAfter, timeout).ConfigureAwait(false)).ToList().AsReadOnly();
         }
@@ -355,7 +355,7 @@ namespace Microsoft.Playwright
         public async Task<IElementHandle> QuerySelectorAsync(string selector)
             => (await _channel.QuerySelectorAsync(selector).ConfigureAwait(false))?.Object;
 
-        public async Task<IReadOnlyCollection<IElementHandle>> QuerySelectorAllAsync(string selector)
+        public async Task<IReadOnlyList<IElementHandle>> QuerySelectorAllAsync(string selector)
             => (await _channel.QuerySelectorAllAsync(selector).ConfigureAwait(false)).Select(c => ((ElementHandleChannel)c).Object).ToList().AsReadOnly();
 
         public async Task<IJSHandle> WaitForFunctionAsync(string expression, object args, float? pollingInterval, float? timeout)

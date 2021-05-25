@@ -44,7 +44,7 @@ namespace Microsoft.Playwright
 
         public IBrowser Browser { get; }
 
-        public IReadOnlyCollection<IPage> Pages => PagesList;
+        public IReadOnlyList<IPage> Pages => PagesList;
 
         internal float DefaultNavigationTimeout
         {
@@ -113,7 +113,7 @@ namespace Microsoft.Playwright
             }
         }
 
-        public Task<IReadOnlyCollection<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls = null) => Channel.CookiesAsync(urls);
+        public Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls = null) => Channel.CookiesAsync(urls);
 
         public Task ExposeBindingAsync(string name, Action callback, bool? handle = null)
             => ExposeBindingAsync(name, _ => callback());

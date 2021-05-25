@@ -152,7 +152,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["offline"] = offline,
                 });
 
-        internal async Task<IReadOnlyCollection<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls)
+        internal async Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls)
         {
             return (await Connection.SendMessageToServerAsync(
                 Guid,
@@ -160,7 +160,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 new Dictionary<string, object>
                 {
                     ["urls"] = urls?.ToArray() ?? Array.Empty<string>(),
-                }).ConfigureAwait(false))?.GetProperty("cookies").ToObject<IReadOnlyCollection<BrowserContextCookiesResult>>();
+                }).ConfigureAwait(false))?.GetProperty("cookies").ToObject<IReadOnlyList<BrowserContextCookiesResult>>();
         }
 
         internal Task AddCookiesAsync(IEnumerable<Cookie> cookies)
