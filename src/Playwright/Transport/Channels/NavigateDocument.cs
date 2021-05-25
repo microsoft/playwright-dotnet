@@ -1,6 +1,6 @@
 using Microsoft.Playwright.Transport.Channels;
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright.Transport.Channels
 {
     internal class NavigateDocument
     {

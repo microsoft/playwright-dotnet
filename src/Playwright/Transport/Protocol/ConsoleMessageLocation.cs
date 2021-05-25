@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class ConsoleMessageLocation
     {

@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright
 {
