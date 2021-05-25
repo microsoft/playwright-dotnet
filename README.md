@@ -120,9 +120,9 @@ playwrightcli codegen https://www.microsoft.com
 
 ### Driver Discoverability
 
-By default, the tool will attempt to look at `%USERPROFILE%\.nuget\packages\microsoft.playwright` for the location of the driver. If that behaviour
-is undesired, you can set the `PW_CLI_DRIVERPATH` environment variable, to specify the location. The location needs to point to the
-folder containing the `Drivers` folder, e.g. `C:\Users\username\.nuget\packages\microsoft.playwright\1.11.0-alpha\`.
+By default, the tool will attempt to look at the current folder, and attempt to find the `.playwright` folder where the drivers would get copied, after installing the NuGet package. If 
+that fails, it will continue to look into `%USERPROFILE%\.nuget\packages\microsoft.playwright`. If that behaviour is undesired, you can set the `PW_CLI_DRIVERPATH` environment variable,
+to specify the location. The location needs to point to the folder containing the `Drivers` folder, e.g. `C:\Users\username\.nuget\packages\microsoft.playwright\1.11.0-alpha\`.
 
 ## Resources
 

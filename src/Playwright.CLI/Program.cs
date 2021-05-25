@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Microsoft.Playwright.CLI
 {
@@ -14,6 +15,7 @@ namespace Microsoft.Playwright.CLI
         static void Main(string[] args)
         {
             string pwPath = GetFullPath();
+            Console.WriteLine(pwPath);
             var playwrightStartInfo = new ProcessStartInfo(pwPath, string.Join(' ', args))
             {
                 UseShellExecute = false,
@@ -29,10 +31,37 @@ namespace Microsoft.Playwright.CLI
             };
 
             playwrightStartInfo.EnvironmentVariables.Add("PW_CLI_TARGET_LANG", "csharp");
-            pwProcess.Start();
-            pwProcess.WaitForExit();
+            playwrightStartInfo.EnvironmentVariables.Add("PW_CLI_NAME ", "playwrightcli");
 
-            Console.WriteLine(pwProcess.StandardOutput.ReadToEnd());
+            using var outputWaitHandle = new AutoResetEvent(false);
+            using var errorWaitHandle = new AutoResetEvent(false);
+
+            pwProcess.OutputDataReceived += (_, e) =>
+            {
+                if (e.Data == null) outputWaitHandle.Set();
+                else
+                {
+                    Console.WriteLine(e.Data);
+                }
+            };
+
+            pwProcess.ErrorDataReceived += (_, e) =>
+            {
+                if (e.Data == null) errorWaitHandle.Set();
+                else
+                {
+                    Console.Error.WriteLine(e.Data);
+                }
+            };
+
+            pwProcess.Start();
+
+            pwProcess.BeginOutputReadLine();
+            pwProcess.BeginErrorReadLine();
+
+            pwProcess.WaitForExit();
+            outputWaitHandle.WaitOne(5000);
+            errorWaitHandle.WaitOne(5000);
         }
 
         private static string GetFullPath()
@@ -51,16 +80,22 @@ namespace Microsoft.Playwright.CLI
 
             var version = Assembly.GetEntryAssembly().GetName().Version;
 
-            var assumedRootDirectory = new DirectoryInfo(
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            string sourcePath = TraverseAndFindFolder(new DirectoryInfo("."));
+            if (!string.IsNullOrEmpty(sourcePath))
+            {
+                return GetDriverPath(sourcePath, string.Empty);
+            }
+
+            sourcePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
                 ".nuget",
                 "packages",
-                "microsoft.playwright"));
+                "microsoft.playwright");
+
+            var assumedRootDirectory = new DirectoryInfo(sourcePath);
 
             if (!assumedRootDirectory.Exists)
             {
-                // figure out what to fallback to?
-                return string.Empty;
+                throw new Exception("Driver Not found");
             }
 
             string path = Path.Combine(assumedRootDirectory.FullName, version.ToString());
@@ -74,7 +109,7 @@ namespace Microsoft.Playwright.CLI
                     path = assumedRootDirectory.GetDirectories().FirstOrDefault()?.FullName;
                     if (string.IsNullOrEmpty(path))
                     {
-                        throw new Exception("not found");
+                        throw new Exception("Driver Not found");
                     }
                 }
             }
@@ -83,27 +118,44 @@ namespace Microsoft.Playwright.CLI
             return GetDriverPath(assumedPath.FullName);
         }
 
+        private static string TraverseAndFindFolder(DirectoryInfo root)
+        {
+            foreach (var subdir in root.EnumerateDirectories())
+            {
+                if (subdir.Name == ".playwright")
+                {
+                    return subdir.FullName;
+                }
+
+                string attempt = TraverseAndFindFolder(subdir);
+                if (!string.IsNullOrEmpty(attempt))
+                    return attempt;
+            }
+
+            return null;
+        }
+
         // TODO: Potentially move this to a shared file between Playwright and the CLI
-        private static string GetDriverPath(string driversDirectory)
+        private static string GetDriverPath(string driversDirectory, string nativeComponent = "native")
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 if (RuntimeInformation.OSArchitecture == Architecture.X64)
                 {
-                    return Path.Combine(driversDirectory, "win-x64", "native", "playwright.cmd");
+                    return Path.Combine(driversDirectory, "win-x64", nativeComponent, "playwright.cmd");
                 }
                 else
                 {
-                    return Path.Combine(driversDirectory, "win-x86", "native", "playwright.cmd");
+                    return Path.Combine(driversDirectory, "win-x86", nativeComponent, "playwright.cmd");
                 }
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return Path.Combine(driversDirectory, "osx", "native", "playwright.sh");
+                return Path.Combine(driversDirectory, "osx", nativeComponent, "playwright.sh");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return Path.Combine(driversDirectory, "unix", "native", "playwright.sh");
+                return Path.Combine(driversDirectory, "unix", nativeComponent, "playwright.sh");
             }
 
             throw new Exception("Unknown platform");
