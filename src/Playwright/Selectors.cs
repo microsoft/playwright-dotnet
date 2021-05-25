@@ -1,20 +1,25 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright
 {
-    internal partial class Selectors : ISelectors
+    internal partial class Selectors : ChannelOwnerBase, IChannelOwner<Selectors>, ISelectors
     {
-        private readonly List<SelectorsOwner> _channels = new List<SelectorsOwner>();
-        private readonly List<SelectorsRegisterParams> _registrations = new List<SelectorsRegisterParams>();
+        private readonly SelectorsChannel _channel;
 
-        internal Selectors()
+        internal Selectors(IChannelOwner parent, string guid) : base(parent, guid)
         {
+            _channel = new SelectorsChannel(guid, parent.Connection, this);
         }
 
-        internal static Selectors SharedSelectors { get; } = new Selectors();
+        ChannelBase IChannelOwner.Channel => _channel;
+
+        IChannel<Selectors> IChannelOwner<Selectors>.Channel => _channel;
 
         public async Task RegisterAsync(string name, string script, string path, bool? contentScript = null)
         {
@@ -26,42 +31,7 @@ namespace Microsoft.Playwright
                 Source = script,
                 ContentScript = contentScript,
             };
-
-            var tasks = new List<Task>();
-            foreach (var channel in _channels)
-            {
-                tasks.Add(channel.RegisterAsync(registerParam));
-            }
-
-            try
-            {
-                await Task.WhenAll(tasks).ConfigureAwait(false);
-            }
-            catch (Exception ex) when (ex.Message.Contains("Connection closed"))
-            {
-                // Ignore connection closed exceptions.
-            }
-
-            _registrations.Add(registerParam);
-        }
-
-        internal async Task AddChannelAsync(SelectorsOwner channel)
-        {
-            _channels.Add(channel);
-            var tasks = new List<Task>();
-            foreach (var registration in _registrations)
-            {
-                tasks.Add(channel.RegisterAsync(registration));
-            }
-
-            try
-            {
-                await Task.WhenAll(tasks).ConfigureAwait(false);
-            }
-            catch (Exception ex) when (ex.Message.Contains("Connection closed"))
-            {
-                // Ignore connection closed exceptions.
-            }
+            await _channel.RegisterAsync(registerParam).ConfigureAwait(false);
         }
     }
 }

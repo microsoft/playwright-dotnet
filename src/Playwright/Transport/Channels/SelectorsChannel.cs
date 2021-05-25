@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
-    internal class SelectorsChannel : Channel<SelectorsOwner>
+    internal class SelectorsChannel : Channel<Selectors>
     {
-        public SelectorsChannel(string guid, Connection connection, SelectorsOwner owner) : base(guid, connection, owner)
+        public SelectorsChannel(string guid, Connection connection, Selectors owner) : base(guid, connection, owner)
         {
         }
 

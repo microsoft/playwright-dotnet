@@ -35,8 +35,6 @@ namespace Microsoft.Playwright
             {
                 _devices[entry.Name] = entry.Descriptor;
             }
-
-            _ = (Selectors as Selectors).AddChannelAsync(initializer.Selectors.Object);
         }
 
         ~PlaywrightImpl() => Dispose(false);
@@ -53,7 +51,7 @@ namespace Microsoft.Playwright
 
         public IBrowserType Webkit { get => _initializer.Webkit; set => throw new NotSupportedException(); }
 
-        public ISelectors Selectors { get => Microsoft.Playwright.Selectors.SharedSelectors; set => throw new NotSupportedException(); }
+        public ISelectors Selectors { get => _initializer.Selectors; }
 
         public IReadOnlyDictionary<string, BrowserNewContextOptions> Devices => _devices;
 

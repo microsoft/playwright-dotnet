@@ -20,7 +20,7 @@ namespace Microsoft.Playwright
         {
             _channel = new ResponseChannel(guid, parent.Connection, this);
             _initializer = initializer;
-            _initializer.Request.Object.Timing = _initializer.Timing;
+            _initializer.Request.Timing = _initializer.Timing;
 
             Headers = new Dictionary<string, string>();
             foreach (var kv in initializer.Headers)
@@ -33,15 +33,27 @@ namespace Microsoft.Playwright
                     Headers.Add(kv.Name.ToLower(), kv.Value);
                 }
             }
+
+            _initializer.Request.Headers.Clear();
+            foreach (var kv in _initializer.RequestHeaders)
+            {
+                var name = kv.Name.ToLower();
+
+                // There are case-sensitive dupes :/
+                if (!_initializer.Request.Headers.ContainsKey(name))
+                {
+                    _initializer.Request.Headers.Add(kv.Name.ToLower(), kv.Value);
+                }
+            }
         }
 
-        public IFrame Frame => _initializer.Request.Object.Frame;
+        public IFrame Frame => _initializer.Request.Frame;
 
         public Dictionary<string, string> Headers { get; }
 
         public bool Ok => Status is 0 or >= 200 and <= 299;
 
-        public IRequest Request => _initializer.Request.Object;
+        public IRequest Request => _initializer.Request;
 
         public int Status => _initializer.Status;
 

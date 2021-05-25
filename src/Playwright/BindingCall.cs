@@ -45,7 +45,7 @@ namespace Microsoft.Playwright
 
                 if (methodParams.Length == 1 && methodParams[0] == typeof(IJSHandle))
                 {
-                    args.Add(_initializer.Handle.Object);
+                    args.Add(_initializer.Handle);
                 }
                 else
                 {

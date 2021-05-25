@@ -1,15 +1,15 @@
-using Microsoft.Playwright.Transport.Channels;
+using System.Collections.Generic;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class PageInitializer
     {
-        public FrameChannel MainFrame { get; set; }
+        public Frame MainFrame { get; set; }
 
-        public PageViewportSizeResult ViewportSize { get; set; }
+        public ViewportSize ViewportSize { get; set; }
 
         public bool IsClosed { get; set; }
 
-        public PageChannel Opener { get; set; }
+        public Page Opener { get; set; }
     }
 }
