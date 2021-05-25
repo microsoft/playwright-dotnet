@@ -16,7 +16,8 @@ namespace Microsoft.Playwright.Transport.Converters
             _connection = connection;
         }
 
-        public override bool CanConvert(Type type) => typeof(T).IsAssignableFrom(type);
+        public override bool CanConvert(Type type)
+            => (typeof(T) == typeof(IChannelOwner) && typeof(T).IsAssignableFrom(type)) || type == typeof(T);
 
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
