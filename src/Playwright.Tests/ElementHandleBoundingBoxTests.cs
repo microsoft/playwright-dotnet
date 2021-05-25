@@ -141,7 +141,7 @@ namespace Microsoft.Playwright.Tests
             Assert.Equal(Math.Round(webBoundingBox.Height * 100), Math.Round(box.Height * 100));
         }
 
-        public static void AssertEqual(float X, float Y, float Width, float Height, ElementHandleBoundingBoxResult box)
+        private static void AssertEqual(float X, float Y, float Width, float Height, ElementHandleBoundingBoxResult box)
         {
             Assert.Equal(X, box.X);
             Assert.Equal(Y, box.Y);
@@ -149,7 +149,7 @@ namespace Microsoft.Playwright.Tests
             Assert.Equal(Height, box.Height);
         }
 
-        public static void AssertEqual(ElementHandleBoundingBoxResult boxA, ElementHandleBoundingBoxResult boxB)
+        private static void AssertEqual(ElementHandleBoundingBoxResult boxA, ElementHandleBoundingBoxResult boxB)
         {
             Assert.Equal(boxA.X, boxB.X);
             Assert.Equal(boxA.Y, boxB.Y);
