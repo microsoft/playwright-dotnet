@@ -24,7 +24,7 @@ namespace Microsoft.Playwright
 
         public string Type => _initializer.Type;
 
-        public IReadOnlyCollection<IJSHandle> Args => _initializer.Args.Select(a => ((JSHandleChannel)a).Object).ToList().AsReadOnly();
+        public IReadOnlyCollection<IJSHandle> Args => _initializer.Args.Select(a => (IJSHandle)a).ToList().AsReadOnly();
 
         public string Location => _initializer.Location.ToString();
 
