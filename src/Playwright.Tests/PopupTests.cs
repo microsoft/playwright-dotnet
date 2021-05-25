@@ -158,7 +158,7 @@ namespace Microsoft.Playwright.Tests
                 return { width: win.innerWidth, height: win.innerHeight };
             }");
 
-            Assert.Equal(new ViewportSize { Width = 400, Height = 500 }, size);
+            AssertEqual(400, 500, size);
         }
 
         [PlaywrightTest("popup.spec.ts", "should use viewport size from window features")]
@@ -183,8 +183,8 @@ namespace Microsoft.Playwright.Tests
             await popup.WaitForLoadStateAsync();
             var resized = await popup.EvaluateAsync<ViewportSize>(@"() => ({ width: window.innerWidth, height: window.innerHeight })");
 
-            Assert.Equal(new ViewportSize { Width = 600, Height = 300 }, size);
-            Assert.Equal(new ViewportSize { Width = 500, Height = 400 }, resized);
+            AssertEqual(600, 300, size);
+            AssertEqual(500, 400, resized);
         }
 
         [PlaywrightTest("popup.spec.ts", "should respect routes from browser context using window.open")]
@@ -263,6 +263,12 @@ namespace Microsoft.Playwright.Tests
             }");
 
             Assert.Equal(13, injected);
+        }
+
+        void AssertEqual(int width, int height, ViewportSize size)
+        {
+            Assert.Equal(width, size.Width);
+            Assert.Equal(height, size.Height);
         }
     }
 }

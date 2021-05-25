@@ -32,11 +32,7 @@ namespace Microsoft.Playwright.Tests
                 @"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
                     resolve({latitude: position.coords.latitude, longitude: position.coords.longitude});
                 }))");
-            Assert.Equal(new Geolocation
-            {
-                Latitude = 10,
-                Longitude = 10
-            }, geolocation);
+            AssertEqual(10, 10, geolocation);
         }
 
         [PlaywrightTest("geolocation.spec.ts", "should throw when invalid longitude")]
@@ -79,21 +75,13 @@ namespace Microsoft.Playwright.Tests
                 @"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
                     resolve({latitude: position.coords.latitude, longitude: position.coords.longitude});
                 }))");
-            Assert.Equal(new Geolocation
-            {
-                Latitude = 10,
-                Longitude = 10
-            }, geolocation);
+            AssertEqual(10, 10, geolocation);
 
             var geolocation2 = await page2.EvaluateAsync<Geolocation>(
                 @"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
                     resolve({latitude: position.coords.latitude, longitude: position.coords.longitude});
                 }))");
-            Assert.Equal(new Geolocation
-            {
-                Latitude = 20,
-                Longitude = 20
-            }, geolocation2);
+            AssertEqual(20, 20, geolocation2);
         }
 
         [PlaywrightTest("geolocation.spec.ts", "should throw with missing latitude")]
@@ -113,7 +101,8 @@ namespace Microsoft.Playwright.Tests
                 Longitude = 20,
                 Latitude = 20
             });
-            Assert.Equal(options.Geolocation, geolocation);
+            Assert.Equal(options.Geolocation.Latitude, geolocation.Latitude);
+            Assert.Equal(options.Geolocation.Longitude, geolocation.Longitude);
         }
 
         [PlaywrightTest("geolocation.spec.ts", "should throw with missing longitude in default options")]
@@ -141,7 +130,8 @@ namespace Microsoft.Playwright.Tests
             var geolocation = await page.EvaluateAsync<Geolocation>(@"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
                 resolve({latitude: position.coords.latitude, longitude: position.coords.longitude});
             }))");
-            Assert.Equal(options.Geolocation, geolocation);
+            Assert.Equal(options.Geolocation.Latitude, geolocation.Latitude);
+            Assert.Equal(options.Geolocation.Longitude, geolocation.Longitude);
         }
 
         [PlaywrightTest("geolocation.spec.ts", "watchPosition should be notified")]
@@ -216,6 +206,12 @@ namespace Microsoft.Playwright.Tests
             var geolocation = await popupTask.Result.EvaluateAsync<Geolocation>("() => window.geolocationPromise");
             Assert.Equal(10, geolocation.Longitude);
             Assert.Equal(10, geolocation.Longitude);
+        }
+
+        void AssertEqual(float lat, float lon, Geolocation geolocation)
+        {
+            Assert.Equal(lat, geolocation.Latitude);
+            Assert.Equal(lon, geolocation.Longitude);
         }
     }
 }

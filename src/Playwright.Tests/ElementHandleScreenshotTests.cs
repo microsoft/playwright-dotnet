@@ -312,7 +312,8 @@ namespace Microsoft.Playwright.Tests
             Assert.Equal(windowSize.Height, decoded.Height);
 
             var sizeAfter = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
-            Assert.Equal(sizeBefore, sizeAfter);
+            Assert.Equal(sizeBefore.Width, sizeAfter.Width);
+            Assert.Equal(sizeBefore.Height, sizeAfter.Height);
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should take fullPage screenshots when default viewport is null")]
@@ -332,7 +333,8 @@ namespace Microsoft.Playwright.Tests
             Assert.NotEmpty(screenshot);
 
             var sizeAfter = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
-            Assert.Equal(sizeBefore, sizeAfter);
+            Assert.Equal(sizeBefore.Width, sizeAfter.Width);
+            Assert.Equal(sizeBefore.Height, sizeAfter.Height);
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should restore default viewport after fullPage screenshot")]
@@ -399,7 +401,8 @@ namespace Microsoft.Playwright.Tests
             Assert.NotEmpty(screenshot);
 
             var sizeAfter = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
-            Assert.Equal(sizeBefore, sizeAfter);
+            Assert.Equal(sizeBefore.Width, sizeAfter.Width);
+            Assert.Equal(sizeBefore.Height, sizeAfter.Height);
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should restore viewport after element screenshot and exception")]
