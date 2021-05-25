@@ -280,7 +280,7 @@ namespace Microsoft.Playwright.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "selectText", args);
         }
 
-        internal async Task<IReadOnlyCollection<string>> SelectOptionAsync(object values, bool? noWaitAfter = null, float? timeout = null)
+        internal async Task<IReadOnlyList<string>> SelectOptionAsync(object values, bool? noWaitAfter = null, float? timeout = null)
         {
             var args = new Dictionary<string, object>();
 

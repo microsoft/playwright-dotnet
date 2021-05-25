@@ -206,37 +206,37 @@ namespace Microsoft.Playwright
             return ScreenshotAsync(path: options.Path, type: options.Type, quality: options.Quality, fullPage: options.FullPage, clip: options.Clip, omitBackground: options.OmitBackground, timeout: options.Timeout);
         }
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, string values, PageSelectOptionOptions options = default)
+        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, string values, PageSelectOptionOptions options = default)
         {
             options ??= new PageSelectOptionOptions();
             return SelectOptionAsync(selector, values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IElementHandle values, PageSelectOptionOptions options = default)
+        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle values, PageSelectOptionOptions options = default)
         {
             options ??= new PageSelectOptionOptions();
             return SelectOptionAsync(selector, values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<string> values, PageSelectOptionOptions options = default)
+        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, PageSelectOptionOptions options = default)
         {
             options ??= new PageSelectOptionOptions();
             return SelectOptionAsync(selector, values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, SelectOptionValue values, PageSelectOptionOptions options = default)
+        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, PageSelectOptionOptions options = default)
         {
             options ??= new PageSelectOptionOptions();
             return SelectOptionAsync(selector, values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, PageSelectOptionOptions options = default)
+        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, PageSelectOptionOptions options = default)
         {
             options ??= new PageSelectOptionOptions();
             return SelectOptionAsync(selector, values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, PageSelectOptionOptions options = default)
+        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, PageSelectOptionOptions options = default)
         {
             options ??= new PageSelectOptionOptions();
             return SelectOptionAsync(selector, values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
