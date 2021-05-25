@@ -118,7 +118,7 @@ namespace Microsoft.Playwright.Transport.Channels
             channelArgs.Add("ignoreHTTPSErrors", ignoreHTTPSErrors);
             channelArgs.Add("bypassCSP", bypassCSP);
 
-            if (ViewportSize.NoViewport.Equals(viewportSize))
+            if (viewportSize?.Width == -1)
             {
                 channelArgs.Add("noDefaultViewport", true);
             }

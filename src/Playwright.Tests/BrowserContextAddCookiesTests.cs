@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -56,7 +57,7 @@ namespace Microsoft.Playwright.Tests
                 Value = c.Value
             }));
             var newCookies = await Context.CookiesAsync();
-            Assert.Equal(cookies, newCookies);
+            AssertEqual(cookies, newCookies);
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should send cookie header")]
@@ -516,6 +517,26 @@ namespace Microsoft.Playwright.Tests
             else
             {
                 Assert.Empty(cookies);
+            }
+        }
+
+        void AssertEqual(IEnumerable<BrowserContextCookiesResult> ea, IEnumerable<BrowserContextCookiesResult> eb)
+        {
+            var aa = ea.ToList();
+            var bb = eb.ToList();
+            Assert.Equal(aa.Count, bb.Count);
+            for (int i = 0; i < aa.Count; ++i)
+            {
+                var a = aa[i];
+                var b = bb[i];
+                Assert.Equal(a.Name, b.Name);
+                Assert.Equal(a.Value, b.Value);
+                Assert.Equal(a.Domain, b.Domain);
+                Assert.Equal(a.Path, b.Path);
+                Assert.Equal(a.Expires, b.Expires);
+                Assert.Equal(a.HttpOnly, b.HttpOnly);
+                Assert.Equal(a.Secure, b.Secure);
+                Assert.Equal(a.SameSite, b.SameSite);
             }
         }
     }

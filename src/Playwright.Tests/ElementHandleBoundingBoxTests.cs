@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
             var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(13)");
             var box = await elementHandle.BoundingBoxAsync();
-            Assert.Equal(new ElementHandleBoundingBoxResult(x: 100, y: 50, width: 50, height: 50), box);
+            AssertEqual(100, 50, 50, 50, box);
         }
 
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should handle nested frames")]
@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
             var nestedFrame = Page.Frames.First(frame => frame.Name == "dos");
             var elementHandle = await nestedFrame.QuerySelectorAsync("div");
             var box = await elementHandle.BoundingBoxAsync();
-            Assert.Equal(new ElementHandleBoundingBoxResult(x: 24, y: 224, width: 268, height: 18), box);
+            AssertEqual(24, 224, 268, 18, box);
         }
 
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should return null for invisible elements")]
@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.Tests
             var elementHandle = await Page.QuerySelectorAsync("div");
             await Page.EvaluateAsync("element => element.style.height = '200px'", elementHandle);
             var box = await elementHandle.BoundingBoxAsync();
-            Assert.Equal(new ElementHandleBoundingBoxResult(x: 8, y: 8, width: 100, height: 200), box);
+            AssertEqual(8, 8, 100, 200, box);
         }
 
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should work with SVG nodes")]
@@ -75,7 +75,7 @@ namespace Microsoft.Playwright.Tests
                     const rect = e.getBoundingClientRect();
                     return { x: rect.x, y: rect.y, width: rect.width, height: rect.height};
                 }", element);
-            Assert.Equal(webBoundingBox, pwBoundingBox);
+            AssertEqual(webBoundingBox, pwBoundingBox);
         }
 
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should work with page scale")]
@@ -139,6 +139,22 @@ namespace Microsoft.Playwright.Tests
             Assert.Equal(Math.Round(webBoundingBox.Y * 100), Math.Round(box.Y * 100));
             Assert.Equal(Math.Round(webBoundingBox.Width * 100), Math.Round(box.Width * 100));
             Assert.Equal(Math.Round(webBoundingBox.Height * 100), Math.Round(box.Height * 100));
+        }
+
+        public static void AssertEqual(float X, float Y, float Width, float Height, ElementHandleBoundingBoxResult box)
+        {
+            Assert.Equal(X, box.X);
+            Assert.Equal(Y, box.Y);
+            Assert.Equal(Width, box.Width);
+            Assert.Equal(Height, box.Height);
+        }
+
+        public static void AssertEqual(ElementHandleBoundingBoxResult boxA, ElementHandleBoundingBoxResult boxB)
+        {
+            Assert.Equal(boxA.X, boxB.X);
+            Assert.Equal(boxA.Y, boxB.Y);
+            Assert.Equal(boxA.Width, boxB.Width);
+            Assert.Equal(boxA.Height, boxB.Height);
         }
     }
 }

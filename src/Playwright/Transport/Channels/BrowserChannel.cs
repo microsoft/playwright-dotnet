@@ -96,7 +96,7 @@ namespace Microsoft.Playwright.Transport.Channels
             args.Add("timezoneId", timezoneId);
             args.Add("userAgent", userAgent);
 
-            if (ViewportSize.NoViewport.Equals(viewportSize))
+            if (viewportSize?.Width == -1)
             {
                 args.Add("noDefaultViewport", true);
             }
