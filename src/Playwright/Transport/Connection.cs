@@ -457,7 +457,7 @@ namespace Microsoft.Playwright.Transport
                     result = new WebSocket(parent, guid, initializer?.ToObject<WebSocketInitializer>(GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.Selectors:
-                    result = new SelectorsOwner(parent, guid);
+                    result = new Selectors(parent, guid);
                     break;
                 case ChannelOwnerType.Stream:
                     result = new PlaywrightStream(parent, guid);

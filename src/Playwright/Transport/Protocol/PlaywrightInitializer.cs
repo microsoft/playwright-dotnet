@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
@@ -7,12 +6,14 @@ namespace Microsoft.Playwright.Transport.Protocol
     {
         public BrowserType Chromium { get; set; }
 
-        public BrowserType Webkit { get; set; }
-
         public BrowserType Firefox { get; set; }
 
-        public SelectorsChannel Selectors { get; set; }
+        public BrowserType Webkit { get; set; }
 
-        public IEnumerable<DeviceDescriptorEntry> DeviceDescriptors { get; set; }
+        public List<DeviceDescriptorEntry> DeviceDescriptors { get; set; }
+
+        public Selectors Selectors { get; set; }
+
+        public Browser PreLaunchedBrowser { get; set; }
     }
 }

@@ -71,7 +71,6 @@ namespace Microsoft.Playwright.Helpers
                 IgnoreNullValues = true,
                 Converters =
                 {
-                    new MixedStateConverter(),
                     new JsonStringEnumMemberConverter(JsonNamingPolicy.CamelCase),
                 },
             };

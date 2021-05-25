@@ -63,10 +63,14 @@ namespace Microsoft.Playwright
 
             _channel = new PageChannel(guid, parent.Connection, this);
 
-            MainFrame = initializer.MainFrame.Object;
+            MainFrame = initializer.MainFrame;
             MainFrame.Page = this;
             _frames.Add(MainFrame);
-            ViewportSize = initializer.ViewportSize;
+            if (initializer.ViewportSize != null)
+            {
+                ViewportSize = new PageViewportSizeResult { Width = initializer.ViewportSize.Width, Height = initializer.ViewportSize.Height };
+            }
+
             IsClosed = initializer.IsClosed;
             _accessibility = new Accessibility(_channel);
             _keyboard = new Keyboard(_channel);
@@ -252,7 +256,7 @@ namespace Microsoft.Playwright
 
         internal List<Worker> WorkersList { get; } = new List<Worker>();
 
-        internal Page Opener => _initializer.Opener?.Object;
+        internal Page Opener => _initializer.Opener;
 
         internal float DefaultTimeout
         {

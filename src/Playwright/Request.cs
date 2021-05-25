@@ -21,13 +21,13 @@ namespace Microsoft.Playwright
             // TODO: Consider using a mapper between RequestInitiliazer and this object
             _channel = new RequestChannel(guid, parent.Connection, this);
             _initializer = initializer;
-            RedirectedFrom = _initializer.RedirectedFrom?.Object;
+            RedirectedFrom = _initializer.RedirectedFrom;
             PostDataBuffer = _initializer.PostData != null ? Convert.FromBase64String(_initializer.PostData) : null;
             Timing = new RequestTimingResult();
 
             if (RedirectedFrom != null)
             {
-                _initializer.RedirectedFrom.Object.RedirectedTo = this;
+                _initializer.RedirectedFrom.RedirectedTo = this;
             }
 
             Headers = new Dictionary<string, string>();
@@ -55,7 +55,7 @@ namespace Microsoft.Playwright
 
         public bool IsNavigationRequest => _initializer.IsNavigationRequest;
 
-        public string Method => _initializer.Method.Method;
+        public string Method => _initializer.Method;
 
         public string PostData => PostDataBuffer == null ? null : Encoding.UTF8.GetString(PostDataBuffer);
 

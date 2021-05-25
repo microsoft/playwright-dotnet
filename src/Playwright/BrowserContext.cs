@@ -32,16 +32,6 @@ namespace Microsoft.Playwright
             Channel.Route += Channel_Route;
             _initializer = initializer;
             Browser = parent as IBrowser;
-
-            if (initializer.Pages != null)
-            {
-                foreach (var pageChannel in initializer.Pages)
-                {
-                    var page = ((PageChannel)pageChannel).Object;
-                    PagesList.Add(page);
-                    page.Context = this;
-                }
-            }
         }
 
         public event EventHandler<IBrowserContext> Close;
