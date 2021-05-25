@@ -86,37 +86,37 @@ namespace Microsoft.Playwright
             return ScrollIntoViewIfNeededAsync(timeout: options.Timeout);
         }
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(string values, ElementHandleSelectOptionOptions options = default)
+        public Task<IReadOnlyList<string>> SelectOptionAsync(string values, ElementHandleSelectOptionOptions options = default)
         {
             options ??= new ElementHandleSelectOptionOptions();
             return SelectOptionAsync(values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(IElementHandle values, ElementHandleSelectOptionOptions options = default)
+        public Task<IReadOnlyList<string>> SelectOptionAsync(IElementHandle values, ElementHandleSelectOptionOptions options = default)
         {
             options ??= new ElementHandleSelectOptionOptions();
             return SelectOptionAsync(values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<string> values, ElementHandleSelectOptionOptions options = default)
+        public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<string> values, ElementHandleSelectOptionOptions options = default)
         {
             options ??= new ElementHandleSelectOptionOptions();
             return SelectOptionAsync(values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(SelectOptionValue values, ElementHandleSelectOptionOptions options = default)
+        public Task<IReadOnlyList<string>> SelectOptionAsync(SelectOptionValue values, ElementHandleSelectOptionOptions options = default)
         {
             options ??= new ElementHandleSelectOptionOptions();
             return SelectOptionAsync(values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, ElementHandleSelectOptionOptions options = default)
+        public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, ElementHandleSelectOptionOptions options = default)
         {
             options ??= new ElementHandleSelectOptionOptions();
             return SelectOptionAsync(values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
-        public Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, ElementHandleSelectOptionOptions options = default)
+        public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, ElementHandleSelectOptionOptions options = default)
         {
             options ??= new ElementHandleSelectOptionOptions();
             return SelectOptionAsync(values, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);

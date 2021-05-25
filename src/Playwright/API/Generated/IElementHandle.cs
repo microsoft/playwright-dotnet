@@ -464,7 +464,7 @@ namespace Microsoft.Playwright
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        Task<IReadOnlyCollection<IElementHandle>> QuerySelectorAllAsync(string selector);
+        Task<IReadOnlyList<IElementHandle>> QuerySelectorAllAsync(string selector);
 
         /// <summary>
         /// <para>Returns the buffer with the captured screenshot.</para>
@@ -530,7 +530,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(string values, ElementHandleSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string values, ElementHandleSelectOptionOptions options = default);
 
         /// <summary>
         /// <para>
@@ -570,7 +570,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(IElementHandle values, ElementHandleSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(IElementHandle values, ElementHandleSelectOptionOptions options = default);
 
         /// <summary>
         /// <para>
@@ -610,7 +610,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<string> values, ElementHandleSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<string> values, ElementHandleSelectOptionOptions options = default);
 
         /// <summary>
         /// <para>
@@ -650,7 +650,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(SelectOptionValue values, ElementHandleSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(SelectOptionValue values, ElementHandleSelectOptionOptions options = default);
 
         /// <summary>
         /// <para>
@@ -690,7 +690,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, ElementHandleSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, ElementHandleSelectOptionOptions options = default);
 
         /// <summary>
         /// <para>
@@ -730,7 +730,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyCollection<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, ElementHandleSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, ElementHandleSelectOptionOptions options = default);
 
         /// <summary>
         /// <para>

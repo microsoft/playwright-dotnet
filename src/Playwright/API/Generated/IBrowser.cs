@@ -102,7 +102,7 @@ namespace Microsoft.Playwright
         /// System.Console.WriteLine(browser.Contexts.Count); // prints "1"
         /// </code>
         /// </summary>
-        IReadOnlyCollection<IBrowserContext> Contexts { get; }
+        IReadOnlyList<IBrowserContext> Contexts { get; }
 
         /// <summary><para>Indicates that the browser is connected.</para></summary>
         bool IsConnected { get; }

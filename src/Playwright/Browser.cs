@@ -28,7 +28,7 @@ namespace Microsoft.Playwright
 
         IChannel<Browser> IChannelOwner<Browser>.Channel => Channel;
 
-        public IReadOnlyCollection<IBrowserContext> Contexts => BrowserContextsList.ToArray();
+        public IReadOnlyList<IBrowserContext> Contexts => BrowserContextsList.ToArray();
 
         public bool IsConnected { get; private set; }
 
