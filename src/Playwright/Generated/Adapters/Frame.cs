@@ -254,7 +254,7 @@ namespace Microsoft.Playwright
             return WaitForFunctionAsync(expression, arg, pollingInterval: options.PollingInterval, timeout: options.Timeout);
         }
 
-        public Task WaitForLoadStateAsync(LoadState state = default, FrameWaitForLoadStateOptions options = default)
+        public Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions options = default)
         {
             options ??= new FrameWaitForLoadStateOptions();
             return WaitForLoadStateAsync(state, timeout: options.Timeout);

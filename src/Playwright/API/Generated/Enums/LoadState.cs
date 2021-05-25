@@ -38,7 +38,6 @@ namespace Microsoft.Playwright
 {
     public enum LoadState
     {
-        Undefined = 0,
         [EnumMember(Value = "load")]
         Load,
         [EnumMember(Value = "domcontentloaded")]

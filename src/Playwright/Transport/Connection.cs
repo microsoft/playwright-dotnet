@@ -26,7 +26,9 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -138,6 +140,7 @@ namespace Microsoft.Playwright.Transport
 
             var st = new StackTrace(true);
             var stack = new List<object>();
+
             for (int i = 0; i < st.FrameCount; ++i)
             {
                 StackFrame sf = st.GetFrame(i);
@@ -151,6 +154,34 @@ namespace Microsoft.Playwright.Transport
             }
 
             var metadata = new { stack = stack };
+
+            var sanitizedArgs = new Dictionary<string, object>();
+            if (args != null)
+            {
+                if (args is IDictionary<string, object> dictionary && dictionary.Keys.OfType<string>().Any())
+                {
+                    foreach (var kv in dictionary)
+                    {
+                        if (kv.Value != null)
+                        {
+                            sanitizedArgs.Add(kv.Key.ToString(), kv.Value);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(args))
+                    {
+                        object obj = propertyDescriptor.GetValue(args);
+                        if (obj != null)
+                        {
+                            var name = propertyDescriptor.Name.Substring(0, 1).ToLower() + propertyDescriptor.Name.Substring(1);
+                            sanitizedArgs.Add(name, obj);
+                        }
+                    }
+                }
+            }
+
             await _queue.EnqueueAsync(() =>
             {
                 var message = new MessageRequest
@@ -158,7 +189,7 @@ namespace Microsoft.Playwright.Transport
                     Id = id,
                     Guid = guid,
                     Method = method,
-                    Params = args,
+                    Params = sanitizedArgs,
                     Metadata = metadata,
                 };
 

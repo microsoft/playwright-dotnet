@@ -191,7 +191,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("colorScheme")]
-        public ColorScheme ColorScheme { get; set; }
+        public ColorScheme? ColorScheme { get; set; }
 
         /// <summary>
         /// <para>

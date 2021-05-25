@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Tests
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
 
-            await Page.EmulateMediaAsync(new PageEmulateMediaOptions { ColorScheme = ColorScheme.Undefined });
+            await Page.EmulateMediaAsync(new PageEmulateMediaOptions { ColorScheme = ColorScheme.Null });
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
         }
@@ -138,7 +138,7 @@ namespace Microsoft.Playwright.Tests
             await Page.EmulateMediaAsync();
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
-            await Page.EmulateMediaAsync(new PageEmulateMediaOptions { Media = Media.Undefined });
+            await Page.EmulateMediaAsync(new PageEmulateMediaOptions { Media = Media.Null });
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
         }

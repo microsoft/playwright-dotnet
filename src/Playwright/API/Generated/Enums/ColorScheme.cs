@@ -38,12 +38,13 @@ namespace Microsoft.Playwright
 {
     public enum ColorScheme
     {
-        Undefined = 0,
         [EnumMember(Value = "light")]
         Light,
         [EnumMember(Value = "dark")]
         Dark,
         [EnumMember(Value = "no-preference")]
         NoPreference,
+        [EnumMember(Value = "null")]
+        Null,
     }
 }

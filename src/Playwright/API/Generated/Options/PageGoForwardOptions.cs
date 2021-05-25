@@ -65,7 +65,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// </summary>
         [JsonPropertyName("waitUntil")]
-        public WaitUntilState WaitUntil { get; set; }
+        public WaitUntilState? WaitUntil { get; set; }
 
         /// <summary>
         /// <para>

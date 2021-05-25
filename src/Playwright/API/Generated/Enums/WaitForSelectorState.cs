@@ -38,7 +38,6 @@ namespace Microsoft.Playwright
 {
     public enum WaitForSelectorState
     {
-        Undefined = 0,
         [EnumMember(Value = "attached")]
         Attached,
         [EnumMember(Value = "detached")]

@@ -38,7 +38,6 @@ namespace Microsoft.Playwright
 {
     public enum KeyboardModifier
     {
-        Undefined = 0,
         [EnumMember(Value = "Alt")]
         Alt,
         [EnumMember(Value = "Control")]

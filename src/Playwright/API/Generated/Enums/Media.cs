@@ -38,10 +38,11 @@ namespace Microsoft.Playwright
 {
     public enum Media
     {
-        Undefined = 0,
         [EnumMember(Value = "screen")]
         Screen,
         [EnumMember(Value = "print")]
         Print,
+        [EnumMember(Value = "null")]
+        Null,
     }
 }

@@ -43,7 +43,7 @@ namespace Microsoft.Playwright
 
         public async Task<IBrowser> LaunchAsync(
             IEnumerable<string> args = default,
-            BrowserChannel channel = default,
+            string channel = default,
             bool? chromiumSandbox = default,
             bool? devtools = default,
             string downloadsPath = default,
@@ -81,7 +81,7 @@ namespace Microsoft.Playwright
         public async Task<IBrowserContext> LaunchPersistentContextAsync(
             string userDataDir,
             IEnumerable<string> args = default,
-            BrowserChannel channel = default,
+            string channel = default,
             bool? chromiumSandbox = default,
             bool? devtools = default,
             string downloadsPath = default,
@@ -113,7 +113,7 @@ namespace Microsoft.Playwright
             IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = default,
             bool? offline = default,
             HttpCredentials httpCredentials = default,
-            ColorScheme colorScheme = default,
+            ColorScheme? colorScheme = default,
             string recordHarPath = default,
             bool? recordHarOmitContent = default,
             string recordVideoDir = default,

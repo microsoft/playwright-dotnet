@@ -38,7 +38,6 @@ namespace Microsoft.Playwright
 {
     public enum MouseButton
     {
-        Undefined = 0,
         [EnumMember(Value = "left")]
         Left,
         [EnumMember(Value = "right")]

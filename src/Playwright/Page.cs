@@ -292,33 +292,24 @@ namespace Microsoft.Playwright
         public Task EmulateMediaAsync(Media? media, ColorScheme? colorScheme)
         {
             var args = new Dictionary<string, object>();
-
-            if (media != null)
-            {
-                args["media"] = media == Media.Undefined ? "null" : media;
-            }
-
-            if (colorScheme != null)
-            {
-                args["colorScheme"] = colorScheme == ColorScheme.Undefined ? "null" : colorScheme;
-            }
-
+            args["media"] = media;
+            args["colorScheme"] = colorScheme;
             return _channel.EmulateMediaAsync(args);
         }
 
-        public Task<IResponse> GotoAsync(string url, WaitUntilState waitUntil, float? timeout, string referer)
-            => MainFrame.GotoAsync(url, waitUntil.EnsureDefaultValue(WaitUntilState.Load), referer, timeout);
+        public Task<IResponse> GotoAsync(string url, WaitUntilState? waitUntil, float? timeout, string referer)
+            => MainFrame.GotoAsync(url, waitUntil, referer, timeout);
 
-        public Task WaitForURLAsync(string urlString, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined)
+        public Task WaitForURLAsync(string urlString, float? timeout = null, WaitUntilState? waitUntil = default)
             => MainFrame.WaitForURLAsync(urlString, timeout, waitUntil);
 
-        public Task WaitForURLAsync(Regex urlRegex, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined)
+        public Task WaitForURLAsync(Regex urlRegex, float? timeout = null, WaitUntilState? waitUntil = default)
             => MainFrame.WaitForURLAsync(urlRegex, timeout, waitUntil);
 
-        public Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = null, WaitUntilState waitUntil = WaitUntilState.Undefined)
+        public Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = null, WaitUntilState? waitUntil = default)
             => MainFrame.WaitForURLAsync(urlFunc, timeout, waitUntil);
 
-        public Task<IResponse> WaitForNavigationAsync(string urlString = default, Regex urlRegex = default, Func<string, bool> urlFunc = default, WaitUntilState waitUntil = default, float? timeout = default)
+        public Task<IResponse> WaitForNavigationAsync(string urlString = default, Regex urlRegex = default, Func<string, bool> urlFunc = default, WaitUntilState? waitUntil = default, float? timeout = default)
             => MainFrame.WaitForNavigationAsync(urlString, urlRegex, urlFunc, waitUntil, timeout);
 
         public Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, float? timeout = default)
@@ -459,7 +450,7 @@ namespace Microsoft.Playwright
             bool? force,
             float? timeout,
             bool? trial)
-            => MainFrame.HoverAsync(selector, position, modifiers, force ?? false, timeout, trial);
+            => MainFrame.HoverAsync(selector, position, modifiers, force, timeout, trial);
 
         public Task PressAsync(string selector, string key, float? delay, bool? noWaitAfter, float? timeout)
             => MainFrame.PressAsync(selector, key, delay, noWaitAfter, timeout);
@@ -484,26 +475,30 @@ namespace Microsoft.Playwright
 
         public Task WaitForTimeoutAsync(float timeout) => Task.Delay(Convert.ToInt32(timeout));
 
-        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorState state, float? timeout)
-            => MainFrame.WaitForSelectorAsync(selector, state.EnsureDefaultValue(WaitForSelectorState.Visible), timeout);
+        public Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout)
+            => MainFrame.WaitForSelectorAsync(selector, state, timeout);
 
         public Task<JsonElement?> EvaluateAsync(string expression, object arg) => MainFrame.EvaluateAsync(expression, arg);
 
         public async Task<byte[]> ScreenshotAsync(
             string path,
-            ScreenshotType type,
+            ScreenshotType? type,
             int? quality,
             bool? fullPage,
             Clip clip,
             bool? omitBackground,
             float? timeout)
         {
-            type = !string.IsNullOrEmpty(path) ? ElementHandle.DetermineScreenshotType(path) : type.EnsureDefaultValue(ScreenshotType.Png);
+            if (type == null && !string.IsNullOrEmpty(path))
+            {
+                type = ElementHandle.DetermineScreenshotType(path);
+            }
+
             byte[] result = Convert.FromBase64String(await _channel.ScreenshotAsync(
                 path,
-                fullPage ?? false,
+                fullPage,
                 clip,
-                omitBackground ?? false,
+                omitBackground,
                 type,
                 quality,
                 Convert.ToInt32(timeout)).ConfigureAwait(false));
@@ -517,8 +512,8 @@ namespace Microsoft.Playwright
             return result;
         }
 
-        public Task SetContentAsync(string html, float? timeout, WaitUntilState waitUntil)
-            => MainFrame.SetContentAsync(html, waitUntil.EnsureDefaultValue(WaitUntilState.Load), timeout);
+        public Task SetContentAsync(string html, float? timeout, WaitUntilState? waitUntil)
+            => MainFrame.SetContentAsync(html, waitUntil, timeout);
 
         public Task<string> ContentAsync() => MainFrame.ContentAsync();
 
@@ -540,7 +535,7 @@ namespace Microsoft.Playwright
 
         public Task ClickAsync(
             string selector,
-            MouseButton button,
+            MouseButton? button,
             int? clickCount,
             float? delay,
             Position position,
@@ -549,11 +544,11 @@ namespace Microsoft.Playwright
             bool? noWaitAfter,
             float? timeout,
             bool? trial)
-            => MainFrame.ClickAsync(selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), clickCount ?? 1, modifiers, position, timeout, force ?? false, noWaitAfter, trial);
+            => MainFrame.ClickAsync(selector, delay, button, clickCount, modifiers, position, timeout, force, noWaitAfter, trial);
 
         public Task DblClickAsync(
             string selector,
-            MouseButton button,
+            MouseButton? button,
             float? delay,
             Position position,
             IEnumerable<KeyboardModifier> modifiers,
@@ -561,16 +556,16 @@ namespace Microsoft.Playwright
             bool? noWaitAfter,
             float? timeout,
             bool? trial)
-            => MainFrame.DblClickAsync(selector, delay ?? 0, button.EnsureDefaultValue(MouseButton.Left), position, modifiers, timeout, force ?? false, noWaitAfter, trial);
+            => MainFrame.DblClickAsync(selector, delay, button, position, modifiers, timeout, force, noWaitAfter, trial);
 
-        public async Task<IResponse> GoBackAsync(WaitUntilState waitUntil, float? timeout)
-            => (await _channel.GoBackAsync(timeout, waitUntil.EnsureDefaultValue(WaitUntilState.Load)).ConfigureAwait(false))?.Object;
+        public async Task<IResponse> GoBackAsync(WaitUntilState? waitUntil, float? timeout)
+            => (await _channel.GoBackAsync(timeout, waitUntil).ConfigureAwait(false))?.Object;
 
-        public async Task<IResponse> GoForwardAsync(WaitUntilState waitUntil, float? timeout)
-            => (await _channel.GoForwardAsync(timeout, waitUntil.EnsureDefaultValue(WaitUntilState.Load)).ConfigureAwait(false))?.Object;
+        public async Task<IResponse> GoForwardAsync(WaitUntilState? waitUntil, float? timeout)
+            => (await _channel.GoForwardAsync(timeout, waitUntil).ConfigureAwait(false))?.Object;
 
-        public async Task<IResponse> ReloadAsync(WaitUntilState waitUntil, float? timeout)
-            => (await _channel.ReloadAsync(timeout, waitUntil.EnsureDefaultValue(WaitUntilState.Load)).ConfigureAwait(false))?.Object;
+        public async Task<IResponse> ReloadAsync(WaitUntilState? waitUntil, float? timeout)
+            => (await _channel.ReloadAsync(timeout, waitUntil).ConfigureAwait(false))?.Object;
 
         public Task ExposeBindingAsync(string name, Action<BindingSource> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
@@ -641,18 +636,18 @@ namespace Microsoft.Playwright
             }
 
             byte[] result = Convert.FromBase64String(await _channel.PdfAsync(
-                scale ?? 1,
-                displayHeaderFooter ?? false,
+                scale,
+                displayHeaderFooter,
                 headerTemplate,
                 footerTemplate,
-                printBackground ?? false,
-                landscape ?? false,
+                printBackground,
+                landscape,
                 pageRanges,
                 format,
                 width,
                 height,
                 margin,
-                preferCSSPageSize ?? false).ConfigureAwait(false));
+                preferCSSPageSize).ConfigureAwait(false));
 
             if (!string.IsNullOrEmpty(path))
             {
@@ -714,7 +709,7 @@ namespace Microsoft.Playwright
                     Handler = handler,
                 });
 
-        public Task WaitForLoadStateAsync(LoadState state, float? timeout)
+        public Task WaitForLoadStateAsync(LoadState? state, float? timeout)
             => MainFrame.WaitForLoadStateAsync(state, timeout);
 
         public Task SetViewportSizeAsync(int width, int height)

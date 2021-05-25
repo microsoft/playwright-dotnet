@@ -49,8 +49,8 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Changes the CSS media type of the page. The only allowed values are <c>'screen'</c>,
-        /// <c>'print'</c> and <c>null</c>. Passing <c>null</c> disables CSS media emulation.
+        /// Changes the CSS media type of the page. The only allowed values are <c>'Screen'</c>,
+        /// <c>'Print'</c> and <c>'Null'</c>. Passing <c>'Null'</c> disables CSS media emulation.
         /// </para>
         /// </summary>
         [JsonPropertyName("media")]
@@ -59,7 +59,7 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// Emulates <c>'prefers-colors-scheme'</c> media feature, supported values are <c>'light'</c>,
-        /// <c>'dark'</c>, <c>'no-preference'</c>. Passing <c>null</c> disables color scheme
+        /// <c>'dark'</c>, <c>'no-preference'</c>. Passing <c>'Null'</c> disables color scheme
         /// emulation.
         /// </para>
         /// </summary>

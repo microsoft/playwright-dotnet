@@ -139,17 +139,17 @@ namespace Microsoft.Playwright
             return (await _channel.SelectOptionAsync(selector, values.Select(v => (ElementHandle)v), noWaitAfter, timeout).ConfigureAwait(false)).ToList().AsReadOnly();
         }
 
-        public async Task WaitForLoadStateAsync(LoadState state, float? timeout)
+        public async Task WaitForLoadStateAsync(LoadState? state, float? timeout)
         {
             Task<LoadState> task;
             Waiter waiter = null;
-            state = state.EnsureDefaultValue(Microsoft.Playwright.LoadState.Load);
+            LoadState loadState = state ?? Microsoft.Playwright.LoadState.Load;
 
             try
             {
                 lock (_loadStates)
                 {
-                    if (_loadStates.Contains(state))
+                    if (_loadStates.Contains(loadState))
                     {
                         return;
                     }
@@ -158,7 +158,7 @@ namespace Microsoft.Playwright
                     task = waiter.WaitForEventAsync<LoadState>(this, "LoadState", s =>
                     {
                         waiter.Log($"  \"{s}\" event fired");
-                        return s == state;
+                        return s == loadState;
                     });
                 }
 
@@ -170,27 +170,27 @@ namespace Microsoft.Playwright
             }
         }
 
-        public Task WaitForURLAsync(string urlString, float? timeout = default, WaitUntilState waitUntil = default)
+        public Task WaitForURLAsync(string urlString, float? timeout = default, WaitUntilState? waitUntil = default)
             => WaitForURLAsync(urlString, null, null, timeout, waitUntil);
 
-        public Task WaitForURLAsync(Regex urlRegex, float? timeout = default, WaitUntilState waitUntil = default)
+        public Task WaitForURLAsync(Regex urlRegex, float? timeout = default, WaitUntilState? waitUntil = default)
             => WaitForURLAsync(null, urlRegex, null, timeout, waitUntil);
 
-        public Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = default, WaitUntilState waitUntil = default)
+        public Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = default, WaitUntilState? waitUntil = default)
             => WaitForURLAsync(null, null, urlFunc, timeout, waitUntil);
 
         public async Task<IResponse> WaitForNavigationAsync(
             string urlString = default,
             Regex urlRegex = default,
             Func<string, bool> urlFunc = default,
-            WaitUntilState waitUntil = default,
+            WaitUntilState? waitUntil = default,
             float? timeout = default)
         {
-            waitUntil = waitUntil.EnsureDefaultValue(WaitUntilState.Load);
+            WaitUntilState waitUntil2 = waitUntil ?? WaitUntilState.Load;
             var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", timeout);
             string toUrl = !string.IsNullOrEmpty(urlString) ? $" to \"{urlString}\"" : string.Empty;
 
-            waiter.Log($"waiting for navigation{toUrl} until \"{waitUntil}\"");
+            waiter.Log($"waiting for navigation{toUrl} until \"{waitUntil2}\"");
 
             var navigatedEventTask = waiter.WaitForEventAsync<FrameNavigatedEventArgs>(
                 this,
@@ -217,7 +217,7 @@ namespace Microsoft.Playwright
                 await waiter.WaitForPromiseAsync(tcs.Task).ConfigureAwait(false);
             }
 
-            if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntil.ToValueString()))
+            if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntil2.ToValueString()))
             {
                 await waiter.WaitForEventAsync<LoadState>(
                     this,
@@ -225,7 +225,7 @@ namespace Microsoft.Playwright
                     e =>
                     {
                         waiter.Log($"  \"{e}\" event fired");
-                        return e.ToValueString() == waitUntil.ToValueString();
+                        return e.ToValueString() == waitUntil2.ToValueString();
                     }).ConfigureAwait(false);
             }
 
@@ -246,7 +246,7 @@ namespace Microsoft.Playwright
             bool? noWaitAfter,
             float? timeout,
             bool? trial)
-            => _channel.TapAsync(selector, modifiers, position, timeout, force ?? false, noWaitAfter, trial);
+            => _channel.TapAsync(selector, modifiers, position, timeout, force, noWaitAfter, trial);
 
         public Task<string> ContentAsync() => _channel.ContentAsync();
 
@@ -254,7 +254,7 @@ namespace Microsoft.Playwright
             => _channel.FocusAsync(selector, timeout);
 
         public Task TypeAsync(string selector, string text, float? delay, bool? noWaitAfter, float? timeout)
-            => _channel.TypeAsync(selector, text, delay ?? 0, timeout, noWaitAfter);
+            => _channel.TypeAsync(selector, text, delay, timeout, noWaitAfter);
 
         public Task<string> GetAttributeAsync(string selector, string name, float? timeout)
             => _channel.GetAttributeAsync(selector, name, timeout);
@@ -272,7 +272,7 @@ namespace Microsoft.Playwright
             => _channel.HoverAsync(selector, position, modifiers, force, timeout, trial);
 
         public Task<string[]> PressAsync(string selector, string key, float? delay, bool? noWaitAfter, float? timeout)
-            => _channel.PressAsync(selector, key, delay ?? 0, timeout, noWaitAfter);
+            => _channel.PressAsync(selector, key, delay, timeout, noWaitAfter);
 
         public Task DispatchEventAsync(string selector, string type, object eventInit, float? timeout)
             => _channel.DispatchEventAsync(
@@ -321,7 +321,7 @@ namespace Microsoft.Playwright
         public Task ClickAsync(
             string selector,
             float? delay,
-            MouseButton button,
+            MouseButton? button,
             int? clickCount,
             IEnumerable<KeyboardModifier> modifiers,
             Position position,
@@ -329,12 +329,12 @@ namespace Microsoft.Playwright
             bool? force,
             bool? noWaitAfter,
             bool? trial)
-            => _channel.ClickAsync(selector, delay, button, clickCount, modifiers, position, timeout, force ?? false, noWaitAfter, trial);
+            => _channel.ClickAsync(selector, delay, button, clickCount, modifiers, position, timeout, force, noWaitAfter, trial);
 
         public Task DblClickAsync(
             string selector,
             float? delay,
-            MouseButton button,
+            MouseButton? button,
             Position position,
             IEnumerable<KeyboardModifier> modifiers,
             float? timeout,
@@ -344,12 +344,12 @@ namespace Microsoft.Playwright
             => _channel.DblClickAsync(selector, delay, button, position, modifiers, timeout, force, noWaitAfter, trial);
 
         public Task CheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
-            => _channel.CheckAsync(selector, position, timeout, force ?? false, noWaitAfter, trial);
+            => _channel.CheckAsync(selector, position, timeout, force, noWaitAfter, trial);
 
         public Task UncheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
-            => _channel.UncheckAsync(selector, position, timeout, force ?? false, noWaitAfter, trial);
+            => _channel.UncheckAsync(selector, position, timeout, force, noWaitAfter, trial);
 
-        public Task SetContentAsync(string html, WaitUntilState waitUntil, float? timeout)
+        public Task SetContentAsync(string html, WaitUntilState? waitUntil, float? timeout)
             => _channel.SetContentAsync(html, timeout, waitUntil);
 
         public async Task<IElementHandle> QuerySelectorAsync(string selector)
@@ -439,14 +439,30 @@ namespace Microsoft.Playwright
         public Task<bool> IsVisibleAsync(string selector, float? timeout)
             => _channel.IsVisibleAsync(selector, timeout);
 
-        private Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, float? timeout, WaitUntilState waitUntil)
+        private Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, float? timeout, WaitUntilState? waitUntil)
         {
             if (UrlMatches(Url, urlString, urlRegex, urlFunc))
             {
-                return WaitForLoadStateAsync(waitUntil.EnsureDefaultValue(WaitUntilState.Load).ToLoadState(), timeout);
+                return WaitForLoadStateAsync(ToLoadState(waitUntil), timeout);
             }
 
             return WaitForNavigationAsync(urlString, urlRegex, urlFunc, waitUntil, timeout);
+        }
+
+        private LoadState? ToLoadState(WaitUntilState? waitUntilState)
+        {
+            if (waitUntilState == null)
+            {
+                return null;
+            }
+
+            return waitUntilState switch
+            {
+                WaitUntilState.Load => Microsoft.Playwright.LoadState.Load,
+                WaitUntilState.DOMContentLoaded => Microsoft.Playwright.LoadState.DOMContentLoaded,
+                WaitUntilState.NetworkIdle => Microsoft.Playwright.LoadState.NetworkIdle,
+                _ => null,
+            };
         }
 
         private Waiter SetupNavigationWaiter(string apiName, float? timeout)
