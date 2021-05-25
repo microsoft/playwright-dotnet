@@ -355,15 +355,15 @@ namespace Microsoft.Playwright
             float? timeout)
             => MainFrame.WaitForFunctionAsync(expression, arg, pollingInterval, timeout);
 
-        public Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, PageWaitForEventOptions<T> options = default)
+        public Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, WaitForEventOptions<T> options = default)
         {
-            options ??= new PageWaitForEventOptions<T>();
+            options ??= new WaitForEventOptions<T>();
             return InnerWaitForEventAsync(playwrightEvent, null, options.Predicate, options.Timeout);
         }
 
-        public Task<T> RunAndWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, PageRunAndWaitForEventOptions<T> options = default)
+        public Task<T> RunAndWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, WaitForEventOptions<T> options = default)
         {
-            options ??= new PageRunAndWaitForEventOptions<T>();
+            options ??= new WaitForEventOptions<T>();
             return InnerWaitForEventAsync(playwrightEvent, action, options.Predicate, options.Timeout);
         }
 

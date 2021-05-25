@@ -160,20 +160,20 @@ namespace Microsoft.Playwright.Tests
             await Page.RunAndWaitForEventAsync(PageEvent.Console, async () =>
             {
                 await Context.SetGeolocationAsync(new Geolocation { Latitude = 0, Longitude = 10 });
-            }, new PageRunAndWaitForEventOptions<IConsoleMessage>
+            }, new WaitForEventOptions<IConsoleMessage>
             {
                 Predicate = e => e.Text.Contains("lat=0 lng=10")
             });
 
             await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Console, new PageWaitForEventOptions<IConsoleMessage>
+                Page.WaitForEventAsync(PageEvent.Console, new WaitForEventOptions<IConsoleMessage>
                 {
                     Predicate = e => e.Text.Contains("lat=20 lng=30")
                 }),
                 Context.SetGeolocationAsync(new Geolocation { Latitude = 20, Longitude = 30 }));
 
             await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Console, new PageWaitForEventOptions<IConsoleMessage>
+                Page.WaitForEventAsync(PageEvent.Console, new WaitForEventOptions<IConsoleMessage>
                 {
                     Predicate = e => e.Text.Contains("lat=40 lng=50")
                 }),

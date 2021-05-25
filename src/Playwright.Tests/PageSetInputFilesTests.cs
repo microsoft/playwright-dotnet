@@ -141,7 +141,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-set-input-files.spec.ts", "should respect timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public Task ShouldRespectTimeout() => Assert.ThrowsAsync<TimeoutException>(()
-            => Page.WaitForEventAsync(PageEvent.FileChooser, new PageWaitForEventOptions<IFileChooser> { Timeout = 1 }));
+            => Page.WaitForEventAsync(PageEvent.FileChooser, new WaitForEventOptions<IFileChooser> { Timeout = 1 }));
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should respect default timeout when there is no custom timeout")]
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
@@ -156,7 +156,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldPrioritizeExactTimeoutOverDefaultTimeout()
         {
             Page.SetDefaultTimeout(0);
-            await Assert.ThrowsAsync<TimeoutException>(() => Page.WaitForEventAsync(PageEvent.FileChooser, new PageWaitForEventOptions<IFileChooser> { Timeout = 1 }));
+            await Assert.ThrowsAsync<TimeoutException>(() => Page.WaitForEventAsync(PageEvent.FileChooser, new WaitForEventOptions<IFileChooser> { Timeout = 1 }));
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should work with no timeout")]
@@ -164,7 +164,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithNoTimeout()
         {
             var (chooser, _) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.FileChooser, new PageWaitForEventOptions<IFileChooser> { Timeout = 0 }),
+                Page.WaitForEventAsync(PageEvent.FileChooser, new WaitForEventOptions<IFileChooser> { Timeout = 0 }),
                 Page.EvaluateAsync(@"() => setTimeout(() => {
                     var el = document.createElement('input');
                     el.type = 'file';

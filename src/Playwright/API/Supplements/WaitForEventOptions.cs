@@ -36,7 +36,26 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class BrowserContextRunAndWaitForEventOptions<T> : BrowserContextWaitForEventOptions<T>
+    public class WaitForEventOptions<T>
     {
+        /// <summary>
+        /// <para>
+        /// Receives the <see cref="IConsoleMessage"/> object and resolves to truthy value when
+        /// the waiting should resolve.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("predicate")]
+        public Func<T, bool> Predicate { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+        /// <see cref="IBrowserContext.SetDefaultTimeout"/> in base of <see cref="IBrowserContext"/> events
+        /// or <see cref="IPage.SetDefaultTimeout"/> in base of <see cref="IPage"/> events.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("timeout")]
+        public float? Timeout { get; set; }
     }
 }

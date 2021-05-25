@@ -225,15 +225,15 @@ namespace Microsoft.Playwright
         public Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler = default)
             => UnrouteAsync(null, null, urlFunc, handler);
 
-        public Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, BrowserContextWaitForEventOptions<T> options = default)
+        public Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, WaitForEventOptions<T> options = default)
         {
-            options ??= new BrowserContextWaitForEventOptions<T>();
+            options ??= new WaitForEventOptions<T>();
             return InnerWaitForEventAsync(playwrightEvent, null, options.Predicate, options.Timeout);
         }
 
-        public Task<T> RunAndWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, BrowserContextRunAndWaitForEventOptions<T> options = default)
+        public Task<T> RunAndWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, WaitForEventOptions<T> options = default)
         {
-            options ??= new BrowserContextRunAndWaitForEventOptions<T>();
+            options ??= new WaitForEventOptions<T>();
             return InnerWaitForEventAsync(playwrightEvent, action, options.Predicate, options.Timeout);
         }
 
@@ -253,7 +253,7 @@ namespace Microsoft.Playwright
                 waiter.RejectOnEvent<IBrowserContext>(this, ContextEvent.Close.Name, new PlaywrightException("Context closed"));
             }
 
-            var result = waiter.WaitForEventAsync<T>(this, playwrightEvent.Name, null);
+            var result = waiter.WaitForEventAsync<T>(this, playwrightEvent.Name, predicate);
             if (action != null)
             {
                 await Task.WhenAll(result, action()).ConfigureAwait(false);
