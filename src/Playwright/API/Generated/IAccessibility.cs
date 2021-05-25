@@ -72,27 +72,8 @@ namespace Microsoft.Playwright
         /// </code>
         /// <para>An example of logging the focused node's name:</para>
         /// <code>
-        /// static AccessibilitySnapshotResult findFocusedNode(AccessibilitySnapshotResult root)<br/>
-        /// {<br/>
-        ///     var nodes = new Stack&lt;AccessibilitySnapshotResult&gt;(new[] { root });<br/>
-        ///     while (nodes.Count &gt; 0)<br/>
-        ///     {<br/>
-        ///         var node = nodes.Pop();<br/>
-        ///         if (node.Focused) return node;<br/>
-        ///         foreach (var innerNode in node.Children)<br/>
-        ///         {<br/>
-        ///             nodes.Push(innerNode);<br/>
-        ///         }<br/>
-        ///     }<br/>
-        /// <br/>
-        ///     return null;<br/>
-        /// }<br/>
-        /// <br/>
         /// var accessibilitySnapshot = await page.Accessibility.SnapshotAsync();<br/>
-        /// Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(accessibilitySnapshot));<br/>
-        /// var focusedNode = findFocusedNode(accessibilitySnapshot);<br/>
-        /// if (focusedNode != null)<br/>
-        ///     Console.WriteLine(focusedNode.Name);
+        /// Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(accessibilitySnapshot));
         /// </code>
         /// </summary>
         /// <remarks>

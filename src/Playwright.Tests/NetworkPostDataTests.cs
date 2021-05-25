@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
 
             var request = task.Result;
             Assert.Equal(expectedJsonValue, request.PostData);
-            Assert.Equal(value, request.PostDataJSON().RootElement.GetString());
+            Assert.Equal(value, request.PostDataJSON()?.GetString());
         }
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
@@ -70,7 +70,7 @@ namespace Microsoft.Playwright.Tests
             await Task.WhenAll(task, actualTask);
 
             var request = task.Result;
-            Assert.Equal(42, request.PostDataJSON().RootElement.GetProperty("value").GetInt32());
+            Assert.Equal(42, request.PostDataJSON()?.GetProperty("value").GetInt32());
         }
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
@@ -114,7 +114,7 @@ namespace Microsoft.Playwright.Tests
             await Task.WhenAll(task, actualTask);
 
             var request = task.Result;
-            Assert.Equal(42, request.PostDataJSON().RootElement.GetProperty("value").GetInt32());
+            Assert.Equal(42, request.PostDataJSON()?.GetProperty("value").GetInt32());
         }
     }
 }

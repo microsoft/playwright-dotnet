@@ -57,16 +57,15 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReturnJson()
         {
             var response = await Page.GotoAsync(TestConstants.ServerUrl + "/simple.json");
-            Assert.Equal("{\"foo\": \"bar\"}", (await response.JsonAsync()).RootElement.GetRawText());
+            Assert.Equal("{\"foo\": \"bar\"}", (await response.JsonAsync())?.GetRawText());
         }
 
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithGenerics()
         {
             var response = await Page.GotoAsync(TestConstants.ServerUrl + "/simple.json");
-            JsonDocument doc = await response.JsonAsync();
-            JsonElement root = doc.RootElement;
-            Assert.Equal("bar", root.GetProperty("foo").GetString());
+            var root = await response.JsonAsync();
+            Assert.Equal("bar", root?.GetProperty("foo").GetString());
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should return status text")]

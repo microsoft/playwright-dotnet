@@ -179,6 +179,6 @@ namespace Microsoft.Playwright
         /// of the values will be returned. Otherwise it will be parsed as JSON.
         /// </para>
         /// </summary>
-        JsonDocument PostDataJSON();
+        JsonElement? PostDataJSON();
     }
 }
