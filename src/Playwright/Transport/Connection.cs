@@ -143,8 +143,8 @@ namespace Microsoft.Playwright.Transport
 
             for (int i = 0; i < st.FrameCount; ++i)
             {
-                StackFrame sf = st.GetFrame(i);
-                var fileName = sf.GetFileName();
+                var sf = st.GetFrame(i);
+                string fileName = sf.GetFileName();
                 if (string.IsNullOrEmpty(fileName) || fileName.Contains("/Playwright/") || fileName.Contains("\\Playwright\\"))
                 {
                     continue;
@@ -153,18 +153,18 @@ namespace Microsoft.Playwright.Transport
                 stack.Add(new { file = fileName, line = sf.GetFileLineNumber() });
             }
 
-            var metadata = new { stack = stack };
+            var metadata = new { stack };
 
             var sanitizedArgs = new Dictionary<string, object>();
             if (args != null)
             {
-                if (args is IDictionary<string, object> dictionary && dictionary.Keys.OfType<string>().Any())
+                if (args is IDictionary<string, object> dictionary && dictionary.Keys.Any(f => f != null))
                 {
                     foreach (var kv in dictionary)
                     {
                         if (kv.Value != null)
                         {
-                            sanitizedArgs.Add(kv.Key.ToString(), kv.Value);
+                            sanitizedArgs.Add(kv.Key, kv.Value);
                         }
                     }
                 }
@@ -175,7 +175,7 @@ namespace Microsoft.Playwright.Transport
                         object obj = propertyDescriptor.GetValue(args);
                         if (obj != null)
                         {
-                            var name = propertyDescriptor.Name.Substring(0, 1).ToLower() + propertyDescriptor.Name.Substring(1);
+                            string name = propertyDescriptor.Name.Substring(0, 1).ToLower() + propertyDescriptor.Name.Substring(1);
                             sanitizedArgs.Add(name, obj);
                         }
                     }
@@ -232,9 +232,10 @@ namespace Microsoft.Playwright.Transport
         internal JsonSerializerOptions GetDefaultJsonSerializerOptions()
         {
             var options = JsonExtensions.GetNewDefaultSerializerOptions();
-            options.Converters.Add(new ElementHandleToGuidConverter(this));
-            options.Converters.Add(new ChannelOwnerToGuidConverter(this));
             options.Converters.Add(new ChannelToGuidConverter(this));
+            options.Converters.Add(new ChannelOwnerToGuidConverter<JSHandle>(this));
+            options.Converters.Add(new ChannelOwnerToGuidConverter<ElementHandle>(this));
+            options.Converters.Add(new ChannelOwnerToGuidConverter<IChannelOwner>(this));
             options.Converters.Add(new HttpMethodConverter());
 
             return options;
@@ -396,7 +397,6 @@ namespace Microsoft.Playwright.Transport
 
         private void CreateRemoteObject(string parentGuid, ChannelOwnerType type, string guid, JsonElement? initializer)
         {
-#pragma warning disable CA2000 // Dispose objects before losing scope
             IChannelOwner result = null;
             var parent = string.IsNullOrEmpty(parentGuid) ? _rootObject : Objects[parentGuid];
 
@@ -469,7 +469,6 @@ namespace Microsoft.Playwright.Transport
 
             Objects.TryAdd(guid, result);
             OnObjectCreated(guid, result);
-#pragma warning restore CA2000 // Dispose objects before losing scope
         }
 
         private void Close(string reason)
@@ -521,26 +520,6 @@ namespace Microsoft.Playwright.Transport
                 .Replace(
                     "use DEBUG=pw:api environment variable and rerun",
                     "pass `debug: \"pw:api\"` to LaunchAsync");
-
-            return new PlaywrightException(message);
-        }
-
-        private Exception CreateException(string message)
-        {
-            if (message.Contains("Timeout") && message.Contains("ms exceeded"))
-            {
-                return new TimeoutException(message);
-            }
-
-            if (message.Contains("Browser closed") || message.Contains("Target closed") || message.Contains("The page has been closed."))
-            {
-                return new PlaywrightException(message);
-            }
-
-            if (message.Contains("Navigation failed because"))
-            {
-                return new PlaywrightException(message);
-            }
 
             return new PlaywrightException(message);
         }

@@ -5,7 +5,9 @@ using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Transport.Converters
 {
-    internal class ChannelOwnerToGuidConverter : JsonConverter<IChannelOwner>
+    internal class ChannelOwnerToGuidConverter<T>
+        : JsonConverter<T>
+        where T : class, IChannelOwner
     {
         private readonly Connection _connection;
 
@@ -15,16 +17,16 @@ namespace Microsoft.Playwright.Transport.Converters
         }
 
         public override bool CanConvert(Type type)
-            => typeof(IChannelOwner).IsAssignableFrom(type) && type != typeof(ElementHandle);
+            => (typeof(T) == typeof(IChannelOwner) && typeof(T).IsAssignableFrom(type)) || type == typeof(T);
 
-        public override IChannelOwner Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             string guid = document.RootElement.GetProperty("guid").ToString();
-            return _connection.GetObject(guid);
+            return _connection.GetObject(guid) as T;
         }
 
-        public override void Write(Utf8JsonWriter writer, IChannelOwner value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
             writer.WriteString("guid", value.Channel.Guid);

@@ -9,7 +9,7 @@ namespace Microsoft.Playwright.Transport.Protocol
 
         public string Text { get; set; }
 
-        public List<ChannelBase> Args { get; set; }
+        public List<JSHandle> Args { get; set; }
 
         public ConsoleMessageLocation Location { get; set; }
     }
