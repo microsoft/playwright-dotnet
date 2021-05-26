@@ -243,7 +243,7 @@ namespace Microsoft.Playwright
                 waiter.RejectOnEvent<IBrowserContext>(this, ContextEvent.Close.Name, new PlaywrightException("Context closed"));
             }
 
-            var result = waiter.WaitForEventAsync<T>(this, playwrightEvent.Name, predicate);
+            var result = waiter.WaitForEventAsync(this, playwrightEvent.Name, predicate);
             if (action != null)
             {
                 await Task.WhenAll(result, action()).ConfigureAwait(false);
@@ -275,7 +275,7 @@ namespace Microsoft.Playwright
                 }
             }
 
-            _ = route.ContinueAsync(new RouteContinueOptions { });
+            _ = route.ContinueAsync(new RouteContinueOptions());
         }
 
         private Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler)
