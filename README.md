@@ -83,7 +83,7 @@ Console.WriteLine(dimensions);
 
 ## Intercept network requests
 
-This code snippet sets up request routing for a WebKit page to log all network requests.
+This code snippet sets up request routing for a Firefox page to log all network requests.
 
 ```cs 
 using var playwright = await Playwright.CreateAsync();
