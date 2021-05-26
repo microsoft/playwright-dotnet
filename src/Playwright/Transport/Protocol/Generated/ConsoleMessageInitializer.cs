@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
