@@ -238,9 +238,9 @@ namespace Microsoft.Playwright
             using var waiter = new Waiter(Channel, $"context.WaitForEventAsync(\"{playwrightEvent.Name}\")");
             waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{playwrightEvent.Name}\"");
 
-            if (playwrightEvent.Name != ContextEvent.Close.Name)
+            if (playwrightEvent.Name != BrowserContextEvent.Close.Name)
             {
-                waiter.RejectOnEvent<IBrowserContext>(this, ContextEvent.Close.Name, new PlaywrightException("Context closed"));
+                waiter.RejectOnEvent<IBrowserContext>(this, BrowserContextEvent.Close.Name, new PlaywrightException("Context closed"));
             }
 
             var result = waiter.WaitForEventAsync(this, playwrightEvent.Name, predicate);
@@ -253,7 +253,7 @@ namespace Microsoft.Playwright
         }
 
         public Task<IPage> RunAndWaitForPageAsync(Func<Task> action = default, Func<IPage, bool> predicate = default, float? timeout = default)
-            => InnerWaitForEventAsync(ContextEvent.Page, action, predicate, timeout);
+            => InnerWaitForEventAsync(BrowserContextEvent.Page, action, predicate, timeout);
 
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
 

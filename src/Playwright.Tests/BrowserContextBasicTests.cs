@@ -185,7 +185,7 @@ namespace Microsoft.Playwright.Tests
         public async Task CloseShouldAbortWaitForEvent()
         {
             var context = await Browser.NewContextAsync();
-            var waitTask = context.WaitForEventAsync(ContextEvent.Page);
+            var waitTask = context.WaitForEventAsync(BrowserContextEvent.Page);
             await context.CloseAsync();
             var exception = await Assert.ThrowsAsync<PlaywrightException>(() => waitTask);
             Assert.Equal("Context closed", exception.Message);

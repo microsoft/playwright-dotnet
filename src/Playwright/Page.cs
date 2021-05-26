@@ -334,24 +334,6 @@ namespace Microsoft.Playwright
         public Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicateFunc, float? timeout = default)
             => InnerWaitForEventAsync(PageEvent.Response, null, e => urlOrPredicateFunc(e), timeout);
 
-        public Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, Func<IConsoleMessage, bool> predicate = default, float? timeout = default)
-            => InnerWaitForEventAsync(PageEvent.Console, action, predicate, timeout);
-
-        public Task<IFileChooser> RunAndWaitForFileChooserAsync(Func<Task> action, Func<IFileChooser, bool> predicate = default, float? timeout = default)
-            => InnerWaitForEventAsync(PageEvent.FileChooser, action, predicate, timeout);
-
-        public Task<IPage> RunAndWaitForPopupAsync(Func<Task> action, Func<IPage, bool> predicate = default, float? timeout = default)
-            => InnerWaitForEventAsync(PageEvent.Popup, action, predicate, timeout);
-
-        public Task<IDownload> RunAndWaitForDownloadAsync(Func<Task> action, Func<IDownload, bool> predicate = default, float? timeout = default)
-            => InnerWaitForEventAsync(PageEvent.Download, action, predicate, timeout);
-
-        public Task<IWebSocket> RunAndWaitForWebSocketAsync(Func<Task> action, Func<IWebSocket, bool> predicate = default, float? timeout = default)
-            => InnerWaitForEventAsync(PageEvent.WebSocket, action, predicate, timeout);
-
-        public Task<IWorker> RunAndWaitForWorkerAsync(Func<Task> action, Func<IWorker, bool> predicate = default, float? timeout = default)
-            => InnerWaitForEventAsync(PageEvent.Worker, action, predicate, timeout);
-
         public Task<IJSHandle> WaitForFunctionAsync(
             string expression,
             object arg,
