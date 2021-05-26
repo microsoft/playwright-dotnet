@@ -86,7 +86,7 @@ namespace Microsoft.Playwright
         /// its response has started loading in the popup.
         /// </para>
         /// <code>
-        /// var popup = await context.RunAndWaitForEventAsync(BrowserContextEvent.Page, async =&gt;<br/>
+        /// var popup = await context.RunAndWaitForEventAsync(BrowserBrowserContextEvent.Page, async =&gt;<br/>
         /// {<br/>
         ///     await page.ClickAsync("a");<br/>
         /// });<br/>

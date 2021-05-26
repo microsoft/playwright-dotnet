@@ -26,7 +26,7 @@ namespace Microsoft.Playwright.Tests
             _ = Server.WaitForRequest("/popup/popup.html", request => requestTcs.TrySetResult(request.Headers["user-agent"]));
 
             await page.SetContentAsync("<a target=_blank rel=noopener href=\"/popup/popup.html\">link</a>");
-            var popupTask = context.WaitForEventAsync(ContextEvent.Page); // This is based on the python test so we can test WaitForPageAsync
+            var popupTask = context.WaitForEventAsync(BrowserContextEvent.Page); // This is based on the python test so we can test WaitForPageAsync
             await TaskUtils.WhenAll(popupTask, page.ClickAsync("a"));
 
             await popupTask.Result.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.Tests
                 intercepted = true;
             });
 
-            var popupTask = context.WaitForEventAsync(ContextEvent.Page);
+            var popupTask = context.WaitForEventAsync(BrowserContextEvent.Page);
             await TaskUtils.WhenAll(popupTask, page.ClickAsync("a"));
 
             Assert.True(intercepted);
@@ -203,7 +203,7 @@ namespace Microsoft.Playwright.Tests
                 intercepted = true;
             });
 
-            var popupTask = context.WaitForEventAsync(ContextEvent.Page);
+            var popupTask = context.WaitForEventAsync(BrowserContextEvent.Page);
             await TaskUtils.WhenAll(
                 popupTask,
                 page.EvaluateAsync("url => window.__popup = window.open(url)", TestConstants.EmptyPage));
