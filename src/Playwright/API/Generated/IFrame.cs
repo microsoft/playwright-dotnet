@@ -1264,10 +1264,12 @@ namespace Microsoft.Playwright
         /// you run code which will indirectly cause the frame to navigate. Consider this example:
         /// </para>
         /// <code>
-        /// await Task.WhenAll(<br/>
-        ///     frame.WaitForNavigationAsync(),<br/>
-        ///     // clicking the link will indirectly cause a navigation<br/>
-        ///     frame.ClickAsync("a.delayed-navigation"));<br/>
+        /// await frame.RunAndWaitForNavigationAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     // Clicking the link will indirectly cause a navigation.<br/>
+        ///     await frame.ClickAsync("a.delayed-navigation");<br/>
+        /// });<br/>
+        /// <br/>
         /// // Resolves after navigation has finished
         /// </code>
         /// </summary>
@@ -1292,10 +1294,12 @@ namespace Microsoft.Playwright
         /// you run code which will indirectly cause the frame to navigate. Consider this example:
         /// </para>
         /// <code>
-        /// await Task.WhenAll(<br/>
-        ///     frame.WaitForNavigationAsync(),<br/>
-        ///     // clicking the link will indirectly cause a navigation<br/>
-        ///     frame.ClickAsync("a.delayed-navigation"));<br/>
+        /// await frame.RunAndWaitForNavigationAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     // Clicking the link will indirectly cause a navigation.<br/>
+        ///     await frame.ClickAsync("a.delayed-navigation");<br/>
+        /// });<br/>
+        /// <br/>
         /// // Resolves after navigation has finished
         /// </code>
         /// </summary>
