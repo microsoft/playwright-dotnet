@@ -112,7 +112,7 @@ namespace Microsoft.Playwright.Tests
 
             var page = await context.NewPageAsync();
             await page.GotoAsync(TestConstants.EmptyPage);
-            var popupTask = page.WaitForEventAsync(PageEvent.Popup);
+            var popupTask = page.WaitForPopupAsync();
 
             await TaskUtils.WhenAll(
                 popupTask,
@@ -134,7 +134,7 @@ namespace Microsoft.Playwright.Tests
 
             var page = await context.NewPageAsync();
             await page.GotoAsync(TestConstants.EmptyPage);
-            var popupTask = page.WaitForEventAsync(PageEvent.Popup);
+            var popupTask = page.WaitForPopupAsync();
 
             await TaskUtils.WhenAll(
                 popupTask,

@@ -26,7 +26,7 @@ using System;
 
 namespace Microsoft.Playwright
 {
-    public static class BrowserContextEvent
+    internal static class BrowserContextEvent
     {
         public static PlaywrightEvent<IPage> Page { get; } = new PlaywrightEvent<IPage>() { Name = "Page" };
 

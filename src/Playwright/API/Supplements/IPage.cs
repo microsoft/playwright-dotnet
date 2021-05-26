@@ -32,10 +32,6 @@ namespace Microsoft.Playwright
 {
     public partial interface IPage
     {
-        Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, PageWaitForEventOptions<T> options = default);
-
-        Task<T> RunAndWaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<Task> action, PageRunAndWaitForEventOptions<T> options = default);
-
         Task<JsonElement?> EvaluateAsync(string expression, object arg = default);
 
         Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg = default);

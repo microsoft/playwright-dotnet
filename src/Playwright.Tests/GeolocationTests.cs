@@ -157,23 +157,23 @@ namespace Microsoft.Playwright.Tests
                 }, err => {});
             }");
 
-            await Page.RunAndWaitForEventAsync(PageEvent.Console, async () =>
+            await Page.RunAndWaitForConsoleMessageAsync(async () =>
             {
                 await Context.SetGeolocationAsync(new Geolocation { Latitude = 0, Longitude = 10 });
-            }, new PageRunAndWaitForEventOptions<IConsoleMessage>
+            }, new PageRunAndWaitForConsoleMessageOptions
             {
                 Predicate = e => e.Text.Contains("lat=0 lng=10")
             });
 
             await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Console, new PageWaitForEventOptions<IConsoleMessage>
+                Page.WaitForConsoleMessageAsync(new PageWaitForConsoleMessageOptions
                 {
                     Predicate = e => e.Text.Contains("lat=20 lng=30")
                 }),
                 Context.SetGeolocationAsync(new Geolocation { Latitude = 20, Longitude = 30 }));
 
             await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Console, new PageWaitForEventOptions<IConsoleMessage>
+                Page.WaitForConsoleMessageAsync(new PageWaitForConsoleMessageOptions
                 {
                     Predicate = e => e.Text.Contains("lat=40 lng=50")
                 }),
@@ -196,7 +196,7 @@ namespace Microsoft.Playwright.Tests
                 Latitude = 10,
             });
 
-            var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
+            var popupTask = Page.WaitForPopupAsync();
 
             await TaskUtils.WhenAll(
                 popupTask,

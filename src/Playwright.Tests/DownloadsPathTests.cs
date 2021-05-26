@@ -26,7 +26,7 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await _browser.NewPageAsync();
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEventAsync(PageEvent.Download);
+            var downloadTask = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
                 downloadTask,
@@ -49,7 +49,7 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await _browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEventAsync(PageEvent.Download);
+            var downloadTask = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
                 downloadTask,
@@ -68,7 +68,7 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await _browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEventAsync(PageEvent.Download);
+            var downloadTask = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
                 downloadTask,

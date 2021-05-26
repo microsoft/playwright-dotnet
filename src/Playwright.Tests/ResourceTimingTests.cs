@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWork()
         {
             var (request, _) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.RequestFinished),
+                Page.WaitForRequestFinishedAsync(),
                 Page.GotoAsync(TestConstants.EmptyPage));
 
             var timing = request.Timing;
@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { IgnoreHTTPSErrors = true });
             var (request, _) = await TaskUtils.WhenAll(
-                page.WaitForEventAsync(PageEvent.RequestFinished),
+                page.WaitForRequestFinishedAsync(),
                 page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html"));
 
             var timing = request.Timing;

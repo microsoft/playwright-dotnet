@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -35,8 +36,17 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class BrowserContextWaitForEventOptions<T>
+    public class PageWaitForConsoleMessageOptions
     {
+        public PageWaitForConsoleMessageOptions() { }
+
+        public PageWaitForConsoleMessageOptions(PageWaitForConsoleMessageOptions clone)
+        {
+            if (clone == null) return;
+            Predicate = clone.Predicate;
+            Timeout = clone.Timeout;
+        }
+
         /// <summary>
         /// <para>
         /// Receives the <see cref="IConsoleMessage"/> object and resolves to truthy value when
@@ -44,7 +54,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("predicate")]
-        public Func<T, bool> Predicate { get; set; }
+        public Func<IConsoleMessage, bool> Predicate { get; set; }
 
         /// <summary>
         /// <para>

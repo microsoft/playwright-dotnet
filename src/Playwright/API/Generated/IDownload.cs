@@ -51,7 +51,7 @@ namespace Microsoft.Playwright
     /// once download completes:
     /// </para>
     /// <code>
-    /// var download = await page.RunAndWaitForEventAsync(PageEvent.Download, async () =&gt;<br/>
+    /// var download = await page.RunAndWaitForDownloadAsync(async () =&gt;<br/>
     /// {<br/>
     ///     await page.ClickAsync("#downloadButton");<br/>
     /// });<br/>

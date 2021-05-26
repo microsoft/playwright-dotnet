@@ -313,11 +313,32 @@ namespace Microsoft.Playwright
         public Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = null, WaitUntilState? waitUntil = default)
             => MainFrame.WaitForURLAsync(urlFunc, timeout, waitUntil);
 
+        public Task<IConsoleMessage> WaitForConsoleMessageAsync(Func<IConsoleMessage, bool> predicate, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.Console, null, predicate, timeout);
+
+        public Task<IDownload> WaitForDownloadAsync(Func<IDownload, bool> predicate, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.Download, null, predicate, timeout);
+
+        public Task<IFileChooser> WaitForFileChooserAsync(Func<IFileChooser, bool> predicate, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.FileChooser, null, predicate, timeout);
+
+        public Task<IPage> WaitForPopupAsync(Func<IPage, bool> predicate, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.Popup, null, predicate, timeout);
+
+        public Task<IRequest> WaitForRequestFinishedAsync(Func<IRequest, bool> predicate, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.RequestFinished, null, predicate, timeout);
+
+        public Task<IWebSocket> WaitForWebSocketAsync(Func<IWebSocket, bool> predicate, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.WebSocket, null, predicate, timeout);
+
+        public Task<IWorker> WaitForWorkerAsync(Func<IWorker, bool> predicate, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.Worker, null, predicate, timeout);
+
         public Task<IResponse> WaitForNavigationAsync(string urlString = default, Regex urlRegex = default, Func<string, bool> urlFunc = default, WaitUntilState? waitUntil = default, float? timeout = default)
             => MainFrame.WaitForNavigationAsync(urlString, urlRegex, urlFunc, waitUntil, timeout);
 
         public Task<IRequest> WaitForRequestAsync(string urlOrPredicateString, float? timeout = default)
-            => InnerWaitForEventAsync(PageEvent.Request, null, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
+            => InnerWaitForEventAsync(PageEvent.Request, null, e => e.Url.UrlMatches(urlOrPredicateString), timeout);
 
         public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicateRegex, float? timeout = default)
             => InnerWaitForEventAsync(PageEvent.Request, null, e => urlOrPredicateRegex.IsMatch(e.Url), timeout);
@@ -326,7 +347,7 @@ namespace Microsoft.Playwright
             => InnerWaitForEventAsync(PageEvent.Request, null, e => urlOrPredicateFunc(e), timeout);
 
         public Task<IResponse> WaitForResponseAsync(string urlOrPredicateString, float? timeout = default)
-            => InnerWaitForEventAsync(PageEvent.Response, null, e => e.Url.Equals(urlOrPredicateString, StringComparison.Ordinal), timeout);
+            => InnerWaitForEventAsync(PageEvent.Response, null, e => e.Url.UrlMatches(urlOrPredicateString), timeout);
 
         public Task<IResponse> WaitForResponseAsync(Regex urlOrPredicateRegex, float? timeout = default)
             => InnerWaitForEventAsync(PageEvent.Response, null, e => urlOrPredicateRegex.IsMatch(e.Url), timeout);
@@ -334,24 +355,54 @@ namespace Microsoft.Playwright
         public Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicateFunc, float? timeout = default)
             => InnerWaitForEventAsync(PageEvent.Response, null, e => urlOrPredicateFunc(e), timeout);
 
+        public Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, Func<IConsoleMessage, bool> predicate, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.Console, action, predicate, timeout);
+
+        public Task<IDownload> RunAndWaitForDownloadAsync(Func<Task> action, Func<IDownload, bool> predicate, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.Download, action, predicate, timeout);
+
+        public Task<IFileChooser> RunAndWaitForFileChooserAsync(Func<Task> action, Func<IFileChooser, bool> predicate, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.FileChooser, action, predicate, timeout);
+
+        public Task<IPage> RunAndWaitForPopupAsync(Func<Task> action, Func<IPage, bool> predicate, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.Popup, action, predicate, timeout);
+
+        public Task<IRequest> RunAndWaitForRequestFinishedAsync(Func<Task> action, Func<IRequest, bool> predicate, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.RequestFinished, action, predicate, timeout);
+
+        public Task<IWebSocket> RunAndWaitForWebSocketAsync(Func<Task> action, Func<IWebSocket, bool> predicate, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.WebSocket, action, predicate, timeout);
+
+        public Task<IWorker> RunAndWaitForWorkerAsync(Func<Task> action, Func<IWorker, bool> predicate, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.Worker, action, predicate, timeout);
+
+        public Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, string urlString = default, Regex urlRegex = default, Func<string, bool> urlFunc = default, WaitUntilState? waitUntil = default, float? timeout = default)
+            => MainFrame.RunAndWaitForNavigationAsync(action, urlString, urlRegex, urlFunc, waitUntil, timeout);
+
+        public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, string urlOrPredicateString, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.Request, action, e => e.Url.UrlMatches(urlOrPredicateString), timeout);
+
+        public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Regex urlOrPredicateRegex, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.Request, action, e => urlOrPredicateRegex.IsMatch(e.Url), timeout);
+
+        public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Func<IRequest, bool> urlOrPredicateFunc, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.Request, action, e => urlOrPredicateFunc(e), timeout);
+
+        public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, string urlOrPredicateString, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.Response, action, e => e.Url.UrlMatches(urlOrPredicateString), timeout);
+
+        public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Regex urlOrPredicateRegex, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.Response, action, e => urlOrPredicateRegex.IsMatch(e.Url), timeout);
+
+        public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Func<IResponse, bool> urlOrPredicateFunc, float? timeout = default)
+            => InnerWaitForEventAsync(PageEvent.Response, action, e => urlOrPredicateFunc(e), timeout);
+
         public Task<IJSHandle> WaitForFunctionAsync(
             string expression,
             object arg,
             float? pollingInterval,
             float? timeout)
             => MainFrame.WaitForFunctionAsync(expression, arg, pollingInterval, timeout);
-
-        public Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, PageWaitForEventOptions<T> options = default)
-        {
-            options ??= new PageWaitForEventOptions<T>();
-            return InnerWaitForEventAsync(playwrightEvent, null, options.Predicate, options.Timeout);
-        }
-
-        public Task<T> RunAndWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, PageRunAndWaitForEventOptions<T> options = default)
-        {
-            options ??= new PageRunAndWaitForEventOptions<T>();
-            return InnerWaitForEventAsync(playwrightEvent, action, options.Predicate, options.Timeout);
-        }
 
         public async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
         {

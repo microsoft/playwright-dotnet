@@ -36,36 +36,24 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    internal partial class BrowserContext
+    public class PageRunAndWaitForResponseOptions
     {
-        public Task ExposeBindingAsync(string name, Action callback, BrowserContextExposeBindingOptions options = default)
+        public PageRunAndWaitForResponseOptions() { }
+
+        public PageRunAndWaitForResponseOptions(PageRunAndWaitForResponseOptions clone)
         {
-            options ??= new BrowserContextExposeBindingOptions();
-            return ExposeBindingAsync(name, callback, handle: options.Handle);
+            if (clone == null) return;
+            Timeout = clone.Timeout;
         }
 
-        public Task GrantPermissionsAsync(IEnumerable<string> permissions, BrowserContextGrantPermissionsOptions options = default)
-        {
-            options ??= new BrowserContextGrantPermissionsOptions();
-            return GrantPermissionsAsync(permissions, origin: options.Origin);
-        }
-
-        public Task<string> StorageStateAsync(BrowserContextStorageStateOptions options = default)
-        {
-            options ??= new BrowserContextStorageStateOptions();
-            return StorageStateAsync(path: options.Path);
-        }
-
-        public Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions options = default)
-        {
-            options ??= new BrowserContextWaitForPageOptions();
-            return WaitForPageAsync(predicate: options.Predicate, timeout: options.Timeout);
-        }
-
-        public Task<IPage> RunAndWaitForPageAsync(Func<Task> action, BrowserContextRunAndWaitForPageOptions options = default)
-        {
-            options ??= new BrowserContextRunAndWaitForPageOptions();
-            return RunAndWaitForPageAsync(action, predicate: options.Predicate, timeout: options.Timeout);
-        }
+        /// <summary>
+        /// <para>
+        /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
+        /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("timeout")]
+        public float? Timeout { get; set; }
     }
 }

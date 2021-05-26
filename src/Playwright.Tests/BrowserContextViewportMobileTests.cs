@@ -139,12 +139,12 @@ namespace Microsoft.Playwright.Tests
                 window.addEventListener('orientationchange', () => console.log(++window.counter));
             }");
 
-            var event1Task = page.WaitForEventAsync(PageEvent.Console);
+            var event1Task = page.WaitForConsoleMessageAsync();
             await page.SetViewportSizeAsync(400, 300);
             var event1 = await event1Task;
             Assert.Equal("1", event1.Text);
 
-            var event2Task = page.WaitForEventAsync(PageEvent.Console);
+            var event2Task = page.WaitForConsoleMessageAsync();
             await page.SetViewportSizeAsync(300, 400);
             var event2 = await event2Task;
             Assert.Equal("2", event2.Text);

@@ -36,16 +36,25 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageWaitForEventOptions<T>
+    public class PageRunAndWaitForPopupOptions
     {
+        public PageRunAndWaitForPopupOptions() { }
+
+        public PageRunAndWaitForPopupOptions(PageRunAndWaitForPopupOptions clone)
+        {
+            if (clone == null) return;
+            Predicate = clone.Predicate;
+            Timeout = clone.Timeout;
+        }
+
         /// <summary>
         /// <para>
-        /// Receives the <see cref="IConsoleMessage"/> object and resolves to truthy value when
-        /// the waiting should resolve.
+        /// Receives the <see cref="IPage"/> object and resolves to truthy value when the waiting
+        /// should resolve.
         /// </para>
         /// </summary>
         [JsonPropertyName("predicate")]
-        public Func<T, bool> Predicate { get; set; }
+        public Func<IPage, bool> Predicate { get; set; }
 
         /// <summary>
         /// <para>

@@ -85,7 +85,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldProvideAccessToTheOpenerPage()
         {
             var (popupEvent, _) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Popup),
+                Page.WaitForPopupAsync(),
                 Page.EvaluateAsync("() => window.open('about:blank')")
             );
             var opener = await popupEvent.OpenerAsync();
@@ -97,7 +97,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReturnNullIfParentPageHasBeenClosed()
         {
             var (popupEvent, _) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Popup),
+                Page.WaitForPopupAsync(),
                 Page.EvaluateAsync("() => window.open('about:blank')")
             );
             await Page.CloseAsync();
@@ -136,7 +136,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWithErrorUponDisconnect()
         {
-            var task = Page.WaitForEventAsync(PageEvent.Download);
+            var task = Page.WaitForDownloadAsync();
             await Page.CloseAsync();
             var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => task);
             Assert.Contains("Page closed", exception.Message);
@@ -180,7 +180,7 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithWindowClose()
         {
-            var newPageTask = Page.WaitForEventAsync(PageEvent.Popup);
+            var newPageTask = Page.WaitForPopupAsync();
             await Page.EvaluateAsync<string>("() => window['newPage'] = window.open('about:blank')");
             var newPage = await newPageTask;
             var closedTsc = new TaskCompletionSource<bool>();
@@ -204,8 +204,11 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireLoadWhenExpected()
         {
+            var loadEvent = new TaskCompletionSource<bool>();
+            Page.Load += (_, _) => loadEvent.TrySetResult(true);
+
             await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Load),
+                loadEvent.Task,
                 Page.GotoAsync("about:blank")
             );
         }
@@ -215,7 +218,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldFireDOMcontentloadedWhenExpected()
         {
             var task = Page.GotoAsync("about:blank");
-            await Page.WaitForEventAsync(PageEvent.DOMContentLoaded);
+            await Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             await task;
         }
 

@@ -36,36 +36,34 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    internal partial class BrowserContext
+    public class PageWaitForPopupOptions
     {
-        public Task ExposeBindingAsync(string name, Action callback, BrowserContextExposeBindingOptions options = default)
+        public PageWaitForPopupOptions() { }
+
+        public PageWaitForPopupOptions(PageWaitForPopupOptions clone)
         {
-            options ??= new BrowserContextExposeBindingOptions();
-            return ExposeBindingAsync(name, callback, handle: options.Handle);
+            if (clone == null) return;
+            Predicate = clone.Predicate;
+            Timeout = clone.Timeout;
         }
 
-        public Task GrantPermissionsAsync(IEnumerable<string> permissions, BrowserContextGrantPermissionsOptions options = default)
-        {
-            options ??= new BrowserContextGrantPermissionsOptions();
-            return GrantPermissionsAsync(permissions, origin: options.Origin);
-        }
+        /// <summary>
+        /// <para>
+        /// Receives the <see cref="IPage"/> object and resolves to truthy value when the waiting
+        /// should resolve.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("predicate")]
+        public Func<IPage, bool> Predicate { get; set; }
 
-        public Task<string> StorageStateAsync(BrowserContextStorageStateOptions options = default)
-        {
-            options ??= new BrowserContextStorageStateOptions();
-            return StorageStateAsync(path: options.Path);
-        }
-
-        public Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions options = default)
-        {
-            options ??= new BrowserContextWaitForPageOptions();
-            return WaitForPageAsync(predicate: options.Predicate, timeout: options.Timeout);
-        }
-
-        public Task<IPage> RunAndWaitForPageAsync(Func<Task> action, BrowserContextRunAndWaitForPageOptions options = default)
-        {
-            options ??= new BrowserContextRunAndWaitForPageOptions();
-            return RunAndWaitForPageAsync(action, predicate: options.Predicate, timeout: options.Timeout);
-        }
+        /// <summary>
+        /// <para>
+        /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("timeout")]
+        public float? Timeout { get; set; }
     }
 }

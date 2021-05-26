@@ -23,9 +23,11 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldEmitCrashEventWhenPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
-            var crashTask = Page.WaitForEventAsync(PageEvent.Crash);
+            var crashEvent = new TaskCompletionSource<bool>();
+            Page.Crash += (_, _) => crashEvent.TrySetResult(true);
+
             await CrashAsync(Page);
-            await crashTask.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await crashEvent.Task.WithTimeout(TestConstants.DefaultTaskTimeout);
         }
 
         // We skip all browser because crash uses internals.
@@ -34,9 +36,11 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowOnAnyActionAfterPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
-            var crashTask = Page.WaitForEventAsync(PageEvent.Crash);
+            var crashEvent = new TaskCompletionSource<bool>();
+            Page.Crash += (_, _) => crashEvent.TrySetResult(true);
+
             await CrashAsync(Page);
-            await crashTask.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await crashEvent.Task.WithTimeout(TestConstants.DefaultTaskTimeout);
             var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.EvaluateAsync("() => {}"));
             Assert.Contains("crash", exception.Message);
         }
@@ -47,7 +51,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldCancelWaitForEventWhenPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
-            var responseTask = Page.WaitForEventAsync(PageEvent.Response);
+            var responseTask = Page.WaitForResponseAsync("**/*");
             await CrashAsync(Page);
             var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => responseTask.WithTimeout(TestConstants.DefaultTaskTimeout));
             Assert.Contains("Page crashed", exception.Message);
@@ -74,9 +78,12 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldBeAbleToCloseContextWhenPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
-            var crashTask = Page.WaitForEventAsync(PageEvent.Crash);
+
+            var crashEvent = new TaskCompletionSource<bool>();
+            Page.Crash += (_, dialog) => crashEvent.TrySetResult(true);
+
             await CrashAsync(Page);
-            await crashTask.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await crashEvent.Task.WithTimeout(TestConstants.DefaultTaskTimeout);
             await Page.Context.CloseAsync();
         }
 

@@ -238,6 +238,23 @@ namespace Microsoft.Playwright
             return response;
         }
 
+        public async Task<IResponse> RunAndWaitForNavigationAsync(
+            Func<Task> action,
+            string urlString = default,
+            Regex urlRegex = default,
+            Func<string, bool> urlFunc = default,
+            WaitUntilState? waitUntil = default,
+            float? timeout = default)
+        {
+            var result = WaitForNavigationAsync(urlString, urlRegex, urlFunc, waitUntil, timeout);
+            if (action != null)
+            {
+                await Task.WhenAll(result, action()).ConfigureAwait(false);
+            }
+
+            return await result.ConfigureAwait(false);
+        }
+
         public Task TapAsync(
             string selector,
             IEnumerable<KeyboardModifier> modifiers,

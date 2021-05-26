@@ -159,7 +159,7 @@ namespace Microsoft.Playwright.Tests
             var context = await browser.NewContextAsync(new BrowserNewContextOptions { ViewportSize = ViewportSize.NoViewport });
             var page = await context.NewPageAsync();
             await page.GotoAsync(TestConstants.EmptyPage);
-            var popupTask = page.WaitForEventAsync(PageEvent.Popup);
+            var popupTask = page.WaitForPopupAsync();
 
             await TaskUtils.WhenAll(
                 popupTask,

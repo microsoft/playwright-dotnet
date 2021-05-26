@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.Tests
         public async Task PageEventsRequestFinished()
         {
             var (_, response) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.RequestFinished),
+                Page.WaitForRequestFinishedAsync(),
                 Page.GotoAsync(TestConstants.EmptyPage));
 
             var request = response.Request;

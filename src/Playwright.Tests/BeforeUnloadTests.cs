@@ -25,9 +25,11 @@ namespace Microsoft.Playwright.Tests
             // fire.
             await newPage.ClickAsync("body");
 
-            var dialogTask = newPage.WaitForEventAsync(PageEvent.Dialog);
+            var dialogEvent = new TaskCompletionSource<IDialog>();
+            newPage.Dialog += (_, dialog) => dialogEvent.TrySetResult(dialog);
+
             var pageClosingTask = newPage.CloseAsync(new PageCloseOptions { RunBeforeUnload = true });
-            var dialog = await dialogTask;
+            var dialog = await dialogEvent.Task;
             Assert.Equal(DialogType.BeforeUnload, dialog.Type);
             Assert.Empty(dialog.DefaultValue);
             if (TestConstants.IsChromium)

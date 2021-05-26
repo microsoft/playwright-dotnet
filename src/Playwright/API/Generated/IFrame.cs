@@ -1282,6 +1282,35 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
+        /// Waits for the frame navigation and returns the main resource response. In case of
+        /// multiple redirects, the navigation will resolve with the response of the last redirect.
+        /// In case of navigation to a different anchor or navigation due to History API usage,
+        /// the navigation will resolve with <c>null</c>.
+        /// </para>
+        /// <para>
+        /// This method waits for the frame to navigate to a new URL. It is useful for when
+        /// you run code which will indirectly cause the frame to navigate. Consider this example:
+        /// </para>
+        /// <code>
+        /// await Task.WhenAll(<br/>
+        ///     frame.WaitForNavigationAsync(),<br/>
+        ///     // clicking the link will indirectly cause a navigation<br/>
+        ///     frame.ClickAsync("a.delayed-navigation"));<br/>
+        /// // Resolves after navigation has finished
+        /// </code>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Usage of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API">History
+        /// API</a> to change the URL is considered a navigation.
+        /// </para>
+        /// </remarks>
+        /// <param name="action">Action that triggers the event.</param>
+        /// <param name="options">Call options</param>
+        Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions options = default);
+
+        /// <summary>
+        /// <para>
         /// Returns when element specified by selector satisfies <paramref name="state"/> option.
         /// Returns <c>null</c> if waiting for <c>hidden</c> or <c>detached</c>.
         /// </para>

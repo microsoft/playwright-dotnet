@@ -83,11 +83,11 @@ namespace Microsoft.Playwright.Tests
             await page.GotoAsync(TestConstants.EmptyPage);
 
             await TaskUtils.WhenAll(
-                page.WaitForEventAsync(PageEvent.Popup),
+                page.WaitForPopupAsync(),
                 page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
 
             await TaskUtils.WhenAll(
-                page.WaitForEventAsync(PageEvent.Popup),
+                page.WaitForPopupAsync(),
                 page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
         }
     }
