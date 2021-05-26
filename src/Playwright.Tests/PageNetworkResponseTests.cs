@@ -140,7 +140,7 @@ namespace Microsoft.Playwright.Tests
             Page.RequestFinished += (_, e) => requestFinished = requestFinished || e.Url.Contains("/get");
             // send request and wait for server response
             var (pageResponse, _) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Response),
+                Page.WaitForResponseAsync("**/*"),
                 Page.EvaluateAsync("fetch('./get', { method: 'GET'})"),
                 Server.WaitForRequest("/get")
             );

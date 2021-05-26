@@ -20,8 +20,11 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldFire()
         {
+            var errorEvent = new TaskCompletionSource<string>();
+            Page.PageError += (_, error) => errorEvent.TrySetResult(error);
+
             var (error, _) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.PageError),
+                errorEvent.Task,
                 Page.GotoAsync(TestConstants.ServerUrl + "/error.html")
             );
 
@@ -41,8 +44,10 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipWebkit: true)]
         public async Task ShouldContainSourceURL()
         {
+            var pageError = new TaskCompletionSource<string>();
+            Page.PageError += (_, error) => pageError.TrySetResult(error);
             var (error, _) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.PageError),
+                pageError.Task,
                 Page.GotoAsync(TestConstants.ServerUrl + "/error.html"));
 
             Assert.Contains("myscript.js", error);
@@ -62,8 +67,10 @@ namespace Microsoft.Playwright.Tests
 
             foreach (object[] kv in cases)
             {
+                var pageError = new TaskCompletionSource<string>();
+                Page.PageError += (_, error) => pageError.TrySetResult(error);
                 var (error, _) = await TaskUtils.WhenAll(
-                    Page.WaitForEventAsync(PageEvent.PageError),
+                    pageError.Task,
                     Page.EvaluateAsync<JsonElement>("value => setTimeout(() => { throw value; }, 0)", kv[0]));
 
                 Assert.Contains(TestConstants.IsFirefox ? "uncaught exception: " + kv[1].ToString() : kv[1].ToString(), error);
@@ -74,8 +81,10 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldHandleObject()
         {
+            var pageError = new TaskCompletionSource<string>();
+            Page.PageError += (_, error) => pageError.TrySetResult(error);
             var (error, _) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.PageError),
+                pageError.Task,
                 Page.EvaluateAsync<JsonElement>("value => setTimeout(() => { throw {}; }, 0)", 0));
 
             Assert.Contains(TestConstants.IsChromium ? "Object" : "[object Object]", error);
@@ -85,8 +94,10 @@ namespace Microsoft.Playwright.Tests
         [SkipBrowserAndPlatformFact(skipFirefox: true)]
         public async Task ShouldHandleWindow()
         {
+            var pageError = new TaskCompletionSource<string>();
+            Page.PageError += (_, error) => pageError.TrySetResult(error);
             var (error, _) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.PageError),
+                pageError.Task,
                 Page.EvaluateAsync<JsonElement>("value => setTimeout(() => { throw window ; }, 0)", 0));
 
             Assert.Contains(TestConstants.IsChromium ? "Window" : "[object Window]", error);

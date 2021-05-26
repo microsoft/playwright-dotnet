@@ -55,7 +55,7 @@ namespace Microsoft.Playwright.Tests
             await Page.EvaluateAsync("() => window.activationPromise");
 
             var (request, swResponse) = await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.Request),
+                Page.WaitForRequestAsync("**/*"),
                 Page.EvaluateAsync<string>("() => fetchDummy('foo')"));
 
             Assert.Equal("responseFromServiceWorker:foo", swResponse);

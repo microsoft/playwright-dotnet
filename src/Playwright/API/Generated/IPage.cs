@@ -113,7 +113,7 @@ namespace Microsoft.Playwright
         ///   // Crash might happen during a click.<br/>
         ///   await page.ClickAsync("button");<br/>
         ///   // Or while waiting for an event.<br/>
-        ///   await page.WaitForEventAsync(PageEvent.Popup);<br/>
+        ///   await page.WaitForPopup();<br/>
         /// } catch (PlaywrightException e) {<br/>
         ///   // When the page crashes, exception message contains "crash".<br/>
         /// }
@@ -209,7 +209,7 @@ namespace Microsoft.Playwright
         /// its response has started loading in the popup.
         /// </para>
         /// <code>
-        /// var popup = await page.RunAndWaitForEventAsync(PageEvent.Popup, async () =&gt;<br/>
+        /// var popup = await page.RunAndWaitForPopupAsync(async () =&gt;<br/>
         /// {<br/>
         ///     await page.EvaluateAsync("() =&gt; window.open('https://microsoft.com')");<br/>
         /// });<br/>
@@ -1685,7 +1685,7 @@ namespace Microsoft.Playwright
         /// <item><description><see cref="IPage.GotoAsync"/></description></item>
         /// <item><description><see cref="IPage.ReloadAsync"/></description></item>
         /// <item><description><see cref="IPage.SetContentAsync"/></description></item>
-        /// <item><description><see cref="IPage.WaitForNavigationAsync"/></description></item>
+        /// <item><description><see cref="IPage.RunAndWaitForNavigationAsync"/></description></item>
         /// <item><description><see cref="IPage.WaitForURLAsync"/></description></item>
         /// </list>
         /// </summary>
@@ -2001,6 +2001,77 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
+        /// Performs action and waits for a <see cref="IConsoleMessage"/> to be logged by in
+        /// the page. If predicate is provided, it passes <see cref="IConsoleMessage"/> value
+        /// into the <c>predicate</c> function and waits for <c>predicate(message)</c> to return
+        /// a truthy value. Will throw an error if the page is closed before the <see cref="IPage.Console"/>
+        /// event is fired.
+        /// </para>
+        /// </summary>
+        /// <param name="options">Call options</param>
+        Task<IConsoleMessage> WaitForConsoleMessageAsync(PageWaitForConsoleMessageOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Performs action and waits for a <see cref="IConsoleMessage"/> to be logged by in
+        /// the page. If predicate is provided, it passes <see cref="IConsoleMessage"/> value
+        /// into the <c>predicate</c> function and waits for <c>predicate(message)</c> to return
+        /// a truthy value. Will throw an error if the page is closed before the <see cref="IPage.Console"/>
+        /// event is fired.
+        /// </para>
+        /// </summary>
+        /// <param name="action">Action that triggers the event.</param>
+        /// <param name="options">Call options</param>
+        Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, PageRunAndWaitForConsoleMessageOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Performs action and waits for a new <see cref="IDownload"/>. If predicate is provided,
+        /// it passes <see cref="IDownload"/> value into the <c>predicate</c> function and waits
+        /// for <c>predicate(download)</c> to return a truthy value. Will throw an error if
+        /// the page is closed before the download event is fired.
+        /// </para>
+        /// </summary>
+        /// <param name="options">Call options</param>
+        Task<IDownload> WaitForDownloadAsync(PageWaitForDownloadOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Performs action and waits for a new <see cref="IDownload"/>. If predicate is provided,
+        /// it passes <see cref="IDownload"/> value into the <c>predicate</c> function and waits
+        /// for <c>predicate(download)</c> to return a truthy value. Will throw an error if
+        /// the page is closed before the download event is fired.
+        /// </para>
+        /// </summary>
+        /// <param name="action">Action that triggers the event.</param>
+        /// <param name="options">Call options</param>
+        Task<IDownload> RunAndWaitForDownloadAsync(Func<Task> action, PageRunAndWaitForDownloadOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Performs action and waits for a new <see cref="IFileChooser"/> to be created. If
+        /// predicate is provided, it passes <see cref="IFileChooser"/> value into the <c>predicate</c>
+        /// function and waits for <c>predicate(fileChooser)</c> to return a truthy value. Will
+        /// throw an error if the page is closed before the file chooser is opened.
+        /// </para>
+        /// </summary>
+        /// <param name="options">Call options</param>
+        Task<IFileChooser> WaitForFileChooserAsync(PageWaitForFileChooserOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Performs action and waits for a new <see cref="IFileChooser"/> to be created. If
+        /// predicate is provided, it passes <see cref="IFileChooser"/> value into the <c>predicate</c>
+        /// function and waits for <c>predicate(fileChooser)</c> to return a truthy value. Will
+        /// throw an error if the page is closed before the file chooser is opened.
+        /// </para>
+        /// </summary>
+        /// <param name="action">Action that triggers the event.</param>
+        /// <param name="options">Call options</param>
+        Task<IFileChooser> RunAndWaitForFileChooserAsync(Func<Task> action, PageRunAndWaitForFileChooserOptions options = default);
+
+        /// <summary>
+        /// <para>
         /// Returns when the <paramref name="expression"/> returns a truthy value. It resolves
         /// to a JSHandle of the truthy value.
         /// </para>
@@ -2055,7 +2126,7 @@ namespace Microsoft.Playwright
         /// await page.WaitForLoadStateAsync(); // The promise resolves after 'load' event.
         /// </code>
         /// <code>
-        /// var popup = await page.RunAndWaitForEventAsync(PageEvent.Popup, async () =&gt;<br/>
+        /// var popup = await page.RunAndWaitForPopupAsync(async () =&gt;<br/>
         /// {<br/>
         ///     await page.ClickAsync("button"); // click triggers the popup/<br/>
         /// });<br/>
@@ -2098,7 +2169,7 @@ namespace Microsoft.Playwright
         ///     frame.ClickAsync("a.delayed-navigation")); // clicking the link will indirectly cause a navigation<br/>
         /// // The method continues after navigation has finished
         /// </code>
-        /// <para>Shortcut for main frame's <see cref="IFrame.WaitForNavigationAsync"/>.</para>
+        /// <para>Shortcut for main frame's <see cref="IFrame.RunAndWaitForNavigationAsync"/>.</para>
         /// </summary>
         /// <remarks>
         /// <para>
@@ -2108,6 +2179,59 @@ namespace Microsoft.Playwright
         /// </remarks>
         /// <param name="options">Call options</param>
         Task<IResponse> WaitForNavigationAsync(PageWaitForNavigationOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Waits for the main frame navigation and returns the main resource response. In case
+        /// of multiple redirects, the navigation will resolve with the response of the last
+        /// redirect. In case of navigation to a different anchor or navigation due to History
+        /// API usage, the navigation will resolve with <c>null</c>.
+        /// </para>
+        /// <para>
+        /// This resolves when the page navigates to a new URL or reloads. It is useful for
+        /// when you run code which will indirectly cause the page to navigate. e.g. The click
+        /// target has an <c>onclick</c> handler that triggers navigation from a <c>setTimeout</c>.
+        /// Consider this example:
+        /// </para>
+        /// <code>
+        /// await Task.WhenAll(page.WaitForNavigationAsync(),<br/>
+        ///     frame.ClickAsync("a.delayed-navigation")); // clicking the link will indirectly cause a navigation<br/>
+        /// // The method continues after navigation has finished
+        /// </code>
+        /// <para>Shortcut for main frame's <see cref="IFrame.RunAndWaitForNavigationAsync"/>.</para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Usage of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API">History
+        /// API</a> to change the URL is considered a navigation.
+        /// </para>
+        /// </remarks>
+        /// <param name="action">Action that triggers the event.</param>
+        /// <param name="options">Call options</param>
+        Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, PageRunAndWaitForNavigationOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Performs action and waits for a popup <see cref="IPage"/>. If predicate is provided,
+        /// it passes <see cref="Popup"/> value into the <c>predicate</c> function and waits
+        /// for <c>predicate(page)</c> to return a truthy value. Will throw an error if the
+        /// page is closed before the popup event is fired.
+        /// </para>
+        /// </summary>
+        /// <param name="options">Call options</param>
+        Task<IPage> WaitForPopupAsync(PageWaitForPopupOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Performs action and waits for a popup <see cref="IPage"/>. If predicate is provided,
+        /// it passes <see cref="Popup"/> value into the <c>predicate</c> function and waits
+        /// for <c>predicate(page)</c> to return a truthy value. Will throw an error if the
+        /// page is closed before the popup event is fired.
+        /// </para>
+        /// </summary>
+        /// <param name="action">Action that triggers the event.</param>
+        /// <param name="options">Call options</param>
+        Task<IPage> RunAndWaitForPopupAsync(Func<Task> action, PageRunAndWaitForPopupOptions options = default);
 
         /// <summary>
         /// <para>
@@ -2168,6 +2292,91 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
+        /// Waits for the matching request and returns it.  See <a href="./events.md#waiting-for-event">waiting
+        /// for event</a> for more details about events.
+        /// </para>
+        /// <code>
+        /// // Waits for the next response with the specified url<br/>
+        /// await Task.WhenAll(page.WaitForRequestAsync("https://example.com/resource"),<br/>
+        ///     page.ClickAsync("button.triggers-request"));<br/>
+        /// <br/>
+        /// // Waits for the next request matching some conditions<br/>
+        /// await Task.WhenAll(page.WaitForRequestAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; "GET" == r.Method),<br/>
+        ///     page.ClickAsync("button.triggers-request"));
+        /// </code>
+        /// </summary>
+        /// <param name="action">Action that triggers the event.</param>
+        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+        /// <param name="options">Call options</param>
+        Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForRequestOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Waits for the matching request and returns it.  See <a href="./events.md#waiting-for-event">waiting
+        /// for event</a> for more details about events.
+        /// </para>
+        /// <code>
+        /// // Waits for the next response with the specified url<br/>
+        /// await Task.WhenAll(page.WaitForRequestAsync("https://example.com/resource"),<br/>
+        ///     page.ClickAsync("button.triggers-request"));<br/>
+        /// <br/>
+        /// // Waits for the next request matching some conditions<br/>
+        /// await Task.WhenAll(page.WaitForRequestAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; "GET" == r.Method),<br/>
+        ///     page.ClickAsync("button.triggers-request"));
+        /// </code>
+        /// </summary>
+        /// <param name="action">Action that triggers the event.</param>
+        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+        /// <param name="options">Call options</param>
+        Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForRequestOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Waits for the matching request and returns it.  See <a href="./events.md#waiting-for-event">waiting
+        /// for event</a> for more details about events.
+        /// </para>
+        /// <code>
+        /// // Waits for the next response with the specified url<br/>
+        /// await Task.WhenAll(page.WaitForRequestAsync("https://example.com/resource"),<br/>
+        ///     page.ClickAsync("button.triggers-request"));<br/>
+        /// <br/>
+        /// // Waits for the next request matching some conditions<br/>
+        /// await Task.WhenAll(page.WaitForRequestAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; "GET" == r.Method),<br/>
+        ///     page.ClickAsync("button.triggers-request"));
+        /// </code>
+        /// </summary>
+        /// <param name="action">Action that triggers the event.</param>
+        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+        /// <param name="options">Call options</param>
+        Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Func<IRequest, bool> urlOrPredicate, PageRunAndWaitForRequestOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Performs action and waits for a <see cref="IRequest"/> to finish loading. If predicate
+        /// is provided, it passes <see cref="IRequest"/> value into the <c>predicate</c> function
+        /// and waits for <c>predicate(request)</c> to return a truthy value. Will throw an
+        /// error if the page is closed before the <see cref="IPage.RequestFinished"/> event
+        /// is fired.
+        /// </para>
+        /// </summary>
+        /// <param name="options">Call options</param>
+        Task<IRequest> WaitForRequestFinishedAsync(PageWaitForRequestFinishedOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Performs action and waits for a <see cref="IRequest"/> to finish loading. If predicate
+        /// is provided, it passes <see cref="IRequest"/> value into the <c>predicate</c> function
+        /// and waits for <c>predicate(request)</c> to return a truthy value. Will throw an
+        /// error if the page is closed before the <see cref="IPage.RequestFinished"/> event
+        /// is fired.
+        /// </para>
+        /// </summary>
+        /// <param name="action">Action that triggers the event.</param>
+        /// <param name="options">Call options</param>
+        Task<IRequest> RunAndWaitForRequestFinishedAsync(Func<Task> action, PageRunAndWaitForRequestFinishedOptions options = default);
+
+        /// <summary>
+        /// <para>
         /// Returns the matched response. See <a href="./events.md#waiting-for-event">waiting
         /// for event</a> for more details about events.
         /// </para>
@@ -2222,6 +2431,66 @@ namespace Microsoft.Playwright
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
         /// <param name="options">Call options</param>
         Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicate, PageWaitForResponseOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Returns the matched response. See <a href="./events.md#waiting-for-event">waiting
+        /// for event</a> for more details about events.
+        /// </para>
+        /// <code>
+        /// // Waits for the next response with the specified url<br/>
+        /// await Task.WhenAll(page.WaitForResponseAsync("https://example.com/resource"),<br/>
+        ///     page.ClickAsync("button.triggers-response"));<br/>
+        /// <br/>
+        /// // Waits for the next response matching some conditions<br/>
+        /// await Task.WhenAll(page.WaitForResponseAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; r.Status == 200),<br/>
+        ///     page.ClickAsync("button.triggers-response"));
+        /// </code>
+        /// </summary>
+        /// <param name="action">Action that triggers the event.</param>
+        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="options">Call options</param>
+        Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForResponseOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Returns the matched response. See <a href="./events.md#waiting-for-event">waiting
+        /// for event</a> for more details about events.
+        /// </para>
+        /// <code>
+        /// // Waits for the next response with the specified url<br/>
+        /// await Task.WhenAll(page.WaitForResponseAsync("https://example.com/resource"),<br/>
+        ///     page.ClickAsync("button.triggers-response"));<br/>
+        /// <br/>
+        /// // Waits for the next response matching some conditions<br/>
+        /// await Task.WhenAll(page.WaitForResponseAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; r.Status == 200),<br/>
+        ///     page.ClickAsync("button.triggers-response"));
+        /// </code>
+        /// </summary>
+        /// <param name="action">Action that triggers the event.</param>
+        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="options">Call options</param>
+        Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForResponseOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Returns the matched response. See <a href="./events.md#waiting-for-event">waiting
+        /// for event</a> for more details about events.
+        /// </para>
+        /// <code>
+        /// // Waits for the next response with the specified url<br/>
+        /// await Task.WhenAll(page.WaitForResponseAsync("https://example.com/resource"),<br/>
+        ///     page.ClickAsync("button.triggers-response"));<br/>
+        /// <br/>
+        /// // Waits for the next response matching some conditions<br/>
+        /// await Task.WhenAll(page.WaitForResponseAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; r.Status == 200),<br/>
+        ///     page.ClickAsync("button.triggers-response"));
+        /// </code>
+        /// </summary>
+        /// <param name="action">Action that triggers the event.</param>
+        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="options">Call options</param>
+        Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Func<IResponse, bool> urlOrPredicate, PageRunAndWaitForResponseOptions options = default);
 
         /// <summary>
         /// <para>
@@ -2328,6 +2597,52 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="options">Call options</param>
         Task WaitForURLAsync(Func<string, bool> url, PageWaitForURLOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Performs action and waits for a new <see cref="IWebSocket"/>. If predicate is provided,
+        /// it passes <see cref="IWebSocket"/> value into the <c>predicate</c> function and
+        /// waits for <c>predicate(webSocket)</c> to return a truthy value. Will throw an error
+        /// if the page is closed before the WebSocket event is fired.
+        /// </para>
+        /// </summary>
+        /// <param name="options">Call options</param>
+        Task<IWebSocket> WaitForWebSocketAsync(PageWaitForWebSocketOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Performs action and waits for a new <see cref="IWebSocket"/>. If predicate is provided,
+        /// it passes <see cref="IWebSocket"/> value into the <c>predicate</c> function and
+        /// waits for <c>predicate(webSocket)</c> to return a truthy value. Will throw an error
+        /// if the page is closed before the WebSocket event is fired.
+        /// </para>
+        /// </summary>
+        /// <param name="action">Action that triggers the event.</param>
+        /// <param name="options">Call options</param>
+        Task<IWebSocket> RunAndWaitForWebSocketAsync(Func<Task> action, PageRunAndWaitForWebSocketOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Performs action and waits for a new <see cref="IWorker"/>. If predicate is provided,
+        /// it passes <see cref="IWorker"/> value into the <c>predicate</c> function and waits
+        /// for <c>predicate(worker)</c> to return a truthy value. Will throw an error if the
+        /// page is closed before the worker event is fired.
+        /// </para>
+        /// </summary>
+        /// <param name="options">Call options</param>
+        Task<IWorker> WaitForWorkerAsync(PageWaitForWorkerOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Performs action and waits for a new <see cref="IWorker"/>. If predicate is provided,
+        /// it passes <see cref="IWorker"/> value into the <c>predicate</c> function and waits
+        /// for <c>predicate(worker)</c> to return a truthy value. Will throw an error if the
+        /// page is closed before the worker event is fired.
+        /// </para>
+        /// </summary>
+        /// <param name="action">Action that triggers the event.</param>
+        /// <param name="options">Call options</param>
+        Task<IWorker> RunAndWaitForWorkerAsync(Func<Task> action, PageRunAndWaitForWorkerOptions options = default);
 
         /// <summary>
         /// <para>

@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync($"<a href=\"{TestConstants.EmptyPage}\">empty.html</a>");
             await TaskUtils.WhenAll(
                 Page.ClickAsync("a").ContinueWith(_ => messages.Add("click")),
-                Page.WaitForEventAsync(PageEvent.FrameNavigated).ContinueWith(_ => messages.Add("navigated")));
+                Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
 
             Assert.Equal("route|navigated|click", string.Join("|", messages));
         }
@@ -51,7 +51,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync($"<a href=\"{TestConstants.CrossProcessHttpPrefix}/empty.html\">empty.html</a>");
             await TaskUtils.WhenAll(
                 Page.ClickAsync("a").ContinueWith(_ => messages.Add("click")),
-                Page.WaitForEventAsync(PageEvent.FrameNavigated).ContinueWith(_ => messages.Add("navigated")));
+                Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
 
             Assert.Equal("route|navigated|click", string.Join("|", messages));
         }
@@ -76,7 +76,7 @@ namespace Microsoft.Playwright.Tests
 
             await TaskUtils.WhenAll(
                 Page.ClickAsync("input[type=submit]").ContinueWith(_ => messages.Add("click")),
-                Page.WaitForEventAsync(PageEvent.FrameNavigated).ContinueWith(_ => messages.Add("navigated")));
+                Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
 
             Assert.Equal("route|navigated|click", string.Join("|", messages));
         }
@@ -101,7 +101,7 @@ namespace Microsoft.Playwright.Tests
 
             await TaskUtils.WhenAll(
                 Page.ClickAsync("input[type=submit]").ContinueWith(_ => messages.Add("click")),
-                Page.WaitForEventAsync(PageEvent.FrameNavigated).ContinueWith(_ => messages.Add("navigated")));
+                Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
 
             Assert.Equal("route|navigated|click", string.Join("|", messages));
         }
@@ -120,7 +120,7 @@ namespace Microsoft.Playwright.Tests
 
             await TaskUtils.WhenAll(
                 Page.EvaluateAsync($"window.location.href = '{TestConstants.EmptyPage}'").ContinueWith(_ => messages.Add("evaluate")),
-                Page.WaitForEventAsync(PageEvent.FrameNavigated).ContinueWith(_ => messages.Add("navigated")));
+                Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
 
             Assert.Equal("route|navigated|evaluate", string.Join("|", messages));
         }
@@ -164,7 +164,7 @@ namespace Microsoft.Playwright.Tests
 
             await TaskUtils.WhenAll(
                 Page.EvaluateAsync($"window.location.reload();").ContinueWith(_ => messages.Add("evaluate")),
-                Page.WaitForEventAsync(PageEvent.FrameNavigated).ContinueWith(_ => messages.Add("navigated")));
+                Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
 
             Assert.Equal("route|navigated|evaluate", string.Join("|", messages));
         }
@@ -189,7 +189,7 @@ namespace Microsoft.Playwright.Tests
 
             await TaskUtils.WhenAll(
                 Page.ClickAsync("a").ContinueWith(_ => messages.Add("click")),
-                Page.WaitForEventAsync(PageEvent.FrameNavigated).ContinueWith(_ => messages.Add("navigated")));
+                Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
 
             Assert.Equal(TestConstants.EmptyPage, frame.Url);
             Assert.Equal("route|navigated|click", string.Join("|", messages));

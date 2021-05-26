@@ -86,7 +86,7 @@ namespace Microsoft.Playwright
         /// its response has started loading in the popup.
         /// </para>
         /// <code>
-        /// var popup = await context.RunAndWaitForEventAsync(BrowserBrowserContextEvent.Page, async =&gt;<br/>
+        /// var popup = await context.RunAndWaitForPageAsync(async =&gt;<br/>
         /// {<br/>
         ///     await page.ClickAsync("a");<br/>
         /// });<br/>
@@ -492,7 +492,7 @@ namespace Microsoft.Playwright
         /// <item><description><see cref="IPage.GotoAsync"/></description></item>
         /// <item><description><see cref="IPage.ReloadAsync"/></description></item>
         /// <item><description><see cref="IPage.SetContentAsync"/></description></item>
-        /// <item><description><see cref="IPage.WaitForNavigationAsync"/></description></item>
+        /// <item><description><see cref="IPage.RunAndWaitForNavigationAsync"/></description></item>
         /// </list>
         /// </summary>
         /// <remarks>
@@ -614,5 +614,28 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="handler">Optional handler function used to register a routing with <see cref="IBrowserContext.RouteAsync"/>.</param>
         Task UnrouteAsync(Func<string, bool> url, Action<IRoute> handler = default);
+
+        /// <summary>
+        /// <para>
+        /// Performs action and waits for a new <see cref="IPage"/> to be created in the context.
+        /// If predicate is provided, it passes <see cref="IPage"/> value into the <c>predicate</c>
+        /// function and waits for <c>predicate(event)</c> to return a truthy value. Will throw
+        /// an error if the context closes before new <see cref="IPage"/> is created.
+        /// </para>
+        /// </summary>
+        /// <param name="options">Call options</param>
+        Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions options = default);
+
+        /// <summary>
+        /// <para>
+        /// Performs action and waits for a new <see cref="IPage"/> to be created in the context.
+        /// If predicate is provided, it passes <see cref="IPage"/> value into the <c>predicate</c>
+        /// function and waits for <c>predicate(event)</c> to return a truthy value. Will throw
+        /// an error if the context closes before new <see cref="IPage"/> is created.
+        /// </para>
+        /// </summary>
+        /// <param name="action">Action that triggers the event.</param>
+        /// <param name="options">Call options</param>
+        Task<IPage> RunAndWaitForPageAsync(Func<Task> action, BrowserContextRunAndWaitForPageOptions options = default);
     }
 }

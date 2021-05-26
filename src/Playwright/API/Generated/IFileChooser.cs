@@ -42,7 +42,7 @@ namespace Microsoft.Playwright
     /// event.
     /// </para>
     /// <code>
-    /// var fileChooser = await page.RunAndWaitForEventAsync(Page.FileChooser, async () =&gt;<br/>
+    /// var fileChooser = await page.RunAndWaitForFileChooserAsync(async () =&gt;<br/>
     /// {<br/>
     ///     await page.ClickAsync("upload");<br/>
     /// });<br/>

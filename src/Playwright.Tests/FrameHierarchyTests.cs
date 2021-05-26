@@ -62,7 +62,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.EmptyPage);
 
             await TaskUtils.WhenAll(
-                Page.WaitForEventAsync(PageEvent.FrameNavigated),
+                Page.WaitForNavigationAsync(),
                 Page.GotoAsync(TestConstants.EmptyPage + "#foo"));
 
             Assert.Equal(TestConstants.EmptyPage + "#foo", Page.Url);
@@ -191,8 +191,11 @@ namespace Microsoft.Playwright.Tests
             }");
             Assert.True(frame1.IsDetached);
 
+            var frameEvent = new TaskCompletionSource<IFrame>();
+            Page.FrameNavigated += (_, frame) => frameEvent.TrySetResult(frame);
+
             var (frame2, _) = await TaskUtils.WhenAll(
-              Page.WaitForEventAsync(PageEvent.FrameNavigated),
+              frameEvent.Task,
               Page.EvaluateAsync("() => document.body.appendChild(window.frame)")
             );
 

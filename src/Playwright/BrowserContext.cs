@@ -215,18 +215,6 @@ namespace Microsoft.Playwright
         public Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler = default)
             => UnrouteAsync(null, null, urlFunc, handler);
 
-        public Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, BrowserContextWaitForEventOptions<T> options = default)
-        {
-            options ??= new BrowserContextWaitForEventOptions<T>();
-            return InnerWaitForEventAsync(playwrightEvent, null, options.Predicate, options.Timeout);
-        }
-
-        public Task<T> RunAndWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, BrowserContextRunAndWaitForEventOptions<T> options = default)
-        {
-            options ??= new BrowserContextRunAndWaitForEventOptions<T>();
-            return InnerWaitForEventAsync(playwrightEvent, action, options.Predicate, options.Timeout);
-        }
-
         public async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
         {
             if (playwrightEvent == null)
@@ -251,6 +239,9 @@ namespace Microsoft.Playwright
 
             return await result.ConfigureAwait(false);
         }
+
+        public Task<IPage> WaitForPageAsync(Func<IPage, bool> predicate, float? timeout = default)
+            => InnerWaitForEventAsync(BrowserContextEvent.Page, null, predicate, timeout);
 
         public Task<IPage> RunAndWaitForPageAsync(Func<Task> action = default, Func<IPage, bool> predicate = default, float? timeout = default)
             => InnerWaitForEventAsync(BrowserContextEvent.Page, action, predicate, timeout);

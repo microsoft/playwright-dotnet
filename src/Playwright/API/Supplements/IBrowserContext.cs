@@ -49,10 +49,6 @@ namespace Microsoft.Playwright
     /// </summary>
     public partial interface IBrowserContext : IAsyncDisposable
     {
-        Task<T> WaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, BrowserContextWaitForEventOptions<T> options = default);
-
-        Task<T> RunAndWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action, BrowserContextRunAndWaitForEventOptions<T> options = default);
-
         /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
         Task ExposeBindingAsync(string name, Action<BindingSource> callback);
 

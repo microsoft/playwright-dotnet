@@ -27,7 +27,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.EmptyPage);
             string value = "baẞ";
 
-            var task = Page.WaitForEventAsync(PageEvent.Request);
+            var task = Page.WaitForRequestAsync("**/*");
             var actualTask = Page.EvaluateAsync(@$"() => {{
                       const request = new Request('{TestConstants.ServerUrl + "/title.html"}', {{
                         method: 'POST',
@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
 
-            var task = Page.WaitForEventAsync(PageEvent.Request);
+            var task = Page.WaitForRequestAsync("**/*");
             var actualTask = Page.EvaluateAsync(@"(url) => {
                       const request = new Request(url, {
                         method: 'POST',
@@ -80,7 +80,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
 
-            var task = Page.WaitForEventAsync(PageEvent.Request);
+            var task = Page.WaitForRequestAsync("**/*");
             var actualTask = Page.EvaluateAsync(@"(url) => {
                       const request = new Request(url, {
                         method: 'POST',
@@ -102,7 +102,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
 
-            var task = Page.WaitForEventAsync(PageEvent.Request);
+            var task = Page.WaitForRequestAsync("**/*");
             var actualTask = Page.EvaluateAsync(@"(url) => {
                       const request = new Request(url, {
                         method: 'PUT',

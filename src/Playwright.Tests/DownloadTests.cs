@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReportDownloadsWithAcceptDownloadsFalse()
         {
             await Page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/downloadWithFilename\">download</a>");
-            var downloadTask = Page.WaitForEventAsync(PageEvent.Download);
+            var downloadTask = Page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
                 downloadTask,
@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var download = await page.RunAndWaitForEventAsync(PageEvent.Download, async () =>
+            var download = await page.RunAndWaitForDownloadAsync(async () =>
             {
                 await page.ClickAsync("a");
             });
@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var download = await page.RunAndWaitForEventAsync(PageEvent.Download, async () =>
+            var download = await page.RunAndWaitForDownloadAsync(async () =>
             {
                 await page.ClickAsync("a");
             });
@@ -95,7 +95,7 @@ namespace Microsoft.Playwright.Tests
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
 
-            var download = await page.RunAndWaitForEventAsync(PageEvent.Download, async () =>
+            var download = await page.RunAndWaitForDownloadAsync(async () =>
             {
                 await page.ClickAsync("a");
             });
@@ -121,7 +121,7 @@ namespace Microsoft.Playwright.Tests
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
 
-            var download = await page.RunAndWaitForEventAsync(PageEvent.Download, async () =>
+            var download = await page.RunAndWaitForDownloadAsync(async () =>
             {
                 await page.ClickAsync("a");
             });
@@ -146,7 +146,7 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEventAsync(PageEvent.Download);
+            var downloadTask = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
                 downloadTask,
@@ -169,7 +169,7 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEventAsync(PageEvent.Download);
+            var downloadTask = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
                 downloadTask,
@@ -197,7 +197,7 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = false });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEventAsync(PageEvent.Download);
+            var downloadTask = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
                 downloadTask,
@@ -217,7 +217,7 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEventAsync(PageEvent.Download);
+            var downloadTask = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
                 downloadTask,
@@ -250,7 +250,7 @@ namespace Microsoft.Playwright.Tests
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.GotoAsync(TestConstants.EmptyPage);
             await page.SetContentAsync($"<a download=\"file.txt\" href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEventAsync(PageEvent.Download);
+            var downloadTask = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
                 downloadTask,
@@ -315,7 +315,7 @@ namespace Microsoft.Playwright.Tests
 
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEventAsync(PageEvent.Download);
+            var downloadTask = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
                 downloadTask,
@@ -334,7 +334,7 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a target=_blank href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEventAsync(PageEvent.Download);
+            var downloadTask = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
                 downloadTask,
@@ -353,7 +353,7 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a target=_blank href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEventAsync(PageEvent.Download);
+            var downloadTask = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
                 downloadTask,
@@ -374,7 +374,7 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a target=_blank href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var downloadTask = page.WaitForEventAsync(PageEvent.Download);
+            var downloadTask = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
                 downloadTask,
@@ -393,13 +393,13 @@ namespace Microsoft.Playwright.Tests
         {
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var download1Task = page.WaitForEventAsync(PageEvent.Download);
+            var download1Task = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
                 download1Task,
                 page.ClickAsync("a"));
 
-            var download2Task = page.WaitForEventAsync(PageEvent.Download);
+            var download2Task = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
                 download2Task,
@@ -421,13 +421,13 @@ namespace Microsoft.Playwright.Tests
             var browser = await BrowserType.LaunchDefaultAsync();
             var page = await browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
-            var download1Task = page.WaitForEventAsync(PageEvent.Download);
+            var download1Task = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
                 download1Task,
                 page.ClickAsync("a"));
 
-            var download2Task = page.WaitForEventAsync(PageEvent.Download);
+            var download2Task = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
                 download2Task,

@@ -125,9 +125,9 @@ namespace Microsoft.Playwright.Tests
 
             for (int i = 1; i < 6; i++)
             {
-                var popupTask = Page.WaitForEventAsync(PageEvent.Popup);
+                var popupTask = Page.WaitForPopupAsync();
                 await Task.WhenAll(
-                    Page.WaitForEventAsync(PageEvent.Popup),
+                    Page.WaitForPopupAsync(),
                     Page.ClickAsync("#box" + i)).WithTimeout(TestConstants.DefaultTestTimeout);
 
                 await popupTask.Result.WaitForLoadStateAsync(LoadState.NetworkIdle);

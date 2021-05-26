@@ -266,6 +266,12 @@ namespace Microsoft.Playwright
             return WaitForNavigationAsync(urlString: options.UrlString, urlRegex: options.UrlRegex, urlFunc: options.UrlFunc, waitUntil: options.WaitUntil, timeout: options.Timeout);
         }
 
+        public Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions options = default)
+        {
+            options ??= new FrameRunAndWaitForNavigationOptions();
+            return RunAndWaitForNavigationAsync(action, urlString: options.UrlString, urlRegex: options.UrlRegex, urlFunc: options.UrlFunc, waitUntil: options.WaitUntil, timeout: options.Timeout);
+        }
+
         public Task<IElementHandle> WaitForSelectorAsync(string selector, FrameWaitForSelectorOptions options = default)
         {
             options ??= new FrameWaitForSelectorOptions();

@@ -509,7 +509,7 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync("**/*", (r) => route = r);
             _ = Page.EvalOnSelectorAsync("iframe", "(frame, url) => frame.src = url", TestConstants.EmptyPage);
             // Wait for request interception.
-            await Page.WaitForEventAsync(PageEvent.Request);
+            await Page.WaitForRequestAsync("**/*");
             // Delete frame to cause request to be canceled.
             await Page.EvalOnSelectorAsync("iframe", "frame => frame.remove()");
             await route.ContinueAsync();

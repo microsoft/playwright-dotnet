@@ -43,13 +43,14 @@ namespace Microsoft.Playwright.Tests
         [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWhenClickOpensAlert()
         {
-            var dialogTask = Page.WaitForEventAsync(PageEvent.Dialog);
+            var dialogEvent = new TaskCompletionSource<IDialog>();
+            Page.Dialog += (_, dialog) => dialogEvent.TrySetResult(dialog);
 
             await Page.SetContentAsync("<div onclick='window.alert(123)'>Click me</div>");
 
             var exception = await Assert.ThrowsAsync<TimeoutException>(() => Page.ClickAsync("div", new PageClickOptions { Timeout = 3000 }));
             Assert.Contains("Timeout 3000ms exceeded", exception.Message);
-            var dialog = await dialogTask;
+            var dialog = await dialogEvent.Task;
             await dialog.DismissAsync();
         }
 

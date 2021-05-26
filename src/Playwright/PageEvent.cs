@@ -27,7 +27,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.Playwright
 {
-    public static class PageEvent
+    internal static class PageEvent
     {
         /// <summary>
         /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Request"/>.

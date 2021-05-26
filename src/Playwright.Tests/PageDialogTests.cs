@@ -106,10 +106,12 @@ namespace Microsoft.Playwright.Tests
         {
             var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            var alertTask = page.WaitForEventAsync(PageEvent.Dialog);
+
+            var alertEvent = new TaskCompletionSource<IDialog>();
+            page.Dialog += (_, dialog) => alertEvent.TrySetResult(dialog);
 
             await page.EvaluateAsync("() => setTimeout(() => alert('hello'), 0)");
-            await alertTask;
+            await alertEvent.Task;
             await context.CloseAsync();
         }
 
