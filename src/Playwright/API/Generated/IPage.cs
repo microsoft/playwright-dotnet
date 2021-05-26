@@ -2165,8 +2165,12 @@ namespace Microsoft.Playwright
         /// Consider this example:
         /// </para>
         /// <code>
-        /// await Task.WhenAll(page.WaitForNavigationAsync(),<br/>
-        ///     frame.ClickAsync("a.delayed-navigation")); // clicking the link will indirectly cause a navigation<br/>
+        /// await page.RunAndWaitForNavigationAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     // Clicking the link will indirectly cause a navigation.<br/>
+        ///     await page.ClickAsync("a.delayed-navigation");<br/>
+        /// });<br/>
+        /// <br/>
         /// // The method continues after navigation has finished
         /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.RunAndWaitForNavigationAsync"/>.</para>
@@ -2194,8 +2198,12 @@ namespace Microsoft.Playwright
         /// Consider this example:
         /// </para>
         /// <code>
-        /// await Task.WhenAll(page.WaitForNavigationAsync(),<br/>
-        ///     frame.ClickAsync("a.delayed-navigation")); // clicking the link will indirectly cause a navigation<br/>
+        /// await page.RunAndWaitForNavigationAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     // Clicking the link will indirectly cause a navigation.<br/>
+        ///     await page.ClickAsync("a.delayed-navigation");<br/>
+        /// });<br/>
+        /// <br/>
         /// // The method continues after navigation has finished
         /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.RunAndWaitForNavigationAsync"/>.</para>
@@ -2239,13 +2247,17 @@ namespace Microsoft.Playwright
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
-        /// // Waits for the next response with the specified url<br/>
-        /// await Task.WhenAll(page.WaitForRequestAsync("https://example.com/resource"),<br/>
-        ///     page.ClickAsync("button.triggers-request"));<br/>
+        /// // Waits for the next request with the specified url.<br/>
+        /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, "http://example.com/resource");<br/>
         /// <br/>
-        /// // Waits for the next request matching some conditions<br/>
-        /// await Task.WhenAll(page.WaitForRequestAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; "GET" == r.Method),<br/>
-        ///     page.ClickAsync("button.triggers-request"));
+        /// // Alternative way with a predicate.<br/>
+        /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
         /// </code>
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
@@ -2258,13 +2270,17 @@ namespace Microsoft.Playwright
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
-        /// // Waits for the next response with the specified url<br/>
-        /// await Task.WhenAll(page.WaitForRequestAsync("https://example.com/resource"),<br/>
-        ///     page.ClickAsync("button.triggers-request"));<br/>
+        /// // Waits for the next request with the specified url.<br/>
+        /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, "http://example.com/resource");<br/>
         /// <br/>
-        /// // Waits for the next request matching some conditions<br/>
-        /// await Task.WhenAll(page.WaitForRequestAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; "GET" == r.Method),<br/>
-        ///     page.ClickAsync("button.triggers-request"));
+        /// // Alternative way with a predicate.<br/>
+        /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
         /// </code>
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
@@ -2277,13 +2293,17 @@ namespace Microsoft.Playwright
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
-        /// // Waits for the next response with the specified url<br/>
-        /// await Task.WhenAll(page.WaitForRequestAsync("https://example.com/resource"),<br/>
-        ///     page.ClickAsync("button.triggers-request"));<br/>
+        /// // Waits for the next request with the specified url.<br/>
+        /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, "http://example.com/resource");<br/>
         /// <br/>
-        /// // Waits for the next request matching some conditions<br/>
-        /// await Task.WhenAll(page.WaitForRequestAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; "GET" == r.Method),<br/>
-        ///     page.ClickAsync("button.triggers-request"));
+        /// // Alternative way with a predicate.<br/>
+        /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
         /// </code>
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
@@ -2296,13 +2316,17 @@ namespace Microsoft.Playwright
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
-        /// // Waits for the next response with the specified url<br/>
-        /// await Task.WhenAll(page.WaitForRequestAsync("https://example.com/resource"),<br/>
-        ///     page.ClickAsync("button.triggers-request"));<br/>
+        /// // Waits for the next request with the specified url.<br/>
+        /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, "http://example.com/resource");<br/>
         /// <br/>
-        /// // Waits for the next request matching some conditions<br/>
-        /// await Task.WhenAll(page.WaitForRequestAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; "GET" == r.Method),<br/>
-        ///     page.ClickAsync("button.triggers-request"));
+        /// // Alternative way with a predicate.<br/>
+        /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
         /// </code>
         /// </summary>
         /// <param name="action">Action that triggers the event.</param>
@@ -2316,13 +2340,17 @@ namespace Microsoft.Playwright
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
-        /// // Waits for the next response with the specified url<br/>
-        /// await Task.WhenAll(page.WaitForRequestAsync("https://example.com/resource"),<br/>
-        ///     page.ClickAsync("button.triggers-request"));<br/>
+        /// // Waits for the next request with the specified url.<br/>
+        /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, "http://example.com/resource");<br/>
         /// <br/>
-        /// // Waits for the next request matching some conditions<br/>
-        /// await Task.WhenAll(page.WaitForRequestAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; "GET" == r.Method),<br/>
-        ///     page.ClickAsync("button.triggers-request"));
+        /// // Alternative way with a predicate.<br/>
+        /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
         /// </code>
         /// </summary>
         /// <param name="action">Action that triggers the event.</param>
@@ -2336,13 +2364,17 @@ namespace Microsoft.Playwright
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
-        /// // Waits for the next response with the specified url<br/>
-        /// await Task.WhenAll(page.WaitForRequestAsync("https://example.com/resource"),<br/>
-        ///     page.ClickAsync("button.triggers-request"));<br/>
+        /// // Waits for the next request with the specified url.<br/>
+        /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, "http://example.com/resource");<br/>
         /// <br/>
-        /// // Waits for the next request matching some conditions<br/>
-        /// await Task.WhenAll(page.WaitForRequestAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; "GET" == r.Method),<br/>
-        ///     page.ClickAsync("button.triggers-request"));
+        /// // Alternative way with a predicate.<br/>
+        /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
         /// </code>
         /// </summary>
         /// <param name="action">Action that triggers the event.</param>
@@ -2381,13 +2413,17 @@ namespace Microsoft.Playwright
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
-        /// // Waits for the next response with the specified url<br/>
-        /// await Task.WhenAll(page.WaitForResponseAsync("https://example.com/resource"),<br/>
-        ///     page.ClickAsync("button.triggers-response"));<br/>
+        /// // Waits for the next response with the specified url.<br/>
+        /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button.triggers-response");<br/>
+        /// }, "http://example.com/resource");<br/>
         /// <br/>
-        /// // Waits for the next response matching some conditions<br/>
-        /// await Task.WhenAll(page.WaitForResponseAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; r.Status == 200),<br/>
-        ///     page.ClickAsync("button.triggers-response"));
+        /// // Alternative way with a predicate.<br/>
+        /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
         /// </code>
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
@@ -2400,13 +2436,17 @@ namespace Microsoft.Playwright
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
-        /// // Waits for the next response with the specified url<br/>
-        /// await Task.WhenAll(page.WaitForResponseAsync("https://example.com/resource"),<br/>
-        ///     page.ClickAsync("button.triggers-response"));<br/>
+        /// // Waits for the next response with the specified url.<br/>
+        /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button.triggers-response");<br/>
+        /// }, "http://example.com/resource");<br/>
         /// <br/>
-        /// // Waits for the next response matching some conditions<br/>
-        /// await Task.WhenAll(page.WaitForResponseAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; r.Status == 200),<br/>
-        ///     page.ClickAsync("button.triggers-response"));
+        /// // Alternative way with a predicate.<br/>
+        /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
         /// </code>
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
@@ -2419,13 +2459,17 @@ namespace Microsoft.Playwright
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
-        /// // Waits for the next response with the specified url<br/>
-        /// await Task.WhenAll(page.WaitForResponseAsync("https://example.com/resource"),<br/>
-        ///     page.ClickAsync("button.triggers-response"));<br/>
+        /// // Waits for the next response with the specified url.<br/>
+        /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button.triggers-response");<br/>
+        /// }, "http://example.com/resource");<br/>
         /// <br/>
-        /// // Waits for the next response matching some conditions<br/>
-        /// await Task.WhenAll(page.WaitForResponseAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; r.Status == 200),<br/>
-        ///     page.ClickAsync("button.triggers-response"));
+        /// // Alternative way with a predicate.<br/>
+        /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
         /// </code>
         /// </summary>
         /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
@@ -2438,13 +2482,17 @@ namespace Microsoft.Playwright
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
-        /// // Waits for the next response with the specified url<br/>
-        /// await Task.WhenAll(page.WaitForResponseAsync("https://example.com/resource"),<br/>
-        ///     page.ClickAsync("button.triggers-response"));<br/>
+        /// // Waits for the next response with the specified url.<br/>
+        /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button.triggers-response");<br/>
+        /// }, "http://example.com/resource");<br/>
         /// <br/>
-        /// // Waits for the next response matching some conditions<br/>
-        /// await Task.WhenAll(page.WaitForResponseAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; r.Status == 200),<br/>
-        ///     page.ClickAsync("button.triggers-response"));
+        /// // Alternative way with a predicate.<br/>
+        /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
         /// </code>
         /// </summary>
         /// <param name="action">Action that triggers the event.</param>
@@ -2458,13 +2506,17 @@ namespace Microsoft.Playwright
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
-        /// // Waits for the next response with the specified url<br/>
-        /// await Task.WhenAll(page.WaitForResponseAsync("https://example.com/resource"),<br/>
-        ///     page.ClickAsync("button.triggers-response"));<br/>
+        /// // Waits for the next response with the specified url.<br/>
+        /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button.triggers-response");<br/>
+        /// }, "http://example.com/resource");<br/>
         /// <br/>
-        /// // Waits for the next response matching some conditions<br/>
-        /// await Task.WhenAll(page.WaitForResponseAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; r.Status == 200),<br/>
-        ///     page.ClickAsync("button.triggers-response"));
+        /// // Alternative way with a predicate.<br/>
+        /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
         /// </code>
         /// </summary>
         /// <param name="action">Action that triggers the event.</param>
@@ -2478,13 +2530,17 @@ namespace Microsoft.Playwright
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
-        /// // Waits for the next response with the specified url<br/>
-        /// await Task.WhenAll(page.WaitForResponseAsync("https://example.com/resource"),<br/>
-        ///     page.ClickAsync("button.triggers-response"));<br/>
+        /// // Waits for the next response with the specified url.<br/>
+        /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button.triggers-response");<br/>
+        /// }, "http://example.com/resource");<br/>
         /// <br/>
-        /// // Waits for the next response matching some conditions<br/>
-        /// await Task.WhenAll(page.WaitForResponseAsync(r =&gt; "https://example.com".Equals(r.Url) &amp;&amp; r.Status == 200),<br/>
-        ///     page.ClickAsync("button.triggers-response"));
+        /// // Alternative way with a predicate.<br/>
+        /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
+        /// {<br/>
+        ///     await page.ClickAsync("button");<br/>
+        /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
         /// </code>
         /// </summary>
         /// <param name="action">Action that triggers the event.</param>

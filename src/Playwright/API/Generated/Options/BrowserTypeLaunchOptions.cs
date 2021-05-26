@@ -73,12 +73,10 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Supported values are "chrome", "chrome-beta", "chrome-dev", "chrome-canary", "msedge",
-        /// "msedge-beta", "msedge-dev", "msedge-canary".
-        /// </para>
-        /// <para>
-        /// Browser distribution channel. Read more about using <a href="./browsers.md#google-chrome--microsoft-edge">Google
-        /// Chrome and Microsoft Edge</a>.
+        /// Browser distribution channel.  Supported values are "chrome", "chrome-beta", "chrome-dev",
+        /// "chrome-canary", "msedge", "msedge-beta", "msedge-dev", "msedge-canary". Read more
+        /// about using <a href="./browsers.md#google-chrome--microsoft-edge">Google Chrome
+        /// and Microsoft Edge</a>.
         /// </para>
         /// </summary>
         [JsonPropertyName("channel")]
