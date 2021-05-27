@@ -30,7 +30,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./src/Playwright/runtimes/
-          key: ${{ hashFiles('./src/Common/PackageInfo.props') }}
+          key: ${{ hashFiles('./src/Playwright/Playwright.csproj') }}
       - name: Setup .NET Core (On Mac)
         if: ${{ matrix.os == 'macos-latest' }}
         uses: actions/setup-dotnet@v1
@@ -79,7 +79,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./src/Playwright/runtimes/
-          key: ${{ hashFiles('./src/Common/PackageInfo.props') }}
+          key: ${{ hashFiles('./src/Playwright/Playwright.csproj') }}
       - name: Setup .NET Core (On Mac)
         if: ${{ matrix.os == 'macos-latest' }}
         uses: actions/setup-dotnet@v1

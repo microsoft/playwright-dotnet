@@ -22,18 +22,8 @@ jobs:
         uses: rohith/publish-nuget@v2
         with:
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-          PROJECT_FILE_PATH: src/PlaywrightSharp/PlaywrightSharp.csproj
-          VERSION_FILE_PATH: src/Common/PackageInfo.props
-          VERSION_REGEX: ^\s*<PackageVersion>(.*)<\/PackageVersion>\s*$
-          INCLUDE_SYMBOLS: false
-          TAG_COMMIT: false
-      - name: Publish Playwright Sharp Tools
-        id: publish_nuget_playwright_sharp_tools
-        uses: rohith/publish-nuget@v2
-        with:
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-          PROJECT_FILE_PATH: src/tools/PlaywrightSharpTool/PlaywrightSharpTool.csproj
-          VERSION_FILE_PATH: src/Common/PackageInfo.props
+          PROJECT_FILE_PATH: src/Playwright/Playwright.csproj
+          VERSION_FILE_PATH: src/Playwright/Playwright.csproj
           VERSION_REGEX: ^\s*<PackageVersion>(.*)<\/PackageVersion>\s*$
           INCLUDE_SYMBOLS: false
           TAG_COMMIT: false

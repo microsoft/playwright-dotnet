@@ -23,9 +23,25 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyVersion>1.11.1</AssemblyVersion>
+    <PackageVersion>$(AssemblyVersion)-alpha-2</PackageVersion>
+    <DriverVersion>1.11.1-1622073148000</DriverVersion>
+    <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <Authors>Microsoft</Authors>
+    <Owners>Microsoft</Owners>
+    <PackageProjectUrl>https://github.com/microsoft/playwright-sharp</PackageProjectUrl>
+    <PackageTags>headless,chrome,firefox,webkit,playwright</PackageTags>
+    <RepositoryUrl>https://github.com/microsoft/playwright-sharp.git</RepositoryUrl>
+    <PackageReleaseNotes><![CDATA[
+]]></PackageReleaseNotes>
+    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
   <Import Project="../Common/Dependencies.props" />
   <Import Project="../Common/SignAssembly.props" />
-  <Import Project="../Common/PackageInfo.props" />
   <Import Project="build/netstandard2.0/Microsoft.Playwright.targets" />
   <ItemGroup>
     <PackageReference Include="Esprima" Version="2.0.0" />
