@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Title>Microsoft.Playwright.CLI</Title>
+    <PackageId>Microsoft.Playwright.CLI</PackageId>
+    <Summary>The Playwright CLI dotnet tool.</Summary>
+    <Description></Description>
+    <TargetFrameworks>net5.0</TargetFrameworks>
+    <DebugSymbols>false</DebugSymbols>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RunWithWarnings>true</RunWithWarnings>
+    <RootNamespace>Microsoft.Playwright.CLI</RootNamespace>
+    <ReleaseVersion>0.0.0</ReleaseVersion>
+    <BuildFromSource>True</BuildFromSource>
+    <AssemblyName>Microsoft.Playwright.CLI</AssemblyName>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>playwrightcli</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+  </PropertyGroup>
+  
+  <Import Project="../Common/SignAssembly.props" />
+  <Import Project="../Common/PackageInfo.props" />
+</Project>
