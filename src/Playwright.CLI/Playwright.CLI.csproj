@@ -9,7 +9,7 @@
     <Title>Microsoft.Playwright.CLI</Title>
     <PackageId>Microsoft.Playwright.CLI</PackageId>
     <Summary>The Playwright CLI dotnet tool.</Summary>
-    <Description></Description>
+    <Description>Playwright enables reliable end-to-end testing for modern web apps. It is built to enable cross-browser web automation that is ever-green, capable, reliable and fast. Learn more at https://playwright.dev/dotnet/.</Description>
     <TargetFrameworks>net5.0</TargetFrameworks>
     <DebugSymbols>false</DebugSymbols>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
