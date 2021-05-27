@@ -50,7 +50,7 @@ jobs:
       - name: Clean
         run: dotnet clean ./src/Playwright.sln --configuration Debug && dotnet nuget locals all --clear
       - name: Download Drivers
-        run: dotnet run -p ./src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj -- download-drivers --basepath .
+        run: dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
       - name: Run tests (!Linux)
         if: ${{ matrix.os != 'ubuntu-latest' }}
         env:
@@ -111,7 +111,7 @@ jobs:
       - name: Clean
         run: dotnet clean ./src/Playwright.sln --configuration Debug && dotnet nuget locals all --clear
       - name: Download Drivers
-        run: dotnet run -p ./src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj -- download-drivers --basepath .
+        run: dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
       - name: Run tests (!Linux)
         if: ${{ matrix.os != 'ubuntu-latest' }}
         env:

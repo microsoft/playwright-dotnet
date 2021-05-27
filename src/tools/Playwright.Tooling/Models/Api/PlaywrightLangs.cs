@@ -1,6 +1,6 @@
 using System;
 
-namespace PlaywrightSharp.Tooling.Models.Api
+namespace Playwright.Tooling.Models.Api
 {
     public class PlaywrightLangs
     {

@@ -9,12 +9,12 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using PlaywrightSharp.Tooling.Extensions;
-using PlaywrightSharp.Tooling.Models.Api;
-using PlaywrightSharp.Tooling.Models.Mismatch;
-using PlaywrightSharp.Tooling.Options;
+using Playwright.Tooling.Extensions;
+using Playwright.Tooling.Models.Api;
+using Playwright.Tooling.Models.Mismatch;
+using Playwright.Tooling.Options;
 
-namespace PlaywrightSharp.Tooling
+namespace Playwright.Tooling
 {
     internal class ApiChecker
     {
