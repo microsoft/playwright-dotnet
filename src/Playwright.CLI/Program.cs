@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace Microsoft.Playwright.CLI
@@ -15,7 +16,13 @@ namespace Microsoft.Playwright.CLI
         static void Main(string[] args)
         {
             string pwPath = GetFullPath();
-            Console.WriteLine(pwPath);
+            if (string.IsNullOrEmpty(pwPath))
+            {
+                Console.WriteLine("Please install Playwright:");
+                Console.WriteLine("   dotnet add package Microsoft.Playwright");
+                return;
+            }
+
             var playwrightStartInfo = new ProcessStartInfo(pwPath, string.Join(' ', args))
             {
                 UseShellExecute = false,
@@ -66,76 +73,43 @@ namespace Microsoft.Playwright.CLI
 
         private static string GetFullPath()
         {
-            string envPath = Environment.GetEnvironmentVariable(DriverEnvironmentPath);
-            if (!string.IsNullOrEmpty(envPath))
-            {
-                envPath = Path.Join(envPath, "Drivers");
-                if (!Directory.Exists(envPath))
-                {
-                    Console.Error.WriteLine($"The path specified in the environment variable {DriverEnvironmentPath} ({envPath}) does not contain the Drivers folder.");
-                }
-
-                return GetDriverPath(envPath);
-            }
-
-            var version = Assembly.GetEntryAssembly().GetName().Version;
-
-            string sourcePath = TraverseAndFindFolder(new DirectoryInfo("."));
-            if (!string.IsNullOrEmpty(sourcePath))
-            {
-                return GetDriverPath(sourcePath, string.Empty);
-            }
-
-            sourcePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            var sourcePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
                 ".nuget",
                 "packages",
                 "microsoft.playwright");
 
-            var assumedRootDirectory = new DirectoryInfo(sourcePath);
-
-            if (!assumedRootDirectory.Exists)
+            var packageDirectory = new DirectoryInfo(sourcePath);
+            if (!packageDirectory.Exists)
             {
-                throw new Exception("Driver Not found");
+                return null;
             }
 
-            string path = Path.Combine(assumedRootDirectory.FullName, version.ToString());
-            if (!Directory.Exists(path))
+            var versions = packageDirectory.GetDirectories();
+            int max = 0;
+            string maxVersion = null;
+            foreach (var version in versions)
             {
-                // fallback to the first one with the best version match#
-                var targetPath = assumedRootDirectory.GetDirectories().Where(x => x.Name.Contains(version.ToString())).FirstOrDefault();
-                if (targetPath == null)
+                var match = Regex.Match(version.Name, @"([\d]+)\.([\d]+)\.([\d]+)");
+                if (!match.Success)
+                    continue;
+                var major = Int32.Parse(match.Groups[1].Value);
+                var minor = Int32.Parse(match.Groups[2].Value);
+                var patch = Int32.Parse(match.Groups[2].Value);
+                var n = major * 10000 + minor * 100 + patch;
+                if (n > max)
                 {
-                    // fallback to the first folder we find
-                    path = assumedRootDirectory.GetDirectories().FirstOrDefault()?.FullName;
-                    if (string.IsNullOrEmpty(path))
-                    {
-                        throw new Exception("Driver Not found");
-                    }
+                    max = n;
+                    maxVersion = version.Name;
                 }
             }
-
-            var assumedPath = new DirectoryInfo(Path.Combine(path, "Drivers"));
-            return GetDriverPath(assumedPath.FullName);
-        }
-
-        private static string TraverseAndFindFolder(DirectoryInfo root)
-        {
-            foreach (var subdir in root.EnumerateDirectories())
+            if (string.IsNullOrEmpty(maxVersion))
             {
-                if (subdir.Name == ".playwright")
-                {
-                    return subdir.FullName;
-                }
-
-                string attempt = TraverseAndFindFolder(subdir);
-                if (!string.IsNullOrEmpty(attempt))
-                    return attempt;
+                return null;
             }
 
-            return null;
+            return GetDriverPath(Path.Combine(packageDirectory.FullName, maxVersion, "Drivers"));
         }
 
-        // TODO: Potentially move this to a shared file between Playwright and the CLI
         private static string GetDriverPath(string driversDirectory, string nativeComponent = "native")
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
