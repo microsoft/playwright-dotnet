@@ -31,7 +31,7 @@ namespace Playwright.Tooling
         internal static Task RunAsync(DownloadDriversOptions o)
         {
             var props = new XmlDocument();
-            props.Load(Path.Combine(o.BasePath, "src", "Common", "PackageInfo.props"));
+            props.Load(Path.Combine(o.BasePath, "src", "Playwright", "Playwright.csproj"));
             string driverVersion = props.DocumentElement.SelectSingleNode("/Project/PropertyGroup/DriverVersion").FirstChild.Value;
 
             return new DriverDownloader()

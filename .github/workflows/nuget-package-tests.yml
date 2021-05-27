@@ -34,7 +34,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./src/Playwright/runtimes/
-          key: ${{ hashFiles('./src/Common/PackageInfo.props') }}
+          key: ${{ hashFiles('./src/Playwright/Playwright.csproj') }}
       - name: Download Drivers
         run: dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
       - name: Build Project

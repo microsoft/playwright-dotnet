@@ -18,13 +18,26 @@
     <ReleaseVersion>0.0.0</ReleaseVersion>
     <BuildFromSource>True</BuildFromSource>
     <AssemblyName>Microsoft.Playwright.CLI</AssemblyName>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>playwrightcli</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
-  
+  <PropertyGroup>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <PackageVersion>$(AssemblyVersion)-alpha</PackageVersion>
+    <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <Authors>Microsoft</Authors>
+    <Owners>Microsoft</Owners>
+    <PackageProjectUrl>https://github.com/microsoft/playwright-sharp</PackageProjectUrl>
+    <PackageTags>headless,chrome,firefox,webkit,playwright</PackageTags>
+    <RepositoryUrl>https://github.com/microsoft/playwright-sharp.git</RepositoryUrl>
+    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReleaseNotes><![CDATA[
+]]></PackageReleaseNotes>
+  </PropertyGroup>
   <Import Project="../Common/SignAssembly.props" />
-  <Import Project="../Common/PackageInfo.props" />
 </Project>
