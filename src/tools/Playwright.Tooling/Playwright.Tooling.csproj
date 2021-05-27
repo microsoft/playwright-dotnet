@@ -17,12 +17,6 @@
 		<PackageReference Include="Microsoft.Extensions.Primitives" Version="5.0.0" />
 	</ItemGroup>
 	<ItemGroup>
-		<Folder Include="Extensions\" />
-		<Folder Include="Linux\" />
-		<Folder Include="Models\" />
-		<Folder Include="Options\" />
-	</ItemGroup>
-	<ItemGroup>
-	  <ProjectReference Include="..\..\Playwright.Testing.Xunit\Playwright.Testing.Xunit.csproj" />
+		<ProjectReference Include="..\..\Playwright.Testing.Xunit\Playwright.Testing.Xunit.csproj" />
 	</ItemGroup>
 </Project>

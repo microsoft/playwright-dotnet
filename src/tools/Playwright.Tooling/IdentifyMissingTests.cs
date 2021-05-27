@@ -29,7 +29,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Playwright.Testing.Xunit;
 
-namespace PlaywrightSharp.Tooling
+namespace Playwright.Tooling
 {
     /// <summary>
     /// This will identify missing tests from upstream.

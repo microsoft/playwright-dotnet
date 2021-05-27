@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace PlaywrightSharp.Tooling.Models.Api
+namespace Playwright.Tooling.Models.Api
 {
     public enum PlaywrightMemberKind
     {

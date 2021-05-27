@@ -10,9 +10,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using DriverDownloader.Linux;
-using PlaywrightSharp.Tooling.Options;
+using Playwright.Tooling.Options;
 
-namespace PlaywrightSharp.Tooling
+namespace Playwright.Tooling
 {
     internal class DriverDownloader
     {

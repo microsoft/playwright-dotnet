@@ -24,7 +24,7 @@
 
 using CommandLine;
 
-namespace PlaywrightSharp.Tooling
+namespace Playwright.Tooling
 {
     /// <summary>
     /// Describes the options for scaffolding the tests.

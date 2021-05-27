@@ -26,9 +26,9 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using CommandLine;
-using PlaywrightSharp.Tooling.Options;
+using Playwright.Tooling.Options;
 
-namespace PlaywrightSharp.Tooling
+namespace Playwright.Tooling
 {
     internal static class Program
     {

@@ -1,4 +1,4 @@
-namespace PlaywrightSharp.Tooling.Models.Mismatch
+namespace Playwright.Tooling.Models.Mismatch
 {
     internal class MismatchArgument
     {
