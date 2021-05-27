@@ -36,7 +36,7 @@ jobs:
           path: ./src/Playwright/runtimes/
           key: ${{ hashFiles('./src/Common/PackageInfo.props') }}
       - name: Download Drivers
-        run: dotnet run -p ./src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj -- download-drivers --basepath .
+        run: dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
       - name: Build Project
         run: dotnet build ./src/Playwright/Playwright.csproj -c Debug
       - name: Delete browsers on Mac

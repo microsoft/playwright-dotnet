@@ -61,7 +61,7 @@ Don’t worry about commit messages or about how many commits your PR has. [Your
 Before building the solution for the first time, you will need to download the drivers by running the following command in your terminal:
 
 ```
-dotnet run -p ./src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj -- download-drivers --basepath .
+dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
 ```
 
 ## Writing Tests

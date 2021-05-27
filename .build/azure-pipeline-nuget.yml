@@ -31,7 +31,7 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: 'run'
-        arguments: '-p $(Build.SourcesDirectory)/src/tools/PlaywrightSharp.Tooling/PlaywrightSharp.Tooling.csproj -- download-drivers --basepath $(Build.SourcesDirectory)'
+        arguments: '-p $(Build.SourcesDirectory)/src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath $(Build.SourcesDirectory)'
 
     - task: DotNetCoreCLI@2
       inputs:
