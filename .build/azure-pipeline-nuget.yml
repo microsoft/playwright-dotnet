@@ -40,21 +40,6 @@ stages:
         arguments: '-p $(Build.SourcesDirectory)/src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath $(Build.SourcesDirectory)'
 
     - task: DotNetCoreCLI@2
-      displayName: Build Playwright CLI
-      inputs:
-        command: 'build'
-        projects: '**/Playwright.CLI.csproj'
-        arguments: '-c $(BuildConfiguration)'
-
-    - task: DotNetCoreCLI@2
-      displayName: Pack Playwright CLI
-      inputs:
-        command: 'pack'
-        packagesToPack: '**/Playwright.CLI.csproj'
-        packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
-        versioningScheme: 'off'
-
-    - task: DotNetCoreCLI@2
       displayName: Build Playwright
       inputs:
         command: 'build'
@@ -66,6 +51,21 @@ stages:
       inputs:
         command: 'pack'
         packagesToPack: '**/Playwright.csproj'
+        packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
+        versioningScheme: 'off'
+
+    - task: DotNetCoreCLI@2
+      displayName: Build Playwright CLI
+      inputs:
+        command: 'build'
+        projects: '**/Playwright.CLI.csproj'
+        arguments: '-c $(BuildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: Pack Playwright CLI
+      inputs:
+        command: 'pack'
+        packagesToPack: '**/Playwright.CLI.csproj'
         packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
         versioningScheme: 'off'
 
