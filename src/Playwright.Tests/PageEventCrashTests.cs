@@ -27,7 +27,7 @@ namespace Microsoft.Playwright.Tests
             Page.Crash += (_, _) => crashEvent.TrySetResult(true);
 
             await CrashAsync(Page);
-            await crashEvent.Task.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await crashEvent.Task;
         }
 
         // We skip all browser because crash uses internals.
@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Tests
             Page.Crash += (_, _) => crashEvent.TrySetResult(true);
 
             await CrashAsync(Page);
-            await crashEvent.Task.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await crashEvent.Task;
             var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.EvaluateAsync("() => {}"));
             Assert.Contains("crash", exception.Message);
         }
@@ -53,7 +53,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<div>This page should crash</div>");
             var responseTask = Page.WaitForResponseAsync("**/*");
             await CrashAsync(Page);
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => responseTask.WithTimeout(TestConstants.DefaultTaskTimeout));
+            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => responseTask);
             Assert.Contains("Page crashed", exception.Message);
         }
 
@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.Tests
             Page.Crash += (_, dialog) => crashEvent.TrySetResult(true);
 
             await CrashAsync(Page);
-            await crashEvent.Task.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await crashEvent.Task;
             await Page.Context.CloseAsync();
         }
 

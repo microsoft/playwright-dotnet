@@ -128,7 +128,7 @@ namespace Microsoft.Playwright.Tests
                 var popupTask = Page.WaitForPopupAsync();
                 await Task.WhenAll(
                     Page.WaitForPopupAsync(),
-                    Page.ClickAsync("#box" + i)).WithTimeout(TestConstants.DefaultTestTimeout);
+                    Page.ClickAsync("#box" + i));
 
                 await popupTask.Result.WaitForLoadStateAsync(LoadState.NetworkIdle);
             }
@@ -167,20 +167,20 @@ namespace Microsoft.Playwright.Tests
             await waitForLoadTask;
             Assert.False(actionTask.IsCompleted);
 
-            await firstFetchResourceRequested.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await firstFetchResourceRequested;
             Assert.False(actionTask.IsCompleted);
 
-            await fetches["/fetch-request-a.js"].Task.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await fetches["/fetch-request-a.js"].Task;
             await frame.Page.EvaluateAsync("() => window['fetchSecond']()");
 
             // Finishing first response should leave 2 requests alive and trigger networkidle2.
             responses["/fetch-request-a.js"].TrySetResult(true);
 
             // Wait for the second round to be requested.
-            await secondFetchResourceRequested.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await secondFetchResourceRequested;
             Assert.False(actionTask.IsCompleted);
 
-            await fetches["/fetch-request-b.js"].Task.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await fetches["/fetch-request-b.js"].Task;
             responses["/fetch-request-b.js"].TrySetResult(true);
 
             IResponse navigationResponse = null;
