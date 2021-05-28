@@ -1,19 +1,13 @@
 using System.Threading.Tasks;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PauseTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class PauseTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public PauseTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
-        [Fact]
+        [Test]
         public async Task ShouldNotFail()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);

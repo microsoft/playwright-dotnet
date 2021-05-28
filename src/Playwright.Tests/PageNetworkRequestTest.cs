@@ -2,35 +2,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>network-request.spec.ts</playwright-file>
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageNetworkRequestTest : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class PageNetworkRequestTest : PageTestEx
     {
-        /// <inheritdoc/>
-        public PageNetworkRequestTest(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("page-network-request.spec.ts", "should work for main frame navigation request")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForMainFrameNavigationRequests()
         {
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
             await Page.GotoAsync(TestConstants.EmptyPage);
-            Assert.Single(requests);
-            Assert.Equal(Page.MainFrame, requests[0].Frame);
+            Assert.That(requests, Has.Count.EqualTo(1));
+            Assert.AreEqual(Page.MainFrame, requests[0].Frame);
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should work for subframe navigation request")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForSubframeNavigationRequest()
         {
             var requests = new List<IRequest>();
@@ -39,99 +32,99 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(TestConstants.EmptyPage);
 
             await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
-            Assert.Equal(2, requests.Count);
-            Assert.Equal(Page.FirstChildFrame(), requests[1].Frame);
+            Assert.AreEqual(2, requests.Count);
+            Assert.AreEqual(Page.FirstChildFrame(), requests[1].Frame);
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should work for fetch requests")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForFetchRequests()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
             await Page.EvaluateAsync("fetch('/digits/1.png')");
-            Assert.Single(requests.Where(r => !r.Url.Contains("favicon")));
-            Assert.Equal(Page.MainFrame, requests[0].Frame);
+            Assert.AreEqual(1, requests.Where(r => !r.Url.Contains("favicon")).Count());
+            Assert.AreEqual(Page.MainFrame, requests[0].Frame);
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should return headers")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnHeaders()
         {
             var response = await Page.GotoAsync(TestConstants.EmptyPage);
 
-            string expected = TestConstants.Product switch
+            string expected = TestConstants.BrowserName switch
             {
-                TestConstants.ChromiumProduct => "Chrome",
-                TestConstants.FirefoxProduct => "Firefox",
-                TestConstants.WebkitProduct => "WebKit",
+                "chromium" => "Chrome",
+                "firefox" => "Firefox",
+                "webkit" => "WebKit",
                 _ => "None"
             };
 
-            Assert.Contains(expected, response.Request.Headers["user-agent"]);
+            StringAssert.Contains(expected, response.Request.Headers["user-agent"]);
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "Request.headers", "should get the same headers as the server")]
-        [Fact(Skip = "We don't need to test this")]
+        [Test, Ignore("We don't need to test this")]
         public void ShouldGetTheSameHeadersAsTheServer()
         {
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should return postData")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnPostData()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            Server.SetRoute("/post", _ => Task.CompletedTask);
+            HttpServer.Server.SetRoute("/post", _ => Task.CompletedTask);
             IRequest request = null;
             Page.Request += (_, e) => request = e;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: JSON.stringify({ foo: 'bar'})})");
             Assert.NotNull(request);
-            Assert.Equal("{\"foo\":\"bar\"}", request.PostData);
+            Assert.AreEqual("{\"foo\":\"bar\"}", request.PostData);
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should work with binary post data")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBinaryPostData()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            Server.SetRoute("/post", _ => Task.CompletedTask);
+            HttpServer.Server.SetRoute("/post", _ => Task.CompletedTask);
             IRequest request = null;
             Page.Request += (_, e) => request = e;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: new Uint8Array(Array.from(Array(256).keys())) })");
             Assert.NotNull(request);
             byte[] data = request.PostDataBuffer;
-            Assert.Equal(256, data.Length);
+            Assert.AreEqual(256, data.Length);
 
             for (int index = 0; index < data.Length; index++)
             {
-                Assert.Equal(index, data[index]);
+                Assert.AreEqual(index, data[index]);
             }
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should work with binary post data and interception")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBinaryPostDataAndInterception()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            Server.SetRoute("/post", _ => Task.CompletedTask);
+            HttpServer.Server.SetRoute("/post", _ => Task.CompletedTask);
             await Page.RouteAsync("/post", (route) => route.ContinueAsync());
             IRequest request = null;
             Page.Request += (_, e) => request = e;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: new Uint8Array(Array.from(Array(256).keys())) })");
             Assert.NotNull(request);
             byte[] data = request.PostDataBuffer;
-            Assert.Equal(256, data.Length);
+            Assert.AreEqual(256, data.Length);
 
             for (int index = 0; index < data.Length; index++)
             {
-                Assert.Equal(index, data[index]);
+                Assert.AreEqual(index, data[index]);
             }
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should be |undefined| when there is no post data")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeUndefinedWhenThereIsNoPostData()
         {
             var response = await Page.GotoAsync(TestConstants.EmptyPage);
@@ -140,24 +133,24 @@ namespace Microsoft.Playwright.Tests
 
 
         [PlaywrightTest("page-network-request.spec.ts", "should parse the json post data")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldParseTheJsonPostData()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            Server.SetRoute("/post", _ => Task.CompletedTask);
+            HttpServer.Server.SetRoute("/post", _ => Task.CompletedTask);
             IRequest request = null;
             Page.Request += (_, e) => request = e;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: JSON.stringify({ foo: 'bar'})})");
             Assert.NotNull(request);
-            Assert.Equal("bar", request.PostDataJSON()?.GetProperty("foo").ToString());
+            Assert.AreEqual("bar", request.PostDataJSON()?.GetProperty("foo").ToString());
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should parse the data if content-type is application/x-www-form-urlencoded")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldParseTheDataIfContentTypeIsApplicationXWwwFormUrlencoded()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            Server.SetRoute("/post", _ => Task.CompletedTask);
+            HttpServer.Server.SetRoute("/post", _ => Task.CompletedTask);
             IRequest request = null;
             Page.Request += (_, e) => request = e;
             await Page.SetContentAsync("<form method='POST' action='/post'><input type='text' name='foo' value='bar'><input type='number' name='baz' value='123'><input type='submit'></form>");
@@ -165,12 +158,12 @@ namespace Microsoft.Playwright.Tests
 
             Assert.NotNull(request);
             var element = request.PostDataJSON();
-            Assert.Equal("bar", element?.GetProperty("foo").ToString());
-            Assert.Equal("123", element?.GetProperty("baz").ToString());
+            Assert.AreEqual("bar", element?.GetProperty("foo").ToString());
+            Assert.AreEqual("123", element?.GetProperty("baz").ToString());
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should be |undefined| when there is no post data")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeUndefinedWhenThereIsNoPostData2()
         {
             var response = await Page.GotoAsync(TestConstants.EmptyPage);
@@ -178,12 +171,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should return event source")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEventSource()
         {
             const string sseMessage = "{\"foo\": \"bar\"}";
 
-            Server.SetRoute("/sse", async ctx =>
+            HttpServer.Server.SetRoute("/sse", async ctx =>
             {
                 ctx.Response.Headers["content-type"] = "text/event-stream";
                 ctx.Response.Headers["connection"] = "keep-alive";
@@ -198,23 +191,23 @@ namespace Microsoft.Playwright.Tests
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
 
-            Assert.Equal(sseMessage, await Page.EvaluateAsync<string>(@"() => {
+            Assert.AreEqual(sseMessage, await Page.EvaluateAsync<string>(@"() => {
                 const eventSource = new EventSource('/sse');
                 return new Promise(resolve => {
                     eventSource.onmessage = e => resolve(e.data);
                 });
             }"));
 
-            Assert.Equal("eventsource", requests[0].ResourceType);
+            Assert.AreEqual("eventsource", requests[0].ResourceType);
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should return navigation bit")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNavigationBit()
         {
             var requests = new Dictionary<string, IRequest>();
             Page.Request += (_, e) => requests[e.Url.Split('/').Last()] = e;
-            Server.SetRedirect("/rrredirect", "/frames/one-frame.html");
+            HttpServer.Server.SetRedirect("/rrredirect", "/frames/one-frame.html");
             await Page.GotoAsync(TestConstants.ServerUrl + "/rrredirect");
             Assert.True(requests["rrredirect"].IsNavigationRequest);
             Assert.True(requests["one-frame.html"].IsNavigationRequest);
@@ -224,7 +217,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "Request.isNavigationRequest", "should return navigation bit when navigating to image")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNavigationBitWhenNavigatingToImage()
         {
             var requests = new List<IRequest>();

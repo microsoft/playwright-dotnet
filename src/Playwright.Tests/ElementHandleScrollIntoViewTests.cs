@@ -1,22 +1,15 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class ElementHandleScrollIntoViewTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class ElementHandleScrollIntoViewTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public ElementHandleScrollIntoViewTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/offscreenbuttons.html");
@@ -26,7 +19,7 @@ namespace Microsoft.Playwright.Tests
                 double before = await button.EvaluateAsync<double>(@"button => {
                     return button.getBoundingClientRect().right - window.innerWidth;
                 }");
-                Assert.Equal(10 * i, before);
+                Assert.AreEqual(10 * i, before);
                 await button.ScrollIntoViewIfNeededAsync();
                 double after = await button.EvaluateAsync<double>(@"button => {
                     return button.getBoundingClientRect().right - window.innerWidth;
@@ -37,18 +30,18 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should throw for detached element")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForDetachedElement()
         {
             await Page.SetContentAsync("<div>Hello</div>");
             var div = await Page.QuerySelectorAsync("div");
             await div.EvaluateAsync("div => div.remove()");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => div.ScrollIntoViewIfNeededAsync());
-            Assert.Contains("Element is not attached to the DOM", exception.Message);
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => div.ScrollIntoViewIfNeededAsync());
+            StringAssert.Contains("Element is not attached to the DOM", exception.Message);
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should wait for display:none to become visible")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForDisplayNoneToBecomeVisible()
         {
             await Page.SetContentAsync("<div style=\"display: none\">Hello</div>");
@@ -56,7 +49,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should wait for display:contents to become visible")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForDisplayContentsToBecomeVisible()
         {
             await Page.SetContentAsync("<div style=\"display: contents\">Hello</div>");
@@ -64,7 +57,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should wait for visibility:hidden to become visible")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisibilityHiddenToBecomeVisible()
         {
             await Page.SetContentAsync("<div style=\"visibility:hidden\">Hello</div>");
@@ -72,7 +65,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should wait for zero-sized element to become visible")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForZeroSiedElementToBecomeVisible()
         {
             await Page.SetContentAsync("<div style=\"height:0\">Hello</div>");
@@ -80,7 +73,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should wait for nested display:none to become visible")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForNestedDisplayNoneToBecomeVisible()
         {
             await Page.SetContentAsync("<span style=\"display: none\"><div>Hello</div></span>");
@@ -88,13 +81,13 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should timeout waiting for visible")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForVisible()
         {
             await Page.SetContentAsync("<div style=\"display: none\">Hello</div>");
             var div = await Page.QuerySelectorAsync("div");
-            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => div.ScrollIntoViewIfNeededAsync(new ElementHandleScrollIntoViewIfNeededOptions { Timeout = 3000 }));
-            Assert.Contains("element is not visible", exception.Message);
+            var exception = await AssertThrowsAsync<TimeoutException>(() => div.ScrollIntoViewIfNeededAsync(new ElementHandleScrollIntoViewIfNeededOptions { Timeout = 3000 }));
+            StringAssert.Contains("element is not visible", exception.Message);
         }
 
         private async Task TestWaitingAsync(IPage page, string after)

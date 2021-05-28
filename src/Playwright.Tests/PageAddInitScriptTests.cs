@@ -1,61 +1,54 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    ///<playwright-file>evaluation.spec.ts</playwright-file>
-    ///<playwright-describe>Page.evaluateOnNewDocument</playwright-describe>
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageAddInitScriptTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class PageAddInitScriptTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public PageAddInitScriptTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("page-add-init-script.spec.ts", "should evaluate before anything else on the page")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEvaluateBeforeAnythingElseOnThePage()
         {
             await Page.AddInitScriptAsync(@"function(){
                 window.injected = 123;
             }");
             await Page.GotoAsync(TestConstants.ServerUrl + "/tamperable.html");
-            Assert.Equal(123, await Page.EvaluateAsync<int>("() => window.result"));
+            Assert.AreEqual(123, await Page.EvaluateAsync<int>("() => window.result"));
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should work with a path")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAPath()
         {
             await Page.AddInitScriptAsync(scriptPath: TestUtils.GetWebServerFile("injectedfile.js"));
 
             await Page.GotoAsync(TestConstants.ServerUrl + "/tamperable.html");
-            Assert.Equal(123, await Page.EvaluateAsync<int>("() => window.result"));
+            Assert.AreEqual(123, await Page.EvaluateAsync<int>("() => window.result"));
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should work with a path")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithContents()
         {
             await Page.AddInitScriptAsync(script: @"function(){
                 window.injected = 123;
             }");
             await Page.GotoAsync(TestConstants.ServerUrl + "/tamperable.html");
-            Assert.Equal(123, await Page.EvaluateAsync<int>("() => window.result"));
+            Assert.AreEqual(123, await Page.EvaluateAsync<int>("() => window.result"));
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should throw without path and content")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        public Task ShouldThrowWithoutPathAndContent()
-            => Assert.ThrowsAnyAsync<ArgumentException>(() => Page.AddInitScriptAsync());
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task ShouldThrowWithoutPathAndContent()
+        {
+            await AssertThrowsAsync<ArgumentException>(() => Page.AddInitScriptAsync());
+        }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should work with browser context scripts")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBrowserContextScripts()
         {
             await using var context = await Browser.NewContextAsync();
@@ -68,11 +61,11 @@ namespace Microsoft.Playwright.Tests
                 window.injected = window.temp;
             }");
             await page.GotoAsync(TestConstants.ServerUrl + "/tamperable.html");
-            Assert.Equal(123, await page.EvaluateAsync<int>("() => window.result"));
+            Assert.AreEqual(123, await page.EvaluateAsync<int>("() => window.result"));
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should work with browser context scripts with path")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBrowserContextScriptsWithPath()
         {
             await using var context = await Browser.NewContextAsync();
@@ -81,11 +74,11 @@ namespace Microsoft.Playwright.Tests
             var page = await context.NewPageAsync();
 
             await page.GotoAsync(TestConstants.ServerUrl + "/tamperable.html");
-            Assert.Equal(123, await page.EvaluateAsync<int>("() => window.result"));
+            Assert.AreEqual(123, await page.EvaluateAsync<int>("() => window.result"));
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should work with browser context scripts for already created pages")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBrowserContextScriptsForAlreadyCreatedPages()
         {
             await using var context = await Browser.NewContextAsync();
@@ -100,11 +93,11 @@ namespace Microsoft.Playwright.Tests
             }");
 
             await page.GotoAsync(TestConstants.ServerUrl + "/tamperable.html");
-            Assert.Equal(123, await page.EvaluateAsync<int>("() => window.result"));
+            Assert.AreEqual(123, await page.EvaluateAsync<int>("() => window.result"));
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should support multiple scripts")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportMultipleScripts()
         {
             await Page.AddInitScriptAsync(@"function(){
@@ -114,20 +107,20 @@ namespace Microsoft.Playwright.Tests
                 window.script2 = 2;
             }");
             await Page.GotoAsync(TestConstants.ServerUrl + "/tamperable.html");
-            Assert.Equal(1, await Page.EvaluateAsync<int>("() => window.script1"));
-            Assert.Equal(2, await Page.EvaluateAsync<int>("() => window.script2"));
+            Assert.AreEqual(1, await Page.EvaluateAsync<int>("() => window.script1"));
+            Assert.AreEqual(2, await Page.EvaluateAsync<int>("() => window.script2"));
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should work with CSP")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCSP()
         {
-            Server.SetCSP("/empty.html", "script-src " + TestConstants.ServerUrl);
+            HttpServer.Server.SetCSP("/empty.html", "script-src " + TestConstants.ServerUrl);
             await Page.AddInitScriptAsync(@"function(){
                 window.injected = 123;
             }");
             await Page.GotoAsync(TestConstants.EmptyPage);
-            Assert.Equal(123, await Page.EvaluateAsync<int>("() => window.injected"));
+            Assert.AreEqual(123, await Page.EvaluateAsync<int>("() => window.injected"));
 
             // Make sure CSP works.
             try
@@ -143,7 +136,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should work after a cross origin navigation")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkAfterACrossOriginNavigation()
         {
             await Page.GotoAsync(TestConstants.CrossProcessUrl);
@@ -151,7 +144,7 @@ namespace Microsoft.Playwright.Tests
                 window.injected = 123;
             }");
             await Page.GotoAsync(TestConstants.ServerUrl + "/tamperable.html");
-            Assert.Equal(123, await Page.EvaluateAsync<int>("() => window.result"));
+            Assert.AreEqual(123, await Page.EvaluateAsync<int>("() => window.result"));
         }
     }
 }

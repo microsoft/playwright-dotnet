@@ -1,22 +1,15 @@
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>selectors-register.spec.ts</playwright-file>
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class SelectorsRegisterTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class SelectorsRegisterTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public SelectorsRegisterTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("selectors-register.spec.ts", "should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             const string createTagSelector = @"({
@@ -37,21 +30,21 @@ namespace Microsoft.Playwright.Tests
             var page = await context.NewPageAsync();
             await page.SetContentAsync("<div><span></span></div><div></div>");
 
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.QuerySelectorAsync("tAG=DIV"));
-            Assert.Contains("Unknown engine \"tAG\" while parsing selector tAG=DIV", exception.Message);
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => page.QuerySelectorAsync("tAG=DIV"));
+            StringAssert.Contains("Unknown engine \"tAG\" while parsing selector tAG=DIV", exception.Message);
         }
 
         [PlaywrightTest("selectors-register.spec.ts", "should work with path")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithPath()
         {
             await TestUtils.RegisterEngineWithPathAsync(Playwright, "foo", TestUtils.GetWebServerFile("sectionselectorengine.js"));
             await Page.SetContentAsync("<section></section>");
-            Assert.Equal("SECTION", await Page.EvalOnSelectorAsync<string>("foo=whatever", "e => e.nodeName"));
+            Assert.AreEqual("SECTION", await Page.EvalOnSelectorAsync<string>("foo=whatever", "e => e.nodeName"));
         }
 
         [PlaywrightTest("selectors-register.spec.ts", "should work in main and isolated world")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkInMainAndIsolatedWorld()
         {
             const string createTagSelector = @"({
@@ -69,28 +62,28 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<div><span><section></section></span></div>");
             await Page.EvaluateAsync("() => window['__answer'] = document.querySelector('span')");
 
-            Assert.Equal("SPAN", await Page.EvalOnSelectorAsync<string>("main=ignored", "e => e.nodeName"));
-            Assert.Equal("SPAN", await Page.EvalOnSelectorAsync<string>("css=div >> main=ignored", "e => e.nodeName"));
+            Assert.AreEqual("SPAN", await Page.EvalOnSelectorAsync<string>("main=ignored", "e => e.nodeName"));
+            Assert.AreEqual("SPAN", await Page.EvalOnSelectorAsync<string>("css=div >> main=ignored", "e => e.nodeName"));
             Assert.True(await Page.EvalOnSelectorAllAsync<bool>("main=ignored", "es => window['__answer'] !== undefined"));
-            Assert.Equal(3, await Page.EvalOnSelectorAllAsync<int>("main=ignored", "es => es.filter(e => e).length"));
+            Assert.AreEqual(3, await Page.EvalOnSelectorAllAsync<int>("main=ignored", "es => es.filter(e => e).length"));
 
             Assert.Null(await Page.QuerySelectorAsync("isolated=ignored"));
             Assert.Null(await Page.QuerySelectorAsync("css=div >> isolated=ignored"));
             Assert.True(await Page.EvalOnSelectorAllAsync<bool>("isolated=ignored", "es => window['__answer'] !== undefined"));
-            Assert.Equal(3, await Page.EvalOnSelectorAllAsync<int>("isolated=ignored", "es => es.filter(e => e).length"));
+            Assert.AreEqual(3, await Page.EvalOnSelectorAllAsync<int>("isolated=ignored", "es => es.filter(e => e).length"));
 
-            Assert.Equal("SPAN", await Page.EvalOnSelectorAsync<string>("main=ignored >> isolated=ignored", "e => e.nodeName"));
-            Assert.Equal("SPAN", await Page.EvalOnSelectorAsync<string>("isolated=ignored >> main=ignored", "e => e.nodeName"));
+            Assert.AreEqual("SPAN", await Page.EvalOnSelectorAsync<string>("main=ignored >> isolated=ignored", "e => e.nodeName"));
+            Assert.AreEqual("SPAN", await Page.EvalOnSelectorAsync<string>("isolated=ignored >> main=ignored", "e => e.nodeName"));
 
-            Assert.Equal("SECTION", await Page.EvalOnSelectorAsync<string>("main=ignored >> css=section", "e => e.nodeName"));
+            Assert.AreEqual("SECTION", await Page.EvalOnSelectorAsync<string>("main=ignored >> css=section", "e => e.nodeName"));
         }
 
         [PlaywrightTest("selectors-register.spec.ts", "should handle errors")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHandleErrors()
         {
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.QuerySelectorAsync("neverregister=ignored"));
-            Assert.Contains("Unknown engine \"neverregister\" while parsing selector neverregister=ignored", exception.Message);
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.QuerySelectorAsync("neverregister=ignored"));
+            StringAssert.Contains("Unknown engine \"neverregister\" while parsing selector neverregister=ignored", exception.Message);
 
             const string createDummySelector = @"({
                 create(root, target) {
@@ -104,17 +97,17 @@ namespace Microsoft.Playwright.Tests
                 }
             })";
 
-            exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Playwright.Selectors.RegisterAsync("$", new SelectorsRegisterOptions { Script = createDummySelector }));
-            Assert.Contains("Selector engine name may only contain [a-zA-Z0-9_] characters", exception.Message);
+            exception = await AssertThrowsAsync<PlaywrightException>(() => Playwright.Selectors.RegisterAsync("$", new SelectorsRegisterOptions { Script = createDummySelector }));
+            StringAssert.Contains("Selector engine name may only contain [a-zA-Z0-9_] characters", exception.Message);
 
             await TestUtils.RegisterEngineAsync(Playwright, "dummy", createDummySelector);
             await TestUtils.RegisterEngineAsync(Playwright, "duMMy", createDummySelector);
 
-            exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Playwright.Selectors.RegisterAsync("dummy", new SelectorsRegisterOptions { Script = createDummySelector }));
-            Assert.Contains("\"dummy\" selector engine has been already registered", exception.Message);
+            exception = await AssertThrowsAsync<PlaywrightException>(() => Playwright.Selectors.RegisterAsync("dummy", new SelectorsRegisterOptions { Script = createDummySelector }));
+            StringAssert.Contains("\"dummy\" selector engine has been already registered", exception.Message);
 
-            exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Playwright.Selectors.RegisterAsync("css", new SelectorsRegisterOptions { Script = createDummySelector }));
-            Assert.Contains("\"css\" is a predefined selector engine", exception.Message);
+            exception = await AssertThrowsAsync<PlaywrightException>(() => Playwright.Selectors.RegisterAsync("css", new SelectorsRegisterOptions { Script = createDummySelector }));
+            StringAssert.Contains("\"css\" is a predefined selector engine", exception.Message);
         }
     }
 }

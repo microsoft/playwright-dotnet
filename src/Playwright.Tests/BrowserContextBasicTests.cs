@@ -3,39 +3,31 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.Attributes;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class BrowserContextBasicTests : PlaywrightSharpBrowserBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class BrowserContextBasicTests : BrowserTestEx
     {
-        /// <inheritdoc/>
-        public BrowserContextBasicTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("browsercontext-basic.spec.ts", "should create new context")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCreateNewContext()
         {
-            await using var browser = await BrowserType.LaunchDefaultAsync();
-            Assert.Empty(browser.Contexts);
+            await using var browser = await BrowserType.LaunchAsync();
+            Assert.IsEmpty(browser.Contexts);
             await using var context = await browser.NewContextAsync();
-            Assert.Single(browser.Contexts);
-            Assert.Contains(context, browser.Contexts);
-            Assert.Same(browser, context.Browser);
+            Assert.That(browser.Contexts, Has.Count.EqualTo(1));
+            CollectionAssert.Contains(browser.Contexts, context);
+            Assert.AreEqual(browser, context.Browser);
             await context.CloseAsync();
-            Assert.Empty(browser.Contexts);
-            Assert.Same(browser, context.Browser);
+            Assert.IsEmpty(browser.Contexts);
+            Assert.AreEqual(browser, context.Browser);
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "window.open should use parent tab context")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task WindowOpenShouldUseParentTabContext()
         {
             await using var context = await Browser.NewContextAsync();
@@ -49,20 +41,20 @@ namespace Microsoft.Playwright.Tests
                 page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage)
             );
 
-            Assert.Same(context, popupTarget.Context);
+            Assert.AreEqual(context, popupTarget.Context);
             await context.CloseAsync();
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should isolate localStorage and cookies")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateLocalStorageAndCookies()
         {
             // Create two incognito contexts.
-            await using var browser = await BrowserType.LaunchDefaultAsync();
+            await using var browser = await BrowserType.LaunchAsync();
             var context1 = await browser.NewContextAsync();
             var context2 = await browser.NewContextAsync();
-            Assert.Empty(context1.Pages);
-            Assert.Empty(context2.Pages);
+            Assert.IsEmpty(context1.Pages);
+            Assert.IsEmpty(context2.Pages);
 
             // Create a page in first incognito context.
             var page1 = await context1.NewPageAsync();
@@ -72,8 +64,8 @@ namespace Microsoft.Playwright.Tests
                 document.cookie = 'name=page1';
             }");
 
-            Assert.Single(context1.Pages);
-            Assert.Empty(context2.Pages);
+            Assert.That(context1.Pages, Has.Count.EqualTo(1));
+            Assert.IsEmpty(context2.Pages);
 
             // Create a page in second incognito context.
             var page2 = await context2.NewPageAsync();
@@ -83,24 +75,24 @@ namespace Microsoft.Playwright.Tests
                 document.cookie = 'name=page2';
             }");
 
-            Assert.Single(context1.Pages);
-            Assert.Equal(page1, context1.Pages.FirstOrDefault());
-            Assert.Single(context2.Pages);
-            Assert.Equal(page2, context2.Pages.FirstOrDefault());
+            Assert.That(context1.Pages, Has.Count.EqualTo(1));
+            Assert.AreEqual(page1, context1.Pages.FirstOrDefault());
+            Assert.That(context2.Pages, Has.Count.EqualTo(1));
+            Assert.AreEqual(page2, context2.Pages.FirstOrDefault());
 
             // Make sure pages don't share localstorage or cookies.
-            Assert.Equal("page1", await page1.EvaluateAsync<string>("() => localStorage.getItem('name')"));
-            Assert.Equal("name=page1", await page1.EvaluateAsync<string>("() => document.cookie"));
-            Assert.Equal("page2", await page2.EvaluateAsync<string>("() => localStorage.getItem('name')"));
-            Assert.Equal("name=page2", await page2.EvaluateAsync<string>("() => document.cookie"));
+            Assert.AreEqual("page1", await page1.EvaluateAsync<string>("() => localStorage.getItem('name')"));
+            Assert.AreEqual("name=page1", await page1.EvaluateAsync<string>("() => document.cookie"));
+            Assert.AreEqual("page2", await page2.EvaluateAsync<string>("() => localStorage.getItem('name')"));
+            Assert.AreEqual("name=page2", await page2.EvaluateAsync<string>("() => document.cookie"));
 
             // Cleanup contexts.
             await TaskUtils.WhenAll(context1.CloseAsync(), context2.CloseAsync());
-            Assert.Empty(browser.Contexts);
+            Assert.IsEmpty(browser.Contexts);
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should propagate default viewport to the page")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPropagateDefaultViewportToThePage()
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
@@ -117,7 +109,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should make a copy of default viewport")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldMakeACopyOfDefaultViewport()
         {
             var viewport = new ViewportSize
@@ -136,7 +128,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should respect deviceScaleFactor")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectDeviceScaleFactor()
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
@@ -145,35 +137,35 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await context.NewPageAsync();
-            Assert.Equal(3, await page.EvaluateAsync<int>("window.devicePixelRatio"));
+            Assert.AreEqual(3, await page.EvaluateAsync<int>("window.devicePixelRatio"));
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should not allow deviceScaleFactor with null viewport")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowDeviceScaleFactorWithViewportDisabled()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new BrowserNewContextOptions
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 ViewportSize = ViewportSize.NoViewport,
                 DeviceScaleFactor = 3,
             }));
-            Assert.Equal("\"deviceScaleFactor\" option is not supported with null \"viewport\"", exception.Message);
+            Assert.AreEqual("\"deviceScaleFactor\" option is not supported with null \"viewport\"", exception.Message);
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should not allow isMobile with null viewport")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowIsMobileWithViewportDisabled()
         {
-            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new BrowserNewContextOptions
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 ViewportSize = ViewportSize.NoViewport,
                 IsMobile = true,
             }));
-            Assert.Equal("\"isMobile\" option is not supported with null \"viewport\"", exception.Message);
+            Assert.AreEqual("\"isMobile\" option is not supported with null \"viewport\"", exception.Message);
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "close() should work for empty context")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task CloseShouldWorkForEmptyContext()
         {
             var context = await Browser.NewContextAsync();
@@ -181,23 +173,23 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "close() should abort waitForEvent")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task CloseShouldAbortWaitForEvent()
         {
             var context = await Browser.NewContextAsync();
             var waitTask = context.WaitForPageAsync();
             await context.CloseAsync();
-            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => waitTask);
-            Assert.Equal("Context closed", exception.Message);
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => waitTask);
+            Assert.AreEqual("Context closed", exception.Message);
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should not report frameless pages on error")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotReportFramelessPagesOnError()
         {
             var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            Server.SetRoute("/empty.html", context =>
+            HttpServer.Server.SetRoute("/empty.html", context =>
             {
                 context.Response.ContentType = "text/html";
                 return context.Response.WriteAsync($"<a href=\"{TestConstants.EmptyPage}\" target=\"_blank\">Click me</a>");
@@ -217,7 +209,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "close() should be callable twice")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task CloseShouldBeCallableTwice()
         {
             var context = await Browser.NewContextAsync();
@@ -226,34 +218,34 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should return all of the pages")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnAllOfThePages()
         {
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
             var second = await context.NewPageAsync();
 
-            Assert.Equal(2, context.Pages.Count);
-            Assert.Contains(page, context.Pages);
-            Assert.Contains(second, context.Pages);
+            Assert.AreEqual(2, context.Pages.Count);
+            CollectionAssert.Contains(context.Pages, page);
+            CollectionAssert.Contains(context.Pages, second);
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "BrowserContext.pages()", "should close all belonging pages once closing context")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCloseAllBelongingPagesOnceClosingContext()
         {
             await using var context = await Browser.NewContextAsync();
             await context.NewPageAsync();
 
-            Assert.Single(context.Pages);
+            Assert.That(context.Pages, Has.Count.EqualTo(1));
 
             await context.CloseAsync();
 
-            Assert.Empty(context.Pages);
+            Assert.IsEmpty(context.Pages);
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should disable javascript")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDisableJavascript()
         {
             await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions { JavaScriptEnabled = false }))
@@ -261,9 +253,9 @@ namespace Microsoft.Playwright.Tests
                 var page = await context.NewPageAsync();
                 await page.GotoAsync("data:text/html, <script>var something = 'forbidden'</script>");
 
-                var exception = await Assert.ThrowsAnyAsync<Exception>(async () => await page.EvaluateAsync("something"));
+                var exception = await AssertThrowsAsync<PlaywrightException>(() => page.EvaluateAsync("something"));
 
-                Assert.Contains(
+                StringAssert.Contains(
                     TestConstants.IsWebKit ? "Can\'t find variable: something" : "something is not defined",
                     exception.Message);
             }
@@ -272,12 +264,12 @@ namespace Microsoft.Playwright.Tests
             {
                 var page = await context.NewPageAsync();
                 await page.GotoAsync("data:text/html, <script>var something = 'forbidden'</script>");
-                Assert.Equal("forbidden", await page.EvaluateAsync<string>("something"));
+                Assert.AreEqual("forbidden", await page.EvaluateAsync<string>("something"));
             }
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should be able to navigate after disabling javascript")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToNavigateAfterDisablingJavascript()
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { JavaScriptEnabled = false });
@@ -286,19 +278,19 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should work with offline option")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithOfflineOption()
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { Offline = true });
             var page = await context.NewPageAsync();
-            await Assert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync(TestConstants.EmptyPage));
+            await AssertThrowsAsync<PlaywrightException>(() => page.GotoAsync(TestConstants.EmptyPage));
             await context.SetOfflineAsync(false);
             var response = await page.GotoAsync(TestConstants.EmptyPage);
-            Assert.Equal((int)HttpStatusCode.OK, response.Status);
+            Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should emulate navigator.onLine")]
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldEmulateNavigatorOnLine()
         {
             await using var context = await Browser.NewContextAsync();

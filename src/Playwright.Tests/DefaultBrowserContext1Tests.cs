@@ -1,24 +1,16 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Microsoft.Playwright.Tests.Helpers;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class DefaultBrowserContext1Tests : PlaywrightSharpBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class DefaultBrowserContext1Tests : PlaywrightTestEx
     {
-        /// <inheritdoc/>
-        public DefaultBrowserContext1Tests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "context.cookies() should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ContextCookiesShouldWork()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -30,23 +22,23 @@ namespace Microsoft.Playwright.Tests
               return document.cookie;
             }");
 
-            Assert.Equal("username=John Doe", documentCookie);
+            Assert.AreEqual("username=John Doe", documentCookie);
             var cookie = (await page.Context.CookiesAsync()).Single();
-            Assert.Equal("username", cookie.Name);
-            Assert.Equal("John Doe", cookie.Value);
-            Assert.Equal("localhost", cookie.Domain);
-            Assert.Equal("/", cookie.Path);
-            Assert.Equal(-1, cookie.Expires);
+            Assert.AreEqual("username", cookie.Name);
+            Assert.AreEqual("John Doe", cookie.Value);
+            Assert.AreEqual("localhost", cookie.Domain);
+            Assert.AreEqual("/", cookie.Path);
+            Assert.AreEqual(-1, cookie.Expires);
             Assert.False(cookie.HttpOnly);
             Assert.False(cookie.Secure);
-            Assert.Equal(SameSiteAttribute.None, cookie.SameSite);
+            Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
 
             tmp.Dispose();
             await context.DisposeAsync();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "context.addCookies() should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ContextAddCookiesShouldWork()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -62,24 +54,24 @@ namespace Microsoft.Playwright.Tests
                 }
             });
 
-            Assert.Equal("username=John Doe", await page.EvaluateAsync<string>(@"() => document.cookie"));
+            Assert.AreEqual("username=John Doe", await page.EvaluateAsync<string>(@"() => document.cookie"));
 
             var cookie = (await page.Context.CookiesAsync()).Single();
-            Assert.Equal("username", cookie.Name);
-            Assert.Equal("John Doe", cookie.Value);
-            Assert.Equal("localhost", cookie.Domain);
-            Assert.Equal("/", cookie.Path);
-            Assert.Equal(-1, cookie.Expires);
+            Assert.AreEqual("username", cookie.Name);
+            Assert.AreEqual("John Doe", cookie.Value);
+            Assert.AreEqual("localhost", cookie.Domain);
+            Assert.AreEqual("/", cookie.Path);
+            Assert.AreEqual(-1, cookie.Expires);
             Assert.False(cookie.HttpOnly);
             Assert.False(cookie.Secure);
-            Assert.Equal(SameSiteAttribute.None, cookie.SameSite);
+            Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
 
             tmp.Dispose();
             await context.DisposeAsync();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "context.clearCookies() should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ContextClearCookiesShouldWork()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -101,19 +93,19 @@ namespace Microsoft.Playwright.Tests
                 },
             });
 
-            Assert.Equal("cookie1=1; cookie2=2", await page.EvaluateAsync<string>(@"() => document.cookie"));
+            Assert.AreEqual("cookie1=1; cookie2=2", await page.EvaluateAsync<string>(@"() => document.cookie"));
 
             await context.ClearCookiesAsync();
             await page.ReloadAsync();
-            Assert.Empty(await page.Context.CookiesAsync());
-            Assert.Empty(await page.EvaluateAsync<string>(@"() => document.cookie"));
+            Assert.IsEmpty(await page.Context.CookiesAsync());
+            Assert.IsEmpty(await page.EvaluateAsync<string>(@"() => document.cookie"));
 
             tmp.Dispose();
             await context.DisposeAsync();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should(not) block third party cookies")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotBlockThirdPartyCookies()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -136,20 +128,20 @@ namespace Microsoft.Playwright.Tests
 
             if (allowsThirdPart)
             {
-                Assert.Single(cookies);
+                Assert.That(cookies, Has.Count.EqualTo(1));
                 var cookie = cookies.First();
-                Assert.Equal("127.0.0.1", cookie.Domain);
-                Assert.Equal(cookie.Expires, -1);
+                Assert.AreEqual("127.0.0.1", cookie.Domain);
+                Assert.AreEqual(cookie.Expires, -1);
                 Assert.False(cookie.HttpOnly);
-                Assert.Equal("username", cookie.Name);
-                Assert.Equal("/", cookie.Path);
-                Assert.Equal(SameSiteAttribute.None, cookie.SameSite);
+                Assert.AreEqual("username", cookie.Name);
+                Assert.AreEqual("/", cookie.Path);
+                Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
                 Assert.False(cookie.Secure);
-                Assert.Equal("John Doe", cookie.Value);
+                Assert.AreEqual("John Doe", cookie.Value);
             }
             else
             {
-                Assert.Empty(cookies);
+                Assert.IsEmpty(cookies);
             }
 
             tmp.Dispose();
@@ -157,7 +149,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support viewport option")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportViewportOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
@@ -178,7 +170,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support deviceScaleFactor option")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportDeviceScaleFactorOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
@@ -186,14 +178,14 @@ namespace Microsoft.Playwright.Tests
                 DeviceScaleFactor = 3
             });
 
-            Assert.Equal(3, await page.EvaluateAsync<int>("window.devicePixelRatio"));
+            Assert.AreEqual(3, await page.EvaluateAsync<int>("window.devicePixelRatio"));
 
             tmp.Dispose();
             await context.DisposeAsync();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support userAgent option")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportUserAgentOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
@@ -204,17 +196,17 @@ namespace Microsoft.Playwright.Tests
             string userAgent = string.Empty;
 
             await TaskUtils.WhenAll(
-                Server.WaitForRequest("/empty.html", r => userAgent = r.Headers["user-agent"]),
+                HttpServer.Server.WaitForRequest("/empty.html", r => userAgent = r.Headers["user-agent"]),
                 page.GotoAsync(TestConstants.EmptyPage));
 
-            Assert.Equal("foobar", userAgent);
+            Assert.AreEqual("foobar", userAgent);
 
             tmp.Dispose();
             await context.DisposeAsync();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support bypassCSP option")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportBypassCSPOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
@@ -224,14 +216,14 @@ namespace Microsoft.Playwright.Tests
 
             await page.GotoAsync(TestConstants.ServerUrl + "/csp.html");
             await page.AddScriptTagAsync(new PageAddScriptTagOptions { Content = "window.__injected = 42;" });
-            Assert.Equal(42, await page.EvaluateAsync<int>("window.__injected"));
+            Assert.AreEqual(42, await page.EvaluateAsync<int>("window.__injected"));
 
             tmp.Dispose();
             await context.DisposeAsync();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support javascriptEnabled option")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportJavascriptEnabledOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
@@ -240,15 +232,15 @@ namespace Microsoft.Playwright.Tests
             });
 
             await page.GotoAsync("data:text/html, <script>var something = \"forbidden\"</script>");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.EvaluateAsync("something"));
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => page.EvaluateAsync("something"));
 
             if (TestConstants.IsWebKit)
             {
-                Assert.Contains("Can't find variable: something", exception.Message);
+                StringAssert.Contains("Can't find variable: something", exception.Message);
             }
             else
             {
-                Assert.Contains("something is not defined", exception.Message);
+                StringAssert.Contains("something is not defined", exception.Message);
             }
 
             tmp.Dispose();
@@ -256,7 +248,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support httpCredentials option")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRupportHttpCredentialsOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
@@ -268,16 +260,16 @@ namespace Microsoft.Playwright.Tests
                 }
             });
 
-            Server.SetAuth("/playground.html", "user", "pass");
+            HttpServer.Server.SetAuth("/playground.html", "user", "pass");
             var response = await page.GotoAsync(TestConstants.ServerUrl + "/playground.html");
-            Assert.Equal((int)HttpStatusCode.OK, response.Status);
+            Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
 
             tmp.Dispose();
             await context.DisposeAsync();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support offline option")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportOfflineOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
@@ -285,14 +277,14 @@ namespace Microsoft.Playwright.Tests
                 Offline = true
             });
 
-            await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.GotoAsync(TestConstants.EmptyPage));
+            await AssertThrowsAsync<PlaywrightException>(() => page.GotoAsync(TestConstants.EmptyPage));
 
             tmp.Dispose();
             await context.DisposeAsync();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support acceptDownloads option")]
-        [Fact(Skip = "Skipped on playwright")]
+        [Test, Ignore("Skipped on playwright")]
         public void ShouldSupportAcceptDownloadsOption()
         {
         }
@@ -300,7 +292,7 @@ namespace Microsoft.Playwright.Tests
         private async Task<(TempDirectory tmp, IBrowserContext context, IPage page)> LaunchAsync(BrowserTypeLaunchPersistentContextOptions options = null)
         {
             var tmp = new TempDirectory();
-            var context = await BrowserType.LaunchDefaultPersistentContext(
+            var context = await BrowserType.LaunchPersistentContextAsync(
                 tmp.Path,
                 options: options);
             var page = context.Pages.First();

@@ -1,24 +1,16 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.Attributes;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class ElementHandleWaitForElementStateTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class ElementHandleWaitForElementStateTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public ElementHandleWaitForElementStateTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for visible")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisible()
         {
             await Page.SetContentAsync("<div style='display:none'>content</div>");
@@ -31,7 +23,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for already visible")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForAlreadyVisible()
         {
             await Page.SetContentAsync("<div>content</div>");
@@ -40,29 +32,29 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should timeout waiting for visible")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForVisible()
         {
             await Page.SetContentAsync("<div style='display:none'>content</div>");
             var div = await Page.QuerySelectorAsync("div");
-            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => div.WaitForElementStateAsync(ElementState.Visible, new ElementHandleWaitForElementStateOptions { Timeout = 1000 }));
-            Assert.Contains("Timeout 1000ms exceeded", exception.Message);
+            var exception = await AssertThrowsAsync<TimeoutException>(() => div.WaitForElementStateAsync(ElementState.Visible, new ElementHandleWaitForElementStateOptions { Timeout = 1000 }));
+            StringAssert.Contains("Timeout 1000ms exceeded", exception.Message);
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should throw waiting for visible when detached")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWaitingForVisibleWhenDetached()
         {
             await Page.SetContentAsync("<div style='display:none'>content</div>");
             var div = await Page.QuerySelectorAsync("div");
             var task = div.WaitForElementStateAsync(ElementState.Visible);
             await div.EvaluateAsync("div => div.remove()");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => task);
-            Assert.Contains("Element is not attached to the DOM", exception.Message);
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => task);
+            StringAssert.Contains("Element is not attached to the DOM", exception.Message);
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for hidden")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForHidden()
         {
             await Page.SetContentAsync("<div>content</div>");
@@ -75,7 +67,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for already hidden")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForAlreadyHidden()
         {
             await Page.SetContentAsync("<div></div>");
@@ -84,7 +76,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should throw waiting for hidden when detached")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWaitingForHiddenWhenDetached()
         {
             await Page.SetContentAsync("<div>content</div>");
@@ -97,7 +89,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for enabled button")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForEnabledButton()
         {
             await Page.SetContentAsync("<button disabled><span>Target</span></button>");
@@ -110,19 +102,19 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should throw waiting for enabled when detached")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWaitingForEnabledWhenDetached()
         {
             await Page.SetContentAsync("<button disabled>Target</button>");
             var button = await Page.QuerySelectorAsync("button");
             var task = button.WaitForElementStateAsync(ElementState.Enabled);
             await button.EvaluateAsync("button => button.remove()");
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => task);
-            Assert.Contains("Element is not attached to the DOM", exception.Message);
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => task);
+            StringAssert.Contains("Element is not attached to the DOM", exception.Message);
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for disabled button")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForDisabledButton()
         {
             await Page.SetContentAsync("<button><span>Target</span></button>");
@@ -135,7 +127,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for stable position")]
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWaitForStablePosition()
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");

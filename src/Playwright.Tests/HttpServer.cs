@@ -2,12 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Tests.TestServer;
 
-namespace Microsoft.Playwright.Tests.BaseTests
+namespace Microsoft.Playwright.Tests
 {
-    /// <summary>
-    /// This class will build all http servers and download browsers
-    /// </summary>
-    public class PlaywrightSharpLoader
+    public class HttpServer
     {
         internal static SimpleServer Server { get; private set; }
         internal static SimpleServer HttpsServer { get; private set; }
