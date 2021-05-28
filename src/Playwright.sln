@@ -14,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright.Tests.TestServer", "Playwright.Tests.TestServer\Playwright.Tests.TestServer.csproj", "{A907B324-4541-4FAF-8CAE-D0B512B4BC36}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright.Tests", "Playwright.Tests\Playwright.Tests.csproj", "{162425E9-A05E-4ECE-8DBE-5AEC68C5DD23}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright", "Playwright\Playwright.csproj", "{EAB878F1-E9FE-4C0B-8DF5-AE58522F8D0A}"
@@ -28,16 +26,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright.Testing.Xunit", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.CLI", "Playwright.CLI\Playwright.CLI.csproj", "{735E5F83-813C-4F5C-BB69-D3F87B15CF39}"
 EndProject
+Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "Playwright.Tests.TestServer", "Playwright.Tests.TestServer\Playwright.Tests.TestServer.csproj", "{55165383-EBE7-462B-B154-738818787740}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Playwright.NUnit", "Microsoft.Playwright.NUnit\Microsoft.Playwright.NUnit.csproj", "{3EC5B076-CEE4-41A4-AA8E-4FDFFD08D4E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A907B324-4541-4FAF-8CAE-D0B512B4BC36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A907B324-4541-4FAF-8CAE-D0B512B4BC36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A907B324-4541-4FAF-8CAE-D0B512B4BC36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A907B324-4541-4FAF-8CAE-D0B512B4BC36}.Release|Any CPU.Build.0 = Release|Any CPU
 		{162425E9-A05E-4ECE-8DBE-5AEC68C5DD23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{162425E9-A05E-4ECE-8DBE-5AEC68C5DD23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{162425E9-A05E-4ECE-8DBE-5AEC68C5DD23}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -62,14 +60,23 @@ Global
 		{735E5F83-813C-4F5C-BB69-D3F87B15CF39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{735E5F83-813C-4F5C-BB69-D3F87B15CF39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{735E5F83-813C-4F5C-BB69-D3F87B15CF39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55165383-EBE7-462B-B154-738818787740}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55165383-EBE7-462B-B154-738818787740}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55165383-EBE7-462B-B154-738818787740}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55165383-EBE7-462B-B154-738818787740}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EC5B076-CEE4-41A4-AA8E-4FDFFD08D4E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EC5B076-CEE4-41A4-AA8E-4FDFFD08D4E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EC5B076-CEE4-41A4-AA8E-4FDFFD08D4E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EC5B076-CEE4-41A4-AA8E-4FDFFD08D4E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{A907B324-4541-4FAF-8CAE-D0B512B4BC36} = {D250D790-5A30-4C38-8F60-50FA96DB4E67}
 		{61C89FA2-645D-4D0E-9A20-06ABE32054CF} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
 		{735E5F83-813C-4F5C-BB69-D3F87B15CF39} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
+		{55165383-EBE7-462B-B154-738818787740} = {D250D790-5A30-4C38-8F60-50FA96DB4E67}
+		{FEFC3D43-748A-4825-836F-462C9B9F7D78} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D6EDE73-B005-4ABC-BCF8-BB3C154497EC}
