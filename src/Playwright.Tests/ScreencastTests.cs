@@ -1,7 +1,5 @@
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Testing.Xunit;
 using Microsoft.Playwright.Tests.Attributes;
 using Microsoft.Playwright.Tests.BaseTests;
@@ -21,9 +19,15 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("screencast.spec.ts", "videoSize should require videosPath")]
-        [Fact(Skip = "We are not using old properties")]
-        public void VideoSizeShouldRequireVideosPath()
+        [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true)]
+        public async Task VideoSizeShouldRequireVideosPath()
         {
+            var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new BrowserNewContextOptions
+            {
+                RecordVideoSize = new RecordVideoSize { Height = 100, Width = 100 }
+            }));
+
+            Assert.Contains("\"RecordVideoSize\" option requires \"RecordVideoDir\" to be specified", exception.Message);
         }
 
         [PlaywrightTest("screencast.spec.ts", "should work with old options")]
@@ -36,6 +40,23 @@ namespace Microsoft.Playwright.Tests
         [Fact(Skip = "We don't need to test this")]
         public void ShouldThrowWithoutRecordVideoDir()
         {
+        }
+
+        [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true)]
+        public async Task ShouldWorkWithoutASize()
+        {
+            using var tempDirectory = new TempDirectory();
+            var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            {
+                RecordVideoDir = tempDirectory.Path
+            });
+
+            var page = await context.NewPageAsync();
+            await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
+            await Task.Delay(1000);
+            await context.CloseAsync();
+
+            Assert.NotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
         }
 
         [PlaywrightTest("screencast.spec.ts", "should capture static page")]
