@@ -2,7 +2,12 @@ trigger: none # We don't want CI builds, just a manual release process
 pool: $(PlaywrightPoolName)
 parameters:
   - name: doRelease
-    displayName: Push the Release to NuGet.org
+    displayName: Push the Playwright Release to NuGet.org
+    default: false
+    type: boolean
+
+  - name: doReleaseCLI
+    displayName: Push the CLI Release to NuGet.org
     default: false
     type: boolean
 
@@ -29,17 +34,35 @@ stages:
         
       # We need to download the browsers first, so we can build
     - task: DotNetCoreCLI@2
+      displayName: Download the browsers
       inputs:
         command: 'run'
         arguments: '-p $(Build.SourcesDirectory)/src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath $(Build.SourcesDirectory)'
 
     - task: DotNetCoreCLI@2
+      displayName: Build Playwright CLI
+      inputs:
+        command: 'build'
+        projects: '**/Playwright.CLI.csproj'
+        arguments: '-c $(BuildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: Pack Playwright CLI
+      inputs:
+        command: 'pack'
+        packagesToPack: '**/Playwright.CLI.csproj'
+        packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
+        versioningScheme: 'off'
+
+    - task: DotNetCoreCLI@2
+      displayName: Build Playwright
       inputs:
         command: 'build'
         projects: '**/Playwright.csproj'
         arguments: '-c $(BuildConfiguration)'
 
     - task: DotNetCoreCLI@2
+      displayName: Pack Playwright NuGet
       inputs:
         command: 'pack'
         packagesToPack: '**/Playwright.csproj'
@@ -47,6 +70,7 @@ stages:
         versioningScheme: 'off'
 
     - task: PublishBuildArtifacts@1
+      displayName: Copy NuGet Artifacts to Build Results
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)/nuget'
         ArtifactName: 'drop'
@@ -54,7 +78,7 @@ stages:
 
     - task: MicroBuildCleanup@1
 
-- stage: Release
+- stage: ReleasePlaywright
   jobs:
   - job: ReleaseNuget
     displayName: Publish on Nuget.org
@@ -63,14 +87,39 @@ stages:
     steps:
     - checkout: none
     - task: DownloadBuildArtifacts@1
+      displayName: Download the NuGet Packages from Build System
       inputs:
         buildType: 'current'
         downloadType: 'specific'
         downloadPath: '$(System.ArtifactsDirectory)'
 
     - task: NuGetCommand@2
+      displayName: Push Playwright NuGet to NuGet.org
       inputs:
         command: 'push'
-        packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg;!$(System.ArtifactsDirectory)/**/*.symbols.nupkg'
+        packagesToPush: '$(System.ArtifactsDirectory)/**/Microsoft.Playwright.nupkg;!$(System.ArtifactsDirectory)/**/Microsoft.Playwright.symbols.nupkg'
+        nuGetFeedType: 'external'
+        publishFeedCredentials: 'NuGet-Playwright'
+
+- stage: ReleasePlaywrightCLI
+  jobs:
+  - job: ReleaseNugetCLI
+    displayName: Publish CLI on Nuget.org
+    condition: and(succeeded(), eq('${{parameters.doReleaseCLI}}', true))
+
+    steps:
+    - checkout: none
+    - task: DownloadBuildArtifacts@1
+      displayName: Download the NuGet Packages from Build System
+      inputs:
+        buildType: 'current'
+        downloadType: 'specific'
+        downloadPath: '$(System.ArtifactsDirectory)'
+
+    - task: NuGetCommand@2
+      displayName: Push CLI NuGet to Nuget.org
+      inputs:
+        command: 'push'
+        packagesToPush: '$(System.ArtifactsDirectory)/**/Microsoft.Playwright.CLI.nupkg;!$(System.ArtifactsDirectory)/**/Microsoft.Playwright.CLI.symbols.nupkg'
         nuGetFeedType: 'external'
         publishFeedCredentials: 'NuGet-Playwright'
