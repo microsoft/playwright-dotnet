@@ -66,12 +66,12 @@ namespace Microsoft.Playwright.Tests
                 domContentLoadedTask,
                 Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { WaitUntil = WaitUntilState.Load })).ContinueWith(_ => bothFired = true);
 
-            await waitForRequestTask.WithTimeout(TestConstants.DefaultTaskTimeout);
-            await domContentLoadedTask.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await waitForRequestTask;
+            await domContentLoadedTask;
             Assert.False(bothFired);
             responseCompleted.SetResult(true);
-            await bothFiredTask.WithTimeout(TestConstants.DefaultTaskTimeout);
-            await navigationTask.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await bothFiredTask;
+            await navigationTask;
         }
 
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work with clicking on anchor links")]

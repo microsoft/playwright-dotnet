@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
                 ws.addEventListener('open', () => ws.close());
             }", TestConstants.Port);
 
-            await socketClosedTcs.Task.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await socketClosedTcs.Task;
             Assert.Equal($"open<ws://localhost:{TestConstants.Port}/ws>:close", string.Join(":", log));
             Assert.True(webSocket.IsClosed);
         }
@@ -89,7 +89,7 @@ namespace Microsoft.Playwright.Tests
                 ws.addEventListener('message', e => { ws.close() });
             }", TestConstants.Port);
 
-            await socketClosedTcs.Task.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await socketClosedTcs.Task;
             Assert.Equal("open", log[0]);
             Assert.Equal("close", log[3]);
             log.Sort();
@@ -122,7 +122,7 @@ namespace Microsoft.Playwright.Tests
             }", TestConstants.Port);
 
 
-            await socketClosedTcs.Task.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await socketClosedTcs.Task;
             Assert.Equal("text", log[0].Text);
 
             for (int i = 0; i < 5; i++)
@@ -148,7 +148,7 @@ namespace Microsoft.Playwright.Tests
             }", TestConstants.Port);
 
 
-            await socketErrorTcs.Task.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await socketErrorTcs.Task;
 
             if (TestConstants.IsFirefox)
             {

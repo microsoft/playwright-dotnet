@@ -101,7 +101,7 @@ namespace Microsoft.Playwright.Tests
             otherPage.Close += (_, _) => closeEventReceived.TrySetResult(true);
 
             await otherPage.CloseAsync();
-            await closeEventReceived.Task.WithTimeout(TestConstants.DefaultTaskTimeout);
+            await closeEventReceived.Task;
 
             allPages = context.Pages;
             Assert.Contains(page, allPages);
