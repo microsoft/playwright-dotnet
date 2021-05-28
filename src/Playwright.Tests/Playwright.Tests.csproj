@@ -11,6 +11,8 @@
     <Import Project="../Common/SignAssembly.props" />
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+        <PackageReference Include="NUnit" Version="3.13.2" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -27,6 +29,7 @@
         <ProjectReference Include="..\Playwright.Testing.Xunit\Playwright.Testing.Xunit.csproj" />
         <ProjectReference Include="..\Playwright\Playwright.csproj" />
         <ProjectReference Include="..\Playwright.Tests.TestServer\Playwright.Tests.TestServer.csproj" />
+        <ProjectReference Include="..\Microsoft.Playwright.NUnit\Microsoft.Playwright.NUnit.csproj" />
     </ItemGroup>
     <ItemGroup>
       <None Remove="xunit.runner.json" />
