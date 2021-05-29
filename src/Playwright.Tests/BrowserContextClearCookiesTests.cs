@@ -11,12 +11,12 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearCookes()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Context.AddCookiesAsync(new[]
             {
                 new Cookie
                 {
-                    Url = TestConstants.EmptyPage,
+                    Url = Server.EmptyPage,
                     Name = "cookie1",
                     Value = "1"
                 }
@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.Tests
                 {
                     Name = "page1cookie",
                     Value = "page1value",
-                    Url = TestConstants.EmptyPage
+                    Url = Server.EmptyPage
                 }
             });
 
@@ -49,7 +49,7 @@ namespace Microsoft.Playwright.Tests
                 {
                     Name = "page2cookie",
                     Value = "page2value",
-                    Url = TestConstants.EmptyPage
+                    Url = Server.EmptyPage
                 }
             });
 

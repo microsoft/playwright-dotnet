@@ -17,7 +17,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAUrl()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var styleHandle = await Page.AddStyleTagAsync(new PageAddStyleTagOptions { Url = "/injectedstyle.css" });
             Assert.NotNull(styleHandle);
             Assert.AreEqual("rgb(255, 0, 0)", await Page.EvaluateAsync<string>("window.getComputedStyle(document.querySelector('body')).getPropertyValue('background-color')"));
@@ -27,7 +27,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowAnErrorIfLoadingFromUrlFail()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await AssertThrowsAsync<PlaywrightException>(() =>
                 Page.AddStyleTagAsync(new PageAddStyleTagOptions { Url = "/nonexistfile.js" }));
         }
@@ -36,7 +36,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAPath()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var styleHandle = await Page.AddStyleTagAsync(new PageAddStyleTagOptions { Path = TestUtils.GetWebServerFile("injectedstyle.css") });
             Assert.NotNull(styleHandle);
             Assert.AreEqual("rgb(255, 0, 0)", await Page.EvaluateAsync<string>("window.getComputedStyle(document.querySelector('body')).getPropertyValue('background-color')"));
@@ -46,7 +46,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeSourceURLWhenPathIsProvided()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.AddStyleTagAsync(new PageAddStyleTagOptions { Path = TestUtils.GetWebServerFile("injectedstyle.css") });
             var styleHandle = await Page.QuerySelectorAsync("style");
             string styleContent = await Page.EvaluateAsync<string>("style => style.innerHTML", styleHandle);
@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithContent()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var styleHandle = await Page.AddStyleTagAsync(new PageAddStyleTagOptions { Content = "body { background-color: green; }" });
             Assert.NotNull(styleHandle);
             Assert.AreEqual("rgb(0, 128, 0)", await Page.EvaluateAsync<string>("window.getComputedStyle(document.querySelector('body')).getPropertyValue('background-color')"));
@@ -67,7 +67,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenAddedWithContentToTheCSPPage()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/csp.html");
+            await Page.GotoAsync(Server.Prefix + "/csp.html");
             await AssertThrowsAsync<PlaywrightException>(() =>
                 Page.AddStyleTagAsync(new PageAddStyleTagOptions { Content = "body { background-color: green; }" }));
         }
@@ -76,9 +76,9 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenAddedWithURLToTheCSPPage()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/csp.html");
+            await Page.GotoAsync(Server.Prefix + "/csp.html");
             await AssertThrowsAsync<PlaywrightException>(() =>
-                Page.AddStyleTagAsync(new PageAddStyleTagOptions { Url = TestConstants.CrossProcessUrl + "/injectedstyle.css" }));
+                Page.AddStyleTagAsync(new PageAddStyleTagOptions { Url = Server.CrossProcessPrefix + "/injectedstyle.css" }));
         }
     }
 }

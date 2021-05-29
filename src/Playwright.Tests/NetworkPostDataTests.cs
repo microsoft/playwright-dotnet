@@ -15,12 +15,12 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnCorrectPostdataBufferForUtf8Body()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             string value = "baẞ";
 
             var task = Page.WaitForRequestAsync("**/*");
             var actualTask = Page.EvaluateAsync(@$"() => {{
-                      const request = new Request('{TestConstants.ServerUrl + "/title.html"}', {{
+                      const request = new Request('{Server.Prefix + "/title.html"}', {{
                         method: 'POST',
                         body: JSON.stringify('{value}'),
                       }});
@@ -46,7 +46,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnPostDataWOContentType()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
 
             var task = Page.WaitForRequestAsync("**/*");
             var actualTask = Page.EvaluateAsync(@"(url) => {
@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Tests
                       });
                       request.headers.set('content-type', '');
                       return fetch(request);
-                    }", TestConstants.ServerUrl + "/title.html");
+                    }", Server.Prefix + "/title.html");
 
             await Task.WhenAll(task, actualTask);
 
@@ -69,7 +69,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowOnInvalidJSONInPostData()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
 
             var task = Page.WaitForRequestAsync("**/*");
             var actualTask = Page.EvaluateAsync(@"(url) => {
@@ -78,7 +78,7 @@ namespace Microsoft.Playwright.Tests
                         body: '<not a json>',
                       });
                       return fetch(request);
-                    }", TestConstants.ServerUrl + "/title.html");
+                    }", Server.Prefix + "/title.html");
 
             await Task.WhenAll(task, actualTask);
 
@@ -91,7 +91,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnPostDataForPUTRequests()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
 
             var task = Page.WaitForRequestAsync("**/*");
             var actualTask = Page.EvaluateAsync(@"(url) => {
@@ -100,7 +100,7 @@ namespace Microsoft.Playwright.Tests
                         body: JSON.stringify({ value: 42 }),
                       });
                       return fetch(request);
-                    }", TestConstants.ServerUrl + "/title.html");
+                    }", Server.Prefix + "/title.html");
 
             await Task.WhenAll(task, actualTask);
 

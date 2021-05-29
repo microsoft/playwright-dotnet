@@ -29,12 +29,12 @@ namespace Microsoft.Playwright.Tests
         [Test, Ignore("We don't need to test this in .NET")]
         public async Task AsyncStacksShouldWork()
         {
-            HttpServer.Server.SetRoute("/empty.html", context =>
+            Server.SetRoute("/empty.html", context =>
             {
                 context.Abort(); // is this right?
                 return Task.CompletedTask;
             });
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(TestConstants.EmptyPage));
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(Server.EmptyPage));
             StringAssert.Contains(nameof(PageBasicTests), exception.StackTrace);
         }
 
@@ -42,7 +42,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PagePressShouldWork()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             await Page.PressAsync("textarea", "a");
             Assert.AreEqual("a", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
         }
@@ -51,7 +51,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task FramePressShouldWork()
         {
-            await Page.SetContentAsync($"<iframe name =inner src=\"{TestConstants.ServerUrl}/input/textarea.html\"></iframe>");
+            await Page.SetContentAsync($"<iframe name =inner src=\"{Server.Prefix}/input/textarea.html\"></iframe>");
             var frame = Page.Frames.Single(f => f.Name == "inner");
             await frame.PressAsync("textarea", "a");
             Assert.AreEqual("a", await frame.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
@@ -71,7 +71,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectUrl()
         {
-            await Page.SetContentAsync($"<iframe src=\"{TestConstants.EmptyPage}\"></iframe>");
+            await Page.SetContentAsync($"<iframe src=\"{Server.EmptyPage}\"></iframe>");
             Assert.Null(Page.Frames.FirstOrDefault(f => f.Name == "bogus"));
             var frame = Page.Frames.FirstOrDefault(f => f.Url.Contains("empty"));
             Assert.AreEqual(Page.MainFrame.ChildFrames.First(), frame);
@@ -106,7 +106,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnThePageTitle()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/title.html");
+            await Page.GotoAsync(Server.Prefix + "/title.html");
             Assert.AreEqual("Woof-Woof", await Page.TitleAsync());
         }
 
@@ -115,18 +115,18 @@ namespace Microsoft.Playwright.Tests
         public async Task PageUrlShouldWork()
         {
             Assert.AreEqual("about:blank", Page.Url);
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            Assert.AreEqual(TestConstants.EmptyPage, Page.Url);
+            await Page.GotoAsync(Server.EmptyPage);
+            Assert.AreEqual(Server.EmptyPage, Page.Url);
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should include hashes")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeHashes()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage + "#hash");
-            Assert.AreEqual(TestConstants.EmptyPage + "#hash", Page.Url);
+            await Page.GotoAsync(Server.EmptyPage + "#hash");
+            Assert.AreEqual(Server.EmptyPage + "#hash", Page.Url);
             await Page.EvaluateAsync("() => window.location.hash = 'dynamic'");
-            Assert.AreEqual(TestConstants.EmptyPage + "#dynamic", Page.Url);
+            Assert.AreEqual(Server.EmptyPage + "#dynamic", Page.Url);
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should fail with error upon disconnect")]
@@ -235,8 +235,8 @@ namespace Microsoft.Playwright.Tests
         {
             var newPage = await Context.NewPageAsync();
             var exception = await AssertThrowsAsync<PlaywrightException>(() => TaskUtils.WhenAll(
-                newPage.WaitForRequestAsync(TestConstants.EmptyPage),
-                newPage.WaitForResponseAsync(TestConstants.EmptyPage),
+                newPage.WaitForRequestAsync(Server.EmptyPage),
+                newPage.WaitForResponseAsync(Server.EmptyPage),
                 newPage.CloseAsync()
             ));
             for (int i = 0; i < 2; i++)

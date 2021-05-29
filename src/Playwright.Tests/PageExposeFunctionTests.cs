@@ -106,7 +106,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldSurviveNavigation()
         {
             await Page.ExposeFunctionAsync("compute", (int a, int b) => a * b);
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             int result = await Page.EvaluateAsync<int>(@"async function() {
                 return await compute(9, 4);
             }");
@@ -129,7 +129,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkOnFrames()
         {
             await Page.ExposeFunctionAsync("compute", (int a, int b) => Task.FromResult(a * b));
-            await Page.GotoAsync(TestConstants.ServerUrl + "/frames/nested-frames.html");
+            await Page.GotoAsync(Server.Prefix + "/frames/nested-frames.html");
             var frame = Page.Frames.ElementAt(1);
             int result = await frame.EvaluateAsync<int>(@"async function() {
                 return await compute(3, 5);
@@ -141,7 +141,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkOnFramesBeforeNavigation()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/frames/nested-frames.html");
+            await Page.GotoAsync(Server.Prefix + "/frames/nested-frames.html");
             await Page.ExposeFunctionAsync("compute", (int a, int b) => Task.FromResult(a * b));
             var frame = Page.Frames.ElementAt(1);
             int result = await frame.EvaluateAsync<int>(@"async function() {
@@ -154,9 +154,9 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkAfterCrossOriginNavigation()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.ExposeFunctionAsync("compute", (int a, int b) => a * b);
-            await Page.GotoAsync(TestConstants.CrossProcessUrl + "/empty.html");
+            await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
             int result = await Page.EvaluateAsync<int>(@"async function() {
                 return await compute(9, 4);
             }");
@@ -214,7 +214,7 @@ namespace Microsoft.Playwright.Tests
                 Page.EvaluateAsync(@"async url => {
                     window['logme']({ foo: 42 });
                     window.location.href = url;
-                }", TestConstants.ServerUrl + "/one-style.html"));
+                }", Server.Prefix + "/one-style.html"));
         }
 
         [PlaywrightTest("browsercontext-expose-function.spec.ts", "should throw for duplicate registrations")]

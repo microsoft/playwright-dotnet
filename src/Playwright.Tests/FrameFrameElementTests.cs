@@ -11,10 +11,10 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
-            var frame2 = await FrameUtils.AttachFrameAsync(Page, "frame2", TestConstants.EmptyPage);
-            var frame3 = await FrameUtils.AttachFrameAsync(Page, "frame3", TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
+            var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
+            var frame2 = await FrameUtils.AttachFrameAsync(Page, "frame2", Server.EmptyPage);
+            var frame3 = await FrameUtils.AttachFrameAsync(Page, "frame3", Server.EmptyPage);
 
             var frame1handle1 = await Page.QuerySelectorAsync("#frame1");
             var frame1handle2 = await frame1.FrameElementAsync();
@@ -33,8 +33,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithContentFrame()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            var frame = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
+            var frame = await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             var handle = await frame.FrameElementAsync();
             var contentFrame = await handle.ContentFrameAsync();
 
@@ -45,8 +45,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenDetached()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
+            var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             await Page.EvalOnSelectorAsync("#frame1", "e => e.remove()");
 
             var exception = await AssertThrowsAsync<PlaywrightException>(() => frame1.FrameElementAsync());

@@ -13,8 +13,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            var task = Page.WaitForRequestAsync(TestConstants.ServerUrl + "/digits/2.png");
+            await Page.GotoAsync(Server.EmptyPage);
+            var task = Page.WaitForRequestAsync(Server.Prefix + "/digits/2.png");
             var (request, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync(@"() => {
@@ -23,15 +23,15 @@ namespace Microsoft.Playwright.Tests
                   fetch('/digits/3.png');
                 }")
             );
-            Assert.AreEqual(TestConstants.ServerUrl + "/digits/2.png", request.Url);
+            Assert.AreEqual(Server.Prefix + "/digits/2.png", request.Url);
         }
 
         [PlaywrightTest("page-wait-for-request.spec.ts", "should work with predicate")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithPredicate()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            var task = Page.WaitForRequestAsync(e => e.Url == TestConstants.ServerUrl + "/digits/2.png");
+            await Page.GotoAsync(Server.EmptyPage);
+            var task = Page.WaitForRequestAsync(e => e.Url == Server.Prefix + "/digits/2.png");
             var (requestEvent, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync<string>(@"() => {
@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Tests
                     fetch('/digits/3.png');
                 }")
             );
-            Assert.AreEqual(TestConstants.ServerUrl + "/digits/2.png", requestEvent.Url);
+            Assert.AreEqual(Server.Prefix + "/digits/2.png", requestEvent.Url);
         }
 
         [PlaywrightTest("page-wait-for-request.spec.ts", "should respect timeout")]
@@ -64,8 +64,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoTimeout()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            var task = Page.WaitForRequestAsync(TestConstants.ServerUrl + "/digits/2.png", new PageWaitForRequestOptions { Timeout = 0 });
+            await Page.GotoAsync(Server.EmptyPage);
+            var task = Page.WaitForRequestAsync(Server.Prefix + "/digits/2.png", new PageWaitForRequestOptions { Timeout = 0 });
             var (request, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync(@"() => setTimeout(() => {
@@ -74,14 +74,14 @@ namespace Microsoft.Playwright.Tests
                     fetch('/digits/3.png');
                 }, 50)")
             );
-            Assert.AreEqual(TestConstants.ServerUrl + "/digits/2.png", request.Url);
+            Assert.AreEqual(Server.Prefix + "/digits/2.png", request.Url);
         }
 
         [PlaywrightTest("page-wait-for-request.spec.ts", "should work with url match")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithUrlMatch()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var task = Page.WaitForRequestAsync(new Regex(@"/digits/\d.png"));
             var (request, _) = await TaskUtils.WhenAll(
                 task,
@@ -89,7 +89,7 @@ namespace Microsoft.Playwright.Tests
                     fetch('/digits/1.png');
                 }")
             );
-            Assert.AreEqual(TestConstants.ServerUrl + "/digits/1.png", request.Url);
+            Assert.AreEqual(Server.Prefix + "/digits/1.png", request.Url);
         }
 
         [PlaywrightTest("page-wait-for-request.spec.ts", "should work with url match regular expression from a different context")]

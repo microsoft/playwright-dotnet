@@ -16,10 +16,10 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWithoutCredentials()
         {
-            HttpServer.Server.SetAuth("/empty.html", "user", "pass");
+            Server.SetAuth("/empty.html", "user", "pass");
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            var response = await page.GotoAsync(TestConstants.EmptyPage);
+            var response = await page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual((int)HttpStatusCode.Unauthorized, response.Status);
         }
 
@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithCorrectCredentials()
         {
             // Use unique user/password since Chromium caches credentials per origin.
-            HttpServer.Server.SetAuth("/empty.html", "user", "pass");
+            Server.SetAuth("/empty.html", "user", "pass");
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 HttpCredentials = new HttpCredentials
@@ -45,7 +45,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await context.NewPageAsync();
-            var response = await page.GotoAsync(TestConstants.EmptyPage);
+            var response = await page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
         }
 
@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldFailIfWrongCredentials()
         {
             // Use unique user/password since Chromium caches credentials per origin.
-            HttpServer.Server.SetAuth("/empty.html", "user", "pass");
+            Server.SetAuth("/empty.html", "user", "pass");
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 HttpCredentials = new HttpCredentials
@@ -65,7 +65,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await context.NewPageAsync();
-            var response = await page.GotoAsync(TestConstants.EmptyPage);
+            var response = await page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual((int)HttpStatusCode.Unauthorized, response.Status);
         }
 
@@ -73,7 +73,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnResourceBody()
         {
-            HttpServer.Server.SetAuth("/playground.html", "user", "pass");
+            Server.SetAuth("/playground.html", "user", "pass");
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 HttpCredentials = new HttpCredentials
@@ -84,7 +84,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await context.NewPageAsync();
-            var response = await page.GotoAsync(TestConstants.ServerUrl + "/playground.html");
+            var response = await page.GotoAsync(Server.Prefix + "/playground.html");
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
             Assert.AreEqual("Playground", await page.TitleAsync());
             StringAssert.Contains("Playground", await response.TextAsync());

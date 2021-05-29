@@ -14,7 +14,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWork()
         {
             await Page.SetViewportSizeAsync(500, 500);
-            await Page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
+            await Page.GotoAsync(Server.Prefix + "/grid.html");
             var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(13)");
             var box = await elementHandle.BoundingBoxAsync();
             AssertEqual(100, 50, 50, 50, box);
@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldHandleNestedFrames()
         {
             await Page.SetViewportSizeAsync(500, 500);
-            await Page.GotoAsync(TestConstants.ServerUrl + "/frames/nested-frames.html");
+            await Page.GotoAsync(Server.Prefix + "/frames/nested-frames.html");
             var nestedFrame = Page.Frames.First(frame => frame.Name == "dos");
             var elementHandle = await nestedFrame.QuerySelectorAsync("div");
             var box = await elementHandle.BoundingBoxAsync();
@@ -84,7 +84,7 @@ namespace Microsoft.Playwright.Tests
                 IsMobile = true,
             });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await page.GotoAsync(Server.Prefix + "/input/button.html");
             var button = await page.QuerySelectorAsync("button");
 
             await button.EvaluateAsync(@"button => {

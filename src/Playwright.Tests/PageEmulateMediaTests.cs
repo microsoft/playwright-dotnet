@@ -46,7 +46,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkDuringNavigation()
         {
             await Page.EmulateMediaAsync(new PageEmulateMediaOptions { ColorScheme = ColorScheme.Light });
-            var navigated = Page.GotoAsync(TestConstants.EmptyPage);
+            var navigated = Page.GotoAsync(Server.EmptyPage);
 
             for (int i = 0; i < 9; i++)
             {
@@ -68,12 +68,12 @@ namespace Microsoft.Playwright.Tests
             }))
             {
                 var page = await context.NewPageAsync();
-                await page.GotoAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(Server.EmptyPage);
                 var popupTask = page.WaitForPopupAsync();
 
                 await TaskUtils.WhenAll(
                     popupTask,
-                    page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
+                    page.EvaluateAsync("url => window.open(url)", Server.EmptyPage));
 
                 var popup = popupTask.Result;
 
@@ -87,12 +87,12 @@ namespace Microsoft.Playwright.Tests
             }))
             {
                 var page = await context.NewPageAsync();
-                await page.GotoAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(Server.EmptyPage);
                 var popupTask = page.WaitForPopupAsync();
 
                 await TaskUtils.WhenAll(
                     popupTask,
-                    page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
+                    page.EvaluateAsync("url => window.open(url)", Server.EmptyPage));
 
                 var popup = popupTask.Result;
 
@@ -111,8 +111,8 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.EmptyPage);
-            await FrameUtils.AttachFrameAsync(page, "frame1", TestConstants.CrossProcessHttpPrefix + "/empty.html");
+            await page.GotoAsync(Server.EmptyPage);
+            await FrameUtils.AttachFrameAsync(page, "frame1", Server.CrossProcessPrefix + "/empty.html");
             var frame = page.Frames.ElementAt(1);
 
             Assert.True(await frame.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));

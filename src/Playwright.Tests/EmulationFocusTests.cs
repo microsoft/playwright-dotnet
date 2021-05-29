@@ -27,12 +27,12 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFocusPopupsByDefault()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var popupTask = Page.WaitForPopupAsync();
 
             await TaskUtils.WhenAll(
                 popupTask,
-                Page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
+                Page.EvaluateAsync("url => window.open(url)", Server.EmptyPage));
 
             var popup = popupTask.Result;
 
@@ -47,8 +47,8 @@ namespace Microsoft.Playwright.Tests
             var page2 = await Page.Context.NewPageAsync();
 
             await TaskUtils.WhenAll(
-                Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html"),
-                page2.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html"));
+                Page.GotoAsync(Server.Prefix + "/input/textarea.html"),
+                page2.GotoAsync(Server.Prefix + "/input/textarea.html"));
 
             await TaskUtils.WhenAll(
                 Page.FocusAsync("input"),
@@ -103,8 +103,8 @@ namespace Microsoft.Playwright.Tests
             var page2 = await Page.Context.NewPageAsync();
 
             await TaskUtils.WhenAll(
-                Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html"),
-                page2.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html"));
+                Page.GotoAsync(Server.Prefix + "/input/textarea.html"),
+                page2.GotoAsync(Server.Prefix + "/input/textarea.html"));
 
             await TaskUtils.WhenAll(
                 Page.FocusAsync("input"),
@@ -128,11 +128,11 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldChangeFocusedIframe()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
 
             var (frame1, frame2) = await TaskUtils.WhenAll(
-                FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.ServerUrl + "/input/textarea.html"),
-                FrameUtils.AttachFrameAsync(Page, "frame2", TestConstants.ServerUrl + "/input/textarea.html"));
+                FrameUtils.AttachFrameAsync(Page, "frame1", Server.Prefix + "/input/textarea.html"),
+                FrameUtils.AttachFrameAsync(Page, "frame2", Server.Prefix + "/input/textarea.html"));
 
             string logger = @"function logger() {
               self._events = [];

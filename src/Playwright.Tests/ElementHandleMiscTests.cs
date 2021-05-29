@@ -11,7 +11,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHover()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/scrollable.html");
+            await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
             var button = await Page.QuerySelectorAsync("#button-6");
             await button.HoverAsync();
             Assert.AreEqual("button-6", await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"));
@@ -21,7 +21,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHoverWhenNodeIsRemoved()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/scrollable.html");
+            await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
             await Page.EvaluateAsync("() => delete window['Node']");
             var button = await Page.QuerySelectorAsync("#button-6");
             await button.HoverAsync();
@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillInput()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             var handle = await Page.QuerySelectorAsync("input");
             await handle.FillAsync("some value");
             Assert.AreEqual("some value", await Page.EvaluateAsync<string>("() => result"));
@@ -42,7 +42,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillInputWhenNodeIsRemoved()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             await Page.EvaluateAsync("() => delete window['Node']");
             var handle = await Page.QuerySelectorAsync("input");
             await handle.FillAsync("some value");
@@ -73,7 +73,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFocusAButton()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
 
             Assert.False(await button.EvaluateAsync<bool?>("button => document.activeElement === button"));
@@ -85,7 +85,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOption()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             var select = await Page.QuerySelectorAsync("select");
             await select.SelectOptionAsync("blue");
 

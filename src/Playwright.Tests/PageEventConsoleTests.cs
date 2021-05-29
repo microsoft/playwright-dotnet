@@ -98,7 +98,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync("about:blank");
             var (messageEvent, _) = await TaskUtils.WhenAll(
                 Page.WaitForConsoleMessageAsync(),
-                Page.EvaluateAsync("async url => fetch(url).catch (e => { })", TestConstants.EmptyPage)
+                Page.EvaluateAsync("async url => fetch(url).catch (e => { })", Server.EmptyPage)
             );
             StringAssert.Contains("Access-Control-Allow-Origin", messageEvent.Text);
             Assert.AreEqual("error", messageEvent.Type);
@@ -108,10 +108,10 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveLocationForConsoleAPICalls()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var messageEvent = await Page.RunAndWaitForConsoleMessageAsync(async () =>
             {
-                await Page.GotoAsync(TestConstants.ServerUrl + "/consolelog.html");
+                await Page.GotoAsync(Server.Prefix + "/consolelog.html");
             });
             Assert.AreEqual("yellow", messageEvent.Text);
             Assert.AreEqual("log", messageEvent.Type);
@@ -122,7 +122,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotThrowWhenThereAreConsoleMessagesInDetachedIframes()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var (popup, _) = await TaskUtils.WhenAll(
                 Page.WaitForPopupAsync(),
                 Page.EvaluateAsync<bool>(@"async () =>

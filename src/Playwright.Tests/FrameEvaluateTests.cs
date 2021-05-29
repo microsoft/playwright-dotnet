@@ -13,8 +13,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveDifferentExecutionContexts()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
+            await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             Assert.AreEqual(2, Page.Frames.Count);
             await Page.Frames.First().EvaluateAsync("() => window.FOO = 'foo'");
             await Page.Frames.ElementAt(1).EvaluateAsync("() => window.FOO = 'bar'");
@@ -26,7 +26,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveCorrectExecutionContexts()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
+            await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
             Assert.AreEqual(2, Page.Frames.Count);
             Assert.IsEmpty(await Page.Frames.First().EvaluateAsync<string>("() => document.body.textContent.trim()"));
             Assert.AreEqual("Hi, I'm frame", await Page.Frames.ElementAt(1).EvaluateAsync<string>("() => document.body.textContent.trim()"));
@@ -48,10 +48,10 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldExecuteAfterCrossSiteNavigation()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var mainFrame = Page.MainFrame;
             StringAssert.Contains("localhost", await mainFrame.EvaluateAsync<string>("() => window.location.href"));
-            await Page.GotoAsync(TestConstants.CrossProcessUrl + "/empty.html");
+            await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
             StringAssert.Contains("127", await mainFrame.EvaluateAsync<string>("() => window.location.href"));
         }
 
@@ -59,7 +59,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAllowCrossFrameJsHandles()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
+            await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
             var handle = await Page.EvaluateHandleAsync(@"() => {
                 const iframe = document.querySelector('iframe');
                 const foo = { bar: 'baz' };
@@ -77,7 +77,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAllowCrossFrameElementHandles()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
+            await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
             var bodyHandle = await Page.MainFrame.ChildFrames.First().QuerySelectorAsync("body");
             string result = await Page.EvaluateAsync<string>("body => body.innerHTML", bodyHandle);
             Assert.AreEqual("<div>Hi, I\'m frame</div>", result.Trim());
@@ -87,8 +87,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowCrossFrameElementHandlesWhenFramesDoNotScriptEachOther()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            var frame = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.CrossProcessUrl + "/empty.html");
+            await Page.GotoAsync(Server.EmptyPage);
+            var frame = await FrameUtils.AttachFrameAsync(Page, "frame1", Server.CrossProcessPrefix + "/empty.html");
             var bodyHandle = await frame.QuerySelectorAsync("body");
             var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("body => body.innerHTML", bodyHandle));
             StringAssert.Contains("Unable to adopt element handle from a different document", exception.Message);
@@ -98,7 +98,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForDetachedFrames()
         {
-            var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
+            var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             await FrameUtils.DetachFrameAsync(Page, "frame1");
             var exception = await AssertThrowsAsync<PlaywrightException>(() => frame1.EvaluateAsync("() => 7 * 8"));
             StringAssert.Contains("Execution Context is not available in detached frame", exception.Message);
@@ -108,8 +108,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeIsolatedBetweenFrames()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
+            await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             Assert.AreEqual(2, Page.Frames.Count);
             var frames = Page.Frames;
             Assert.That(frames.First(), Is.Not.EqualTo(frames.ElementAt(1)));
@@ -151,7 +151,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipChromium: true, skipFirefox: true)]
         public async Task ShouldWorkInIframesThatInterruptedInitialJavascriptUrlNavigation()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
 
             await Page.EvaluateAsync(@"() => {
                 const iframe = document.createElement('iframe');
@@ -162,7 +162,7 @@ namespace Microsoft.Playwright.Tests
                 iframe.contentDocument.close();
             }");
 
-            Assert.AreEqual(TestConstants.EmptyPage, await Page.Frames.ElementAt(1).EvaluateAsync<string>("() => window.location.href"));
+            Assert.AreEqual(Server.EmptyPage, await Page.Frames.ElementAt(1).EvaluateAsync<string>("() => window.location.href"));
             Assert.NotNull(await Page.Frames.ElementAt(1).QuerySelectorAsync("DIV"));
         }
 
@@ -170,7 +170,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task EvaluateHandleShouldWork()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var windowHandle = await Page.MainFrame.EvaluateHandleAsync("() => window");
             Assert.NotNull(windowHandle);
         }

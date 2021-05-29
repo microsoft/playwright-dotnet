@@ -15,7 +15,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButton()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.ClickAsync("button");
             Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("result"));
         }
@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonIfWindowNodeIsRemoved()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvaluateAsync("delete window.Node");
             await Page.ClickAsync("button");
             Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("result"));
@@ -69,9 +69,9 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonAfterNavigation()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.ClickAsync("button");
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.ClickAsync("button");
             Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("result"));
         }
@@ -80,9 +80,9 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonAfterACrossOriginNavigation()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.ClickAsync("button");
-            await Page.GotoAsync(TestConstants.CrossProcessHttpPrefix + "/input/button.html");
+            await Page.GotoAsync(Server.CrossProcessPrefix + "/input/button.html");
             await Page.ClickAsync("button");
             Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("result"));
         }
@@ -93,12 +93,12 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { JavaScriptEnabled = false });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.ServerUrl + "/wrappedlink.html");
+            await page.GotoAsync(Server.Prefix + "/wrappedlink.html");
             await TaskUtils.WhenAll(
                 page.ClickAsync("a"),
                 page.WaitForNavigationAsync()
             );
-            Assert.AreEqual(TestConstants.ServerUrl + "/wrappedlink.html#clicked", page.Url);
+            Assert.AreEqual(Server.Prefix + "/wrappedlink.html#clicked", page.Url);
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click when one of inline box children is outside of viewport")]
@@ -123,7 +123,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectTheTextByTripleClicking()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             const string text = "This is the text that we are going to try to select. Let's see how it goes.";
             await Page.FillAsync("textarea", text);
             await Page.ClickAsync("textarea", new PageClickOptions { ClickCount = 3 });
@@ -137,7 +137,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickOffscreenButtons()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/offscreenbuttons.html");
+            await Page.GotoAsync(Server.Prefix + "/offscreenbuttons.html");
             var messages = new List<string>();
             Page.Console += (_, e) => messages.Add(e.Text);
 
@@ -167,7 +167,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisibleWhenAlreadyVisible()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.ClickAsync("button");
             Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("result"));
         }
@@ -176,7 +176,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotWaitWithForce()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "b => b.style.display = 'none'");
 
             var exception = await AssertThrowsAsync<PlaywrightException>(()
@@ -190,7 +190,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForDisplayNoneToBeGone()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "b => b.style.display = 'none'");
             var clickTask = Page.ClickAsync("button", new PageClickOptions { Timeout = 0 });
 
@@ -209,7 +209,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisibilityhiddenToBeGone()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "b => b.style.visibility = 'hidden'");
             var clickTask = Page.ClickAsync("button", new PageClickOptions { Timeout = 0 });
 
@@ -228,7 +228,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisibleWhenParentIsHidden()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "b => b.parentElement.style.display = 'none'");
             var clickTask = Page.ClickAsync("button", new PageClickOptions { Timeout = 0 });
 
@@ -247,7 +247,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickWrappedLinks()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/wrappedlink.html");
+            await Page.GotoAsync(Server.Prefix + "/wrappedlink.html");
             await Page.ClickAsync("a");
             Assert.True(await Page.EvaluateAsync<bool>("window.__clicked"));
         }
@@ -256,7 +256,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickOnCheckboxInputAndToggle()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/checkbox.html");
+            await Page.GotoAsync(Server.Prefix + "/input/checkbox.html");
             Assert.Null(await Page.EvaluateAsync<bool?>("result.check"));
             await Page.ClickAsync("input#agree");
             Assert.True(await Page.EvaluateAsync<bool>("result.check"));
@@ -278,7 +278,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickOnCheckboxLabelAndToggle()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/checkbox.html");
+            await Page.GotoAsync(Server.Prefix + "/input/checkbox.html");
             Assert.Null(await Page.EvaluateAsync("result.check"));
             await Page.ClickAsync("label[for=\"agree\"]");
             Assert.True(await Page.EvaluateAsync<bool>("result.check"));
@@ -311,7 +311,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Ignore("Flacky")]
         public async Task ShouldScrollAndClickTheButton()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/scrollable.html");
+            await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
             await Page.ClickAsync("#button-5");
             Assert.AreEqual("clicked", await Page.EvaluateAsync<string>("document.querySelector(\"#button-5\").textContent"));
             await Page.ClickAsync("#button-80");
@@ -322,7 +322,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDoubleClickTheButton()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvaluateAsync(@"{
                window.double = false;
                const button = document.querySelector('button');
@@ -340,7 +340,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickAPartiallyObscuredButton()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvaluateAsync(@"{
                 const button = document.querySelector('button');
                 button.textContent = 'Some really long text that will go offscreen';
@@ -356,7 +356,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickARotatedButton()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/rotatedButton.html");
+            await Page.GotoAsync(Server.Prefix + "/input/rotatedButton.html");
             await Page.ClickAsync("button");
             Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("result"));
         }
@@ -365,7 +365,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireContextmenuEventOnRightClick()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/scrollable.html");
+            await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
             await Page.ClickAsync("#button-8", new PageClickOptions { Button = MouseButton.Right });
             Assert.AreEqual("context menu", await Page.EvaluateAsync<string>("document.querySelector('#button-8').textContent"));
         }
@@ -374,7 +374,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickLinksWhichCauseNavigation()
         {
-            await Page.SetContentAsync($"<a href=\"{TestConstants.EmptyPage}\">empty.html</a>");
+            await Page.SetContentAsync($"<a href=\"{Server.EmptyPage}\">empty.html</a>");
             // This await should not hang.
             await Page.ClickAsync("a");
         }
@@ -383,9 +383,9 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonInsideAnIframe()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.SetContentAsync("<div style=\"width:100px;height:100px\">spacer</div>");
-            await FrameUtils.AttachFrameAsync(Page, "button-test", TestConstants.ServerUrl + "/input/button.html");
+            await FrameUtils.AttachFrameAsync(Page, "button-test", Server.Prefix + "/input/button.html");
             var frame = Page.FirstChildFrame();
             var button = await frame.QuerySelectorAsync("button");
             await button.ClickAsync();
@@ -396,10 +396,10 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipChromium: true, skipWebkit: true)]
         public async Task ShouldClickTheButtonWithFixedPositionInsideAnIframe()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.SetViewportSizeAsync(500, 500);
             await Page.SetContentAsync("<div style=\"width:100px;height:2000px\">spacer</div>");
-            await FrameUtils.AttachFrameAsync(Page, "button-test", TestConstants.ServerUrl + "/input/button.html");
+            await FrameUtils.AttachFrameAsync(Page, "button-test", Server.Prefix + "/input/button.html");
             var frame = Page.FirstChildFrame();
             await frame.EvalOnSelectorAsync("button", "button => button.style.setProperty('position', 'fixed')");
             await frame.ClickAsync("button");
@@ -423,7 +423,7 @@ namespace Microsoft.Playwright.Tests
             var page = await context.NewPageAsync();
             Assert.AreEqual(5, await page.EvaluateAsync<int>("window.devicePixelRatio"));
             await page.SetContentAsync("<div style=\"width:100px;height:100px\">spacer</div>");
-            await FrameUtils.AttachFrameAsync(page, "button-test", TestConstants.ServerUrl + "/input/button.html");
+            await FrameUtils.AttachFrameAsync(page, "button-test", Server.Prefix + "/input/button.html");
             var frame = page.FirstChildFrame();
             var button = await frame.QuerySelectorAsync("button");
             await button.ClickAsync();
@@ -434,7 +434,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonWithPxBorderWithRelativePoint()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '8px'");
             await Page.ClickAsync("button", new PageClickOptions { Position = new Position { X = 20, Y = 10 } });
             Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("window.result"));
@@ -447,7 +447,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonWithEmBorderWithOffset()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '2em'");
             await Page.EvalOnSelectorAsync("button", "button => button.style.fontSize = '12px'");
             await Page.ClickAsync("button", new PageClickOptions { Position = new Position { X = 20, Y = 10 } });
@@ -461,7 +461,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickAVeryLargeButtonWithOffset()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '8px'");
             await Page.EvalOnSelectorAsync("button", "button => button.style.height = button.style.width = '2000px'");
             await Page.ClickAsync("button", new PageClickOptions { Position = new Position { X = 1900, Y = 1910 } });
@@ -475,7 +475,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickAButtonInScrollingContainerWithOffset()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", @"button => {
                 const container = document.createElement('div');
                 container.style.overflow = 'auto';
@@ -511,7 +511,7 @@ namespace Microsoft.Playwright.Tests
 
             var page = await context.NewPageAsync();
 
-            await page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await page.GotoAsync(Server.Prefix + "/input/button.html");
             await page.EvalOnSelectorAsync("button", @"button => {
                 button.style.borderWidth = '8px';
                 document.body.style.margin = '0';
@@ -535,7 +535,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForStablePosition()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", @"button => {
                 button.style.transition = 'margin 500ms linear 0s';
                 button.style.marginLeft = '200px';
@@ -558,7 +558,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForBecomingHitTarget()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", @"button => {
                 button.style.borderWidth = '0';
                 button.style.width = '200px';
@@ -592,7 +592,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForBecomingHitTargetWithTrialRun()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", @"button => {
                 button.style.borderWidth = '0';
                 button.style.width = '200px';
@@ -626,7 +626,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task TrialRunShouldWorkWithShortTimeout()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
             await Page.EvalOnSelectorAsync("button", @"button => button.disabled = true");
             var exception = await AssertThrowsAsync<TimeoutException>(() => Page.ClickAsync("button", new PageClickOptions { Trial = true, Timeout = 500 }));
@@ -638,7 +638,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task TrialRunShouldNotClick()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.ClickAsync("button", new PageClickOptions { Trial = true });
             Assert.AreEqual("Was not clicked", await Page.EvaluateAsync<string>("window.result"));
         }
@@ -647,7 +647,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task TrialRunShouldNotDoubleClick()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvaluateAsync(@"() => {
                 window['double'] = false;
                 const button = document.querySelector('button');
@@ -664,7 +664,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenObscuredAndNotWaitingForHitTarget()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
             await Page.EvalOnSelectorAsync("button", @"button => {
                 document.body.style.position = 'relative';
@@ -786,7 +786,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUpdateModifiersCorrectly()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.ClickAsync("button", new PageClickOptions { Modifiers = new[] { KeyboardModifier.Shift } });
             Assert.True(await Page.EvaluateAsync<bool>("shiftKey"));
             await Page.ClickAsync("button", new PageClickOptions { Modifiers = Array.Empty<KeyboardModifier>() });
@@ -823,7 +823,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNiceErrorWhenElementIsDetachedAndForceClicked()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/animating-button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/animating-button.html");
             await Page.EvaluateAsync("() => addButton()");
             var handle = await Page.QuerySelectorAsync("button");
             await Page.EvaluateAsync("() => stopButton(true)");
@@ -837,7 +837,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenElementDetachesAfterAnimation()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/animating-button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/animating-button.html");
             await Page.EvaluateAsync("() => addButton()");
             var handle = await Page.QuerySelectorAsync("button");
             var clickTask = handle.ClickAsync();
@@ -851,7 +851,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetryWhenElementDetachesAfterAnimation()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/animating-button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/animating-button.html");
             await Page.EvaluateAsync("() => addButton()");
             var clickTask = Page.ClickAsync("button");
             Assert.False(clickTask.IsCompleted);
@@ -964,7 +964,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonWhenWindowInnerWidthIsCorrupted()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvaluateAsync(@"() => window.innerWith = 0");
 
             await Page.ClickAsync("button");

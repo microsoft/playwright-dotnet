@@ -12,8 +12,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            var task = Page.WaitForResponseAsync(TestConstants.ServerUrl + "/digits/2.png");
+            await Page.GotoAsync(Server.EmptyPage);
+            var task = Page.WaitForResponseAsync(Server.Prefix + "/digits/2.png");
             var (response, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync<string>(@"() => {
@@ -22,7 +22,7 @@ namespace Microsoft.Playwright.Tests
                     fetch('/digits/3.png');
                 }")
             );
-            Assert.AreEqual(TestConstants.ServerUrl + "/digits/2.png", response.Url);
+            Assert.AreEqual(Server.Prefix + "/digits/2.png", response.Url);
         }
 
         [PlaywrightTest("page-wait-for-response.spec.ts", "should respect timeout")]
@@ -49,8 +49,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithPredicate()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            var task = Page.WaitForResponseAsync(e => e.Url == TestConstants.ServerUrl + "/digits/2.png");
+            await Page.GotoAsync(Server.EmptyPage);
+            var task = Page.WaitForResponseAsync(e => e.Url == Server.Prefix + "/digits/2.png");
             var (responseEvent, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync<string>(@"() => {
@@ -59,15 +59,15 @@ namespace Microsoft.Playwright.Tests
                     fetch('/digits/3.png');
                 }")
             );
-            Assert.AreEqual(TestConstants.ServerUrl + "/digits/2.png", responseEvent.Url);
+            Assert.AreEqual(Server.Prefix + "/digits/2.png", responseEvent.Url);
         }
 
         [PlaywrightTest("page-wait-for-response.spec.ts", "should work with no timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoTimeout()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            var task = Page.WaitForResponseAsync(TestConstants.ServerUrl + "/digits/2.png", new PageWaitForResponseOptions { Timeout = 0 });
+            await Page.GotoAsync(Server.EmptyPage);
+            var task = Page.WaitForResponseAsync(Server.Prefix + "/digits/2.png", new PageWaitForResponseOptions { Timeout = 0 });
             var (response, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync(@"() => setTimeout(() => {
@@ -76,7 +76,7 @@ namespace Microsoft.Playwright.Tests
                     fetch('/digits/3.png');
                 }, 50)")
             );
-            Assert.AreEqual(TestConstants.ServerUrl + "/digits/2.png", response.Url);
+            Assert.AreEqual(Server.Prefix + "/digits/2.png", response.Url);
         }
     }
 }

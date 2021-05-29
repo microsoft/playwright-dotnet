@@ -26,6 +26,11 @@ namespace Microsoft.Playwright.Tests.TestServer
         private static int counter;
         private readonly Dictionary<int, WebSocket> _clients = new Dictionary<int, WebSocket>();
 
+        public int Port { get; }
+        public string Prefix { get; }
+        public string CrossProcessPrefix { get; }
+        public string EmptyPage { get; internal set; }
+
         internal IList<string> GzipRoutes { get; }
 
         public event EventHandler<RequestReceivedEventArgs> RequestReceived;
@@ -36,6 +41,20 @@ namespace Microsoft.Playwright.Tests.TestServer
 
         public SimpleServer(int port, string contentRoot, bool isHttps)
         {
+            Port = port;
+            if (isHttps)
+            {
+                Prefix = $"https://localhost:{port}";
+                CrossProcessPrefix = $"https://127.0.0.1:{port}";
+            }
+            else
+            {
+                Prefix = $"http://localhost:{port}";
+                CrossProcessPrefix = $"http://127.0.0.1:{port}";
+            }
+
+            EmptyPage = $"{Prefix}/empty.html";
+
             _subscribers = new ConcurrentDictionary<string, Action<HttpContext>>();
             _requestWaits = new ConcurrentDictionary<string, Action<HttpContext>>();
             _routes = new ConcurrentDictionary<string, RequestDelegate>();

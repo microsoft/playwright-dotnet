@@ -16,7 +16,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnBody()
         {
-            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/pptr.png");
+            var response = await Page.GotoAsync(Server.Prefix + "/pptr.png");
             byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
             Assert.AreEqual(imageBuffer, await response.BodyAsync());
         }
@@ -25,8 +25,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnBodyWithCompression()
         {
-            HttpServer.Server.EnableGzip("/pptr.png");
-            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/pptr.png");
+            Server.EnableGzip("/pptr.png");
+            var response = await Page.GotoAsync(Server.Prefix + "/pptr.png");
             byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
             Assert.AreEqual(imageBuffer, await response.BodyAsync());
         }
@@ -35,13 +35,13 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            HttpServer.Server.SetRoute("/empty.html", (context) =>
+            Server.SetRoute("/empty.html", (context) =>
             {
                 context.Response.Headers["foo"] = "bar";
                 return Task.CompletedTask;
             });
 
-            var response = await Page.GotoAsync(TestConstants.EmptyPage);
+            var response = await Page.GotoAsync(Server.EmptyPage);
             StringAssert.Contains("bar", response.Headers["foo"]);
         }
 
@@ -49,14 +49,14 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnJson()
         {
-            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/simple.json");
+            var response = await Page.GotoAsync(Server.Prefix + "/simple.json");
             Assert.AreEqual("{\"foo\": \"bar\"}", (await response.JsonAsync())?.GetRawText());
         }
 
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithGenerics()
         {
-            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/simple.json");
+            var response = await Page.GotoAsync(Server.Prefix + "/simple.json");
             var root = await response.JsonAsync();
             Assert.AreEqual("bar", root?.GetProperty("foo").GetString());
         }
@@ -65,7 +65,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnStatusText()
         {
-            HttpServer.Server.SetRoute("/cool", (context) =>
+            Server.SetRoute("/cool", (context) =>
             {
                 context.Response.StatusCode = 200;
                 //There are some debates about this on these issues
@@ -75,7 +75,7 @@ namespace Microsoft.Playwright.Tests
                 context.Features.Get<IHttpResponseFeature>().ReasonPhrase = "cool!";
                 return Task.CompletedTask;
             });
-            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/cool");
+            var response = await Page.GotoAsync(Server.Prefix + "/cool");
             Assert.AreEqual("cool!", response.StatusText);
         }
 
@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnText()
         {
-            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/simple.json");
+            var response = await Page.GotoAsync(Server.Prefix + "/simple.json");
             Assert.AreEqual("{\"foo\": \"bar\"}", (await response.TextAsync()).Trim());
         }
 
@@ -91,8 +91,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnUncompressedText()
         {
-            HttpServer.Server.EnableGzip("/simple.json");
-            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/simple.json");
+            Server.EnableGzip("/simple.json");
+            var response = await Page.GotoAsync(Server.Prefix + "/simple.json");
             Assert.AreEqual("gzip", response.Headers["content-encoding"]);
             Assert.AreEqual("{\"foo\": \"bar\"}", (await response.TextAsync()).Trim());
         }
@@ -101,8 +101,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenRequestingBodyOfRedirectedResponse()
         {
-            HttpServer.Server.SetRedirect("/foo.html", "/empty.html");
-            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/foo.html");
+            Server.SetRedirect("/foo.html", "/empty.html");
+            var response = await Page.GotoAsync(Server.Prefix + "/foo.html");
             var redirectedFrom = response.Request.RedirectedFrom;
             Assert.NotNull(redirectedFrom);
             var redirected = await redirectedFrom.ResponseAsync();
@@ -116,11 +116,11 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitUntilResponseCompletes()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             // Setup server to trap request.
             var serverResponseCompletion = new TaskCompletionSource<bool>();
             HttpResponse serverResponse = null;
-            HttpServer.Server.SetRoute("/get", context =>
+            Server.SetRoute("/get", context =>
             {
                 serverResponse = context.Response;
                 context.Response.Headers["Content-Type"] = "text/plain; charset=utf-8";
@@ -135,7 +135,7 @@ namespace Microsoft.Playwright.Tests
             var (pageResponse, _) = await TaskUtils.WhenAll(
                 Page.WaitForResponseAsync("**/*"),
                 Page.EvaluateAsync("fetch('./get', { method: 'GET'})"),
-                HttpServer.Server.WaitForRequest("/get")
+                Server.WaitForRequest("/get")
             );
 
             Assert.NotNull(serverResponse);

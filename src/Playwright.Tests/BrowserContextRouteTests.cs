@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             page = await context.NewPageAsync();
-            var response = await page.GotoAsync(TestConstants.EmptyPage);
+            var response = await page.GotoAsync(Server.EmptyPage);
             Assert.True(response.Ok);
             Assert.True(intercepted);
         }
@@ -75,17 +75,17 @@ namespace Microsoft.Playwright.Tests
                 route.ContinueAsync();
             });
 
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual(new List<int>() { 1 }, intercepted);
 
             intercepted.Clear();
             await context.UnrouteAsync("**/empty.html", handler1);
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual(new List<int>() { 2 }, intercepted);
 
             intercepted.Clear();
             await context.UnrouteAsync("**/empty.html");
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual(new List<int>() { 4 }, intercepted);
         }
 
@@ -105,7 +105,7 @@ namespace Microsoft.Playwright.Tests
                 route.FulfillAsync(new RouteFulfillOptions { Status = (int)HttpStatusCode.OK, Body = "page" });
             });
 
-            var response = await page.GotoAsync(TestConstants.EmptyPage);
+            var response = await page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual("page", await response.TextAsync());
         }
 
@@ -125,7 +125,7 @@ namespace Microsoft.Playwright.Tests
                 route.FulfillAsync(new RouteFulfillOptions { Status = (int)HttpStatusCode.OK, Body = "page" });
             });
 
-            var response = await page.GotoAsync(TestConstants.EmptyPage);
+            var response = await page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual("context", await response.TextAsync());
         }
     }

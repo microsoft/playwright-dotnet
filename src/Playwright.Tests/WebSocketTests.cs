@@ -22,7 +22,7 @@ namespace Microsoft.Playwright.Tests
                 const ws = new WebSocket('ws://localhost:' + port + '/ws');
                 ws.addEventListener('message', data => { ws.close(); cb(data.data); });
                 return result;
-            }", TestConstants.Port);
+            }", Server.Port);
             Assert.AreEqual("incoming", value);
         }
 
@@ -48,10 +48,10 @@ namespace Microsoft.Playwright.Tests
             await Page.EvaluateAsync(@"port => {
                 const ws = new WebSocket('ws://localhost:' + port + '/ws');
                 ws.addEventListener('open', () => ws.close());
-            }", TestConstants.Port);
+            }", Server.Port);
 
             await socketClosedTcs.Task;
-            Assert.AreEqual($"open<ws://localhost:{TestConstants.Port}/ws>:close", string.Join(":", log));
+            Assert.AreEqual($"open<ws://localhost:{Server.Port}/ws>:close", string.Join(":", log));
             Assert.True(webSocket.IsClosed);
         }
 
@@ -80,7 +80,7 @@ namespace Microsoft.Playwright.Tests
                 const ws = new WebSocket('ws://127.0.0.1:' + port + '/ws');
                 ws.addEventListener('open', () => { ws.send('outgoing'); });
                 ws.addEventListener('message', e => { ws.close() });
-            }", TestConstants.Port);
+            }", Server.Port);
 
             await socketClosedTcs.Task;
             Assert.AreEqual("open", log[0]);
@@ -112,7 +112,7 @@ namespace Microsoft.Playwright.Tests
                     ws.send(binary);
                     ws.close();
                 });
-            }", TestConstants.Port);
+            }", Server.Port);
 
 
             await socketClosedTcs.Task;
@@ -138,7 +138,7 @@ namespace Microsoft.Playwright.Tests
 
             await Page.EvaluateAsync(@"port => {
                 new WebSocket('ws://localhost:' + port + '/bogus-ws');
-            }", TestConstants.Port);
+            }", Server.Port);
 
 
             await socketErrorTcs.Task;
@@ -172,7 +172,7 @@ namespace Microsoft.Playwright.Tests
                 frameReceivedTcs.Task,
                 Page.EvaluateAsync(@"port => {
                     window.ws = new WebSocket('ws://localhost:' + port + '/ws');
-                }", TestConstants.Port));
+                }", Server.Port));
 
             await Page.EvaluateAsync("window.ws.close();");
             Assert.Null(socketError);

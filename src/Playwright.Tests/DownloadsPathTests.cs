@@ -17,7 +17,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldKeepDownloadsPathFolder()
         {
             var page = await _browser.NewPageAsync();
-            await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
+            await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
             var downloadTask = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests
                 page.ClickAsync("a"));
 
             var download = downloadTask.Result;
-            Assert.AreEqual($"{TestConstants.ServerUrl}/download", download.Url);
+            Assert.AreEqual($"{Server.Prefix}/download", download.Url);
             Assert.AreEqual("file.txt", download.SuggestedFilename);
 
             var exception = await AssertThrowsAsync<PlaywrightException>(() => download.PathAsync());
@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldDeleteDownloadsWhenContextCloses()
         {
             var page = await _browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
-            await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
+            await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
             var downloadTask = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
@@ -59,7 +59,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReportDownloadsInDownloadsPathFolder()
         {
             var page = await _browser.NewPageAsync(new BrowserNewPageOptions { AcceptDownloads = true });
-            await page.SetContentAsync($"<a href=\"{TestConstants.ServerUrl}/download\">download</a>");
+            await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
             var downloadTask = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
@@ -75,7 +75,7 @@ namespace Microsoft.Playwright.Tests
         [SetUp]
         public async Task InitializeAsync()
         {
-            HttpServer.Server.SetRoute("/download", context =>
+            Server.SetRoute("/download", context =>
             {
                 context.Response.Headers["Content-Type"] = "application/octet-stream";
                 context.Response.Headers["Content-Disposition"] = "attachment; filename=file.txt";

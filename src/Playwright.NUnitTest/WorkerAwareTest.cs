@@ -32,42 +32,44 @@ using NUnit.Framework.Interfaces;
 
 namespace Microsoft.Playwright.NUnitTest
 {
-    public class BrowserTest : PlaywrightTest
+    public class WorkerAwareTest
     {
-        public class BrowserService : IWorkerService
-        {
-            private IBrowserType browserType_;
-            public IBrowser Browser { get; internal set; }
+        private static ConcurrentStack<WorkerServices> workerServicesPool_ = new ConcurrentStack<WorkerServices>();
 
-            public BrowserService(IBrowserType browserType)
-            {
-                browserType_ = browserType;
-            }
-
-            public async Task InitAsync()
-            {
-                Browser = await browserType_.LaunchAsync(new BrowserTypeLaunchOptions
-                {
-                    Headless = true
-                });
-            }
-
-            public Task ResetAsync() => Task.CompletedTask;
-            public Task DisposeAsync() => Browser.CloseAsync();
-        };
-
-        public IBrowser Browser { get; internal set; }
+        public WorkerServices Services { get; private set; }
 
         [SetUp]
-        public async Task BrowserSetup()
+        public void WorkerSetup()
         {
-            var service = await Services.Register("Browser", async () =>
+            WorkerServices services;
+            if (workerServicesPool_.TryPop(out services))
             {
-                var service = new BrowserService(BrowserType);
-                await service.InitAsync();
-                return service;
-            });
-            Browser = service.Browser;
+                Services = services;
+                return;
+            }
+
+            Services = new WorkerServices();
+        }
+
+        [TearDown]
+        public async Task WorkerTeardown()
+        {
+            if (TestOk())
+            {
+                workerServicesPool_.Push(Services);
+                await Services.ResetAsync();
+            }
+            else
+            {
+                await Services.DisposeAsync();
+            }
+        }
+
+        public bool TestOk()
+        {
+            return
+                TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed ||
+                TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Skipped;
         }
     }
 }

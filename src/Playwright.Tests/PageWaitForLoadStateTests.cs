@@ -17,9 +17,9 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldPickUpOngoingNavigation()
         {
             var responseTask = new TaskCompletionSource<bool>();
-            var waitForRequestTask = HttpServer.Server.WaitForRequest("/one-style.css");
+            var waitForRequestTask = Server.WaitForRequest("/one-style.css");
 
-            HttpServer.Server.SetRoute("/one-style.css", async (ctx) =>
+            Server.SetRoute("/one-style.css", async (ctx) =>
             {
                 if (await responseTask.Task)
                 {
@@ -28,7 +28,7 @@ namespace Microsoft.Playwright.Tests
                 }
             });
 
-            var navigationTask = Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
+            var navigationTask = Page.GotoAsync(Server.Prefix + "/one-style.html");
             await waitForRequestTask;
             var waitLoadTask = Page.WaitForLoadStateAsync();
             responseTask.TrySetResult(true);
@@ -40,8 +40,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
-            HttpServer.Server.SetRoute("/one-style.css", _ => Task.Delay(Timeout.Infinite));
-            await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html", new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
+            Server.SetRoute("/one-style.css", _ => Task.Delay(Timeout.Infinite));
+            await Page.GotoAsync(Server.Prefix + "/one-style.html", new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
             var exception = await AssertThrowsAsync<TimeoutException>(() => Page.WaitForLoadStateAsync(LoadState.Load, new PageWaitForLoadStateOptions { Timeout = 1 }));
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
         }
@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldResolveImmediatelyIfLoaded()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
+            await Page.GotoAsync(Server.Prefix + "/one-style.html");
             await Page.WaitForLoadStateAsync();
         }
 
@@ -65,9 +65,9 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldResolveImmediatelyIfLoadStateMatches()
         {
             var responseTask = new TaskCompletionSource<bool>();
-            var waitForRequestTask = HttpServer.Server.WaitForRequest("/one-style.css");
+            var waitForRequestTask = Server.WaitForRequest("/one-style.css");
 
-            HttpServer.Server.SetRoute("/one-style.css", async (ctx) =>
+            Server.SetRoute("/one-style.css", async (ctx) =>
             {
                 if (await responseTask.Task)
                 {
@@ -76,7 +76,7 @@ namespace Microsoft.Playwright.Tests
                 }
             });
 
-            var navigationTask = Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
+            var navigationTask = Page.GotoAsync(Server.Prefix + "/one-style.html");
             await waitForRequestTask;
             await Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             responseTask.TrySetResult(true);
@@ -87,7 +87,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWorkWithPagesThatHaveLoadedBeforeBeingConnectedTo()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.EvaluateAsync(@"async () => {
                 const child = window.open(document.location.href);
                 while (child.document.readyState !== 'complete' || child.document.location.href === 'about:blank')
@@ -101,30 +101,30 @@ namespace Microsoft.Playwright.Tests
             var connectedPage = pages.Single(p => !ReferenceEquals(Page, p));
 
             Assert.NotNull(mainPage);
-            Assert.AreEqual(TestConstants.EmptyPage, mainPage.Url);
+            Assert.AreEqual(Server.EmptyPage, mainPage.Url);
 
-            Assert.AreEqual(TestConstants.EmptyPage, connectedPage.Url);
+            Assert.AreEqual(Server.EmptyPage, connectedPage.Url);
             await connectedPage.WaitForLoadStateAsync();
-            Assert.AreEqual(TestConstants.EmptyPage, connectedPage.Url);
+            Assert.AreEqual(Server.EmptyPage, connectedPage.Url);
         }
 
         [PlaywrightTest("page-wait-for-load-state.spec.ts", "should work for frame")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForFrame()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
+            await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
             var frame = Page.Frames.ElementAt(1);
 
             TaskCompletionSource<bool> requestTask = new TaskCompletionSource<bool>();
             TaskCompletionSource<bool> routeReachedTask = new TaskCompletionSource<bool>();
-            await Page.RouteAsync(TestConstants.ServerUrl + "/one-style.css", async (route) =>
+            await Page.RouteAsync(Server.Prefix + "/one-style.css", async (route) =>
             {
                 routeReachedTask.TrySetResult(true);
                 await requestTask.Task;
                 await route.ContinueAsync();
             });
 
-            await frame.GotoAsync(TestConstants.ServerUrl + "/one-style.html", new FrameGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
+            await frame.GotoAsync(Server.Prefix + "/one-style.html", new FrameGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
 
             await routeReachedTask.Task;
             var loadTask = frame.WaitForLoadStateAsync();

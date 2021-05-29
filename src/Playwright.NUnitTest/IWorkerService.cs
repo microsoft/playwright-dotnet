@@ -32,42 +32,9 @@ using NUnit.Framework.Interfaces;
 
 namespace Microsoft.Playwright.NUnitTest
 {
-    public class BrowserTest : PlaywrightTest
+    public interface IWorkerService
     {
-        public class BrowserService : IWorkerService
-        {
-            private IBrowserType browserType_;
-            public IBrowser Browser { get; internal set; }
-
-            public BrowserService(IBrowserType browserType)
-            {
-                browserType_ = browserType;
-            }
-
-            public async Task InitAsync()
-            {
-                Browser = await browserType_.LaunchAsync(new BrowserTypeLaunchOptions
-                {
-                    Headless = true
-                });
-            }
-
-            public Task ResetAsync() => Task.CompletedTask;
-            public Task DisposeAsync() => Browser.CloseAsync();
-        };
-
-        public IBrowser Browser { get; internal set; }
-
-        [SetUp]
-        public async Task BrowserSetup()
-        {
-            var service = await Services.Register("Browser", async () =>
-            {
-                var service = new BrowserService(BrowserType);
-                await service.InitAsync();
-                return service;
-            });
-            Browser = service.Browser;
-        }
+        public Task ResetAsync();
+        public Task DisposeAsync();
     }
 }

@@ -12,9 +12,9 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBblankTarget()
         {
-            HttpServer.Server.SetRoute("/empty.html", ctx =>
-            ctx.Response.WriteAsync($"<a href=\"{TestConstants.EmptyPage}\" target=\"_blank\">Click me</a>"));
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            Server.SetRoute("/empty.html", ctx =>
+            ctx.Response.WriteAsync($"<a href=\"{Server.EmptyPage}\" target=\"_blank\">Click me</a>"));
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.ClickAsync("\"Click me\"");
         }
 
@@ -22,9 +22,9 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCrossProcessBlankTarget()
         {
-            HttpServer.Server.SetRoute("/empty.html", ctx =>
-            ctx.Response.WriteAsync($"<a href=\"{TestConstants.CrossProcessUrl}/empty.html\" target=\"_blank\">Click me</a>"));
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            Server.SetRoute("/empty.html", ctx =>
+            ctx.Response.WriteAsync($"<a href=\"{Server.CrossProcessPrefix}/empty.html\" target=\"_blank\">Click me</a>"));
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.ClickAsync("\"Click me\"");
         }
     }

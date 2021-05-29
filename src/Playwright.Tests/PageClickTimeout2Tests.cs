@@ -15,7 +15,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForDisplayNoneToBeGone()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "b => b.style.display = 'none'");
             var exception = await AssertThrowsAsync<TimeoutException>(()
                 => Page.ClickAsync("button", new PageClickOptions { Timeout = 5000 }));
@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForVisbilityHiddenToBeGone()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "b => b.style.visibility = 'hidden'");
             var clickTask = Page.ClickAsync("button", new PageClickOptions { Timeout = 5000 });
             var exception = await AssertThrowsAsync<TimeoutException>(()

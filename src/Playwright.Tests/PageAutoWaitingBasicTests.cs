@@ -14,14 +14,14 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAwaitNavigationWhenClickingAnchor()
         {
             var messages = new List<string>();
-            HttpServer.Server.SetRoute("/empty.html", context =>
+            Server.SetRoute("/empty.html", context =>
             {
                 messages.Add("route");
                 context.Response.ContentType = "text/html";
                 return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
             });
 
-            await Page.SetContentAsync($"<a href=\"{TestConstants.EmptyPage}\">empty.html</a>");
+            await Page.SetContentAsync($"<a href=\"{Server.EmptyPage}\">empty.html</a>");
             await TaskUtils.WhenAll(
                 Page.ClickAsync("a").ContinueWith(_ => messages.Add("click")),
                 Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
@@ -34,14 +34,14 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAwaitCrossProcessNavigationWhenClickingAnchor()
         {
             var messages = new List<string>();
-            HttpServer.Server.SetRoute("/empty.html", context =>
+            Server.SetRoute("/empty.html", context =>
             {
                 messages.Add("route");
                 context.Response.ContentType = "text/html";
                 return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
             });
 
-            await Page.SetContentAsync($"<a href=\"{TestConstants.CrossProcessHttpPrefix}/empty.html\">empty.html</a>");
+            await Page.SetContentAsync($"<a href=\"{Server.CrossProcessPrefix}/empty.html\">empty.html</a>");
             await TaskUtils.WhenAll(
                 Page.ClickAsync("a").ContinueWith(_ => messages.Add("click")),
                 Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAwaitFormGetOnClick()
         {
             var messages = new List<string>();
-            HttpServer.Server.SetRoute("/empty.html?foo=bar", context =>
+            Server.SetRoute("/empty.html?foo=bar", context =>
             {
                 messages.Add("route");
                 context.Response.ContentType = "text/html";
@@ -62,7 +62,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             await Page.SetContentAsync($@"
-                <form action=""{TestConstants.EmptyPage}"" method=""get"">
+                <form action=""{Server.EmptyPage}"" method=""get"">
                     <input name=""foo"" value=""bar"">
                     <input type=""submit"" value=""Submit"">
                 </form>");
@@ -79,7 +79,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAwaitFormPostOnClick()
         {
             var messages = new List<string>();
-            HttpServer.Server.SetRoute("/empty.html", context =>
+            Server.SetRoute("/empty.html", context =>
             {
                 messages.Add("route");
                 context.Response.ContentType = "text/html";
@@ -87,7 +87,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             await Page.SetContentAsync($@"
-                <form action=""{ TestConstants.EmptyPage}"" method=""post"">
+                <form action=""{ Server.EmptyPage}"" method=""post"">
                     <input name=""foo"" value=""bar"">
                     <input type=""submit"" value=""Submit"">
                 </form>");
@@ -104,7 +104,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAwaitNavigationWhenAssigningLocation()
         {
             var messages = new List<string>();
-            HttpServer.Server.SetRoute("/empty.html", context =>
+            Server.SetRoute("/empty.html", context =>
             {
                 messages.Add("route");
                 context.Response.ContentType = "text/html";
@@ -112,7 +112,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             await TaskUtils.WhenAll(
-                Page.EvaluateAsync($"window.location.href = '{TestConstants.EmptyPage}'").ContinueWith(_ => messages.Add("evaluate")),
+                Page.EvaluateAsync($"window.location.href = '{Server.EmptyPage}'").ContinueWith(_ => messages.Add("evaluate")),
                 Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
 
             Assert.AreEqual("route|navigated|evaluate", string.Join("|", messages));
@@ -123,20 +123,20 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAwaitNavigationWhenAssigningLocationTwice()
         {
             var messages = new List<string>();
-            HttpServer.Server.SetRoute("/empty.html?cancel", context =>
+            Server.SetRoute("/empty.html?cancel", context =>
             {
                 return context.Response.WriteAsync("done");
             });
 
-            HttpServer.Server.SetRoute("/empty.html?override", context =>
+            Server.SetRoute("/empty.html?override", context =>
             {
                 messages.Add("routeoverride");
                 return context.Response.WriteAsync("done");
             });
 
             await Page.EvaluateAsync($@"
-                window.location.href = '{TestConstants.EmptyPage}?cancel';
-                window.location.href = '{TestConstants.EmptyPage}?override';");
+                window.location.href = '{Server.EmptyPage}?cancel';
+                window.location.href = '{Server.EmptyPage}?override';");
             messages.Add("evaluate");
 
             Assert.AreEqual("routeoverride|evaluate", string.Join("|", messages));
@@ -147,8 +147,8 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAwaitNavigationWhenEvaluatingReload()
         {
             var messages = new List<string>();
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            HttpServer.Server.SetRoute("/empty.html", context =>
+            await Page.GotoAsync(Server.EmptyPage);
+            Server.SetRoute("/empty.html", context =>
             {
                 messages.Add("route");
                 context.Response.ContentType = "text/html";
@@ -167,7 +167,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAwaitNavigatingSpecifiedTarget()
         {
             var messages = new List<string>();
-            HttpServer.Server.SetRoute("/empty.html", context =>
+            Server.SetRoute("/empty.html", context =>
             {
                 messages.Add("route");
                 context.Response.ContentType = "text/html";
@@ -175,7 +175,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             await Page.SetContentAsync($@"
-                <a href=""{ TestConstants.EmptyPage}"" target=target>empty.html</a>
+                <a href=""{ Server.EmptyPage}"" target=target>empty.html</a>
                 <iframe name=target></iframe>");
 
             var frame = Page.Frame("target");
@@ -184,7 +184,7 @@ namespace Microsoft.Playwright.Tests
                 Page.ClickAsync("a").ContinueWith(_ => messages.Add("click")),
                 Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
 
-            Assert.AreEqual(TestConstants.EmptyPage, frame.Url);
+            Assert.AreEqual(Server.EmptyPage, frame.Url);
             Assert.AreEqual("route|navigated|click", string.Join("|", messages));
         }
 
@@ -193,9 +193,9 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithNoWaitAfterTrue()
         {
             var messages = new List<string>();
-            HttpServer.Server.SetRoute("/empty.html", _ => Task.CompletedTask);
+            Server.SetRoute("/empty.html", _ => Task.CompletedTask);
 
-            await Page.SetContentAsync($@"<a href=""{ TestConstants.EmptyPage}"" target=target>empty.html</a>");
+            await Page.SetContentAsync($@"<a href=""{ Server.EmptyPage}"" target=target>empty.html</a>");
             await Page.ClickAsync("a", new PageClickOptions { NoWaitAfter = true });
         }
 
@@ -204,14 +204,14 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithWaitForLoadStateLoad()
         {
             var messages = new List<string>();
-            HttpServer.Server.SetRoute("/empty.html", context =>
+            Server.SetRoute("/empty.html", context =>
             {
                 messages.Add("route");
                 context.Response.ContentType = "text/html";
                 return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
             });
 
-            await Page.SetContentAsync($"<a href=\"{TestConstants.EmptyPage}\">empty.html</a>");
+            await Page.SetContentAsync($"<a href=\"{Server.EmptyPage}\">empty.html</a>");
             var clickLoaded = new TaskCompletionSource<bool>();
 
             await TaskUtils.WhenAll(
@@ -231,7 +231,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithGotoFollowingClick()
         {
             var messages = new List<string>();
-            HttpServer.Server.SetRoute("/empty.html", context =>
+            Server.SetRoute("/empty.html", context =>
             {
                 messages.Add("route");
                 context.Response.ContentType = "text/html";
@@ -239,14 +239,14 @@ namespace Microsoft.Playwright.Tests
             });
 
             await Page.SetContentAsync($@"
-                <form action=""{ TestConstants.EmptyPage}/login.html"" method=""get"">
+                <form action=""{ Server.EmptyPage}/login.html"" method=""get"">
                     <input type=""text"">
                     <input type=""submit"" value=""Submit"">
                 </form>");
 
             await Page.FillAsync("input[type=text]", "admin");
             await Page.ClickAsync("input[type=submit]");
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
         }
 
         [PlaywrightTest("page-autowaiting-basic.spec.ts", "should report navigation in the log when clicking anchor")]

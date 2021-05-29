@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithWindowFeatures()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var popupTask = Page.WaitForPopupAsync();
             await TaskUtils.WhenAll(
                 popupTask,
@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitForImmediatelyClosedPopups()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var popupTask = Page.WaitForPopupAsync();
             await TaskUtils.WhenAll(
                 popupTask,
@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitForImmediatelyClosedPopupsWithLocation()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var popup = await Page.RunAndWaitForPopupAsync(async () =>
             {
                 await Page.EvaluateAsync<string>(@"() => {
@@ -78,7 +78,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithEmptyUrl()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var popupTask = Page.WaitForPopupAsync();
             await TaskUtils.WhenAll(
                 popupTask,
@@ -93,7 +93,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoopenerAndNoUrl()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var popupTask = Page.WaitForPopupAsync();
             await TaskUtils.WhenAll(
                 popupTask,
@@ -109,7 +109,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoopenerAndAboutBlank()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var popupTask = Page.WaitForPopupAsync();
             await TaskUtils.WhenAll(
                 popupTask,
@@ -124,11 +124,11 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoopenerAndUrl()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var popupTask = Page.WaitForPopupAsync();
             await TaskUtils.WhenAll(
                 popupTask,
-                Page.EvaluateAsync("url => window.open(url, null, 'noopener')", TestConstants.EmptyPage)
+                Page.EvaluateAsync("url => window.open(url, null, 'noopener')", Server.EmptyPage)
             );
             var popup = popupTask.Result;
             Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
@@ -139,7 +139,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithClickingTargetBlank()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.SetContentAsync("<a target=_blank rel=\"opener\" href=\"/one-style.html\">yo</a>");
             var popupTask = Page.WaitForPopupAsync().ContinueWith(async task =>
             {
@@ -161,7 +161,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithFakeClickingTargetBlankAndRelNoopener()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
             var popupTask = Page.WaitForPopupAsync().ContinueWith(async task =>
             {
@@ -182,7 +182,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithClickingTargetBlankAndRelNoopener()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
             var popupTask = Page.WaitForPopupAsync().ContinueWith(async task =>
             {
@@ -203,7 +203,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldNotTreatNavigationsAsNewPopups()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
             var popupTask = Page.WaitForPopupAsync().ContinueWith(async task =>
             {
@@ -218,7 +218,7 @@ namespace Microsoft.Playwright.Tests
             var popup = await popupTask.Result;
             bool badSecondPopup = false;
             Page.Popup += (_, _) => badSecondPopup = true;
-            await popup.GotoAsync(TestConstants.CrossProcessUrl + "/empty.html");
+            await popup.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
             Assert.False(badSecondPopup);
         }
     }

@@ -51,7 +51,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotRetargetWhenElementChangesOnHover()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/react.html");
+            await Page.GotoAsync(Server.Prefix + "/react.html");
             await Page.EvaluateAsync(@"() => {
                 renderComponent(e('div', {}, [e(MyButton, { name: 'button1', renameOnHover: true }), e(MyButton, { name: 'button2' })] ));
             }");
@@ -65,7 +65,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotRetargetWhenElementIsRecycledOnHover()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/react.html");
+            await Page.GotoAsync(Server.Prefix + "/react.html");
             await Page.EvaluateAsync(@"() => {
                 function shuffle() {
                     renderComponent(e('div', {}, [e(MyButton, { name: 'button2' }), e(MyButton, { name: 'button1' })] ));

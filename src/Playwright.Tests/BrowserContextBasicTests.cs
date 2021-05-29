@@ -32,13 +32,13 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             var popupTargetCompletion = new TaskCompletionSource<IPage>();
             page.Popup += (_, e) => popupTargetCompletion.SetResult(e);
 
             var (popupTarget, _) = await TaskUtils.WhenAll(
                 popupTargetCompletion.Task,
-                page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage)
+                page.EvaluateAsync("url => window.open(url)", Server.EmptyPage)
             );
 
             Assert.AreEqual(context, popupTarget.Context);
@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.Tests
 
             // Create a page in first incognito context.
             var page1 = await context1.NewPageAsync();
-            await page1.GotoAsync(TestConstants.EmptyPage);
+            await page1.GotoAsync(Server.EmptyPage);
             await page1.EvaluateAsync(@"() => {
                 localStorage.setItem('name', 'page1');
                 document.cookie = 'name=page1';
@@ -69,7 +69,7 @@ namespace Microsoft.Playwright.Tests
 
             // Create a page in second incognito context.
             var page2 = await context2.NewPageAsync();
-            await page2.GotoAsync(TestConstants.EmptyPage);
+            await page2.GotoAsync(Server.EmptyPage);
             await page2.EvaluateAsync(@"() => {
                 localStorage.setItem('name', 'page2');
                 document.cookie = 'name=page2';
@@ -189,15 +189,15 @@ namespace Microsoft.Playwright.Tests
         {
             var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            HttpServer.Server.SetRoute("/empty.html", context =>
+            Server.SetRoute("/empty.html", context =>
             {
                 context.Response.ContentType = "text/html";
-                return context.Response.WriteAsync($"<a href=\"{TestConstants.EmptyPage}\" target=\"_blank\">Click me</a>");
+                return context.Response.WriteAsync($"<a href=\"{Server.EmptyPage}\" target=\"_blank\">Click me</a>");
             });
 
             IPage popup = null;
             context.Page += (_, e) => popup = e;
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             await page.ClickAsync("'Click me'");
             await context.CloseAsync();
 
@@ -274,7 +274,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { JavaScriptEnabled = false });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should work with offline option")]
@@ -283,9 +283,9 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { Offline = true });
             var page = await context.NewPageAsync();
-            await AssertThrowsAsync<PlaywrightException>(() => page.GotoAsync(TestConstants.EmptyPage));
+            await AssertThrowsAsync<PlaywrightException>(() => page.GotoAsync(Server.EmptyPage));
             await context.SetOfflineAsync(false);
-            var response = await page.GotoAsync(TestConstants.EmptyPage);
+            var response = await page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
         }
 

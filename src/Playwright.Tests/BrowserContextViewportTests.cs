@@ -70,9 +70,9 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotHaveTouchByDefault()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/mobile.html");
+            await Page.GotoAsync(Server.Prefix + "/mobile.html");
             Assert.False(await Page.EvaluateAsync<bool>("'ontouchstart' in window"));
-            await Page.GotoAsync(TestConstants.ServerUrl + "/detect-touch.html");
+            await Page.GotoAsync(Server.Prefix + "/detect-touch.html");
             Assert.AreEqual("NO", await Page.EvaluateAsync<string>("document.body.textContent.trim()"));
         }
 
@@ -82,7 +82,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { ViewportSize = null, HasTouch = true });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.ServerUrl + "/mobile.html");
+            await page.GotoAsync(Server.Prefix + "/mobile.html");
             Assert.True(await page.EvaluateAsync<bool>("'ontouchstart' in window"));
         }
     }

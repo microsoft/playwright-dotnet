@@ -18,7 +18,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldGetACookie()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual("username=John Doe", await Page.EvaluateAsync<string>(@"() => {
                 document.cookie = 'username=John Doe';
                 return document.cookie;
@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldGetANonSessionCookie()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var date = new DateTime(2038, 1, 1);
             Assert.AreEqual("username=John Doe", await Page.EvaluateAsync<string>(@"timestamp => {
                 const date = new Date(timestamp);
@@ -62,12 +62,12 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldProperlyReportHttpOnlyCookie()
         {
-            HttpServer.Server.SetRoute("/empty.html", context =>
+            Server.SetRoute("/empty.html", context =>
             {
                 context.Response.Headers["Set-Cookie"] = "name=vaue;HttpOnly; Path=/";
                 return Task.CompletedTask;
             });
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var cookies = await Context.CookiesAsync();
             Assert.That(cookies, Has.Count.EqualTo(1));
             Assert.True(cookies.ElementAt(0).HttpOnly);
@@ -77,12 +77,12 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipWebkit: true, skipWindows: true)]
         public async Task ShouldProperlyReportStrictSameSiteCookie()
         {
-            HttpServer.Server.SetRoute("/empty.html", context =>
+            Server.SetRoute("/empty.html", context =>
             {
                 context.Response.Headers["Set-Cookie"] = "name=value;SameSite=Strict";
                 return Task.CompletedTask;
             });
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var cookies = await Context.CookiesAsync();
             Assert.That(cookies, Has.Count.EqualTo(1));
             Assert.AreEqual(SameSiteAttribute.Strict, cookies.ElementAt(0).SameSite);
@@ -92,12 +92,12 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipWebkit: true, skipWindows: true)]
         public async Task ShouldProperlyReportLaxSameSiteCookie()
         {
-            HttpServer.Server.SetRoute("/empty.html", context =>
+            Server.SetRoute("/empty.html", context =>
             {
                 context.Response.Headers["Set-Cookie"] = "name=value;SameSite=Lax";
                 return Task.CompletedTask;
             });
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var cookies = await Context.CookiesAsync();
             Assert.That(cookies, Has.Count.EqualTo(1));
             Assert.AreEqual(SameSiteAttribute.Lax, cookies.ElementAt(0).SameSite);
@@ -107,7 +107,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldGetMultipleCookies()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             Assert.IsEmpty(await Context.CookiesAsync());
 
             string documentCookie = await Page.EvaluateAsync<string>(@"() => {

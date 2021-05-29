@@ -10,7 +10,7 @@ namespace Microsoft.Playwright.Tests
         [Test]
         public async Task ShouldNotFail()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.PauseAsync();
         }
     }

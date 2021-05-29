@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPressTheMetaKey1()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/empty.html");
+            await Page.GotoAsync(Server.Prefix + "/empty.html");
             await Page.EvaluateAsync<string>(@"() => {
                 window.keyPromise = new Promise(resolve => document.addEventListener('keydown', event => resolve(event.key)));
             }");
@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldMoveWithTheArrowKeys()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             await Page.TypeAsync("textarea", "Hello World!");
             Assert.AreEqual("Hello World!", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
             for (int i = 0; i < "World!".Length; i++)
@@ -64,7 +64,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendACharacterWithElementHandlePress()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             var textarea = await Page.QuerySelectorAsync("textarea");
             await textarea.PressAsync("a");
             Assert.AreEqual("a", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
@@ -79,7 +79,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendACharacterWithSendCharacter()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             await Page.FocusAsync("textarea");
             await Page.Keyboard.InsertTextAsync("嗨");
             Assert.AreEqual("嗨", await Page.EvaluateAsync<string>("() => document.querySelector('textarea').value"));
@@ -92,7 +92,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task InsertTextShouldOnlyEmitInputEvent()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             await Page.FocusAsync("textarea");
 
             var events = await Page.EvaluateHandleAsync(@"() => {
@@ -112,7 +112,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true, skipOSX: true)]
         public async Task ShouldReportShiftKey()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/keyboard.html");
+            await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
             var keyboard = Page.Keyboard;
             var codeForKey = new Dictionary<string, int> { ["Shift"] = 16, ["Alt"] = 18, ["Control"] = 17 };
             foreach (string modifierKey in codeForKey.Keys)
@@ -142,7 +142,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportMultipleModifiers()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/keyboard.html");
+            await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
             var keyboard = Page.Keyboard;
             await keyboard.DownAsync("Control");
             Assert.AreEqual("Keydown: Control ControlLeft 17 [Control]", await Page.EvaluateAsync<string>("() => getResult()"));
@@ -162,7 +162,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendProperCodesWhileTyping()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/keyboard.html");
+            await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
             await Page.Keyboard.TypeAsync("!");
             Assert.AreEqual(string.Join("\n",
                 "Keydown: ! Digit1 49 []",
@@ -179,7 +179,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendProperCodesWhileTypingWithShift()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/keyboard.html");
+            await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
             var keyboard = Page.Keyboard;
             await keyboard.DownAsync("Shift");
             await Page.Keyboard.TypeAsync("~");
@@ -195,7 +195,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotTypeCanceledEvents()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             await Page.FocusAsync("textarea");
             await Page.EvaluateAsync<string>(@"() =>{
                 window.addEventListener('keydown', event => {
@@ -215,7 +215,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPressPlus()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/keyboard.html");
+            await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
             await Page.Keyboard.PressAsync("+");
             Assert.AreEqual(
                 string.Join(
@@ -233,7 +233,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPressShiftPlus()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/keyboard.html");
+            await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
             await Page.Keyboard.PressAsync("Shift++");
             Assert.AreEqual(
                 string.Join(
@@ -253,7 +253,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportPlusSeparatedModifiers()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/keyboard.html");
+            await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
             await Page.Keyboard.PressAsync("Shift+~");
             Assert.AreEqual(
                 string.Join(
@@ -273,7 +273,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportMultiplePlusSeparatedModifiers()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/keyboard.html");
+            await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
             await Page.Keyboard.PressAsync("Control+Shift+~");
             Assert.AreEqual(
                 string.Join(
@@ -294,7 +294,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldShiftRawCodes()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/keyboard.html");
+            await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
             await Page.Keyboard.PressAsync("Shift+Digit3");
             Assert.AreEqual(
                 string.Join(
@@ -314,7 +314,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSpecifyRepeatProperty()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             await Page.FocusAsync("textarea");
             var lastEvent = await CaptureLastKeydownAsync(Page);
             await Page.EvaluateAsync("() => document.querySelector('textarea').addEventListener('keydown', e => window.lastEvent = e, true)");
@@ -337,7 +337,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTypeAllKindsOfCharacters()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             await Page.FocusAsync("textarea");
             string text = "This text goes onto two lines.\nThis character is 嗨.";
             await Page.Keyboard.TypeAsync(text);
@@ -348,7 +348,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSpecifyLocation()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             var lastEventHandle = await CaptureLastKeydownAsync(Page);
             var textarea = await Page.QuerySelectorAsync("textarea");
 
@@ -409,7 +409,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTypeEmoji()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             await Page.TypeAsync("textarea", "👹 Tokyo street Japan 🇯🇵");
             Assert.AreEqual("👹 Tokyo street Japan 🇯🇵", await Page.EvalOnSelectorAsync<string>("textarea", "textarea => textarea.value"));
         }
@@ -418,8 +418,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTypeEmojiIntoAnIframe()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            await FrameUtils.AttachFrameAsync(Page, "emoji-test", TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(Server.EmptyPage);
+            await FrameUtils.AttachFrameAsync(Page, "emoji-test", Server.Prefix + "/input/textarea.html");
             var frame = Page.Frames.ElementAt(1);
             var textarea = await frame.QuerySelectorAsync("textarea");
             await textarea.TypeAsync("👹 Tokyo street Japan 🇯🇵");
@@ -430,7 +430,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipOSX: true, skipChromium: true)]
         public async Task ShouldHandleSelectAll()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             var textarea = await Page.QuerySelectorAsync("textarea");
             await textarea.TypeAsync("some text");
             string modifier = TestConstants.IsMacOSX ? "Meta" : "Control";
@@ -445,7 +445,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipOSX: true, skipChromium: true)]
         public async Task ShouldBeAbleToPreventSelectAll()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             var textarea = await Page.QuerySelectorAsync("textarea");
             await textarea.TypeAsync("some text");
             await Page.EvalOnSelectorAsync("textarea", @"textarea => {
@@ -505,8 +505,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkAfterACrossOriginNavigation()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/empty.html");
-            await Page.GotoAsync(TestConstants.CrossProcessUrl + "/empty.html");
+            await Page.GotoAsync(Server.Prefix + "/empty.html");
+            await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
             var lastEventHandle = await CaptureLastKeydownAsync(Page);
             await Page.Keyboard.PressAsync("a");
             dynamic result = await lastEventHandle.JsonValueAsync<ExpandoObject>();
@@ -543,7 +543,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldScrollWithPageDown()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/scrollable.html");
+            await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
             await Page.ClickAsync("body");
             await Page.Keyboard.PressAsync("PageDown");
             await Page.WaitForFunctionAsync("() => scrollY > 0");
