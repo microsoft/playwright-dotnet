@@ -1,24 +1,17 @@
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class LauncherTests : PlaywrightSharpBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class LauncherTests : PlaywrightTestEx
     {
-        /// <inheritdoc/>
-        public LauncherTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("launcher.spec.ts", "should require top-level Errors")]
-        [Fact(Skip = "We don't need this test. Leaving for tracking purposes")]
+        [Test, Ignore("We don't need this test. Leaving for tracking purposes")]
         public void ShouldRequireTopLevelErrors() { }
 
         [PlaywrightTest("launcher.spec.ts", "should require top-level DeviceDescriptors")]
-        [Fact(Skip = "We don't need this test. Leaving for tracking purposes")]
+        [Test, Ignore("We don't need this test. Leaving for tracking purposes")]
         public void ShouldRequireTopLevelDeviceDescriptors() { }
     }
 }

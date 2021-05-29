@@ -1,21 +1,14 @@
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageDragTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class PageDragTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public PageDragTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("page-drag.spec.ts", "should work")]
-        [Fact(Skip = "Skipped in Playwright")]
+        [Test, Ignore("Skipped in Playwright")]
         public async Task ShouldWork()
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/drag-n-drop.html");

@@ -1,22 +1,15 @@
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class BeforeUnloadTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class BeforeUnloadTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public BeforeUnloadTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
 
         [PlaywrightTest("beforeunload.spec.ts", "should run beforeunload if asked for")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRunBeforeunloadIfAskedFor()
         {
             var newPage = await Context.NewPageAsync();
@@ -30,19 +23,19 @@ namespace Microsoft.Playwright.Tests
 
             var pageClosingTask = newPage.CloseAsync(new PageCloseOptions { RunBeforeUnload = true });
             var dialog = await dialogEvent.Task;
-            Assert.Equal(DialogType.BeforeUnload, dialog.Type);
-            Assert.Empty(dialog.DefaultValue);
+            Assert.AreEqual(DialogType.BeforeUnload, dialog.Type);
+            Assert.IsEmpty(dialog.DefaultValue);
             if (TestConstants.IsChromium)
             {
-                Assert.Empty(dialog.Message);
+                Assert.IsEmpty(dialog.Message);
             }
             else if (TestConstants.IsWebKit)
             {
-                Assert.Equal("Leave?", dialog.Message);
+                Assert.AreEqual("Leave?", dialog.Message);
             }
             else
             {
-                Assert.Contains("This page is asking you to confirm that you want to leave", dialog.Message);
+                StringAssert.Contains("This page is asking you to confirm that you want to leave", dialog.Message);
             }
 
             await dialog.AcceptAsync();
@@ -50,7 +43,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("beforeunload.spec.ts", "should *not* run beforeunload by default")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotRunBeforeunloadByDefault()
         {
             var newPage = await Context.NewPageAsync();

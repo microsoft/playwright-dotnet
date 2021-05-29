@@ -1,29 +1,22 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PopupTests : PlaywrightSharpBrowserBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class PopupTests : BrowserTestEx
     {
-        /// <inheritdoc/>
-        public PopupTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("popup.spec.ts", "should inherit user agent from browser context")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldInheritUserAgentFromBrowserContext()
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { UserAgent = "hey" });
             var page = await context.NewPageAsync();
             await page.GotoAsync(TestConstants.EmptyPage);
             var requestTcs = new TaskCompletionSource<string>();
-            _ = Server.WaitForRequest("/popup/popup.html", request => requestTcs.TrySetResult(request.Headers["user-agent"]));
+            _ = HttpServer.Server.WaitForRequest("/popup/popup.html", request => requestTcs.TrySetResult(request.Headers["user-agent"]));
 
             await page.SetContentAsync("<a target=_blank rel=noopener href=\"/popup/popup.html\">link</a>");
             var popupTask = context.WaitForPageAsync(); // This is based on the python test so we can test WaitForPageAsync
@@ -33,12 +26,12 @@ namespace Microsoft.Playwright.Tests
             string userAgent = await popupTask.Result.EvaluateAsync<string>("() => window.initialUserAgent");
             await requestTcs.Task;
 
-            Assert.Equal("hey", userAgent);
-            Assert.Equal("hey", requestTcs.Task.Result);
+            Assert.AreEqual("hey", userAgent);
+            Assert.AreEqual("hey", requestTcs.Task.Result);
         }
 
         [PlaywrightTest("popup.spec.ts", "should respect routes from browser context")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectRoutesFromBrowserContext()
         {
             await using var context = await Browser.NewContextAsync();
@@ -61,7 +54,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("popup.spec.ts", "should inherit extra headers from browser context")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldInheritExtraHeadersFromBrowserContext()
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
@@ -74,16 +67,16 @@ namespace Microsoft.Playwright.Tests
             var page = await context.NewPageAsync();
             await page.GotoAsync(TestConstants.EmptyPage);
             var requestTcs = new TaskCompletionSource<string>();
-            _ = Server.WaitForRequest("/dummy.html", request => requestTcs.TrySetResult(request.Headers["foo"]));
+            _ = HttpServer.Server.WaitForRequest("/dummy.html", request => requestTcs.TrySetResult(request.Headers["foo"]));
 
             await page.EvaluateAsync(@"url => window._popup = window.open(url)", TestConstants.ServerUrl + "/dummy.html");
             await requestTcs.Task;
 
-            Assert.Equal("bar", requestTcs.Task.Result);
+            Assert.AreEqual("bar", requestTcs.Task.Result);
         }
 
         [PlaywrightTest("popup.spec.ts", "should inherit offline from browser context")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldInheritOfflineFromBrowserContext()
         {
             await using var context = await Browser.NewContextAsync();
@@ -102,10 +95,10 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("popup.spec.ts", "should inherit http credentials from browser context")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldInheritHttpCredentialsFromBrowserContext()
         {
-            Server.SetAuth("/title.html", "user", "pass");
+            HttpServer.Server.SetAuth("/title.html", "user", "pass");
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 HttpCredentials = new HttpCredentials() { Username = "user", Password = "pass" },
@@ -119,11 +112,11 @@ namespace Microsoft.Playwright.Tests
                 page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.ServerUrl + "/title.html"));
 
             await popup.Result.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-            Assert.Equal("Woof-Woof", await popup.Result.TitleAsync());
+            Assert.AreEqual("Woof-Woof", await popup.Result.TitleAsync());
         }
 
         [PlaywrightTest("popup.spec.ts", "should inherit touch support from browser context")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldInheritTouchSupportFromBrowserContext()
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
@@ -143,7 +136,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("popup.spec.ts", "should inherit viewport size from browser context")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldInheritViewportSizeFromBrowserContext()
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
@@ -162,7 +155,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("popup.spec.ts", "should use viewport size from window features")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUseViewportSizeFromWindowFeatures()
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
@@ -188,7 +181,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("popup.spec.ts", "should respect routes from browser context using window.open")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectRoutesFromBrowserContextUsingWindowOpen()
         {
             await using var context = await Browser.NewContextAsync();
@@ -212,7 +205,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("popup.spec.ts", "BrowserContext.addInitScript should apply to an in-process popup")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task BrowserContextAddInitScriptShouldApplyToAnInProcessPopup()
         {
             await using var context = await Browser.NewContextAsync();
@@ -225,11 +218,11 @@ namespace Microsoft.Playwright.Tests
                 return win.injected;
             }");
 
-            Assert.Equal(123, injected);
+            Assert.AreEqual(123, injected);
         }
 
         [PlaywrightTest("popup.spec.ts", "BrowserContext.addInitScript should apply to a cross-process popup")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task BrowserContextAddInitScriptShouldApplyToACrossProcessPopup()
         {
             await using var context = await Browser.NewContextAsync();
@@ -243,13 +236,13 @@ namespace Microsoft.Playwright.Tests
                 popup,
                 page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.CrossProcessUrl + "/title.html"));
 
-            Assert.Equal(123, await popup.Result.EvaluateAsync<int>("injected"));
+            Assert.AreEqual(123, await popup.Result.EvaluateAsync<int>("injected"));
             await popup.Result.ReloadAsync();
-            Assert.Equal(123, await popup.Result.EvaluateAsync<int>("injected"));
+            Assert.AreEqual(123, await popup.Result.EvaluateAsync<int>("injected"));
         }
 
         [PlaywrightTest("popup.spec.ts", "should expose function from browser context")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldExposeFunctionFromBrowserContext()
         {
             await using var context = await Browser.NewContextAsync();
@@ -262,13 +255,13 @@ namespace Microsoft.Playwright.Tests
                 return win.add(9, 4);
             }");
 
-            Assert.Equal(13, injected);
+            Assert.AreEqual(13, injected);
         }
 
         void AssertEqual(int width, int height, ViewportSize size)
         {
-            Assert.Equal(width, size.Width);
-            Assert.Equal(height, size.Height);
+            Assert.AreEqual(width, size.Width);
+            Assert.AreEqual(height, size.Height);
         }
     }
 }

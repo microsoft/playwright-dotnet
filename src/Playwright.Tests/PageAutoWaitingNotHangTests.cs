@@ -1,21 +1,14 @@
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageAutoWaitingNotHangTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class PageAutoWaitingNotHangTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public PageAutoWaitingNotHangTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "clicking on links which do not commit navigation")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ClickingOnLinksWhichDoNotCommitNavigation()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -24,10 +17,10 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "calling window.stop async")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task CallingWindowStopAsync()
         {
-            Server.SetRoute("/empty.html", _ => Task.CompletedTask);
+            HttpServer.Server.SetRoute("/empty.html", _ => Task.CompletedTask);
 
             await Page.EvaluateAsync($@"(url) => {{
                 window.location.href = url;
@@ -36,10 +29,10 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "calling window.stop")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task CallingWindowStop()
         {
-            Server.SetRoute("/empty.html", _ => Task.CompletedTask);
+            HttpServer.Server.SetRoute("/empty.html", _ => Task.CompletedTask);
 
             await Page.EvaluateAsync($@"(url) => {{
                 window.location.href = url;
@@ -48,7 +41,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "assigning location to about:blank")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task AssigningLocationToAboutBlank()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -56,10 +49,10 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "assigning location to about:blank after non-about:blank")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task AssigningLocationToAboutBlankAfterNonAboutBlank()
         {
-            Server.SetRoute("/empty.html", _ => Task.CompletedTask);
+            HttpServer.Server.SetRoute("/empty.html", _ => Task.CompletedTask);
 
             await Page.EvaluateAsync($@"(url) => {{
                 window.location.href = '{TestConstants.EmptyPage}';
@@ -68,7 +61,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "calling window.open and window.close")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task CallingWindowOpenAndWindowClose()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -80,7 +73,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "opening a popup")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task OpeningAPopup()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);

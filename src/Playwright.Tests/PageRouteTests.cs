@@ -7,37 +7,29 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.Attributes;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageRouteTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class PageRouteTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public PageRouteTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("page-route.spec.ts", "should intercept")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIntercept()
         {
             bool intercepted = false;
             await Page.RouteAsync("**/empty.html", (route) =>
             {
-                Assert.Contains("empty.html", route.Request.Url);
-                Assert.Contains(route.Request.Headers, x => string.Equals(x.Key, "user-agent", StringComparison.OrdinalIgnoreCase));
-                Assert.Equal(HttpMethod.Get.Method, route.Request.Method);
+                StringAssert.Contains("empty.html", route.Request.Url);
+                Assert.False(string.IsNullOrEmpty(route.Request.Headers["user-agent"]));
+                Assert.AreEqual(HttpMethod.Get.Method, route.Request.Method);
                 Assert.Null(route.Request.PostData);
                 Assert.True(route.Request.IsNavigationRequest);
-                Assert.Equal("document", route.Request.ResourceType, true);
-                Assert.Same(route.Request.Frame, Page.MainFrame);
-                Assert.Equal("about:blank", route.Request.Frame.Url);
+                Assert.AreEqual("document", route.Request.ResourceType);
+                Assert.AreEqual(route.Request.Frame, Page.MainFrame);
+                Assert.AreEqual("about:blank", route.Request.Frame.Url);
                 route.ContinueAsync();
                 intercepted = true;
             });
@@ -48,7 +40,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should unroute")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUnroute()
         {
             var intercepted = new List<int>();
@@ -78,24 +70,24 @@ namespace Microsoft.Playwright.Tests
             });
 
             var response = await Page.GotoAsync(TestConstants.EmptyPage);
-            Assert.Equal(new[] { 1 }, intercepted.ToArray());
+            Assert.AreEqual(new[] { 1 }, intercepted.ToArray());
 
             intercepted.Clear();
             await Page.UnrouteAsync("**/empty.html", handler1);
             await Page.GotoAsync(TestConstants.EmptyPage);
-            Assert.Equal(new[] { 2 }, intercepted.ToArray());
+            Assert.AreEqual(new[] { 2 }, intercepted.ToArray());
 
             intercepted.Clear();
             await Page.UnrouteAsync("**/empty.html");
             await Page.GotoAsync(TestConstants.EmptyPage);
-            Assert.Equal(new[] { 4 }, intercepted.ToArray());
+            Assert.AreEqual(new[] { 4 }, intercepted.ToArray());
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work when POST is redirected with 302")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenPostIsRedirectedWith302()
         {
-            Server.SetRedirect("/rredirect", "/empty.html");
+            HttpServer.Server.SetRedirect("/rredirect", "/empty.html");
             await Page.GotoAsync(TestConstants.EmptyPage);
             await Page.RouteAsync("**/*", (route) => route.ContinueAsync());
             await Page.SetContentAsync(@"
@@ -109,10 +101,10 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work when header manipulation headers with redirect")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenHeaderManipulationHeadersWithRedirect()
         {
-            Server.SetRedirect("/rrredirect", "/empty.html");
+            HttpServer.Server.SetRedirect("/rrredirect", "/empty.html");
             await Page.RouteAsync("**/*", (route) =>
             {
                 var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["foo"] = "bar" };
@@ -122,7 +114,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should be able to remove headers")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToRemoveHeaders()
         {
             await Page.RouteAsync("**/*", (route) =>
@@ -132,16 +124,16 @@ namespace Microsoft.Playwright.Tests
                 route.ContinueAsync(new RouteContinueOptions { Headers = headers });
             });
 
-            var originRequestHeader = Server.WaitForRequest("/empty.html", request => request.Headers["origin"]);
+            var originRequestHeader = HttpServer.Server.WaitForRequest("/empty.html", request => request.Headers["origin"]);
             await TaskUtils.WhenAll(
                 originRequestHeader,
                 Page.GotoAsync(TestConstants.EmptyPage)
             );
-            Assert.Equal(StringValues.Empty, originRequestHeader.Result);
+            Assert.AreEqual(StringValues.Empty, originRequestHeader.Result);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should contain referer header")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldContainRefererHeader()
         {
             var requests = new List<IRequest>();
@@ -151,12 +143,12 @@ namespace Microsoft.Playwright.Tests
                 route.ContinueAsync();
             });
             await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
-            Assert.Contains("/one-style.css", requests[1].Url);
-            Assert.Contains("/one-style.html", requests[1].Headers["referer"]);
+            StringAssert.Contains("/one-style.css", requests[1].Url);
+            StringAssert.Contains("/one-style.html", requests[1].Headers["referer"]);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should properly return navigation response when URL has cookies")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldProperlyReturnNavigationResponseWhenURLHasCookies()
         {
             // Setup cookie.
@@ -174,11 +166,11 @@ namespace Microsoft.Playwright.Tests
             // Setup request interception.
             await Page.RouteAsync("**/*", (route) => route.ContinueAsync());
             var response = await Page.ReloadAsync();
-            Assert.Equal((int)HttpStatusCode.OK, response.Status);
+            Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should show custom HTTP headers")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldShowCustomHTTPHeaders()
         {
             await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
@@ -187,7 +179,7 @@ namespace Microsoft.Playwright.Tests
             });
             await Page.RouteAsync("**/*", (route) =>
             {
-                Assert.Equal("bar", route.Request.Headers["foo"]);
+                Assert.AreEqual("bar", route.Request.Headers["foo"]);
                 route.ContinueAsync();
             });
             var response = await Page.GotoAsync(TestConstants.EmptyPage);
@@ -195,11 +187,11 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with redirect inside sync XHR")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithRedirectInsideSyncXHR()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
-            Server.SetRedirect("/logo.png", "/pptr.png");
+            HttpServer.Server.SetRedirect("/logo.png", "/pptr.png");
             await Page.RouteAsync("**/*", (route) => route.ContinueAsync());
             int status = await Page.EvaluateAsync<int>(@"async () => {
                 var request = new XMLHttpRequest();
@@ -207,17 +199,17 @@ namespace Microsoft.Playwright.Tests
                 request.send(null);
                 return request.status;
             }");
-            Assert.Equal(200, status);
+            Assert.AreEqual(200, status);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with custom referer headers")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCustomRefererHeaders()
         {
             await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = TestConstants.EmptyPage });
             await Page.RouteAsync("**/*", (route) =>
             {
-                Assert.Equal(TestConstants.EmptyPage, route.Request.Headers["referer"]);
+                Assert.AreEqual(TestConstants.EmptyPage, route.Request.Headers["referer"]);
                 route.ContinueAsync();
             });
             var response = await Page.GotoAsync(TestConstants.EmptyPage);
@@ -225,7 +217,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should be abortable")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbortable()
         {
             await Page.RouteAsync(new Regex("\\.css"), (route) => route.AbortAsync());
@@ -235,11 +227,11 @@ namespace Microsoft.Playwright.Tests
             var response = await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
             Assert.True(response.Ok);
             Assert.Null(response.Request.Failure);
-            Assert.Equal(1, failedRequests);
+            Assert.AreEqual(1, failedRequests);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should be abortable with custom error codes")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbortableWithCustomErrorCodes()
         {
             await Page.RouteAsync("**/*", (route) =>
@@ -253,55 +245,55 @@ namespace Microsoft.Playwright.Tests
             Assert.NotNull(failedRequest);
             if (TestConstants.IsWebKit)
             {
-                Assert.Equal("Request intercepted", failedRequest.Failure);
+                Assert.AreEqual("Request intercepted", failedRequest.Failure);
             }
             else if (TestConstants.IsFirefox)
             {
-                Assert.Equal("NS_ERROR_OFFLINE", failedRequest.Failure);
+                Assert.AreEqual("NS_ERROR_OFFLINE", failedRequest.Failure);
             }
             else
             {
-                Assert.Equal("net::ERR_INTERNET_DISCONNECTED", failedRequest.Failure);
+                Assert.AreEqual("net::ERR_INTERNET_DISCONNECTED", failedRequest.Failure);
             }
         }
 
         [PlaywrightTest("page-route.spec.ts", "should send referer")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendReferer()
         {
             await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = "http://google.com/" });
             await Page.RouteAsync("**/*", (route) => route.ContinueAsync());
-            var requestTask = Server.WaitForRequest("/grid.html", request => request.Headers["referer"]);
+            var requestTask = HttpServer.Server.WaitForRequest("/grid.html", request => request.Headers["referer"]);
             await TaskUtils.WhenAll(
                 requestTask,
                 Page.GotoAsync(TestConstants.ServerUrl + "/grid.html")
             );
-            Assert.Equal("http://google.com/", requestTask.Result);
+            Assert.AreEqual("http://google.com/", requestTask.Result);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should fail navigation when aborting main resource")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailNavigationWhenAbortingMainResource()
         {
             await Page.RouteAsync("**/*", (route) => route.AbortAsync());
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.GotoAsync(TestConstants.EmptyPage));
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(TestConstants.EmptyPage));
             Assert.NotNull(exception);
             if (TestConstants.IsWebKit)
             {
-                Assert.Contains("Request intercepted", exception.Message);
+                StringAssert.Contains("Request intercepted", exception.Message);
             }
             else if (TestConstants.IsFirefox)
             {
-                Assert.Contains("NS_ERROR_FAILURE", exception.Message);
+                StringAssert.Contains("NS_ERROR_FAILURE", exception.Message);
             }
             else
             {
-                Assert.Contains("net::ERR_FAILED", exception.Message);
+                StringAssert.Contains("net::ERR_FAILED", exception.Message);
             }
         }
 
         [PlaywrightTest("page-route.spec.ts", "should not work with redirects")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotWorkWithRedirects()
         {
             var requests = new List<IRequest>();
@@ -310,15 +302,15 @@ namespace Microsoft.Playwright.Tests
                 route.ContinueAsync();
                 requests.Add(route.Request);
             });
-            Server.SetRedirect("/non-existing-page.html", "/non-existing-page-2.html");
-            Server.SetRedirect("/non-existing-page-2.html", "/non-existing-page-3.html");
-            Server.SetRedirect("/non-existing-page-3.html", "/non-existing-page-4.html");
-            Server.SetRedirect("/non-existing-page-4.html", "/empty.html");
+            HttpServer.Server.SetRedirect("/non-existing-page.html", "/non-existing-page-2.html");
+            HttpServer.Server.SetRedirect("/non-existing-page-2.html", "/non-existing-page-3.html");
+            HttpServer.Server.SetRedirect("/non-existing-page-3.html", "/non-existing-page-4.html");
+            HttpServer.Server.SetRedirect("/non-existing-page-4.html", "/empty.html");
             var response = await Page.GotoAsync(TestConstants.ServerUrl + "/non-existing-page.html");
 
-            Assert.Contains("non-existing-page.html", requests[0].Url);
-            Assert.Single(requests);
-            Assert.Equal("document", requests[0].ResourceType, true);
+            StringAssert.Contains("non-existing-page.html", requests[0].Url);
+            Assert.That(requests, Has.Count.EqualTo(1));
+            Assert.AreEqual("document", requests[0].ResourceType);
             Assert.True(requests[0].IsNavigationRequest);
 
             var chain = new List<IRequest>();
@@ -329,23 +321,23 @@ namespace Microsoft.Playwright.Tests
                 Assert.True(request.IsNavigationRequest);
             }
 
-            Assert.Equal(5, chain.Count);
-            Assert.Contains("/empty.html", chain[0].Url);
-            Assert.Contains("/non-existing-page-4.html", chain[1].Url);
-            Assert.Contains("/non-existing-page-3.html", chain[2].Url);
-            Assert.Contains("/non-existing-page-2.html", chain[3].Url);
-            Assert.Contains("/non-existing-page.html", chain[4].Url);
+            Assert.AreEqual(5, chain.Count);
+            StringAssert.Contains("/empty.html", chain[0].Url);
+            StringAssert.Contains("/non-existing-page-4.html", chain[1].Url);
+            StringAssert.Contains("/non-existing-page-3.html", chain[2].Url);
+            StringAssert.Contains("/non-existing-page-2.html", chain[3].Url);
+            StringAssert.Contains("/non-existing-page.html", chain[4].Url);
 
             for (int i = 0; i < chain.Count; ++i)
             {
                 var request = chain[i];
                 Assert.True(request.IsNavigationRequest);
-                Assert.Equal(i > 0 ? chain[i - 1] : null, chain[i].RedirectedTo);
+                Assert.AreEqual(i > 0 ? chain[i - 1] : null, chain[i].RedirectedTo);
             }
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with redirects for subresources")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithRedirectsForSubresources()
         {
             var requests = new List<IRequest>();
@@ -354,24 +346,24 @@ namespace Microsoft.Playwright.Tests
                 route.ContinueAsync();
                 requests.Add(route.Request);
             });
-            Server.SetRedirect("/one-style.css", "/two-style.css");
-            Server.SetRedirect("/two-style.css", "/three-style.css");
-            Server.SetRedirect("/three-style.css", "/four-style.css");
-            Server.SetRoute("/four-style.css", context => context.Response.WriteAsync("body {box-sizing: border-box; }"));
+            HttpServer.Server.SetRedirect("/one-style.css", "/two-style.css");
+            HttpServer.Server.SetRedirect("/two-style.css", "/three-style.css");
+            HttpServer.Server.SetRedirect("/three-style.css", "/four-style.css");
+            HttpServer.Server.SetRoute("/four-style.css", context => context.Response.WriteAsync("body {box-sizing: border-box; }"));
 
             var response = await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
-            Assert.Equal((int)HttpStatusCode.OK, response.Status);
-            Assert.Contains("one-style.html", response.Url);
+            Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
+            StringAssert.Contains("one-style.html", response.Url);
 
-            Assert.Equal(2, requests.Count);
-            Assert.Equal("document", requests[0].ResourceType, true);
-            Assert.Contains("one-style.html", requests[0].Url);
+            Assert.AreEqual(2, requests.Count);
+            Assert.AreEqual("document", requests[0].ResourceType);
+            StringAssert.Contains("one-style.html", requests[0].Url);
 
             var request = requests[1];
             foreach (string url in new[] { "/one-style.css", "/two-style.css", "/three-style.css", "/four-style.css" })
             {
-                Assert.Equal("stylesheet", request.ResourceType, true);
-                Assert.Contains(url, request.Url);
+                Assert.AreEqual("stylesheet", request.ResourceType);
+                StringAssert.Contains(url, request.Url);
                 request = request.RedirectedTo;
             }
 
@@ -379,12 +371,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with equal requests")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithEqualRequests()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
             int responseCount = 1;
-            Server.SetRoute("/zzz", context => context.Response.WriteAsync((responseCount++ * 11).ToString()));
+            HttpServer.Server.SetRoute("/zzz", context => context.Response.WriteAsync((responseCount++ * 11).ToString()));
 
             bool spinner = false;
             // Cancel 2nd request.
@@ -407,11 +399,11 @@ namespace Microsoft.Playwright.Tests
                 results.Add(await Page.EvaluateAsync<string>("fetch('/zzz').then(response => response.text()).catch (e => 'FAILED')"));
             }
 
-            Assert.Equal(new[] { "11", "FAILED", "22" }, results);
+            Assert.AreEqual(new[] { "11", "FAILED", "22" }, results);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should navigate to dataURL and not fire dataURL requests")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateToDataURLAndNotFireDataURLRequests()
         {
             var requests = new List<IRequest>();
@@ -423,11 +415,11 @@ namespace Microsoft.Playwright.Tests
             string dataURL = "data:text/html,<div>yo</div>";
             var response = await Page.GotoAsync(dataURL);
             Assert.Null(response);
-            Assert.Empty(requests);
+            Assert.IsEmpty(requests);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should be able to fetch dataURL and not fire dataURL requests")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToFetchDataURLAndNotFireDataURLRequests()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -440,12 +432,12 @@ namespace Microsoft.Playwright.Tests
             });
             string dataURL = "data:text/html,<div>yo</div>";
             string text = await Page.EvaluateAsync<string>("url => fetch(url).then(r => r.text())", dataURL);
-            Assert.Equal("<div>yo</div>", text);
-            Assert.Empty(requests);
+            Assert.AreEqual("<div>yo</div>", text);
+            Assert.IsEmpty(requests);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should navigate to URL with hash and and fire requests without hash")]
-        [Fact(Skip = "Not implemented")]
+        [Test, Ignore("Not implemented")]
         public async Task ShouldNavigateToURLWithHashAndAndFireRequestsWithoutHash()
         {
             var requests = new List<IRequest>();
@@ -455,35 +447,35 @@ namespace Microsoft.Playwright.Tests
                 route.ContinueAsync();
             });
             var response = await Page.GotoAsync(TestConstants.EmptyPage + "#hash");
-            Assert.Equal((int)HttpStatusCode.OK, response.Status);
-            Assert.Equal(TestConstants.EmptyPage, response.Url);
-            Assert.Single(requests);
-            Assert.Equal(TestConstants.EmptyPage, requests[0].Url);
+            Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
+            Assert.AreEqual(TestConstants.EmptyPage, response.Url);
+            Assert.That(requests, Has.Count.EqualTo(1));
+            Assert.AreEqual(TestConstants.EmptyPage, requests[0].Url);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with encoded server")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithEncodedServer()
         {
             // The requestWillBeSent will report encoded URL, whereas interception will
             // report URL as-is. @see crbug.com/759388
             await Page.RouteAsync("**/*", (route) => route.ContinueAsync());
             var response = await Page.GotoAsync(TestConstants.ServerUrl + "/some nonexisting page");
-            Assert.Equal((int)HttpStatusCode.NotFound, response.Status);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, response.Status);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with badly encoded server")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBadlyEncodedServer()
         {
-            Server.SetRoute("/malformed?rnd=%911", _ => Task.CompletedTask);
+            HttpServer.Server.SetRoute("/malformed?rnd=%911", _ => Task.CompletedTask);
             await Page.RouteAsync("**/*", (route) => route.ContinueAsync());
             var response = await Page.GotoAsync(TestConstants.ServerUrl + "/malformed?rnd=%911");
-            Assert.Equal((int)HttpStatusCode.OK, response.Status);
+            Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with encoded server - 2")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithEncodedServer2()
         {
             // The requestWillBeSent will report URL as-is, whereas interception will
@@ -496,12 +488,12 @@ namespace Microsoft.Playwright.Tests
             });
             var response = await Page.GotoAsync($"data:text/html,<link rel=\"stylesheet\" href=\"{TestConstants.EmptyPage}/fonts?helvetica|arial\"/>");
             Assert.Null(response);
-            Assert.Single(requests);
-            Assert.Equal((int)HttpStatusCode.NotFound, (await requests[0].ResponseAsync()).Status);
+            Assert.That(requests, Has.Count.EqualTo(1));
+            Assert.AreEqual((int)HttpStatusCode.NotFound, (await requests[0].ResponseAsync()).Status);
         }
 
         [PlaywrightTest("page-route.spec.ts", @"should not throw ""Invalid Interception Id"" if the request was cancelled")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotThrowInvalidInterceptionIdIfTheRequestWasCancelled()
         {
             await Page.SetContentAsync("<iframe></iframe>");
@@ -516,7 +508,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should intercept main resource during cross-process navigation")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldInterceptMainResourceDuringCrossProcessNavigation()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -536,11 +528,11 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should fulfill with redirect status")]
-        [SkipBrowserAndPlatformFact(skipWebkit: true)]
+        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldFulfillWithRedirectStatus()
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/title.html");
-            Server.SetRoute("/final", context => context.Response.WriteAsync("foo"));
+            HttpServer.Server.SetRoute("/final", context => context.Response.WriteAsync("foo"));
             await Page.RouteAsync("**/*", (route) =>
             {
                 if (route.Request.Url != TestConstants.ServerUrl + "/redirect_this")
@@ -564,11 +556,11 @@ namespace Microsoft.Playwright.Tests
               return data.text();
             }", TestConstants.ServerUrl + "/redirect_this");
 
-            Assert.Equal("foo", text);
+            Assert.AreEqual("foo", text);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should support cors with GET")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportCorsWithGET()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -592,18 +584,18 @@ namespace Microsoft.Playwright.Tests
                 return response.json();
             }");
 
-            Assert.Equal(new[] { "electric", "cars" }, resp);
+            Assert.AreEqual(new[] { "electric", "cars" }, resp);
 
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.EvaluateAsync<string>(@"async () => {
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync<string>(@"async () => {
                 const response = await fetch('https://example.com/cars?reject', { mode: 'cors' });
                 return response.json();
             }"));
 
-            Assert.Contains("failed", exception.Message);
+            StringAssert.Contains("failed", exception.Message);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should support cors with POST")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportCorsWithPOST()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -628,11 +620,11 @@ namespace Microsoft.Playwright.Tests
                 return response.json();
             }");
 
-            Assert.Equal(new[] { "electric", "cars" }, resp);
+            Assert.AreEqual(new[] { "electric", "cars" }, resp);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should support cors with different methods")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportCorsWithDifferentMethods()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -657,7 +649,7 @@ namespace Microsoft.Playwright.Tests
                 return response.json();
             }");
 
-            Assert.Equal(new[] { "POST", "electric", "cars" }, resp);
+            Assert.AreEqual(new[] { "POST", "electric", "cars" }, resp);
 
             resp = await Page.EvaluateAsync<string[]>(@"async () => {
                 const response = await fetch('https://example.com/cars', {
@@ -669,7 +661,7 @@ namespace Microsoft.Playwright.Tests
                 return response.json();
             }");
 
-            Assert.Equal(new[] { "DELETE", "electric", "cars" }, resp);
+            Assert.AreEqual(new[] { "DELETE", "electric", "cars" }, resp);
         }
     }
 }

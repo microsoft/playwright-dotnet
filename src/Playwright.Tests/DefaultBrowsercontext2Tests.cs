@@ -3,26 +3,17 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.Attributes;
-using Microsoft.Playwright.Tests.BaseTests;
-using Microsoft.Playwright.Tests.Helpers;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
     /// <playwright-file>defaultbrowsercontext-2.spec.ts</playwright-file>
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class DefaultBrowsercontext2Tests : PlaywrightSharpBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class DefaultBrowsercontext2Tests : PlaywrightTestEx
     {
-        /// <inheritdoc/>
-        public DefaultBrowsercontext2Tests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support hasTouch option")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportHasTouchOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
@@ -38,7 +29,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should work in persistent context")]
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkInPersistentContext()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
@@ -52,14 +43,14 @@ namespace Microsoft.Playwright.Tests
             });
 
             await page.GotoAsync(TestConstants.EmptyPage);
-            Assert.Equal(980, await page.EvaluateAsync<int>("() => window.innerWidth"));
+            Assert.AreEqual(980, await page.EvaluateAsync<int>("() => window.innerWidth"));
 
             tmp.Dispose();
             await context.DisposeAsync();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support colorScheme option")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportColorSchemeOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
@@ -75,7 +66,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support timezoneId option")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportTimezoneIdOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
@@ -83,14 +74,14 @@ namespace Microsoft.Playwright.Tests
                 TimezoneId = "America/Jamaica",
             });
 
-            Assert.Equal("Sat Nov 19 2016 13:12:34 GMT-0500 (Eastern Standard Time)", await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+            Assert.AreEqual("Sat Nov 19 2016 13:12:34 GMT-0500 (Eastern Standard Time)", await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
 
             tmp.Dispose();
             await context.DisposeAsync();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support locale option")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportLocaleOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
@@ -98,14 +89,14 @@ namespace Microsoft.Playwright.Tests
                 Locale = "fr-CH",
             });
 
-            Assert.Equal("fr-CH", await page.EvaluateAsync<string>("() => navigator.language"));
+            Assert.AreEqual("fr-CH", await page.EvaluateAsync<string>("() => navigator.language"));
 
             tmp.Dispose();
             await context.DisposeAsync();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support geolocation and permissions options")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportGeolocationAndPermissionsOptions()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
@@ -122,16 +113,16 @@ namespace Microsoft.Playwright.Tests
             var geolocation = await page.EvaluateAsync<Geolocation>(@"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
                 resolve({latitude: position.coords.latitude, longitude: position.coords.longitude});
             }))");
-            Assert.Equal(10, geolocation.Latitude);
-            Assert.Equal(10, geolocation.Longitude);
+            Assert.AreEqual(10, geolocation.Latitude);
+            Assert.AreEqual(10, geolocation.Longitude);
 
             tmp.Dispose();
             await context.DisposeAsync();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support ignoreHTTPSErrors option")]
-        // [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        [Fact(Skip = "Fix me #1058")]
+        // [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        [Test, Ignore("Fix me #1058")]
         public async Task ShouldSupportIgnoreHTTPSErrorsOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
@@ -147,7 +138,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support extraHTTPHeaders option")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportExtraHTTPHeadersOption()
         {
             var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
@@ -161,54 +152,54 @@ namespace Microsoft.Playwright.Tests
             string fooHeader = string.Empty;
 
             await TaskUtils.WhenAll(
-                Server.WaitForRequest("/empty.html", r => fooHeader = r.Headers["foo"]),
+                HttpServer.Server.WaitForRequest("/empty.html", r => fooHeader = r.Headers["foo"]),
                 page.GotoAsync(TestConstants.EmptyPage));
 
-            Assert.Equal("bar", fooHeader);
+            Assert.AreEqual("bar", fooHeader);
 
             tmp.Dispose();
             await context.DisposeAsync();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should accept userDataDir")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptUserDataDir()
         {
             var (tmp, context, _) = await LaunchAsync();
-            Assert.NotEmpty(new DirectoryInfo(tmp.Path).GetDirectories());
+            Assert.IsNotEmpty(new DirectoryInfo(tmp.Path).GetDirectories());
             await context.CloseAsync();
-            Assert.NotEmpty(new DirectoryInfo(tmp.Path).GetDirectories());
+            Assert.IsNotEmpty(new DirectoryInfo(tmp.Path).GetDirectories());
 
             tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should restore state from userDataDir")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRestoreStateFromUserDataDir()
         {
             using var userDataDir = new TempDirectory();
 
 
-            await using (var browserContext = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path))
+            await using (var browserContext = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path))
             {
                 var page = await browserContext.NewPageAsync();
                 await page.GotoAsync(TestConstants.EmptyPage);
                 await page.EvaluateAsync("() => localStorage.hey = 'hello'");
             }
 
-            await using (var browserContext2 = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path))
+            await using (var browserContext2 = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path))
             {
                 var page = await browserContext2.NewPageAsync();
                 await page.GotoAsync(TestConstants.EmptyPage);
-                Assert.Equal("hello", await page.EvaluateAsync<string>("() => localStorage.hey"));
+                Assert.AreEqual("hello", await page.EvaluateAsync<string>("() => localStorage.hey"));
             }
 
             using var userDataDir2 = new TempDirectory();
-            await using (var browserContext2 = await BrowserType.LaunchDefaultPersistentContext(userDataDir2.Path))
+            await using (var browserContext2 = await BrowserType.LaunchPersistentContextAsync(userDataDir2.Path))
             {
                 var page = await browserContext2.NewPageAsync();
                 await page.GotoAsync(TestConstants.EmptyPage);
-                Assert.NotEqual("hello", await page.EvaluateAsync<string>("() => localStorage.hey"));
+                Assert.That("hello", Is.Not.EqualTo(await page.EvaluateAsync<string>("() => localStorage.hey")));
             }
 
             userDataDir2.Dispose();
@@ -216,12 +207,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should restore cookies from userDataDir")]
-        [SkipBrowserAndPlatformFact(skipChromium: true, skipWindows: true, skipOSX: true)]
+        [Test, SkipBrowserAndPlatform(skipChromium: true, skipWindows: true, skipOSX: true)]
         public async Task ShouldRestoreCookiesFromUserDataDir()
         {
             var userDataDir = new TempDirectory();
 
-            await using (var browserContext = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path))
+            await using (var browserContext = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path))
             {
                 var page = await browserContext.NewPageAsync();
                 await page.GotoAsync(TestConstants.EmptyPage);
@@ -230,22 +221,22 @@ namespace Microsoft.Playwright.Tests
                     return document.cookie;
                 }");
 
-                Assert.Equal("doSomethingOnlyOnce=true", documentCookie);
+                Assert.AreEqual("doSomethingOnlyOnce=true", documentCookie);
             }
 
-            await using (var browserContext2 = await BrowserType.LaunchDefaultPersistentContext(userDataDir.Path))
+            await using (var browserContext2 = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path))
             {
                 var page = await browserContext2.NewPageAsync();
                 await page.GotoAsync(TestConstants.EmptyPage);
-                Assert.Equal("doSomethingOnlyOnce=true", await page.EvaluateAsync<string>("() => document.cookie"));
+                Assert.AreEqual("doSomethingOnlyOnce=true", await page.EvaluateAsync<string>("() => document.cookie"));
             }
 
             var userDataDir2 = new TempDirectory();
-            await using (var browserContext2 = await BrowserType.LaunchDefaultPersistentContext(userDataDir2.Path))
+            await using (var browserContext2 = await BrowserType.LaunchPersistentContextAsync(userDataDir2.Path))
             {
                 var page = await browserContext2.NewPageAsync();
                 await page.GotoAsync(TestConstants.EmptyPage);
-                Assert.NotEqual("doSomethingOnlyOnce=true", await page.EvaluateAsync<string>("() => document.cookie"));
+                Assert.That("doSomethingOnlyOnce=true", Is.Not.EqualTo(await page.EvaluateAsync<string>("() => document.cookie")));
             }
 
             userDataDir2.Dispose();
@@ -253,49 +244,49 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should have default URL when launching browser")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveDefaultURLWhenLaunchingBrowser()
         {
             var (tmp, context, page) = await LaunchAsync();
 
             string[] urls = context.Pages.Select(p => p.Url).ToArray();
-            Assert.Equal(new[] { "about:blank" }, urls);
+            Assert.AreEqual(new[] { "about:blank" }, urls);
 
             tmp.Dispose();
             await context.DisposeAsync();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should throw if page argument is passed")]
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldThrowIfPageArgumentIsPassed()
         {
             var tmp = new TempDirectory();
-            await Assert.ThrowsAnyAsync<PlaywrightException>(() =>
-                BrowserType.LaunchDefaultPersistentContext(tmp.Path, new[] { TestConstants.EmptyPage }));
-
+            var args = new[] { TestConstants.EmptyPage };
+            await AssertThrowsAsync<PlaywrightException>(() =>
+                BrowserType.LaunchPersistentContextAsync(tmp.Path, new BrowserTypeLaunchPersistentContextOptions { Args = args }));
             tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should have passed URL when launching with ignoreDefaultArgs: true")]
-        [Fact(Skip = "Skip USES_HOOKS")]
+        [Test, Ignore("Skip USES_HOOKS")]
         public void ShouldHavePassedURLWhenLaunchingWithIgnoreDefaultArgsTrue()
         {
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should handle timeout")]
-        [Fact(Skip = "Skip USES_HOOKS")]
+        [Test, Ignore("Skip USES_HOOKS")]
         public void ShouldHandleTimeout()
         {
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should handle exception")]
-        [Fact(Skip = "Skip USES_HOOKS")]
+        [Test, Ignore("Skip USES_HOOKS")]
         public void ShouldHandleException()
         {
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should fire close event for a persistent context")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireCloseEventForAPersistentContext()
         {
             var (tmp, context, _) = await LaunchAsync();
@@ -310,7 +301,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "coverage should work")]
-        [Fact(Skip = "We won't support coverage")]
+        [Test, Ignore("We won't support coverage")]
         public void CoverageShouldWork()
         {
             /*
@@ -319,9 +310,9 @@ namespace Microsoft.Playwright.Tests
             await page.Coverage.StartJSCoverageAsync();
             await page.GotoAsync(TestConstants.ServerUrl + "/jscoverage/simple.html", LoadState.NetworkIdle);
             var coverage = await page.Coverage.StopJSCoverageAsync();
-            Assert.Single(coverage);
-            Assert.Contains("/jscoverage/simple.html", coverage[0].Url);
-            Assert.Equal(1, coverage[0].Functions.Single(f => f.FunctionName == "foo").Ranges[0].Count);
+            Assert.That(coverage, Has.Count.EqualTo(1));
+            StringAssert.Contains("/jscoverage/simple.html", coverage[0].Url);
+            Assert.AreEqual(1, coverage[0].Functions.Single(f => f.FunctionName == "foo").Ranges[0].Count);
 
             tmp.Dispose();
             await context.DisposeAsync();
@@ -329,7 +320,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "coverage should be missing")]
-        [Fact(Skip = "We won't support coverage")]
+        [Test, Ignore("We won't support coverage")]
         public void CoverageShouldBeMissing()
         {
             /*
@@ -341,7 +332,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should respect selectors")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectSelectors()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -357,8 +348,8 @@ namespace Microsoft.Playwright.Tests
 
             await TestUtils.RegisterEngineAsync(Playwright, "defaultContextCSS", defaultContextCSS);
             await page.SetContentAsync("<div>hello</div>");
-            Assert.Equal("hello", await page.InnerHTMLAsync("css=div"));
-            Assert.Equal("hello", await page.InnerHTMLAsync("defaultContextCSS=div"));
+            Assert.AreEqual("hello", await page.InnerHTMLAsync("css=div"));
+            Assert.AreEqual("hello", await page.InnerHTMLAsync("defaultContextCSS=div"));
 
             tmp.Dispose();
             await context.DisposeAsync();
@@ -367,7 +358,7 @@ namespace Microsoft.Playwright.Tests
         private async Task<(TempDirectory tmp, IBrowserContext context, IPage page)> LaunchAsync(BrowserTypeLaunchPersistentContextOptions options = null)
         {
             var tmp = new TempDirectory();
-            var context = await BrowserType.LaunchDefaultPersistentContext(tmp.Path, null, options);
+            var context = await BrowserType.LaunchPersistentContextAsync(tmp.Path, options);
             var page = context.Pages.First();
 
             return (tmp, context, page);

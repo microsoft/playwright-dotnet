@@ -1,22 +1,14 @@
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.Attributes;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageEventPopupTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class PageEventPopupTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public PageEventPopupTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("page-event-popup.spec.ts", "should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             var popupTask = Page.WaitForPopupAsync();
@@ -30,7 +22,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with window features")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithWindowFeatures()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -45,7 +37,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should emit for immediately closed popups")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitForImmediatelyClosedPopups()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -61,7 +53,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should emit for immediately closed popups")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitForImmediatelyClosedPopupsWithLocation()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -76,14 +68,14 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should be able to capture alert")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public void ShouldBeAbleToCaptureAlert()
         {
             // Too fancy.
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with empty url")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithEmptyUrl()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -98,7 +90,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with noopener and no url")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoopenerAndNoUrl()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -108,13 +100,13 @@ namespace Microsoft.Playwright.Tests
                 Page.EvaluateAsync("() => window.open(undefined, null, 'noopener')")
             );
             var popup = popupTask.Result;
-            Assert.Equal("about:blank", popup.Url.Split('#')[0]);
+            Assert.AreEqual("about:blank", popup.Url.Split('#')[0]);
             Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
             Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with noopener and about:blank")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoopenerAndAboutBlank()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -129,7 +121,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with noopener and url")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoopenerAndUrl()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -144,7 +136,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with clicking target=_blank")]
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithClickingTargetBlank()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -166,7 +158,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with fake-clicking target=_blank and rel=noopener")]
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithFakeClickingTargetBlankAndRelNoopener()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -187,7 +179,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with clicking target=_blank and rel=noopener")]
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithClickingTargetBlankAndRelNoopener()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -208,7 +200,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should not treat navigations as new popups")]
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldNotTreatNavigationsAsNewPopups()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);

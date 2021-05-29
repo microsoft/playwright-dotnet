@@ -15,11 +15,11 @@ namespace Microsoft.Playwright.Tests
             const int pixelThreshold = 10;
             const decimal totalTolerance = 0.05m;
 
-            var baseImage = Image.Load<Rgb24>(Path.Combine(TestUtils.FindParentDirectory("Screenshots"), TestConstants.Product, screenShotFile));
+            var baseImage = Image.Load<Rgb24>(Path.Combine(TestUtils.FindParentDirectory("Screenshots"), TestConstants.BrowserName, screenShotFile));
             var compareImage = Image.Load<Rgb24>(screenshot);
 
             //Just for debugging purpose
-            compareImage.Save(Path.Combine(TestUtils.FindParentDirectory("Screenshots"), TestConstants.Product, "test.png"));
+            compareImage.Save(Path.Combine(TestUtils.FindParentDirectory("Screenshots"), TestConstants.BrowserName, "test.png"));
 
             if (baseImage.Width != compareImage.Width || baseImage.Height != compareImage.Height)
             {

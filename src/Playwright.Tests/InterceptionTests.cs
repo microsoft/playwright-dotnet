@@ -3,48 +3,44 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Testing.Xunit;
+using Microsoft.Playwright.NUnitTest;
 using Microsoft.Playwright.Tests;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class GlobTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class GlobTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public GlobTests(ITestOutputHelper output) : base(output)
+        public GlobTests()
         {
         }
 
         [PlaywrightTest("interception.spec.ts", "should work with glob")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public void ShouldWorkWithGlob()
         {
-            Assert.Matches(StringExtensions.GlobToRegex("**/*.js"), "https://localhost:8080/foo.js");
-            Assert.DoesNotMatch(StringExtensions.GlobToRegex("**/*.css"), "https://localhost:8080/foo.js");
-            Assert.DoesNotMatch(StringExtensions.GlobToRegex("*.js"), "https://localhost:8080/foo.js");
-            Assert.Matches(StringExtensions.GlobToRegex("https://**/*.js"), "https://localhost:8080/foo.js");
-            Assert.Matches(StringExtensions.GlobToRegex("http://localhost:8080/simple/path.js"), "http://localhost:8080/simple/path.js");
-            Assert.Matches(StringExtensions.GlobToRegex("http://localhost:8080/?imple/path.js"), "http://localhost:8080/Simple/path.js");
-            Assert.Matches(StringExtensions.GlobToRegex("**/{a,b}.js"), "https://localhost:8080/a.js");
-            Assert.Matches(StringExtensions.GlobToRegex("**/{a,b}.js"), "https://localhost:8080/b.js");
-            Assert.DoesNotMatch(StringExtensions.GlobToRegex("**/{a,b}.js"), "https://localhost:8080/c.js");
-
-            Assert.Matches(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}"), "https://localhost:8080/c.jpg");
-            Assert.Matches(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}"), "https://localhost:8080/c.jpeg");
-            Assert.Matches(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}"), "https://localhost:8080/c.png");
-            Assert.DoesNotMatch(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}"), "https://localhost:8080/c.css");
+            Assert.That("https://localhost:8080/foo.js", Does.Match(StringExtensions.GlobToRegex("**/*.js")));
+            Assert.That("https://localhost:8080/foo.js", Does.Match(StringExtensions.GlobToRegex("https://**/*.js")));
+            Assert.That("http://localhost:8080/simple/path.js", Does.Match(StringExtensions.GlobToRegex("http://localhost:8080/simple/path.js")));
+            Assert.That("http://localhost:8080/Simple/path.js", Does.Match(StringExtensions.GlobToRegex("http://localhost:8080/?imple/path.js")));
+            Assert.That("https://localhost:8080/a.js", Does.Match(StringExtensions.GlobToRegex("**/{a,b}.js")));
+            Assert.That("https://localhost:8080/b.js", Does.Match(StringExtensions.GlobToRegex("**/{a,b}.js")));
+            Assert.That("https://localhost:8080/c.jpg", Does.Match(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}")));
+            Assert.That("https://localhost:8080/c.jpeg", Does.Match(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}")));
+            Assert.That("https://localhost:8080/c.png", Does.Match(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}")));
+            Assert.That("https://localhost:8080/c.css", Does.Not.Match(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}")));
+            Assert.That("https://localhost:8080/foo.js", Does.Not.Match(StringExtensions.GlobToRegex("**/*.css")));
+            Assert.That("https://localhost:8080/foo.js", Does.Not.Match(StringExtensions.GlobToRegex("*.js")));
+            Assert.That("https://localhost:8080/c.js", Does.Not.Match(StringExtensions.GlobToRegex("**/{a,b}.js")));
         }
 
         [PlaywrightTest("interception.spec.ts", "should work with ignoreHTTPSErrors")]
-        // [Fact(Timeout = TestConstants.DefaultTestTimeout)]
-        [Fact(Skip = "Fix me #1058")]
+        // [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        [Test, Ignore("Fix me #1058")]
         public async Task ShouldWorkWitIgnoreHTTPSErrors()
         {
-            await using var browser = await BrowserType.LaunchDefaultAsync();
+            await using var browser = await BrowserType.LaunchAsync();
             var context = await browser.NewContextAsync(new BrowserNewContextOptions
             {
                 IgnoreHTTPSErrors = true
@@ -54,12 +50,12 @@ namespace Microsoft.Playwright.Tests
 
             await page.RouteAsync("**/*", (route) => route.ContinueAsync());
             var response = await page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html");
-            Assert.Equal((int)HttpStatusCode.OK, response.Status);
+            Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
         }
 
 
         [PlaywrightTest("interception.spec.ts", "should work with navigation")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNavigation()
         {
             var requests = new Dictionary<string, IRequest>();
@@ -69,7 +65,7 @@ namespace Microsoft.Playwright.Tests
                 route.ContinueAsync();
             });
 
-            Server.SetRedirect("/rrredirect", "/frames/one-frame.html");
+            HttpServer.Server.SetRedirect("/rrredirect", "/frames/one-frame.html");
             await Page.GotoAsync(TestConstants.ServerUrl + "/rrredirect");
             Assert.True(requests["rrredirect"].IsNavigationRequest);
             Assert.True(requests["frame.html"].IsNavigationRequest);
@@ -78,20 +74,20 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("interception.spec.ts", "should work with regular expression passed from a different context")]
-        [Fact(Skip = "We don't need to test Regex contexts")]
+        [Test, Ignore("We don't need to test Regex contexts")]
         public void ShouldWorkWithRegularExpressionPassedFromADifferentContext()
         {
         }
 
         [PlaywrightTest("interception.spec.ts", "should intercept after a service worker")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldInterceptAfterAServiceWorker()
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/serviceworkers/fetchdummy/sw.html");
             await Page.EvaluateAsync("() => window.activationPromise");
 
             string swResponse = await Page.EvaluateAsync<string>("() => fetchDummy('foo')");
-            Assert.Equal("responseFromServiceWorker:foo", swResponse);
+            Assert.AreEqual("responseFromServiceWorker:foo", swResponse);
 
             await Page.RouteAsync("**/foo", (route) =>
             {
@@ -102,10 +98,10 @@ namespace Microsoft.Playwright.Tests
             });
 
             string swResponse2 = await Page.EvaluateAsync<string>("() => fetchDummy('foo')");
-            Assert.Equal("responseFromServiceWorker:foo", swResponse2);
+            Assert.AreEqual("responseFromServiceWorker:foo", swResponse2);
 
             string nonInterceptedResponse = await Page.EvaluateAsync<string>("() => fetchDummy('passthrough')");
-            Assert.Equal("FAILURE: Not Found", nonInterceptedResponse);
+            Assert.AreEqual("FAILURE: Not Found", nonInterceptedResponse);
         }
     }
 }

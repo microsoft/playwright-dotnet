@@ -1,43 +1,40 @@
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class BrowserContextCredentialsTests : PlaywrightSharpBrowserBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class BrowserContextCredentialsTests : BrowserTestEx
     {
-        /// <inheritdoc/>
-        public BrowserContextCredentialsTests(ITestOutputHelper output) : base(output)
+        public BrowserContextCredentialsTests()
         {
         }
 
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should fail without credentials")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWithoutCredentials()
         {
-            Server.SetAuth("/empty.html", "user", "pass");
+            HttpServer.Server.SetAuth("/empty.html", "user", "pass");
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
             var response = await page.GotoAsync(TestConstants.EmptyPage);
-            Assert.Equal((int)HttpStatusCode.Unauthorized, response.Status);
+            Assert.AreEqual((int)HttpStatusCode.Unauthorized, response.Status);
         }
 
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with setHTTPCredentials")]
-        [Fact(Skip = "This test is no longer applicable as the API no longer exists.")]
+        [Test, Ignore("This test is no longer applicable as the API no longer exists.")]
         public void ShouldWorkWithSetHTTPCredentials()
         {
         }
 
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with correct credentials")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCorrectCredentials()
         {
             // Use unique user/password since Chromium caches credentials per origin.
-            Server.SetAuth("/empty.html", "user", "pass");
+            HttpServer.Server.SetAuth("/empty.html", "user", "pass");
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 HttpCredentials = new HttpCredentials
@@ -49,15 +46,15 @@ namespace Microsoft.Playwright.Tests
 
             var page = await context.NewPageAsync();
             var response = await page.GotoAsync(TestConstants.EmptyPage);
-            Assert.Equal((int)HttpStatusCode.OK, response.Status);
+            Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
         }
 
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should fail if wrong credentials")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailIfWrongCredentials()
         {
             // Use unique user/password since Chromium caches credentials per origin.
-            Server.SetAuth("/empty.html", "user", "pass");
+            HttpServer.Server.SetAuth("/empty.html", "user", "pass");
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 HttpCredentials = new HttpCredentials
@@ -69,14 +66,14 @@ namespace Microsoft.Playwright.Tests
 
             var page = await context.NewPageAsync();
             var response = await page.GotoAsync(TestConstants.EmptyPage);
-            Assert.Equal((int)HttpStatusCode.Unauthorized, response.Status);
+            Assert.AreEqual((int)HttpStatusCode.Unauthorized, response.Status);
         }
 
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should return resource body")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnResourceBody()
         {
-            Server.SetAuth("/playground.html", "user", "pass");
+            HttpServer.Server.SetAuth("/playground.html", "user", "pass");
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 HttpCredentials = new HttpCredentials
@@ -88,9 +85,9 @@ namespace Microsoft.Playwright.Tests
 
             var page = await context.NewPageAsync();
             var response = await page.GotoAsync(TestConstants.ServerUrl + "/playground.html");
-            Assert.Equal((int)HttpStatusCode.OK, response.Status);
-            Assert.Equal("Playground", await page.TitleAsync());
-            Assert.Contains("Playground", await response.TextAsync());
+            Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
+            Assert.AreEqual("Playground", await page.TitleAsync());
+            StringAssert.Contains("Playground", await response.TextAsync());
         }
     }
 }

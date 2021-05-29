@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
@@ -22,20 +22,20 @@ namespace Microsoft.Playwright.Tests
         {
             if (TestConstants.IsChromium)
             {
-                Assert.Contains("net::ERR_CERT_AUTHORITY_INVALID", errorMessage);
+                StringAssert.Contains("net::ERR_CERT_AUTHORITY_INVALID", errorMessage);
             }
             else if (TestConstants.IsWebKit)
             {
                 if (TestConstants.IsMacOSX)
-                    Assert.Contains("The certificate for this server is invalid", errorMessage);
+                    StringAssert.Contains("The certificate for this server is invalid", errorMessage);
                 else if (TestConstants.IsWindows)
-                    Assert.Contains("SSL peer certificate or SSH remote key was not OK", errorMessage);
+                    StringAssert.Contains("SSL peer certificate or SSH remote key was not OK", errorMessage);
                 else
-                    Assert.Contains("Unacceptable TLS certificate", errorMessage);
+                    StringAssert.Contains("Unacceptable TLS certificate", errorMessage);
             }
             else
             {
-                Assert.Contains("SSL_ERROR_UNKNOWN", errorMessage);
+                StringAssert.Contains("SSL_ERROR_UNKNOWN", errorMessage);
             }
         }
 
@@ -94,10 +94,10 @@ namespace Microsoft.Playwright.Tests
 
         internal static async Task VerifyViewportAsync(IPage page, int width, int height)
         {
-            Assert.Equal(width, (int)page.ViewportSize.Width);
-            Assert.Equal(height, (int)page.ViewportSize.Height);
-            Assert.Equal(width, await page.EvaluateAsync<int>("window.innerWidth"));
-            Assert.Equal(height, await page.EvaluateAsync<int>("window.innerHeight"));
+            Assert.AreEqual(width, (int)page.ViewportSize.Width);
+            Assert.AreEqual(height, (int)page.ViewportSize.Height);
+            Assert.AreEqual(width, await page.EvaluateAsync<int>("window.innerWidth"));
+            Assert.AreEqual(height, await page.EvaluateAsync<int>("window.innerHeight"));
         }
 
         internal static async Task RegisterEngineAsync(IPlaywright playwright, string name, string script, bool? contentScript = null)

@@ -3,62 +3,55 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class FrameGoToTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class FrameGoToTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public FrameGoToTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("frame-goto.spec.ts", "should navigate subframes")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateSubFrames()
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
-            Assert.Single(Page.Frames.Where(f => f.Url.Contains("/frames/one-frame.html")));
-            Assert.Single(Page.Frames.Where(f => f.Url.Contains("/frames/frame.html")));
+            Assert.AreEqual(1, Page.Frames.Where(f => f.Url.Contains("/frames/one-frame.html")).Count());
+            Assert.AreEqual(1, Page.Frames.Where(f => f.Url.Contains("/frames/frame.html")).Count());
             var childFrame = Page.FirstChildFrame();
             var response = await childFrame.GotoAsync(TestConstants.EmptyPage);
-            Assert.Equal((int)HttpStatusCode.OK, response.Status);
-            Assert.Same(response.Frame, childFrame);
+            Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
+            Assert.AreEqual(response.Frame, childFrame);
         }
 
         [PlaywrightTest("frame-goto.spec.ts", "should reject when frame detaches")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectWhenFrameDetaches()
         {
             await Page.GotoAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
-            Server.SetRoute("/empty.html", _ => Task.Delay(10000));
-            var waitForRequestTask = Server.WaitForRequest("/empty.html");
+            HttpServer.Server.SetRoute("/empty.html", _ => Task.Delay(10000));
+            var waitForRequestTask = HttpServer.Server.WaitForRequest("/empty.html");
             var navigationTask = Page.FirstChildFrame().GotoAsync(TestConstants.EmptyPage);
             await waitForRequestTask;
             await Page.EvalOnSelectorAsync("iframe", "frame => frame.remove()");
-            var exception = await Assert.ThrowsAsync<PlaywrightException>(async () => await navigationTask);
-            Assert.Contains("frame was detached", exception.Message);
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => navigationTask);
+            StringAssert.Contains("frame was detached", exception.Message);
         }
 
         [PlaywrightTest("frame-goto.spec.ts", "should continue after client redirect")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldContinueAfterClientRedirect()
         {
-            Server.SetRoute("/frames/script.js", _ => Task.Delay(10000));
+            HttpServer.Server.SetRoute("/frames/script.js", _ => Task.Delay(10000));
             string url = TestConstants.ServerUrl + "/frames/child-redirect.html";
-            var exception = await Assert.ThrowsAnyAsync<TimeoutException>(() => Page.GotoAsync(url, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle, Timeout = 5000 }));
+            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(url, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle, Timeout = 5000 }));
 
-            Assert.Contains("Timeout 5000ms", exception.Message);
-            Assert.Contains($"navigating to \"{url}\", waiting until \"networkidle\"", exception.Message);
+            StringAssert.Contains("Timeout 5000ms", exception.Message);
+            StringAssert.Contains($"navigating to \"{url}\", waiting until \"networkidle\"", exception.Message);
         }
 
         [PlaywrightTest("frame-goto.spec.ts", "should return matching responses")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnMatchingResponses()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -81,13 +74,13 @@ namespace Microsoft.Playwright.Tests
                 }
             });
 
-            Server.SetRoute("/one-style.html?index=0", requestHandler);
-            Server.SetRoute("/one-style.html?index=1", requestHandler);
-            Server.SetRoute("/one-style.html?index=2", requestHandler);
+            HttpServer.Server.SetRoute("/one-style.html?index=0", requestHandler);
+            HttpServer.Server.SetRoute("/one-style.html?index=1", requestHandler);
+            HttpServer.Server.SetRoute("/one-style.html?index=2", requestHandler);
 
             for (int i = 0; i < 3; ++i)
             {
-                var waitRequestTask = Server.WaitForRequest("/one-style.html");
+                var waitRequestTask = HttpServer.Server.WaitForRequest("/one-style.html");
                 matchingData[i].NavigationTask = matchingData[i].FrameTask.Result.GotoAsync($"{TestConstants.ServerUrl}/one-style.html?index={i}");
                 await waitRequestTask;
             }
@@ -97,8 +90,8 @@ namespace Microsoft.Playwright.Tests
             {
                 matchingData[i].ServerResponseTcs.TrySetResult(serverResponseTexts[i]);
                 var response = await matchingData[i].NavigationTask;
-                Assert.Same(matchingData[i].FrameTask.Result, response.Frame);
-                Assert.Equal(serverResponseTexts[i], await response.TextAsync());
+                Assert.AreEqual(matchingData[i].FrameTask.Result, response.Frame);
+                Assert.AreEqual(serverResponseTexts[i], await response.TextAsync());
             }
         }
 

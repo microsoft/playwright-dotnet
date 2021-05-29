@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.CLI", "Playwrigh
 EndProject
 Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "Playwright.Tests.TestServer", "Playwright.Tests.TestServer\Playwright.Tests.TestServer.csproj", "{55165383-EBE7-462B-B154-738818787740}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Playwright.NUnit", "Microsoft.Playwright.NUnit\Microsoft.Playwright.NUnit.csproj", "{3EC5B076-CEE4-41A4-AA8E-4FDFFD08D4E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.NUnit", "Playwright.NUnitTest\Playwright.NUnitTest.csproj", "{3EC5B076-CEE4-41A4-AA8E-4FDFFD08D4E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -2,39 +2,32 @@ using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnitTest;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class WorkersTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class WorkersTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public WorkersTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("workers.spec.ts", "Page.workers")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PageWorkers()
         {
             await TaskUtils.WhenAll(
                 Page.WaitForWorkerAsync(),
                 Page.GotoAsync(TestConstants.ServerUrl + "/worker/worker.html"));
             var worker = Page.Workers.First();
-            Assert.Contains("worker.js", worker.Url);
+            StringAssert.Contains("worker.js", worker.Url);
 
-            Assert.Equal("worker function result", await worker.EvaluateAsync<string>("() => self['workerFunction']()"));
+            Assert.AreEqual("worker function result", await worker.EvaluateAsync<string>("() => self['workerFunction']()"));
 
             await Page.GotoAsync(TestConstants.EmptyPage);
-            Assert.Empty(Page.Workers);
+            Assert.IsEmpty(Page.Workers);
         }
 
         [PlaywrightTest("workers.spec.ts", "should emit created and destroyed events")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitCreatedAndDestroyedEvents()
         {
             var workerCreatedTcs = new TaskCompletionSource<IWorker>();
@@ -46,13 +39,13 @@ namespace Microsoft.Playwright.Tests
             var workerDestroyedTcs = new TaskCompletionSource<IWorker>();
             worker.Close += (sender, _) => workerDestroyedTcs.TrySetResult((IWorker)sender);
             await Page.EvaluateAsync("workerObj => workerObj.terminate()", workerObj);
-            Assert.Same(worker, await workerDestroyedTcs.Task);
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => workerThisObj.GetPropertyAsync("self"));
-            Assert.Contains("Most likely the worker has been closed.", exception.Message);
+            Assert.AreEqual(worker, await workerDestroyedTcs.Task);
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => workerThisObj.GetPropertyAsync("self"));
+            StringAssert.Contains("Most likely the worker has been closed.", exception.Message);
         }
 
         [PlaywrightTest("workers.spec.ts", "should report console logs")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportConsoleLogs()
         {
             var (message, _) = await TaskUtils.WhenAll(
@@ -60,11 +53,11 @@ namespace Microsoft.Playwright.Tests
                 Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], {type: 'application/javascript'})))")
             );
 
-            Assert.Equal("1", message.Text);
+            Assert.AreEqual("1", message.Text);
         }
 
         [PlaywrightTest("workers.spec.ts", "should have JSHandles for console logs")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveJSHandlesForConsoleLogs()
         {
             var consoleTcs = new TaskCompletionSource<IConsoleMessage>();
@@ -72,25 +65,25 @@ namespace Microsoft.Playwright.Tests
 
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1,2,3,this)'], {type: 'application/javascript'})))");
             var log = await consoleTcs.Task;
-            Assert.Equal("1 2 3 JSHandle@object", log.Text);
-            Assert.Equal(4, log.Args.Count());
+            Assert.AreEqual("1 2 3 JSHandle@object", log.Text);
+            Assert.AreEqual(4, log.Args.Count());
             string json = await (await log.Args.ElementAt(3).GetPropertyAsync("origin")).JsonValueAsync<string>();
-            Assert.Equal("null", json);
+            Assert.AreEqual("null", json);
         }
 
         [PlaywrightTest("workers.spec.ts", "should evaluate")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEvaluate()
         {
             var workerCreatedTask = Page.WaitForWorkerAsync();
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], {type: 'application/javascript'})))");
 
             await workerCreatedTask;
-            Assert.Equal(2, await workerCreatedTask.Result.EvaluateAsync<int>("1+1"));
+            Assert.AreEqual(2, await workerCreatedTask.Result.EvaluateAsync<int>("1+1"));
         }
 
         [PlaywrightTest("workers.spec.ts", "should report errors")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportErrors()
         {
             var errorTcs = new TaskCompletionSource<string>();
@@ -104,11 +97,11 @@ namespace Microsoft.Playwright.Tests
               })
             `], {type: 'application/javascript'})))");
             string errorLog = await errorTcs.Task;
-            Assert.Contains("this is my error", errorLog);
+            StringAssert.Contains("this is my error", errorLog);
         }
 
         [PlaywrightTest("workers.spec.ts", "should clear upon navigation")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearUponNavigation()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -116,17 +109,17 @@ namespace Microsoft.Playwright.Tests
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
             var worker = await workerCreatedTask;
 
-            Assert.Single(Page.Workers);
+            Assert.That(Page.Workers, Has.Count.EqualTo(1));
             bool destroyed = false;
             worker.Close += (_, _) => destroyed = true;
 
             await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
             Assert.True(destroyed);
-            Assert.Empty(Page.Workers);
+            Assert.IsEmpty(Page.Workers);
         }
 
         [PlaywrightTest("workers.spec.ts", "should clear upon cross-process navigation")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearUponCrossProcessNavigation()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -134,17 +127,17 @@ namespace Microsoft.Playwright.Tests
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
             var worker = await workerCreatedTask;
 
-            Assert.Single(Page.Workers);
+            Assert.That(Page.Workers, Has.Count.EqualTo(1));
             bool destroyed = false;
             worker.Close += (_, _) => destroyed = true;
 
             await Page.GotoAsync(TestConstants.CrossProcessUrl + "/empty.html");
             Assert.True(destroyed);
-            Assert.Empty(Page.Workers);
+            Assert.IsEmpty(Page.Workers);
         }
 
         [PlaywrightTest("workers.spec.ts", "should report network activity")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNetworkActivity()
         {
             var (worker, _) = await TaskUtils.WhenAll(
@@ -160,13 +153,13 @@ namespace Microsoft.Playwright.Tests
 
             await TaskUtils.WhenAll(requestTask, responseTask);
 
-            Assert.Equal(url, requestTask.Result.Url);
-            Assert.Equal(requestTask.Result, responseTask.Result.Request);
+            Assert.AreEqual(url, requestTask.Result.Url);
+            Assert.AreEqual(requestTask.Result, responseTask.Result.Request);
             Assert.True(responseTask.Result.Ok);
         }
 
         [PlaywrightTest("workers.spec.ts", "should report network activity on worker creation")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNetworkActivityOnWorkerCreation()
         {
             await Page.GotoAsync(TestConstants.EmptyPage);
@@ -181,13 +174,13 @@ namespace Microsoft.Playwright.Tests
 
             await TaskUtils.WhenAll(requestTask, responseTask);
 
-            Assert.Equal(url, requestTask.Result.Url);
-            Assert.Equal(requestTask.Result, responseTask.Result.Request);
+            Assert.AreEqual(url, requestTask.Result.Url);
+            Assert.AreEqual(requestTask.Result, responseTask.Result.Request);
             Assert.True(responseTask.Result.Ok);
         }
 
         [PlaywrightTest("workers.spec.ts", "should format number using context locale")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatNumberUsingContextLocale()
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { Locale = "ru-RU" });
@@ -197,7 +190,7 @@ namespace Microsoft.Playwright.Tests
                 page.WaitForWorkerAsync(),
                 page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], {type: 'application/javascript'})))"));
 
-            Assert.Equal("10\u00A0000,2", await worker.EvaluateAsync<string>("() => (10000.20).toLocaleString()"));
+            Assert.AreEqual("10\u00A0000,2", await worker.EvaluateAsync<string>("() => (10000.20).toLocaleString()"));
         }
     }
 }
