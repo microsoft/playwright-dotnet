@@ -1,7 +1,4 @@
-using System;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Playwright;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.NUnitTest
@@ -10,10 +7,7 @@ namespace Microsoft.Playwright.NUnitTest
     {
         public IBrowserContext Context { get; private set; }
 
-        public virtual BrowserNewContextOptions ContextOptions()
-        {
-            return null;
-        }
+        public virtual BrowserNewContextOptions ContextOptions() => null;
 
         [SetUp]
         public async Task ContextSetup()

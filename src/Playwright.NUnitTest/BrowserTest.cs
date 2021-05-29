@@ -10,7 +10,7 @@ namespace Microsoft.Playwright.NUnitTest
 {
     public class BrowserTest : PlaywrightTest
     {
-        private static ConcurrentStack<IBrowser> browserPool_ = new ConcurrentStack<IBrowser>();
+        private static ConcurrentStack<IBrowser> _browserPool = new ConcurrentStack<IBrowser>();
 
         public IBrowser Browser { get; private set; }
 
@@ -18,7 +18,7 @@ namespace Microsoft.Playwright.NUnitTest
         public async Task BrowserSetup()
         {
             IBrowser browser;
-            if (browserPool_.TryPop(out browser))
+            if (_browserPool.TryPop(out browser))
             {
                 Browser = browser;
                 return;
@@ -35,7 +35,7 @@ namespace Microsoft.Playwright.NUnitTest
         {
             if (TestOk())
             {
-                browserPool_.Push(Browser);
+                _browserPool.Push(Browser);
             }
             else
             {
