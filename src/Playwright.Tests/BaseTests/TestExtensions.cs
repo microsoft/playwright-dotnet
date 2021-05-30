@@ -27,20 +27,31 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
+using Microsoft.Playwright.NUnitTest;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
 namespace Microsoft.Playwright.NUnitTest
 {
-    public class BrowserTest : PlaywrightTest
+    public static class TestExtensions
     {
-        public IBrowser Browser { get; internal set; }
-
-        [SetUp]
-        public async Task BrowserSetup()
+        public static async Task<T> AssertThrowsAsync<T>(this PlaywrightTest test, Func<Task> action) where T : System.Exception
         {
-            var service = await BrowserService.Register(this, BrowserType);
-            Browser = service.Browser;
+            try
+            {
+                await action();
+                Assert.Fail();
+                return null;
+            }
+            catch (T t)
+            {
+                return t;
+            }
+        }
+
+        public static void DebugLog(this PlaywrightTest test, string text)
+        {
+            TestContext.Progress.WriteLine(text);
         }
     }
 }

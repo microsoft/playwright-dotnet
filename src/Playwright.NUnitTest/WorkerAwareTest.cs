@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
@@ -34,21 +35,36 @@ namespace Microsoft.Playwright.NUnitTest
 {
     public class WorkerAwareTest
     {
-        private static ConcurrentStack<WorkerServices> workerServicesPool_ = new ConcurrentStack<WorkerServices>();
+        internal class Worker
+        {
+            private static int lastWorkerIndex_ = 0;
+            public int WorkerIndex = Interlocked.Increment(ref lastWorkerIndex_);
+            public Dictionary<string, IWorkerService> Services = new Dictionary<string, IWorkerService>();
+        }
 
-        public WorkerServices Services { get; private set; }
+        private static ConcurrentStack<Worker> allWorkers_ = new ConcurrentStack<Worker>();
+        private Worker currentWorker_;
+
+        public int WorkerIndex { get; internal set; }
+
+        public async Task<T> RegisterService<T>(string name, Func<Task<T>> factory) where T : class, IWorkerService
+        {
+            if (!currentWorker_.Services.ContainsKey(name))
+            {
+                currentWorker_.Services[name] = await factory();
+            }
+
+            return currentWorker_.Services[name] as T;
+        }
 
         [SetUp]
         public void WorkerSetup()
         {
-            WorkerServices services;
-            if (workerServicesPool_.TryPop(out services))
+            if (!allWorkers_.TryPop(out currentWorker_))
             {
-                Services = services;
-                return;
+                currentWorker_ = new Worker();
             }
-
-            Services = new WorkerServices();
+            WorkerIndex = currentWorker_.WorkerIndex;
         }
 
         [TearDown]
@@ -56,12 +72,19 @@ namespace Microsoft.Playwright.NUnitTest
         {
             if (TestOk())
             {
-                workerServicesPool_.Push(Services);
-                await Services.ResetAsync();
+                foreach (var kv in currentWorker_.Services)
+                {
+                    await kv.Value.ResetAsync();
+                }
+                allWorkers_.Push(currentWorker_);
             }
             else
             {
-                await Services.DisposeAsync();
+                foreach (var kv in currentWorker_.Services)
+                {
+                    await kv.Value.DisposeAsync();
+                }
+                currentWorker_.Services.Clear();
             }
         }
 

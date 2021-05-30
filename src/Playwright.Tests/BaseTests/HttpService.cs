@@ -7,14 +7,13 @@ namespace Microsoft.Playwright.Tests
 {
     public class HttpService : IWorkerService
     {
-        private static string SERVICE_NAME = "Http";
         public SimpleServer Server { get; internal set; }
         public SimpleServer HttpsServer { get; internal set; }
 
-        public static async Task<HttpService> Register(WorkerServices services)
+        public static async Task<HttpService> Register(WorkerAwareTest test)
         {
-            var workerIndex = services.WorkerIndex;
-            return await services.Register(SERVICE_NAME, async () =>
+            var workerIndex = test.WorkerIndex;
+            return await test.RegisterService("Http", async () =>
             {
                 var http = new HttpService();
                 http.Server = SimpleServer.Create(8081 + workerIndex * 2, TestUtils.FindParentDirectory("Playwright.Tests.TestServer"));
