@@ -16,7 +16,7 @@ namespace Microsoft.Playwright.Tests
         [SetUp]
         public async Task HttpSetup()
         {
-            var http = await HttpService.Register(Services);
+            var http = await HttpService.Register(this);
             Server = http.Server;
             HttpsServer = http.HttpsServer;
         }

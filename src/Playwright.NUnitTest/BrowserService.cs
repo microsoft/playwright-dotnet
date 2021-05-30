@@ -23,7 +23,7 @@
  */
 
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
@@ -32,42 +32,24 @@ using NUnit.Framework.Interfaces;
 
 namespace Microsoft.Playwright.NUnitTest
 {
-    public class WorkerServices
+    public class BrowserService : IWorkerService
     {
-        private Dictionary<string, IWorkerService> services_ = new Dictionary<string, IWorkerService>();
-        private static int lastWorkerIndex_ = 0;
-        public int WorkerIndex { get; }
+        public IBrowser Browser { get; internal set; }
 
-        public WorkerServices()
+        public static async Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType)
         {
-            WorkerIndex = Interlocked.Increment(ref lastWorkerIndex_);
-        }
-
-        public async Task<T> Register<T>(string name, Func<Task<T>> factory) where T : class, IWorkerService
-        {
-            if (!services_.ContainsKey(name))
+            return await test.RegisterService("Browser", async () =>
             {
-                services_[name] = await factory();
-            }
-
-            return services_[name] as T;
+                var service = new BrowserService();
+                service.Browser = await browserType.LaunchAsync(new BrowserTypeLaunchOptions
+                {
+                    Headless = true
+                });
+                return service;
+            });
         }
 
-        internal async Task ResetAsync()
-        {
-            foreach (var kv in services_)
-            {
-                await kv.Value.ResetAsync();
-            }
-        }
-
-        internal async Task DisposeAsync()
-        {
-            foreach (var kv in services_)
-            {
-                await kv.Value.DisposeAsync();
-            }
-            services_.Clear();
-        }
-    }
+        public Task ResetAsync() => Task.CompletedTask;
+        public Task DisposeAsync() => Browser.CloseAsync();
+    };
 }
