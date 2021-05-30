@@ -71,14 +71,14 @@ namespace Microsoft.Playwright.Tests
 
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { StorageStatePath = path });
             var page2 = await context.NewPageAsync();
-            await page1.RouteAsync("**/*", (route) =>
+            await page2.RouteAsync("**/*", (route) =>
             {
                 route.FulfillAsync(new RouteFulfillOptions { Body = "<html></html>" });
             });
 
-            await page1.GotoAsync("https://www.example.com");
-            Assert.AreEqual("value1", await page1.EvaluateAsync<string>("localStorage['name1']"));
-            Assert.AreEqual("username=John Doe", await page1.EvaluateAsync<string>("document.cookie"));
+            await page2.GotoAsync("https://www.example.com");
+            Assert.AreEqual("value1", await page2.EvaluateAsync<string>("localStorage['name1']"));
+            Assert.AreEqual("username=John Doe", await page2.EvaluateAsync<string>("document.cookie"));
         }
     }
 }
