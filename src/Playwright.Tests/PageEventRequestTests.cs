@@ -14,7 +14,7 @@ namespace Microsoft.Playwright.Tests
         {
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             Assert.That(requests, Has.Count.EqualTo(1));
         }
 
@@ -24,8 +24,8 @@ namespace Microsoft.Playwright.Tests
         {
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
+            await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             Assert.AreEqual(2, requests.Count);
         }
 
@@ -35,7 +35,7 @@ namespace Microsoft.Playwright.Tests
         {
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.EvaluateAsync("fetch('/empty.html')");
             Assert.AreEqual(2, requests.Count);
         }
@@ -44,7 +44,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportRequestsAndResponsesHandledByServiceWorker()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/serviceworkers/fetchdummy/sw.html");
+            await Page.GotoAsync(Server.Prefix + "/serviceworkers/fetchdummy/sw.html");
             await Page.EvaluateAsync("() => window.activationPromise");
 
             var (request, swResponse) = await TaskUtils.WhenAll(
@@ -52,9 +52,9 @@ namespace Microsoft.Playwright.Tests
                 Page.EvaluateAsync<string>("() => fetchDummy('foo')"));
 
             Assert.AreEqual("responseFromServiceWorker:foo", swResponse);
-            Assert.AreEqual(TestConstants.ServerUrl + "/serviceworkers/fetchdummy/foo", request.Url);
+            Assert.AreEqual(Server.Prefix + "/serviceworkers/fetchdummy/foo", request.Url);
             var response = await request.ResponseAsync();
-            Assert.AreEqual(TestConstants.ServerUrl + "/serviceworkers/fetchdummy/foo", response.Url);
+            Assert.AreEqual(Server.Prefix + "/serviceworkers/fetchdummy/foo", response.Url);
             Assert.AreEqual("responseFromServiceWorker:foo", await response.TextAsync());
         }
     }

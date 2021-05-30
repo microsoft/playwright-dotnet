@@ -13,7 +13,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipWebkit: true, skipWindows: true)]
         public async Task WebAssemblyShouldWork()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/wasm/table2.html");
+            await Page.GotoAsync(Server.Prefix + "/wasm/table2.html");
             Assert.AreEqual("42, 83", await Page.EvaluateAsync<string>("() => loadTable()"));
         }
 
@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Tests
                     ws.addEventListener('error', error => cb('Error'));
                     return result;
                 }}",
-                TestConstants.Port);
+                Server.Port);
             Assert.AreEqual("incoming", value);
         }
 #endif
@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectCSP()
         {
-            HttpServer.Server.SetRoute("/empty.html", context =>
+            Server.SetRoute("/empty.html", context =>
             {
                 const string message = @"
                     <script>
@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.Tests
                 return context.Response.WriteAsync(message);
             });
 
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual("SUCCESS", await Page.EvaluateAsync<string>("() => window.testStatus"));
         }
 
@@ -62,7 +62,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldPlayVideo()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + (TestConstants.IsWebKit ? "/video_mp4.html" : "/video.html"));
+            await Page.GotoAsync(Server.Prefix + (TestConstants.IsWebKit ? "/video_mp4.html" : "/video.html"));
             await Page.EvalOnSelectorAsync("video", "v => v.play()");
             await Page.EvalOnSelectorAsync("video", "v => v.pause()");
         }

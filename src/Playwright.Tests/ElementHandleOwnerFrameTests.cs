@@ -12,8 +12,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
+            await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             var frame = Page.Frames.ElementAt(1);
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document.body");
             Assert.AreEqual(frame, await elementHandle.OwnerFrameAsync());
@@ -23,8 +23,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForCrossProcessIframes()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.CrossProcessUrl + "/empty.html");
+            await Page.GotoAsync(Server.EmptyPage);
+            await FrameUtils.AttachFrameAsync(Page, "frame1", Server.CrossProcessPrefix + "/empty.html");
             var frame = Page.Frames.ElementAt(1);
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document.body");
             Assert.AreEqual(frame, await elementHandle.OwnerFrameAsync());
@@ -34,8 +34,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForDocument()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
+            await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             var frame = Page.Frames.ElementAt(1);
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document");
             Assert.AreEqual(frame, await elementHandle.OwnerFrameAsync());
@@ -45,8 +45,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForIframeElements()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
+            await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             var frame = Page.MainFrame;
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document.querySelector('#frame1')");
             Assert.AreEqual(frame, await elementHandle.OwnerFrameAsync());
@@ -56,8 +56,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForCrossFrameEvaluations()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
+            await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             var frame = Page.MainFrame;
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document.querySelector('#frame1').contentWindow.document.body");
             Assert.AreEqual(frame.ChildFrames.First(), await elementHandle.OwnerFrameAsync());
@@ -67,7 +67,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForDetachedElements()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var divHandle = (IElementHandle)await Page.EvaluateHandleAsync(@"() => {
                     var div = document.createElement('div');
                     document.body.appendChild(div);
@@ -85,11 +85,11 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkForAdoptedElements()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var popupTask = Page.WaitForPopupAsync();
             await TaskUtils.WhenAll(
               popupTask,
-              Page.EvaluateAsync("url => window.__popup = window.open(url)", TestConstants.EmptyPage));
+              Page.EvaluateAsync("url => window.__popup = window.open(url)", Server.EmptyPage));
             var popup = await popupTask;
             var divHandle = (IElementHandle)await Page.EvaluateHandleAsync(@"() => {
                     var div = document.createElement('div');

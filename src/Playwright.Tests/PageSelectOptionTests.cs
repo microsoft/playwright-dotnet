@@ -13,7 +13,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOption()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.SelectOptionAsync("select", "blue");
             Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
             Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
@@ -23,7 +23,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOptionByValue()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.SelectOptionAsync("select", new SelectOptionValue { Value = "blue" });
             Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
             Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
@@ -33,7 +33,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOptionByLabel()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.SelectOptionAsync("select", new SelectOptionValue { Label = "Indigo" });
             Assert.AreEqual(new[] { "indigo" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
             Assert.AreEqual(new[] { "indigo" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
@@ -43,7 +43,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOptionByHandle()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.SelectOptionAsync("select", await Page.QuerySelectorAsync("[id=whiteOption]"));
             Assert.AreEqual(new[] { "white" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
             Assert.AreEqual(new[] { "white" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
@@ -53,7 +53,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOptionByIndex()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.SelectOptionAsync("select", new SelectOptionValue { Index = 2 });
             Assert.AreEqual(new[] { "brown" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
             Assert.AreEqual(new[] { "brown" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
@@ -63,7 +63,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOptionByMultipleAttributes()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.SelectOptionAsync("select", new SelectOptionValue { Value = "green", Label = "Green" });
             Assert.AreEqual(new[] { "green" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
             Assert.AreEqual(new[] { "green" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
@@ -73,7 +73,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotSelectSingleOptionWhenSomeAttributesDoNotMatch()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.EvalOnSelectorAsync("select", "s => s.value = undefined");
             await AssertThrowsAsync<TimeoutException>(() => Page.SelectOptionAsync("select", new SelectOptionValue { Value = "green", Label = "Brown" }, new PageSelectOptionOptions { Timeout = 300 }));
             Assert.IsEmpty(await Page.EvaluateAsync<string>("() => document.querySelector('select').value"));
@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectOnlyFirstOption()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.SelectOptionAsync("select", new[] { "blue", "green", "red" });
             Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
             Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
@@ -93,7 +93,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotThrowWhenSelectCausesNavigation()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.EvalOnSelectorAsync("select", "select => select.addEventListener('input', () => window.location = '/empty.html')");
             await TaskUtils.WhenAll(
                 Page.SelectOptionAsync("select", "blue"),
@@ -106,7 +106,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectMultipleOptions()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.EvaluateAsync("() => makeMultiple()");
             await Page.SelectOptionAsync("select", new[] { "blue", "green", "red" });
             Assert.AreEqual(new[] { "blue", "green", "red" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
@@ -117,7 +117,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectMultipleOptionsWithAttributes()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.EvaluateAsync("() => makeMultiple()");
             await Page.SelectOptionAsync(
                 "select",
@@ -134,7 +134,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectEventBubbling()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.SelectOptionAsync("select", "blue");
             Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onBubblingInput"));
             Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onBubblingChange"));
@@ -144,7 +144,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenElementIsNotASelect()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.SelectOptionAsync("body", string.Empty));
             StringAssert.Contains("Element is not a <select> element.", exception.Message);
         }
@@ -153,7 +153,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEmptyArrayOnNoMatchedValues()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             var result = await Page.SelectOptionAsync("select", Array.Empty<string>());
             Assert.IsEmpty(result);
         }
@@ -162,7 +162,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnAnArrayOfMatchedValues()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.EvaluateAsync<string>("() => makeMultiple()");
             var result = await Page.SelectOptionAsync("select", new[] { "blue", "black", "magenta" });
             Assert.AreEqual(new[] { "blue", "black", "magenta" }.OrderBy(v => v), result.OrderBy(v => v));
@@ -172,7 +172,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnAnArrayOfOneElementWhenMultipleIsNotSet()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             var result = await Page.SelectOptionAsync("select", new[] { "42", "blue", "black", "magenta" });
             Assert.That(result, Has.Count.EqualTo(1));
         }
@@ -181,7 +181,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEmptyArrayOnNoValues()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             var result = await Page.SelectOptionAsync("select", Array.Empty<string>());
             Assert.IsEmpty(result);
         }
@@ -190,7 +190,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUnselectWithNull()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.EvaluateAsync("() => makeMultiple()");
             var result = await Page.SelectOptionAsync("select", new[] { "blue", "black", "magenta" });
             Assert.True(result.All(r => new[] { "blue", "black", "magenta" }.Contains(r)));
@@ -202,7 +202,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeselectAllOptionsWhenPassedNoValuesForAMultipleSelect()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.EvaluateAsync("() => makeMultiple()");
             await Page.SelectOptionAsync("select", new[] { "blue", "black", "magenta" });
             await Page.SelectOptionAsync("select", new string[] { });
@@ -213,7 +213,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeselectAllOptionsWhenPassedNoValuesForASelectWithoutMultiple()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.SelectOptionAsync("select", new[] { "blue", "black", "magenta" });
             await Page.SelectOptionAsync("select", Array.Empty<string>());
             Assert.True(await Page.EvalOnSelectorAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected)"));
@@ -229,7 +229,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenReDefiningTopLevelEventClass()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/select.html");
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.EvaluateAsync("() => window.Event = null");
             await Page.SelectOptionAsync("select", "blue");
             Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));

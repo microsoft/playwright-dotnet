@@ -11,12 +11,12 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PageGobackShouldWork()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            await Page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
+            await Page.GotoAsync(Server.EmptyPage);
+            await Page.GotoAsync(Server.Prefix + "/grid.html");
 
             var response = await Page.GoBackAsync();
             Assert.True(response.Ok);
-            StringAssert.Contains(TestConstants.EmptyPage, response.Url);
+            StringAssert.Contains(Server.EmptyPage, response.Url);
 
             response = await Page.GoForwardAsync();
             Assert.True(response.Ok);
@@ -30,19 +30,19 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PageGoBackShouldWorkWithHistoryAPI()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.EvaluateAsync(@"
               history.pushState({ }, '', '/first.html');
               history.pushState({ }, '', '/second.html');
             ");
-            Assert.AreEqual(TestConstants.ServerUrl + "/second.html", Page.Url);
+            Assert.AreEqual(Server.Prefix + "/second.html", Page.Url);
 
             await Page.GoBackAsync();
-            Assert.AreEqual(TestConstants.ServerUrl + "/first.html", Page.Url);
+            Assert.AreEqual(Server.Prefix + "/first.html", Page.Url);
             await Page.GoBackAsync();
-            Assert.AreEqual(TestConstants.EmptyPage, Page.Url);
+            Assert.AreEqual(Server.EmptyPage, Page.Url);
             await Page.GoForwardAsync();
-            Assert.AreEqual(TestConstants.ServerUrl + "/first.html", Page.Url);
+            Assert.AreEqual(Server.Prefix + "/first.html", Page.Url);
         }
 
         [PlaywrightTest("page-history.spec.ts", "should work for file urls")]
@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PageReloadShouldWork()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.EvaluateAsync("() => window._foo = 10");
             await Page.ReloadAsync();
             Assert.Null(await Page.EvaluateAsync("() => window._foo"));

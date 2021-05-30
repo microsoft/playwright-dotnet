@@ -21,7 +21,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForHitTarget()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
 
             await Page.EvalOnSelectorAsync("button", @"button => {

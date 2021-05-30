@@ -23,7 +23,7 @@
  */
 
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
@@ -32,42 +32,42 @@ using NUnit.Framework.Interfaces;
 
 namespace Microsoft.Playwright.NUnitTest
 {
-    public class BrowserTest : PlaywrightTest
+    public class WorkerServices
     {
-        public class BrowserService : IWorkerService
-        {
-            private IBrowserType browserType_;
-            public IBrowser Browser { get; internal set; }
+        private Dictionary<string, IWorkerService> services_ = new Dictionary<string, IWorkerService>();
+        private static int lastWorkerIndex_ = 0;
+        public int WorkerIndex { get; }
 
-            public BrowserService(IBrowserType browserType)
+        public WorkerServices()
+        {
+            WorkerIndex = Interlocked.Increment(ref lastWorkerIndex_);
+        }
+
+        public async Task<T> Register<T>(string name, Func<Task<T>> factory) where T : class, IWorkerService
+        {
+            if (!services_.ContainsKey(name))
             {
-                browserType_ = browserType;
+                services_[name] = await factory();
             }
 
-            public async Task InitAsync()
-            {
-                Browser = await browserType_.LaunchAsync(new BrowserTypeLaunchOptions
-                {
-                    Headless = true
-                });
-            }
+            return services_[name] as T;
+        }
 
-            public Task ResetAsync() => Task.CompletedTask;
-            public Task DisposeAsync() => Browser.CloseAsync();
-        };
-
-        public IBrowser Browser { get; internal set; }
-
-        [SetUp]
-        public async Task BrowserSetup()
+        internal async Task ResetAsync()
         {
-            var service = await Services.Register("Browser", async () =>
+            foreach (var kv in services_)
             {
-                var service = new BrowserService(BrowserType);
-                await service.InitAsync();
-                return service;
-            });
-            Browser = service.Browser;
+                await kv.Value.ResetAsync();
+            }
+        }
+
+        internal async Task DisposeAsync()
+        {
+            foreach (var kv in services_)
+            {
+                await kv.Value.DisposeAsync();
+            }
+            services_.Clear();
         }
     }
 }

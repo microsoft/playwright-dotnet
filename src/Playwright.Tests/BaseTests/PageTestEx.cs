@@ -3,17 +3,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.Tests.TestServer;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
     public class PageTestEx : PageTest
     {
-        [TearDown]
-        public void ServerTeardown()
+        public SimpleServer Server { get; internal set; }
+        public SimpleServer HttpsServer { get; internal set; }
+
+        [SetUp]
+        public async Task HttpSetup()
         {
-            HttpServer.Server.Reset();
-            HttpServer.HttpsServer.Reset();
+            var http = await HttpService.Register(Services);
+            Server = http.Server;
+            HttpsServer = http.HttpsServer;
         }
     }
 }

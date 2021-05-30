@@ -17,11 +17,11 @@ namespace Microsoft.Playwright.Tests
         {
             bool boxFound = false;
             var waitForSelector = Page.WaitForSelectorAsync(".box").ContinueWith(_ => boxFound = true);
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             Assert.False(boxFound);
             await Page.ReloadAsync();
             Assert.False(boxFound);
-            await Page.GotoAsync(TestConstants.CrossProcessHttpPrefix + "/grid.html");
+            await Page.GotoAsync(Server.CrossProcessPrefix + "/grid.html");
             await waitForSelector;
             Assert.True(boxFound);
         }
@@ -174,7 +174,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportSelectorSyntax()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var frame = Page.MainFrame;
             var watchdog = frame.WaitForSelectorAsync("css=div >> css=span", new FrameWaitForSelectorOptions { State = WaitForSelectorState.Attached });
             await frame.EvaluateAsync(AddElement, "br");
@@ -231,8 +231,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRunInSpecifiedFrameXPath()
         {
-            await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
-            await FrameUtils.AttachFrameAsync(Page, "frame2", TestConstants.EmptyPage);
+            await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
+            await FrameUtils.AttachFrameAsync(Page, "frame2", Server.EmptyPage);
             var frame1 = Page.Frames.First(f => f.Name == "frame1");
             var frame2 = Page.Frames.First(f => f.Name == "frame2");
             var waitForXPathPromise = frame2.WaitForSelectorAsync("//div", new FrameWaitForSelectorOptions { State = WaitForSelectorState.Attached });
@@ -246,7 +246,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenFrameIsDetachedXPath()
         {
-            await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
+            await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             var frame = Page.FirstChildFrame();
             var waitPromise = frame.WaitForSelectorAsync("//*[@class=\"box\"]");
             await FrameUtils.DetachFrameAsync(Page, "frame1");

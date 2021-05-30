@@ -12,7 +12,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldQueryExistingElement()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/playground.html");
+            await Page.GotoAsync(Server.Prefix + "/playground.html");
             await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">A</div></div></body></html>");
             var html = await Page.QuerySelectorAsync("html");
             var second = await html.QuerySelectorAsync(".second");
@@ -35,11 +35,11 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForAdoptedElements()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
 
             var (popup, _) = await TaskUtils.WhenAll(
                 Page.WaitForPopupAsync(),
-                Page.EvaluateAsync("url => window.__popup = window.open(url)", TestConstants.EmptyPage));
+                Page.EvaluateAsync("url => window.__popup = window.open(url)", Server.EmptyPage));
 
             var divHandle = await Page.EvaluateHandleAsync(@"() => {
                 const div = document.createElement('div');
@@ -89,7 +89,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task XPathShouldQueryExistingElement()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/playground.html");
+            await Page.GotoAsync(Server.Prefix + "/playground.html");
             await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">A</div></div></body></html>");
             var html = await Page.QuerySelectorAsync("html");
             var second = await html.QuerySelectorAllAsync("xpath=./body/div[contains(@class, 'second')]");

@@ -22,8 +22,8 @@ namespace Microsoft.Playwright.Tests
                 var page = await context.NewPageAsync();
 
                 var (userAgent, _) = await TaskUtils.WhenAll(
-                    HttpServer.Server.WaitForRequest("/empty.html", request => request.Headers["User-Agent"].ToString()),
-                    page.GotoAsync(TestConstants.EmptyPage)
+                    Server.WaitForRequest("/empty.html", request => request.Headers["User-Agent"].ToString()),
+                    page.GotoAsync(Server.EmptyPage)
                 );
                 Assert.AreEqual("foobar", userAgent);
             }
@@ -44,8 +44,8 @@ namespace Microsoft.Playwright.Tests
                 var page = await context.NewPageAsync();
 
                 var (userAgent, _) = await TaskUtils.WhenAll(
-                    HttpServer.Server.WaitForRequest<string>("/empty.html", (request) => request.Headers["user-agent"]),
-                    FrameUtils.AttachFrameAsync(page, "frame1", TestConstants.EmptyPage));
+                    Server.WaitForRequest<string>("/empty.html", (request) => request.Headers["user-agent"]),
+                    FrameUtils.AttachFrameAsync(page, "frame1", Server.EmptyPage));
 
                 Assert.AreEqual("foobar", userAgent);
             }
@@ -58,14 +58,14 @@ namespace Microsoft.Playwright.Tests
             await using (var context = await Browser.NewContextAsync())
             {
                 var page = await context.NewPageAsync();
-                await page.GotoAsync(TestConstants.ServerUrl + "/mobile.html");
+                await page.GotoAsync(Server.Prefix + "/mobile.html");
                 CollectionAssert.DoesNotContain("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
             }
 
             await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions { UserAgent = "iPhone" }))
             {
                 var page = await context.NewPageAsync();
-                await page.GotoAsync(TestConstants.ServerUrl + "/mobile.html");
+                await page.GotoAsync(Server.Prefix + "/mobile.html");
                 StringAssert.Contains("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
             }
         }
@@ -84,8 +84,8 @@ namespace Microsoft.Playwright.Tests
             var page = await context.NewPageAsync();
 
             var (userAgent, _) = await TaskUtils.WhenAll(
-                HttpServer.Server.WaitForRequest("/empty.html", request => request.Headers["User-Agent"].ToString()),
-                page.GotoAsync(TestConstants.EmptyPage)
+                Server.WaitForRequest("/empty.html", request => request.Headers["User-Agent"].ToString()),
+                page.GotoAsync(Server.EmptyPage)
             );
             Assert.AreEqual("foobar", userAgent);
         }

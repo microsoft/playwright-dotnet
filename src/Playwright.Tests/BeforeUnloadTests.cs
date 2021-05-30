@@ -13,7 +13,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRunBeforeunloadIfAskedFor()
         {
             var newPage = await Context.NewPageAsync();
-            await newPage.GotoAsync(TestConstants.ServerUrl + "/beforeunload.html");
+            await newPage.GotoAsync(Server.Prefix + "/beforeunload.html");
             // We have to interact with a page so that 'beforeunload' handlers
             // fire.
             await newPage.ClickAsync("body");
@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldNotRunBeforeunloadByDefault()
         {
             var newPage = await Context.NewPageAsync();
-            await newPage.GotoAsync(TestConstants.ServerUrl + "/beforeunload.html");
+            await newPage.GotoAsync(Server.Prefix + "/beforeunload.html");
             // We have to interact with a page so that 'beforeunload' handlers
             // fire.
             await newPage.ClickAsync("body");

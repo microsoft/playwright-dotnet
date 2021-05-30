@@ -18,7 +18,7 @@ namespace Microsoft.Playwright.Tests
         {
             var (request, _) = await TaskUtils.WhenAll(
                 Page.WaitForRequestFinishedAsync(),
-                Page.GotoAsync(TestConstants.EmptyPage));
+                Page.GotoAsync(Server.EmptyPage));
 
             var timing = request.Timing;
             Assert.True(timing.DomainLookupStart >= -1);
@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.Tests
             var requests = new List<IRequest>();
 
             Page.RequestFinished += (_, e) => requests.Add(e);
-            await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
+            await Page.GotoAsync(Server.Prefix + "/one-style.html");
 
             Assert.AreEqual(2, requests.Count);
 
@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Tests
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { IgnoreHTTPSErrors = true });
             var (request, _) = await TaskUtils.WhenAll(
                 page.WaitForRequestFinishedAsync(),
-                page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html"));
+                page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
 
             var timing = request.Timing;
             if (!(TestConstants.IsWebKit && TestConstants.IsMacOSX))
@@ -97,18 +97,18 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldWorkForRedirect()
         {
-            HttpServer.Server.SetRedirect("/foo.html", "/empty.html");
+            Server.SetRedirect("/foo.html", "/empty.html");
             var responses = new List<IResponse>();
 
             Page.Response += (_, e) => responses.Add(e);
-            await Page.GotoAsync(TestConstants.ServerUrl + "/foo.html");
+            await Page.GotoAsync(Server.Prefix + "/foo.html");
 
             // This is different on purpose, promises work different in TS.
             await responses[1].FinishedAsync();
 
             Assert.AreEqual(2, responses.Count);
-            Assert.AreEqual(TestConstants.ServerUrl + "/foo.html", responses[0].Url);
-            Assert.AreEqual(TestConstants.ServerUrl + "/empty.html", responses[1].Url);
+            Assert.AreEqual(Server.Prefix + "/foo.html", responses[0].Url);
+            Assert.AreEqual(Server.Prefix + "/empty.html", responses[1].Url);
 
             var timing1 = responses[0].Request.Timing;
             Assert.True(timing1.DomainLookupStart >= 0);

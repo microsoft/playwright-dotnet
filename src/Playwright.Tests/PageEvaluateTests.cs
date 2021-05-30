@@ -151,7 +151,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEvaluateInThePageContext()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/global-var.html");
+            await Page.GotoAsync(Server.Prefix + "/global-var.html");
             Assert.AreEqual(123, await Page.EvaluateAsync<int>("globalVar"));
         }
 
@@ -214,7 +214,7 @@ namespace Microsoft.Playwright.Tests
             {
                 frameEvaluation = e.EvaluateAsync<int>("() => 6 * 7");
             };
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual(42, await frameEvaluation);
         }
 
@@ -222,13 +222,13 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkRightAfterACrossOriginNavigation()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             Task<int> frameEvaluation = null;
             Page.FrameNavigated += (_, e) =>
             {
                 frameEvaluation = e.EvaluateAsync<int>("() => 6 * 7");
             };
-            await Page.GotoAsync(TestConstants.CrossProcessUrl + "/empty.html");
+            await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
             Assert.AreEqual(42, await frameEvaluation);
         }
 
@@ -502,7 +502,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotThrowAnErrorWhenEvaluationDoesANavigation()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
+            await Page.GotoAsync(Server.Prefix + "/one-style.html");
             int[] result = await Page.EvaluateAsync<int[]>(@"() => {
                 window.location = '/empty.html';
                 return [42];
@@ -563,7 +563,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldAwaitPromiseFromPopup()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
 
             int result = await Page.EvaluateAsync<int>(@"() => {
                 const win = window.open('about:blank');

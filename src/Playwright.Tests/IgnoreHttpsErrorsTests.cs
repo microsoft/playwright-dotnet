@@ -19,10 +19,10 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
             var page = await context.NewPageAsync();
-            var requestTask = HttpServer.Server.WaitForRequest(
+            var requestTask = Server.WaitForRequest(
                 "/empty.html",
                 request => request.HttpContext.Features.Get<ITlsHandshakeFeature>().Protocol);
-            var responseTask = page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html");
+            var responseTask = page.GotoAsync(HttpsServer.Prefix + "/empty.html");
 
             await TaskUtils.WhenAll(
                 requestTask,
@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Tests
             await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true }))
             {
                 var page = await context.NewPageAsync();
-                var response = await page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html");
+                var response = await page.GotoAsync(HttpsServer.Prefix + "/empty.html");
 
                 Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
             }
@@ -48,7 +48,7 @@ namespace Microsoft.Playwright.Tests
             await using (var context = await Browser.NewContextAsync())
             {
                 var page = await context.NewPageAsync();
-                await AssertThrowsAsync<PlaywrightException>(() => page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html"));
+                await AssertThrowsAsync<PlaywrightException>(() => page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
             }
         }
 
@@ -57,13 +57,13 @@ namespace Microsoft.Playwright.Tests
         [Test, Ignore("Fix me #1058")]
         public async Task ShouldWorkWithMixedContent()
         {
-            HttpServer.Server.SetRoute("/mixedcontent.html", async (context) =>
+            Server.SetRoute("/mixedcontent.html", async (context) =>
             {
-                await context.Response.WriteAsync($"<iframe src='{TestConstants.EmptyPage}'></iframe>");
+                await context.Response.WriteAsync($"<iframe src='{Server.EmptyPage}'></iframe>");
             });
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.HttpsPrefix + "/mixedcontent.html", new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
+            await page.GotoAsync(HttpsServer.Prefix + "/mixedcontent.html", new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
             Assert.AreEqual(2, page.Frames.Count);
             Assert.AreEqual(3, await page.MainFrame.EvaluateAsync<int>("1 + 2"));
             Assert.AreEqual(5, await page.FirstChildFrame().EvaluateAsync<int>("2 + 3"));
@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.Tests
               ws.addEventListener('message', data => { ws.close(); cb(data.data); });
               ws.addEventListener('error', error => cb('Error'));
               return result;
-            }", TestConstants.HttpsPrefix.Replace("https", "wss") + "/ws");
+            }", HttpsServer.Prefix.Replace("https", "wss") + "/ws");
 
             Assert.AreEqual("incoming", value);
         }
@@ -102,7 +102,7 @@ namespace Microsoft.Playwright.Tests
               ws.addEventListener('message', data => { ws.close(); cb(data.data); });
               ws.addEventListener('error', error => cb('Error'));
               return result;
-            }", TestConstants.HttpsPrefix.Replace("https", "wss") + "/ws");
+            }", HttpsServer.Prefix.Replace("https", "wss") + "/ws");
 
             Assert.AreEqual("Error", value);
         }

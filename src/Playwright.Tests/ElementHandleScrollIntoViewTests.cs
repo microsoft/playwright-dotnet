@@ -12,7 +12,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/offscreenbuttons.html");
+            await Page.GotoAsync(Server.Prefix + "/offscreenbuttons.html");
             for (int i = 0; i < 11; ++i)
             {
                 var button = await Page.QuerySelectorAsync("#btn" + i);

@@ -16,11 +16,11 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { Locale = "fr-CH" });
             string acceptLanguage = string.Empty;
             var page = await context.NewPageAsync();
-            var requestTask = HttpServer.Server.WaitForRequest("/empty.html", c => acceptLanguage = c.Headers["accept-language"]);
+            var requestTask = Server.WaitForRequest("/empty.html", c => acceptLanguage = c.Headers["accept-language"]);
 
             await TaskUtils.WhenAll(
                 requestTask,
-                page.GotoAsync(TestConstants.EmptyPage));
+                page.GotoAsync(Server.EmptyPage));
 
             Assert.That(acceptLanguage, Does.StartWith("fr-CH"));
         }
@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
             }))
             {
                 var page = await context.NewPageAsync();
-                await page.GotoAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(Server.EmptyPage);
                 Assert.AreEqual("1,000,000.5", await page.EvaluateAsync<string>("() => (1000000.50).toLocaleString()"));
             }
 
@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
             }))
             {
                 var page = await context.NewPageAsync();
-                await page.GotoAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(Server.EmptyPage);
                 string value = await page.EvaluateAsync<string>("() => (1000000.50).toLocaleString().replace(/\\s/g, ' ')");
                 Assert.AreEqual("1 000 000,5", value);
             }
@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Tests
             }))
             {
                 var page = await context.NewPageAsync();
-                await page.GotoAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(Server.EmptyPage);
                 Assert.AreEqual(
                     "Sat Nov 19 2016 10:12:34 GMT-0800 (Pacific Standard Time)",
                     await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
@@ -87,7 +87,7 @@ namespace Microsoft.Playwright.Tests
             }))
             {
                 var page = await context.NewPageAsync();
-                await page.GotoAsync(TestConstants.EmptyPage);
+                await page.GotoAsync(Server.EmptyPage);
                 Assert.AreEqual(
                     "Sat Nov 19 2016 19:12:34 GMT+0100 (Mitteleuropäische Normalzeit)",
                     await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
@@ -104,12 +104,12 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             var popupTask = page.WaitForPopupAsync();
 
             await TaskUtils.WhenAll(
                 popupTask,
-                page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.ServerUrl + "/formatted-number.html"));
+                page.EvaluateAsync("url => window._popup = window.open(url)", Server.Prefix + "/formatted-number.html"));
 
             var popup = popupTask.Result;
             await popup.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
@@ -126,12 +126,12 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             var popupTask = page.WaitForPopupAsync();
 
             await TaskUtils.WhenAll(
                 popupTask,
-                page.EvaluateAsync("url => window._popup = window.open(url)", TestConstants.ServerUrl + "/formatted-number.html"));
+                page.EvaluateAsync("url => window._popup = window.open(url)", Server.Prefix + "/formatted-number.html"));
 
             var popup = popupTask.Result;
             await popup.WaitForLoadStateAsync(LoadState.DOMContentLoaded);

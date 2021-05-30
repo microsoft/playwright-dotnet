@@ -18,9 +18,9 @@ namespace Microsoft.Playwright.Tests
 
             var (otherPage, _) = await TaskUtils.WhenAll(
                 context.WaitForPageAsync(),
-                page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
+                page.EvaluateAsync("url => window.open(url)", Server.EmptyPage));
 
-            Assert.AreEqual(TestConstants.EmptyPage, otherPage.Url);
+            Assert.AreEqual(Server.EmptyPage, otherPage.Url);
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should have url after domcontentloaded")]
@@ -32,10 +32,10 @@ namespace Microsoft.Playwright.Tests
 
             var (otherPage, _) = await TaskUtils.WhenAll(
                 context.WaitForPageAsync(),
-                page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
+                page.EvaluateAsync("url => window.open(url)", Server.EmptyPage));
 
             await otherPage.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-            Assert.AreEqual(TestConstants.EmptyPage, otherPage.Url);
+            Assert.AreEqual(Server.EmptyPage, otherPage.Url);
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should have about:blank url with domcontentloaded")]
@@ -77,10 +77,10 @@ namespace Microsoft.Playwright.Tests
 
             var otherPage = await context.RunAndWaitForPageAsync(async () =>
             {
-                await page.EvaluateAsync("url => window.open(url)", TestConstants.CrossProcessUrl + "/empty.html");
+                await page.EvaluateAsync("url => window.open(url)", Server.CrossProcessPrefix + "/empty.html");
             });
 
-            StringAssert.Contains(TestConstants.CrossProcessUrl, otherPage.Url);
+            StringAssert.Contains(Server.CrossProcessPrefix, otherPage.Url);
             Assert.AreEqual("Hello world", await otherPage.EvaluateAsync<string>("() => ['Hello', 'world'].join(' ')"));
             Assert.NotNull(await otherPage.QuerySelectorAsync("body"));
 
@@ -124,7 +124,7 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
-            HttpServer.Server.SetRoute("/one-style.css", context =>
+            Server.SetRoute("/one-style.css", context =>
             {
                 context.Response.Redirect("/one-style.css");
                 return Task.CompletedTask;
@@ -134,13 +134,13 @@ namespace Microsoft.Playwright.Tests
             var pageCreatedTask = context.WaitForPageAsync();
             await TaskUtils.WhenAll(
                 pageCreatedTask,
-                page.EvaluateAsync("url => window.open(url)", TestConstants.ServerUrl + "/one-style.html"),
-                HttpServer.Server.WaitForRequest("/one-style.css"));
+                page.EvaluateAsync("url => window.open(url)", Server.Prefix + "/one-style.html"),
+                Server.WaitForRequest("/one-style.css"));
 
             var newPage = pageCreatedTask.Result;
 
             await newPage.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-            Assert.AreEqual(TestConstants.ServerUrl + "/one-style.html", newPage.Url);
+            Assert.AreEqual(Server.Prefix + "/one-style.html", newPage.Url);
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should have an opener")]
@@ -149,14 +149,14 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
 
             var (popupEvent, _) = await TaskUtils.WhenAll(
               context.WaitForPageAsync(),
-              page.GotoAsync(TestConstants.ServerUrl + "/popup/window-open.html"));
+              page.GotoAsync(Server.Prefix + "/popup/window-open.html"));
 
             var popup = popupEvent;
-            Assert.AreEqual(TestConstants.ServerUrl + "/popup/popup.html", popup.Url);
+            Assert.AreEqual(Server.Prefix + "/popup/popup.html", popup.Url);
             Assert.AreEqual(page, await popup.OpenerAsync());
             Assert.Null(await page.OpenerAsync());
         }
@@ -175,13 +175,13 @@ namespace Microsoft.Playwright.Tests
             };
 
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             await page.CloseAsync();
             Assert.AreEqual(
                 new List<string>()
                 {
                     "CREATED: about:blank",
-                    $"DESTROYED: {TestConstants.EmptyPage}"
+                    $"DESTROYED: {Server.EmptyPage}"
                 },
                 events);
         }
@@ -193,7 +193,7 @@ namespace Microsoft.Playwright.Tests
             // WebKit: Shift+Click does not open a new window.
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             await page.SetContentAsync("<a href=\"/one-style.html\">yo</a>");
 
             var popupEventTask = context.WaitForPageAsync();
@@ -212,7 +212,7 @@ namespace Microsoft.Playwright.Tests
             // WebKit: Ctrl+Click does not open a new tab.
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             await page.SetContentAsync("<a href=\"/one-style.html\">yo</a>");
 
             var popupEventTask = context.WaitForPageAsync();

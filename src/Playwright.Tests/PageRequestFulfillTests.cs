@@ -33,7 +33,7 @@ namespace Microsoft.Playwright.Tests
                     Body = "Yo, page!",
                 });
             });
-            var response = await Page.GotoAsync(TestConstants.EmptyPage);
+            var response = await Page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual((int)HttpStatusCode.Created, response.Status);
             Assert.AreEqual("bar", response.Headers["foo"]);
             Assert.AreEqual("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
@@ -52,7 +52,7 @@ namespace Microsoft.Playwright.Tests
             {
                 route.FulfillAsync(new RouteFulfillOptions { Status = (int)HttpStatusCode.UpgradeRequired, Body = "Yo, page!" });
             });
-            var response = await Page.GotoAsync(TestConstants.EmptyPage);
+            var response = await Page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual((int)HttpStatusCode.UpgradeRequired, response.Status);
             Assert.AreEqual("Upgrade Required", response.StatusText);
             Assert.AreEqual("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
@@ -76,7 +76,7 @@ namespace Microsoft.Playwright.Tests
                 img.src = PREFIX + '/does-not-exist.png';
                 document.body.appendChild(img);
                 return new Promise(fulfill => img.onload = fulfill);
-            }", TestConstants.ServerUrl);
+            }", Server.Prefix);
             var img = await Page.QuerySelectorAsync("img");
             Assert.True(ScreenshotHelper.PixelMatch("mock-binary-response.png", await img.ScreenshotAsync()));
         }
@@ -105,7 +105,7 @@ namespace Microsoft.Playwright.Tests
                 img.src = PREFIX + '/does-not-exist.png';
                 document.body.appendChild(img);
                 return new Promise(fulfill => img.onload = fulfill);
-            }", TestConstants.ServerUrl);
+            }", Server.Prefix);
             var img = await Page.QuerySelectorAsync("img");
             Assert.True(ScreenshotHelper.PixelMatch("mock-binary-response.png", await img.ScreenshotAsync()));
         }
@@ -127,7 +127,7 @@ namespace Microsoft.Playwright.Tests
                 });
             });
 
-            var response = await Page.GotoAsync(TestConstants.EmptyPage);
+            var response = await Page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
             Assert.AreEqual("true", response.Headers["foo"]);
             Assert.AreEqual("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
@@ -137,12 +137,12 @@ namespace Microsoft.Playwright.Tests
         [Test, Ignore("Flacky with the ASP.NET server")]
         public async Task ShouldNotModifyTheHeadersSentToTheServer()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var interceptedRequests = new List<Dictionary<string, string>>();
 
-            await Page.GotoAsync(TestConstants.ServerUrl + "/unused");
+            await Page.GotoAsync(Server.Prefix + "/unused");
 
-            HttpServer.Server.SetRoute("/something", ctx =>
+            Server.SetRoute("/something", ctx =>
             {
                 var hh = new Dictionary<string, string>();
                 foreach (var h in ctx.Request.Headers)
@@ -157,13 +157,13 @@ namespace Microsoft.Playwright.Tests
             string text = await Page.EvaluateAsync<string>(@"async url => {
                 const data = await fetch(url);
                 return data.text();
-            }", TestConstants.CrossProcessUrl + "/something");
+            }", Server.CrossProcessPrefix + "/something");
 
             Assert.AreEqual("done", text);
 
             IRequest playwrightRequest = null;
 
-            await Page.RouteAsync(TestConstants.CrossProcessUrl + "/something", (route) =>
+            await Page.RouteAsync(Server.CrossProcessPrefix + "/something", (route) =>
             {
                 playwrightRequest = route.Request;
                 route.ContinueAsync(new RouteContinueOptions { Headers = route.Request.Headers.ToDictionary(x => x.Key, x => x.Value) });
@@ -172,7 +172,7 @@ namespace Microsoft.Playwright.Tests
             string textAfterRoute = await Page.EvaluateAsync<string>(@"async url => {
                 const data = await fetch(url);
                 return data.text();
-            }", TestConstants.CrossProcessUrl + "/something");
+            }", Server.CrossProcessPrefix + "/something");
 
             Assert.AreEqual("done", textAfterRoute);
 
@@ -184,10 +184,10 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeTheOriginHeader()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             IRequest interceptedRequest = null;
 
-            await Page.RouteAsync(TestConstants.CrossProcessUrl + "/something", (route) =>
+            await Page.RouteAsync(Server.CrossProcessPrefix + "/something", (route) =>
             {
                 interceptedRequest = route.Request;
                 route.FulfillAsync(new RouteFulfillOptions
@@ -201,10 +201,10 @@ namespace Microsoft.Playwright.Tests
             string text = await Page.EvaluateAsync<string>(@"async url => {
                 const data = await fetch(url);
                 return data.text();
-            }", TestConstants.CrossProcessUrl + "/something");
+            }", Server.CrossProcessPrefix + "/something");
 
             Assert.AreEqual("done", text);
-            Assert.AreEqual(TestConstants.ServerUrl, interceptedRequest.Headers["origin"]);
+            Assert.AreEqual(Server.Prefix, interceptedRequest.Headers["origin"]);
         }
     }
 }

@@ -72,15 +72,15 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { TimezoneId = "Europe/Moscow" });
 
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
 
             await TaskUtils.WhenAll(
                 page.WaitForPopupAsync(),
-                page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
+                page.EvaluateAsync("url => window.open(url)", Server.EmptyPage));
 
             await TaskUtils.WhenAll(
                 page.WaitForPopupAsync(),
-                page.EvaluateAsync("url => window.open(url)", TestConstants.EmptyPage));
+                page.EvaluateAsync("url => window.open(url)", Server.EmptyPage));
         }
     }
 }

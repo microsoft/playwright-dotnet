@@ -48,7 +48,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldThrowIfPageArgumentIsPassed()
         {
-            var args = new[] { TestConstants.EmptyPage };
+            var args = new[] { Server.EmptyPage };
             await AssertThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { Args = args }));
         }
 

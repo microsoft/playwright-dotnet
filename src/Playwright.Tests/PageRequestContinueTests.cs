@@ -18,7 +18,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWork()
         {
             await Page.RouteAsync("**/*", (route) => route.ContinueAsync());
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
         }
 
         [PlaywrightTest("page-request-continue.spec.ts", "should amend HTTP headers")]
@@ -30,8 +30,8 @@ namespace Microsoft.Playwright.Tests
                 var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["FOO"] = "bar" };
                 route.ContinueAsync(new RouteContinueOptions { Headers = headers });
             });
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            var requestTask = HttpServer.Server.WaitForRequest("/sleep.zzz", request => request.Headers["foo"]);
+            await Page.GotoAsync(Server.EmptyPage);
+            var requestTask = Server.WaitForRequest("/sleep.zzz", request => request.Headers["foo"]);
             await TaskUtils.WhenAll(
                 requestTask,
                 Page.EvaluateAsync("() => fetch('/sleep.zzz')")
@@ -43,9 +43,9 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAmendMethodOnMainRequest()
         {
-            var methodTask = HttpServer.Server.WaitForRequest("/empty.html", r => r.Method);
+            var methodTask = Server.WaitForRequest("/empty.html", r => r.Method);
             await Page.RouteAsync("**/*", (route) => route.ContinueAsync(new RouteContinueOptions { Method = HttpMethod.Post.Method }));
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual("POST", await methodTask);
         }
 
@@ -53,12 +53,12 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAmendPostData()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.RouteAsync("**/*", (route) =>
             {
                 route.ContinueAsync(new RouteContinueOptions { PostData = Encoding.UTF8.GetBytes("doggo") });
             });
-            var requestTask = HttpServer.Server.WaitForRequest("/sleep.zzz", request =>
+            var requestTask = Server.WaitForRequest("/sleep.zzz", request =>
             {
                 using StreamReader reader = new StreamReader(request.Body);
                 return reader.ReadToEndAsync().GetAwaiter().GetResult();

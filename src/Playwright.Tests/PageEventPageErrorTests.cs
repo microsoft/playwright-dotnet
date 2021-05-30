@@ -17,7 +17,7 @@ namespace Microsoft.Playwright.Tests
 
             var (error, _) = await TaskUtils.WhenAll(
                 errorEvent.Task,
-                Page.GotoAsync(TestConstants.ServerUrl + "/error.html")
+                Page.GotoAsync(Server.Prefix + "/error.html")
             );
 
             StringAssert.Contains("Error", error);
@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Tests
             Page.PageError += (_, error) => pageError.TrySetResult(error);
             var (error, _) = await TaskUtils.WhenAll(
                 pageError.Task,
-                Page.GotoAsync(TestConstants.ServerUrl + "/error.html"));
+                Page.GotoAsync(Server.Prefix + "/error.html"));
 
             StringAssert.Contains("myscript.js", error);
         }

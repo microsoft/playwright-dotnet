@@ -16,13 +16,13 @@ namespace Microsoft.Playwright.Tests
         {
             await TaskUtils.WhenAll(
                 Page.WaitForWorkerAsync(),
-                Page.GotoAsync(TestConstants.ServerUrl + "/worker/worker.html"));
+                Page.GotoAsync(Server.Prefix + "/worker/worker.html"));
             var worker = Page.Workers.First();
             StringAssert.Contains("worker.js", worker.Url);
 
             Assert.AreEqual("worker function result", await worker.EvaluateAsync<string>("() => self['workerFunction']()"));
 
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             Assert.IsEmpty(Page.Workers);
         }
 
@@ -104,7 +104,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearUponNavigation()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var workerCreatedTask = Page.WaitForWorkerAsync();
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
             var worker = await workerCreatedTask;
@@ -113,7 +113,7 @@ namespace Microsoft.Playwright.Tests
             bool destroyed = false;
             worker.Close += (_, _) => destroyed = true;
 
-            await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
+            await Page.GotoAsync(Server.Prefix + "/one-style.html");
             Assert.True(destroyed);
             Assert.IsEmpty(Page.Workers);
         }
@@ -122,7 +122,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearUponCrossProcessNavigation()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var workerCreatedTask = Page.WaitForWorkerAsync();
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
             var worker = await workerCreatedTask;
@@ -131,7 +131,7 @@ namespace Microsoft.Playwright.Tests
             bool destroyed = false;
             worker.Close += (_, _) => destroyed = true;
 
-            await Page.GotoAsync(TestConstants.CrossProcessUrl + "/empty.html");
+            await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
             Assert.True(destroyed);
             Assert.IsEmpty(Page.Workers);
         }
@@ -142,10 +142,10 @@ namespace Microsoft.Playwright.Tests
         {
             var (worker, _) = await TaskUtils.WhenAll(
                 Page.WaitForWorkerAsync(),
-                Page.GotoAsync(TestConstants.ServerUrl + "/worker/worker.html")
+                Page.GotoAsync(Server.Prefix + "/worker/worker.html")
             );
 
-            string url = TestConstants.ServerUrl + "/one-style.css";
+            string url = Server.Prefix + "/one-style.css";
             var requestTask = Page.WaitForRequestAsync(url);
             var responseTask = Page.WaitForResponseAsync(url);
 
@@ -162,8 +162,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNetworkActivityOnWorkerCreation()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            string url = TestConstants.ServerUrl + "/one-style.css";
+            await Page.GotoAsync(Server.EmptyPage);
+            string url = Server.Prefix + "/one-style.css";
 
             var requestTask = Page.WaitForRequestAsync(url);
             var responseTask = Page.WaitForResponseAsync(url);
@@ -185,7 +185,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { Locale = "ru-RU" });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             var (worker, _) = await TaskUtils.WhenAll(
                 page.WaitForWorkerAsync(),
                 page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], {type: 'application/javascript'})))"));

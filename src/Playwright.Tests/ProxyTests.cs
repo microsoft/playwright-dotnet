@@ -14,9 +14,9 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUseProxy()
         {
-            HttpServer.Server.SetRoute("/target.html", ctx => ctx.Response.WriteAsync("<html><title>Served by the proxy</title></html>"));
+            Server.SetRoute("/target.html", ctx => ctx.Response.WriteAsync("<html><title>Served by the proxy</title></html>"));
 
-            var proxy = new Proxy { Server = $"localhost:{TestConstants.Port}" };
+            var proxy = new Proxy { Server = $"localhost:{Server.Port}" };
 
             await using var browser = await BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { Proxy = proxy });
 
@@ -30,7 +30,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAuthenticate()
         {
-            HttpServer.Server.SetRoute("/target.html", ctx =>
+            Server.SetRoute("/target.html", ctx =>
             {
                 string auth = ctx.Request.Headers["proxy-authorization"];
 
@@ -45,7 +45,7 @@ namespace Microsoft.Playwright.Tests
 
             var proxy = new Proxy
             {
-                Server = $"localhost:{TestConstants.Port}",
+                Server = $"localhost:{Server.Port}",
                 Username = "user",
                 Password = "secret"
             };
@@ -62,11 +62,11 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldExcludePatterns()
         {
-            HttpServer.Server.SetRoute("/target.html", ctx => ctx.Response.WriteAsync("<html><title>Served by the proxy</title></html>"));
+            Server.SetRoute("/target.html", ctx => ctx.Response.WriteAsync("<html><title>Served by the proxy</title></html>"));
 
             var proxy = new Proxy
             {
-                Server = $"localhost:{TestConstants.Port}",
+                Server = $"localhost:{Server.Port}",
                 Bypass = "non-existent1.com, .non-existent2.com, .zone",
             };
 

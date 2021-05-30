@@ -31,13 +31,13 @@ namespace Microsoft.Playwright.Tests
             // Write a cookie in headful chrome            
             await using var headfulContext = await LaunchPersistentHeaded(userDataDir.Path);
             var headfulPage = await headfulContext.NewPageAsync();
-            await headfulPage.GotoAsync(TestConstants.EmptyPage);
+            await headfulPage.GotoAsync(Server.EmptyPage);
             await headfulPage.EvaluateAsync("() => document.cookie = 'foo=true; expires=Fri, 31 Dec 9999 23:59:59 GMT'");
             await headfulContext.CloseAsync();
 
             var headlessContext = await LaunchPersistentHeaded(userDataDir.Path);
             var headlessPage = await headlessContext.NewPageAsync();
-            await headlessPage.GotoAsync(TestConstants.EmptyPage);
+            await headlessPage.GotoAsync(Server.EmptyPage);
             string cookie = await headlessPage.EvaluateAsync<string>("() => document.cookie");
             await headlessContext.CloseAsync();
 
@@ -52,7 +52,7 @@ namespace Microsoft.Playwright.Tests
             await using var browserContext = await LaunchPersistentHeaded(userDataDir.Path);
             var page = await browserContext.NewPageAsync();
 
-            await page.GotoAsync(TestConstants.ServerUrl + "/beforeunload.html");
+            await page.GotoAsync(Server.Prefix + "/beforeunload.html");
             // We have to interact with a page so that 'beforeunload' handlers fire.
             await page.ClickAsync("body");
         }
@@ -80,7 +80,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var browser = await LaunchHeaded();
             var page = await browser.NewPageAsync();
-            await page.SetContentAsync($"<button>Hello</button><a target=_blank href=\"{TestConstants.EmptyPage}\">empty.html</a>");
+            await page.SetContentAsync($"<button>Hello</button><a target=_blank href=\"{Server.EmptyPage}\">empty.html</a>");
             await page.ClickAsync("a");
             await page.ClickAsync("button");
         }
@@ -91,7 +91,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var browser = await LaunchHeaded();
             var page = await browser.NewPageAsync();
-            await page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
+            await page.GotoAsync(Server.Prefix + "/grid.html");
             await page.ClickAsync("body", new PageClickOptions { Button = MouseButton.Right });
         }
 
@@ -101,7 +101,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var browser = await LaunchHeaded();
             var page = await browser.NewPageAsync();
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
 
             await page.EvaluateAsync(@"src => {
                 let fulfill;
@@ -111,7 +111,7 @@ namespace Microsoft.Playwright.Tests
                 iframe.onload = fulfill;
                 iframe.src = src;
                 return promise;
-            }", TestConstants.CrossProcessUrl + "/grid.html");
+            }", Server.CrossProcessPrefix + "/grid.html");
 
             string documentCookie = await page.Frames.ElementAt(1).EvaluateAsync<string>(@"() => {
                 document.cookie = 'username=John Doe';
@@ -121,7 +121,7 @@ namespace Microsoft.Playwright.Tests
             await page.WaitForTimeoutAsync(2000);
             bool allowsThirdParty = TestConstants.IsChromium || TestConstants.IsFirefox;
             Assert.AreEqual(allowsThirdParty ? "username=John Doe" : string.Empty, documentCookie);
-            var cookies = await page.Context.CookiesAsync(new[] { TestConstants.CrossProcessUrl + "/grid.html" });
+            var cookies = await page.Context.CookiesAsync(new[] { Server.CrossProcessPrefix + "/grid.html" });
 
             if (allowsThirdParty)
             {
@@ -149,7 +149,7 @@ namespace Microsoft.Playwright.Tests
             await using var browser = await LaunchHeaded();
             var context = await browser.NewContextAsync(new BrowserNewContextOptions { ViewportSize = ViewportSize.NoViewport });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             var popupTask = page.WaitForPopupAsync();
 
             await TaskUtils.WhenAll(

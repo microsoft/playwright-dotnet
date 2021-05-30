@@ -56,9 +56,9 @@ namespace Microsoft.Playwright.Tests
         {
             string imgPath = "/img.png";
             // stall for image
-            HttpServer.Server.SetRoute(imgPath, _ => Task.Delay(Timeout.Infinite));
+            Server.SetRoute(imgPath, _ => Task.Delay(Timeout.Infinite));
             await AssertThrowsAsync<TimeoutException>(() =>
-                Page.SetContentAsync($"<img src=\"{TestConstants.ServerUrl + imgPath}\"></img>", new PageSetContentOptions { Timeout = 1 })
+                Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new PageSetContentOptions { Timeout = 1 })
             );
         }
 
@@ -69,9 +69,9 @@ namespace Microsoft.Playwright.Tests
             Page.SetDefaultNavigationTimeout(1);
             string imgPath = "/img.png";
             // stall for image
-            HttpServer.Server.SetRoute(imgPath, _ => Task.Delay(Timeout.Infinite));
+            Server.SetRoute(imgPath, _ => Task.Delay(Timeout.Infinite));
             var exception = await AssertThrowsAsync<TimeoutException>(() =>
-                Page.SetContentAsync($"<img src=\"{TestConstants.ServerUrl + imgPath}\"></img>", new PageSetContentOptions { Timeout = 1 })
+                Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new PageSetContentOptions { Timeout = 1 })
             );
 
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
@@ -83,10 +83,10 @@ namespace Microsoft.Playwright.Tests
         {
             string imgPath = "/img.png";
             var imgResponse = new TaskCompletionSource<bool>();
-            HttpServer.Server.SetRoute(imgPath, _ => imgResponse.Task);
+            Server.SetRoute(imgPath, _ => imgResponse.Task);
             bool loaded = false;
-            var contentTask = Page.SetContentAsync($"<img src=\"{TestConstants.ServerUrl + imgPath}\"></img>").ContinueWith(_ => loaded = true);
-            await HttpServer.Server.WaitForRequest(imgPath);
+            var contentTask = Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>").ContinueWith(_ => loaded = true);
+            await Server.WaitForRequest(imgPath);
             Assert.False(loaded);
             imgResponse.SetResult(true);
             await contentTask;

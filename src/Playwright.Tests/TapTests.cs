@@ -131,8 +131,8 @@ namespace Microsoft.Playwright.Tests
         {
             var requestResponse = new TaskCompletionSource<bool>();
             string route = "/intercept-this.html";
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            HttpServer.Server.SetRoute(route, _ =>
+            await Page.GotoAsync(Server.EmptyPage);
+            Server.SetRoute(route, _ =>
             {
                 requestResponse.SetResult(true);
                 return requestResponse.Task;

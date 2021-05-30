@@ -21,8 +21,8 @@ namespace Microsoft.Playwright.Tests
                 ["Foo"] = "Bar"
             });
 
-            var headerTask = HttpServer.Server.WaitForRequest("/empty.html", request => request.Headers["Foo"]);
-            await TaskUtils.WhenAll(Page.GotoAsync(TestConstants.EmptyPage), headerTask);
+            var headerTask = Server.WaitForRequest("/empty.html", request => request.Headers["Foo"]);
+            await TaskUtils.WhenAll(Page.GotoAsync(Server.EmptyPage), headerTask);
 
             Assert.AreEqual("Bar", headerTask.Result);
         }
@@ -31,14 +31,14 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithRedirects()
         {
-            HttpServer.Server.SetRedirect("/foo.html", "/empty.html");
+            Server.SetRedirect("/foo.html", "/empty.html");
             await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
             {
                 ["Foo"] = "Bar"
             });
 
-            var headerTask = HttpServer.Server.WaitForRequest("/empty.html", request => request.Headers["Foo"]);
-            await TaskUtils.WhenAll(Page.GotoAsync(TestConstants.ServerUrl + "/foo.html"), headerTask);
+            var headerTask = Server.WaitForRequest("/empty.html", request => request.Headers["Foo"]);
+            await TaskUtils.WhenAll(Page.GotoAsync(Server.Prefix + "/foo.html"), headerTask);
 
             Assert.AreEqual("Bar", headerTask.Result);
         }
@@ -54,8 +54,8 @@ namespace Microsoft.Playwright.Tests
             });
             var page = await context.NewPageAsync();
 
-            var headerTask = HttpServer.Server.WaitForRequest("/empty.html", request => request.Headers["Foo"]);
-            await TaskUtils.WhenAll(page.GotoAsync(TestConstants.EmptyPage), headerTask);
+            var headerTask = Server.WaitForRequest("/empty.html", request => request.Headers["Foo"]);
+            await TaskUtils.WhenAll(page.GotoAsync(Server.EmptyPage), headerTask);
 
             Assert.AreEqual("Bar", headerTask.Result);
         }
@@ -77,8 +77,8 @@ namespace Microsoft.Playwright.Tests
                 ["Foo"] = "Bar"
             });
 
-            var headerTask = HttpServer.Server.WaitForRequest("/empty.html", request => (request.Headers["Foo"], request.Headers["baR"]));
-            await TaskUtils.WhenAll(page.GotoAsync(TestConstants.EmptyPage), headerTask);
+            var headerTask = Server.WaitForRequest("/empty.html", request => (request.Headers["Foo"], request.Headers["baR"]));
+            await TaskUtils.WhenAll(page.GotoAsync(Server.EmptyPage), headerTask);
 
             Assert.AreEqual("Bar", headerTask.Result.Item1);
             Assert.AreEqual("foO", headerTask.Result.Item2);

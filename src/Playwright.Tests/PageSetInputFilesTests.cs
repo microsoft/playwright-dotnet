@@ -17,7 +17,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUploadTheFile()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/fileupload.html");
+            await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", TestConstants.FileToUpload);
             var input = await Page.QuerySelectorAsync("input");
             await input.SetInputFilesAsync(filePath);
@@ -122,8 +122,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCSP()
         {
-            HttpServer.Server.SetCSP("/empty.html", "default-src \"none\"");
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            Server.SetCSP("/empty.html", "default-src \"none\"");
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.SetContentAsync("<input type=file>");
 
             await Page.SetInputFilesAsync("input", Path.Combine(Directory.GetCurrentDirectory(), "Assets", TestConstants.FileToUpload));
@@ -206,7 +206,7 @@ namespace Microsoft.Playwright.Tests
         {
             var files = new List<(string name, string mime, byte[] content)>();
 
-            HttpServer.Server.SetRoute("/upload", context =>
+            Server.SetRoute("/upload", context =>
             {
                 files.AddRange(context.Request.Form.Files.Select(f =>
                 {
@@ -217,7 +217,7 @@ namespace Microsoft.Playwright.Tests
                 return Task.CompletedTask;
             });
 
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.SetContentAsync(@"
                 <form action=""/upload"" method=""post"" enctype=""multipart/form-data"">
                     <input type=""file"" name=""file1"">
@@ -231,7 +231,7 @@ namespace Microsoft.Playwright.Tests
 
             await TaskUtils.WhenAll(
                Page.ClickAsync("input[type=submit]"),
-               HttpServer.Server.WaitForRequest("/upload")
+               Server.WaitForRequest("/upload")
             );
 
             Assert.AreEqual("file-to-upload.txt", files[0].name);

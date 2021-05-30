@@ -15,11 +15,11 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateSubFrames()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
+            await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
             Assert.AreEqual(1, Page.Frames.Where(f => f.Url.Contains("/frames/one-frame.html")).Count());
             Assert.AreEqual(1, Page.Frames.Where(f => f.Url.Contains("/frames/frame.html")).Count());
             var childFrame = Page.FirstChildFrame();
-            var response = await childFrame.GotoAsync(TestConstants.EmptyPage);
+            var response = await childFrame.GotoAsync(Server.EmptyPage);
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
             Assert.AreEqual(response.Frame, childFrame);
         }
@@ -28,10 +28,10 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectWhenFrameDetaches()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
-            HttpServer.Server.SetRoute("/empty.html", _ => Task.Delay(10000));
-            var waitForRequestTask = HttpServer.Server.WaitForRequest("/empty.html");
-            var navigationTask = Page.FirstChildFrame().GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+            Server.SetRoute("/empty.html", _ => Task.Delay(10000));
+            var waitForRequestTask = Server.WaitForRequest("/empty.html");
+            var navigationTask = Page.FirstChildFrame().GotoAsync(Server.EmptyPage);
             await waitForRequestTask;
             await Page.EvalOnSelectorAsync("iframe", "frame => frame.remove()");
             var exception = await AssertThrowsAsync<PlaywrightException>(() => navigationTask);
@@ -42,8 +42,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldContinueAfterClientRedirect()
         {
-            HttpServer.Server.SetRoute("/frames/script.js", _ => Task.Delay(10000));
-            string url = TestConstants.ServerUrl + "/frames/child-redirect.html";
+            Server.SetRoute("/frames/script.js", _ => Task.Delay(10000));
+            string url = Server.Prefix + "/frames/child-redirect.html";
             var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(url, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle, Timeout = 5000 }));
 
             StringAssert.Contains("Timeout 5000ms", exception.Message);
@@ -54,13 +54,13 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnMatchingResponses()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             // Attach three frames.
             var matchingData = new MatchingResponseData[]
             {
-                new MatchingResponseData{ FrameTask =  FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage)},
-                new MatchingResponseData{ FrameTask =  FrameUtils.AttachFrameAsync(Page, "frame2", TestConstants.EmptyPage)},
-                new MatchingResponseData{ FrameTask =  FrameUtils.AttachFrameAsync(Page, "frame3", TestConstants.EmptyPage)}
+                new MatchingResponseData{ FrameTask =  FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage)},
+                new MatchingResponseData{ FrameTask =  FrameUtils.AttachFrameAsync(Page, "frame2", Server.EmptyPage)},
+                new MatchingResponseData{ FrameTask =  FrameUtils.AttachFrameAsync(Page, "frame3", Server.EmptyPage)}
             };
 
             await TaskUtils.WhenAll(matchingData.Select(m => m.FrameTask));
@@ -74,14 +74,14 @@ namespace Microsoft.Playwright.Tests
                 }
             });
 
-            HttpServer.Server.SetRoute("/one-style.html?index=0", requestHandler);
-            HttpServer.Server.SetRoute("/one-style.html?index=1", requestHandler);
-            HttpServer.Server.SetRoute("/one-style.html?index=2", requestHandler);
+            Server.SetRoute("/one-style.html?index=0", requestHandler);
+            Server.SetRoute("/one-style.html?index=1", requestHandler);
+            Server.SetRoute("/one-style.html?index=2", requestHandler);
 
             for (int i = 0; i < 3; ++i)
             {
-                var waitRequestTask = HttpServer.Server.WaitForRequest("/one-style.html");
-                matchingData[i].NavigationTask = matchingData[i].FrameTask.Result.GotoAsync($"{TestConstants.ServerUrl}/one-style.html?index={i}");
+                var waitRequestTask = Server.WaitForRequest("/one-style.html");
+                matchingData[i].NavigationTask = matchingData[i].FrameTask.Result.GotoAsync($"{Server.Prefix}/one-style.html?index={i}");
                 await waitRequestTask;
             }
             // Respond from server out-of-order.

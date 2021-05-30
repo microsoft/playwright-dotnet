@@ -15,8 +15,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            Assert.AreEqual(TestConstants.EmptyPage, Page.Url);
+            await Page.GotoAsync(Server.EmptyPage);
+            Assert.AreEqual(Server.EmptyPage, Page.Url);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work with file URL")]
@@ -33,18 +33,18 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUseHttpForNoProtocol()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage.Replace("http://", string.Empty));
-            Assert.AreEqual(TestConstants.EmptyPage, Page.Url);
+            await Page.GotoAsync(Server.EmptyPage.Replace("http://", string.Empty));
+            Assert.AreEqual(Server.EmptyPage, Page.Url);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work cross-process")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkCrossProcess()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            Assert.AreEqual(TestConstants.EmptyPage, Page.Url);
+            await Page.GotoAsync(Server.EmptyPage);
+            Assert.AreEqual(Server.EmptyPage, Page.Url);
 
-            string url = TestConstants.CrossProcessHttpPrefix + "/empty.html";
+            string url = Server.CrossProcessPrefix + "/empty.html";
             IFrame requestFrame = null;
             Page.Request += (_, e) =>
             {
@@ -65,22 +65,22 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCaptureIframeNavigationRequest()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            Assert.AreEqual(TestConstants.EmptyPage, Page.Url);
+            await Page.GotoAsync(Server.EmptyPage);
+            Assert.AreEqual(Server.EmptyPage, Page.Url);
 
             IFrame requestFrame = null;
             Page.Request += (_, e) =>
             {
-                if (e.Url == TestConstants.ServerUrl + "/frames/frame.html")
+                if (e.Url == Server.Prefix + "/frames/frame.html")
                 {
                     requestFrame = e.Frame;
                 }
             };
 
-            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
-            Assert.AreEqual(TestConstants.ServerUrl + "/frames/one-frame.html", Page.Url);
+            var response = await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+            Assert.AreEqual(Server.Prefix + "/frames/one-frame.html", Page.Url);
             Assert.AreEqual(Page.MainFrame, response.Frame);
-            Assert.AreEqual(TestConstants.ServerUrl + "/frames/one-frame.html", response.Url);
+            Assert.AreEqual(Server.Prefix + "/frames/one-frame.html", response.Url);
 
             Assert.AreEqual(2, Page.Frames.Count);
             Assert.AreEqual(Page.FirstChildFrame(), requestFrame);
@@ -90,22 +90,22 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCaptureCrossProcessIframeNavigationRequest()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            Assert.AreEqual(TestConstants.EmptyPage, Page.Url);
+            await Page.GotoAsync(Server.EmptyPage);
+            Assert.AreEqual(Server.EmptyPage, Page.Url);
 
             IFrame requestFrame = null;
             Page.Request += (_, e) =>
             {
-                if (e.Url == TestConstants.CrossProcessHttpPrefix + "/frames/frame.html")
+                if (e.Url == Server.CrossProcessPrefix + "/frames/frame.html")
                 {
                     requestFrame = e.Frame;
                 }
             };
 
-            var response = await Page.GotoAsync(TestConstants.CrossProcessHttpPrefix + "/frames/one-frame.html");
-            Assert.AreEqual(TestConstants.CrossProcessHttpPrefix + "/frames/one-frame.html", Page.Url);
+            var response = await Page.GotoAsync(Server.CrossProcessPrefix + "/frames/one-frame.html");
+            Assert.AreEqual(Server.CrossProcessPrefix + "/frames/one-frame.html", Page.Url);
             Assert.AreEqual(Page.MainFrame, response.Frame);
-            Assert.AreEqual(TestConstants.CrossProcessHttpPrefix + "/frames/one-frame.html", response.Url);
+            Assert.AreEqual(Server.CrossProcessPrefix + "/frames/one-frame.html", response.Url);
 
             Assert.AreEqual(2, Page.Frames.Count);
             Assert.AreEqual(Page.FirstChildFrame(), requestFrame);
@@ -115,24 +115,24 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAnchorNavigation()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            Assert.AreEqual(TestConstants.EmptyPage, Page.Url);
-            await Page.GotoAsync($"{TestConstants.EmptyPage}#foo");
-            Assert.AreEqual($"{TestConstants.EmptyPage}#foo", Page.Url);
-            await Page.GotoAsync($"{TestConstants.EmptyPage}#bar");
-            Assert.AreEqual($"{TestConstants.EmptyPage}#bar", Page.Url);
+            await Page.GotoAsync(Server.EmptyPage);
+            Assert.AreEqual(Server.EmptyPage, Page.Url);
+            await Page.GotoAsync($"{Server.EmptyPage}#foo");
+            Assert.AreEqual($"{Server.EmptyPage}#foo", Page.Url);
+            await Page.GotoAsync($"{Server.EmptyPage}#bar");
+            Assert.AreEqual($"{Server.EmptyPage}#bar", Page.Url);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work with redirects")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithRedirects()
         {
-            HttpServer.Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
-            HttpServer.Server.SetRedirect("/redirect/2.html", "/empty.html");
+            Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
+            Server.SetRedirect("/redirect/2.html", "/empty.html");
 
-            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/redirect/1.html");
+            var response = await Page.GotoAsync(Server.Prefix + "/redirect/1.html");
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should navigate to about:blank")]
@@ -147,7 +147,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnResponseWhenPageChangesItsURLAfterLoad()
         {
-            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/historyapi.html");
+            var response = await Page.GotoAsync(Server.Prefix + "/historyapi.html");
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
         }
 
@@ -155,25 +155,25 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithSubframesReturn204()
         {
-            HttpServer.Server.SetRoute("/frames/frame.html", context =>
+            Server.SetRoute("/frames/frame.html", context =>
             {
                 context.Response.StatusCode = 204;
                 return Task.CompletedTask;
             });
-            await Page.GotoAsync(TestConstants.ServerUrl + "/frames/one-frame.html");
+            await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work with subframes return 204")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenServerReturns204()
         {
-            HttpServer.Server.SetRoute("/empty.html", context =>
+            Server.SetRoute("/empty.html", context =>
             {
                 context.Response.StatusCode = 204;
                 return Task.CompletedTask;
             });
             var exception = await AssertThrowsAsync<PlaywrightException>(
-                () => Page.GotoAsync(TestConstants.EmptyPage));
+                () => Page.GotoAsync(Server.EmptyPage));
 
             if (TestConstants.IsChromium)
             {
@@ -193,7 +193,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateToEmptyPageWithDOMContentLoaded()
         {
-            var response = await Page.GotoAsync(TestConstants.EmptyPage, new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
+            var response = await Page.GotoAsync(Server.EmptyPage, new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
         }
 
@@ -201,12 +201,12 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenPageCallsHistoryAPIInBeforeunload()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.EvaluateAsync(@"() =>
             {
                 window.addEventListener('beforeunload', () => history.replaceState(null, 'initial', window.location.href), false);
             }");
-            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/grid.html");
+            var response = await Page.GotoAsync(Server.Prefix + "/grid.html");
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
         }
 
@@ -234,7 +234,7 @@ namespace Microsoft.Playwright.Tests
             Page.RequestFinished += (_, e) => Assert.NotNull(e);
             Page.RequestFailed += (_, e) => Assert.NotNull(e);
 
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html"));
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
             TestUtils.AssertSSLError(exception.Message);
         }
 
@@ -243,9 +243,9 @@ namespace Microsoft.Playwright.Tests
         [Test, Ignore("Fix me #1058")]
         public async Task ShouldFailWhenNavigatingToBadSSLAfterRedirects()
         {
-            HttpServer.Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
-            HttpServer.Server.SetRedirect("/redirect/2.html", "/empty.html");
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(TestConstants.HttpsPrefix + "/redirect/1.html"));
+            Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
+            Server.SetRedirect("/redirect/2.html", "/empty.html");
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(HttpsServer.Prefix + "/redirect/1.html"));
             TestUtils.AssertSSLError(exception.Message);
         }
 
@@ -254,8 +254,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Ignore("Fix me #1058")]
         public async Task ShouldNotCrashWhenNavigatingToBadSSLAfterACrossOriginNavigation()
         {
-            await Page.GotoAsync(TestConstants.CrossProcessHttpPrefix + "/empty.html");
-            await Page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html").ContinueWith(_ => { });
+            await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
+            await Page.GotoAsync(HttpsServer.Prefix + "/empty.html").ContinueWith(_ => { });
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should throw if networkidle0 is passed as an option")]
@@ -296,57 +296,57 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingMaximumNavigationTimeout()
         {
-            HttpServer.Server.SetRoute("/empty.html", _ => Task.Delay(-1));
+            Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             var exception = await AssertThrowsAsync<TimeoutException>(()
-                => Page.GotoAsync(TestConstants.EmptyPage, new PageGotoOptions { Timeout = 1 }));
+                => Page.GotoAsync(Server.EmptyPage, new PageGotoOptions { Timeout = 1 }));
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
-            StringAssert.Contains(TestConstants.EmptyPage, exception.Message);
+            StringAssert.Contains(Server.EmptyPage, exception.Message);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding maximum navigation timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingDefaultMaximumNavigationTimeout()
         {
-            HttpServer.Server.SetRoute("/empty.html", _ => Task.Delay(-1));
+            Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             Page.Context.SetDefaultNavigationTimeout(2);
             Page.SetDefaultNavigationTimeout(1);
-            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(TestConstants.EmptyPage));
+            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(Server.EmptyPage));
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
-            StringAssert.Contains(TestConstants.EmptyPage, exception.Message);
+            StringAssert.Contains(Server.EmptyPage, exception.Message);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding browser context navigation timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingBrowserContextNavigationTimeout()
         {
-            HttpServer.Server.SetRoute("/empty.html", _ => Task.Delay(-1));
+            Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             Page.Context.SetDefaultNavigationTimeout(2);
-            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(TestConstants.EmptyPage));
+            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(Server.EmptyPage));
             StringAssert.Contains("Timeout 2ms exceeded", exception.Message);
-            StringAssert.Contains(TestConstants.EmptyPage, exception.Message);
+            StringAssert.Contains(Server.EmptyPage, exception.Message);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding default maximum timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingDefaultMaximumTimeout()
         {
-            HttpServer.Server.SetRoute("/empty.html", _ => Task.Delay(-1));
+            Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             Page.Context.SetDefaultTimeout(2);
             Page.SetDefaultTimeout(1);
-            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(TestConstants.EmptyPage));
+            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(Server.EmptyPage));
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
-            StringAssert.Contains(TestConstants.EmptyPage, exception.Message);
+            StringAssert.Contains(Server.EmptyPage, exception.Message);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding browser context timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingBrowserContextTimeout()
         {
-            HttpServer.Server.SetRoute("/empty.html", _ => Task.Delay(-1));
+            Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             Page.Context.SetDefaultTimeout(2);
-            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(TestConstants.EmptyPage));
+            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(Server.EmptyPage));
             StringAssert.Contains("Timeout 2ms exceeded", exception.Message);
-            StringAssert.Contains(TestConstants.EmptyPage, exception.Message);
+            StringAssert.Contains(Server.EmptyPage, exception.Message);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should prioritize default navigation timeout over default timeout")]
@@ -354,12 +354,12 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldPrioritizeDefaultNavigationTimeoutOverDefaultTimeout()
         {
             // Hang for request to the empty.html
-            HttpServer.Server.SetRoute("/empty.html", _ => Task.Delay(-1));
+            Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             Page.SetDefaultTimeout(0);
             Page.SetDefaultNavigationTimeout(1);
-            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(TestConstants.EmptyPage));
+            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(Server.EmptyPage));
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
-            StringAssert.Contains(TestConstants.EmptyPage, exception.Message);
+            StringAssert.Contains(Server.EmptyPage, exception.Message);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should disable timeout when its set to 0")]
@@ -374,7 +374,7 @@ namespace Microsoft.Playwright.Tests
             }
             Page.Load += OnLoad;
 
-            await Page.GotoAsync(TestConstants.ServerUrl + "/grid.html", new PageGotoOptions { WaitUntil = WaitUntilState.Load, Timeout = 0 });
+            await Page.GotoAsync(Server.Prefix + "/grid.html", new PageGotoOptions { WaitUntil = WaitUntilState.Load, Timeout = 0 });
             Assert.True(loaded);
         }
 
@@ -385,13 +385,13 @@ namespace Microsoft.Playwright.Tests
             Task anotherTask = null;
 
             // Hang for request to the empty.html
-            HttpServer.Server.SetRoute("/empty.html", _ =>
+            Server.SetRoute("/empty.html", _ =>
             {
-                anotherTask = Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
+                anotherTask = Page.GotoAsync(Server.Prefix + "/one-style.html");
                 return Task.Delay(-1);
             });
 
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(TestConstants.EmptyPage));
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(Server.EmptyPage));
             await anotherTask;
 
             if (TestConstants.IsChromium)
@@ -412,7 +412,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenNavigatingToValidUrl()
         {
-            var response = await Page.GotoAsync(TestConstants.EmptyPage);
+            var response = await Page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
         }
 
@@ -428,7 +428,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenNavigatingTo404()
         {
-            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/not-found");
+            var response = await Page.GotoAsync(Server.Prefix + "/not-found");
             Assert.AreEqual((int)HttpStatusCode.NotFound, response.Status);
         }
 
@@ -436,13 +436,13 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnLastResponseInRedirectChain()
         {
-            HttpServer.Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
-            HttpServer.Server.SetRedirect("/redirect/2.html", "/redirect/3.html");
-            HttpServer.Server.SetRedirect("/redirect/3.html", TestConstants.EmptyPage);
+            Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
+            Server.SetRedirect("/redirect/2.html", "/redirect/3.html");
+            Server.SetRedirect("/redirect/3.html", Server.EmptyPage);
 
-            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/redirect/1.html");
+            var response = await Page.GotoAsync(Server.Prefix + "/redirect/1.html");
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
-            Assert.AreEqual(TestConstants.EmptyPage, response.Url);
+            Assert.AreEqual(Server.EmptyPage, response.Url);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should not leak listeners during navigation")]
@@ -480,18 +480,18 @@ namespace Microsoft.Playwright.Tests
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
 
-            var response = await Page.GotoAsync(TestConstants.EmptyPage + "#hash");
+            var response = await Page.GotoAsync(Server.EmptyPage + "#hash");
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
-            Assert.AreEqual(TestConstants.EmptyPage, response.Url);
+            Assert.AreEqual(Server.EmptyPage, response.Url);
             Assert.That(requests, Has.Count.EqualTo(1));
-            Assert.AreEqual(TestConstants.EmptyPage, requests[0].Url);
+            Assert.AreEqual(Server.EmptyPage, requests[0].Url);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work with self requesting page")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithSelfRequestingPage()
         {
-            var response = await Page.GotoAsync(TestConstants.ServerUrl + "/self-request.html");
+            var response = await Page.GotoAsync(Server.Prefix + "/self-request.html");
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
             StringAssert.Contains("self-request.html", response.Url);
         }
@@ -501,7 +501,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Ignore("Fix me #1058")]
         public async Task ShouldFailWhenNavigatingAndShowTheUrlAtTheErrorMessage()
         {
-            const string url = TestConstants.HttpsPrefix + "/redirect/1.html";
+            string url = HttpsServer.Prefix + "/redirect/1.html";
             var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(url));
             StringAssert.Contains(url, exception.Message);
         }
@@ -510,9 +510,9 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToNavigateToAPageControlledByServiceWorker()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/serviceworkers/fetch/sw.html");
+            await Page.GotoAsync(Server.Prefix + "/serviceworkers/fetch/sw.html");
             await Page.EvaluateAsync("() => window.activationPromise");
-            await Page.GotoAsync(TestConstants.ServerUrl + "/serviceworkers/fetch/sw.html");
+            await Page.GotoAsync(Server.Prefix + "/serviceworkers/fetch/sw.html");
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should send referer")]
@@ -523,15 +523,15 @@ namespace Microsoft.Playwright.Tests
             string referer2 = null;
 
             await TaskUtils.WhenAll(
-                HttpServer.Server.WaitForRequest("/grid.html", r => referer1 = r.Headers["Referer"]),
-                HttpServer.Server.WaitForRequest("/digits/1.png", r => referer2 = r.Headers["Referer"]),
-                Page.GotoAsync(TestConstants.ServerUrl + "/grid.html", new PageGotoOptions { Referer = "http://google.com/" })
+                Server.WaitForRequest("/grid.html", r => referer1 = r.Headers["Referer"]),
+                Server.WaitForRequest("/digits/1.png", r => referer2 = r.Headers["Referer"]),
+                Page.GotoAsync(Server.Prefix + "/grid.html", new PageGotoOptions { Referer = "http://google.com/" })
             );
 
             Assert.AreEqual("http://google.com/", referer1);
             // Make sure subresources do not inherit referer.
-            Assert.AreEqual(TestConstants.ServerUrl + "/grid.html", referer2);
-            Assert.AreEqual(TestConstants.ServerUrl + "/grid.html", Page.Url);
+            Assert.AreEqual(Server.Prefix + "/grid.html", referer2);
+            Assert.AreEqual(Server.Prefix + "/grid.html", Page.Url);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should reject referer option when setExtraHTTPHeaders provides referer")]
@@ -544,17 +544,17 @@ namespace Microsoft.Playwright.Tests
             });
 
             var exception = await AssertThrowsAsync<PlaywrightException>(() =>
-                Page.GotoAsync(TestConstants.ServerUrl + "/grid.html", new PageGotoOptions { Referer = "http://google.com/" }));
+                Page.GotoAsync(Server.Prefix + "/grid.html", new PageGotoOptions { Referer = "http://google.com/" }));
 
             StringAssert.Contains("\"referer\" is already specified as extra HTTP header", exception.Message);
-            StringAssert.Contains(TestConstants.ServerUrl + "/grid.html", exception.Message);
+            StringAssert.Contains(Server.Prefix + "/grid.html", exception.Message);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should override referrer-policy")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldOverrideReferrerPolicy()
         {
-            HttpServer.Server.Subscribe("/grid.html", context =>
+            Server.Subscribe("/grid.html", context =>
             {
                 context.Response.Headers["Referrer-Policy"] = "no-referrer";
             });
@@ -562,28 +562,28 @@ namespace Microsoft.Playwright.Tests
             string referer1 = null;
             string referer2 = null;
 
-            var reqTask1 = HttpServer.Server.WaitForRequest("/grid.html", r => referer1 = r.Headers["Referer"]);
-            var reqTask2 = HttpServer.Server.WaitForRequest("/digits/1.png", r => referer2 = r.Headers["Referer"]);
+            var reqTask1 = Server.WaitForRequest("/grid.html", r => referer1 = r.Headers["Referer"]);
+            var reqTask2 = Server.WaitForRequest("/digits/1.png", r => referer2 = r.Headers["Referer"]);
             await TaskUtils.WhenAll(
                 reqTask1,
                 reqTask2,
-                Page.GotoAsync(TestConstants.ServerUrl + "/grid.html", new PageGotoOptions { Referer = "http://microsoft.com/" }));
+                Page.GotoAsync(Server.Prefix + "/grid.html", new PageGotoOptions { Referer = "http://microsoft.com/" }));
 
             Assert.AreEqual("http://microsoft.com/", referer1);
             // Make sure subresources do not inherit referer.
             Assert.Null(referer2);
-            Assert.AreEqual(TestConstants.ServerUrl + "/grid.html", Page.Url);
+            Assert.AreEqual(Server.Prefix + "/grid.html", Page.Url);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when canceled by another navigation")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenCanceledByAnotherNavigation()
         {
-            HttpServer.Server.SetRoute("/one-style.html", _ => Task.Delay(10_000));
-            var request = HttpServer.Server.WaitForRequest("/one-style.html");
-            var failed = Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html", new PageGotoOptions { WaitUntil = TestConstants.IsFirefox ? WaitUntilState.NetworkIdle : WaitUntilState.Load });
+            Server.SetRoute("/one-style.html", _ => Task.Delay(10_000));
+            var request = Server.WaitForRequest("/one-style.html");
+            var failed = Page.GotoAsync(Server.Prefix + "/one-style.html", new PageGotoOptions { WaitUntil = TestConstants.IsFirefox ? WaitUntilState.NetworkIdle : WaitUntilState.Load });
             await request;
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
 
             await AssertThrowsAsync<PlaywrightException>(() => failed);
         }

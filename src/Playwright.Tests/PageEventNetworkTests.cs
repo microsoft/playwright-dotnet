@@ -17,14 +17,14 @@ namespace Microsoft.Playwright.Tests
         {
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             Assert.That(requests, Has.Count.EqualTo(1));
-            Assert.AreEqual(TestConstants.EmptyPage, requests[0].Url);
+            Assert.AreEqual(Server.EmptyPage, requests[0].Url);
             Assert.AreEqual("document", requests[0].ResourceType);
             Assert.AreEqual(HttpMethod.Get.Method, requests[0].Method);
             Assert.NotNull(await requests[0].ResponseAsync());
             Assert.AreEqual(Page.MainFrame, requests[0].Frame);
-            Assert.AreEqual(TestConstants.EmptyPage, requests[0].Frame.Url);
+            Assert.AreEqual(Server.EmptyPage, requests[0].Frame.Url);
         }
 
         [PlaywrightTest("page-event-network.spec.ts", "Page.Events.Response")]
@@ -33,9 +33,9 @@ namespace Microsoft.Playwright.Tests
         {
             var responses = new List<IResponse>();
             Page.Response += (_, e) => responses.Add(e);
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             Assert.That(responses, Has.Count.EqualTo(1));
-            Assert.AreEqual(TestConstants.EmptyPage, responses[0].Url);
+            Assert.AreEqual(Server.EmptyPage, responses[0].Url);
             Assert.AreEqual((int)HttpStatusCode.OK, responses[0].Status);
             Assert.True(responses[0].Ok);
             Assert.NotNull(responses[0].Request);
@@ -45,7 +45,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PageEventsRequestFailed()
         {
-            int port = TestConstants.Port + 100;
+            int port = Server.Port + 100;
             var disposableServer = new SimpleServer(port, TestUtils.FindParentDirectory("Playwright.Tests.TestServer"), false);
             await disposableServer.StartAsync();
 
@@ -77,14 +77,14 @@ namespace Microsoft.Playwright.Tests
         {
             var (_, response) = await TaskUtils.WhenAll(
                 Page.WaitForRequestFinishedAsync(),
-                Page.GotoAsync(TestConstants.EmptyPage));
+                Page.GotoAsync(Server.EmptyPage));
 
             var request = response.Request;
-            Assert.AreEqual(TestConstants.EmptyPage, request.Url);
+            Assert.AreEqual(Server.EmptyPage, request.Url);
             Assert.NotNull(await request.ResponseAsync());
             Assert.AreEqual(HttpMethod.Get.Method, request.Method);
             Assert.AreEqual(Page.MainFrame, request.Frame);
-            Assert.AreEqual(TestConstants.EmptyPage, request.Frame.Url);
+            Assert.AreEqual(Server.EmptyPage, request.Frame.Url);
         }
 
         [PlaywrightTest("page-event-network.spec.ts", "should fire events in proper order")]
@@ -94,7 +94,7 @@ namespace Microsoft.Playwright.Tests
             var events = new List<string>();
             Page.Request += (_, _) => events.Add("request");
             Page.Response += (_, _) => events.Add("response");
-            var response = await Page.GotoAsync(TestConstants.EmptyPage);
+            var response = await Page.GotoAsync(Server.EmptyPage);
             await response.FinishedAsync();
             events.Add("requestfinished");
             Assert.AreEqual(new[] { "request", "response", "requestfinished" }, events);
@@ -109,17 +109,17 @@ namespace Microsoft.Playwright.Tests
             Page.Response += (_, e) => events.Add($"{(int)e.Status} {e.Url}");
             Page.RequestFinished += (_, e) => events.Add($"DONE {e.Url}");
             Page.RequestFailed += (_, e) => events.Add($"FAIL {e.Url}");
-            HttpServer.Server.SetRedirect("/foo.html", "/empty.html");
-            const string FOO_URL = TestConstants.ServerUrl + "/foo.html";
+            Server.SetRedirect("/foo.html", "/empty.html");
+            string FOO_URL = Server.Prefix + "/foo.html";
             var response = await Page.GotoAsync(FOO_URL);
             await response.FinishedAsync();
             Assert.AreEqual(new[] {
                 $"GET {FOO_URL}",
                 $"302 {FOO_URL}",
                 $"DONE {FOO_URL}",
-                $"GET {TestConstants.EmptyPage}",
-                $"200 {TestConstants.EmptyPage}",
-                $"DONE {TestConstants.EmptyPage}"
+                $"GET {Server.EmptyPage}",
+                $"200 {Server.EmptyPage}",
+                $"DONE {Server.EmptyPage}"
             }, events);
 
             // Check redirect chain
