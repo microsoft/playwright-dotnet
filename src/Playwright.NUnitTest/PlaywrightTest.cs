@@ -23,12 +23,8 @@
  */
 
 using System;
-using System.Collections.Concurrent;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Playwright;
 using NUnit.Framework;
-using NUnit.Framework.Interfaces;
 
 namespace Microsoft.Playwright.NUnitTest
 {
@@ -37,7 +33,7 @@ namespace Microsoft.Playwright.NUnitTest
         public static string BrowserName => string.IsNullOrEmpty(Environment.GetEnvironmentVariable("BROWSER")) ?
             "chromium" : Environment.GetEnvironmentVariable("BROWSER").ToLower();
 
-        private static Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
+        private static readonly Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
 
         public IPlaywright Playwright { get; private set; }
         public IBrowserType BrowserType { get; private set; }
@@ -49,7 +45,7 @@ namespace Microsoft.Playwright.NUnitTest
             BrowserType = Playwright[BrowserName];
         }
 
-        public static async Task<T> AssertThrowsAsync<T>(Func<Task> action) where T : System.Exception
+        public static async Task<T> AssertThrowsAsync<T>(Func<Task> action) where T : Exception
         {
             try
             {
