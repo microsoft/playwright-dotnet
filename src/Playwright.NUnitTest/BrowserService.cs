@@ -22,13 +22,7 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections.Concurrent;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Playwright;
-using NUnit.Framework;
-using NUnit.Framework.Interfaces;
 
 namespace Microsoft.Playwright.NUnitTest
 {
@@ -40,11 +34,13 @@ namespace Microsoft.Playwright.NUnitTest
         {
             return await test.RegisterService("Browser", async () =>
             {
-                var service = new BrowserService();
-                service.Browser = await browserType.LaunchAsync(new BrowserTypeLaunchOptions
+                var service = new BrowserService
                 {
-                    Headless = true
-                });
+                    Browser = await browserType.LaunchAsync(new BrowserTypeLaunchOptions
+                    {
+                        Headless = true
+                    })
+                };
                 return service;
             });
         }

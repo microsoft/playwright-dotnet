@@ -22,13 +22,7 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections.Concurrent;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Playwright;
-using NUnit.Framework;
-using NUnit.Framework.Interfaces;
 
 namespace Microsoft.Playwright.NUnitTest
 {

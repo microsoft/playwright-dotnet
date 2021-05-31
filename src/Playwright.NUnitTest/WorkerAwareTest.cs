@@ -27,7 +27,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Playwright;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
@@ -37,34 +36,34 @@ namespace Microsoft.Playwright.NUnitTest
     {
         internal class Worker
         {
-            private static int lastWorkerIndex_ = 0;
-            public int WorkerIndex = Interlocked.Increment(ref lastWorkerIndex_);
-            public Dictionary<string, IWorkerService> Services = new Dictionary<string, IWorkerService>();
+            private static int _lastWorkedIndex = 0;
+            public int WorkerIndex = Interlocked.Increment(ref _lastWorkedIndex);
+            public Dictionary<string, IWorkerService> Services = new();
         }
 
-        private static ConcurrentStack<Worker> allWorkers_ = new ConcurrentStack<Worker>();
-        private Worker currentWorker_;
+        private static readonly ConcurrentStack<Worker> _allWorkers = new();
+        private Worker _currentWorker;
 
         public int WorkerIndex { get; internal set; }
 
         public async Task<T> RegisterService<T>(string name, Func<Task<T>> factory) where T : class, IWorkerService
         {
-            if (!currentWorker_.Services.ContainsKey(name))
+            if (!_currentWorker.Services.ContainsKey(name))
             {
-                currentWorker_.Services[name] = await factory();
+                _currentWorker.Services[name] = await factory();
             }
 
-            return currentWorker_.Services[name] as T;
+            return _currentWorker.Services[name] as T;
         }
 
         [SetUp]
         public void WorkerSetup()
         {
-            if (!allWorkers_.TryPop(out currentWorker_))
+            if (!_allWorkers.TryPop(out _currentWorker))
             {
-                currentWorker_ = new Worker();
+                _currentWorker = new Worker();
             }
-            WorkerIndex = currentWorker_.WorkerIndex;
+            WorkerIndex = _currentWorker.WorkerIndex;
         }
 
         [TearDown]
@@ -72,19 +71,19 @@ namespace Microsoft.Playwright.NUnitTest
         {
             if (TestOk())
             {
-                foreach (var kv in currentWorker_.Services)
+                foreach (var kv in _currentWorker.Services)
                 {
                     await kv.Value.ResetAsync();
                 }
-                allWorkers_.Push(currentWorker_);
+                _allWorkers.Push(_currentWorker);
             }
             else
             {
-                foreach (var kv in currentWorker_.Services)
+                foreach (var kv in _currentWorker.Services)
                 {
                     await kv.Value.DisposeAsync();
                 }
-                currentWorker_.Services.Clear();
+                _currentWorker.Services.Clear();
             }
         }
 
