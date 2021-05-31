@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport.Protocol;
 
@@ -91,8 +91,21 @@ namespace Microsoft.Playwright.Transport.Channels
                 });
             }
 
-            args.Add("storageState", storageState);
-            args.Add("storageStatePath", storageStatePath);
+            if (!string.IsNullOrEmpty(storageStatePath))
+            {
+                if (!File.Exists(storageStatePath))
+                {
+                    throw new PlaywrightException($"The specified storage state file does not exist: {storageStatePath}");
+                }
+
+                storageState = File.ReadAllText(storageStatePath);
+            }
+
+            if (!string.IsNullOrEmpty(storageState))
+            {
+                args.Add("storageState", JsonSerializer.Deserialize<StorageState>(storageState, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
+            }
+
             args.Add("timezoneId", timezoneId);
             args.Add("userAgent", userAgent);
 
