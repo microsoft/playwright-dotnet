@@ -1,6 +1,5 @@
 using System.IO;
 using System.Net;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -108,7 +107,7 @@ namespace Microsoft.Playwright.Tests
             var redirected = await redirectedFrom.ResponseAsync();
             Assert.AreEqual((int)HttpStatusCode.Redirect, redirected.Status);
 
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => redirected.TextAsync());
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await redirected.TextAsync());
             StringAssert.Contains("Response body is unavailable for redirect responses", exception.Message);
         }
 

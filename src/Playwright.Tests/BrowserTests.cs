@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowUponSecondCreateNewPage()
         {
             var page = await Browser.NewPageAsync();
-            var ex = await AssertThrowsAsync<PlaywrightException>(() => page.Context.NewPageAsync());
+            var ex = Assert.ThrowsAsync<PlaywrightException>(async () => await page.Context.NewPageAsync());
             await page.CloseAsync();
             StringAssert.Contains("Please use Browser.NewContextAsync()", ex.Message);
         }

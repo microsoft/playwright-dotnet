@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowAnErrorIfLoadingFromUrlFail()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            await AssertThrowsAsync<PlaywrightException>(() => Page.AddScriptTagAsync(new PageAddScriptTagOptions { Url = "/nonexistfile.js" }));
+            Assert.ThrowsAsync<PlaywrightException>(async () => await Page.AddScriptTagAsync(new PageAddScriptTagOptions { Url = "/nonexistfile.js" }));
         }
 
         [PlaywrightTest("page-add-script-tag.spec.ts", "should work with a path")]
@@ -95,8 +95,8 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowWhenAddedWithContentToTheCSPPage()
         {
             await Page.GotoAsync(Server.Prefix + "/csp.html");
-            await AssertThrowsAsync<PlaywrightException>(() =>
-                Page.AddScriptTagAsync(new PageAddScriptTagOptions { Content = "window.__injected = 35;" }));
+            Assert.ThrowsAsync<PlaywrightException>(async ()
+                => await Page.AddScriptTagAsync(new PageAddScriptTagOptions { Content = "window.__injected = 35;" }));
         }
 
         [PlaywrightTest("page-add-script-tag.spec.ts", "should throw when added with URL to the CSP page")]
@@ -104,8 +104,8 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowWhenAddedWithURLToTheCSPPage()
         {
             await Page.GotoAsync(Server.Prefix + "/csp.html");
-            await AssertThrowsAsync<PlaywrightException>(() =>
-                Page.AddScriptTagAsync(new PageAddScriptTagOptions { Url = Server.CrossProcessPrefix + "/injectedfile.js" }));
+            Assert.ThrowsAsync<PlaywrightException>(async ()
+                => await Page.AddScriptTagAsync(new PageAddScriptTagOptions { Url = Server.CrossProcessPrefix + "/injectedfile.js" }));
         }
 
         [PlaywrightTest("page-add-script-tag.spec.ts", "should throw a nice error when the request fails")]
@@ -114,7 +114,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.EmptyPage);
             string url = Server.Prefix + "/this_does_not_exists.js";
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.AddScriptTagAsync(new PageAddScriptTagOptions { Url = url }));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.AddScriptTagAsync(new PageAddScriptTagOptions { Url = url }));
             StringAssert.Contains(url, exception.Message);
         }
     }

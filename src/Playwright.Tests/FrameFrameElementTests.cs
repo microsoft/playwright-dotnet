@@ -49,7 +49,7 @@ namespace Microsoft.Playwright.Tests
             var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             await Page.EvalOnSelectorAsync("#frame1", "e => e.remove()");
 
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => frame1.FrameElementAsync());
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await frame1.FrameElementAsync());
 
             Assert.AreEqual("Frame has been detached.", exception.Message);
         }

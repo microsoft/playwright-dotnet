@@ -28,7 +28,7 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual($"{Server.Prefix}/download", download.Url);
             Assert.AreEqual("file.txt", download.SuggestedFilename);
 
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => download.PathAsync());
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await download.PathAsync());
 
             await page.CloseAsync();
             await _browser.CloseAsync();

@@ -52,26 +52,26 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-set-content.spec.ts", "should respect timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldRespectTimeout()
+        public void ShouldRespectTimeout()
         {
             string imgPath = "/img.png";
             // stall for image
             Server.SetRoute(imgPath, _ => Task.Delay(Timeout.Infinite));
-            await AssertThrowsAsync<TimeoutException>(() =>
-                Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new PageSetContentOptions { Timeout = 1 })
+            Assert.ThrowsAsync<TimeoutException>(async ()
+                => await Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new PageSetContentOptions { Timeout = 1 })
             );
         }
 
         [PlaywrightTest("page-set-content.spec.ts", "should respect default navigation timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldRespectDefaultNavigationTimeout()
+        public void ShouldRespectDefaultNavigationTimeout()
         {
             Page.SetDefaultNavigationTimeout(1);
             string imgPath = "/img.png";
             // stall for image
             Server.SetRoute(imgPath, _ => Task.Delay(Timeout.Infinite));
-            var exception = await AssertThrowsAsync<TimeoutException>(() =>
-                Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new PageSetContentOptions { Timeout = 1 })
+            var exception = Assert.ThrowsAsync<TimeoutException>(async ()
+                => await Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new PageSetContentOptions { Timeout = 1 })
             );
 
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);

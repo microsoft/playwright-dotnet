@@ -133,26 +133,26 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should respect timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldRespectTimeout()
+        public void ShouldRespectTimeout()
         {
-            await AssertThrowsAsync<TimeoutException>(()
-            => Page.WaitForFileChooserAsync(new PageWaitForFileChooserOptions { Timeout = 1 }));
+            Assert.ThrowsAsync<TimeoutException>(async ()
+                => await Page.WaitForFileChooserAsync(new PageWaitForFileChooserOptions { Timeout = 1 }));
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should respect default timeout when there is no custom timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldRespectDefaultTimeoutWhenThereIsNoCustomTimeout()
+        public void ShouldRespectDefaultTimeoutWhenThereIsNoCustomTimeout()
         {
             Page.SetDefaultTimeout(1);
-            await AssertThrowsAsync<TimeoutException>(() => Page.WaitForFileChooserAsync());
+            Assert.ThrowsAsync<TimeoutException>(async () => await Page.WaitForFileChooserAsync());
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should prioritize exact timeout over default timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldPrioritizeExactTimeoutOverDefaultTimeout()
+        public void ShouldPrioritizeExactTimeoutOverDefaultTimeout()
         {
             Page.SetDefaultTimeout(0);
-            await AssertThrowsAsync<TimeoutException>(() => Page.WaitForFileChooserAsync(new PageWaitForFileChooserOptions { Timeout = 1 }));
+            Assert.ThrowsAsync<TimeoutException>(async () => await Page.WaitForFileChooserAsync(new PageWaitForFileChooserOptions { Timeout = 1 }));
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should work with no timeout")]
@@ -290,8 +290,8 @@ namespace Microsoft.Playwright.Tests
                Page.WaitForFileChooserAsync(),
                Page.ClickAsync("input")
             );
-            await AssertThrowsAsync<PlaywrightException>(() =>
-                fileChooser.SetFilesAsync(new string[]
+            Assert.ThrowsAsync<PlaywrightException>(async () =>
+                await fileChooser.SetFilesAsync(new string[]
                 {
                     TestUtils.GetWebServerFile(TestConstants.FileToUpload),
                     TestUtils.GetWebServerFile("pptr.png"),

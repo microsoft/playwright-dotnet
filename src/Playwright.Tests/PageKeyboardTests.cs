@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -393,15 +392,15 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-keyboard.spec.ts", "should throw on unknown keys")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldThrowOnUnknownKeys()
+        public void ShouldThrowOnUnknownKeys()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.Keyboard.PressAsync("NotARealKey"));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.Keyboard.PressAsync("NotARealKey"));
             Assert.AreEqual("Unknown key: \"NotARealKey\"", exception.Message);
 
-            exception = await AssertThrowsAsync<PlaywrightException>(() => Page.Keyboard.PressAsync("ё"));
+            exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.Keyboard.PressAsync("ё"));
             Assert.AreEqual("Unknown key: \"ё\"", exception.Message);
 
-            exception = await AssertThrowsAsync<PlaywrightException>(() => Page.Keyboard.PressAsync("😊"));
+            exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.Keyboard.PressAsync("😊"));
             Assert.AreEqual("Unknown key: \"😊\"", exception.Message);
         }
 

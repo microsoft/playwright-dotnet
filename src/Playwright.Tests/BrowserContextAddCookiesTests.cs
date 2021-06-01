@@ -345,8 +345,8 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.AboutBlank);
 
-            var exception = await AssertThrowsAsync<PlaywrightException>(()
-                => Context.AddCookiesAsync(new[]
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async ()
+                => await Context.AddCookiesAsync(new[]
                 {
                         new Cookie
                         {
@@ -369,8 +369,8 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldNotSetACookieOnADataURLPage()
         {
             await Page.GotoAsync("data:,Hello%2C%20World!");
-            var exception = await AssertThrowsAsync<PlaywrightException>(()
-                => Context.AddCookiesAsync(new[]
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async ()
+                => await Context.AddCookiesAsync(new[]
                 {
                         new Cookie
                         {

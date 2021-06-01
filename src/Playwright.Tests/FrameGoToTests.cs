@@ -34,17 +34,17 @@ namespace Microsoft.Playwright.Tests
             var navigationTask = Page.FirstChildFrame().GotoAsync(Server.EmptyPage);
             await waitForRequestTask;
             await Page.EvalOnSelectorAsync("iframe", "frame => frame.remove()");
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => navigationTask);
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await navigationTask);
             StringAssert.Contains("frame was detached", exception.Message);
         }
 
         [PlaywrightTest("frame-goto.spec.ts", "should continue after client redirect")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldContinueAfterClientRedirect()
+        public void ShouldContinueAfterClientRedirect()
         {
             Server.SetRoute("/frames/script.js", _ => Task.Delay(10000));
             string url = Server.Prefix + "/frames/child-redirect.html";
-            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(url, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle, Timeout = 5000 }));
+            var exception = Assert.ThrowsAsync<TimeoutException>(async () => await Page.GotoAsync(url, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle, Timeout = 5000 }));
 
             StringAssert.Contains("Timeout 5000ms", exception.Message);
             StringAssert.Contains($"navigating to \"{url}\", waiting until \"networkidle\"", exception.Message);

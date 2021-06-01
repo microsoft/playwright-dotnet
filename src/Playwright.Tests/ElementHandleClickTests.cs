@@ -55,7 +55,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
             await Page.EvaluateAsync("button => button.remove()", button);
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => button.ClickAsync());
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await button.ClickAsync());
             StringAssert.Contains("Element is not attached to the DOM", exception.Message);
         }
 
@@ -66,7 +66,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
             await Page.EvaluateAsync("button => button.style.display = 'none'", button);
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => button.ClickAsync(new ElementHandleClickOptions { Force = true }));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await button.ClickAsync(new ElementHandleClickOptions { Force = true }));
             StringAssert.Contains("Element is not visible", exception.Message);
         }
 
@@ -77,7 +77,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
             await Page.EvaluateAsync("button => button.parentElement.style.display = 'none'", button);
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => button.ClickAsync(new ElementHandleClickOptions { Force = true }));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await button.ClickAsync(new ElementHandleClickOptions { Force = true }));
             StringAssert.Contains("Element is not visible", exception.Message);
         }
 
@@ -87,7 +87,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("hello<br>goodbye");
             var br = await Page.QuerySelectorAsync("br");
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => br.ClickAsync(new ElementHandleClickOptions { Force = true }));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await br.ClickAsync(new ElementHandleClickOptions { Force = true }));
             StringAssert.Contains("Element is outside of the viewport", exception.Message);
         }
 

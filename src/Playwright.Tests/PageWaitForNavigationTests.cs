@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.NUnitTest;
 using NUnit.Framework;
 
@@ -36,7 +35,7 @@ namespace Microsoft.Playwright.Tests
 
             await Page.GotoAsync(Server.EmptyPage);
 
-            var exception = await AssertThrowsAsync<TimeoutException>(() => waitForNavigationResult);
+            var exception = Assert.ThrowsAsync<TimeoutException>(async () => await waitForNavigationResult);
 
             StringAssert.Contains("Timeout 5000ms exceeded", exception.Message);
             StringAssert.Contains("waiting for navigation to \"**/frame.html\" until \"Load\"", exception.Message);
@@ -90,7 +89,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.EmptyPage);
             await Page.SetContentAsync($"<a href='{HttpsServer.Prefix}/empty.html'>foobar</a>");
             var navigationTask = Page.WaitForNavigationAsync();
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => TaskUtils.WhenAll(
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await TaskUtils.WhenAll(
                 navigationTask,
                 Page.ClickAsync("a")
             ));

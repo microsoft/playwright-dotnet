@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -142,9 +141,9 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should not allow deviceScaleFactor with null viewport")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldNotAllowDeviceScaleFactorWithViewportDisabled()
+        public void ShouldNotAllowDeviceScaleFactorWithViewportDisabled()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new BrowserNewContextOptions
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 ViewportSize = ViewportSize.NoViewport,
                 DeviceScaleFactor = 3,
@@ -154,9 +153,9 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should not allow isMobile with null viewport")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldNotAllowIsMobileWithViewportDisabled()
+        public void ShouldNotAllowIsMobileWithViewportDisabled()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new BrowserNewContextOptions
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Browser.NewContextAsync(new BrowserNewContextOptions
             {
                 ViewportSize = ViewportSize.NoViewport,
                 IsMobile = true,
@@ -179,7 +178,7 @@ namespace Microsoft.Playwright.Tests
             var context = await Browser.NewContextAsync();
             var waitTask = context.WaitForPageAsync();
             await context.CloseAsync();
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => waitTask);
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await waitTask);
             Assert.AreEqual("Context closed", exception.Message);
         }
 
@@ -253,7 +252,7 @@ namespace Microsoft.Playwright.Tests
                 var page = await context.NewPageAsync();
                 await page.GotoAsync("data:text/html, <script>var something = 'forbidden'</script>");
 
-                var exception = await AssertThrowsAsync<PlaywrightException>(() => page.EvaluateAsync("something"));
+                var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await page.EvaluateAsync("something"));
 
                 StringAssert.Contains(
                     TestConstants.IsWebKit ? "Can\'t find variable: something" : "something is not defined",
@@ -283,7 +282,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { Offline = true });
             var page = await context.NewPageAsync();
-            await AssertThrowsAsync<PlaywrightException>(() => page.GotoAsync(Server.EmptyPage));
+            Assert.ThrowsAsync<PlaywrightException>(async () => await page.GotoAsync(Server.EmptyPage));
             await context.SetOfflineAsync(false);
             var response = await page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);

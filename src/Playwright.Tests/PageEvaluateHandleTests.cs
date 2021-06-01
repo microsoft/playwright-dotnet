@@ -1,4 +1,3 @@
-using System;
 using System.Dynamic;
 using System.Linq;
 using System.Text.Json;
@@ -86,13 +85,13 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should throw for circular objects")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldThrowForCircularObjects()
+        public void ShouldThrowForCircularObjects()
         {
             dynamic a = new ExpandoObject();
             a.a = 1;
             a.y = a;
 
-            var exception = await AssertThrowsAsync<JsonException>(() => Page.EvaluateAsync("x => x", a));
+            var exception = Assert.ThrowsAsync<JsonException>(async () => await Page.EvaluateAsync("x => x", a));
             Assert.AreEqual("Argument is a circular structure", exception.Message);
         }
 

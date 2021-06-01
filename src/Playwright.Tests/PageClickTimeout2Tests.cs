@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.NUnitTest;
 using NUnit.Framework;
 
@@ -17,8 +14,8 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "b => b.style.display = 'none'");
-            var exception = await AssertThrowsAsync<TimeoutException>(()
-                => Page.ClickAsync("button", new PageClickOptions { Timeout = 5000 }));
+            var exception = Assert.ThrowsAsync<TimeoutException>(async ()
+                => await Page.ClickAsync("button", new PageClickOptions { Timeout = 5000 }));
 
             StringAssert.Contains("Timeout 5000ms exceeded", exception.Message);
             StringAssert.Contains("waiting for element to be visible, enabled and stable", exception.Message);
@@ -32,8 +29,8 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "b => b.style.visibility = 'hidden'");
             var clickTask = Page.ClickAsync("button", new PageClickOptions { Timeout = 5000 });
-            var exception = await AssertThrowsAsync<TimeoutException>(()
-                => Page.ClickAsync("button", new PageClickOptions { Timeout = 5000 }));
+            var exception = Assert.ThrowsAsync<TimeoutException>(async ()
+                => await Page.ClickAsync("button", new PageClickOptions { Timeout = 5000 }));
 
             StringAssert.Contains("Timeout 5000ms exceeded", exception.Message);
             StringAssert.Contains("waiting for element to be visible, enabled and stable", exception.Message);

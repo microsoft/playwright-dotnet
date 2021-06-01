@@ -22,7 +22,7 @@ namespace Microsoft.Playwright.Tests
             var clickTask = Page.ClickAsync("text=Click target", new PageClickOptions { Timeout = 3000 });
             Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
 
-            var exception = await AssertThrowsAsync<TimeoutException>(() => clickTask);
+            var exception = Assert.ThrowsAsync<TimeoutException>(async () => await clickTask);
 
             StringAssert.Contains("Timeout 3000ms exceeded", exception.Message);
             StringAssert.Contains("element is not enabled - waiting", exception.Message);

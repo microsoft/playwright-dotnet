@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnitTest;
@@ -29,10 +28,10 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("geolocation.spec.ts", "should throw when invalid longitude")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldThrowWhenInvalidLongitude()
+        public void ShouldThrowWhenInvalidLongitude()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() =>
-                Context.SetGeolocationAsync(new Geolocation
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () =>
+                await Context.SetGeolocationAsync(new Geolocation
                 {
                     Longitude = 200,
                     Latitude = 100

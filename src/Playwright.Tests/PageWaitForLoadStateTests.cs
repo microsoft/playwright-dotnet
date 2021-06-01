@@ -42,7 +42,7 @@ namespace Microsoft.Playwright.Tests
         {
             Server.SetRoute("/one-style.css", _ => Task.Delay(Timeout.Infinite));
             await Page.GotoAsync(Server.Prefix + "/one-style.html", new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
-            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.WaitForLoadStateAsync(LoadState.Load, new PageWaitForLoadStateOptions { Timeout = 1 }));
+            var exception = Assert.ThrowsAsync<TimeoutException>(async () => await Page.WaitForLoadStateAsync(LoadState.Load, new PageWaitForLoadStateOptions { Timeout = 1 }));
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
         }
 

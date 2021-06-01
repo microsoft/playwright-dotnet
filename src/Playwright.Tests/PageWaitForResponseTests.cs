@@ -27,10 +27,10 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-wait-for-response.spec.ts", "should respect timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldRespectTimeout()
+        public void ShouldRespectTimeout()
         {
-            var exception = await AssertThrowsAsync<TimeoutException>(
-                () => Page.WaitForResponseAsync(_ => false, new PageWaitForResponseOptions
+            var exception = Assert.ThrowsAsync<TimeoutException>(async ()
+                => await Page.WaitForResponseAsync(_ => false, new PageWaitForResponseOptions
                 {
                     Timeout = 1,
                 }));
@@ -38,11 +38,11 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-wait-for-response.spec.ts", "should respect default timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldRespectDefaultTimeout()
+        public void ShouldRespectDefaultTimeout()
         {
             Page.SetDefaultTimeout(1);
-            var exception = await AssertThrowsAsync<TimeoutException>(
-                () => Page.WaitForResponseAsync(_ => false));
+            var exception = Assert.ThrowsAsync<TimeoutException>(async ()
+                => await Page.WaitForResponseAsync(_ => false));
         }
 
         [PlaywrightTest("page-wait-for-response.spec.ts", "should work with predicate")]

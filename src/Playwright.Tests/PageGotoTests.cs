@@ -165,15 +165,15 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-goto.spec.ts", "should work with subframes return 204")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldFailWhenServerReturns204()
+        public void ShouldFailWhenServerReturns204()
         {
             Server.SetRoute("/empty.html", context =>
             {
                 context.Response.StatusCode = 204;
                 return Task.CompletedTask;
             });
-            var exception = await AssertThrowsAsync<PlaywrightException>(
-                () => Page.GotoAsync(Server.EmptyPage));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async ()
+                => await Page.GotoAsync(Server.EmptyPage));
 
             if (TestConstants.IsChromium)
             {
@@ -212,9 +212,9 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when navigating to bad url")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldFailWhenNavigatingToBadUrl()
+        public void ShouldFailWhenNavigatingToBadUrl()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync("asdfasdf"));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.GotoAsync("asdfasdf"));
             if (TestConstants.IsChromium || TestConstants.IsWebKit)
             {
                 StringAssert.Contains("Cannot navigate to invalid URL", exception.Message);
@@ -228,24 +228,24 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-goto.spec.ts", "should fail when navigating to bad SSL")]
         // [Test, Timeout(TestConstants.DefaultTestTimeout)]
         [Test, Ignore("Fix me #1058")]
-        public async Task ShouldFailWhenNavigatingToBadSSL()
+        public void ShouldFailWhenNavigatingToBadSSL()
         {
             Page.Request += (_, e) => Assert.NotNull(e);
             Page.RequestFinished += (_, e) => Assert.NotNull(e);
             Page.RequestFailed += (_, e) => Assert.NotNull(e);
 
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
             TestUtils.AssertSSLError(exception.Message);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when navigating to bad SSL after redirects")]
         // [Test, Timeout(TestConstants.DefaultTestTimeout)]
         [Test, Ignore("Fix me #1058")]
-        public async Task ShouldFailWhenNavigatingToBadSSLAfterRedirects()
+        public void ShouldFailWhenNavigatingToBadSSLAfterRedirects()
         {
             Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
             Server.SetRedirect("/redirect/2.html", "/empty.html");
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(HttpsServer.Prefix + "/redirect/1.html"));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.GotoAsync(HttpsServer.Prefix + "/redirect/1.html"));
             TestUtils.AssertSSLError(exception.Message);
         }
 
@@ -270,9 +270,9 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-goto.spec.ts", "should throw if networkidle is passed as an option")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldFailWhenMainResourcesFailedToLoad()
+        public void ShouldFailWhenMainResourcesFailedToLoad()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync("http://localhost:44123/non-existing-url"));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.GotoAsync("http://localhost:44123/non-existing-url"));
 
             if (TestConstants.IsChromium)
             {
@@ -294,70 +294,70 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding maximum navigation timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldFailWhenExceedingMaximumNavigationTimeout()
+        public void ShouldFailWhenExceedingMaximumNavigationTimeout()
         {
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
-            var exception = await AssertThrowsAsync<TimeoutException>(()
-                => Page.GotoAsync(Server.EmptyPage, new PageGotoOptions { Timeout = 1 }));
+            var exception = Assert.ThrowsAsync<TimeoutException>(async ()
+                => await Page.GotoAsync(Server.EmptyPage, new PageGotoOptions { Timeout = 1 }));
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
             StringAssert.Contains(Server.EmptyPage, exception.Message);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding maximum navigation timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldFailWhenExceedingDefaultMaximumNavigationTimeout()
+        public void ShouldFailWhenExceedingDefaultMaximumNavigationTimeout()
         {
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             Page.Context.SetDefaultNavigationTimeout(2);
             Page.SetDefaultNavigationTimeout(1);
-            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(Server.EmptyPage));
+            var exception = Assert.ThrowsAsync<TimeoutException>(async () => await Page.GotoAsync(Server.EmptyPage));
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
             StringAssert.Contains(Server.EmptyPage, exception.Message);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding browser context navigation timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldFailWhenExceedingBrowserContextNavigationTimeout()
+        public void ShouldFailWhenExceedingBrowserContextNavigationTimeout()
         {
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             Page.Context.SetDefaultNavigationTimeout(2);
-            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(Server.EmptyPage));
+            var exception = Assert.ThrowsAsync<TimeoutException>(async () => await Page.GotoAsync(Server.EmptyPage));
             StringAssert.Contains("Timeout 2ms exceeded", exception.Message);
             StringAssert.Contains(Server.EmptyPage, exception.Message);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding default maximum timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldFailWhenExceedingDefaultMaximumTimeout()
+        public void ShouldFailWhenExceedingDefaultMaximumTimeout()
         {
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             Page.Context.SetDefaultTimeout(2);
             Page.SetDefaultTimeout(1);
-            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(Server.EmptyPage));
+            var exception = Assert.ThrowsAsync<TimeoutException>(async () => await Page.GotoAsync(Server.EmptyPage));
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
             StringAssert.Contains(Server.EmptyPage, exception.Message);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding browser context timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldFailWhenExceedingBrowserContextTimeout()
+        public void ShouldFailWhenExceedingBrowserContextTimeout()
         {
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             Page.Context.SetDefaultTimeout(2);
-            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(Server.EmptyPage));
+            var exception = Assert.ThrowsAsync<TimeoutException>(async () => await Page.GotoAsync(Server.EmptyPage));
             StringAssert.Contains("Timeout 2ms exceeded", exception.Message);
             StringAssert.Contains(Server.EmptyPage, exception.Message);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should prioritize default navigation timeout over default timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldPrioritizeDefaultNavigationTimeoutOverDefaultTimeout()
+        public void ShouldPrioritizeDefaultNavigationTimeoutOverDefaultTimeout()
         {
             // Hang for request to the empty.html
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             Page.SetDefaultTimeout(0);
             Page.SetDefaultNavigationTimeout(1);
-            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.GotoAsync(Server.EmptyPage));
+            var exception = Assert.ThrowsAsync<TimeoutException>(async () => await Page.GotoAsync(Server.EmptyPage));
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
             StringAssert.Contains(Server.EmptyPage, exception.Message);
         }
@@ -391,7 +391,7 @@ namespace Microsoft.Playwright.Tests
                 return Task.Delay(-1);
             });
 
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(Server.EmptyPage));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.GotoAsync(Server.EmptyPage));
             await anotherTask;
 
             if (TestConstants.IsChromium)
@@ -499,10 +499,10 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-goto.spec.ts", "should fail when navigating and show the url at the error message")]
         // [Test, Timeout(TestConstants.DefaultTestTimeout)]
         [Test, Ignore("Fix me #1058")]
-        public async Task ShouldFailWhenNavigatingAndShowTheUrlAtTheErrorMessage()
+        public void ShouldFailWhenNavigatingAndShowTheUrlAtTheErrorMessage()
         {
             string url = HttpsServer.Prefix + "/redirect/1.html";
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(url));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.GotoAsync(url));
             StringAssert.Contains(url, exception.Message);
         }
 
@@ -543,8 +543,8 @@ namespace Microsoft.Playwright.Tests
                 ["referer"] = "http://microsoft.com/"
             });
 
-            var exception = await AssertThrowsAsync<PlaywrightException>(() =>
-                Page.GotoAsync(Server.Prefix + "/grid.html", new PageGotoOptions { Referer = "http://google.com/" }));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async ()
+                => await Page.GotoAsync(Server.Prefix + "/grid.html", new PageGotoOptions { Referer = "http://google.com/" }));
 
             StringAssert.Contains("\"referer\" is already specified as extra HTTP header", exception.Message);
             StringAssert.Contains(Server.Prefix + "/grid.html", exception.Message);
@@ -585,7 +585,7 @@ namespace Microsoft.Playwright.Tests
             await request;
             await Page.GotoAsync(Server.EmptyPage);
 
-            await AssertThrowsAsync<PlaywrightException>(() => failed);
+            Assert.ThrowsAsync<PlaywrightException>(async () => await failed);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "extraHTTPHeaders should be pushed to provisional page")]

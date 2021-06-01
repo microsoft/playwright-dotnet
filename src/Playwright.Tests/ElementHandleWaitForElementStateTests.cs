@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<div style='display:none'>content</div>");
             var div = await Page.QuerySelectorAsync("div");
-            var exception = await AssertThrowsAsync<TimeoutException>(() => div.WaitForElementStateAsync(ElementState.Visible, new ElementHandleWaitForElementStateOptions { Timeout = 1000 }));
+            var exception = Assert.ThrowsAsync<TimeoutException>(async () => await div.WaitForElementStateAsync(ElementState.Visible, new ElementHandleWaitForElementStateOptions { Timeout = 1000 }));
             StringAssert.Contains("Timeout 1000ms exceeded", exception.Message);
         }
 
@@ -49,7 +49,7 @@ namespace Microsoft.Playwright.Tests
             var div = await Page.QuerySelectorAsync("div");
             var task = div.WaitForElementStateAsync(ElementState.Visible);
             await div.EvaluateAsync("div => div.remove()");
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => task);
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await task);
             StringAssert.Contains("Element is not attached to the DOM", exception.Message);
         }
 
@@ -109,7 +109,7 @@ namespace Microsoft.Playwright.Tests
             var button = await Page.QuerySelectorAsync("button");
             var task = button.WaitForElementStateAsync(ElementState.Enabled);
             await button.EvaluateAsync("button => button.remove()");
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => task);
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await task);
             StringAssert.Contains("Element is not attached to the DOM", exception.Message);
         }
 

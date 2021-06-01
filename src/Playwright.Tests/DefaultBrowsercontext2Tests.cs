@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.NUnitTest;
 using NUnit.Framework;
 
@@ -258,12 +257,11 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should throw if page argument is passed")]
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
-        public async Task ShouldThrowIfPageArgumentIsPassed()
+        public void ShouldThrowIfPageArgumentIsPassed()
         {
             var tmp = new TempDirectory();
             var args = new[] { Server.EmptyPage };
-            await AssertThrowsAsync<PlaywrightException>(() =>
-                BrowserType.LaunchPersistentContextAsync(tmp.Path, new BrowserTypeLaunchPersistentContextOptions { Args = args }));
+            Assert.ThrowsAsync<PlaywrightException>(async () => await BrowserType.LaunchPersistentContextAsync(tmp.Path, new BrowserTypeLaunchPersistentContextOptions { Args = args }));
             tmp.Dispose();
         }
 

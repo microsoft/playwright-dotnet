@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.NUnitTest;
 using NUnit.Framework;
 
@@ -89,7 +88,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetViewportSizeAsync(500, 500);
             await Page.GotoAsync(Server.Prefix + "/grid.html");
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.ScreenshotAsync(new PageScreenshotOptions
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.ScreenshotAsync(new PageScreenshotOptions
             {
                 Clip = new Clip
                 {
@@ -446,9 +445,9 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-screenshot.spec.ts", "path option should throw for unsupported mime type")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task PathOptionShouldThrowForUnsupportedMimeType()
+        public void PathOptionShouldThrowForUnsupportedMimeType()
         {
-            var exception = await AssertThrowsAsync<ArgumentException>(() => Page.ScreenshotAsync(new PageScreenshotOptions { Path = "file.txt" }));
+            var exception = Assert.ThrowsAsync<ArgumentException>(async () => await Page.ScreenshotAsync(new PageScreenshotOptions { Path = "file.txt" }));
             StringAssert.Contains("path: unsupported mime type \"text/plain\"", exception.Message);
         }
     }

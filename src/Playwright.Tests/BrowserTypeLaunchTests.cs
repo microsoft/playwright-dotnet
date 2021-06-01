@@ -1,10 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnitTest;
-using Microsoft.Playwright.Transport;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -21,7 +17,7 @@ namespace Microsoft.Playwright.Tests
             var page = await (await browser.NewContextAsync()).NewPageAsync();
             var neverResolves = page.EvaluateHandleAsync("() => new Promise(r => {})");
             await browser.CloseAsync();
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => neverResolves);
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await neverResolves);
             StringAssert.Contains("Protocol error", exception.Message);
 
         }
@@ -46,10 +42,10 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should throw if page argument is passed")]
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
-        public async Task ShouldThrowIfPageArgumentIsPassed()
+        public void ShouldThrowIfPageArgumentIsPassed()
         {
             var args = new[] { Server.EmptyPage };
-            await AssertThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { Args = args }));
+            Assert.ThrowsAsync<PlaywrightException>(async () => await BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { Args = args }));
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should reject if launched browser fails immediately")]
@@ -60,9 +56,9 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should reject if executable path is invalid")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldRejectIfExecutablePathIsInvalid()
+        public void ShouldRejectIfExecutablePathIsInvalid()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { ExecutablePath = "random-invalid-path" }));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { ExecutablePath = "random-invalid-path" }));
 
             StringAssert.Contains("Failed to launch", exception.Message);
         }

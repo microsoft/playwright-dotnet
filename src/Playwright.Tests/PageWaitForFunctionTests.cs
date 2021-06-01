@@ -61,7 +61,7 @@ namespace Microsoft.Playwright.Tests
             int counter = 0;
             Page.Console += (_, _) => ++counter;
 
-            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.WaitForFunctionAsync(
+            var exception = Assert.ThrowsAsync<TimeoutException>(async () => await Page.WaitForFunctionAsync(
                 @"() => {
                   window.counter = (window.counter || 0) + 1;
                   console.log(window.counter);
@@ -96,17 +96,17 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should fail with predicate throwing on first call")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldFailWithPredicateThrowingOnFirstCall()
+        public void ShouldFailWithPredicateThrowingOnFirstCall()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.WaitForFunctionAsync("() => { throw new Error('oh my'); }"));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.WaitForFunctionAsync("() => { throw new Error('oh my'); }"));
             StringAssert.Contains("oh my", exception.Message);
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should fail with predicate throwing sometimes")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldFailWithPredicateThrowingSometimes()
+        public void ShouldFailWithPredicateThrowingSometimes()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.WaitForFunctionAsync(@"() => {
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.WaitForFunctionAsync(@"() => {
               window.counter = (window.counter || 0) + 1;
               if (window.counter === 3)
                 throw new Error('Bad counter!');
@@ -117,9 +117,9 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should fail with ReferenceError on wrong page")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldFailWithReferenceErrorOnWrongPage()
+        public void ShouldFailWithReferenceErrorOnWrongPage()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.WaitForFunctionAsync("() => globalVar === 123"));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.WaitForFunctionAsync("() => globalVar === 123"));
             StringAssert.Contains("globalVar", exception.Message);
         }
 
@@ -146,10 +146,10 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should throw negative polling interval")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldThrowNegativePollingInterval()
+        public void ShouldThrowNegativePollingInterval()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(()
-                => Page.WaitForFunctionAsync("() => !!document.body", null, new PageWaitForFunctionOptions { PollingInterval = -10 }));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async ()
+                => await Page.WaitForFunctionAsync("() => !!document.body", null, new PageWaitForFunctionOptions { PollingInterval = -10 }));
 
             StringAssert.Contains("Cannot poll with non-positive interval", exception.Message);
         }
@@ -180,21 +180,21 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should respect timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldRespectTimeout()
+        public void ShouldRespectTimeout()
         {
-            var exception = await AssertThrowsAsync<TimeoutException>(()
-                => Page.WaitForFunctionAsync("false", null, new PageWaitForFunctionOptions { Timeout = 10 }));
+            var exception = Assert.ThrowsAsync<TimeoutException>(async ()
+                => await Page.WaitForFunctionAsync("false", null, new PageWaitForFunctionOptions { Timeout = 10 }));
 
             StringAssert.Contains("Timeout 10ms exceeded", exception.Message);
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should respect default timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldRespectDefaultTimeout()
+        public void ShouldRespectDefaultTimeout()
         {
             Page.SetDefaultTimeout(1);
-            var exception = await AssertThrowsAsync<TimeoutException>(()
-                => Page.WaitForFunctionAsync("false"));
+            var exception = Assert.ThrowsAsync<TimeoutException>(async ()
+                => await Page.WaitForFunctionAsync("false"));
 
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
         }

@@ -127,10 +127,10 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("eval-on-selector.spec.ts", "should throw error if no element is found")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldThrowErrorIfNoElementIsFound()
+        public void ShouldThrowErrorIfNoElementIsFound()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(()
-                => Page.EvalOnSelectorAsync("section", "e => e.id"));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async ()
+                => await Page.EvalOnSelectorAsync("section", "e => e.id"));
             StringAssert.Contains("failed to find element matching selector \"section\"", exception.Message);
         }
 
@@ -183,17 +183,17 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("eval-on-selector.spec.ts", "should throw on multiple * captures")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldThrowOnMultipleStarCaptures()
+        public void ShouldThrowOnMultipleStarCaptures()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.EvalOnSelectorAsync<string>("*css=div >> *css=span", "(e) => e.outerHTML"));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.EvalOnSelectorAsync<string>("*css=div >> *css=span", "(e) => e.outerHTML"));
             Assert.AreEqual("Only one of the selectors can capture using * modifier", exception.Message);
         }
 
         [PlaywrightTest("eval-on-selector.spec.ts", "should throw on malformed * capture")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldThrowOnMalformedStarCapture()
+        public void ShouldThrowOnMalformedStarCapture()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.EvalOnSelectorAsync<string>("*=div", "(e) => e.outerHTML"));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.EvalOnSelectorAsync<string>("*=div", "(e) => e.outerHTML"));
             Assert.AreEqual("Unknown engine \"\" while parsing selector *=div", exception.Message);
         }
 

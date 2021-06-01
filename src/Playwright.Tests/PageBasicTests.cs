@@ -18,7 +18,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRejectAllPromisesWhenPageIsClosed()
         {
             var newPage = await Context.NewPageAsync();
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => TaskUtils.WhenAll(
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await TaskUtils.WhenAll(
                 newPage.EvaluateAsync<string>("() => new Promise(r => { })"),
                 newPage.CloseAsync()
             ));
@@ -27,14 +27,14 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-basic.spec.ts", "async stacks should work")]
         [Test, Ignore("We don't need to test this in .NET")]
-        public async Task AsyncStacksShouldWork()
+        public void AsyncStacksShouldWork()
         {
             Server.SetRoute("/empty.html", context =>
             {
                 context.Abort(); // is this right?
                 return Task.CompletedTask;
             });
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(Server.EmptyPage));
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.GotoAsync(Server.EmptyPage));
             StringAssert.Contains(nameof(PageBasicTests), exception.StackTrace);
         }
 
@@ -135,7 +135,7 @@ namespace Microsoft.Playwright.Tests
         {
             var task = Page.WaitForDownloadAsync();
             await Page.CloseAsync();
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => task);
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await task);
             StringAssert.Contains("Page closed", exception.Message);
         }
 
@@ -234,7 +234,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldTerminateNetworkWaiters()
         {
             var newPage = await Context.NewPageAsync();
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => TaskUtils.WhenAll(
+            var exception = Assert.ThrowsAsync<PlaywrightException>(async () => await TaskUtils.WhenAll(
                 newPage.WaitForRequestAsync(Server.EmptyPage),
                 newPage.WaitForResponseAsync(Server.EmptyPage),
                 newPage.CloseAsync()

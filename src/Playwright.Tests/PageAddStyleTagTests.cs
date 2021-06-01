@@ -28,8 +28,8 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowAnErrorIfLoadingFromUrlFail()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            await AssertThrowsAsync<PlaywrightException>(() =>
-                Page.AddStyleTagAsync(new PageAddStyleTagOptions { Url = "/nonexistfile.js" }));
+            Assert.ThrowsAsync<PlaywrightException>(async ()
+                => await Page.AddStyleTagAsync(new PageAddStyleTagOptions { Url = "/nonexistfile.js" }));
         }
 
         [PlaywrightTest("page-add-style-tag.spec.ts", "should work with a path")]
@@ -68,8 +68,8 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowWhenAddedWithContentToTheCSPPage()
         {
             await Page.GotoAsync(Server.Prefix + "/csp.html");
-            await AssertThrowsAsync<PlaywrightException>(() =>
-                Page.AddStyleTagAsync(new PageAddStyleTagOptions { Content = "body { background-color: green; }" }));
+            Assert.ThrowsAsync<PlaywrightException>(async ()
+                => await Page.AddStyleTagAsync(new PageAddStyleTagOptions { Content = "body { background-color: green; }" }));
         }
 
         [PlaywrightTest("page-add-style-tag.spec.ts", "should throw when added with URL to the CSP page")]
@@ -77,8 +77,8 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowWhenAddedWithURLToTheCSPPage()
         {
             await Page.GotoAsync(Server.Prefix + "/csp.html");
-            await AssertThrowsAsync<PlaywrightException>(() =>
-                Page.AddStyleTagAsync(new PageAddStyleTagOptions { Url = Server.CrossProcessPrefix + "/injectedstyle.css" }));
+            Assert.ThrowsAsync<PlaywrightException>(async ()
+                => await Page.AddStyleTagAsync(new PageAddStyleTagOptions { Url = Server.CrossProcessPrefix + "/injectedstyle.css" }));
         }
     }
 }
