@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netcoreapp3.1;net5.0;net48</TargetFrameworks>
+      <AssemblyName>Microsoft.Playwright.NUnitTest</AssemblyName>
+      <TargetFrameworks>netcoreapp3.1;net5.0;net48</TargetFrameworks>
     </PropertyGroup>
-    <ItemGroup>
+  <Import Project="../Common/SignAssembly.props" />
+  <ItemGroup>
         <ProjectReference Include="..\Playwright\Playwright.csproj" />
         <PackageReference Include="NUnit" Version="3.13.2" />
         <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
