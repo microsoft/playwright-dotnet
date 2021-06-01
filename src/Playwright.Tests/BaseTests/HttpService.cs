@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using Microsoft.Playwright.Tests.TestServer;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
@@ -29,7 +30,7 @@ namespace Microsoft.Playwright.Tests
                         HttpsServer = SimpleServer.CreateHttps(httpsPort, TestUtils.FindParentDirectory("Playwright.Tests.TestServer"))
                     };
 
-                    System.Diagnostics.Debug.WriteLine($"Worker assigned ports {httpPort} (HTTP) and {httpsPort} (HTTPS).");
+                    TestContext.Progress.WriteLine($"Worker {test.WorkerIndex} assigned ports {httpPort} (HTTP) and {httpsPort} (HTTPS).");
 
                     try
                     {
@@ -38,6 +39,7 @@ namespace Microsoft.Playwright.Tests
                     }
                     catch (IOException) // likely a failed to bind to port exception
                     {
+                        TestContext.Progress.WriteLine($"Worker {test.WorkerIndex} port assignemnt failed. Re-trying...");
                         attempt++;
                     }
                 }

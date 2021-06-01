@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
@@ -35,11 +36,15 @@ namespace Microsoft.Playwright.NUnit
     {
         internal class Worker
         {
+            private static int _lastWorkedIndex = 0;
+            public int WorkerIndex = Interlocked.Increment(ref _lastWorkedIndex);
             public Dictionary<string, IWorkerService> Services = new();
         }
 
         private static readonly ConcurrentStack<Worker> _allWorkers = new();
         private Worker _currentWorker;
+
+        public int WorkerIndex { get; internal set; }
 
         public async Task<T> RegisterService<T>(string name, Func<Task<T>> factory) where T : class, IWorkerService
         {
@@ -58,6 +63,7 @@ namespace Microsoft.Playwright.NUnit
             {
                 _currentWorker = new Worker();
             }
+            WorkerIndex = _currentWorker.WorkerIndex;
         }
 
         [TearDown]
