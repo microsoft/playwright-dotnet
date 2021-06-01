@@ -62,12 +62,12 @@ namespace Microsoft.Playwright.Tests
         public async Task InnerTextShouldThrow()
         {
             await Page.SetContentAsync("<svg>text</svg>");
-            var exception1 = await AssertThrowsAsync<PlaywrightException>(() => Page.InnerTextAsync("svg"));
+            var exception1 = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.InnerTextAsync("svg"));
             StringAssert.Contains("Not an HTMLElement", exception1.Message);
 
             var handle = await Page.QuerySelectorAsync("svg");
-            await Assert.ThrowsAnyAsync<PlaywrightException>(() => handle.GetInnerTextAsync());
-            Assert.Contains("Not an HTMLElement", exception1.Message);
+            var exception2 = Assert.ThrowsAsync<PlaywrightException>(async () => await handle.InnerTextAsync());
+            StringAssert.Contains("Not an HTMLElement", exception2.Message);
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "textContent should work")]
