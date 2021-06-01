@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using Microsoft.Playwright.Tests.TestServer;
@@ -7,6 +8,8 @@ namespace Microsoft.Playwright.Tests
 {
     public class HttpService : IWorkerService
     {
+        private static int _availablePort = 8081;
+
         public SimpleServer Server { get; internal set; }
         public SimpleServer HttpsServer { get; internal set; }
 
@@ -15,9 +18,17 @@ namespace Microsoft.Playwright.Tests
             var workerIndex = test.WorkerIndex;
             return await test.RegisterService("Http", async () =>
             {
-                var http = new HttpService();
-                http.Server = SimpleServer.Create(8081 + workerIndex * 2, TestUtils.FindParentDirectory("Playwright.Tests.TestServer"));
-                http.HttpsServer = SimpleServer.CreateHttps(8081 + workerIndex * 2 + 1, TestUtils.FindParentDirectory("Playwright.Tests.TestServer"));
+                var httpPort = Interlocked.Increment(ref _availablePort);
+                var httpsPort = Interlocked.Increment(ref _availablePort);
+
+                var http = new HttpService
+                {
+                    Server = SimpleServer.Create(_availablePort, TestUtils.FindParentDirectory("Playwright.Tests.TestServer")),
+                    HttpsServer = SimpleServer.CreateHttps(httpsPort, TestUtils.FindParentDirectory("Playwright.Tests.TestServer"))
+                };
+
+                System.Diagnostics.Debug.WriteLine($"Worker {workerIndex} assigned ports {httpPort} (HTTP) and {httpsPort} (HTTPS).");
+
                 await Task.WhenAll(http.Server.StartAsync(), http.HttpsServer.StartAsync());
                 return http;
             });
