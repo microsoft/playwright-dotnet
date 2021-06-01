@@ -1,4 +1,4 @@
-using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
@@ -15,22 +15,34 @@ namespace Microsoft.Playwright.Tests
 
         public static async Task<HttpService> Register(WorkerAwareTest test)
         {
-            var workerIndex = test.WorkerIndex;
             return await test.RegisterService("Http", async () =>
             {
-                var httpPort = Interlocked.Increment(ref _availablePort);
-                var httpsPort = Interlocked.Increment(ref _availablePort);
-
-                var http = new HttpService
+                int attempt = 0;
+                while (attempt <= 5)
                 {
-                    Server = SimpleServer.Create(_availablePort, TestUtils.FindParentDirectory("Playwright.Tests.TestServer")),
-                    HttpsServer = SimpleServer.CreateHttps(httpsPort, TestUtils.FindParentDirectory("Playwright.Tests.TestServer"))
-                };
+                    var httpPort = Interlocked.Increment(ref _availablePort);
+                    var httpsPort = Interlocked.Increment(ref _availablePort);
 
-                System.Diagnostics.Debug.WriteLine($"Worker {workerIndex} assigned ports {httpPort} (HTTP) and {httpsPort} (HTTPS).");
+                    var http = new HttpService
+                    {
+                        Server = SimpleServer.Create(httpPort, TestUtils.FindParentDirectory("Playwright.Tests.TestServer")),
+                        HttpsServer = SimpleServer.CreateHttps(httpsPort, TestUtils.FindParentDirectory("Playwright.Tests.TestServer"))
+                    };
 
-                await Task.WhenAll(http.Server.StartAsync(), http.HttpsServer.StartAsync());
-                return http;
+                    System.Diagnostics.Debug.WriteLine($"Worker assigned ports {httpPort} (HTTP) and {httpsPort} (HTTPS).");
+
+                    try
+                    {
+                        await Task.WhenAll(http.Server.StartAsync(), http.HttpsServer.StartAsync());
+                        return http;
+                    }
+                    catch (IOException) // likely a failed to bind to port exception
+                    {
+                        attempt++;
+                    }
+                }
+
+                throw new System.Exception("Could not find an empty port for Http Server");
             });
         }
 
