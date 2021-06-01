@@ -365,7 +365,7 @@ namespace Microsoft.Playwright.Tests
             });
             var page = await context.NewPageAsync();
 
-            await Page.SetContentAsync(@"
+            await page.SetContentAsync(@"
                 <div style=""height: 14px"">oooo</div>
                 <style>
                 div.to-screenshot {
