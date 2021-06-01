@@ -98,13 +98,16 @@ stages:
       inputs:
         buildType: 'current'
         downloadType: 'specific'
+        itemPattern: |
+          **
+          !*.CLI.*
         downloadPath: '$(System.ArtifactsDirectory)'
 
     - task: NuGetCommand@2
       displayName: Push Playwright NuGet to NuGet.org
       inputs:
         command: 'push'
-        packagesToPush: '$(System.ArtifactsDirectory)/**/Microsoft.Playwright.nupkg;!$(System.ArtifactsDirectory)/**/Microsoft.Playwright.symbols.nupkg'
+        packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg;!$(System.ArtifactsDirectory)/**/*.symbols.nupkg'
         nuGetFeedType: 'external'
         publishFeedCredentials: 'NuGet-Playwright'
 
@@ -121,12 +124,13 @@ stages:
       inputs:
         buildType: 'current'
         downloadType: 'specific'
+        itemPattern: '**/*.CLI.*'
         downloadPath: '$(System.ArtifactsDirectory)'
 
     - task: NuGetCommand@2
       displayName: Push CLI NuGet to Nuget.org
       inputs:
         command: 'push'
-        packagesToPush: '$(System.ArtifactsDirectory)/**/Microsoft.Playwright.CLI.nupkg;!$(System.ArtifactsDirectory)/**/Microsoft.Playwright.CLI.symbols.nupkg'
+        packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg;!$(System.ArtifactsDirectory)/**/*.symbols.nupkg'
         nuGetFeedType: 'external'
         publishFeedCredentials: 'NuGet-Playwright'
