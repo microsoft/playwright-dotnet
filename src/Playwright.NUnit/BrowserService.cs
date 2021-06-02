@@ -22,46 +22,30 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Threading.Tasks;
-using NUnit.Framework;
 
-namespace Microsoft.Playwright.NUnitTest
+namespace Microsoft.Playwright.NUnit
 {
-    public class PlaywrightTest : WorkerAwareTest
+    public class BrowserService : IWorkerService
     {
-        public static string BrowserName => string.IsNullOrEmpty(Environment.GetEnvironmentVariable("BROWSER")) ?
-            "chromium" : Environment.GetEnvironmentVariable("BROWSER").ToLower();
+        public IBrowser Browser { get; internal set; }
 
-        private static readonly Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
-
-        public IPlaywright Playwright { get; private set; }
-        public IBrowserType BrowserType { get; private set; }
-
-        [SetUp]
-        public async Task PlaywrightSetup()
+        public static async Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType)
         {
-            Playwright = await _playwrightTask;
-            BrowserType = Playwright[BrowserName];
-        }
-
-        public static async Task<T> AssertThrowsAsync<T>(Func<Task> action) where T : Exception
-        {
-            try
+            return await test.RegisterService("Browser", async () =>
             {
-                await action();
-                Assert.Fail();
-                return null;
-            }
-            catch (T t)
-            {
-                return t;
-            }
+                var service = new BrowserService
+                {
+                    Browser = await browserType.LaunchAsync(new BrowserTypeLaunchOptions
+                    {
+                        Headless = true
+                    })
+                };
+                return service;
+            });
         }
 
-        public static void DebugLog(string text)
-        {
-            TestContext.Progress.WriteLine(text);
-        }
-    }
+        public Task ResetAsync() => Task.CompletedTask;
+        public Task DisposeAsync() => Browser.CloseAsync();
+    };
 }

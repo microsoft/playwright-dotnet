@@ -30,7 +30,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
-namespace Microsoft.Playwright.NUnitTest
+namespace Microsoft.Playwright.NUnit
 {
     public class WorkerAwareTest
     {

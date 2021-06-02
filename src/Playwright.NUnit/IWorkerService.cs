@@ -23,18 +23,12 @@
  */
 
 using System.Threading.Tasks;
-using NUnit.Framework;
 
-namespace Microsoft.Playwright.NUnitTest
+namespace Microsoft.Playwright.NUnit
 {
-    public class PageTest : ContextTest
+    public interface IWorkerService
     {
-        public IPage Page { get; private set; }
-
-        [SetUp]
-        public async Task PageSetup()
-        {
-            Page = await Context.NewPageAsync();
-        }
+        public Task ResetAsync();
+        public Task DisposeAsync();
     }
 }

@@ -25,7 +25,7 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.NUnitTest
+namespace Microsoft.Playwright.NUnit
 {
     public class ContextTest : BrowserTest
     {
