@@ -144,7 +144,6 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldHaveASaneUserAgent()
         {
             string userAgent = await Page.EvaluateAsync<string>("() => navigator.userAgent");
-            var regex = new Regex("[()]");
             string[] parts = Regex.Split(userAgent, "[()]").Select(t => t.Trim()).ToArray();
 
             Assert.AreEqual("Mozilla/5.0", parts[0]);

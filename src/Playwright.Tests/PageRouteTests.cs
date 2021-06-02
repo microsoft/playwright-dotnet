@@ -69,7 +69,7 @@ namespace Microsoft.Playwright.Tests
                 route.ContinueAsync();
             });
 
-            var response = await Page.GotoAsync(Server.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual(new[] { 1 }, intercepted.ToArray());
 
             intercepted.Clear();

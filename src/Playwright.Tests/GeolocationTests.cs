@@ -141,7 +141,7 @@ namespace Microsoft.Playwright.Tests
                 Latitude = 0
             });
 
-            var geolocation = await Page.EvaluateAsync<Geolocation>(@"() => {
+            await Page.EvaluateAsync<Geolocation>(@"() => {
                 navigator.geolocation.watchPosition(pos => {
                     const coords = pos.coords;
                     console.log(`lat=${coords.latitude} lng=${coords.longitude}`);

@@ -364,7 +364,7 @@ namespace Microsoft.Playwright.Tests
             });
             var page = await context.NewPageAsync();
 
-            await Page.SetContentAsync(@"
+            await page.SetContentAsync(@"
                 <div style=""height: 14px"">oooo</div>
                 <style>
                 div.to-screenshot {
@@ -383,7 +383,7 @@ namespace Microsoft.Playwright.Tests
 
             var sizeBefore = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
             var elementHandle = await page.QuerySelectorAsync("div.to-screenshot");
-            byte[] screenshot = await page.ScreenshotAsync();
+            byte[] screenshot = await elementHandle.ScreenshotAsync();
             Assert.NotNull(screenshot);
 
             var sizeAfter = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");

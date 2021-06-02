@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
-            var exception = await AssertThrowsAsync<TimeoutException>(
+            await AssertThrowsAsync<TimeoutException>(
                 () => Page.WaitForRequestAsync(_ => false, new PageWaitForRequestOptions { Timeout = 1 }));
         }
 
@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRespectDefaultTimeout()
         {
             Page.SetDefaultTimeout(1);
-            var exception = await AssertThrowsAsync<TimeoutException>(
+            await AssertThrowsAsync<TimeoutException>(
                 () => Page.WaitForRequestAsync(_ => false));
         }
 
