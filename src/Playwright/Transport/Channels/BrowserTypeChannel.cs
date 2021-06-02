@@ -58,50 +58,44 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal Task<BrowserContextChannel> LaunchPersistentContextAsync(
             string userDataDir,
-            bool? headless = default,
-            string channel = default,
-            string executablePath = default,
-            IEnumerable<string> args = default,
-            Proxy proxy = default,
-            string downloadsPath = default,
-            bool? chromiumSandbox = default,
-            bool? handleSIGINT = default,
-            bool? handleSIGTERM = default,
-            bool? handleSIGHUP = default,
-            float? timeout = default,
-            IEnumerable<KeyValuePair<string, string>> env = default,
-            bool? devtools = default,
-            float? slowMo = default,
-            bool? acceptDownloads = default,
-            bool? ignoreHTTPSErrors = default,
-            bool? bypassCSP = default,
-            ViewportSize viewportSize = default,
-            ScreenSize screenSize = default,
-            string userAgent = default,
-            float? deviceScaleFactor = default,
-            bool? isMobile = default,
-            bool? hasTouch = default,
-            bool? javaScriptEnabled = default,
-            string timezoneId = default,
-            Geolocation geolocation = default,
-            string locale = default,
-            IEnumerable<string> permissions = default,
-            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = default,
-            bool? offline = default,
-            HttpCredentials httpCredentials = default,
-            ColorScheme? colorScheme = default,
-            string recordHarPath = default,
-            bool? recordHarOmitContent = default,
-            string recordVideoDir = default,
-            RecordVideoSize recordVideoSize = default,
-            IEnumerable<string> ignoreDefaultArgs = default,
-            bool? ignoreAllDefaultArgs = default)
+            bool? headless,
+            string channel,
+            string executablePath,
+            IEnumerable<string> args,
+            Proxy proxy,
+            string downloadsPath,
+            bool? chromiumSandbox,
+            bool? handleSIGINT,
+            bool? handleSIGTERM,
+            bool? handleSIGHUP,
+            float? timeout,
+            IEnumerable<KeyValuePair<string, string>> env,
+            bool? devtools,
+            float? slowMo,
+            bool? acceptDownloads,
+            bool? ignoreHTTPSErrors,
+            bool? bypassCSP,
+            ViewportSize viewportSize,
+            ScreenSize screenSize,
+            string userAgent,
+            float? deviceScaleFactor,
+            bool? isMobile,
+            bool? hasTouch,
+            bool? javaScriptEnabled,
+            string timezoneId,
+            Geolocation geolocation,
+            string locale,
+            IEnumerable<string> permissions,
+            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders,
+            bool? offline,
+            HttpCredentials httpCredentials,
+            ColorScheme? colorScheme,
+            string recordHarPath,
+            bool? recordHarOmitContent,
+            Dictionary<string, object> recordVideo,
+            IEnumerable<string> ignoreDefaultArgs,
+            bool? ignoreAllDefaultArgs)
         {
-            if (recordVideoSize != null && string.IsNullOrEmpty(recordVideoDir))
-            {
-                throw new PlaywrightException("\"RecordVideoSize\" option requires \"RecordVideoDir\" to be specified");
-            }
-
             var channelArgs = new Dictionary<string, object>();
 
             channelArgs.Add("userDataDir", userDataDir);
@@ -146,6 +140,7 @@ namespace Microsoft.Playwright.Transport.Channels
             channelArgs.Add("offline", offline);
             channelArgs.Add("httpCredentials", httpCredentials);
             channelArgs.Add("colorScheme", colorScheme);
+
             if (!string.IsNullOrEmpty(recordHarPath))
             {
                 channelArgs.Add("recordHar", new
@@ -155,13 +150,9 @@ namespace Microsoft.Playwright.Transport.Channels
                 });
             }
 
-            if (!string.IsNullOrEmpty(recordVideoDir))
+            if (recordVideo != null)
             {
-                channelArgs.Add("recordVideo", new Dictionary<string, object>()
-                {
-                    { "dir", recordVideoDir },
-                    { "size", recordVideoSize },
-                });
+                channelArgs.Add("recordVideo", recordVideo);
             }
 
             channelArgs.Add("ignoreDefaultArgs", ignoreDefaultArgs);

@@ -167,15 +167,7 @@ namespace Microsoft.Playwright
 
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
 
-        private void DidClose()
-        {
-            IsConnected = false;
-            _isClosedOrClosing = true;
-            Disconnected?.Invoke(this, this);
-            _closedTcs.TrySetResult(true);
-        }
-
-        private Dictionary<string, object> GetVideoArgs(string recordVideoDir, RecordVideoSize recordVideoSize)
+        internal static Dictionary<string, object> GetVideoArgs(string recordVideoDir, RecordVideoSize recordVideoSize)
         {
             Dictionary<string, object> recordVideoArgs = null;
 
@@ -198,6 +190,14 @@ namespace Microsoft.Playwright
             }
 
             return recordVideoArgs;
+        }
+
+        private void DidClose()
+        {
+            IsConnected = false;
+            _isClosedOrClosing = true;
+            Disconnected?.Invoke(this, this);
+            _closedTcs.TrySetResult(true);
         }
     }
 }
