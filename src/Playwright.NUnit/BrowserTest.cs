@@ -22,13 +22,25 @@
  * SOFTWARE.
  */
 
+using System;
+using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Playwright;
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
-namespace Microsoft.Playwright.NUnitTest
+namespace Microsoft.Playwright.NUnit
 {
-    public interface IWorkerService
+    public class BrowserTest : PlaywrightTest
     {
-        public Task ResetAsync();
-        public Task DisposeAsync();
+        public IBrowser Browser { get; internal set; }
+
+        [SetUp]
+        public async Task BrowserSetup()
+        {
+            var service = await BrowserService.Register(this, BrowserType);
+            Browser = service.Browser;
+        }
     }
 }

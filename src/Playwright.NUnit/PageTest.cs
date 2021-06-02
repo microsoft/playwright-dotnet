@@ -23,29 +23,18 @@
  */
 
 using System.Threading.Tasks;
+using NUnit.Framework;
 
-namespace Microsoft.Playwright.NUnitTest
+namespace Microsoft.Playwright.NUnit
 {
-    public class BrowserService : IWorkerService
+    public class PageTest : ContextTest
     {
-        public IBrowser Browser { get; internal set; }
+        public IPage Page { get; private set; }
 
-        public static async Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType)
+        [SetUp]
+        public async Task PageSetup()
         {
-            return await test.RegisterService("Browser", async () =>
-            {
-                var service = new BrowserService
-                {
-                    Browser = await browserType.LaunchAsync(new BrowserTypeLaunchOptions
-                    {
-                        Headless = true
-                    })
-                };
-                return service;
-            });
+            Page = await Context.NewPageAsync();
         }
-
-        public Task ResetAsync() => Task.CompletedTask;
-        public Task DisposeAsync() => Browser.CloseAsync();
-    };
+    }
 }

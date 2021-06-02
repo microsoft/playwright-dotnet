@@ -24,9 +24,11 @@
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.Playwright;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.NUnitTest
+namespace Microsoft.Playwright.NUnit
 {
     public static class TestExtensions
     {
