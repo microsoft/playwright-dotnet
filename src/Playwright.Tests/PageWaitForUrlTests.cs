@@ -26,7 +26,7 @@ namespace Microsoft.Playwright.Tests
         {
             var task = Page.WaitForURLAsync("**/frame.html", new() { Timeout = 2500 });
             await Page.GotoAsync(Server.EmptyPage);
-            var exception = await AssertThrowsAsync<TimeoutException>(() => task);
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => task);
             StringAssert.Contains("Timeout 2500ms exceeded.", exception.Message);
         }
 

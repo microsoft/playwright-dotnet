@@ -159,8 +159,8 @@ namespace Microsoft.Playwright.Tests
 
             var (cookies1, cookies2) = await TaskUtils.WhenAll(Context.CookiesAsync(), context2.CookiesAsync());
             Assert.That(cookies1, Has.Count.EqualTo(1));
-            Assert.AreEqual("persistent", cookies1.First().Name);
-            Assert.AreEqual("persistent-value", cookies1.First().Value);
+            Assert.AreEqual("persistent", cookies1[0].Name);
+            Assert.AreEqual("persistent-value", cookies1[0].Value);
             Assert.IsEmpty(cookies2);
         }
 
@@ -293,7 +293,7 @@ namespace Microsoft.Playwright.Tests
 
             var cookies = await Context.CookiesAsync();
             Assert.That(cookies, Has.Count.EqualTo(1));
-            var cookie = cookies.First();
+            var cookie = cookies[0];
             Assert.AreEqual("defaults", cookie.Name);
             Assert.AreEqual("123456", cookie.Value);
             Assert.AreEqual("localhost", cookie.Domain);
@@ -322,7 +322,7 @@ namespace Microsoft.Playwright.Tests
 
             var cookies = await Context.CookiesAsync();
             Assert.That(cookies, Has.Count.EqualTo(1));
-            var cookie = cookies.First();
+            var cookie = cookies[0];
             Assert.AreEqual("gridcookie", cookie.Name);
             Assert.AreEqual("GRID", cookie.Value);
             Assert.AreEqual("localhost", cookie.Domain);
@@ -345,7 +345,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(TestConstants.AboutBlank);
 
-            var exception = await AssertThrowsAsync<PlaywrightException>(()
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(()
                 => Context.AddCookiesAsync(new[]
                 {
                         new Cookie
@@ -369,7 +369,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldNotSetACookieOnADataURLPage()
         {
             await Page.GotoAsync("data:,Hello%2C%20World!");
-            var exception = await AssertThrowsAsync<PlaywrightException>(()
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(()
                 => Context.AddCookiesAsync(new[]
                 {
                         new Cookie
@@ -402,7 +402,7 @@ namespace Microsoft.Playwright.Tests
 
             var cookies = await Context.CookiesAsync(new[] { secureUrl });
             Assert.That(cookies, Has.Count.EqualTo(1));
-            var cookie = cookies.First();
+            var cookie = cookies[0];
             Assert.True(cookie.Secure);
         }
 
@@ -425,7 +425,7 @@ namespace Microsoft.Playwright.Tests
 
             var cookies = await Context.CookiesAsync(new[] { SecureUrl });
             Assert.That(cookies, Has.Count.EqualTo(1));
-            var cookie = cookies.First();
+            var cookie = cookies[0];
 
             Assert.False(cookie.Secure);
         }
@@ -448,7 +448,7 @@ namespace Microsoft.Playwright.Tests
 
             var cookies = await Context.CookiesAsync(new[] { "https://www.example.com" });
             Assert.That(cookies, Has.Count.EqualTo(1));
-            var cookie = cookies.First();
+            var cookie = cookies[0];
 
             Assert.AreEqual("example-cookie", cookie.Name);
             Assert.AreEqual("best", cookie.Value);
@@ -512,7 +512,7 @@ namespace Microsoft.Playwright.Tests
             if (allowsThirdPart)
             {
                 Assert.That(cookies, Has.Count.EqualTo(1));
-                var cookie = cookies.First();
+                var cookie = cookies[0];
                 Assert.AreEqual("127.0.0.1", cookie.Domain);
                 Assert.AreEqual(cookie.Expires, -1);
                 Assert.False(cookie.HttpOnly);
@@ -528,7 +528,7 @@ namespace Microsoft.Playwright.Tests
             }
         }
 
-        void AssertEqual(IEnumerable<BrowserContextCookiesResult> ea, IEnumerable<BrowserContextCookiesResult> eb)
+        static void AssertEqual(IEnumerable<BrowserContextCookiesResult> ea, IEnumerable<BrowserContextCookiesResult> eb)
         {
             var aa = ea.ToList();
             var bb = eb.ToList();

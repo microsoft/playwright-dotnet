@@ -91,7 +91,7 @@ namespace Microsoft.Playwright.Tests
             a.a = 1;
             a.y = a;
 
-            var exception = await AssertThrowsAsync<JsonException>(() => Page.EvaluateAsync("x => x", a));
+            var exception = await PlaywrightAssert.ThrowsAsync<JsonException>(() => Page.EvaluateAsync("x => x", a));
             Assert.AreEqual("Argument is a circular structure", exception.Message);
         }
 

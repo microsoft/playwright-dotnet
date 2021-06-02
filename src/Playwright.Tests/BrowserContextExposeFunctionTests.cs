@@ -58,15 +58,15 @@ namespace Microsoft.Playwright.Tests
             await Context.ExposeFunctionAsync("foo", () => { });
             await Context.ExposeFunctionAsync("bar", () => { });
 
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Context.ExposeFunctionAsync("foo", () => { }));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Context.ExposeFunctionAsync("foo", () => { }));
             Assert.AreEqual("Function \"foo\" has been already registered", exception.Message);
 
             var page = await Context.NewPageAsync();
-            exception = await AssertThrowsAsync<PlaywrightException>(() => page.ExposeFunctionAsync("foo", () => { }));
+            exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.ExposeFunctionAsync("foo", () => { }));
             Assert.AreEqual("Function \"foo\" has been already registered in the browser context", exception.Message);
 
             await page.ExposeFunctionAsync("baz", () => { });
-            exception = await AssertThrowsAsync<PlaywrightException>(() => Context.ExposeFunctionAsync("baz", () => { }));
+            exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Context.ExposeFunctionAsync("baz", () => { }));
             Assert.AreEqual("Function \"baz\" has been already registered in one of the pages", exception.Message);
         }
 

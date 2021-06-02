@@ -394,13 +394,13 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowOnUnknownKeys()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.Keyboard.PressAsync("NotARealKey"));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.Keyboard.PressAsync("NotARealKey"));
             Assert.AreEqual("Unknown key: \"NotARealKey\"", exception.Message);
 
-            exception = await AssertThrowsAsync<PlaywrightException>(() => Page.Keyboard.PressAsync("ё"));
+            exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.Keyboard.PressAsync("ё"));
             Assert.AreEqual("Unknown key: \"ё\"", exception.Message);
 
-            exception = await AssertThrowsAsync<PlaywrightException>(() => Page.Keyboard.PressAsync("😊"));
+            exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.Keyboard.PressAsync("😊"));
             Assert.AreEqual("Unknown key: \"😊\"", exception.Message);
         }
 

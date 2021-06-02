@@ -259,7 +259,7 @@ namespace Microsoft.Playwright.Tests
             await handle.EvaluateAsync("input => input.checked = false");
             Assert.False(await handle.IsCheckedAsync());
             Assert.False(await Page.IsCheckedAsync("input"));
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.IsCheckedAsync("div"));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.IsCheckedAsync("div"));
             StringAssert.Contains("Not a checkbox or radio button", exception.Message);
         }
     }

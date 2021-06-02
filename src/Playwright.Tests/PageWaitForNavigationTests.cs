@@ -36,7 +36,7 @@ namespace Microsoft.Playwright.Tests
 
             await Page.GotoAsync(Server.EmptyPage);
 
-            var exception = await AssertThrowsAsync<TimeoutException>(() => waitForNavigationResult);
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => waitForNavigationResult);
 
             StringAssert.Contains("Timeout 5000ms exceeded", exception.Message);
             StringAssert.Contains("waiting for navigation to \"**/frame.html\" until \"Load\"", exception.Message);
@@ -90,7 +90,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.EmptyPage);
             await Page.SetContentAsync($"<a href='{HttpsServer.Prefix}/empty.html'>foobar</a>");
             var navigationTask = Page.WaitForNavigationAsync();
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => TaskUtils.WhenAll(
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => TaskUtils.WhenAll(
                 navigationTask,
                 Page.ClickAsync("a")
             ));
