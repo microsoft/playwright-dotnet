@@ -22,6 +22,10 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
   <PropertyGroup>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+  <PropertyGroup>
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <PackageVersion>$(AssemblyVersion)-alpha</PackageVersion>
     <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>

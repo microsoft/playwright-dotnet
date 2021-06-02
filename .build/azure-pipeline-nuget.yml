@@ -89,7 +89,7 @@ stages:
         arguments: '-c $(BuildConfiguration)'
 
     - task: DotNetCoreCLI@2
-      displayName: Pack Playwright NuGet
+      displayName: Pack Playwright.NUnit NuGet
       inputs:
         command: 'pack'
         packagesToPack: '**/Playwright.NUnit.csproj'
