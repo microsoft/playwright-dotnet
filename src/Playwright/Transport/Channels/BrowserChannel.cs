@@ -27,63 +27,51 @@ namespace Microsoft.Playwright.Transport.Channels
         }
 
         internal Task<BrowserContextChannel> NewContextAsync(
-            bool? acceptDownloads = null,
-            bool? bypassCSP = null,
-            ColorScheme? colorScheme = null,
-            float? deviceScaleFactor = null,
-            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null,
-            Geolocation geolocation = null,
-            bool? hasTouch = null,
-            HttpCredentials httpCredentials = null,
-            bool? ignoreHTTPSErrors = null,
-            bool? isMobile = null,
-            bool? javaScriptEnabled = null,
-            string locale = null,
-            bool? offline = null,
-            IEnumerable<string> permissions = null,
-            Proxy proxy = null,
-            bool? recordHarOmitContent = null,
-            string recordHarPath = null,
-            string recordVideoDir = null,
-            RecordVideoSize recordVideoSize = null,
-            string storageState = null,
-            string storageStatePath = null,
-            string timezoneId = null,
-            string userAgent = null,
-            ViewportSize viewportSize = default)
+            bool? acceptDownloads,
+            bool? bypassCSP,
+            ColorScheme? colorScheme,
+            float? deviceScaleFactor,
+            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders,
+            Geolocation geolocation,
+            bool? hasTouch,
+            HttpCredentials httpCredentials,
+            bool? ignoreHTTPSErrors,
+            bool? isMobile,
+            bool? javaScriptEnabled,
+            string locale,
+            bool? offline,
+            IEnumerable<string> permissions,
+            Proxy proxy,
+            bool? recordHarOmitContent,
+            string recordHarPath,
+            Dictionary<string, object> recordVideo,
+            string storageState,
+            string storageStatePath,
+            string timezoneId,
+            string userAgent,
+            ViewportSize viewportSize)
         {
-            if (recordVideoSize != null && string.IsNullOrEmpty(recordVideoDir))
-            {
-                throw new PlaywrightException("\"RecordVideoSize\" option requires \"RecordVideoDir\" to be specified");
-            }
-
-            var args = new Dictionary<string, object>
-            {
-                { "acceptDownloads", acceptDownloads },
-                { "bypassCSP", bypassCSP },
-                { "colorScheme", colorScheme },
-                { "deviceScaleFactor", deviceScaleFactor },
-                { "geolocation", geolocation },
-                { "hasTouch", hasTouch },
-                { "httpCredentials", httpCredentials },
-                { "ignoreHTTPSErrors", ignoreHTTPSErrors },
-                { "isMobile", isMobile },
-                { "javaScriptEnabled", javaScriptEnabled },
-                { "locale", locale },
-                { "offline", offline },
-                { "permissions", permissions },
-                { "proxy", proxy },
-                { "storageState", storageState },
-                { "storageStatePath", storageStatePath },
-                { "timezoneId", timezoneId },
-                { "userAgent", userAgent },
-            };
-            args["sdkLanguage"] = "csharp";
+            var args = new Dictionary<string, object>();
+            args.Add("acceptDownloads", acceptDownloads);
+            args.Add("bypassCSP", bypassCSP);
+            args.Add("colorScheme", colorScheme);
+            args.Add("deviceScaleFactor", deviceScaleFactor);
 
             if (extraHTTPHeaders != null)
             {
                 args["extraHTTPHeaders"] = extraHTTPHeaders.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray();
             }
+
+            args.Add("geolocation", geolocation);
+            args.Add("hasTouch", hasTouch);
+            args.Add("httpCredentials", httpCredentials);
+            args.Add("ignoreHTTPSErrors", ignoreHTTPSErrors);
+            args.Add("isMobile", isMobile);
+            args.Add("javaScriptEnabled", javaScriptEnabled);
+            args.Add("locale", locale);
+            args.Add("offline", offline);
+            args.Add("permissions", permissions);
+            args.Add("proxy", proxy);
 
             if (!string.IsNullOrEmpty(recordHarPath))
             {
@@ -94,20 +82,15 @@ namespace Microsoft.Playwright.Transport.Channels
                 });
             }
 
-            if (!string.IsNullOrEmpty(recordVideoDir))
+            if (recordVideo != null)
             {
-                var recordVideoArgs = new Dictionary<string, object>()
-                {
-                    { "dir", recordVideoDir },
-                };
-
-                if (recordVideoSize != null)
-                {
-                    recordVideoArgs["size"] = recordVideoSize;
-                }
-
-                args.Add("recordVideo", recordVideoArgs);
+                args.Add("recordVideo", recordVideo);
             }
+
+            args.Add("storageState", storageState);
+            args.Add("storageStatePath", storageStatePath);
+            args.Add("timezoneId", timezoneId);
+            args.Add("userAgent", userAgent);
 
             if (viewportSize?.Width == -1)
             {
@@ -117,6 +100,8 @@ namespace Microsoft.Playwright.Transport.Channels
             {
                 args.Add("viewport", viewportSize);
             }
+
+            args["sdkLanguage"] = "csharp";
 
             return Connection.SendMessageToServerAsync<BrowserContextChannel>(
                 Guid,
@@ -128,13 +113,11 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal Task StartTracingAsync(IPage page, bool screenshots, string path, IEnumerable<string> categories)
         {
-            var args = new Dictionary<string, object>
-            {
-                ["screenshots"] = screenshots,
-                ["path"] = path,
-                ["page"] = page,
-                ["categories"] = categories,
-            };
+            var args = new Dictionary<string, object>();
+            args["screenshots"] = screenshots;
+            args["path"] = path;
+            args["page"] = page;
+            args["categories"] = categories;
 
             return Connection.SendMessageToServerAsync(Guid, "crStartTracing", args);
         }

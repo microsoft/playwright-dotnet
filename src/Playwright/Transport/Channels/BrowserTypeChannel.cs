@@ -31,26 +31,24 @@ namespace Microsoft.Playwright.Transport.Channels
             IEnumerable<string> ignoreDefaultArgs = default,
             bool? ignoreAllDefaultArgs = default)
         {
-            var args = new Dictionary<string, object>
-            {
-                { "channel", channel },
-                { "executablePath", executablePath },
-                { "args", passedArguments },
-                { "ignoreAllDefaultArgs", ignoreAllDefaultArgs },
-                { "ignoreDefaultArgs", ignoreDefaultArgs },
-                { "handleSIGHUP", handleSIGHUP },
-                { "handleSIGINT", handleSIGINT },
-                { "handleSIGTERM", handleSIGTERM },
-                { "headless", headless },
-                { "devtools", devtools },
-                { "env", env.Remap() },
-                { "proxy", proxy },
-                { "downloadsPath", downloadsPath },
-                { "firefoxUserPrefs", firefoxUserPrefs },
-                { "chromiumSandbox", chromiumSandbox },
-                { "slowMo", slowMo },
-                { "timeout", timeout },
-            };
+            var args = new Dictionary<string, object>();
+            args.Add("channel", channel);
+            args.Add("executablePath", executablePath);
+            args.Add("args", passedArguments);
+            args.Add("ignoreAllDefaultArgs", ignoreAllDefaultArgs);
+            args.Add("ignoreDefaultArgs", ignoreDefaultArgs);
+            args.Add("handleSIGHUP", handleSIGHUP);
+            args.Add("handleSIGINT", handleSIGINT);
+            args.Add("handleSIGTERM", handleSIGTERM);
+            args.Add("headless", headless);
+            args.Add("devtools", devtools);
+            args.Add("env", env.Remap());
+            args.Add("proxy", proxy);
+            args.Add("downloadsPath", downloadsPath);
+            args.Add("firefoxUserPrefs", firefoxUserPrefs);
+            args.Add("chromiumSandbox", chromiumSandbox);
+            args.Add("slowMo", slowMo);
+            args.Add("timeout", timeout);
 
             return Connection.SendMessageToServerAsync<BrowserChannel>(
                 Guid,
@@ -104,44 +102,26 @@ namespace Microsoft.Playwright.Transport.Channels
                 throw new PlaywrightException("\"RecordVideoSize\" option requires \"RecordVideoDir\" to be specified");
             }
 
-            var channelArgs = new Dictionary<string, object>
-            {
-                { "userDataDir", userDataDir },
-                { "headless", headless },
-                { "channel", channel },
-                { "executablePath", executablePath },
-                { "args", args },
-                { "downloadsPath", downloadsPath },
-                { "proxy", proxy },
-                { "chromiumSandbox", chromiumSandbox },
-                { "handleSIGINT", handleSIGINT },
-                { "handleSIGTERM", handleSIGTERM },
-                { "handleSIGHUP", handleSIGHUP },
-                { "timeout", timeout },
-                { "env", env.Remap() },
-                { "devtools", devtools },
-                { "slowMo", slowMo },
-                { "acceptDownloads", acceptDownloads },
-                { "ignoreHTTPSErrors", ignoreHTTPSErrors },
-                { "bypassCSP", bypassCSP },
-                { "screensize", screenSize },
-                { "userAgent", userAgent },
-                { "deviceScaleFactor", deviceScaleFactor },
-                { "isMobile", isMobile },
-                { "hasTouch", hasTouch },
-                { "javaScriptEnabled", javaScriptEnabled },
-                { "timezoneId", timezoneId },
-                { "geolocation", geolocation },
-                { "locale", locale },
-                { "permissions", permissions },
-                { "extraHTTPHeaders", extraHTTPHeaders.Remap() },
-                { "offline", offline },
-                { "httpCredentials", httpCredentials },
-                { "colorScheme", colorScheme },
-                { "ignoreDefaultArgs", ignoreDefaultArgs },
-                { "ignoreAllDefaultArgs", ignoreAllDefaultArgs },
-                { "sdkLanguage", "csharp" },
-            };
+            var channelArgs = new Dictionary<string, object>();
+
+            channelArgs.Add("userDataDir", userDataDir);
+            channelArgs.Add("headless", headless);
+            channelArgs.Add("channel", channel);
+            channelArgs.Add("executablePath", executablePath);
+            channelArgs.Add("args", args);
+            channelArgs.Add("downloadsPath", downloadsPath);
+            channelArgs.Add("proxy", proxy);
+            channelArgs.Add("chromiumSandbox", chromiumSandbox);
+            channelArgs.Add("handleSIGINT", handleSIGINT);
+            channelArgs.Add("handleSIGTERM", handleSIGTERM);
+            channelArgs.Add("handleSIGHUP", handleSIGHUP);
+            channelArgs.Add("timeout", timeout);
+            channelArgs.Add("env", env.Remap());
+            channelArgs.Add("devtools", devtools);
+            channelArgs.Add("slowMo", slowMo);
+            channelArgs.Add("acceptDownloads", acceptDownloads);
+            channelArgs.Add("ignoreHTTPSErrors", ignoreHTTPSErrors);
+            channelArgs.Add("bypassCSP", bypassCSP);
 
             if (viewportSize?.Width == -1)
             {
@@ -152,29 +132,41 @@ namespace Microsoft.Playwright.Transport.Channels
                 channelArgs.Add("viewport", viewportSize);
             }
 
+            channelArgs.Add("screensize", screenSize);
+            channelArgs.Add("userAgent", userAgent);
+            channelArgs.Add("deviceScaleFactor", deviceScaleFactor);
+            channelArgs.Add("isMobile", isMobile);
+            channelArgs.Add("hasTouch", hasTouch);
+            channelArgs.Add("javaScriptEnabled", javaScriptEnabled);
+            channelArgs.Add("timezoneId", timezoneId);
+            channelArgs.Add("geolocation", geolocation);
+            channelArgs.Add("locale", locale);
+            channelArgs.Add("permissions", permissions);
+            channelArgs.Add("extraHTTPHeaders", extraHTTPHeaders.Remap());
+            channelArgs.Add("offline", offline);
+            channelArgs.Add("httpCredentials", httpCredentials);
+            channelArgs.Add("colorScheme", colorScheme);
             if (!string.IsNullOrEmpty(recordHarPath))
             {
                 channelArgs.Add("recordHar", new
                 {
                     Path = recordHarPath,
-                    OmitContent = recordHarOmitContent ?? false,
+                    OmitContent = recordHarOmitContent.GetValueOrDefault(false),
                 });
             }
 
             if (!string.IsNullOrEmpty(recordVideoDir))
             {
-                var recordVideoArgs = new Dictionary<string, object>()
+                channelArgs.Add("recordVideo", new Dictionary<string, object>()
                 {
                     { "dir", recordVideoDir },
-                };
-
-                if (recordVideoSize != null)
-                {
-                    recordVideoArgs["size"] = recordVideoSize;
-                }
-
-                channelArgs.Add("recordVideo", recordVideoArgs);
+                    { "size", recordVideoSize },
+                });
             }
+
+            channelArgs.Add("ignoreDefaultArgs", ignoreDefaultArgs);
+            channelArgs.Add("ignoreAllDefaultArgs", ignoreAllDefaultArgs);
+            channelArgs.Add("sdkLanguage", "csharp");
 
             return Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "launchPersistentContext", channelArgs);
         }

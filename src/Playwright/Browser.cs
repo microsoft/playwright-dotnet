@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
@@ -16,7 +15,7 @@ namespace Microsoft.Playwright
 
         internal Browser(IChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
         {
-            Channel = new Microsoft.Playwright.Transport.Channels.BrowserChannel(guid, parent.Connection, this);
+            Channel = new BrowserChannel(guid, parent.Connection, this);
             IsConnected = true;
             Channel.Closed += (_, _) => DidClose();
             _initializer = initializer;
@@ -34,7 +33,7 @@ namespace Microsoft.Playwright
 
         public string Version => _initializer.Version;
 
-        internal Microsoft.Playwright.Transport.Channels.BrowserChannel Channel { get; }
+        internal BrowserChannel Channel { get; }
 
         internal List<BrowserContext> BrowserContextsList { get; } = new List<BrowserContext>();
 
@@ -94,8 +93,7 @@ namespace Microsoft.Playwright
                 proxy,
                 recordHarOmitContent,
                 recordHarPath,
-                recordVideoDir,
-                recordVideoSize,
+                GetVideoArgs(recordVideoDir, recordVideoSize),
                 storageState,
                 storageStatePath,
                 timezoneId,
@@ -175,6 +173,31 @@ namespace Microsoft.Playwright
             _isClosedOrClosing = true;
             Disconnected?.Invoke(this, this);
             _closedTcs.TrySetResult(true);
+        }
+
+        private Dictionary<string, object> GetVideoArgs(string recordVideoDir, RecordVideoSize recordVideoSize)
+        {
+            Dictionary<string, object> recordVideoArgs = null;
+
+            if (recordVideoSize != null && string.IsNullOrEmpty(recordVideoDir))
+            {
+                throw new PlaywrightException("\"RecordVideoSize\" option requires \"RecordVideoDir\" to be specified");
+            }
+
+            if (!string.IsNullOrEmpty(recordVideoDir))
+            {
+                recordVideoArgs = new Dictionary<string, object>()
+                {
+                    { "dir", recordVideoDir },
+                };
+
+                if (recordVideoSize != null)
+                {
+                    recordVideoArgs["size"] = recordVideoSize;
+                }
+            }
+
+            return recordVideoArgs;
         }
     }
 }
