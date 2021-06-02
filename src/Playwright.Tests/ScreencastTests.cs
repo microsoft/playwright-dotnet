@@ -19,7 +19,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("screencast.spec.ts", "videoSize should require videosPath")]
-        [SkipBrowserAndPlatformFact(skipWebkit: true, skipWindows: true)]
+        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
         public async Task VideoSizeShouldRequireVideosPath()
         {
             var exception = await Assert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new BrowserNewContextOptions
