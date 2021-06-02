@@ -1,6 +1,4 @@
-using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.NUnitTest;
 using NUnit.Framework;
 

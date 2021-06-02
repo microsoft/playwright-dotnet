@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.NUnitTest;
 using NUnit.Framework;
 

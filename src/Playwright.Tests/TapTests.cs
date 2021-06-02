@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnitTest;
 using NUnit.Framework;

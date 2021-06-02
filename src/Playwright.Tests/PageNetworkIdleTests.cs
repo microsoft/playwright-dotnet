@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.NUnitTest;
 using NUnit.Framework;
 
