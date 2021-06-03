@@ -312,7 +312,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithOverwrittenPromise()
         {
-            await Page.EvaluateAsync(@"const originalPromise = window.Promise;
+            await Page.EvaluateAsync(@"() => {
+              const originalPromise = window.Promise;
               class Promise2 {
                 static all(...arg) {
                   return wrap(originalPromise.all(...arg));
@@ -342,7 +343,8 @@ namespace Microsoft.Playwright.Tests
                 return result;
               };
               window.Promise = Promise2;
-              window.__Promise2 = Promise2;");
+              window.__Promise2 = Promise2;
+            }");
 
             Assert.True(await Page.EvaluateAsync<bool>(@"() => {
               const p = Promise.all([Promise.race([]), new Promise(() => {}).then(() => {})]);

@@ -12,9 +12,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEvaluateBeforeAnythingElseOnThePage()
         {
-            await Page.AddInitScriptAsync(@"function(){
-                window.injected = 123;
-            }");
+            await Page.AddInitScriptAsync("window.injected = 123;");
             await Page.GotoAsync(Server.Prefix + "/tamperable.html");
             Assert.AreEqual(123, await Page.EvaluateAsync<int>("() => window.result"));
         }
@@ -33,9 +31,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithContents()
         {
-            await Page.AddInitScriptAsync(script: @"function(){
-                window.injected = 123;
-            }");
+            await Page.AddInitScriptAsync("window.injected = 123;");
             await Page.GotoAsync(Server.Prefix + "/tamperable.html");
             Assert.AreEqual(123, await Page.EvaluateAsync<int>("() => window.result"));
         }
@@ -52,14 +48,10 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithBrowserContextScripts()
         {
             await using var context = await Browser.NewContextAsync();
-            await context.AddInitScriptAsync(@"function(){
-                window.temp = 123;
-            }");
+            await context.AddInitScriptAsync("window.temp = 123;");
 
             var page = await context.NewPageAsync();
-            await page.AddInitScriptAsync(script: @"function(){
-                window.injected = window.temp;
-            }");
+            await page.AddInitScriptAsync("window.injected = window.temp;");
             await page.GotoAsync(Server.Prefix + "/tamperable.html");
             Assert.AreEqual(123, await page.EvaluateAsync<int>("() => window.result"));
         }
@@ -84,13 +76,9 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
-            await context.AddInitScriptAsync(@"function(){
-                window.temp = 123;
-            }");
+            await context.AddInitScriptAsync("window.temp = 123;");
 
-            await page.AddInitScriptAsync(script: @"function(){
-                window.injected = window.temp;
-            }");
+            await page.AddInitScriptAsync(script: "window.injected = window.temp;");
 
             await page.GotoAsync(Server.Prefix + "/tamperable.html");
             Assert.AreEqual(123, await page.EvaluateAsync<int>("() => window.result"));
@@ -100,12 +88,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportMultipleScripts()
         {
-            await Page.AddInitScriptAsync(@"function(){
-                window.script1 = 1;
-            }");
-            await Page.AddInitScriptAsync(@"function(){
-                window.script2 = 2;
-            }");
+            await Page.AddInitScriptAsync("window.script1 = 1;");
+            await Page.AddInitScriptAsync("window.script2 = 2;");
             await Page.GotoAsync(Server.Prefix + "/tamperable.html");
             Assert.AreEqual(1, await Page.EvaluateAsync<int>("() => window.script1"));
             Assert.AreEqual(2, await Page.EvaluateAsync<int>("() => window.script2"));
@@ -116,9 +100,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithCSP()
         {
             Server.SetCSP("/empty.html", "script-src " + Server.Prefix);
-            await Page.AddInitScriptAsync(@"function(){
-                window.injected = 123;
-            }");
+            await Page.AddInitScriptAsync("window.injected = 123;");
             await Page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual(123, await Page.EvaluateAsync<int>("() => window.injected"));
 
@@ -140,9 +122,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkAfterACrossOriginNavigation()
         {
             await Page.GotoAsync(Server.CrossProcessPrefix);
-            await Page.AddInitScriptAsync(@"function(){
-                window.injected = 123;
-            }");
+            await Page.AddInitScriptAsync("window.injected = 123;");
             await Page.GotoAsync(Server.Prefix + "/tamperable.html");
             Assert.AreEqual(123, await Page.EvaluateAsync<int>("() => window.result"));
         }

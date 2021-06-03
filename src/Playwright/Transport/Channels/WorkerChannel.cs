@@ -25,20 +25,18 @@ namespace Microsoft.Playwright.Transport.Channels
             }
         }
 
-        internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, bool isFunction, object arg)
+        internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, object arg)
             => Connection.SendMessageToServerAsync<JSHandleChannel>(
                 Guid,
                 "evaluateExpressionHandle",
                 new Dictionary<string, object>
                 {
                     ["expression"] = script,
-                    ["isFunction"] = isFunction,
                     ["arg"] = arg,
                 });
 
         internal Task<JsonElement?> EvaluateExpressionAsync(
             string script,
-            bool isFunction,
             object arg)
         {
             return Connection.SendMessageToServerAsync<JsonElement?>(
@@ -47,7 +45,6 @@ namespace Microsoft.Playwright.Transport.Channels
                 new Dictionary<string, object>
                 {
                     ["expression"] = script,
-                    ["isFunction"] = isFunction,
                     ["arg"] = arg,
                 });
         }

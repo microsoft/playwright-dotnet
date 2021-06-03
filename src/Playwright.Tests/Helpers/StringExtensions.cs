@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Esprima;
-using Esprima.Ast;
 
 namespace Microsoft.Playwright
 {
@@ -645,42 +643,6 @@ namespace Microsoft.Playwright
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Determine if the script is a javascript function and not an expression.
-        /// </summary>
-        /// <param name="script">Script to evaluate.</param>
-        /// <param name="retry">Whether it should retry by wrapping the code in parenthesis.</param>
-        /// <param name="checkExpression">Checks whether the function could be a function expression.</param>
-        /// <returns>Whether the script is a function or not.</returns>
-        public static bool IsJavascriptFunction(this string script, bool retry = true, bool checkExpression = false)
-        {
-            try
-            {
-                var parser = new JavaScriptParser(script);
-                var program = parser.ParseScript();
-
-                if (program.Body.Count > 0)
-                {
-                    return
-                        (program.Body[0] is ExpressionStatement expression && (
-                            expression.Expression.Type == Nodes.ArrowFunctionExpression ||
-                           (checkExpression && expression.Expression.Type == Nodes.FunctionExpression))) ||
-                        program.Body[0] is FunctionDeclaration;
-                }
-
-                return false;
-            }
-            catch (ParserException)
-            {
-                if (retry)
-                {
-                    return IsJavascriptFunction($"({script})", false, true);
-                }
-
-                return true;
-            }
         }
 
         /// <summary>

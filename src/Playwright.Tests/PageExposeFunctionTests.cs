@@ -96,7 +96,7 @@ namespace Microsoft.Playwright.Tests
             {
                 called = true;
             });
-            await Page.AddInitScriptAsync("() => woof()");
+            await Page.AddInitScriptAsync("woof()");
             await Page.ReloadAsync();
             Assert.True(called);
         }

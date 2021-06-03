@@ -9,7 +9,7 @@ namespace Microsoft.Playwright.Helpers
     /// Task helper.
     /// </summary>
     [SuppressMessage("Microsoft.VisualStudio.Threading.Analyzers", "VSTHRD200", Justification = "Calling the method WithTimeoutAsync doesn't make any sense.")]
-    public static class TaskHelper
+    internal static class TaskHelper
     {
         private static readonly Func<TimeSpan, Exception> _defaultExceptionFactory =
             timeout => new TimeoutException($"Timeout of {timeout.TotalMilliseconds}ms exceeded");

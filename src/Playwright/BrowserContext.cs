@@ -127,7 +127,7 @@ namespace Microsoft.Playwright
                 script = ScriptsHelper.EvaluationScript(script, scriptPath);
             }
 
-            return Channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(script, null));
+            return Channel.AddInitScriptAsync(script);
         }
 
         public Task ClearCookiesAsync() => Channel.ClearCookiesAsync();

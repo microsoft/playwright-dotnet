@@ -31,7 +31,6 @@
   <Import Project="../Common/SignAssembly.props" />
   <Import Project="build/netstandard2.0/Microsoft.Playwright.targets" />
   <ItemGroup>
-    <PackageReference Include="Esprima" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     <PackageReference Include="Microsoft.VisualStudioEng.MicroBuild.Core" Version="0.4.1">
       <PrivateAssets>all</PrivateAssets>
