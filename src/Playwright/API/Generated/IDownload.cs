@@ -77,6 +77,9 @@ namespace Microsoft.Playwright
         /// <summary><para>Returns download error if any. Will wait for the download to finish if necessary.</para></summary>
         Task<string> FailureAsync();
 
+        /// <summary><para>Get the page that the download belongs to.</para></summary>
+        IPage Page { get; }
+
         /// <summary>
         /// <para>
         /// Returns path to the downloaded file in case of successful download. The method will

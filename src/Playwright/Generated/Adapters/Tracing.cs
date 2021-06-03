@@ -36,34 +36,18 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageRunAndWaitForRequestFinishedOptions
+    internal partial class Tracing
     {
-        public PageRunAndWaitForRequestFinishedOptions() { }
-
-        public PageRunAndWaitForRequestFinishedOptions(PageRunAndWaitForRequestFinishedOptions clone)
+        public Task StartAsync(TracingStartOptions options = default)
         {
-            if (clone == null) return;
-            Predicate = clone.Predicate;
-            Timeout = clone.Timeout;
+            options ??= new TracingStartOptions();
+            return StartAsync(name: options.Name, screenshots: options.Screenshots, snapshots: options.Snapshots);
         }
 
-        /// <summary>
-        /// <para>
-        /// Receives the <see cref="IRequest"/> object and resolves to truthy value when the
-        /// waiting should resolve.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("predicate")]
-        public Func<IRequest, bool> Predicate { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
-        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        public Task StopAsync(TracingStopOptions options = default)
+        {
+            options ??= new TracingStopOptions();
+            return StopAsync(path: options.Path);
+        }
     }
 }

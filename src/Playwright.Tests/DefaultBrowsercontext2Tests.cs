@@ -74,7 +74,14 @@ namespace Microsoft.Playwright.Tests
                 TimezoneId = "America/Jamaica",
             });
 
-            Assert.AreEqual("Sat Nov 19 2016 13:12:34 GMT-0500 (Eastern Standard Time)", await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+            if (BrowserName == "webkit")
+            {
+                Assert.AreEqual("Sat Nov 19 2016 13:12:34 GMT-0500", await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+            }
+            else
+            {
+                Assert.AreEqual("Sat Nov 19 2016 13:12:34 GMT-0500 (Eastern Standard Time)", await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+            }
 
             tmp.Dispose();
             await context.DisposeAsync();

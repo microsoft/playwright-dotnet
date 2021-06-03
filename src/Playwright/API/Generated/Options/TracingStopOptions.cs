@@ -36,34 +36,18 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageRunAndWaitForRequestFinishedOptions
+    public class TracingStopOptions
     {
-        public PageRunAndWaitForRequestFinishedOptions() { }
+        public TracingStopOptions() { }
 
-        public PageRunAndWaitForRequestFinishedOptions(PageRunAndWaitForRequestFinishedOptions clone)
+        public TracingStopOptions(TracingStopOptions clone)
         {
             if (clone == null) return;
-            Predicate = clone.Predicate;
-            Timeout = clone.Timeout;
+            Path = clone.Path;
         }
 
-        /// <summary>
-        /// <para>
-        /// Receives the <see cref="IRequest"/> object and resolves to truthy value when the
-        /// waiting should resolve.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("predicate")]
-        public Func<IRequest, bool> Predicate { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
-        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        /// <summary><para>Export trace into the file with the given name.</para></summary>
+        [JsonPropertyName("path")]
+        public string Path { get; set; }
     }
 }

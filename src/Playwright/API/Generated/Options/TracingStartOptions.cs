@@ -36,34 +36,38 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageRunAndWaitForRequestFinishedOptions
+    public class TracingStartOptions
     {
-        public PageRunAndWaitForRequestFinishedOptions() { }
+        public TracingStartOptions() { }
 
-        public PageRunAndWaitForRequestFinishedOptions(PageRunAndWaitForRequestFinishedOptions clone)
+        public TracingStartOptions(TracingStartOptions clone)
         {
             if (clone == null) return;
-            Predicate = clone.Predicate;
-            Timeout = clone.Timeout;
+            Name = clone.Name;
+            Screenshots = clone.Screenshots;
+            Snapshots = clone.Snapshots;
         }
 
         /// <summary>
         /// <para>
-        /// Receives the <see cref="IRequest"/> object and resolves to truthy value when the
-        /// waiting should resolve.
+        /// If specified, the trace is going to be saved into the file with the given name inside
+        /// the <paramref name="tracesDir"/> folder specified in <see cref="IBrowserType.LaunchAsync"/>.
         /// </para>
         /// </summary>
-        [JsonPropertyName("predicate")]
-        public Func<IRequest, bool> Predicate { get; set; }
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
 
         /// <summary>
         /// <para>
-        /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
-        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
+        /// Whether to capture screenshots during tracing. Screenshots are used to build a timeline
+        /// preview.
         /// </para>
         /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        [JsonPropertyName("screenshots")]
+        public bool? Screenshots { get; set; }
+
+        /// <summary><para>Whether to capture DOM snapshot on every action.</para></summary>
+        [JsonPropertyName("snapshots")]
+        public bool? Snapshots { get; set; }
     }
 }

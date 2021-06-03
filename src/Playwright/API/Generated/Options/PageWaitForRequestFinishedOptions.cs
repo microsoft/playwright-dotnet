@@ -49,8 +49,8 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Receives the <see cref="IConsoleMessage"/> object and resolves to truthy value when
-        /// the waiting should resolve.
+        /// Receives the <see cref="IRequest"/> object and resolves to truthy value when the
+        /// waiting should resolve.
         /// </para>
         /// </summary>
         [JsonPropertyName("predicate")]

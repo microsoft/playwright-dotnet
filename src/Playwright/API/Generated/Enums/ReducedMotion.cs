@@ -36,34 +36,13 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageRunAndWaitForRequestFinishedOptions
+    public enum ReducedMotion
     {
-        public PageRunAndWaitForRequestFinishedOptions() { }
-
-        public PageRunAndWaitForRequestFinishedOptions(PageRunAndWaitForRequestFinishedOptions clone)
-        {
-            if (clone == null) return;
-            Predicate = clone.Predicate;
-            Timeout = clone.Timeout;
-        }
-
-        /// <summary>
-        /// <para>
-        /// Receives the <see cref="IRequest"/> object and resolves to truthy value when the
-        /// waiting should resolve.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("predicate")]
-        public Func<IRequest, bool> Predicate { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
-        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        [EnumMember(Value = "reduce")]
+        Reduce,
+        [EnumMember(Value = "no-preference")]
+        NoPreference,
+        [EnumMember(Value = "null")]
+        Null,
     }
 }
