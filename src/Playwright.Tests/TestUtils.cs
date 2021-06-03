@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,9 @@ namespace Microsoft.Playwright.Tests
     {
         internal static string FindParentDirectory(string directory)
         {
-            string current = Directory.GetCurrentDirectory();
+            // when using Directory.GetCurrentDirectory, for .NET 4.8 under test explorer on Windows,
+            // the location was Local App Data
+            string current = AppContext.BaseDirectory;
             while (!Directory.Exists(Path.Combine(current, directory)))
             {
                 current = Directory.GetParent(current).FullName;

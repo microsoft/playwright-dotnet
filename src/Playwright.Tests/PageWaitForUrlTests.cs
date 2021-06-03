@@ -139,8 +139,10 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
             var frame = Page.Frames.ElementAt(1);
 
-            await frame.EvaluateAsync("url => window.location.href = url", Server.Prefix + "/grid.html");
-            await frame.WaitForURLAsync("**/grid.html");
+            await TaskUtils.WhenAll(
+                frame.WaitForURLAsync("**/grid.html"),
+                frame.EvaluateAsync("url => window.location.href = url", Server.Prefix + "/grid.html"));
+            ;
         }
     }
 }
