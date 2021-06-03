@@ -358,3 +358,5 @@ src/Playwright.Tests/Screenshots/**/test.png
 src/Playwright/Microsoft.Playwright.xml
 
 dotnet-format/
+
+.runsettings
