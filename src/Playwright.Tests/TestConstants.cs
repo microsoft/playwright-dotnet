@@ -6,7 +6,7 @@ namespace Microsoft.Playwright.Tests
 {
     internal static class TestConstants
     {
-        public static string BrowserName => NUnitTest.PlaywrightTest.BrowserName;
+        public static string BrowserName => NUnit.PlaywrightTest.BrowserName;
 
         public const int DefaultTestTimeout = 30_000;
         public const int DefaultTimeout = 10_000;
