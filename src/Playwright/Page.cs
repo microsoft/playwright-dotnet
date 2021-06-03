@@ -79,20 +79,6 @@ namespace Microsoft.Playwright
             _channel.Closed += Channel_Closed;
             _channel.Crashed += Channel_Crashed;
             _channel.Popup += (_, e) => Popup?.Invoke(this, e.Page);
-            _channel.RequestFailed += (_, e) =>
-            {
-                e.Request.Object.Failure = e.FailureText;
-                e.Request.Object.Timing.ResponseEnd = e.ResponseEndTiming;
-                RequestFailed?.Invoke(this, e.Request.Object);
-            };
-
-            _channel.Request += (_, e) => Request?.Invoke(this, e);
-            _channel.RequestFinished += (_, e) =>
-            {
-                e.Request.Object.Timing.ResponseEnd = e.ResponseEndTiming;
-                RequestFinished?.Invoke(this, e.Request.Object);
-            };
-            _channel.Response += (_, e) => Response?.Invoke(this, e);
             _channel.WebSocket += (_, e) => WebSocket?.Invoke(this, e);
             _channel.BindingCall += Channel_BindingCall;
             _channel.Route += Channel_Route;
@@ -111,7 +97,7 @@ namespace Microsoft.Playwright
             };
             _channel.Console += (_, e) => Console?.Invoke(this, e);
             _channel.DOMContentLoaded += (_, e) => DOMContentLoaded?.Invoke(this, this);
-            _channel.Download += (_, e) => Download?.Invoke(this, new Download(e.Url, e.SuggestedFilename, e.Artifact.Object));
+            _channel.Download += (_, e) => Download?.Invoke(this, new Download(this, e.Url, e.SuggestedFilename, e.Artifact.Object));
             _channel.PageError += (_, e) => PageError?.Invoke(this, e.ToString());
             _channel.Load += (_, e) => Load?.Invoke(this, this);
             _channel.Video += (_, e) => ForceVideo().ArtifactReady(e.Artifact);
@@ -293,11 +279,12 @@ namespace Microsoft.Playwright
 
         public Task<IPage> OpenerAsync() => Task.FromResult<IPage>(Opener?.IsClosed == false ? Opener : null);
 
-        public Task EmulateMediaAsync(Media? media, ColorScheme? colorScheme)
+        public Task EmulateMediaAsync(Media? media, ColorScheme? colorScheme, ReducedMotion? reducedMotion)
         {
             var args = new Dictionary<string, object>();
             args["media"] = media;
             args["colorScheme"] = colorScheme;
+            args["reducedMotion"] = reducedMotion;
             return _channel.EmulateMediaAsync(args);
         }
 
@@ -801,6 +788,14 @@ namespace Microsoft.Playwright
 
         internal void OnFrameNavigated(Frame frame)
             => FrameNavigated?.Invoke(this, frame);
+
+        internal void FireRequest(IRequest request) => Request?.Invoke(this, request);
+
+        internal void FireRequestFailed(IRequest request) => RequestFailed?.Invoke(this, request);
+
+        internal void FireRequestFinished(IRequest request) => RequestFinished?.Invoke(this, request);
+
+        internal void FireResponse(IResponse response) => Response?.Invoke(this, response);
 
         private Task RouteAsync(RouteSetting setting)
         {

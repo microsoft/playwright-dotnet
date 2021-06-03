@@ -83,7 +83,7 @@ namespace Microsoft.Playwright
         public Task EmulateMediaAsync(PageEmulateMediaOptions options = default)
         {
             options ??= new PageEmulateMediaOptions();
-            return EmulateMediaAsync(media: options.Media, colorScheme: options.ColorScheme);
+            return EmulateMediaAsync(media: options.Media, colorScheme: options.ColorScheme, reducedMotion: options.ReducedMotion);
         }
 
         public Task ExposeBindingAsync(string name, Action callback, PageExposeBindingOptions options = default)

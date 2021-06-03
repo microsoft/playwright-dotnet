@@ -73,9 +73,18 @@ namespace Microsoft.Playwright.Tests
             {
                 var page = await context.NewPageAsync();
                 await page.GotoAsync(Server.EmptyPage);
-                Assert.AreEqual(
-                    "Sat Nov 19 2016 10:12:34 GMT-0800 (Pacific Standard Time)",
-                    await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+                if (BrowserName == "webkit")
+                {
+                    Assert.AreEqual(
+                        "Sat Nov 19 2016 10:12:34 GMT-0800",
+                        await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+                }
+                else
+                {
+                    Assert.AreEqual(
+                        "Sat Nov 19 2016 10:12:34 GMT-0800 (Pacific Standard Time)",
+                        await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+                }
             }
 
             await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions
@@ -86,9 +95,18 @@ namespace Microsoft.Playwright.Tests
             {
                 var page = await context.NewPageAsync();
                 await page.GotoAsync(Server.EmptyPage);
-                Assert.AreEqual(
-                    "Sat Nov 19 2016 19:12:34 GMT+0100 (Mitteleuropäische Normalzeit)",
-                    await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+                if (BrowserName == "webkit")
+                {
+                    Assert.AreEqual(
+                        "Sat Nov 19 2016 19:12:34 GMT+0100",
+                        await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+                }
+                else
+                {
+                    Assert.AreEqual(
+                        "Sat Nov 19 2016 19:12:34 GMT+0100 (Mitteleuropäische Normalzeit)",
+                        await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+                }
             }
         }
 

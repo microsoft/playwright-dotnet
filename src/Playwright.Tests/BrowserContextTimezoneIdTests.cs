@@ -18,33 +18,69 @@ namespace Microsoft.Playwright.Tests
             {
                 var page = await context.NewPageAsync();
                 string result = await page.EvaluateAsync<string>(func);
-                Assert.AreEqual(
-                    "Sat Nov 19 2016 13:12:34 GMT-0500 (Eastern Standard Time)",
-                    result);
+                if (BrowserName == "webkit")
+                {
+                    Assert.AreEqual(
+                        "Sat Nov 19 2016 13:12:34 GMT-0500",
+                        result);
+                }
+                else
+                {
+                    Assert.AreEqual(
+                        "Sat Nov 19 2016 13:12:34 GMT-0500 (Eastern Standard Time)",
+                        result);
+                }
             }
 
             await using (var context = await browser.NewContextAsync(new BrowserNewContextOptions { TimezoneId = "Pacific/Honolulu" }))
             {
                 var page = await context.NewPageAsync();
-                Assert.AreEqual(
-                    "Sat Nov 19 2016 08:12:34 GMT-1000 (Hawaii-Aleutian Standard Time)",
-                    await page.EvaluateAsync<string>(func));
+                if (BrowserName == "webkit")
+                {
+                    Assert.AreEqual(
+                        "Sat Nov 19 2016 08:12:34 GMT-1000",
+                        await page.EvaluateAsync<string>(func));
+                }
+                else
+                {
+                    Assert.AreEqual(
+                        "Sat Nov 19 2016 08:12:34 GMT-1000 (Hawaii-Aleutian Standard Time)",
+                        await page.EvaluateAsync<string>(func));
+                }
             }
 
             await using (var context = await browser.NewContextAsync(new BrowserNewContextOptions { TimezoneId = "America/Buenos_Aires" }))
             {
                 var page = await context.NewPageAsync();
-                Assert.AreEqual(
-                    "Sat Nov 19 2016 15:12:34 GMT-0300 (Argentina Standard Time)",
-                    await page.EvaluateAsync<string>(func));
+                if (BrowserName == "webkit")
+                {
+                    Assert.AreEqual(
+                        "Sat Nov 19 2016 15:12:34 GMT-0300",
+                        await page.EvaluateAsync<string>(func));
+                }
+                else
+                {
+                    Assert.AreEqual(
+                        "Sat Nov 19 2016 15:12:34 GMT-0300 (Argentina Standard Time)",
+                        await page.EvaluateAsync<string>(func));
+                }
             }
 
             await using (var context = await browser.NewContextAsync(new BrowserNewContextOptions { TimezoneId = "Europe/Berlin" }))
             {
                 var page = await context.NewPageAsync();
-                Assert.AreEqual(
-                    "Sat Nov 19 2016 19:12:34 GMT+0100 (Central European Standard Time)",
-                    await page.EvaluateAsync<string>(func));
+                if (BrowserName == "webkit")
+                {
+                    Assert.AreEqual(
+                        "Sat Nov 19 2016 19:12:34 GMT+0100",
+                        await page.EvaluateAsync<string>(func));
+                }
+                else
+                {
+                    Assert.AreEqual(
+                        "Sat Nov 19 2016 19:12:34 GMT+0100 (Central European Standard Time)",
+                        await page.EvaluateAsync<string>(func));
+                }
             }
         }
 

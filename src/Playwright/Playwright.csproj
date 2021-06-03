@@ -18,7 +18,7 @@
     <ReleaseVersion>0.0.0</ReleaseVersion>
     <BuildFromSource>True</BuildFromSource>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <NoWarn>1701;1702;CS0067;1734</NoWarn>
+    <NoWarn>1701;1702;CS0067;1734;NU5110;NU5111</NoWarn>
     <AssemblyName>Microsoft.Playwright</AssemblyName>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>

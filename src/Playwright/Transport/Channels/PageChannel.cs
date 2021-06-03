@@ -43,14 +43,6 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal event EventHandler Crashed;
 
-        internal event EventHandler<IRequest> Request;
-
-        internal event EventHandler<PageChannelRequestEventArgs> RequestFinished;
-
-        internal event EventHandler<PageChannelRequestEventArgs> RequestFailed;
-
-        internal event EventHandler<IResponse> Response;
-
         internal event EventHandler<IWebSocket> WebSocket;
 
         internal event EventHandler DOMContentLoaded;
@@ -137,18 +129,6 @@ namespace Microsoft.Playwright.Transport.Channels
                     break;
                 case "console":
                     Console?.Invoke(this, serverParams?.GetProperty("message").ToObject<ConsoleMessage>(Connection.GetDefaultJsonSerializerOptions()));
-                    break;
-                case "request":
-                    Request?.Invoke(this, serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
-                    break;
-                case "requestFinished":
-                    RequestFinished?.Invoke(this, serverParams?.ToObject<PageChannelRequestEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
-                    break;
-                case "requestFailed":
-                    RequestFailed?.Invoke(this, serverParams?.ToObject<PageChannelRequestEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
-                    break;
-                case "response":
-                    Response?.Invoke(this, serverParams?.GetProperty("response").ToObject<ResponseChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "webSocket":
                     WebSocket?.Invoke(this, serverParams?.GetProperty("webSocket").ToObject<WebSocketChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);

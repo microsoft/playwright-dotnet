@@ -30,6 +30,7 @@ namespace Microsoft.Playwright.Transport.Channels
             bool? acceptDownloads = null,
             bool? bypassCSP = null,
             ColorScheme? colorScheme = null,
+            ReducedMotion? reducedMotion = null,
             float? deviceScaleFactor = null,
             IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null,
             Geolocation geolocation = null,
@@ -56,6 +57,7 @@ namespace Microsoft.Playwright.Transport.Channels
             args.Add("acceptDownloads", acceptDownloads);
             args.Add("bypassCSP", bypassCSP);
             args.Add("colorScheme", colorScheme);
+            args.Add("reducedMotion", reducedMotion);
             args.Add("deviceScaleFactor", deviceScaleFactor);
 
             if (extraHTTPHeaders != null)

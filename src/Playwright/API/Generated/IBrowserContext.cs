@@ -103,6 +103,54 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
+        /// Emitted when a request is issued from any pages created through this context. The
+        /// <see cref="request"/> object is read-only. To only listen for requests from a particular
+        /// page, use <see cref="IPage.Request"/>.
+        /// </para>
+        /// <para>
+        /// In order to intercept and mutate requests, see <see cref="IBrowserContext.RouteAsync"/>
+        /// or <see cref="IPage.RouteAsync"/>.
+        /// </para>
+        /// </summary>
+        event EventHandler<IRequest> Request;
+
+        /// <summary>
+        /// <para>
+        /// Emitted when a request fails, for example by timing out. To only listen for failed
+        /// requests from a particular page, use <see cref="IPage.RequestFailed"/>.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// HTTP Error responses, such as 404 or 503, are still successful responses from HTTP
+        /// standpoint, so request will complete with <see cref="IBrowserContext.RequestFinished"/>
+        /// event and not with <see cref="IBrowserContext.RequestFailed"/>.
+        /// </para>
+        /// </remarks>
+        event EventHandler<IRequest> RequestFailed;
+
+        /// <summary>
+        /// <para>
+        /// Emitted when a request finishes successfully after downloading the response body.
+        /// For a successful response, the sequence of events is <c>request</c>, <c>response</c>
+        /// and <c>requestfinished</c>. To listen for successful requests from a particular
+        /// page, use <see cref="IPage.RequestFinished"/>.
+        /// </para>
+        /// </summary>
+        event EventHandler<IRequest> RequestFinished;
+
+        /// <summary>
+        /// <para>
+        /// Emitted when <see cref="response"/> status and headers are received for a request.
+        /// For a successful response, the sequence of events is <c>request</c>, <c>response</c>
+        /// and <c>requestfinished</c>. To listen for response events from a particular page,
+        /// use <see cref="IPage.Response"/>.
+        /// </para>
+        /// </summary>
+        event EventHandler<IResponse> Response;
+
+        /// <summary>
+        /// <para>
         /// Adds cookies into this browser context. All pages within this context will have
         /// these cookies installed. Cookies can be obtained via <see cref="IBrowserContext.CookiesAsync"/>.
         /// </para>
@@ -255,7 +303,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>If the <paramref name="callback"/> returns a <see cref="Task"/>, it will be awaited.</para>
         /// <para>See <see cref="IPage.ExposeFunctionAsync"/> for page-only version.</para>
-        /// <para>An example of adding an <c>md5</c> function to all pages in the context:</para>
+        /// <para>An example of adding a <c>sha256</c> function to all pages in the context:</para>
         /// <code>
         /// using Microsoft.Playwright;<br/>
         /// using System;<br/>
@@ -264,24 +312,22 @@ namespace Microsoft.Playwright
         /// <br/>
         /// class BrowserContextExamples<br/>
         /// {<br/>
-        ///     public static async Task AddMd5FunctionToAllPagesInContext()<br/>
+        ///     public static async Task Main()<br/>
         ///     {<br/>
         ///         using var playwright = await Playwright.CreateAsync();<br/>
         ///         var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });<br/>
         ///         var context = await browser.NewContextAsync();<br/>
         /// <br/>
-        ///         // NOTE: md5 is inherently insecure, and we strongly discourage using<br/>
-        ///         // this in production in any shape or form<br/>
-        ///         await context.ExposeFunctionAsync("sha1", (string input) =&gt;<br/>
+        ///         await context.ExposeFunctionAsync("sha256", (string input) =&gt;<br/>
         ///         {<br/>
         ///             return Convert.ToBase64String(<br/>
-        ///                 MD5.Create().ComputeHash(System.Text.Encoding.UTF8.GetBytes(input)));<br/>
+        ///                 SHA256.Create().ComputeHash(System.Text.Encoding.UTF8.GetBytes(input)));<br/>
         ///         });<br/>
         /// <br/>
         ///         var page = await context.NewPageAsync();<br/>
         ///         await page.SetContentAsync("&lt;script&gt;\n" +<br/>
         ///         "  async function onClick() {\n" +<br/>
-        ///         "    document.querySelector('div').textContent = await window.sha1('PLAYWRIGHT');\n" +<br/>
+        ///         "    document.querySelector('div').textContent = await window.sha256('PLAYWRIGHT');\n" +<br/>
         ///         "  }\n" +<br/>
         ///         "&lt;/script&gt;\n" +<br/>
         ///         "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>
@@ -575,6 +621,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="options">Call options</param>
         Task<string> StorageStateAsync(BrowserContextStorageStateOptions options = default);
+
+        public ITracing Tracing { get; }
 
         /// <summary>
         /// <para>
