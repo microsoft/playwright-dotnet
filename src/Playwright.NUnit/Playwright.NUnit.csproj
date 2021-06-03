@@ -19,9 +19,8 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <IsPackable>true</IsPackable>
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
+
   <Import Project="../Common/Version.props" />
   <Import Project="../Common/SignAssembly.props" />
   <ItemGroup>

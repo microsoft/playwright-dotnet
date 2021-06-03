@@ -89,7 +89,7 @@ stages:
         arguments: '-c $(BuildConfiguration)'
 
     - task: DotNetCoreCLI@2
-      displayName: Pack Playwright NuGet
+      displayName: Pack Playwright.NUnit NuGet
       inputs:
         command: 'pack'
         packagesToPack: '**/Playwright.NUnit.csproj'
@@ -128,7 +128,7 @@ stages:
       displayName: Push Playwright NuGet to NuGet.org
       inputs:
         command: 'push'
-        packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg;!$(System.ArtifactsDirectory)/**/*.symbols.nupkg'
+        packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg'
         nuGetFeedType: 'external'
         publishFeedCredentials: 'NuGet-Playwright'
 
@@ -152,7 +152,7 @@ stages:
       displayName: Push CLI NuGet to Nuget.org
       inputs:
         command: 'push'
-        packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg;!$(System.ArtifactsDirectory)/**/*.symbols.nupkg'
+        packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg'
         nuGetFeedType: 'external'
         publishFeedCredentials: 'NuGet-Playwright'
 
@@ -176,6 +176,6 @@ stages:
       displayName: Push NUnit NuGet to Nuget.org
       inputs:
         command: 'push'
-        packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg;!$(System.ArtifactsDirectory)/**/*.symbols.nupkg'
+        packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg'
         nuGetFeedType: 'external'
         publishFeedCredentials: 'NuGet-Playwright'
