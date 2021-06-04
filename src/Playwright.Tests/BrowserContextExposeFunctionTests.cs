@@ -78,9 +78,9 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             await context.ExposeFunctionAsync("woof", (string arg) => { args.Add(arg); });
 
-            await context.AddInitScriptAsync("() => woof('context')");
+            await context.AddInitScriptAsync("woof('context')");
             var page = await context.NewPageAsync();
-            await page.AddInitScriptAsync("() => woof('page')");
+            await page.AddInitScriptAsync("woof('page')");
 
             args.Clear();
             await page.ReloadAsync();

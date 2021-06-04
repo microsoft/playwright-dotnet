@@ -378,7 +378,6 @@ namespace Microsoft.Playwright
         public async Task<IJSHandle> WaitForFunctionAsync(string expression, object args, float? pollingInterval, float? timeout)
              => (await _channel.WaitForFunctionAsync(
                 expression: expression,
-                isFunction: expression.IsJavascriptFunction(),
                 arg: ScriptsHelper.SerializedArgument(args),
                 timeout: timeout,
                 polling: pollingInterval).ConfigureAwait(false)).Object;
@@ -391,48 +390,41 @@ namespace Microsoft.Playwright
 
         public async Task<IJSHandle> EvaluateHandleAsync(string script, object args = null)
             => (await _channel.EvaluateExpressionHandleAsync(
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
+                script,
                 arg: ScriptsHelper.SerializedArgument(args)).ConfigureAwait(false))?.Object;
 
         public async Task<JsonElement?> EvaluateAsync(string script, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
+                script,
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         public async Task<T> EvaluateAsync<T>(string script, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
+                script,
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         public async Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
+                script,
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         public async Task<T> EvalOnSelectorAsync<T>(string selector, string script, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
+                script,
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         public async Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
+                script,
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         public async Task<T> EvalOnSelectorAllAsync<T>(string selector, string script, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
-                script: script,
-                isFunction: script.IsJavascriptFunction(),
+                script,
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         public async Task<IResponse> GotoAsync(string url, WaitUntilState? waitUntil, string referer, float? timeout)

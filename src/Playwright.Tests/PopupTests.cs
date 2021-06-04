@@ -209,7 +209,7 @@ namespace Microsoft.Playwright.Tests
         public async Task BrowserContextAddInitScriptShouldApplyToAnInProcessPopup()
         {
             await using var context = await Browser.NewContextAsync();
-            await context.AddInitScriptAsync("() => window.injected = 123");
+            await context.AddInitScriptAsync("window.injected = 123;");
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
 
@@ -226,7 +226,7 @@ namespace Microsoft.Playwright.Tests
         public async Task BrowserContextAddInitScriptShouldApplyToACrossProcessPopup()
         {
             await using var context = await Browser.NewContextAsync();
-            await context.AddInitScriptAsync("() => window.injected = 123");
+            await context.AddInitScriptAsync("window.injected = 123;");
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
 

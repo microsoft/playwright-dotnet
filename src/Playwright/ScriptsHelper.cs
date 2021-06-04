@@ -17,28 +17,6 @@ namespace Microsoft.Playwright
             .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
             .Single(m => m.Name == nameof(ParseEvaluateResult) && m.IsGenericMethod);
 
-        internal static string SerializeScriptCall(string script, object[] args = null)
-        {
-            args ??= Array.Empty<object>();
-
-            if (script.IsJavascriptFunction())
-            {
-                if (args?.Any() == true)
-                {
-                    return $"({script})({string.Join(",", args.Select(a => JsonSerializer.Serialize(a, JsonExtensions.GetNewDefaultSerializerOptions())))})";
-                }
-
-                return $"({script})()";
-            }
-
-            if (args.Length > 0)
-            {
-                throw new PlaywrightException("Cannot evaluate a string with arguments");
-            }
-
-            return script;
-        }
-
         internal static object ParseEvaluateResult(JsonElement? element, Type t)
         {
             var genericMethod = _parseEvaluateResult.MakeGenericMethod(t);
@@ -59,7 +37,7 @@ namespace Microsoft.Playwright
             return new { value = converter.Serialize(arg), handles = converter.Handles };
         }
 
-        internal static string EvaluationScript(string content, string path, bool addSourceUrl = true)
+        internal static string EvaluationScript(string content, string path)
         {
             if (!string.IsNullOrEmpty(content))
             {
@@ -67,14 +45,7 @@ namespace Microsoft.Playwright
             }
             else if (!string.IsNullOrEmpty(path))
             {
-                string contents = File.ReadAllText(path);
-
-                if (addSourceUrl)
-                {
-                    contents += "//# sourceURL=" + path.Replace(" ", string.Empty);
-                }
-
-                return contents;
+                return File.ReadAllText(path);
             }
 
             throw new ArgumentException("Either path or content property must be present");

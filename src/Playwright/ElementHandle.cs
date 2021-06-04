@@ -151,21 +151,18 @@ namespace Microsoft.Playwright
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script: expression,
-                isFunction: expression.IsJavascriptFunction(),
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         public async Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script: expression,
-                isFunction: expression.IsJavascriptFunction(),
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         public async Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAllAsync(
                 selector: selector,
                 script: expression,
-                isFunction: expression.IsJavascriptFunction(),
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         public Task FocusAsync() => _channel.FocusAsync();

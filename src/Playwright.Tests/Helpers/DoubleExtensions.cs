@@ -1,6 +1,6 @@
 using System;
 
-namespace Microsoft.Playwright.Helpers
+namespace Microsoft.Playwright.Tests
 {
     /// <summary>
     /// Extensions for <see cref="double"/>.

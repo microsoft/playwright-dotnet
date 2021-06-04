@@ -683,7 +683,7 @@ namespace Microsoft.Playwright
         }
 
         public Task AddInitScriptAsync(string script, string scriptPath)
-            => _channel.AddInitScriptAsync(ScriptsHelper.SerializeScriptCall(ScriptsHelper.EvaluationScript(script, scriptPath)));
+            => _channel.AddInitScriptAsync(ScriptsHelper.EvaluationScript(script, scriptPath));
 
         public Task RouteAsync(string urlString, Action<IRoute> handler)
             => RouteAsync(
