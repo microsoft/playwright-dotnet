@@ -193,7 +193,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateToEmptyPageWithDOMContentLoaded()
         {
-            var response = await Page.GotoAsync(Server.EmptyPage, new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
+            var response = await Page.GotoAsync(Server.EmptyPage, new() { WaitUntil = WaitUntilState.DOMContentLoaded });
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
         }
 
@@ -298,7 +298,7 @@ namespace Microsoft.Playwright.Tests
         {
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             var exception = await AssertThrowsAsync<TimeoutException>(()
-                => Page.GotoAsync(Server.EmptyPage, new PageGotoOptions { Timeout = 1 }));
+                => Page.GotoAsync(Server.EmptyPage, new() { Timeout = 1 }));
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
             StringAssert.Contains(Server.EmptyPage, exception.Message);
         }
@@ -374,7 +374,7 @@ namespace Microsoft.Playwright.Tests
             }
             Page.Load += OnLoad;
 
-            await Page.GotoAsync(Server.Prefix + "/grid.html", new PageGotoOptions { WaitUntil = WaitUntilState.Load, Timeout = 0 });
+            await Page.GotoAsync(Server.Prefix + "/grid.html", new() { WaitUntil = WaitUntilState.Load, Timeout = 0 });
             Assert.True(loaded);
         }
 
@@ -525,7 +525,7 @@ namespace Microsoft.Playwright.Tests
             await TaskUtils.WhenAll(
                 Server.WaitForRequest("/grid.html", r => referer1 = r.Headers["Referer"]),
                 Server.WaitForRequest("/digits/1.png", r => referer2 = r.Headers["Referer"]),
-                Page.GotoAsync(Server.Prefix + "/grid.html", new PageGotoOptions { Referer = "http://google.com/" })
+                Page.GotoAsync(Server.Prefix + "/grid.html", new() { Referer = "http://google.com/" })
             );
 
             Assert.AreEqual("http://google.com/", referer1);
@@ -544,7 +544,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var exception = await AssertThrowsAsync<PlaywrightException>(() =>
-                Page.GotoAsync(Server.Prefix + "/grid.html", new PageGotoOptions { Referer = "http://google.com/" }));
+                Page.GotoAsync(Server.Prefix + "/grid.html", new() { Referer = "http://google.com/" }));
 
             StringAssert.Contains("\"referer\" is already specified as extra HTTP header", exception.Message);
             StringAssert.Contains(Server.Prefix + "/grid.html", exception.Message);
@@ -567,7 +567,7 @@ namespace Microsoft.Playwright.Tests
             await TaskUtils.WhenAll(
                 reqTask1,
                 reqTask2,
-                Page.GotoAsync(Server.Prefix + "/grid.html", new PageGotoOptions { Referer = "http://microsoft.com/" }));
+                Page.GotoAsync(Server.Prefix + "/grid.html", new() { Referer = "http://microsoft.com/" }));
 
             Assert.AreEqual("http://microsoft.com/", referer1);
             // Make sure subresources do not inherit referer.
@@ -581,7 +581,7 @@ namespace Microsoft.Playwright.Tests
         {
             Server.SetRoute("/one-style.html", _ => Task.Delay(10_000));
             var request = Server.WaitForRequest("/one-style.html");
-            var failed = Page.GotoAsync(Server.Prefix + "/one-style.html", new PageGotoOptions { WaitUntil = TestConstants.IsFirefox ? WaitUntilState.NetworkIdle : WaitUntilState.Load });
+            var failed = Page.GotoAsync(Server.Prefix + "/one-style.html", new() { WaitUntil = TestConstants.IsFirefox ? WaitUntilState.NetworkIdle : WaitUntilState.Load });
             await request;
             await Page.GotoAsync(Server.EmptyPage);
 

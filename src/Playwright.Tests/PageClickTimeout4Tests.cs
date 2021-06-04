@@ -20,7 +20,7 @@ namespace Microsoft.Playwright.Tests
             }");
 
             var exception = await AssertThrowsAsync<TimeoutException>(()
-                => Page.ClickAsync("button", new PageClickOptions { Timeout = 3000 }));
+                => Page.ClickAsync("button", new() { Timeout = 3000 }));
 
             StringAssert.Contains("Timeout 3000ms exceeded", exception.Message);
             StringAssert.Contains("waiting for element to be visible, enabled and stable", exception.Message);

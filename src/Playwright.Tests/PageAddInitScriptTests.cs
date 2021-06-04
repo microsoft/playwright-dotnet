@@ -107,7 +107,7 @@ namespace Microsoft.Playwright.Tests
             // Make sure CSP works.
             try
             {
-                await Page.AddScriptTagAsync(new PageAddScriptTagOptions { Content = "window.e = 10;" });
+                await Page.AddScriptTagAsync(new() { Content = "window.e = 10;" });
             }
             catch
             {

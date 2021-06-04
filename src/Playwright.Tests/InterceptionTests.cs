@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWitIgnoreHTTPSErrors()
         {
             await using var browser = await BrowserType.LaunchAsync();
-            var context = await browser.NewContextAsync(new BrowserNewContextOptions
+            var context = await browser.NewContextAsync(new()
             {
                 IgnoreHTTPSErrors = true
             });
@@ -94,7 +94,7 @@ namespace Microsoft.Playwright.Tests
                 int slash = route.Request.Url.LastIndexOf("/");
                 string name = route.Request.Url.Substring(slash + 1);
 
-                route.FulfillAsync(new RouteFulfillOptions { Status = (int)HttpStatusCode.OK, Body = "responseFromInterception:" + name, ContentType = "text/css" });
+                route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK, Body = "responseFromInterception:" + name, ContentType = "text/css" });
             });
 
             string swResponse2 = await Page.EvaluateAsync<string>("() => fetchDummy('foo')");

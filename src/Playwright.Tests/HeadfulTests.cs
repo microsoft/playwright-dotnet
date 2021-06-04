@@ -92,7 +92,7 @@ namespace Microsoft.Playwright.Tests
             await using var browser = await LaunchHeaded();
             var page = await browser.NewPageAsync();
             await page.GotoAsync(Server.Prefix + "/grid.html");
-            await page.ClickAsync("body", new PageClickOptions { Button = MouseButton.Right });
+            await page.ClickAsync("body", new() { Button = MouseButton.Right });
         }
 
         [PlaywrightTest("headful.spec.ts", "should(not) block third party cookies")]
@@ -147,7 +147,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldNotOverrideViewportSizeWhenPassedNull()
         {
             await using var browser = await LaunchHeaded();
-            var context = await browser.NewContextAsync(new BrowserNewContextOptions { ViewportSize = ViewportSize.NoViewport });
+            var context = await browser.NewContextAsync(new() { ViewportSize = ViewportSize.NoViewport });
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
             var popupTask = page.WaitForPopupAsync();
@@ -169,7 +169,7 @@ namespace Microsoft.Playwright.Tests
         public async Task PageBringToFrontShouldWork()
         {
             await using var browser = await LaunchHeaded();
-            var context = await browser.NewContextAsync(new BrowserNewContextOptions { ViewportSize = ViewportSize.NoViewport });
+            var context = await browser.NewContextAsync(new() { ViewportSize = ViewportSize.NoViewport });
             var page1 = await context.NewPageAsync();
             await page1.SetContentAsync("Page1");
             var page2 = await context.NewPageAsync();
@@ -186,12 +186,12 @@ namespace Microsoft.Playwright.Tests
 
         private Task<IBrowserContext> LaunchPersistentHeaded(string path)
         {
-            return BrowserType.LaunchPersistentContextAsync(path, new BrowserTypeLaunchPersistentContextOptions { Headless = false });
+            return BrowserType.LaunchPersistentContextAsync(path, new() { Headless = false });
         }
 
         private Task<IBrowser> LaunchHeaded()
         {
-            return BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });
+            return BrowserType.LaunchAsync(new() { Headless = false });
         }
     }
 }

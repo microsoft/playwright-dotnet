@@ -94,7 +94,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPropagateDefaultViewportToThePage()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize
                 {
@@ -117,7 +117,7 @@ namespace Microsoft.Playwright.Tests
                 Height = 789
             };
 
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { ViewportSize = viewport });
+            await using var context = await Browser.NewContextAsync(new() { ViewportSize = viewport });
 
             viewport.Width = 567;
 
@@ -130,7 +130,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectDeviceScaleFactor()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 DeviceScaleFactor = 3
             });
@@ -143,7 +143,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowDeviceScaleFactorWithViewportDisabled()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new BrowserNewContextOptions
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new()
             {
                 ViewportSize = ViewportSize.NoViewport,
                 DeviceScaleFactor = 3,
@@ -155,7 +155,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowIsMobileWithViewportDisabled()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new BrowserNewContextOptions
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new()
             {
                 ViewportSize = ViewportSize.NoViewport,
                 IsMobile = true,
@@ -247,7 +247,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDisableJavascript()
         {
-            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions { JavaScriptEnabled = false }))
+            await using (var context = await Browser.NewContextAsync(new() { JavaScriptEnabled = false }))
             {
                 var page = await context.NewPageAsync();
                 await page.GotoAsync("data:text/html, <script>var something = 'forbidden'</script>");
@@ -271,7 +271,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToNavigateAfterDisablingJavascript()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { JavaScriptEnabled = false });
+            await using var context = await Browser.NewContextAsync(new() { JavaScriptEnabled = false });
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
         }
@@ -280,7 +280,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithOfflineOption()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { Offline = true });
+            await using var context = await Browser.NewContextAsync(new() { Offline = true });
             var page = await context.NewPageAsync();
             await AssertThrowsAsync<PlaywrightException>(() => page.GotoAsync(Server.EmptyPage));
             await context.SetOfflineAsync(false);

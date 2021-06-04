@@ -46,7 +46,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowIfPageArgumentIsPassed()
         {
             var args = new[] { Server.EmptyPage };
-            await AssertThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { Args = args }));
+            await AssertThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new() { Args = args }));
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should reject if launched browser fails immediately")]
@@ -59,7 +59,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectIfExecutablePathIsInvalid()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { ExecutablePath = "random-invalid-path" }));
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new() { ExecutablePath = "random-invalid-path" }));
 
             StringAssert.Contains("Failed to launch", exception.Message);
         }
@@ -115,7 +115,7 @@ namespace Microsoft.Playwright.Tests
                 ["Foo"] = "Var"
             };
 
-            await using var browser = await BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { Env = env });
+            await using var browser = await BrowserType.LaunchAsync(new() { Env = env });
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace Microsoft.Playwright.Tests
                 "--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4"
             };
 
-            await using var browser = await BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { IgnoreAllDefaultArgs = true, Args = args });
+            await using var browser = await BrowserType.LaunchAsync(new() { IgnoreAllDefaultArgs = true, Args = args });
         }
     }
 }

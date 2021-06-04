@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDomcontentloaded()
         {
-            await Page.SetContentAsync("<div>hello</div>", new PageSetContentOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
+            await Page.SetContentAsync("<div>hello</div>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
             string result = await Page.ContentAsync();
             Assert.AreEqual(_expectedOutput, result);
         }
@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.Tests
             // stall for image
             Server.SetRoute(imgPath, _ => Task.Delay(Timeout.Infinite));
             await AssertThrowsAsync<TimeoutException>(() =>
-                Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new PageSetContentOptions { Timeout = 1 })
+                Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new() { Timeout = 1 })
             );
         }
 
@@ -71,7 +71,7 @@ namespace Microsoft.Playwright.Tests
             // stall for image
             Server.SetRoute(imgPath, _ => Task.Delay(Timeout.Infinite));
             var exception = await AssertThrowsAsync<TimeoutException>(() =>
-                Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new PageSetContentOptions { Timeout = 1 })
+                Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new() { Timeout = 1 })
             );
 
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);

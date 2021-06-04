@@ -21,7 +21,7 @@ namespace Microsoft.Playwright.Tests
             {
                 fileInfo.Delete();
             }
-            await Page.PdfAsync(new PagePdfOptions { Path = outputFile, Format = PaperFormat.Letter });
+            await Page.PdfAsync(new() { Path = outputFile, Format = PaperFormat.Letter });
             fileInfo = new FileInfo(outputFile);
             Assert.True(new FileInfo(outputFile).Length > 0);
             if (fileInfo.Exists)

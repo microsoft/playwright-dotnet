@@ -16,7 +16,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportHasTouchOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 HasTouch = true
             });
@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkInPersistentContext()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 ViewportSize = new ViewportSize
                 {
@@ -53,7 +53,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportColorSchemeOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 ColorScheme = ColorScheme.Dark,
             });
@@ -69,7 +69,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportTimezoneIdOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 TimezoneId = "America/Jamaica",
             });
@@ -91,7 +91,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportLocaleOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 Locale = "fr-CH",
             });
@@ -106,7 +106,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportGeolocationAndPermissionsOptions()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 Geolocation = new Geolocation
                 {
@@ -132,7 +132,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Ignore("Fix me #1058")]
         public async Task ShouldSupportIgnoreHTTPSErrorsOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 IgnoreHTTPSErrors = true
             });
@@ -148,7 +148,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportExtraHTTPHeadersOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 ExtraHTTPHeaders = new Dictionary<string, string>
                 {
@@ -270,7 +270,7 @@ namespace Microsoft.Playwright.Tests
             var tmp = new TempDirectory();
             var args = new[] { Server.EmptyPage };
             await AssertThrowsAsync<PlaywrightException>(() =>
-                BrowserType.LaunchPersistentContextAsync(tmp.Path, new BrowserTypeLaunchPersistentContextOptions { Args = args }));
+                BrowserType.LaunchPersistentContextAsync(tmp.Path, new() { Args = args }));
             tmp.Dispose();
         }
 

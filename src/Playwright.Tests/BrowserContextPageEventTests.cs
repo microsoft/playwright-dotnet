@@ -199,7 +199,7 @@ namespace Microsoft.Playwright.Tests
             var popupEventTask = context.WaitForPageAsync();
             await TaskUtils.WhenAll(
               popupEventTask,
-              page.ClickAsync("a", new PageClickOptions { Modifiers = new[] { KeyboardModifier.Shift } }));
+              page.ClickAsync("a", new() { Modifiers = new[] { KeyboardModifier.Shift } }));
 
             Assert.Null(await popupEventTask.Result.OpenerAsync());
         }
@@ -218,7 +218,7 @@ namespace Microsoft.Playwright.Tests
             var popupEventTask = context.WaitForPageAsync();
             await TaskUtils.WhenAll(
               popupEventTask,
-              page.ClickAsync("a", new PageClickOptions { Modifiers = new[] { TestConstants.IsMacOSX ? KeyboardModifier.Meta : KeyboardModifier.Control } }));
+              page.ClickAsync("a", new() { Modifiers = new[] { TestConstants.IsMacOSX ? KeyboardModifier.Meta : KeyboardModifier.Control } }));
 
             Assert.Null(await popupEventTask.Result.OpenerAsync());
         }

@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Tests
     {
         public override BrowserNewContextOptions ContextOptions()
         {
-            return new BrowserNewContextOptions { HasTouch = true };
+            return new() { HasTouch = true };
         }
 
         [PlaywrightTest("tap.spec.ts", "should send all of the correct events")]
@@ -71,7 +71,7 @@ namespace Microsoft.Playwright.Tests
 
             await Page.TapAsync("#a");
             var handle = await TrackEventsAsync("#b");
-            await Page.TapAsync("#b", new PageTapOptions { Trial = true });
+            await Page.TapAsync("#b", new() { Trial = true });
 
             Assert.IsEmpty(await handle.JsonValueAsync<string[]>());
         }
@@ -168,7 +168,7 @@ namespace Microsoft.Playwright.Tests
                     })");
 
             await Page.EvaluateAsync("() => void 0");
-            await Page.TapAsync("body", new PageTapOptions { Modifiers = new[] { KeyboardModifier.Alt } });
+            await Page.TapAsync("body", new() { Modifiers = new[] { KeyboardModifier.Alt } });
             Assert.True((await altKeyTask));
         }
 
