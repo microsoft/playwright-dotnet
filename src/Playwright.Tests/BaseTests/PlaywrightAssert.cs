@@ -49,9 +49,6 @@ namespace Microsoft.Playwright.Tests
             }
         }
 
-        internal static void DebugLog(string text)
-        {
-            TestContext.Progress.WriteLine(text);
-        }
+        internal static void DebugLog(string text) => TestContext.Progress.WriteLine(text);
     }
 }
