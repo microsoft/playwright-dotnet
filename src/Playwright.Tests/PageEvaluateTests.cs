@@ -695,5 +695,22 @@ namespace Microsoft.Playwright.Tests
         public void ShouldNotUseToJSONInJsonValue()
         {
         }
+
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task ShouldSerializeEnumProperty()
+        {
+            int result = await Page.EvaluateAsync<int>("a => a.TestEnum", new ClassWithEnumProperty());
+            Assert.AreEqual(1, result);
+        }
+
+        private class ClassWithEnumProperty
+        {
+            public TestEnum TestEnum { get; set; } = TestEnum.Test;
+        }
+
+        private enum TestEnum
+        {
+            Test = 1
+        }
     }
 }
