@@ -144,7 +144,7 @@ namespace Microsoft.Playwright.Tests
         {
             Server.SetRoute("/setcookie.html", context =>
             {
-                context.Response.Cookies.Append("persistent", "persistent-value", new CookieOptions { MaxAge = TimeSpan.FromSeconds(3600) });
+                context.Response.Cookies.Append("persistent", "persistent-value", new() { MaxAge = TimeSpan.FromSeconds(3600) });
                 return Task.CompletedTask;
             });
 

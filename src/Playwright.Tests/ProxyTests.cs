@@ -18,7 +18,7 @@ namespace Microsoft.Playwright.Tests
 
             var proxy = new Proxy { Server = $"localhost:{Server.Port}" };
 
-            await using var browser = await BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { Proxy = proxy });
+            await using var browser = await BrowserType.LaunchAsync(new() { Proxy = proxy });
 
             var page = await browser.NewPageAsync();
             await page.GotoAsync("http://non-existent.com/target.html");
@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Tests
                 Password = "secret"
             };
 
-            await using var browser = await BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { Proxy = proxy });
+            await using var browser = await BrowserType.LaunchAsync(new() { Proxy = proxy });
 
             var page = await browser.NewPageAsync();
             await page.GotoAsync("http://non-existent.com/target.html");
@@ -70,7 +70,7 @@ namespace Microsoft.Playwright.Tests
                 Bypass = "non-existent1.com, .non-existent2.com, .zone",
             };
 
-            await using var browser = await BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { Proxy = proxy });
+            await using var browser = await BrowserType.LaunchAsync(new() { Proxy = proxy });
 
             var page = await browser.NewPageAsync();
             await page.GotoAsync("http://non-existent.com/target.html");

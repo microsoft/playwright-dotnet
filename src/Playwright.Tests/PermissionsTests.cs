@@ -21,7 +21,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldDenyPermissionWhenNotListed()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            await Context.GrantPermissionsAsync(Array.Empty<string>(), new BrowserContextGrantPermissionsOptions { Origin = Server.EmptyPage });
+            await Context.GrantPermissionsAsync(Array.Empty<string>(), new() { Origin = Server.EmptyPage });
             Assert.AreEqual("denied", await GetPermissionAsync(Page, "geolocation"));
         }
 
@@ -85,7 +85,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldGrantPermissionWhenCreatingContext()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 Permissions = new[] { "geolocation" },
             });
@@ -100,7 +100,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldResetPermissions()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            await Context.GrantPermissionsAsync(new[] { "geolocation" }, new BrowserContextGrantPermissionsOptions { Origin = Server.EmptyPage });
+            await Context.GrantPermissionsAsync(new[] { "geolocation" }, new() { Origin = Server.EmptyPage });
             Assert.AreEqual("granted", await GetPermissionAsync(Page, "geolocation"));
             await Context.ClearPermissionsAsync();
             Assert.AreEqual("prompt", await GetPermissionAsync(Page, "geolocation"));
@@ -121,9 +121,9 @@ namespace Microsoft.Playwright.Tests
                 });
             }");
             Assert.AreEqual(new[] { "prompt" }, await Page.EvaluateAsync<string[]>("window.events"));
-            await Context.GrantPermissionsAsync(Array.Empty<string>(), new BrowserContextGrantPermissionsOptions { Origin = Server.EmptyPage });
+            await Context.GrantPermissionsAsync(Array.Empty<string>(), new() { Origin = Server.EmptyPage });
             Assert.AreEqual(new[] { "prompt", "denied" }, await Page.EvaluateAsync<string[]>("window.events"));
-            await Context.GrantPermissionsAsync(new[] { "geolocation" }, new BrowserContextGrantPermissionsOptions { Origin = Server.EmptyPage });
+            await Context.GrantPermissionsAsync(new[] { "geolocation" }, new() { Origin = Server.EmptyPage });
             Assert.AreEqual(
                 new[] { "prompt", "denied", "granted" },
                 await Page.EvaluateAsync<string[]>("window.events"));
@@ -144,8 +144,8 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("prompt", await GetPermissionAsync(Page, "geolocation"));
             Assert.AreEqual("prompt", await GetPermissionAsync(otherPage, "geolocation"));
 
-            await Context.GrantPermissionsAsync(Array.Empty<string>(), new BrowserContextGrantPermissionsOptions { Origin = Server.EmptyPage });
-            await otherContext.GrantPermissionsAsync(new[] { "geolocation" }, new BrowserContextGrantPermissionsOptions { Origin = Server.EmptyPage });
+            await Context.GrantPermissionsAsync(Array.Empty<string>(), new() { Origin = Server.EmptyPage });
+            await otherContext.GrantPermissionsAsync(new[] { "geolocation" }, new() { Origin = Server.EmptyPage });
             Assert.AreEqual("denied", await GetPermissionAsync(Page, "geolocation"));
             Assert.AreEqual("granted", await GetPermissionAsync(otherPage, "geolocation"));
 

@@ -59,7 +59,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldDetectTouchWhenApplyingViewportWithTouches()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize
                 {
@@ -71,7 +71,7 @@ namespace Microsoft.Playwright.Tests
 
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
-            await page.AddScriptTagAsync(new PageAddScriptTagOptions { Url = Server.Prefix + "/modernizr.js" });
+            await page.AddScriptTagAsync(new() { Url = Server.Prefix + "/modernizr.js" });
             Assert.True(await page.EvaluateAsync<bool>("() => Modernizr.touchevents"));
         }
 
@@ -94,7 +94,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldSupportWindowOrientationEmulation()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize
                 {
@@ -115,7 +115,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldFireOrientationChangeEvent()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize
                 {
@@ -146,7 +146,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task DefaultMobileViewportsTo980Width()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize
                 {
@@ -165,7 +165,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task RespectMetaViewportTag()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize
                 {

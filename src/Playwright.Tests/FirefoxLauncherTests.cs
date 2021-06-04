@@ -21,7 +21,7 @@ namespace Microsoft.Playwright.Tests.Firefox
                 ["network.proxy.http_port"] = 333,
             };
 
-            await using var browser = await BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { FirefoxUserPrefs = firefoxUserPrefs });
+            await using var browser = await BrowserType.LaunchAsync(new() { FirefoxUserPrefs = firefoxUserPrefs });
             var page = await browser.NewPageAsync();
             var exception = await AssertThrowsAsync<PlaywrightException>(() => page.GotoAsync("http://example.com"));
 

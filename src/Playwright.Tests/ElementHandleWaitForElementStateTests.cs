@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<div style='display:none'>content</div>");
             var div = await Page.QuerySelectorAsync("div");
-            var exception = await AssertThrowsAsync<TimeoutException>(() => div.WaitForElementStateAsync(ElementState.Visible, new ElementHandleWaitForElementStateOptions { Timeout = 1000 }));
+            var exception = await AssertThrowsAsync<TimeoutException>(() => div.WaitForElementStateAsync(ElementState.Visible, new() { Timeout = 1000 }));
             StringAssert.Contains("Timeout 1000ms exceeded", exception.Message);
         }
 

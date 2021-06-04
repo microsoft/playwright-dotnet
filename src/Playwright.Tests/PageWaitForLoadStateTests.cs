@@ -41,8 +41,8 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRespectTimeout()
         {
             Server.SetRoute("/one-style.css", _ => Task.Delay(Timeout.Infinite));
-            await Page.GotoAsync(Server.Prefix + "/one-style.html", new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
-            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.WaitForLoadStateAsync(LoadState.Load, new PageWaitForLoadStateOptions { Timeout = 1 }));
+            await Page.GotoAsync(Server.Prefix + "/one-style.html", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.WaitForLoadStateAsync(LoadState.Load, new() { Timeout = 1 }));
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
         }
 
@@ -124,7 +124,7 @@ namespace Microsoft.Playwright.Tests
                 await route.ContinueAsync();
             });
 
-            await frame.GotoAsync(Server.Prefix + "/one-style.html", new FrameGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
+            await frame.GotoAsync(Server.Prefix + "/one-style.html", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
 
             await routeReachedTask.Task;
             var loadTask = frame.WaitForLoadStateAsync();

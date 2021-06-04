@@ -182,7 +182,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatNumberUsingContextLocale()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { Locale = "ru-RU" });
+            await using var context = await Browser.NewContextAsync(new() { Locale = "ru-RU" });
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
             var (worker, _) = await TaskUtils.WhenAll(

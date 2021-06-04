@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
-            var waitForNavigationResult = Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { UrlString = "**/frame.html", Timeout = 5000 });
+            var waitForNavigationResult = Page.WaitForNavigationAsync(new() { UrlString = "**/frame.html", Timeout = 5000 });
 
             await Page.GotoAsync(Server.EmptyPage);
 
@@ -52,12 +52,12 @@ namespace Microsoft.Playwright.Tests
 
             var waitForRequestTask = Server.WaitForRequest("/one-style.css");
             var navigationTask = Page.GotoAsync(Server.Prefix + "/one-style.html");
-            var domContentLoadedTask = Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
+            var domContentLoadedTask = Page.WaitForNavigationAsync(new() { WaitUntil = WaitUntilState.DOMContentLoaded });
 
             bool bothFired = false;
             var bothFiredTask = TaskUtils.WhenAll(
                 domContentLoadedTask,
-                Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { WaitUntil = WaitUntilState.Load })).ContinueWith(_ => bothFired = true);
+                Page.WaitForNavigationAsync(new() { WaitUntil = WaitUntilState.Load })).ContinueWith(_ => bothFired = true);
 
             await waitForRequestTask;
             await domContentLoadedTask;
@@ -220,11 +220,11 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithUrlMatch()
         {
             IResponse response1 = null;
-            var response1Task = Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { UrlRegex = new Regex("one-style\\.html") }).ContinueWith(t => response1 = t.Result);
+            var response1Task = Page.WaitForNavigationAsync(new() { UrlRegex = new Regex("one-style\\.html") }).ContinueWith(t => response1 = t.Result);
             IResponse response2 = null;
-            var response2Task = Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { UrlRegex = new Regex("\\/frame.html") }).ContinueWith(t => response2 = t.Result);
+            var response2Task = Page.WaitForNavigationAsync(new() { UrlRegex = new Regex("\\/frame.html") }).ContinueWith(t => response2 = t.Result);
             IResponse response3 = null;
-            var response3Task = Page.WaitForNavigationAsync(new PageWaitForNavigationOptions
+            var response3Task = Page.WaitForNavigationAsync(new()
             {
                 UrlFunc = (url) =>
                 {
@@ -267,7 +267,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.EmptyPage);
             bool resolved = false;
-            var waitTask = Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { UrlRegex = new Regex("third\\.html") }).ContinueWith(_ => resolved = true);
+            var waitTask = Page.WaitForNavigationAsync(new() { UrlRegex = new Regex("third\\.html") }).ContinueWith(_ => resolved = true);
 
             Assert.False(resolved);
 
@@ -287,7 +287,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkForCrossProcessNavigations()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            var waitTask = Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
+            var waitTask = Page.WaitForNavigationAsync(new() { WaitUntil = WaitUntilState.DOMContentLoaded });
 
             string url = Server.CrossProcessPrefix + "/empty.html";
             var gotoTask = Page.GotoAsync(url);

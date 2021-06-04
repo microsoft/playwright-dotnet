@@ -18,7 +18,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithAUrl()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            var scriptHandle = await Page.AddScriptTagAsync(new PageAddScriptTagOptions { Url = "/injectedfile.js" });
+            var scriptHandle = await Page.AddScriptTagAsync(new() { Url = "/injectedfile.js" });
             Assert.NotNull(scriptHandle);
             Assert.AreEqual(42, await Page.EvaluateAsync<int>("() => __injected"));
         }
@@ -28,7 +28,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithAUrlAndTypeModule()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            await Page.AddScriptTagAsync(new PageAddScriptTagOptions { Url = "/es6/es6import.js", Type = "module" });
+            await Page.AddScriptTagAsync(new() { Url = "/es6/es6import.js", Type = "module" });
             Assert.AreEqual(42, await Page.EvaluateAsync<int>("() => __es6injected"));
         }
 
@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithAPathAndTypeModule()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            await Page.AddScriptTagAsync(new PageAddScriptTagOptions { Path = TestUtils.GetWebServerFile("es6/es6pathimport.js"), Type = "module" });
+            await Page.AddScriptTagAsync(new() { Path = TestUtils.GetWebServerFile("es6/es6pathimport.js"), Type = "module" });
             await Page.WaitForFunctionAsync("window.__es6injected");
             Assert.AreEqual(42, await Page.EvaluateAsync<int>("() => __es6injected"));
         }
@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithAContentAndTypeModule()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            await Page.AddScriptTagAsync(new PageAddScriptTagOptions { Content = "import num from '/es6/es6module.js'; window.__es6injected = num;", Type = "module" });
+            await Page.AddScriptTagAsync(new() { Content = "import num from '/es6/es6module.js'; window.__es6injected = num;", Type = "module" });
             await Page.WaitForFunctionAsync("window.__es6injected");
             Assert.AreEqual(42, await Page.EvaluateAsync<int>("() => __es6injected"));
         }
@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowAnErrorIfLoadingFromUrlFail()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            await AssertThrowsAsync<PlaywrightException>(() => Page.AddScriptTagAsync(new PageAddScriptTagOptions { Url = "/nonexistfile.js" }));
+            await AssertThrowsAsync<PlaywrightException>(() => Page.AddScriptTagAsync(new() { Url = "/nonexistfile.js" }));
         }
 
         [PlaywrightTest("page-add-script-tag.spec.ts", "should work with a path")]
@@ -65,7 +65,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithAPath()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            var scriptHandle = await Page.AddScriptTagAsync(new PageAddScriptTagOptions { Path = TestUtils.GetWebServerFile("injectedfile.js") });
+            var scriptHandle = await Page.AddScriptTagAsync(new() { Path = TestUtils.GetWebServerFile("injectedfile.js") });
             Assert.NotNull(scriptHandle);
             Assert.AreEqual(42, await Page.EvaluateAsync<int>("() => __injected"));
         }
@@ -75,7 +75,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldIncludeSourceURLWhenPathIsProvided()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            await Page.AddScriptTagAsync(new PageAddScriptTagOptions { Path = TestUtils.GetWebServerFile("injectedfile.js") });
+            await Page.AddScriptTagAsync(new() { Path = TestUtils.GetWebServerFile("injectedfile.js") });
             string result = await Page.EvaluateAsync<string>("() => __injectedError.stack");
             StringAssert.Contains(TestUtils.GetWebServerFile("injectedfile.js"), result);
         }
@@ -85,7 +85,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithContent()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            var scriptHandle = await Page.AddScriptTagAsync(new PageAddScriptTagOptions { Content = "window.__injected = 35;" });
+            var scriptHandle = await Page.AddScriptTagAsync(new() { Content = "window.__injected = 35;" });
             Assert.NotNull(scriptHandle);
             Assert.AreEqual(35, await Page.EvaluateAsync<int>("() => __injected"));
         }
@@ -96,7 +96,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.Prefix + "/csp.html");
             await AssertThrowsAsync<PlaywrightException>(() =>
-                Page.AddScriptTagAsync(new PageAddScriptTagOptions { Content = "window.__injected = 35;" }));
+                Page.AddScriptTagAsync(new() { Content = "window.__injected = 35;" }));
         }
 
         [PlaywrightTest("page-add-script-tag.spec.ts", "should throw when added with URL to the CSP page")]
@@ -105,7 +105,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.Prefix + "/csp.html");
             await AssertThrowsAsync<PlaywrightException>(() =>
-                Page.AddScriptTagAsync(new PageAddScriptTagOptions { Url = Server.CrossProcessPrefix + "/injectedfile.js" }));
+                Page.AddScriptTagAsync(new() { Url = Server.CrossProcessPrefix + "/injectedfile.js" }));
         }
 
         [PlaywrightTest("page-add-script-tag.spec.ts", "should throw a nice error when the request fails")]
@@ -114,7 +114,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.EmptyPage);
             string url = Server.Prefix + "/this_does_not_exists.js";
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.AddScriptTagAsync(new PageAddScriptTagOptions { Url = url }));
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.AddScriptTagAsync(new() { Url = url }));
             StringAssert.Contains(url, exception.Message);
         }
     }

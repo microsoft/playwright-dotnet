@@ -16,15 +16,15 @@ namespace Microsoft.Playwright.Tests
             {
                 var page = await context.NewPageAsync();
                 await page.GotoAsync(Server.Prefix + "/csp.html");
-                await page.AddScriptTagAsync(new PageAddScriptTagOptions { Content = "window.__injected = 42;" }).ContinueWith(_ => Task.CompletedTask);
+                await page.AddScriptTagAsync(new() { Content = "window.__injected = 42;" }).ContinueWith(_ => Task.CompletedTask);
                 Assert.Null(await page.EvaluateAsync("window.__injected"));
             }
             // By-pass CSP and try one more time.
-            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions { BypassCSP = true }))
+            await using (var context = await Browser.NewContextAsync(new() { BypassCSP = true }))
             {
                 var page = await context.NewPageAsync();
                 await page.GotoAsync(Server.Prefix + "/csp.html");
-                await page.AddScriptTagAsync(new PageAddScriptTagOptions { Content = "window.__injected = 42;" });
+                await page.AddScriptTagAsync(new() { Content = "window.__injected = 42;" });
                 Assert.AreEqual(42, await page.EvaluateAsync<int>("window.__injected"));
             }
         }
@@ -40,16 +40,16 @@ namespace Microsoft.Playwright.Tests
             {
                 var page = await context.NewPageAsync();
                 await page.GotoAsync(Server.EmptyPage);
-                await page.AddScriptTagAsync(new PageAddScriptTagOptions { Content = "window.__injected = 42;" }).ContinueWith(_ => Task.CompletedTask);
+                await page.AddScriptTagAsync(new() { Content = "window.__injected = 42;" }).ContinueWith(_ => Task.CompletedTask);
                 Assert.Null(await page.EvaluateAsync("window.__injected"));
             }
 
             // By-pass CSP and try one more time.
-            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions { BypassCSP = true }))
+            await using (var context = await Browser.NewContextAsync(new() { BypassCSP = true }))
             {
                 var page = await context.NewPageAsync();
                 await page.GotoAsync(Server.EmptyPage);
-                await page.AddScriptTagAsync(new PageAddScriptTagOptions { Content = "window.__injected = 42;" });
+                await page.AddScriptTagAsync(new() { Content = "window.__injected = 42;" });
                 Assert.AreEqual(42, await page.EvaluateAsync<int>("window.__injected"));
             }
         }
@@ -58,14 +58,14 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBypassAfterCrossProcessNavigation()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { BypassCSP = true });
+            await using var context = await Browser.NewContextAsync(new() { BypassCSP = true });
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.Prefix + "/csp.html");
-            await page.AddScriptTagAsync(new PageAddScriptTagOptions { Content = "window.__injected = 42;" });
+            await page.AddScriptTagAsync(new() { Content = "window.__injected = 42;" });
             Assert.AreEqual(42, await page.EvaluateAsync<int>("window.__injected"));
 
             await page.GotoAsync(Server.CrossProcessPrefix + "/csp.html");
-            await page.AddScriptTagAsync(new PageAddScriptTagOptions { Content = "window.__injected = 42;" });
+            await page.AddScriptTagAsync(new() { Content = "window.__injected = 42;" });
             Assert.AreEqual(42, await page.EvaluateAsync<int>("window.__injected"));
         }
 
@@ -80,19 +80,19 @@ namespace Microsoft.Playwright.Tests
 
                 // Make sure CSP prohibits addScriptTag in an iframe.
                 var frame = await FrameUtils.AttachFrameAsync(page, "frame1", Server.Prefix + "/csp.html");
-                await frame.AddScriptTagAsync(new FrameAddScriptTagOptions { Content = "window.__injected = 42;" }).ContinueWith(_ => Task.CompletedTask);
+                await frame.AddScriptTagAsync(new() { Content = "window.__injected = 42;" }).ContinueWith(_ => Task.CompletedTask);
                 Assert.Null(await frame.EvaluateAsync<int?>("() => window.__injected"));
             }
 
             // By-pass CSP and try one more time.
-            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions { BypassCSP = true }))
+            await using (var context = await Browser.NewContextAsync(new() { BypassCSP = true }))
             {
                 var page = await context.NewPageAsync();
                 await page.GotoAsync(Server.EmptyPage);
 
                 // Make sure CSP prohibits addScriptTag in an iframe.
                 var frame = await FrameUtils.AttachFrameAsync(page, "frame1", Server.Prefix + "/csp.html");
-                await frame.AddScriptTagAsync(new FrameAddScriptTagOptions { Content = "window.__injected = 42;" }).ContinueWith(_ => Task.CompletedTask);
+                await frame.AddScriptTagAsync(new() { Content = "window.__injected = 42;" }).ContinueWith(_ => Task.CompletedTask);
                 Assert.AreEqual(42, await frame.EvaluateAsync<int?>("() => window.__injected"));
 
             }

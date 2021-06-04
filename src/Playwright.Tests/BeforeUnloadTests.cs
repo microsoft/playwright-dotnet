@@ -21,7 +21,7 @@ namespace Microsoft.Playwright.Tests
             var dialogEvent = new TaskCompletionSource<IDialog>();
             newPage.Dialog += (_, dialog) => dialogEvent.TrySetResult(dialog);
 
-            var pageClosingTask = newPage.CloseAsync(new PageCloseOptions { RunBeforeUnload = true });
+            var pageClosingTask = newPage.CloseAsync(new() { RunBeforeUnload = true });
             var dialog = await dialogEvent.Task;
             Assert.AreEqual(DialogType.BeforeUnload, dialog.Type);
             Assert.IsEmpty(dialog.DefaultValue);

@@ -134,7 +134,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync(
                 @"<meta http-equiv=""Content-Security-Policy"" content=""script-src 'none';"">
                  <iframe src='javascript:""""'></iframe>",
-                new PageSetContentOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
+                new() { WaitUntil = WaitUntilState.DOMContentLoaded });
 
             await Page.EvaluateAsync(@"() => {
                 const iframe = document.querySelector('iframe');

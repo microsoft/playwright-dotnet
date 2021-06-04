@@ -85,7 +85,7 @@ namespace Microsoft.Playwright.Tests
         {
             try
             {
-                await playwright.Selectors.RegisterAsync(name, new SelectorsRegisterOptions { Path = path });
+                await playwright.Selectors.RegisterAsync(name, new() { Path = path });
             }
             catch (PlaywrightException ex) when (ex.Message.Contains("has been already registered"))
             {
@@ -106,7 +106,7 @@ namespace Microsoft.Playwright.Tests
         {
             try
             {
-                await playwright.Selectors.RegisterAsync(name, new SelectorsRegisterOptions { Script = script, ContentScript = contentScript });
+                await playwright.Selectors.RegisterAsync(name, new() { Script = script, ContentScript = contentScript });
             }
             catch (PlaywrightException ex) when (ex.Message.Contains("has been already registered"))
             {

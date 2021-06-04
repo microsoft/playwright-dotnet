@@ -48,7 +48,7 @@ namespace Microsoft.Playwright.Tests
                     return false;
                 }
                 return Date.now() - window.__startTime;
-            }", null, new PageWaitForFunctionOptions { PollingInterval = polling });
+            }", null, new() { PollingInterval = polling });
             int value = (await timeDelta.JsonValueAsync<int>());
 
             Assert.True(value >= polling);
@@ -66,7 +66,7 @@ namespace Microsoft.Playwright.Tests
                   window.counter = (window.counter || 0) + 1;
                   console.log(window.counter);
                 }",
-                null, new PageWaitForFunctionOptions { PollingInterval = 1, Timeout = 1000 }));
+                null, new() { PollingInterval = 1, Timeout = 1000 }));
 
             int savedCounter = counter;
             await Page.WaitForTimeoutAsync(2000);
@@ -149,7 +149,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowNegativePollingInterval()
         {
             var exception = await AssertThrowsAsync<PlaywrightException>(()
-                => Page.WaitForFunctionAsync("() => !!document.body", null, new PageWaitForFunctionOptions { PollingInterval = -10 }));
+                => Page.WaitForFunctionAsync("() => !!document.body", null, new() { PollingInterval = -10 }));
 
             StringAssert.Contains("Cannot poll with non-positive interval", exception.Message);
         }
@@ -183,7 +183,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRespectTimeout()
         {
             var exception = await AssertThrowsAsync<TimeoutException>(()
-                => Page.WaitForFunctionAsync("false", null, new PageWaitForFunctionOptions { Timeout = 10 }));
+                => Page.WaitForFunctionAsync("false", null, new() { Timeout = 10 }));
 
             StringAssert.Contains("Timeout 10ms exceeded", exception.Message);
         }
@@ -209,7 +209,7 @@ namespace Microsoft.Playwright.Tests
                     return window.__injected;
                 }",
                 null,
-                new PageWaitForFunctionOptions
+                new()
                 {
                     PollingInterval = 10,
                     Timeout = 0

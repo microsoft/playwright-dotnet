@@ -48,7 +48,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRespectTimeout()
         {
             await AssertThrowsAsync<TimeoutException>(
-                () => Page.WaitForRequestAsync(_ => false, new PageWaitForRequestOptions { Timeout = 1 }));
+                () => Page.WaitForRequestAsync(_ => false, new() { Timeout = 1 }));
         }
 
         [PlaywrightTest("page-wait-for-request.spec.ts", "should respect default timeout")]
@@ -65,7 +65,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithNoTimeout()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            var task = Page.WaitForRequestAsync(Server.Prefix + "/digits/2.png", new PageWaitForRequestOptions { Timeout = 0 });
+            var task = Page.WaitForRequestAsync(Server.Prefix + "/digits/2.png", new() { Timeout = 0 });
             var (request, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync(@"() => setTimeout(() => {

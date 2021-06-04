@@ -14,7 +14,7 @@ namespace Microsoft.Playwright.Tests
             await using var browser = await Playwright[TestConstants.BrowserName].LaunchAsync();
 
             const string func = "() => new Date(1479579154987).toString()";
-            await using (var context = await browser.NewContextAsync(new BrowserNewContextOptions { TimezoneId = "America/Jamaica" }))
+            await using (var context = await browser.NewContextAsync(new() { TimezoneId = "America/Jamaica" }))
             {
                 var page = await context.NewPageAsync();
                 string result = await page.EvaluateAsync<string>(func);
@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Tests
                 }
             }
 
-            await using (var context = await browser.NewContextAsync(new BrowserNewContextOptions { TimezoneId = "Pacific/Honolulu" }))
+            await using (var context = await browser.NewContextAsync(new() { TimezoneId = "Pacific/Honolulu" }))
             {
                 var page = await context.NewPageAsync();
                 if (BrowserName == "webkit")
@@ -49,7 +49,7 @@ namespace Microsoft.Playwright.Tests
                 }
             }
 
-            await using (var context = await browser.NewContextAsync(new BrowserNewContextOptions { TimezoneId = "America/Buenos_Aires" }))
+            await using (var context = await browser.NewContextAsync(new() { TimezoneId = "America/Buenos_Aires" }))
             {
                 var page = await context.NewPageAsync();
                 if (BrowserName == "webkit")
@@ -66,7 +66,7 @@ namespace Microsoft.Playwright.Tests
                 }
             }
 
-            await using (var context = await browser.NewContextAsync(new BrowserNewContextOptions { TimezoneId = "Europe/Berlin" }))
+            await using (var context = await browser.NewContextAsync(new() { TimezoneId = "Europe/Berlin" }))
             {
                 var page = await context.NewPageAsync();
                 if (BrowserName == "webkit")
@@ -88,13 +88,13 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForInvalidTimezoneId()
         {
-            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions { TimezoneId = "Foo/Bar" }))
+            await using (var context = await Browser.NewContextAsync(new() { TimezoneId = "Foo/Bar" }))
             {
                 var exception = await AssertThrowsAsync<PlaywrightException>(() => context.NewPageAsync());
                 StringAssert.Contains("Invalid timezone ID: Foo/Bar", exception.Message);
             }
 
-            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions { TimezoneId = "Baz/Qux" }))
+            await using (var context = await Browser.NewContextAsync(new() { TimezoneId = "Baz/Qux" }))
             {
                 var exception = await AssertThrowsAsync<PlaywrightException>(() => context.NewPageAsync());
                 StringAssert.Contains("Invalid timezone ID: Baz/Qux", exception.Message);
@@ -105,7 +105,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForMultiplePagesSharingSameProcess()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { TimezoneId = "Europe/Moscow" });
+            await using var context = await Browser.NewContextAsync(new() { TimezoneId = "Europe/Moscow" });
 
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);

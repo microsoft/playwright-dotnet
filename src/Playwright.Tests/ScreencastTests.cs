@@ -13,7 +13,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task VideoSizeShouldRequireVideosPath()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new BrowserNewContextOptions
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new()
             {
                 RecordVideoSize = new RecordVideoSize { Height = 100, Width = 100 }
             }));
@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithoutASize()
         {
             using var tempDirectory = new TempDirectory();
-            var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            var context = await Browser.NewContextAsync(new()
             {
                 RecordVideoDir = tempDirectory.Path
             });
@@ -55,7 +55,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldCaptureStaticPage()
         {
             using var tempDirectory = new TempDirectory();
-            var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            var context = await Browser.NewContextAsync(new()
             {
                 RecordVideoDir = tempDirectory.Path,
                 RecordVideoSize = new RecordVideoSize() { Height = 100, Width = 100 }
@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldExposeVideoPath()
         {
             using var tempDirectory = new TempDirectory();
-            var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            var context = await Browser.NewContextAsync(new()
             {
                 RecordVideoDir = tempDirectory.Path,
                 RecordVideoSize = new RecordVideoSize { Height = 100, Width = 100 }
@@ -94,7 +94,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldExposeVideoPathBlankPage()
         {
             using var tempDirectory = new TempDirectory();
-            var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            var context = await Browser.NewContextAsync(new()
             {
                 RecordVideoDir = tempDirectory.Path,
                 RecordVideoSize = new RecordVideoSize() { Height = 100, Width = 100 }
@@ -156,7 +156,7 @@ namespace Microsoft.Playwright.Tests
         {
             using var userDirectory = new TempDirectory();
             using var tempDirectory = new TempDirectory();
-            var context = await BrowserType.LaunchPersistentContextAsync(userDirectory.Path, new BrowserTypeLaunchPersistentContextOptions
+            var context = await BrowserType.LaunchPersistentContextAsync(userDirectory.Path, new()
             {
                 RecordVideoDir = tempDirectory.Path,
                 RecordVideoSize = new RecordVideoSize() { Height = 100, Width = 100 },
