@@ -65,6 +65,22 @@ namespace Microsoft.Playwright.Tests
             await context.DisposeAsync();
         }
 
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support reducedMotion option")]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task ShouldSupportReducedMotionOption()
+        {
+            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions()
+            {
+                ReducedMotion = ReducedMotion.Reduce
+            });
+
+            Assert.True(await page.EvaluateAsync<bool?>("() => matchMedia('(prefers-reduced-motion: reduce)').matches"));
+            Assert.False(await page.EvaluateAsync<bool?>("() => matchMedia('(prefers-reduced-motion: no-preference)').matches"));
+
+            tmp.Dispose();
+            await context.DisposeAsync();
+        }
+
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support timezoneId option")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportTimezoneIdOption()
