@@ -2,23 +2,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageEventConsoleTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class PageEventConsoleTests2 : PageTestEx
     {
-        /// <inheritdoc/>
-        public PageEventConsoleTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("page-event-console.spec.ts", "should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             IConsoleMessage message = null;
@@ -32,15 +25,15 @@ namespace Microsoft.Playwright.Tests
                 Page.WaitForConsoleMessageAsync(),
                 Page.EvaluateAsync("() => console.log('hello', 5, { foo: 'bar'})"));
 
-            Assert.Equal("hello 5 JSHandle@object", message.Text);
-            Assert.Equal("log", message.Type);
-            Assert.Equal("hello", await message.Args.ElementAt(0).JsonValueAsync<string>());
-            Assert.Equal(5, await message.Args.ElementAt(1).JsonValueAsync<int>());
-            Assert.Equal("bar", (await message.Args.ElementAt(2).JsonValueAsync<JsonElement>()).GetProperty("foo").GetString());
+            Assert.AreEqual("hello 5 JSHandle@object", message.Text);
+            Assert.AreEqual("log", message.Type);
+            Assert.AreEqual("hello", await message.Args.ElementAt(0).JsonValueAsync<string>());
+            Assert.AreEqual(5, await message.Args.ElementAt(1).JsonValueAsync<int>());
+            Assert.AreEqual("bar", (await message.Args.ElementAt(2).JsonValueAsync<JsonElement>()).GetProperty("foo").GetString());
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should emit same log twice")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitSameLogTwice()
         {
             var messages = new List<string>();
@@ -48,11 +41,11 @@ namespace Microsoft.Playwright.Tests
             Page.Console += (_, e) => messages.Add(e.Text);
             await Page.EvaluateAsync("() => { for (let i = 0; i < 2; ++i ) console.log('hello'); } ");
 
-            Assert.Equal(new[] { "hello", "hello" }, messages.ToArray());
+            Assert.AreEqual(new[] { "hello", "hello" }, messages.ToArray());
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should work for different console API calls")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForDifferentConsoleAPICalls()
         {
             var messages = new List<IConsoleMessage>();
@@ -68,9 +61,9 @@ namespace Microsoft.Playwright.Tests
                 console.error('calling console.error');
                 console.log(Promise.resolve('should not wait until resolved!'));
             }");
-            Assert.Equal(new[] { "timeEnd", "trace", "dir", "warning", "error", "log" }, messages.Select(msg => msg.Type));
-            Assert.Contains("calling console.time", messages[0].Text);
-            Assert.Equal(new[]
+            Assert.AreEqual(new[] { "timeEnd", "trace", "dir", "warning", "error", "log" }, messages.Select(msg => msg.Type));
+            StringAssert.Contains("calling console.time", messages[0].Text);
+            Assert.AreEqual(new[]
             {
                 "calling console.trace",
                 "calling console.dir",
@@ -81,7 +74,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should not fail for window object")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotFailForWindowObject()
         {
             IConsoleMessage message = null;
@@ -95,41 +88,41 @@ namespace Microsoft.Playwright.Tests
                 Page.EvaluateAsync("() => console.error(window)"),
                 Page.WaitForConsoleMessageAsync()
             );
-            Assert.Equal("JSHandle@object", message.Text);
+            Assert.AreEqual("JSHandle@object", message.Text);
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should trigger correct Log")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTriggerCorrectLog()
         {
             await Page.GotoAsync("about:blank");
             var (messageEvent, _) = await TaskUtils.WhenAll(
                 Page.WaitForConsoleMessageAsync(),
-                Page.EvaluateAsync("async url => fetch(url).catch (e => { })", TestConstants.EmptyPage)
+                Page.EvaluateAsync("async url => fetch(url).catch (e => { })", Server.EmptyPage)
             );
-            Assert.Contains("Access-Control-Allow-Origin", messageEvent.Text);
-            Assert.Equal("error", messageEvent.Type);
+            StringAssert.Contains("Access-Control-Allow-Origin", messageEvent.Text);
+            Assert.AreEqual("error", messageEvent.Type);
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should have location for console API calls")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveLocationForConsoleAPICalls()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var messageEvent = await Page.RunAndWaitForConsoleMessageAsync(async () =>
             {
-                await Page.GotoAsync(TestConstants.ServerUrl + "/consolelog.html");
+                await Page.GotoAsync(Server.Prefix + "/consolelog.html");
             });
-            Assert.Equal("yellow", messageEvent.Text);
-            Assert.Equal("log", messageEvent.Type);
+            Assert.AreEqual("yellow", messageEvent.Text);
+            Assert.AreEqual("log", messageEvent.Type);
             string location = messageEvent.Location;
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should not throw when there are console messages in detached iframes")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotThrowWhenThereAreConsoleMessagesInDetachedIframes()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var (popup, _) = await TaskUtils.WhenAll(
                 Page.WaitForPopupAsync(),
                 Page.EvaluateAsync<bool>(@"async () =>
@@ -148,7 +141,7 @@ namespace Microsoft.Playwright.Tests
                     frame.remove();
                 }"));
             // 4. Connect to the popup and make sure it doesn't throw.
-            Assert.Equal(2, await popup.EvaluateAsync<int>("1 + 1"));
+            Assert.AreEqual(2, await popup.EvaluateAsync<int>("1 + 1"));
         }
     }
 }

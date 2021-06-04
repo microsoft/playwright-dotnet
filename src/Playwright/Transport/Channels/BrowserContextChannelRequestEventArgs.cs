@@ -2,9 +2,11 @@ using System;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
-    internal class PageChannelRequestEventArgs : EventArgs
+    internal class BrowserContextChannelRequestEventArgs : EventArgs
     {
-        public RequestChannel Request { get; set; }
+        public Page Page { get; set; }
+
+        public Request Request { get; set; }
 
         public string FailureText { get; set; }
 

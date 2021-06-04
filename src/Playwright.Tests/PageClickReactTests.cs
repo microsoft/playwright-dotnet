@@ -1,46 +1,39 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageClickReactTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class PageClickReactTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public PageClickReactTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("page-click-react.spec.ts", "should retarget when element is recycled during hit testing")]
-        [Fact(Skip = " Skip USES_HOOKS")]
+        [Test, Ignore(" Skip USES_HOOKS")]
         public void ShouldRetargetWhenElementIsRecycledDuringHitTesting()
         {
         }
 
         [PlaywrightTest("page-click-react.spec.ts", "should report that selector does not match anymore")]
-        [Fact(Skip = " Skip USES_HOOKS")]
+        [Test, Ignore(" Skip USES_HOOKS")]
         public void ShouldReportThatSelectorDoesNotMatchAnymore()
         {
         }
 
         [PlaywrightTest("page-click-react.spec.ts", "should retarget when element is recycled before enabled check")]
-        [Fact(Skip = " Skip USES_HOOKS")]
+        [Test, Ignore(" Skip USES_HOOKS")]
         public void ShouldRetargetWhenElementIsRecycledBeforeEnabledCheck()
         {
         }
 
         [PlaywrightTest("page-click-react.spec.ts", "should not retarget the handle when element is recycled")]
-        [Fact(Skip = " Skip USES_HOOKS")]
+        [Test, Ignore(" Skip USES_HOOKS")]
         public void ShouldNotRetargetTheHandleWhenElementIsRecycled()
         {
         }
 
         [PlaywrightTest("page-click-react.spec.ts", "should timeout when click opens alert")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWhenClickOpensAlert()
         {
             var dialogEvent = new TaskCompletionSource<IDialog>();
@@ -48,17 +41,17 @@ namespace Microsoft.Playwright.Tests
 
             await Page.SetContentAsync("<div onclick='window.alert(123)'>Click me</div>");
 
-            var exception = await Assert.ThrowsAsync<TimeoutException>(() => Page.ClickAsync("div", new PageClickOptions { Timeout = 3000 }));
-            Assert.Contains("Timeout 3000ms exceeded", exception.Message);
+            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.ClickAsync("div", new PageClickOptions { Timeout = 3000 }));
+            StringAssert.Contains("Timeout 3000ms exceeded", exception.Message);
             var dialog = await dialogEvent.Task;
             await dialog.DismissAsync();
         }
 
         [PlaywrightTest("page-click-react.spec.ts", "should not retarget when element changes on hover")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotRetargetWhenElementChangesOnHover()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/react.html");
+            await Page.GotoAsync(Server.Prefix + "/react.html");
             await Page.EvaluateAsync(@"() => {
                 renderComponent(e('div', {}, [e(MyButton, { name: 'button1', renameOnHover: true }), e(MyButton, { name: 'button2' })] ));
             }");
@@ -69,10 +62,10 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click-react.spec.ts", "should not retarget when element is recycled on hover")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotRetargetWhenElementIsRecycledOnHover()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/react.html");
+            await Page.GotoAsync(Server.Prefix + "/react.html");
             await Page.EvaluateAsync(@"() => {
                 function shuffle() {
                     renderComponent(e('div', {}, [e(MyButton, { name: 'button2' }), e(MyButton, { name: 'button1' })] ));

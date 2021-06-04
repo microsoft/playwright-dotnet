@@ -1,61 +1,54 @@
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>browser.spec.ts</playwright-file>
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class BrowserTests : PlaywrightSharpBrowserBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class BrowserTests : BrowserTestEx
     {
-        /// <inheritdoc/>
-        public BrowserTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("browser.spec.ts", "should create new page")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCreateNewPage()
         {
-            var browser = await Playwright[TestConstants.Product].LaunchDefaultAsync();
+            var browser = await Playwright[TestConstants.BrowserName].LaunchAsync();
             var page1 = await browser.NewPageAsync();
-            Assert.Single(browser.Contexts);
+            Assert.That(browser.Contexts, Has.Count.EqualTo(1));
 
             var page2 = await browser.NewPageAsync();
-            Assert.Equal(2, browser.Contexts.Count);
+            Assert.AreEqual(2, browser.Contexts.Count);
 
             await page1.CloseAsync();
-            Assert.Single(browser.Contexts);
+            Assert.That(browser.Contexts, Has.Count.EqualTo(1));
 
             await page2.CloseAsync();
         }
 
         [PlaywrightTest("browser.spec.ts", "should throw upon second create new page")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowUponSecondCreateNewPage()
         {
             var page = await Browser.NewPageAsync();
-            var ex = await Assert.ThrowsAsync<PlaywrightException>(() => page.Context.NewPageAsync());
+            var ex = await AssertThrowsAsync<PlaywrightException>(() => page.Context.NewPageAsync());
             await page.CloseAsync();
-            Assert.Contains("Please use Browser.NewContextAsync()", ex.Message);
+            StringAssert.Contains("Please use Browser.NewContextAsync()", ex.Message);
         }
 
         [PlaywrightTest("browser.spec.ts", "version should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public void VersionShouldWork()
         {
             string version = Browser.Version;
 
             if (TestConstants.IsChromium)
             {
-                Assert.Matches(new Regex("\\d+\\.\\d+\\.\\d+\\.\\d+"), version);
+                Assert.That(version, Does.Match(new Regex("\\d+\\.\\d+\\.\\d+\\.\\d+")));
             }
             else
             {
-                Assert.Matches(new Regex("\\d+\\.\\d+"), version);
+                Assert.That(version, Does.Match(new Regex("\\d+\\.\\d+")));
             }
         }
     }

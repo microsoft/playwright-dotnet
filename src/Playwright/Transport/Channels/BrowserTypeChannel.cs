@@ -19,6 +19,7 @@ namespace Microsoft.Playwright.Transport.Channels
             IEnumerable<string> passedArguments = default,
             Proxy proxy = default,
             string downloadsPath = default,
+            string tracesDir = default,
             bool? chromiumSandbox = default,
             IEnumerable<KeyValuePair<string, object>> firefoxUserPrefs = default,
             bool? handleSIGINT = default,
@@ -45,6 +46,7 @@ namespace Microsoft.Playwright.Transport.Channels
             args.Add("env", env.Remap());
             args.Add("proxy", proxy);
             args.Add("downloadsPath", downloadsPath);
+            args.Add("tracesDir", tracesDir);
             args.Add("firefoxUserPrefs", firefoxUserPrefs);
             args.Add("chromiumSandbox", chromiumSandbox);
             args.Add("slowMo", slowMo);
@@ -58,43 +60,45 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal Task<BrowserContextChannel> LaunchPersistentContextAsync(
             string userDataDir,
-            bool? headless,
-            string channel,
-            string executablePath,
-            IEnumerable<string> args,
-            Proxy proxy,
-            string downloadsPath,
-            bool? chromiumSandbox,
-            bool? handleSIGINT,
-            bool? handleSIGTERM,
-            bool? handleSIGHUP,
-            float? timeout,
-            IEnumerable<KeyValuePair<string, string>> env,
-            bool? devtools,
-            float? slowMo,
-            bool? acceptDownloads,
-            bool? ignoreHTTPSErrors,
-            bool? bypassCSP,
-            ViewportSize viewportSize,
-            ScreenSize screenSize,
-            string userAgent,
-            float? deviceScaleFactor,
-            bool? isMobile,
-            bool? hasTouch,
-            bool? javaScriptEnabled,
-            string timezoneId,
-            Geolocation geolocation,
-            string locale,
-            IEnumerable<string> permissions,
-            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders,
-            bool? offline,
-            HttpCredentials httpCredentials,
-            ColorScheme? colorScheme,
-            string recordHarPath,
-            bool? recordHarOmitContent,
-            Dictionary<string, object> recordVideo,
-            IEnumerable<string> ignoreDefaultArgs,
-            bool? ignoreAllDefaultArgs)
+            bool? headless = default,
+            string channel = default,
+            string executablePath = default,
+            IEnumerable<string> args = default,
+            Proxy proxy = default,
+            string downloadsPath = default,
+            string tracesDir = default,
+            bool? chromiumSandbox = default,
+            bool? handleSIGINT = default,
+            bool? handleSIGTERM = default,
+            bool? handleSIGHUP = default,
+            float? timeout = default,
+            IEnumerable<KeyValuePair<string, string>> env = default,
+            bool? devtools = default,
+            float? slowMo = default,
+            bool? acceptDownloads = default,
+            bool? ignoreHTTPSErrors = default,
+            bool? bypassCSP = default,
+            ViewportSize viewportSize = default,
+            ScreenSize screenSize = default,
+            string userAgent = default,
+            float? deviceScaleFactor = default,
+            bool? isMobile = default,
+            bool? hasTouch = default,
+            bool? javaScriptEnabled = default,
+            string timezoneId = default,
+            Geolocation geolocation = default,
+            string locale = default,
+            IEnumerable<string> permissions = default,
+            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = default,
+            bool? offline = default,
+            HttpCredentials httpCredentials = default,
+            ColorScheme? colorScheme = default,
+            ReducedMotion? reducedMotion = default,
+            string recordHarPath = default,
+            bool? recordHarOmitContent = default,
+            Dictionary<string, object> recordVideo = default,
+            IEnumerable<string> ignoreDefaultArgs = default,
+            bool? ignoreAllDefaultArgs = default)
         {
             var channelArgs = new Dictionary<string, object>();
 
@@ -104,6 +108,7 @@ namespace Microsoft.Playwright.Transport.Channels
             channelArgs.Add("executablePath", executablePath);
             channelArgs.Add("args", args);
             channelArgs.Add("downloadsPath", downloadsPath);
+            channelArgs.Add("tracesDir", tracesDir);
             channelArgs.Add("proxy", proxy);
             channelArgs.Add("chromiumSandbox", chromiumSandbox);
             channelArgs.Add("handleSIGINT", handleSIGINT);
@@ -140,6 +145,7 @@ namespace Microsoft.Playwright.Transport.Channels
             channelArgs.Add("offline", offline);
             channelArgs.Add("httpCredentials", httpCredentials);
             channelArgs.Add("colorScheme", colorScheme);
+            channelArgs.Add("reducedMotion", reducedMotion);
 
             if (!string.IsNullOrEmpty(recordHarPath))
             {

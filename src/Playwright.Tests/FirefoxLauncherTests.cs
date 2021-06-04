@@ -1,25 +1,17 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.Attributes;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests.Firefox
 {
     ///<playwright-file>firefox/launcher.spec.ts</playwright-file>
     ///<playwright-describe>launcher</playwright-describe>
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class LauncherTests : PlaywrightSharpBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class FirefoxLauncherTests : PlaywrightTestEx
     {
-        /// <inheritdoc/>
-        public LauncherTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("firefox/launcher.spec.ts", "should pass firefox user preferences")]
-        [SkipBrowserAndPlatformFact(skipChromium: true, skipWebkit: true)]
+        [Test, SkipBrowserAndPlatform(skipChromium: true, skipWebkit: true)]
         public async Task ShouldPassFirefoxUserPreferences()
         {
             var firefoxUserPrefs = new Dictionary<string, object>
@@ -31,9 +23,9 @@ namespace Microsoft.Playwright.Tests.Firefox
 
             await using var browser = await BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { FirefoxUserPrefs = firefoxUserPrefs });
             var page = await browser.NewPageAsync();
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.GotoAsync("http://example.com"));
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => page.GotoAsync("http://example.com"));
 
-            Assert.Contains("NS_ERROR_PROXY_CONNECTION_REFUSED", exception.Message);
+            StringAssert.Contains("NS_ERROR_PROXY_CONNECTION_REFUSED", exception.Message);
         }
     }
 }

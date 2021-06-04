@@ -1,24 +1,16 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.Attributes;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageMouseTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class PageMouseTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public PageMouseTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("page-mouse.spec.ts", "should click the document")]
-        [SkipBrowserAndPlatformFact(skipFirefox: true, skipWindows: true)]
+        [Test, SkipBrowserAndPlatform(skipFirefox: true, skipWindows: true)]
         public async Task ShouldClickTheDocument()
         {
             await Page.EvaluateAsync(@"() => {
@@ -37,19 +29,19 @@ namespace Microsoft.Playwright.Tests
             }");
             await Page.Mouse.ClickAsync(50, 60);
             var clickEvent = await Page.EvaluateAsync<JsonElement>("() => window.clickPromise");
-            Assert.Equal("click", clickEvent.GetProperty("type").GetString());
-            Assert.Equal(1, clickEvent.GetProperty("detail").GetInt32());
-            Assert.Equal(50, clickEvent.GetProperty("clientX").GetInt32());
-            Assert.Equal(60, clickEvent.GetProperty("clientY").GetInt32());
+            Assert.AreEqual("click", clickEvent.GetProperty("type").GetString());
+            Assert.AreEqual(1, clickEvent.GetProperty("detail").GetInt32());
+            Assert.AreEqual(50, clickEvent.GetProperty("clientX").GetInt32());
+            Assert.AreEqual(60, clickEvent.GetProperty("clientY").GetInt32());
             Assert.True(clickEvent.GetProperty("isTrusted").GetBoolean());
-            Assert.Equal(0, clickEvent.GetProperty("button").GetInt32());
+            Assert.AreEqual(0, clickEvent.GetProperty("button").GetInt32());
         }
 
         [PlaywrightTest("page-mouse.spec.ts", "should select the text with mouse")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectTheTextWithMouse()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/textarea.html");
+            await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             await Page.FocusAsync("textarea");
             const string text = "This is the text that we are going to try to select. Let\'s see how it goes.";
             await Page.Keyboard.TypeAsync(text);
@@ -71,40 +63,40 @@ namespace Microsoft.Playwright.Tests
             await Page.Mouse.DownAsync();
             await Page.Mouse.MoveAsync(200, 200);
             await Page.Mouse.UpAsync();
-            Assert.Equal(text, await Page.EvaluateAsync<string>(@"() => {
+            Assert.AreEqual(text, await Page.EvaluateAsync<string>(@"() => {
                 const textarea = document.querySelector('textarea');
                 return textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
             }"));
         }
 
         [PlaywrightTest("page-mouse.spec.ts", "should trigger hover state")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTriggerHoverState()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/scrollable.html");
+            await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
             await Page.HoverAsync("#button-6");
-            Assert.Equal("button-6", await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"));
+            Assert.AreEqual("button-6", await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"));
             await Page.HoverAsync("#button-2");
-            Assert.Equal("button-2", await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"));
+            Assert.AreEqual("button-2", await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"));
             await Page.HoverAsync("#button-91");
-            Assert.Equal("button-91", await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"));
+            Assert.AreEqual("button-91", await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"));
         }
 
         [PlaywrightTest("page-mouse.spec.ts", "should trigger hover state with removed window.Node")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTriggerHoverStateWithRemovedWindowNode()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/scrollable.html");
+            await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
             await Page.EvaluateAsync("() => delete window.Node");
             await Page.HoverAsync("#button-6");
-            Assert.Equal("button-6", await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"));
+            Assert.AreEqual("button-6", await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"));
         }
 
         [PlaywrightTest("page-mouse.spec.ts", "should set modifier keys on click")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetModifierKeysOnClick()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/scrollable.html");
+            await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
             await Page.EvaluateAsync("() => document.querySelector('#button-3').addEventListener('mousedown', e => window.lastEvent = e, true)");
             var modifiers = new Dictionary<string, string> { ["Shift"] = "shiftKey", ["Control"] = "ctrlKey", ["Alt"] = "altKey", ["Meta"] = "metaKey" };
             // In Firefox, the Meta modifier only exists on Mac
@@ -129,7 +121,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-mouse.spec.ts", "should tween mouse movement")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTweenMouseMovement()
         {
             // The test becomes flaky on WebKit without next line.
@@ -145,7 +137,7 @@ namespace Microsoft.Playwright.Tests
                 });
             }");
             await Page.Mouse.MoveAsync(200, 300, new MouseMoveOptions { Steps = 5 });
-            Assert.Equal(
+            Assert.AreEqual(
                 new[]
                 {
                     new[] { 120, 140 },
@@ -158,7 +150,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-mouse.spec.ts", "should work with mobile viewports and cross process navigations")]
-        [SkipBrowserAndPlatformFact(skipFirefox: true)]
+        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithMobileViewportsAndCrossProcessNavigations()
         {
             await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
@@ -167,9 +159,9 @@ namespace Microsoft.Playwright.Tests
                 IsMobile = true,
             });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
 
-            await page.GotoAsync(TestConstants.CrossProcessHttpPrefix + "/mobile.html");
+            await page.GotoAsync(Server.CrossProcessPrefix + "/mobile.html");
             await page.EvaluateAsync(@"() => {
                 document.addEventListener('click', event => {
                     window.result = { x: event.clientX, y: event.clientY };
@@ -177,8 +169,8 @@ namespace Microsoft.Playwright.Tests
             }");
             await page.Mouse.ClickAsync(30, 40);
             var result = await page.EvaluateAsync<JsonElement>("result");
-            Assert.Equal(30, result.GetProperty("x").GetInt32());
-            Assert.Equal(40, result.GetProperty("y").GetInt32());
+            Assert.AreEqual(30, result.GetProperty("x").GetInt32());
+            Assert.AreEqual(40, result.GetProperty("y").GetInt32());
         }
     }
 }

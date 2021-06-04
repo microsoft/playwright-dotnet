@@ -1,23 +1,16 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class BrowserContextExposeFunctionTests : PlaywrightSharpBrowserContextBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class BrowserContextExposeFunctionTests : ContextTestEx
     {
-        /// <inheritdoc/>
-        public BrowserContextExposeFunctionTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("browsercontext-expose-function.spec.ts", "expose binding should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ExposeBindingShouldWork()
         {
             BindingSource bindingSource = null;
@@ -33,15 +26,15 @@ namespace Microsoft.Playwright.Tests
                 return await add(5, 6);
             }");
 
-            Assert.Same(Context, bindingSource.Context);
-            Assert.Same(page, bindingSource.Page);
-            Assert.Same(page.MainFrame, bindingSource.Frame);
+            Assert.AreEqual(Context, bindingSource.Context);
+            Assert.AreEqual(page, bindingSource.Page);
+            Assert.AreEqual(page.MainFrame, bindingSource.Frame);
 
-            Assert.Equal(11, result);
+            Assert.AreEqual(11, result);
         }
 
         [PlaywrightTest("browsercontext-expose-function.spec.ts", "should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Context.ExposeFunctionAsync("add", (int a, int b) => a + b);
@@ -53,32 +46,32 @@ namespace Microsoft.Playwright.Tests
             var result = await page.EvaluateAsync<JsonElement>(@"async function() {
                 return { mul: await mul(9, 4), add: await add(9, 4), sub: await sub(9, 4) };
             }");
-            Assert.Equal(36, result.GetProperty("mul").GetInt32());
-            Assert.Equal(13, result.GetProperty("add").GetInt32());
-            Assert.Equal(5, result.GetProperty("sub").GetInt32());
+            Assert.AreEqual(36, result.GetProperty("mul").GetInt32());
+            Assert.AreEqual(13, result.GetProperty("add").GetInt32());
+            Assert.AreEqual(5, result.GetProperty("sub").GetInt32());
         }
 
         [PlaywrightTest("browsercontext-expose-function.spec.ts", "should throw for duplicate registrations")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForDuplicateRegistrations()
         {
             await Context.ExposeFunctionAsync("foo", () => { });
             await Context.ExposeFunctionAsync("bar", () => { });
 
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Context.ExposeFunctionAsync("foo", () => { }));
-            Assert.Equal("Function \"foo\" has been already registered", exception.Message);
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => Context.ExposeFunctionAsync("foo", () => { }));
+            Assert.AreEqual("Function \"foo\" has been already registered", exception.Message);
 
             var page = await Context.NewPageAsync();
-            exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => page.ExposeFunctionAsync("foo", () => { }));
-            Assert.Equal("Function \"foo\" has been already registered in the browser context", exception.Message);
+            exception = await AssertThrowsAsync<PlaywrightException>(() => page.ExposeFunctionAsync("foo", () => { }));
+            Assert.AreEqual("Function \"foo\" has been already registered in the browser context", exception.Message);
 
             await page.ExposeFunctionAsync("baz", () => { });
-            exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Context.ExposeFunctionAsync("baz", () => { }));
-            Assert.Equal("Function \"baz\" has been already registered in one of the pages", exception.Message);
+            exception = await AssertThrowsAsync<PlaywrightException>(() => Context.ExposeFunctionAsync("baz", () => { }));
+            Assert.AreEqual("Function \"baz\" has been already registered in one of the pages", exception.Message);
         }
 
         [PlaywrightTest("browsercontext-expose-function.spec.ts", "should be callable from-inside addInitScript")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeCallableFromInsideAddInitScript()
         {
             var args = new List<object>();
@@ -91,12 +84,12 @@ namespace Microsoft.Playwright.Tests
 
             args.Clear();
             await page.ReloadAsync();
-            Assert.Contains("context", args);
-            Assert.Contains("page", args);
+            CollectionAssert.Contains(args, "context");
+            CollectionAssert.Contains(args, "page");
         }
 
         [PlaywrightTest("browsercontext-expose-function.spec.ts", "exposeBindingHandle should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ExposeBindingHandleShouldWork()
         {
             IJSHandle target = null;
@@ -113,11 +106,11 @@ namespace Microsoft.Playwright.Tests
                 return window['logme']({ foo: 42 });
             }");
 
-            Assert.Equal(42, await target.EvaluateAsync<int>("x => x.foo"));
-            Assert.Equal(17, result);
+            Assert.AreEqual(42, await target.EvaluateAsync<int>("x => x.foo"));
+            Assert.AreEqual(17, result);
         }
 
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ExposeBindingHandleLikeInDocumentation()
         {
             var result = new TaskCompletionSource<string>();
@@ -134,7 +127,7 @@ namespace Microsoft.Playwright.Tests
              "<div>Or click me</div>\n");
 
             await page.ClickAsync("div");
-            Assert.Equal("Click me", await result.Task);
+            Assert.AreEqual("Click me", await result.Task);
         }
     }
 }

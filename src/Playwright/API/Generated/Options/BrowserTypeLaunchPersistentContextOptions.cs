@@ -56,6 +56,7 @@ namespace Microsoft.Playwright
             Headless = clone.Headless;
             Proxy = clone.Proxy;
             Timeout = clone.Timeout;
+            TracesDir = clone.TracesDir;
             SlowMo = clone.SlowMo;
             IgnoreDefaultArgs = clone.IgnoreDefaultArgs;
             IgnoreAllDefaultArgs = clone.IgnoreAllDefaultArgs;
@@ -77,6 +78,7 @@ namespace Microsoft.Playwright
             Offline = clone.Offline;
             HttpCredentials = clone.HttpCredentials;
             ColorScheme = clone.ColorScheme;
+            ReducedMotion = clone.ReducedMotion;
             RecordHarPath = clone.RecordHarPath;
             RecordHarOmitContent = clone.RecordHarOmitContent;
             RecordVideoDir = clone.RecordVideoDir;
@@ -174,6 +176,10 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("timeout")]
         public float? Timeout { get; set; }
+
+        /// <summary><para>If specified, traces are saved into this directory.</para></summary>
+        [JsonPropertyName("tracesDir")]
+        public string TracesDir { get; set; }
 
         /// <summary>
         /// <para>
@@ -325,6 +331,16 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("colorScheme")]
         public ColorScheme? ColorScheme { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Emulates <c>'prefers-reduced-motion'</c> media feature, supported values are <c>'reduce'</c>,
+        /// <c>'no-preference'</c>. See <see cref="IPage.EmulateMediaAsync"/> for more details.
+        /// Defaults to <c>'no-preference'</c>.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("reducedMotion")]
+        public ReducedMotion? ReducedMotion { get; set; }
 
         /// <summary>
         /// <para>

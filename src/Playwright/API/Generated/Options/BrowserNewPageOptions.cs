@@ -61,6 +61,7 @@ namespace Microsoft.Playwright
             Offline = clone.Offline;
             HttpCredentials = clone.HttpCredentials;
             ColorScheme = clone.ColorScheme;
+            ReducedMotion = clone.ReducedMotion;
             RecordHarPath = clone.RecordHarPath;
             RecordHarOmitContent = clone.RecordHarOmitContent;
             RecordVideoDir = clone.RecordVideoDir;
@@ -192,6 +193,16 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("colorScheme")]
         public ColorScheme? ColorScheme { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Emulates <c>'prefers-reduced-motion'</c> media feature, supported values are <c>'reduce'</c>,
+        /// <c>'no-preference'</c>. See <see cref="IPage.EmulateMediaAsync"/> for more details.
+        /// Defaults to <c>'no-preference'</c>.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("reducedMotion")]
+        public ReducedMotion? ReducedMotion { get; set; }
 
         /// <summary>
         /// <para>

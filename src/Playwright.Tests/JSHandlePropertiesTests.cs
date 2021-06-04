@@ -1,22 +1,15 @@
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class JSHandlePropertiesTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class JSHandlePropertiesTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public JSHandlePropertiesTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("jshandle-properties.spec.ts", "getProperties should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task GetPropertiesShouldWork()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => ({
@@ -24,20 +17,20 @@ namespace Microsoft.Playwright.Tests
             })");
             var properties = await aHandle.GetPropertiesAsync();
             Assert.True(properties.TryGetValue("foo", out var foo));
-            Assert.Equal("bar", await foo.JsonValueAsync<string>());
+            Assert.AreEqual("bar", await foo.JsonValueAsync<string>());
         }
 
         [PlaywrightTest("jshandle-properties.spec.ts", "should return empty map for non-objects")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEmptyMapForNonObjects()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => 123");
             var properties = await aHandle.GetPropertiesAsync();
-            Assert.Empty(properties);
+            Assert.IsEmpty(properties);
         }
 
         [PlaywrightTest("jshandle-properties.spec.ts", "should return even non-own properties")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEvenNonOwnProperties()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => {
@@ -58,12 +51,12 @@ namespace Microsoft.Playwright.Tests
                 return new B();
             }");
             var properties = await aHandle.GetPropertiesAsync();
-            Assert.Equal("1", await properties["a"].JsonValueAsync<string>());
-            Assert.Equal("2", await properties["b"].JsonValueAsync<string>());
+            Assert.AreEqual("1", await properties["a"].JsonValueAsync<string>());
+            Assert.AreEqual("2", await properties["b"].JsonValueAsync<string>());
         }
 
         [PlaywrightTest("jshandle-properties.spec.ts", "should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => ({
@@ -72,11 +65,11 @@ namespace Microsoft.Playwright.Tests
                 three: 3
             })");
             var twoHandle = await aHandle.GetPropertyAsync("two");
-            Assert.Equal(2, await twoHandle.JsonValueAsync<int>());
+            Assert.AreEqual(2, await twoHandle.JsonValueAsync<int>());
         }
 
         [PlaywrightTest("jshandle-properties.spec.ts", "should work with undefined, null, and empty")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithUndefinedNullAndEmpty()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => ({
@@ -92,7 +85,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("jshandle-properties.spec.ts", "should work with unserializable values")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithUnserializableValues()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => ({
@@ -103,11 +96,11 @@ namespace Microsoft.Playwright.Tests
             })");
 
             var infinityHandle = await aHandle.GetPropertyAsync("infinity");
-            Assert.Equal(double.PositiveInfinity, await infinityHandle.JsonValueAsync<double>());
+            Assert.AreEqual(double.PositiveInfinity, await infinityHandle.JsonValueAsync<double>());
             var ninfinityHandle = await aHandle.GetPropertyAsync("nInfinity");
-            Assert.Equal(double.NegativeInfinity, await ninfinityHandle.JsonValueAsync<double>());
+            Assert.AreEqual(double.NegativeInfinity, await ninfinityHandle.JsonValueAsync<double>());
             var nanHandle = await aHandle.GetPropertyAsync("nan");
-            Assert.Equal(double.NaN, await nanHandle.JsonValueAsync<double>());
+            Assert.AreEqual(double.NaN, await nanHandle.JsonValueAsync<double>());
             var nzeroHandle = await aHandle.GetPropertyAsync("nzero");
             Assert.True((await nzeroHandle.JsonValueAsync<double>()).IsNegativeZero());
         }

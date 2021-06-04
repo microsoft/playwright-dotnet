@@ -1,8 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -11,8 +9,6 @@ namespace Microsoft.Playwright.CLI
 {
     class Program
     {
-        private const string DriverEnvironmentPath = "PW_CLI_DRIVERPATH";
-
         static void Main(string[] args)
         {
             string pwPath = GetFullPath();
@@ -73,10 +69,12 @@ namespace Microsoft.Playwright.CLI
 
         private static string GetFullPath()
         {
-            var sourcePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                ".nuget",
-                "packages",
-                "microsoft.playwright");
+            string packagesPath = Environment.GetEnvironmentVariable("NUGET_PACKAGES")
+                ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                    ".nuget",
+                    "packages");
+
+            string sourcePath = Path.Combine(packagesPath, "microsoft.playwright");
 
             var packageDirectory = new DirectoryInfo(sourcePath);
             if (!packageDirectory.Exists)
@@ -92,9 +90,9 @@ namespace Microsoft.Playwright.CLI
                 var match = Regex.Match(version.Name, @"([\d]+)\.([\d]+)\.([\d]+)");
                 if (!match.Success)
                     continue;
-                var major = Int32.Parse(match.Groups[1].Value);
-                var minor = Int32.Parse(match.Groups[2].Value);
-                var patch = Int32.Parse(match.Groups[2].Value);
+                var major = int.Parse(match.Groups[1].Value);
+                var minor = int.Parse(match.Groups[2].Value);
+                var patch = int.Parse(match.Groups[2].Value);
                 var n = major * 10000 + minor * 100 + patch;
                 if (n > max)
                 {

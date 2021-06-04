@@ -23,19 +23,38 @@ namespace Microsoft.Playwright.Tests.TestServer
         private readonly IDictionary<string, (string username, string password)> _auths;
         private readonly IDictionary<string, string> _csp;
         private readonly IWebHost _webHost;
-        private static int counter;
-        private readonly Dictionary<int, WebSocket> _clients = new Dictionary<int, WebSocket>();
+        private static int _counter;
+        private readonly Dictionary<int, WebSocket> _clients = new();
+
+        public int Port { get; }
+        public string Prefix { get; }
+        public string CrossProcessPrefix { get; }
+        public string EmptyPage { get; internal set; }
 
         internal IList<string> GzipRoutes { get; }
 
         public event EventHandler<RequestReceivedEventArgs> RequestReceived;
 
-        public static SimpleServer Create(int port, string contentRoot) => new SimpleServer(port, contentRoot, isHttps: false);
+        public static SimpleServer Create(int port, string contentRoot) => new(port, contentRoot, isHttps: false);
 
-        public static SimpleServer CreateHttps(int port, string contentRoot) => new SimpleServer(port, contentRoot, isHttps: true);
+        public static SimpleServer CreateHttps(int port, string contentRoot) => new(port, contentRoot, isHttps: true);
 
         public SimpleServer(int port, string contentRoot, bool isHttps)
         {
+            Port = port;
+            if (isHttps)
+            {
+                Prefix = $"https://localhost:{port}";
+                CrossProcessPrefix = $"https://127.0.0.1:{port}";
+            }
+            else
+            {
+                Prefix = $"http://localhost:{port}";
+                CrossProcessPrefix = $"http://127.0.0.1:{port}";
+            }
+
+            EmptyPage = $"{Prefix}/empty.html";
+
             _subscribers = new ConcurrentDictionary<string, Action<HttpContext>>();
             _requestWaits = new ConcurrentDictionary<string, Action<HttpContext>>();
             _routes = new ConcurrentDictionary<string, RequestDelegate>();
@@ -263,24 +282,24 @@ namespace Microsoft.Playwright.Tests.TestServer
                 {
                     string closeMessage = string.Format("Maximum message size: {0} bytes.", MaxMessageSize);
                     await webSocket.CloseAsync(WebSocketCloseStatus.MessageTooBig, closeMessage, CancellationToken.None);
-                    return new ArraySegment<byte>();
+                    return new();
                 }
 
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer, count, MaxMessageSize - count), CancellationToken.None);
                 count += result.Count;
 
             }
-            return new ArraySegment<byte>(buffer, 0, count);
+            return new(buffer, 0, count);
         }
 
 
         private static int NextConnectionId()
         {
-            int id = Interlocked.Increment(ref counter);
+            int id = Interlocked.Increment(ref _counter);
 
             if (id == int.MaxValue)
             {
-                throw new Exception("connection id limit reached: " + id);
+                throw new("connection id limit reached: " + id);
             }
 
             return id;

@@ -1,35 +1,26 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 
 namespace Microsoft.Playwright.Tests
 {
     /// <playwright-file>network-post-data.spec.ts</playwright-file>
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public sealed class NetworkPostDataTests : PlaywrightSharpPageBaseTest
+    public sealed class NetworkPostDataTests : PageTestEx
     {
-
-        /// <inheritdoc/>
-        public NetworkPostDataTests(ITestOutputHelper output) :
-                base(output)
-        {
-        }
-
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
         /// <playwright-it>should return correct postData buffer for utf-8 body</playwright-it>
-        [Fact(Timeout = 30_000)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnCorrectPostdataBufferForUtf8Body()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             string value = "baẞ";
 
             var task = Page.WaitForRequestAsync("**/*");
             var actualTask = Page.EvaluateAsync(@$"() => {{
-                      const request = new Request('{TestConstants.ServerUrl + "/title.html"}', {{
+                      const request = new Request('{Server.Prefix + "/title.html"}', {{
                         method: 'POST',
                         body: JSON.stringify('{value}'),
                       }});
@@ -46,16 +37,16 @@ namespace Microsoft.Playwright.Tests
             });
 
             var request = task.Result;
-            Assert.Equal(expectedJsonValue, request.PostData);
-            Assert.Equal(value, request.PostDataJSON()?.GetString());
+            Assert.AreEqual(expectedJsonValue, request.PostData);
+            Assert.AreEqual(value, request.PostDataJSON()?.GetString());
         }
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
         /// <playwright-it>should return post data w/o content-type</playwright-it>
-        [Fact(Timeout = 30_000)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnPostDataWOContentType()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
 
             var task = Page.WaitForRequestAsync("**/*");
             var actualTask = Page.EvaluateAsync(@"(url) => {
@@ -65,20 +56,20 @@ namespace Microsoft.Playwright.Tests
                       });
                       request.headers.set('content-type', '');
                       return fetch(request);
-                    }", TestConstants.ServerUrl + "/title.html");
+                    }", Server.Prefix + "/title.html");
 
             await Task.WhenAll(task, actualTask);
 
             var request = task.Result;
-            Assert.Equal(42, request.PostDataJSON()?.GetProperty("value").GetInt32());
+            Assert.AreEqual(42, request.PostDataJSON()?.GetProperty("value").GetInt32());
         }
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
         /// <playwright-it>should throw on invalid JSON in post data</playwright-it>
-        [Fact(Timeout = 30_000)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowOnInvalidJSONInPostData()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
 
             var task = Page.WaitForRequestAsync("**/*");
             var actualTask = Page.EvaluateAsync(@"(url) => {
@@ -87,20 +78,20 @@ namespace Microsoft.Playwright.Tests
                         body: '<not a json>',
                       });
                       return fetch(request);
-                    }", TestConstants.ServerUrl + "/title.html");
+                    }", Server.Prefix + "/title.html");
 
             await Task.WhenAll(task, actualTask);
 
             var request = task.Result;
-            Assert.ThrowsAny<JsonException>(() => request.PostDataJSON());
+            Assert.That(() => request.PostDataJSON(), Throws.Exception);
         }
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>
         /// <playwright-it>should return post data for PUT requests</playwright-it>
-        [Fact(Timeout = 30_000)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnPostDataForPUTRequests()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
 
             var task = Page.WaitForRequestAsync("**/*");
             var actualTask = Page.EvaluateAsync(@"(url) => {
@@ -109,12 +100,12 @@ namespace Microsoft.Playwright.Tests
                         body: JSON.stringify({ value: 42 }),
                       });
                       return fetch(request);
-                    }", TestConstants.ServerUrl + "/title.html");
+                    }", Server.Prefix + "/title.html");
 
             await Task.WhenAll(task, actualTask);
 
             var request = task.Result;
-            Assert.Equal(42, request.PostDataJSON()?.GetProperty("value").GetInt32());
+            Assert.AreEqual(42, request.PostDataJSON()?.GetProperty("value").GetInt32());
         }
     }
 }

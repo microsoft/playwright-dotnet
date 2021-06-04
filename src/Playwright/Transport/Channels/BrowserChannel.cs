@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport.Protocol;
 
@@ -27,34 +27,36 @@ namespace Microsoft.Playwright.Transport.Channels
         }
 
         internal Task<BrowserContextChannel> NewContextAsync(
-            bool? acceptDownloads,
-            bool? bypassCSP,
-            ColorScheme? colorScheme,
-            float? deviceScaleFactor,
-            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders,
-            Geolocation geolocation,
-            bool? hasTouch,
-            HttpCredentials httpCredentials,
-            bool? ignoreHTTPSErrors,
-            bool? isMobile,
-            bool? javaScriptEnabled,
-            string locale,
-            bool? offline,
-            IEnumerable<string> permissions,
-            Proxy proxy,
-            bool? recordHarOmitContent,
-            string recordHarPath,
-            Dictionary<string, object> recordVideo,
-            string storageState,
-            string storageStatePath,
-            string timezoneId,
-            string userAgent,
-            ViewportSize viewportSize)
+            bool? acceptDownloads = null,
+            bool? bypassCSP = null,
+            ColorScheme? colorScheme = null,
+            ReducedMotion? reducedMotion = null,
+            float? deviceScaleFactor = null,
+            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null,
+            Geolocation geolocation = null,
+            bool? hasTouch = null,
+            HttpCredentials httpCredentials = null,
+            bool? ignoreHTTPSErrors = null,
+            bool? isMobile = null,
+            bool? javaScriptEnabled = null,
+            string locale = null,
+            bool? offline = null,
+            IEnumerable<string> permissions = null,
+            Proxy proxy = null,
+            bool? recordHarOmitContent = null,
+            string recordHarPath = null,
+            Dictionary<string, object> recordVideo = null,
+            string storageState = null,
+            string storageStatePath = null,
+            string timezoneId = null,
+            string userAgent = null,
+            ViewportSize viewportSize = default)
         {
             var args = new Dictionary<string, object>();
             args.Add("acceptDownloads", acceptDownloads);
             args.Add("bypassCSP", bypassCSP);
             args.Add("colorScheme", colorScheme);
+            args.Add("reducedMotion", reducedMotion);
             args.Add("deviceScaleFactor", deviceScaleFactor);
 
             if (extraHTTPHeaders != null)
@@ -87,8 +89,21 @@ namespace Microsoft.Playwright.Transport.Channels
                 args.Add("recordVideo", recordVideo);
             }
 
-            args.Add("storageState", storageState);
-            args.Add("storageStatePath", storageStatePath);
+            if (!string.IsNullOrEmpty(storageStatePath))
+            {
+                if (!File.Exists(storageStatePath))
+                {
+                    throw new PlaywrightException($"The specified storage state file does not exist: {storageStatePath}");
+                }
+
+                storageState = File.ReadAllText(storageStatePath);
+            }
+
+            if (!string.IsNullOrEmpty(storageState))
+            {
+                args.Add("storageState", JsonSerializer.Deserialize<StorageState>(storageState, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
+            }
+
             args.Add("timezoneId", timezoneId);
             args.Add("userAgent", userAgent);
 

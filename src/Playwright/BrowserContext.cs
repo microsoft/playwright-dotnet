@@ -17,6 +17,7 @@ namespace Microsoft.Playwright
         private readonly TaskCompletionSource<bool> _closeTcs = new();
         private readonly Dictionary<string, Delegate> _bindings = new();
         private readonly BrowserContextInitializer _initializer;
+        private readonly ITracing _tracing;
         private List<RouteSetting> _routes = new();
         private bool _isClosedOrClosing;
 
@@ -30,6 +31,31 @@ namespace Microsoft.Playwright
             Channel.Page += Channel_OnPage;
             Channel.BindingCall += Channel_BindingCall;
             Channel.Route += Channel_Route;
+            Channel.RequestFailed += (_, e) =>
+            {
+                e.Request.Failure = e.FailureText;
+                e.Request.Timing.ResponseEnd = e.ResponseEndTiming;
+                RequestFailed?.Invoke(this, e.Request);
+                e.Page?.FireRequestFailed(e.Request);
+            };
+            Channel.Request += (_, e) =>
+            {
+                Request?.Invoke(this, e.Request);
+                e.Page?.FireRequest(e.Request);
+            };
+            Channel.RequestFinished += (_, e) =>
+            {
+                e.Request.Timing.ResponseEnd = e.ResponseEndTiming;
+                RequestFinished?.Invoke(this, e.Request);
+                e.Page?.FireRequestFinished(e.Request);
+            };
+            Channel.Response += (_, e) =>
+            {
+                Response?.Invoke(this, e.Response);
+                e.Page?.FireResponse(e.Response);
+            };
+
+            _tracing = new Tracing(Channel);
             _initializer = initializer;
             Browser = parent as IBrowser;
         }
@@ -37,6 +63,20 @@ namespace Microsoft.Playwright
         public event EventHandler<IBrowserContext> Close;
 
         public event EventHandler<IPage> Page;
+
+        public event EventHandler<IRequest> Request;
+
+        public event EventHandler<IRequest> RequestFailed;
+
+        public event EventHandler<IRequest> RequestFinished;
+
+        public event EventHandler<IResponse> Response;
+
+        public ITracing Tracing
+        {
+            get => _tracing;
+            set => throw new NotSupportedException();
+        }
 
         ChannelBase IChannelOwner.Channel => Channel;
 

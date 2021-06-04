@@ -1,23 +1,14 @@
 using System.Runtime.InteropServices;
-using Xunit;
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
-namespace Microsoft.Playwright.Tests.Attributes
+namespace Microsoft.Playwright.Tests
 {
-    /// <summary>
-    /// Skip browsers and/or platforms
-    /// </summary>
-    public class SkipBrowserAndPlatformFact : FactAttribute
+    public class SkipBrowserAndPlatformAttribute : NUnitAttribute, IApplyToTest
     {
-        /// <summary>
-        /// Creates a new <seealso cref="SkipBrowserAndPlatformFact"/>
-        /// </summary>
-        /// <param name="skipFirefox">Skip firefox</param>
-        /// <param name="skipChromium">Skip Chromium</param>
-        /// <param name="skipWebkit">Skip Webkit</param>
-        /// <param name="skipOSX">Skip OSX</param>
-        /// <param name="skipWindows">Skip Windows</param>
-        /// <param name="skipLinux">Skip Linux</param>
-        public SkipBrowserAndPlatformFact(
+        private readonly bool _skip = false;
+
+        public SkipBrowserAndPlatformAttribute(
             bool skipFirefox = false,
             bool skipChromium = false,
             bool skipWebkit = false,
@@ -25,11 +16,18 @@ namespace Microsoft.Playwright.Tests.Attributes
             bool skipWindows = false,
             bool skipLinux = false)
         {
-            Timeout = TestConstants.DefaultTestTimeout;
-
             if (SkipBrowser(skipFirefox, skipChromium, skipWebkit) && SkipPlatform(skipOSX, skipWindows, skipLinux))
             {
-                Skip = "Skipped by browser/platform";
+                _skip = true;
+            }
+        }
+
+        public void ApplyToTest(global::NUnit.Framework.Internal.Test test)
+        {
+            if (_skip)
+            {
+                test.RunState = RunState.Ignored;
+                test.Properties.Set(global::NUnit.Framework.Internal.PropertyNames.SkipReason, "Skipped by browser/platform");
             }
         }
 

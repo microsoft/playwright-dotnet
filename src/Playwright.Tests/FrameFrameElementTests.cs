@@ -1,27 +1,20 @@
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class FrameFrameElementTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class FrameFrameElementTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public FrameFrameElementTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("frame-frame-element.spec.ts", "should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
-            var frame2 = await FrameUtils.AttachFrameAsync(Page, "frame2", TestConstants.EmptyPage);
-            var frame3 = await FrameUtils.AttachFrameAsync(Page, "frame3", TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
+            var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
+            var frame2 = await FrameUtils.AttachFrameAsync(Page, "frame2", Server.EmptyPage);
+            var frame3 = await FrameUtils.AttachFrameAsync(Page, "frame3", Server.EmptyPage);
 
             var frame1handle1 = await Page.QuerySelectorAsync("#frame1");
             var frame1handle2 = await frame1.FrameElementAsync();
@@ -37,28 +30,28 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-frame-element.spec.ts", "should work with contentFrame")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithContentFrame()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            var frame = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
+            var frame = await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             var handle = await frame.FrameElementAsync();
             var contentFrame = await handle.ContentFrameAsync();
 
-            Assert.Same(contentFrame, frame);
+            Assert.AreEqual(contentFrame, frame);
         }
 
         [PlaywrightTest("frame-frame-element.spec.ts", "should throw when detached")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenDetached()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
-            var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
+            var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             await Page.EvalOnSelectorAsync("#frame1", "e => e.remove()");
 
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => frame1.FrameElementAsync());
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => frame1.FrameElementAsync());
 
-            Assert.Equal("Frame has been detached.", exception.Message);
+            Assert.AreEqual("Frame has been detached.", exception.Message);
         }
     }
 }

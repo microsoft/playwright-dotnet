@@ -1,25 +1,17 @@
-using System;
 using System.Dynamic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageEvaluateHandleTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class PageEvaluateHandleTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public PageEvaluateHandleTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             var windowHandle = await Page.EvaluateHandleAsync("() => window");
@@ -27,16 +19,16 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept object handle as an argument")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptObjectHandleAsAnArgument()
         {
             var navigatorHandle = await Page.EvaluateHandleAsync("() => navigator");
             string text = await Page.EvaluateAsync<string>("e => e.userAgent", navigatorHandle);
-            Assert.Contains("Mozilla", text);
+            StringAssert.Contains("Mozilla", text);
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept object handle to primitive types")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptObjectHandleToPrimitiveTypes()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => 5");
@@ -45,18 +37,18 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept nested handle")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptNestedHandle()
         {
             var foo = await Page.EvaluateHandleAsync("() => ({x: 1, y: 'foo'})");
             dynamic result = await Page.EvaluateAsync<ExpandoObject>("({ foo }) => foo", new { foo });
 
-            Assert.Equal(1, result.x);
-            Assert.Equal("foo", result.y);
+            Assert.AreEqual(1, result.x);
+            Assert.AreEqual("foo", result.y);
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept nested window handle")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptNestedWindowHandle()
         {
             var foo = await Page.EvaluateHandleAsync("() => window");
@@ -64,7 +56,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept multiple nested handles")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptMultipleNestedHandles()
         {
             var foo = await Page.EvaluateHandleAsync("() => ({ x: 1, y: 'foo' })");
@@ -85,26 +77,26 @@ namespace Microsoft.Playwright.Tests
 
             var json = JsonDocument.Parse(result).RootElement;
 
-            Assert.Equal(1, json.GetProperty("a1").GetProperty("foo").GetProperty("x").GetInt32());
-            Assert.Equal("foo", json.GetProperty("a1").GetProperty("foo").GetProperty("y").ToString());
-            Assert.Equal(5, json.GetProperty("a2").GetProperty("bar").GetInt32());
-            Assert.Equal("baz", json.GetProperty("a2").GetProperty("arr").EnumerateArray().First().GetProperty("baz").EnumerateArray().First().ToString());
+            Assert.AreEqual(1, json.GetProperty("a1").GetProperty("foo").GetProperty("x").GetInt32());
+            Assert.AreEqual("foo", json.GetProperty("a1").GetProperty("foo").GetProperty("y").ToString());
+            Assert.AreEqual(5, json.GetProperty("a2").GetProperty("bar").GetInt32());
+            Assert.AreEqual("baz", json.GetProperty("a2").GetProperty("arr").EnumerateArray().First().GetProperty("baz").EnumerateArray().First().ToString());
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should throw for circular objects")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForCircularObjects()
         {
             dynamic a = new ExpandoObject();
             a.a = 1;
             a.y = a;
 
-            var exception = await Assert.ThrowsAnyAsync<JsonException>(() => Page.EvaluateAsync("x => x", a));
-            Assert.Equal("Argument is a circular structure", exception.Message);
+            var exception = await AssertThrowsAsync<JsonException>(() => Page.EvaluateAsync("x => x", a));
+            Assert.AreEqual("Argument is a circular structure", exception.Message);
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept same nested object multiple times")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptSameNestedObjectMultipleTimes()
         {
             dynamic foo = new { x = 1 };
@@ -119,13 +111,13 @@ namespace Microsoft.Playwright.Tests
 
             var json = JsonDocument.Parse(result).RootElement;
 
-            Assert.Equal(1, json.GetProperty("foo").GetProperty("x").GetInt32());
-            Assert.Equal(1, json.GetProperty("bar").EnumerateArray().First().GetProperty("x").GetInt32());
-            Assert.Equal(1, json.GetProperty("baz").GetProperty("foo").GetProperty("x").GetInt32());
+            Assert.AreEqual(1, json.GetProperty("foo").GetProperty("x").GetInt32());
+            Assert.AreEqual(1, json.GetProperty("bar").EnumerateArray().First().GetProperty("x").GetInt32());
+            Assert.AreEqual(1, json.GetProperty("baz").GetProperty("foo").GetProperty("x").GetInt32());
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept object handle to unserializable value")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptObjectHandleToUnserializableValue()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => Infinity");
@@ -133,7 +125,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should pass configurable args")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPassConfigurableArgs()
         {
             JsonElement result = await Page.EvaluateAsync<JsonElement>(
@@ -150,18 +142,18 @@ namespace Microsoft.Playwright.Tests
                 }",
                 new { foo = 42 });
 
-            Assert.Equal("{}", result.ToString());
+            Assert.AreEqual("{}", result.ToString());
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should work with primitives")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithPrimitives()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => {
                 window.FOO = 123;
                 return window;
             }");
-            Assert.Equal(123, await Page.EvaluateAsync<int>("e => e.FOO", aHandle));
+            Assert.AreEqual(123, await Page.EvaluateAsync<int>("e => e.FOO", aHandle));
         }
     }
 }

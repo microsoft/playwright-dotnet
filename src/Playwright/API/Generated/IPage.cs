@@ -765,7 +765,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>If the <paramref name="callback"/> returns a <see cref="Task"/>, it will be awaited.</para>
         /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
-        /// <para>An example of adding an <c>sha1</c> function to the page:</para>
+        /// <para>An example of adding a <c>sha256</c> function to the page:</para>
         /// <code>
         /// using Microsoft.Playwright;<br/>
         /// using System;<br/>
@@ -783,17 +783,15 @@ namespace Microsoft.Playwright
         ///         });<br/>
         ///         var page = await browser.NewPageAsync();<br/>
         /// <br/>
-        ///         // NOTE: md5 is inherently insecure, and we strongly discourage using<br/>
-        ///         // this in production in any shape or form<br/>
-        ///         await page.ExposeFunctionAsync("sha1", (string input) =&gt;<br/>
+        ///         await page.ExposeFunctionAsync("sha256", (string input) =&gt;<br/>
         ///         {<br/>
         ///             return Convert.ToBase64String(<br/>
-        ///                 MD5.Create().ComputeHash(System.Text.Encoding.UTF8.GetBytes(input)));<br/>
+        ///                 SHA256.Create().ComputeHash(System.Text.Encoding.UTF8.GetBytes(input)));<br/>
         ///         });<br/>
         /// <br/>
         ///         await page.SetContentAsync("&lt;script&gt;\n" +<br/>
         ///         "  async function onClick() {\n" +<br/>
-        ///         "    document.querySelector('div').textContent = await window.sha1('PLAYWRIGHT');\n" +<br/>
+        ///         "    document.querySelector('div').textContent = await window.sha256('PLAYWRIGHT');\n" +<br/>
         ///         "  }\n" +<br/>
         ///         "&lt;/script&gt;\n" +<br/>
         ///         "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>

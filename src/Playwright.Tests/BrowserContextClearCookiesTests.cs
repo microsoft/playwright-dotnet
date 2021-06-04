@@ -1,42 +1,35 @@
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class BrowserContextClearCookiesTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class BrowserContextClearCookiesTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public BrowserContextClearCookiesTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should clear cookies")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearCookes()
         {
-            await Page.GotoAsync(TestConstants.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             await Context.AddCookiesAsync(new[]
             {
                 new Cookie
                 {
-                    Url = TestConstants.EmptyPage,
+                    Url = Server.EmptyPage,
                     Name = "cookie1",
                     Value = "1"
                 }
             });
-            Assert.Equal("cookie1=1", await Page.EvaluateAsync<string>("document.cookie"));
+            Assert.AreEqual("cookie1=1", await Page.EvaluateAsync<string>("document.cookie"));
             await Context.ClearCookiesAsync();
-            Assert.Empty(await Context.CookiesAsync());
+            Assert.IsEmpty(await Context.CookiesAsync());
             await Page.ReloadAsync();
-            Assert.Empty(await Page.EvaluateAsync<string>("document.cookie"));
+            Assert.IsEmpty(await Page.EvaluateAsync<string>("document.cookie"));
         }
 
         [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should isolate cookies when clearing")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateWhenClearing()
         {
             await using var anotherContext = await Browser.NewContextAsync();
@@ -46,7 +39,7 @@ namespace Microsoft.Playwright.Tests
                 {
                     Name = "page1cookie",
                     Value = "page1value",
-                    Url = TestConstants.EmptyPage
+                    Url = Server.EmptyPage
                 }
             });
 
@@ -56,20 +49,20 @@ namespace Microsoft.Playwright.Tests
                 {
                     Name = "page2cookie",
                     Value = "page2value",
-                    Url = TestConstants.EmptyPage
+                    Url = Server.EmptyPage
                 }
             });
 
-            Assert.Single(await Context.CookiesAsync());
-            Assert.Single(await anotherContext.CookiesAsync());
+            Assert.That(await Context.CookiesAsync(), Has.Count.EqualTo(1));
+            Assert.That(await anotherContext.CookiesAsync(), Has.Count.EqualTo(1));
 
             await Context.ClearCookiesAsync();
-            Assert.Empty((await Context.CookiesAsync()));
-            Assert.Single((await anotherContext.CookiesAsync()));
+            Assert.IsEmpty((await Context.CookiesAsync()));
+            Assert.That((await anotherContext.CookiesAsync()), Has.Count.EqualTo(1));
 
             await anotherContext.ClearCookiesAsync();
-            Assert.Empty(await Context.CookiesAsync());
-            Assert.Empty(await anotherContext.CookiesAsync());
+            Assert.IsEmpty(await Context.CookiesAsync());
+            Assert.IsEmpty(await anotherContext.CookiesAsync());
         }
     }
 }

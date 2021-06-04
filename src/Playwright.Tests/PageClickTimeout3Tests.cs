@@ -1,35 +1,25 @@
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.Attributes;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class PageClickTimeout3Tests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class PageClickTimeout3Tests : PageTestEx
     {
-        /// <inheritdoc/>
-        public PageClickTimeout3Tests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("page-click-timeout-3.spec.ts", "should fail when element jumps during hit testing")]
-        [Fact(Skip = " Skip USES_HOOKS")]
+        [Test, Ignore(" Skip USES_HOOKS")]
         public void ShouldFailWhenElementJumpsDuringHitTesting()
         {
         }
 
         [PlaywrightTest("page-click-timeout-3.spec.ts", "should timeout waiting for hit target")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForHitTarget()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/input/button.html");
+            await Page.GotoAsync(Server.Prefix + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
 
             await Page.EvalOnSelectorAsync("button", @"button => {
@@ -49,10 +39,10 @@ namespace Microsoft.Playwright.Tests
                 document.body.appendChild(flyOver);
             }");
 
-            var exception = await Assert.ThrowsAsync<TimeoutException>(()
+            var exception = await AssertThrowsAsync<TimeoutException>(()
                 => button.ClickAsync(new ElementHandleClickOptions { Timeout = 5000 }));
 
-            Assert.Contains("Timeout 5000ms exceeded.", exception.Message);
+            StringAssert.Contains("Timeout 5000ms exceeded.", exception.Message);
         }
     }
 }

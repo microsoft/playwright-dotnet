@@ -1,21 +1,14 @@
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>browsertype-connect.spec.ts</playwright-file>
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class BrowserTypeConnectTests : PlaywrightSharpBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class BrowserTypeConnectTests : PlaywrightTestEx
     {
-        /// <inheritdoc/>
-        public BrowserTypeConnectTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to reconnect to a browser")]
-        [Fact(Skip = "SKIP WIRE")]
+        [Test, Ignore("SKIP WIRE")]
         public void ShouldBeAbleToReconnectToABrowser()
         {
             /*
@@ -23,7 +16,7 @@ namespace Microsoft.Playwright.Tests
             await using var browser = await BrowserType.ConnectAsync(browserServer.WSEndpoint);
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
 
             await browser.CloseAsync();
 
@@ -31,68 +24,68 @@ namespace Microsoft.Playwright.Tests
 
             context = await remote.NewContextAsync();
             page = await context.NewPageAsync();
-            await page.GotoAsync(TestConstants.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             await remote.CloseAsync();
             await browserServer.CloseAsync();
             */
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to connect two browsers at the same time")]
-        [Fact(Skip = "SKIP WIRE")]
+        [Test, Ignore("SKIP WIRE")]
         public void ShouldBeAbleToConnectTwoBrowsersAtTheSameTime()
         {
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "disconnected event should be emitted when browser is closed or server is closed")]
-        [Fact(Skip = "SKIP WIRE")]
+        [Test, Ignore("SKIP WIRE")]
         public void DisconnectedEventShouldBeEmittedWhenBrowserIsClosedOrServerIsClosed()
         {
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should handle exceptions during connect")]
-        [Fact(Skip = "SKIP WIRE")]
+        [Test, Ignore("SKIP WIRE")]
         public void ShouldHandleExceptionsDuringConnect()
         {
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should set the browser connected state")]
-        [Fact(Skip = "SKIP WIRE")]
+        [Test, Ignore("SKIP WIRE")]
         public void ShouldSetTheBrowserConnectedState()
         {
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should throw when used after isConnected returns false")]
-        [Fact(Skip = "SKIP WIRE")]
+        [Test, Ignore("SKIP WIRE")]
         public void ShouldThrowWhenUsedAfterIsConnectedReturnsFalse()
         {
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should reject navigation when browser closes")]
-        [Fact(Skip = "SKIP WIRE")]
+        [Test, Ignore("SKIP WIRE")]
         public void ShouldRejectNavigationWhenBrowserCloses()
         {
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should reject waitForSelector when browser closes")]
-        [Fact(Skip = "SKIP WIRE")]
+        [Test, Ignore("SKIP WIRE")]
         public void ShouldRejectWaitForSelectorWhenBrowserCloses()
         {
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should emit close events on pages and contexts")]
-        [Fact(Skip = "SKIP WIRE")]
+        [Test, Ignore("SKIP WIRE")]
         public void ShouldEmitCloseEventsOnPagesAndContexts()
         {
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should terminate network waiters")]
-        [Fact(Skip = "SKIP WIRE")]
+        [Test, Ignore("SKIP WIRE")]
         public void ShouldTerminateNetworkWaiters()
         {
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should respect selectors")]
-        [Fact(Skip = "SKIP WIRE")]
+        [Test, Ignore("SKIP WIRE")]
         public void ShouldRespectSelectors()
         {
         }

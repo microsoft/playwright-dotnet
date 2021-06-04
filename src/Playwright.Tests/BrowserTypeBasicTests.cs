@@ -1,32 +1,25 @@
 using System.IO;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class BrowserTypeBasicTests : PlaywrightSharpBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class BrowserTypeBasicTests : PlaywrightTestEx
     {
-        /// <inheritdoc/>
-        public BrowserTypeBasicTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("browsertype-basic.spec.ts", "browserType.executablePath should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public void BrowserTypeExecutablePathShouldWork() => Assert.True(File.Exists(BrowserType.ExecutablePath));
 
         [PlaywrightTest("browsertype-basic.spec.ts", "browserType.name should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public void BrowserTypeNameShouldWork()
-            => Assert.Equal(
-                TestConstants.Product switch
+            => Assert.AreEqual(
+                TestConstants.BrowserName switch
                 {
-                    TestConstants.WebkitProduct => "webkit",
-                    TestConstants.FirefoxProduct => "firefox",
-                    TestConstants.ChromiumProduct => "chromium",
+                    "webkit" => "webkit",
+                    "firefox" => "firefox",
+                    "chromium" => "chromium",
                     _ => null
                 },
                 BrowserType.Name);

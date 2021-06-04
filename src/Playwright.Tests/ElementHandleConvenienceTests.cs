@@ -1,95 +1,88 @@
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>elementhandle-convenience.spec.ts</playwright-file>
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class ElementHandleConvenienceTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class ElementHandleConvenienceTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public ElementHandleConvenienceTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("elementhandle-convenience.spec.ts", "should have a nice preview")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveANicePreview()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/dom.html");
+            await Page.GotoAsync(Server.Prefix + "/dom.html");
             var outer = await Page.QuerySelectorAsync("#outer");
             var inner = await Page.QuerySelectorAsync("#inner");
             var check = await Page.QuerySelectorAsync("#check");
             var text = await inner.EvaluateHandleAsync("e => e.firstChild");
             await Page.EvaluateAsync("() => 1");  // Give them a chance to calculate the preview.
-            Assert.Equal("JSHandle@<div id=\"outer\" name=\"value\">…</div>", outer.ToString());
-            Assert.Equal("JSHandle@<div id=\"inner\">Text,↵more text</div>", inner.ToString());
-            Assert.Equal("JSHandle@#text=Text,↵more text", text.ToString());
-            Assert.Equal("JSHandle@<input checked id=\"check\" foo=\"bar\"\" type=\"checkbox\"/>", check.ToString());
+            Assert.AreEqual("JSHandle@<div id=\"outer\" name=\"value\">…</div>", outer.ToString());
+            Assert.AreEqual("JSHandle@<div id=\"inner\">Text,↵more text</div>", inner.ToString());
+            Assert.AreEqual("JSHandle@#text=Text,↵more text", text.ToString());
+            Assert.AreEqual("JSHandle@<input checked id=\"check\" foo=\"bar\"\" type=\"checkbox\"/>", check.ToString());
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "getAttribute should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task GetAttributeShouldWork()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/dom.html");
+            await Page.GotoAsync(Server.Prefix + "/dom.html");
             var handle = await Page.QuerySelectorAsync("#outer");
 
-            Assert.Equal("value", await handle.GetAttributeAsync("name"));
-            Assert.Equal("value", await Page.GetAttributeAsync("#outer", "name"));
+            Assert.AreEqual("value", await handle.GetAttributeAsync("name"));
+            Assert.AreEqual("value", await Page.GetAttributeAsync("#outer", "name"));
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "innerHTML should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task InnerHTMLShouldWork()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/dom.html");
+            await Page.GotoAsync(Server.Prefix + "/dom.html");
             var handle = await Page.QuerySelectorAsync("#outer");
 
-            Assert.Equal("<div id=\"inner\">Text,\nmore text</div>", await handle.InnerHTMLAsync());
-            Assert.Equal("<div id=\"inner\">Text,\nmore text</div>", await Page.InnerHTMLAsync("#outer"));
+            Assert.AreEqual("<div id=\"inner\">Text,\nmore text</div>", await handle.InnerHTMLAsync());
+            Assert.AreEqual("<div id=\"inner\">Text,\nmore text</div>", await Page.InnerHTMLAsync("#outer"));
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "innerText should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task InnerTextShouldWork()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/dom.html");
+            await Page.GotoAsync(Server.Prefix + "/dom.html");
             var handle = await Page.QuerySelectorAsync("#inner");
 
-            Assert.Equal("Text, more text", await handle.InnerTextAsync());
-            Assert.Equal("Text, more text", await Page.InnerTextAsync("#inner"));
+            Assert.AreEqual("Text, more text", await handle.InnerTextAsync());
+            Assert.AreEqual("Text, more text", await Page.InnerTextAsync("#inner"));
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "'innerText should throw")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task InnerTextShouldThrow()
         {
             await Page.SetContentAsync("<svg>text</svg>");
-            var exception1 = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.InnerTextAsync("svg"));
-            Assert.Contains("Not an HTMLElement", exception1.Message);
+            var exception1 = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.InnerTextAsync("svg"));
+            StringAssert.Contains("Not an HTMLElement", exception1.Message);
 
             var handle = await Page.QuerySelectorAsync("svg");
-            var exception2 = await Assert.ThrowsAnyAsync<PlaywrightException>(() => handle.InnerTextAsync());
-            Assert.Contains("Not an HTMLElement", exception1.Message);
+            var exception2 = Assert.ThrowsAsync<PlaywrightException>(async () => await handle.InnerTextAsync());
+            StringAssert.Contains("Not an HTMLElement", exception2.Message);
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "textContent should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task TextContentShouldWork()
         {
-            await Page.GotoAsync(TestConstants.ServerUrl + "/dom.html");
+            await Page.GotoAsync(Server.Prefix + "/dom.html");
             var handle = await Page.QuerySelectorAsync("#outer");
 
-            Assert.Equal("Text,\nmore text", await handle.TextContentAsync());
-            Assert.Equal("Text,\nmore text", await Page.TextContentAsync("#outer"));
+            Assert.AreEqual("Text,\nmore text", await handle.TextContentAsync());
+            Assert.AreEqual("Text,\nmore text", await Page.TextContentAsync("#outer"));
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "textContent should be atomic")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task TextContentShouldBeAtomic()
         {
             const string createDummySelector = @"({
@@ -111,12 +104,12 @@ namespace Microsoft.Playwright.Tests
             await TestUtils.RegisterEngineAsync(Playwright, "textContent", createDummySelector);
             await Page.SetContentAsync("<div>Hello</div>");
             string tc = await Page.TextContentAsync("textContent=div");
-            Assert.Equal("Hello", tc);
-            Assert.Equal("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').textContent"));
+            Assert.AreEqual("Hello", tc);
+            Assert.AreEqual("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').textContent"));
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "innerText should be atomic")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task InnerTextShouldBeAtomic()
         {
             const string createDummySelector = @"({
@@ -138,12 +131,12 @@ namespace Microsoft.Playwright.Tests
             await TestUtils.RegisterEngineAsync(Playwright, "innerText", createDummySelector);
             await Page.SetContentAsync("<div>Hello</div>");
             string tc = await Page.InnerTextAsync("innerText=div");
-            Assert.Equal("Hello", tc);
-            Assert.Equal("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').textContent"));
+            Assert.AreEqual("Hello", tc);
+            Assert.AreEqual("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').textContent"));
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "innerHTML should be atomic")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task InnerHtmlShouldBeAtomic()
         {
             const string createDummySelector = @"({
@@ -165,12 +158,12 @@ namespace Microsoft.Playwright.Tests
             await TestUtils.RegisterEngineAsync(Playwright, "innerHtml", createDummySelector);
             await Page.SetContentAsync("<div>Hello</div>");
             string tc = await Page.InnerHTMLAsync("innerHtml=div");
-            Assert.Equal("Hello", tc);
-            Assert.Equal("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').textContent"));
+            Assert.AreEqual("Hello", tc);
+            Assert.AreEqual("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').textContent"));
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "getAttribute should be atomic")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task GetAttributeShouldBeAtomic()
         {
             const string createDummySelector = @"({
@@ -192,12 +185,12 @@ namespace Microsoft.Playwright.Tests
             await TestUtils.RegisterEngineAsync(Playwright, "getAttribute", createDummySelector);
             await Page.SetContentAsync("<div foo=Hello></div>");
             string tc = await Page.GetAttributeAsync("getAttribute=div", "foo");
-            Assert.Equal("Hello", tc);
-            Assert.Equal("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').getAttribute('foo')"));
+            Assert.AreEqual("Hello", tc);
+            Assert.AreEqual("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').getAttribute('foo')"));
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "isVisible and isHidden should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task IsVisibleAndIsHiddenShouldWork()
         {
             await Page.SetContentAsync("<div>Hi</div><span></span>");
@@ -214,7 +207,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "isEnabled and isDisabled should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task IsEnabledAndIsDisabledShouldWork()
         {
             await Page.SetContentAsync(@"
@@ -239,7 +232,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "isEditable should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task IsEditableShouldWork()
         {
             await Page.SetContentAsync(@"<input id=input1 disabled><textarea></textarea><input id=input2>");
@@ -256,7 +249,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "isChecked should work")]
-        [Fact(Timeout = TestConstants.DefaultTestTimeout)]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task IsCheckedShouldWork()
         {
             await Page.SetContentAsync(@"<input type='checkbox' checked><div>Not a checkbox</div>");
@@ -266,8 +259,8 @@ namespace Microsoft.Playwright.Tests
             await handle.EvaluateAsync("input => input.checked = false");
             Assert.False(await handle.IsCheckedAsync());
             Assert.False(await Page.IsCheckedAsync("input"));
-            var exception = await Assert.ThrowsAnyAsync<PlaywrightException>(() => Page.IsCheckedAsync("div"));
-            Assert.Contains("Not a checkbox or radio button", exception.Message);
+            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.IsCheckedAsync("div"));
+            StringAssert.Contains("Not a checkbox or radio button", exception.Message);
         }
     }
 }

@@ -1,38 +1,28 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.Attributes;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>resource-timing.spec.ts</playwright-file>
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class ResourceTimingTests : PlaywrightSharpPageBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class ResourceTimingTests : PageTestEx
     {
-        /// <inheritdoc/>
-        public ResourceTimingTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("resource-timing.spec.ts", "should work")]
-        [Fact]
+        [Test]
         public async Task ShouldWork()
         {
             var (request, _) = await TaskUtils.WhenAll(
                 Page.WaitForRequestFinishedAsync(),
-                Page.GotoAsync(TestConstants.EmptyPage));
+                Page.GotoAsync(Server.EmptyPage));
 
             var timing = request.Timing;
             Assert.True(timing.DomainLookupStart >= -1);
             Assert.True(timing.DomainLookupEnd >= timing.DomainLookupStart);
             Assert.True(timing.ConnectStart >= timing.DomainLookupEnd);
-            Assert.Equal(-1, timing.SecureConnectionStart);
+            Assert.AreEqual(-1, timing.SecureConnectionStart);
             Assert.True(VerifyTimingValue(timing.ConnectEnd, timing.SecureConnectionStart));
             Assert.True(VerifyTimingValue(timing.RequestStart, timing.ConnectEnd));
             Assert.True(timing.ResponseStart > timing.RequestStart);
@@ -41,15 +31,15 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("resource-timing.spec.ts", "should work for subresource")]
-        [Fact]
+        [Test]
         public async Task ShouldWorkForSubresource()
         {
             var requests = new List<IRequest>();
 
             Page.RequestFinished += (_, e) => requests.Add(e);
-            await Page.GotoAsync(TestConstants.ServerUrl + "/one-style.html");
+            await Page.GotoAsync(Server.Prefix + "/one-style.html");
 
-            Assert.Equal(2, requests.Count);
+            Assert.AreEqual(2, requests.Count);
 
             var timing = requests[1].Timing;
             if (TestConstants.IsWebKit && TestConstants.IsWindows)
@@ -57,16 +47,16 @@ namespace Microsoft.Playwright.Tests
                 Assert.True(timing.DomainLookupStart >= 0);
                 Assert.True(timing.DomainLookupEnd >= timing.DomainLookupStart);
                 Assert.True(timing.ConnectStart >= timing.DomainLookupEnd);
-                Assert.Equal(-1, timing.SecureConnectionStart);
+                Assert.AreEqual(-1, timing.SecureConnectionStart);
                 Assert.True(timing.ConnectEnd > timing.SecureConnectionStart);
             }
             else
             {
                 Assert.True(timing.DomainLookupStart == 0 || timing.DomainLookupStart == -1);
-                Assert.Equal(-1, timing.DomainLookupEnd);
-                Assert.Equal(-1, timing.ConnectStart);
-                Assert.Equal(-1, timing.SecureConnectionStart);
-                Assert.Equal(-1, timing.ConnectEnd);
+                Assert.AreEqual(-1, timing.DomainLookupEnd);
+                Assert.AreEqual(-1, timing.ConnectStart);
+                Assert.AreEqual(-1, timing.SecureConnectionStart);
+                Assert.AreEqual(-1, timing.ConnectEnd);
             }
 
             Assert.True(timing.RequestStart >= 0);
@@ -76,13 +66,13 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("resource-timing.spec.ts", "should work for SSL")]
-        [Fact(Skip = "Fix me #1058")]
+        [Test, Ignore("Fix me #1058")]
         public async Task ShouldWorkForSSL()
         {
             var page = await Browser.NewPageAsync(new BrowserNewPageOptions { IgnoreHTTPSErrors = true });
             var (request, _) = await TaskUtils.WhenAll(
                 page.WaitForRequestFinishedAsync(),
-                page.GotoAsync(TestConstants.HttpsPrefix + "/empty.html"));
+                page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
 
             var timing = request.Timing;
             if (!(TestConstants.IsWebKit && TestConstants.IsMacOSX))
@@ -102,27 +92,27 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("resource-timing.spec.ts", "should work for redirect")]
-        [SkipBrowserAndPlatformFact(skipWebkit: true)]
+        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldWorkForRedirect()
         {
             Server.SetRedirect("/foo.html", "/empty.html");
             var responses = new List<IResponse>();
 
             Page.Response += (_, e) => responses.Add(e);
-            await Page.GotoAsync(TestConstants.ServerUrl + "/foo.html");
+            await Page.GotoAsync(Server.Prefix + "/foo.html");
 
             // This is different on purpose, promises work different in TS.
             await responses[1].FinishedAsync();
 
-            Assert.Equal(2, responses.Count);
-            Assert.Equal(TestConstants.ServerUrl + "/foo.html", responses[0].Url);
-            Assert.Equal(TestConstants.ServerUrl + "/empty.html", responses[1].Url);
+            Assert.AreEqual(2, responses.Count);
+            Assert.AreEqual(Server.Prefix + "/foo.html", responses[0].Url);
+            Assert.AreEqual(Server.Prefix + "/empty.html", responses[1].Url);
 
             var timing1 = responses[0].Request.Timing;
             Assert.True(timing1.DomainLookupStart >= 0);
             Assert.True(timing1.DomainLookupEnd >= timing1.DomainLookupStart);
             Assert.True(timing1.ConnectStart >= timing1.DomainLookupEnd);
-            Assert.Equal(-1, timing1.SecureConnectionStart);
+            Assert.AreEqual(-1, timing1.SecureConnectionStart);
             Assert.True(timing1.ConnectEnd > timing1.SecureConnectionStart);
             Assert.True(timing1.RequestStart >= timing1.ConnectEnd);
             Assert.True(timing1.ResponseStart > timing1.RequestStart);
@@ -130,11 +120,11 @@ namespace Microsoft.Playwright.Tests
             Assert.True(timing1.ResponseEnd < 10000);
 
             var timing2 = responses[1].Request.Timing;
-            Assert.Equal(-1, timing2.DomainLookupStart);
-            Assert.Equal(-1, timing2.DomainLookupEnd);
-            Assert.Equal(-1, timing2.ConnectStart);
-            Assert.Equal(-1, timing2.SecureConnectionStart);
-            Assert.Equal(-1, timing2.ConnectEnd);
+            Assert.AreEqual(-1, timing2.DomainLookupStart);
+            Assert.AreEqual(-1, timing2.DomainLookupEnd);
+            Assert.AreEqual(-1, timing2.ConnectStart);
+            Assert.AreEqual(-1, timing2.SecureConnectionStart);
+            Assert.AreEqual(-1, timing2.ConnectEnd);
             Assert.True(timing2.RequestStart >= 0);
             Assert.True(timing2.ResponseStart >= timing2.RequestStart);
             Assert.True(timing2.ResponseEnd >= timing2.ResponseStart);

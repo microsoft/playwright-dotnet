@@ -1,26 +1,19 @@
-using Microsoft.Playwright.Testing.Xunit;
-using Microsoft.Playwright.Tests.BaseTests;
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Collection(TestConstants.TestFixtureBrowserCollectionName)]
-    public class LoggerTests : PlaywrightSharpBaseTest
+    [Parallelizable(ParallelScope.Self)]
+    public class LoggerTests : PlaywrightTestEx
     {
-        /// <inheritdoc/>
-        public LoggerTests(ITestOutputHelper output) : base(output)
-        {
-        }
-
         [PlaywrightTest("logger.spec.ts", "should log")]
-        [Fact(Skip = "We don't test CHANNEL")]
+        [Test, Ignore("We don't test CHANNEL")]
         public void ShouldLog()
         {
         }
 
         [PlaywrightTest("logger.spec.ts", "should log context-level")]
-        [Fact(Skip = "We don't test CHANNEL")]
+        [Test, Ignore("We don't test CHANNEL")]
         public void ShouldLogContextLevel()
         {
         }
