@@ -181,7 +181,7 @@ namespace Microsoft.Playwright.Tests
             var elementHandle = await Page.QuerySelectorAsync("h1");
             await Page.EvaluateAsync("element => element.remove()", elementHandle);
 
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => elementHandle.ScreenshotAsync());
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => elementHandle.ScreenshotAsync());
             StringAssert.Contains("Element is not attached to the DOM", exception.Message);
         }
 
@@ -191,7 +191,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync(@"<div style='width: 50px; height: 0'></div>");
             var elementHandle = await Page.QuerySelectorAsync("div");
-            var exception = await AssertThrowsAsync<TimeoutException>(() => elementHandle.ScreenshotAsync(new() { Timeout = 3000 }));
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => elementHandle.ScreenshotAsync(new() { Timeout = 3000 }));
             StringAssert.Contains("Timeout 3000ms exceeded", exception.Message);
             StringAssert.Contains("element is not visible", exception.Message);
         }

@@ -135,7 +135,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
-            await AssertThrowsAsync<TimeoutException>(()
+            await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
             => Page.WaitForFileChooserAsync(new() { Timeout = 1 }));
         }
 
@@ -144,7 +144,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRespectDefaultTimeoutWhenThereIsNoCustomTimeout()
         {
             Page.SetDefaultTimeout(1);
-            await AssertThrowsAsync<TimeoutException>(() => Page.WaitForFileChooserAsync());
+            await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.WaitForFileChooserAsync());
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should prioritize exact timeout over default timeout")]
@@ -152,7 +152,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldPrioritizeExactTimeoutOverDefaultTimeout()
         {
             Page.SetDefaultTimeout(0);
-            await AssertThrowsAsync<TimeoutException>(() => Page.WaitForFileChooserAsync(new() { Timeout = 1 }));
+            await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.WaitForFileChooserAsync(new() { Timeout = 1 }));
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should work with no timeout")]
@@ -290,7 +290,7 @@ namespace Microsoft.Playwright.Tests
                Page.WaitForFileChooserAsync(),
                Page.ClickAsync("input")
             );
-            await AssertThrowsAsync<PlaywrightException>(() =>
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() =>
                 fileChooser.SetFilesAsync(new string[]
                 {
                     TestUtils.GetWebServerFile(TestConstants.FileToUpload),

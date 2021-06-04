@@ -18,7 +18,7 @@ namespace Microsoft.Playwright.Tests
             var page = await (await browser.NewContextAsync()).NewPageAsync();
             var neverResolves = page.EvaluateHandleAsync("() => new Promise(r => {})");
             await browser.CloseAsync();
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => neverResolves);
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => neverResolves);
             StringAssert.Contains("Protocol error", exception.Message);
 
         }
@@ -46,7 +46,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowIfPageArgumentIsPassed()
         {
             var args = new[] { Server.EmptyPage };
-            await AssertThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new() { Args = args }));
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new() { Args = args }));
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should reject if launched browser fails immediately")]
@@ -59,7 +59,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectIfExecutablePathIsInvalid()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new() { ExecutablePath = "random-invalid-path" }));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new() { ExecutablePath = "random-invalid-path" }));
 
             StringAssert.Contains("Failed to launch", exception.Message);
         }

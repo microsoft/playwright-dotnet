@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.Tests
                 document.body.appendChild(flyOver);
             }");
 
-            var exception = await AssertThrowsAsync<TimeoutException>(()
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
                 => button.ClickAsync(new() { Timeout = 5000 }));
 
             StringAssert.Contains("Timeout 5000ms exceeded.", exception.Message);

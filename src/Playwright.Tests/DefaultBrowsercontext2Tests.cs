@@ -285,7 +285,7 @@ namespace Microsoft.Playwright.Tests
         {
             var tmp = new TempDirectory();
             var args = new[] { Server.EmptyPage };
-            await AssertThrowsAsync<PlaywrightException>(() =>
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() =>
                 BrowserType.LaunchPersistentContextAsync(tmp.Path, new() { Args = args }));
             tmp.Dispose();
         }
