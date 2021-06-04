@@ -96,8 +96,7 @@ namespace Microsoft.Playwright.Transport.Channels
             ReducedMotion? reducedMotion = default,
             string recordHarPath = default,
             bool? recordHarOmitContent = default,
-            string recordVideoDir = default,
-            RecordVideoSize recordVideoSize = default,
+            Dictionary<string, object> recordVideo = default,
             IEnumerable<string> ignoreDefaultArgs = default,
             bool? ignoreAllDefaultArgs = default)
         {
@@ -157,13 +156,9 @@ namespace Microsoft.Playwright.Transport.Channels
                 });
             }
 
-            if (!string.IsNullOrEmpty(recordVideoDir))
+            if (recordVideo != null)
             {
-                channelArgs.Add("recordVideo", new Dictionary<string, object>()
-                {
-                    { "dir", recordVideoDir },
-                    { "size", recordVideoSize },
-                });
+                channelArgs.Add("recordVideo", recordVideo);
             }
 
             channelArgs.Add("ignoreDefaultArgs", ignoreDefaultArgs);

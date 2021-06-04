@@ -121,8 +121,8 @@ namespace Microsoft.Playwright
             string recordHarPath = default,
             bool? recordHarOmitContent = default,
             string recordVideoDir = default,
-            RecordVideoSize recordVideoSize = default) =>
-            (await _channel.LaunchPersistentContextAsync(
+            RecordVideoSize recordVideoSize = default)
+            => (await _channel.LaunchPersistentContextAsync(
                 userDataDir,
                 headless,
                 channel,
@@ -160,8 +160,7 @@ namespace Microsoft.Playwright
                 reducedMotion,
                 recordHarPath,
                 recordHarOmitContent,
-                recordVideoDir,
-                recordVideoSize,
+                Browser.GetVideoArgs(recordVideoDir, recordVideoSize),
                 ignoreDefaultArgs,
                 ignoreAllDefaultArgs).ConfigureAwait(false)).Object;
     }
