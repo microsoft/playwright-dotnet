@@ -33,6 +33,10 @@ namespace Microsoft.Playwright.Tests
             Assert.That("https://localhost:8080/foo.js", Does.Not.Match(StringExtensions.GlobToRegex("**/*.css")));
             Assert.That("https://localhost:8080/foo.js", Does.Not.Match(StringExtensions.GlobToRegex("*.js")));
             Assert.That("https://localhost:8080/c.js", Does.Not.Match(StringExtensions.GlobToRegex("**/{a,b}.js")));
+            Assert.That("foo.js", Does.Match(StringExtensions.GlobToRegex("foo*")));
+            Assert.That("foo/bar.js", Does.Not.Match(StringExtensions.GlobToRegex("foo*")));
+            Assert.That("http://localhost:3000/signin-oidc/foo", Does.Not.Match(StringExtensions.GlobToRegex("http://localhost:3000/signin-oidc*")));
+            Assert.That("http://localhost:3000/signin-oidcnice", Does.Match(StringExtensions.GlobToRegex("http://localhost:3000/signin-oidc*")));
         }
 
         [PlaywrightTest("interception.spec.ts", "should work with ignoreHTTPSErrors")]
