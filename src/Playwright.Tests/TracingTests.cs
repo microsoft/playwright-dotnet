@@ -112,7 +112,7 @@ namespace Microsoft.Playwright.Tests
 
         }
 
-        private IReadOnlyList<TraceEventEntry> ParseTrace(string path)
+        private static IReadOnlyList<TraceEventEntry> ParseTrace(string path)
         {
             List<TraceEventEntry> results = new();
             var archive = ZipFile.OpenRead(path);
