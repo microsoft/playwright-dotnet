@@ -138,5 +138,19 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-emulate-media.spec.ts", "should throw in case of bad colorScheme argument")]
         [Test, Ignore("We don't need this test. Leaving for tracking purposes")]
         public void ShouldThrowInCaseOfBadColorSchemeArgument() { }
+
+        [PlaywrightTest("page-emulate-media.spec.ts", "should emulate reduced motion")]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task ShouldEmulateReducedMotion()
+        {
+            Assert.True(await Page.EvaluateAsync<bool>("matchMedia('(prefers-reduced-motion: no-preference)').matches"));
+            await Page.EmulateMediaAsync(new() { ReducedMotion = ReducedMotion.Reduce });
+            Assert.True(await Page.EvaluateAsync<bool>("matchMedia('(prefers-reduced-motion: reduce)').matches"));
+            Assert.False(await Page.EvaluateAsync<bool>("matchMedia('(prefers-reduced-motion: no-preference)').matches"));
+            await Page.EmulateMediaAsync(new() { ReducedMotion = ReducedMotion.NoPreference });
+            Assert.False(await Page.EvaluateAsync<bool>("matchMedia('(prefers-reduced-motion: reduce)').matches"));
+            Assert.True(await Page.EvaluateAsync<bool>("matchMedia('(prefers-reduced-motion: no-preference)').matches"));
+            await Page.EmulateMediaAsync(new() { ReducedMotion = ReducedMotion.Null });
+        }
     }
 }
