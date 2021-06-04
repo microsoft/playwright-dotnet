@@ -15,7 +15,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "b => b.style.display = 'none'");
-            var exception = await AssertThrowsAsync<TimeoutException>(()
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
                 => Page.ClickAsync("button", new() { Timeout = 5000 }));
 
             StringAssert.Contains("Timeout 5000ms exceeded", exception.Message);
@@ -30,7 +30,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "b => b.style.visibility = 'hidden'");
             var clickTask = Page.ClickAsync("button", new() { Timeout = 5000 });
-            var exception = await AssertThrowsAsync<TimeoutException>(()
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
                 => Page.ClickAsync("button", new() { Timeout = 5000 }));
 
             StringAssert.Contains("Timeout 5000ms exceeded", exception.Message);

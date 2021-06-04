@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
             string imgPath = "/img.png";
             // stall for image
             Server.SetRoute(imgPath, _ => Task.Delay(Timeout.Infinite));
-            await AssertThrowsAsync<TimeoutException>(() =>
+            await PlaywrightAssert.ThrowsAsync<TimeoutException>(() =>
                 Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new() { Timeout = 1 })
             );
         }
@@ -70,7 +70,7 @@ namespace Microsoft.Playwright.Tests
             string imgPath = "/img.png";
             // stall for image
             Server.SetRoute(imgPath, _ => Task.Delay(Timeout.Infinite));
-            var exception = await AssertThrowsAsync<TimeoutException>(() =>
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() =>
                 Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new() { Timeout = 1 })
             );
 

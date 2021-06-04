@@ -28,11 +28,14 @@ using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.NUnit
+namespace Microsoft.Playwright.Tests
 {
-    public static class TestExtensions
+    internal static class PlaywrightAssert
     {
-        public static async Task<T> AssertThrowsAsync<T>(this PlaywrightTest test, Func<Task> action) where T : System.Exception
+        /// This functions replaces the <see cref="NUnit.Framework.Assert.ThrowsAsync(NUnit.Framework.Constraints.IResolveConstraint, AsyncTestDelegate)"/> because that
+        /// particular function does not actually work correctly for Playwright Tests as it completely blocks the calling thread.
+        /// For a more detailed read on the subject, see <see href="https://github.com/nunit/nunit/issues/464"/>.
+        internal static async Task<T> ThrowsAsync<T>(Func<Task> action) where T : Exception
         {
             try
             {
@@ -46,9 +49,6 @@ namespace Microsoft.Playwright.NUnit
             }
         }
 
-        public static void DebugLog(this PlaywrightTest test, string text)
-        {
-            TestContext.Progress.WriteLine(text);
-        }
+        internal static void DebugLog(string text) => TestContext.Progress.WriteLine(text);
     }
 }

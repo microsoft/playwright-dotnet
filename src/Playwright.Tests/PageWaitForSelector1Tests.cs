@@ -62,7 +62,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<div></div>");
             var div = await Page.QuerySelectorAsync("div");
-            var exception = await AssertThrowsAsync<TimeoutException>(() => div.WaitForSelectorAsync("span", new() { State = WaitForSelectorState.Attached, Timeout = 100 }));
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => div.WaitForSelectorAsync("span", new() { State = WaitForSelectorState.Attached, Timeout = 100 }));
             StringAssert.Contains("Timeout 100ms exceeded.", exception.Message);
         }
 
@@ -80,7 +80,7 @@ namespace Microsoft.Playwright.Tests
             }
 
             await Page.GotoAsync(Server.EmptyPage);
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => task);
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => task);
             StringAssert.Contains("Execution context was destroyed, most likely because of a navigation", exception.Message);
         }
 
@@ -144,7 +144,7 @@ namespace Microsoft.Playwright.Tests
             }");
             await GiveItTimeToLogAsync(frame);
 
-            var exception = await AssertThrowsAsync<TimeoutException>(() => watchdog);
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => watchdog);
 
             StringAssert.Contains("Timeout 5000ms", exception.Message);
             StringAssert.Contains("waiting for selector \"div\" to be visible", exception.Message);
@@ -180,7 +180,7 @@ namespace Microsoft.Playwright.Tests
             }");
             await GiveItTimeToLogAsync(frame);
 
-            var exception = await AssertThrowsAsync<TimeoutException>(() => watchdog);
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => watchdog);
 
             StringAssert.Contains("Timeout 5000ms", exception.Message);
             StringAssert.Contains("waiting for selector \"div\" to be hidden", exception.Message);

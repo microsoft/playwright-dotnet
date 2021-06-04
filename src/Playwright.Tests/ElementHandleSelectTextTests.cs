@@ -68,7 +68,7 @@ namespace Microsoft.Playwright.Tests
             var textarea = await Page.QuerySelectorAsync("textarea");
             await textarea.EvaluateAsync("e => e.style.display = 'none'");
 
-            var exception = await AssertThrowsAsync<TimeoutException>(() => textarea.SelectTextAsync(new() { Timeout = 3000 }));
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => textarea.SelectTextAsync(new() { Timeout = 3000 }));
             StringAssert.Contains("element is not visible", exception.Message);
         }
 

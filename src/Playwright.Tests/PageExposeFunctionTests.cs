@@ -222,7 +222,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowForDuplicateRegistrations()
         {
             await Page.ExposeFunctionAsync("foo", () => { });
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.ExposeFunctionAsync("foo", () => { }));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.ExposeFunctionAsync("foo", () => { }));
             Assert.AreEqual("Function \"foo\" has been already registered", exception.Message);
         }
 

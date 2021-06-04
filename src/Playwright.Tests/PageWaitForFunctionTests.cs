@@ -61,7 +61,7 @@ namespace Microsoft.Playwright.Tests
             int counter = 0;
             Page.Console += (_, _) => ++counter;
 
-            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.WaitForFunctionAsync(
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.WaitForFunctionAsync(
                 @"() => {
                   window.counter = (window.counter || 0) + 1;
                   console.log(window.counter);
@@ -98,7 +98,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWithPredicateThrowingOnFirstCall()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.WaitForFunctionAsync("() => { throw new Error('oh my'); }"));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.WaitForFunctionAsync("() => { throw new Error('oh my'); }"));
             StringAssert.Contains("oh my", exception.Message);
         }
 
@@ -106,7 +106,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWithPredicateThrowingSometimes()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.WaitForFunctionAsync(@"() => {
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.WaitForFunctionAsync(@"() => {
               window.counter = (window.counter || 0) + 1;
               if (window.counter === 3)
                 throw new Error('Bad counter!');
@@ -119,7 +119,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWithReferenceErrorOnWrongPage()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.WaitForFunctionAsync("() => globalVar === 123"));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.WaitForFunctionAsync("() => globalVar === 123"));
             StringAssert.Contains("globalVar", exception.Message);
         }
 
@@ -148,7 +148,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowNegativePollingInterval()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(()
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(()
                 => Page.WaitForFunctionAsync("() => !!document.body", null, new() { PollingInterval = -10 }));
 
             StringAssert.Contains("Cannot poll with non-positive interval", exception.Message);
@@ -182,7 +182,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
-            var exception = await AssertThrowsAsync<TimeoutException>(()
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
                 => Page.WaitForFunctionAsync("false", null, new() { Timeout = 10 }));
 
             StringAssert.Contains("Timeout 10ms exceeded", exception.Message);
@@ -193,7 +193,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRespectDefaultTimeout()
         {
             Page.SetDefaultTimeout(1);
-            var exception = await AssertThrowsAsync<TimeoutException>(()
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
                 => Page.WaitForFunctionAsync("false"));
 
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);

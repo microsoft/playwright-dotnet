@@ -33,6 +33,6 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("pdf.spec.ts", "should only have pdf in chromium")]
         [Test, SkipBrowserAndPlatform(skipChromium: true)]
         public Task ShouldOnlyHavePdfInChromium()
-            => AssertThrowsAsync<NotSupportedException>(() => Page.PdfAsync());
+            => PlaywrightAssert.ThrowsAsync<NotSupportedException>(() => Page.PdfAsync());
     }
 }

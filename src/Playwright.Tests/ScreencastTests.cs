@@ -13,7 +13,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task VideoSizeShouldRequireVideosPath()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new()
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new()
             {
                 RecordVideoSize = new RecordVideoSize { Height = 100, Width = 100 }
             }));

@@ -232,7 +232,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             await page.GotoAsync("data:text/html, <script>var something = \"forbidden\"</script>");
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => page.EvaluateAsync("something"));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.EvaluateAsync("something"));
 
             if (TestConstants.IsWebKit)
             {
@@ -277,7 +277,7 @@ namespace Microsoft.Playwright.Tests
                 Offline = true
             });
 
-            await AssertThrowsAsync<PlaywrightException>(() => page.GotoAsync(Server.EmptyPage));
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync(Server.EmptyPage));
 
             tmp.Dispose();
             await context.DisposeAsync();

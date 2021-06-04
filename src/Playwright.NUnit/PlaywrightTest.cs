@@ -43,24 +43,5 @@ namespace Microsoft.Playwright.NUnit
             Playwright = await _playwrightTask;
             BrowserType = Playwright[BrowserName];
         }
-
-        public static async Task<T> AssertThrowsAsync<T>(Func<Task> action) where T : Exception
-        {
-            try
-            {
-                await action();
-                Assert.Fail();
-                return null;
-            }
-            catch (T t)
-            {
-                return t;
-            }
-        }
-
-        public static void DebugLog(string text)
-        {
-            TestContext.Progress.WriteLine(text);
-        }
     }
 }

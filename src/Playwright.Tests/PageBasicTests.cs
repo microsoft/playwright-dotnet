@@ -18,7 +18,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRejectAllPromisesWhenPageIsClosed()
         {
             var newPage = await Context.NewPageAsync();
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => TaskUtils.WhenAll(
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => TaskUtils.WhenAll(
                 newPage.EvaluateAsync<string>("() => new Promise(r => { })"),
                 newPage.CloseAsync()
             ));
@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
                 context.Abort(); // is this right?
                 return Task.CompletedTask;
             });
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(Server.EmptyPage));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync(Server.EmptyPage));
             StringAssert.Contains(nameof(PageBasicTests), exception.StackTrace);
         }
 
@@ -135,7 +135,7 @@ namespace Microsoft.Playwright.Tests
         {
             var task = Page.WaitForDownloadAsync();
             await Page.CloseAsync();
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => task);
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => task);
             StringAssert.Contains("Page closed", exception.Message);
         }
 
@@ -233,7 +233,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldTerminateNetworkWaiters()
         {
             var newPage = await Context.NewPageAsync();
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => TaskUtils.WhenAll(
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => TaskUtils.WhenAll(
                 newPage.WaitForRequestAsync(Server.EmptyPage),
                 newPage.WaitForResponseAsync(Server.EmptyPage),
                 newPage.CloseAsync()

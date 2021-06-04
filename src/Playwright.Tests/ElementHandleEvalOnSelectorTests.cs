@@ -67,7 +67,7 @@ namespace Microsoft.Playwright.Tests
             string htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"></div>";
             await Page.SetContentAsync(htmlContent);
             var elementHandle = await Page.QuerySelectorAsync("#myId");
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => elementHandle.EvalOnSelectorAsync(".a", "node => node.innerText"));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => elementHandle.EvalOnSelectorAsync(".a", "node => node.innerText"));
             StringAssert.Contains("failed to find element matching selector \".a\"", exception.Message);
         }
     }

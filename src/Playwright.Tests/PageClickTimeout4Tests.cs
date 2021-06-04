@@ -19,7 +19,7 @@ namespace Microsoft.Playwright.Tests
                 button.style.marginLeft = '200px';
             }");
 
-            var exception = await AssertThrowsAsync<TimeoutException>(()
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
                 => Page.ClickAsync("button", new() { Timeout = 3000 }));
 
             StringAssert.Contains("Timeout 3000ms exceeded", exception.Message);
