@@ -21,7 +21,6 @@
         <PackageReference Include="CompareNETObjects" Version="4.73.0" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Playwright.Testing.Xunit\Playwright.Testing.Xunit.csproj" />
         <ProjectReference Include="..\Playwright\Playwright.csproj" />
         <ProjectReference Include="..\Playwright.Tests.TestServer\Playwright.Tests.TestServer.csproj" />
         <ProjectReference Include="..\Playwright.NUnit\Playwright.NUnit.csproj" />

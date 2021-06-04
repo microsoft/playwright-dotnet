@@ -28,7 +28,7 @@ namespace Microsoft.Playwright.Tests
         {
             Server.Reset();
             HttpsServer.Reset();
-            return Task.CompletedTask;
+            return Task.CompletedTask; 
         }
 
         public async Task DisposeAsync()

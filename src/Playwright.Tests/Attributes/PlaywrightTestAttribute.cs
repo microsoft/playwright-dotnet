@@ -9,7 +9,7 @@ namespace Microsoft.Playwright.Tests
     public class PlaywrightTestAttribute : Attribute
     {
         /// <summary>
-        /// Creates a new instance of the attribute.
+        /// Initializes a new instance of the <see cref="PlaywrightTestAttribute"/> class.
         /// </summary>
         /// <param name="fileName"><see cref="FileName"/></param>
         /// <param name="nameOfTest"><see cref="TestName"/></param>
@@ -20,7 +20,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         /// <summary>
-        /// Creates a new instance of the attribute.
+        /// Initializes a new instance of the <see cref="PlaywrightTestAttribute"/> class.
         /// </summary>
         /// <param name="fileName"><see cref="FileName"/></param>
         /// <param name="describe"><see cref="Describe"/></param>
@@ -49,5 +49,17 @@ namespace Microsoft.Playwright.Tests
         /// The describe of the test, the decorated code is based on, if one exists.
         /// </summary>
         public string Describe { get; }
+
+        public override string ToString()
+        {
+            if (Describe == null)
+            {
+                return $"{FileName}: {TestName}";
+            }
+            else
+            {
+                return $"{FileName}: {Describe}: {TestName}";
+            }
+        }
     }
 }

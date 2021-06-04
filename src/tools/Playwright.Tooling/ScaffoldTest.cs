@@ -29,8 +29,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using CommandLine;
 
 namespace Playwright.Tooling
 {
@@ -98,8 +96,6 @@ namespace Playwright.Tooling
             // add imports
             globalNamespace.Imports.Add(new CodeNamespaceImport("System.Threading.Tasks"));
             globalNamespace.Imports.Add(new CodeNamespaceImport("Microsoft.Playwright.Tests.BaseTests"));
-            globalNamespace.Imports.Add(new CodeNamespaceImport("Xunit"));
-            globalNamespace.Imports.Add(new CodeNamespaceImport("Xunit.Abstractions"));
 
             targetUnit.Namespaces.Add(globalNamespace);
 
