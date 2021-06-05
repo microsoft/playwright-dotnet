@@ -15,13 +15,13 @@ namespace Microsoft.Playwright.Tests
         {
             var browser = await Playwright[TestConstants.BrowserName].LaunchAsync();
             var page1 = await browser.NewPageAsync();
-            Assert.That(browser.Contexts, Has.Count.EqualTo(1));
+            Assert.That(browser.Contexts, Has.Length.EqualTo(1));
 
             var page2 = await browser.NewPageAsync();
             Assert.AreEqual(2, browser.Contexts.Count);
 
             await page1.CloseAsync();
-            Assert.That(browser.Contexts, Has.Count.EqualTo(1));
+            Assert.That(browser.Contexts, Has.Length.EqualTo(1));
 
             await page2.CloseAsync();
         }
@@ -44,11 +44,11 @@ namespace Microsoft.Playwright.Tests
 
             if (TestConstants.IsChromium)
             {
-                Assert.That(version, Does.Match(new Regex("\\d+\\.\\d+\\.\\d+\\.\\d+")));
+                Assert.That(version, Does.Match("\\d+\\.\\d+\\.\\d+\\.\\d+"));
             }
             else
             {
-                Assert.That(version, Does.Match(new Regex("\\d+\\.\\d+")));
+                Assert.That(version, Does.Match("\\d+\\.\\d+"));
             }
         }
     }

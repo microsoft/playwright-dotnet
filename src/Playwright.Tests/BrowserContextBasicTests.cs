@@ -17,7 +17,7 @@ namespace Microsoft.Playwright.Tests
             await using var browser = await BrowserType.LaunchAsync();
             Assert.IsEmpty(browser.Contexts);
             await using var context = await browser.NewContextAsync();
-            Assert.That(browser.Contexts, Has.Count.EqualTo(1));
+            Assert.That(browser.Contexts, Has.Length.EqualTo(1));
             CollectionAssert.Contains(browser.Contexts, context);
             Assert.AreEqual(browser, context.Browser);
             await context.CloseAsync();

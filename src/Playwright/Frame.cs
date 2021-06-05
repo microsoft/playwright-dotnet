@@ -499,7 +499,7 @@ namespace Microsoft.Playwright
 
             if (!string.IsNullOrEmpty(matchUrl))
             {
-                regex = matchUrl.GlobToRegex();
+                regex = new Regex(matchUrl.GlobToRegex());
             }
 
             if (matchUrl != null && url == matchUrl)
