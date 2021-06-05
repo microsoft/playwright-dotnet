@@ -650,7 +650,7 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="glob">Input url.</param>
         /// <returns>A Regex with the glob expression.</returns>
-        public static Regex GlobToRegex(this string glob)
+        public static string GlobToRegex(this string glob)
         {
             if (string.IsNullOrEmpty(glob))
             {
@@ -726,7 +726,7 @@ namespace Microsoft.Playwright
             }
 
             tokens.Add("$");
-            return new Regex(string.Concat(tokens.ToArray()));
+            return string.Concat(tokens.ToArray());
         }
 
         /// <summary>
@@ -748,7 +748,7 @@ namespace Microsoft.Playwright
             return _mappings.TryGetValue(extension, out string contentType) ? contentType : defaultContentType;
         }
 
-        internal static bool UrlMatches(this string url, string glob) => GlobToRegex(glob).Match(url).Success;
+        internal static bool UrlMatches(this string url, string glob) => new Regex(GlobToRegex(glob)).Match(url).Success;
 
         internal static string MimeType(this string file)
             => _mappings.TryGetValue(new FileInfo(file).Extension, out string mime) ? mime : "application/octet-stream";
