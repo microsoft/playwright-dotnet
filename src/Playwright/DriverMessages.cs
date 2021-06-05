@@ -3,7 +3,7 @@ namespace Microsoft.Playwright
     /// <summary>
     /// Messages coming from the Playwright Driver.
     /// </summary>
-    public static class DriverMessages
+    internal static class DriverMessages
     {
         /// <summary>
         /// Message used when the browser gets closed.

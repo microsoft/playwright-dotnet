@@ -93,26 +93,6 @@ namespace Microsoft.Playwright.Transport
             _loggerFactory.Dispose();
         }
 
-        internal static async Task InstallAsync(string driverPath = null, string browsersPath = null)
-        {
-            if (!string.IsNullOrEmpty(browsersPath))
-            {
-                Environment.SetEnvironmentVariable(EnvironmentVariables.BrowsersPathEnvironmentVariable, Path.GetFullPath(browsersPath));
-            }
-
-            var tcs = new TaskCompletionSource<bool>();
-            using var process = GetProcess(driverPath);
-            process.StartInfo.Arguments = "install";
-            process.StartInfo.RedirectStandardOutput = false;
-            process.StartInfo.RedirectStandardInput = false;
-            process.StartInfo.RedirectStandardError = false;
-            process.EnableRaisingEvents = true;
-            process.Exited += (_, _) => tcs.TrySetResult(true);
-            process.Start();
-
-            await tcs.Task.ConfigureAwait(false);
-        }
-
         internal Task<JsonElement?> SendMessageToServerAsync(
             string guid,
             string method,
@@ -284,17 +264,8 @@ namespace Microsoft.Playwright.Transport
 
         private static string GetExecutablePath()
         {
-            string driversPath;
-
-            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable(EnvironmentVariables.DriverPathEnvironmentVariable)))
-            {
-                driversPath = Environment.GetEnvironmentVariable(EnvironmentVariables.DriverPathEnvironmentVariable);
-            }
-            else
-            {
-                var assembly = typeof(Playwright).Assembly;
-                driversPath = new FileInfo(assembly.Location).Directory.FullName;
-            }
+            var assembly = typeof(Playwright).Assembly;
+            string driversPath = new FileInfo(assembly.Location).Directory.FullName;
 
             string executableFile = GetPath(driversPath);
             if (File.Exists(executableFile))
