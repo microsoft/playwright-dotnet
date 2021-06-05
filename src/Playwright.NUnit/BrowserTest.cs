@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
@@ -35,12 +36,34 @@ namespace Microsoft.Playwright.NUnit
     public class BrowserTest : PlaywrightTest
     {
         public IBrowser Browser { get; internal set; }
+        private List<IBrowserContext> _contexts = new List<IBrowserContext>();
+
+        public async Task<IBrowserContext> NewContext(BrowserNewContextOptions options)
+        {
+            var context = await Browser.NewContextAsync(options);
+            _contexts.Add(context);
+            return context;
+        }
 
         [SetUp]
         public async Task BrowserSetup()
         {
             var service = await BrowserService.Register(this, BrowserType);
             Browser = service.Browser;
+        }
+
+        [TearDown]
+        public async Task BrowserTearDown()
+        {
+            if (TestOk())
+            {
+                foreach (var context in _contexts)
+                {
+                    await context.CloseAsync();
+                }
+            }
+            _contexts.Clear();
+            Browser = null;
         }
     }
 }
