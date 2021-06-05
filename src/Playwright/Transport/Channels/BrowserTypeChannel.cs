@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport.Channels
@@ -10,6 +11,48 @@ namespace Microsoft.Playwright.Transport.Channels
     {
         public BrowserTypeChannel(string guid, Connection connection, BrowserType owner) : base(guid, connection, owner)
         {
+        }
+
+        public async Task<BrowserChannel> ConnectAsync(
+            string wsEndpoint = default,
+            IEnumerable<KeyValuePair<string, string>> headers = default,
+            float? timeout = default,
+            float? slowMo = default)
+        {
+            var args = new Dictionary<string, object>();
+            args.Add("wsEndpoint", wsEndpoint);
+            args.Add("headers", headers);
+            args.Add("timeout", timeout);
+            args.Add("slowMo", slowMo);
+
+            WebSocketTransport webSocketTransport = new WebSocketTransport(new Uri(wsEndpoint), headers, timeout, 0);
+            var loggerFactory = LoggerFactory.Create(builder =>
+            {
+                builder.SetMinimumLevel(LogLevel.Debug);
+                builder.AddFilter((f, _) => f == "PlaywrightSharp.Playwright");
+            });
+            var logger = loggerFactory.CreateLogger<Connection>();
+            Connection connection = new Connection(webSocketTransport, loggerFactory);
+            var playwright = await connection.WaitForObjectWithKnownNameAsync<PlaywrightImpl>("Playwright").ConfigureAwait(false);
+            playwright.Connection = connection;
+            if (playwright.Initializer.PreLaunchedBrowser == null)
+            {
+                try
+                {
+                    connection.Close("Client WebSocket Closed");
+                }
+                catch (Exception ex)
+                {
+                    logger?.LogError(ex, "Failed to Close Client WebSocket");
+                }
+            }
+
+            Browser browser = playwright.Initializer.PreLaunchedBrowser;
+            browser.IsRemote = true;
+            browser.IsConnectedOverWebSocket = true;
+            browser.Disconnected += Browser_Disconnected;
+
+            return browser.Channel;
         }
 
         public Task<BrowserChannel> LaunchAsync(
@@ -164,6 +207,11 @@ namespace Microsoft.Playwright.Transport.Channels
             channelArgs.Add("sdkLanguage", "csharp");
 
             return Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "launchPersistentContext", channelArgs);
+        }
+
+        private void Browser_Disconnected(object sender, IBrowser e)
+        {
+            _ = e.CloseAsync();
         }
     }
 }

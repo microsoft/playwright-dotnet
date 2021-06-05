@@ -32,6 +32,10 @@ namespace Microsoft.Playwright
 
         public bool IsConnected { get; private set; }
 
+        public bool IsRemote { get; set; }
+
+        public bool IsConnectedOverWebSocket { get; set; }
+
         public string Version => _initializer.Version;
 
         internal Microsoft.Playwright.Transport.Channels.BrowserChannel Channel { get; }

@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
@@ -40,6 +43,14 @@ namespace Microsoft.Playwright
         public string ExecutablePath => _initializer.ExecutablePath;
 
         public string Name => _initializer.Name;
+
+        public async Task<IBrowser> ConnectAsync(
+            string wsEndpoint = default)
+        {
+            IEnumerable<KeyValuePair<string, string>> headers = Enumerable.Empty<KeyValuePair<string, string>>();
+            float timeout = 1 * 24 * 60 * 60 * 1000;
+            return (await _channel.ConnectAsync(wsEndpoint, headers, timeout, 0).ConfigureAwait(false)).Object;
+        }
 
         public async Task<IBrowser> LaunchAsync(
             IEnumerable<string> args = default,

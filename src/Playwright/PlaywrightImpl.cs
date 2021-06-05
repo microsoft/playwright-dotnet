@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -52,6 +53,8 @@ namespace Microsoft.Playwright
         public IBrowserType Webkit { get => _initializer.Webkit; set => throw new NotSupportedException(); }
 
         public ISelectors Selectors { get => _initializer.Selectors; }
+
+        public PlaywrightInitializer Initializer { get => _initializer; }
 
         public IReadOnlyDictionary<string, BrowserNewContextOptions> Devices => _devices;
 

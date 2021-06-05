@@ -33,11 +33,18 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Playwright.API.Generated.Options;
 
 namespace Microsoft.Playwright
 {
     internal partial class BrowserType
     {
+        public Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions options = default)
+        {
+            options ??= new BrowserTypeConnectOptions();
+            return ConnectAsync(wsEndpoint);
+        }
+
         public Task<IBrowser> LaunchAsync(BrowserTypeLaunchOptions options = default)
         {
             options ??= new BrowserTypeLaunchOptions();

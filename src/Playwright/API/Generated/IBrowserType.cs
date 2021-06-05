@@ -33,6 +33,7 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Playwright.API.Generated.Options;
 
 namespace Microsoft.Playwright
 {
@@ -65,6 +66,41 @@ namespace Microsoft.Playwright
     {
         /// <summary><para>A path where Playwright expects to find a bundled browser executable.</para></summary>
         string ExecutablePath { get; }
+
+        /// <summary>
+        /// <para>Returns the browser instance.</para>
+        /// <para>
+        /// You can use <paramref name="ignoreDefaultArgs"/> to filter out <c>--mute-audio</c>
+        /// from default arguments:
+        /// </para>
+        /// <code>
+        /// var browser = await playwright.Chromium.ConnectAsync(new BrowserTypeLaunchOptions {<br/>
+        ///     IgnoreDefaultArgs = new[] { "--mute-audio" }<br/>
+        /// })
+        /// </code>
+        /// <para>
+        /// > **Chromium-only** Playwright can also be used to control the Google Chrome or
+        /// Microsoft Edge browsers, but it works best with the version of Chromium it is bundled
+        /// with. There is no guarantee it will work with any other version. Use <paramref name="executablePath"/>
+        /// option with extreme caution.
+        /// </para>
+        /// <para>></para>
+        /// <para>
+        /// > If Google Chrome (rather than Chromium) is preferred, a <a href="https://www.google.com/chrome/browser/canary.html">Chrome
+        /// Canary</a> or <a href="https://www.chromium.org/getting-involved/dev-channel">Dev
+        /// Channel</a> build is suggested.
+        /// </para>
+        /// <para>></para>
+        /// <para>
+        /// > Stock browsers like Google Chrome and Microsoft Edge are suitable for tests that
+        /// require proprietary media codecs for video playback. See <a href="https://www.howtogeek.com/202825/what%E2%80%99s-the-difference-between-chromium-and-chrome/">this
+        /// article</a> for other differences between Chromium and Chrome. <a href="https://chromium.googlesource.com/chromium/src/+/lkgr/docs/chromium_browser_vs_google_chrome.md">This
+        /// article</a> describes some differences for Linux users.
+        /// </para>
+        /// </summary>
+        /// <param name="wsEndpoint">Call wsEndpoint</param>
+        /// <param name="options">Call options</param>
+        Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions options = default);
 
         /// <summary>
         /// <para>Returns the browser instance.</para>
