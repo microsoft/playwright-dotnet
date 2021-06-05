@@ -160,6 +160,8 @@ namespace Microsoft.Playwright.CLI
             {
                 if (GetAttributeValue(item, "Include") == "Microsoft.Playwright")
                     version = GetAttributeValue(item, "Version");
+                if (GetAttributeValue(item, "Include") == "Microsoft.Playwright.NUnit")
+                    version = GetAttributeValue(item, "Version");
             }
             if (string.IsNullOrEmpty(version))
             {
