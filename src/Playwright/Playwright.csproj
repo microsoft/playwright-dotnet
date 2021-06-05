@@ -22,10 +22,6 @@
     <AssemblyName>Microsoft.Playwright</AssemblyName>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
-  <PropertyGroup>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>
   <Import Project="../Common/Version.props" />
   <Import Project="../Common/Dependencies.props" />
   <Import Project="../Common/SignAssembly.props" />
