@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright.NUnit
@@ -38,7 +39,7 @@ namespace Microsoft.Playwright.NUnit
                 {
                     Browser = await browserType.LaunchAsync(new BrowserTypeLaunchOptions
                     {
-                        Headless = true
+                        Headless = Environment.GetEnvironmentVariable("HEADED") != "1"
                     })
                 };
                 return service;

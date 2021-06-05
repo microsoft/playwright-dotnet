@@ -39,16 +39,7 @@ namespace Microsoft.Playwright.NUnit
         [SetUp]
         public async Task ContextSetup()
         {
-            Context = await Browser.NewContextAsync(ContextOptions());
-        }
-
-        [TearDown]
-        public async Task ContextTeardown()
-        {
-            if (TestOk())
-            {
-                await Context.CloseAsync();
-            }
+            Context = await NewContext(ContextOptions());
         }
     }
 }
