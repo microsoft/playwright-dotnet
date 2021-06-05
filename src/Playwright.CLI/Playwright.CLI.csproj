@@ -14,14 +14,14 @@
     <BuildFromSource>True</BuildFromSource>
     <AssemblyName>Microsoft.Playwright.CLI</AssemblyName>
     <PackAsTool>true</PackAsTool>
-    <ToolCommandName>playwrightcli</ToolCommandName>
+    <ToolCommandName>playwright</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyVersion>1.0.0</AssemblyVersion>
-    <PackageVersion>$(AssemblyVersion)-alpha</PackageVersion>
+    <PackageVersion>$(AssemblyVersion)-alpha-1</PackageVersion>
     <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <NoDefaultExcludes>true</NoDefaultExcludes>
@@ -37,6 +37,7 @@
   </PropertyGroup>
   <Import Project="../Common/SignAssembly.props" />
   <ItemGroup>
+    <PackageReference Include="Microsoft.Build" Version="16.10.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
