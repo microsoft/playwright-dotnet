@@ -2,7 +2,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -17,7 +17,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Ignore("Fix me #1058")]
         public async Task ShouldWork()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
+            await using var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true });
             var page = await context.NewPageAsync();
             var requestTask = Server.WaitForRequest(
                 "/empty.html",
@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Ignore("Fix me #1058")]
         public async Task ShouldIsolateContexts()
         {
-            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true }))
+            await using (var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true }))
             {
                 var page = await context.NewPageAsync();
                 var response = await page.GotoAsync(HttpsServer.Prefix + "/empty.html");
@@ -48,7 +48,7 @@ namespace Microsoft.Playwright.Tests
             await using (var context = await Browser.NewContextAsync())
             {
                 var page = await context.NewPageAsync();
-                await AssertThrowsAsync<PlaywrightException>(() => page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
+                await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
             }
         }
 
@@ -61,9 +61,9 @@ namespace Microsoft.Playwright.Tests
             {
                 await context.Response.WriteAsync($"<iframe src='{Server.EmptyPage}'></iframe>");
             });
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
+            await using var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(HttpsServer.Prefix + "/mixedcontent.html", new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
+            await page.GotoAsync(HttpsServer.Prefix + "/mixedcontent.html", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
             Assert.AreEqual(2, page.Frames.Count);
             Assert.AreEqual(3, await page.MainFrame.EvaluateAsync<int>("1 + 2"));
             Assert.AreEqual(5, await page.FirstChildFrame().EvaluateAsync<int>("2 + 3"));
@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Ignore("Fix me #1058")]
         public async Task ShouldWorkWithWebSocket()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
+            await using var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true });
             var page = await context.NewPageAsync();
             string value = await page.EvaluateAsync<string>(@"endpoint => {
                 let cb;

@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -75,7 +75,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.EvalOnSelectorAsync("select", "s => s.value = undefined");
-            await AssertThrowsAsync<TimeoutException>(() => Page.SelectOptionAsync("select", new SelectOptionValue { Value = "green", Label = "Brown" }, new PageSelectOptionOptions { Timeout = 300 }));
+            await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.SelectOptionAsync("select", new SelectOptionValue { Value = "green", Label = "Brown" }, new PageSelectOptionOptions { Timeout = 300 }));
             Assert.IsEmpty(await Page.EvaluateAsync<string>("() => document.querySelector('select').value"));
         }
 
@@ -145,7 +145,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowWhenElementIsNotASelect()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.SelectOptionAsync("body", string.Empty));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.SelectOptionAsync("body", string.Empty));
             StringAssert.Contains("Element is not a <select> element.", exception.Message);
         }
 

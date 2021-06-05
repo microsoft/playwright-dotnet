@@ -30,6 +30,7 @@ namespace Microsoft.Playwright.Transport.Channels
             bool? acceptDownloads = null,
             bool? bypassCSP = null,
             ColorScheme? colorScheme = null,
+            ReducedMotion? reducedMotion = null,
             float? deviceScaleFactor = null,
             IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null,
             Geolocation geolocation = null,
@@ -44,8 +45,7 @@ namespace Microsoft.Playwright.Transport.Channels
             Proxy proxy = null,
             bool? recordHarOmitContent = null,
             string recordHarPath = null,
-            string recordVideoDir = null,
-            RecordVideoSize recordVideoSize = null,
+            Dictionary<string, object> recordVideo = null,
             string storageState = null,
             string storageStatePath = null,
             string timezoneId = null,
@@ -56,6 +56,7 @@ namespace Microsoft.Playwright.Transport.Channels
             args.Add("acceptDownloads", acceptDownloads);
             args.Add("bypassCSP", bypassCSP);
             args.Add("colorScheme", colorScheme);
+            args.Add("reducedMotion", reducedMotion);
             args.Add("deviceScaleFactor", deviceScaleFactor);
 
             if (extraHTTPHeaders != null)
@@ -73,6 +74,7 @@ namespace Microsoft.Playwright.Transport.Channels
             args.Add("offline", offline);
             args.Add("permissions", permissions);
             args.Add("proxy", proxy);
+
             if (!string.IsNullOrEmpty(recordHarPath))
             {
                 args.Add("recordHar", new
@@ -82,13 +84,9 @@ namespace Microsoft.Playwright.Transport.Channels
                 });
             }
 
-            if (!string.IsNullOrEmpty(recordVideoDir))
+            if (recordVideo != null)
             {
-                args.Add("recordVideo", new Dictionary<string, object>()
-                {
-                    { "dir", recordVideoDir },
-                    { "size", recordVideoSize },
-                });
+                args.Add("recordVideo", recordVideo);
             }
 
             if (!string.IsNullOrEmpty(storageStatePath))

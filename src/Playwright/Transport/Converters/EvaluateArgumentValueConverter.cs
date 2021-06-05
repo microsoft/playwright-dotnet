@@ -77,6 +77,11 @@ namespace Microsoft.Playwright.Transport.Converters
                 return new { s = value };
             }
 
+            if (value.GetType().IsEnum)
+            {
+                return new { n = (int)value };
+            }
+
             if (
                 value.GetType() == typeof(int) ||
                 value.GetType() == typeof(decimal) ||

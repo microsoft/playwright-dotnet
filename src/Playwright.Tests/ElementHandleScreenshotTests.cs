@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 using SixLabors.ImageSharp;
 
@@ -181,7 +181,7 @@ namespace Microsoft.Playwright.Tests
             var elementHandle = await Page.QuerySelectorAsync("h1");
             await Page.EvaluateAsync("element => element.remove()", elementHandle);
 
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => elementHandle.ScreenshotAsync());
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => elementHandle.ScreenshotAsync());
             StringAssert.Contains("Element is not attached to the DOM", exception.Message);
         }
 
@@ -191,7 +191,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync(@"<div style='width: 50px; height: 0'></div>");
             var elementHandle = await Page.QuerySelectorAsync("div");
-            var exception = await AssertThrowsAsync<TimeoutException>(() => elementHandle.ScreenshotAsync(new ElementHandleScreenshotOptions { Timeout = 3000 }));
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => elementHandle.ScreenshotAsync(new() { Timeout = 3000 }));
             StringAssert.Contains("Timeout 3000ms exceeded", exception.Message);
             StringAssert.Contains("element is not visible", exception.Message);
         }
@@ -232,7 +232,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithAMobileViewport()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize
                 {
@@ -254,7 +254,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithDeviceScaleFactor()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize
                 {
@@ -286,7 +286,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTakeScreenshotsWhenDefaultViewportIsNull()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = ViewportSize.NoViewport
             });
@@ -310,7 +310,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTakeFullPageScreenshotsWhenDefaultViewportIsNull()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = ViewportSize.NoViewport
             });
@@ -318,7 +318,7 @@ namespace Microsoft.Playwright.Tests
             await page.GotoAsync(Server.Prefix + "/grid.html");
             var sizeBefore = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
 
-            byte[] screenshot = await page.ScreenshotAsync(new PageScreenshotOptions { FullPage = true });
+            byte[] screenshot = await page.ScreenshotAsync(new() { FullPage = true });
             Assert.NotNull(screenshot);
 
             var sizeAfter = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
@@ -330,13 +330,13 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRestoreDefaultViewportAfterFullPageScreenshot()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize { Width = 456, Height = 789 },
             });
             var page = await context.NewPageAsync();
             await TestUtils.VerifyViewportAsync(page, 456, 789);
-            byte[] screenshot = await page.ScreenshotAsync(new PageScreenshotOptions { FullPage = true });
+            byte[] screenshot = await page.ScreenshotAsync(new() { FullPage = true });
             Assert.NotNull(screenshot);
 
             await TestUtils.VerifyViewportAsync(page, 456, 789);
@@ -359,13 +359,13 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTakeElementScreenshotWhenDefaultViewportIsNullAndRestoreBack()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = ViewportSize.NoViewport,
             });
             var page = await context.NewPageAsync();
 
-            await Page.SetContentAsync(@"
+            await page.SetContentAsync(@"
                 <div style=""height: 14px"">oooo</div>
                 <style>
                 div.to-screenshot {
@@ -384,7 +384,7 @@ namespace Microsoft.Playwright.Tests
 
             var sizeBefore = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
             var elementHandle = await page.QuerySelectorAsync("div.to-screenshot");
-            byte[] screenshot = await page.ScreenshotAsync();
+            byte[] screenshot = await elementHandle.ScreenshotAsync();
             Assert.NotNull(screenshot);
 
             var sizeAfter = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
@@ -419,7 +419,7 @@ namespace Microsoft.Playwright.Tests
             var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(3)");
             using var tmpDir = new TempDirectory();
             string outputPath = Path.Combine(tmpDir.Path, "these", "are", "directories", "screenshot.png");
-            await elementHandle.ScreenshotAsync(new ElementHandleScreenshotOptions { Path = outputPath });
+            await elementHandle.ScreenshotAsync(new() { Path = outputPath });
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-bounding-box.png", outputPath));
         }
     }

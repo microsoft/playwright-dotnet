@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -21,7 +21,7 @@ namespace Microsoft.Playwright.Tests
             {
                 fileInfo.Delete();
             }
-            await Page.PdfAsync(new PagePdfOptions { Path = outputFile, Format = PaperFormat.Letter });
+            await Page.PdfAsync(new() { Path = outputFile, Format = PaperFormat.Letter });
             fileInfo = new FileInfo(outputFile);
             Assert.True(new FileInfo(outputFile).Length > 0);
             if (fileInfo.Exists)
@@ -33,6 +33,6 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("pdf.spec.ts", "should only have pdf in chromium")]
         [Test, SkipBrowserAndPlatform(skipChromium: true)]
         public Task ShouldOnlyHavePdfInChromium()
-            => AssertThrowsAsync<NotSupportedException>(() => Page.PdfAsync());
+            => PlaywrightAssert.ThrowsAsync<NotSupportedException>(() => Page.PdfAsync());
     }
 }

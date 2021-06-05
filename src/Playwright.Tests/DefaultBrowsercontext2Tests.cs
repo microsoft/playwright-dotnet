@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -16,7 +16,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportHasTouchOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 HasTouch = true
             });
@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkInPersistentContext()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 ViewportSize = new ViewportSize
                 {
@@ -53,7 +53,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportColorSchemeOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 ColorScheme = ColorScheme.Dark,
             });
@@ -65,16 +65,39 @@ namespace Microsoft.Playwright.Tests
             await context.DisposeAsync();
         }
 
+        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support reducedMotion option")]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task ShouldSupportReducedMotionOption()
+        {
+            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions()
+            {
+                ReducedMotion = ReducedMotion.Reduce
+            });
+
+            Assert.True(await page.EvaluateAsync<bool?>("() => matchMedia('(prefers-reduced-motion: reduce)').matches"));
+            Assert.False(await page.EvaluateAsync<bool?>("() => matchMedia('(prefers-reduced-motion: no-preference)').matches"));
+
+            tmp.Dispose();
+            await context.DisposeAsync();
+        }
+
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support timezoneId option")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportTimezoneIdOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 TimezoneId = "America/Jamaica",
             });
 
-            Assert.AreEqual("Sat Nov 19 2016 13:12:34 GMT-0500 (Eastern Standard Time)", await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+            if (BrowserName == "webkit")
+            {
+                Assert.AreEqual("Sat Nov 19 2016 13:12:34 GMT-0500", await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+            }
+            else
+            {
+                Assert.AreEqual("Sat Nov 19 2016 13:12:34 GMT-0500 (Eastern Standard Time)", await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+            }
 
             tmp.Dispose();
             await context.DisposeAsync();
@@ -84,7 +107,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportLocaleOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 Locale = "fr-CH",
             });
@@ -99,7 +122,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportGeolocationAndPermissionsOptions()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 Geolocation = new Geolocation
                 {
@@ -125,7 +148,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Ignore("Fix me #1058")]
         public async Task ShouldSupportIgnoreHTTPSErrorsOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 IgnoreHTTPSErrors = true
             });
@@ -141,7 +164,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportExtraHTTPHeadersOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 ExtraHTTPHeaders = new Dictionary<string, string>
                 {
@@ -262,8 +285,8 @@ namespace Microsoft.Playwright.Tests
         {
             var tmp = new TempDirectory();
             var args = new[] { Server.EmptyPage };
-            await AssertThrowsAsync<PlaywrightException>(() =>
-                BrowserType.LaunchPersistentContextAsync(tmp.Path, new BrowserTypeLaunchPersistentContextOptions { Args = args }));
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() =>
+                BrowserType.LaunchPersistentContextAsync(tmp.Path, new() { Args = args }));
             tmp.Dispose();
         }
 

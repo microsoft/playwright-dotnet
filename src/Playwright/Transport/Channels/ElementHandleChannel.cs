@@ -104,7 +104,7 @@ namespace Microsoft.Playwright.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").ToString();
         }
 
-        internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, bool isFunction, object arg)
+        internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, object arg)
             => Connection.SendMessageToServerAsync<JsonElement?>(
                 Guid,
                 "evalOnSelector",
@@ -112,11 +112,10 @@ namespace Microsoft.Playwright.Transport.Channels
                 {
                     ["selector"] = selector,
                     ["expression"] = script,
-                    ["isFunction"] = isFunction,
                     ["arg"] = arg,
                 });
 
-        internal Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, bool isFunction, object arg)
+        internal Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, object arg)
             => Connection.SendMessageToServerAsync<JsonElement?>(
                 Guid,
                 "evalOnSelectorAll",
@@ -124,7 +123,6 @@ namespace Microsoft.Playwright.Transport.Channels
                 {
                     ["selector"] = selector,
                     ["expression"] = script,
-                    ["isFunction"] = isFunction,
                     ["arg"] = arg,
                 });
 

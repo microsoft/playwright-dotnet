@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDifferentSubtypes()
         {
-            Assert.AreEqual("JSHandle@function", (await Page.EvaluateHandleAsync("(function(){})")).ToString());
+            Assert.AreEqual("JSHandle@function", (await Page.EvaluateHandleAsync("() => function(){}")).ToString());
             Assert.AreEqual("JSHandle@12", (await Page.EvaluateHandleAsync("12")).ToString());
             Assert.AreEqual("JSHandle@true", (await Page.EvaluateHandleAsync("true")).ToString());
             Assert.AreEqual("JSHandle@undefined", (await Page.EvaluateHandleAsync("undefined")).ToString());

@@ -62,6 +62,7 @@ namespace Microsoft.Playwright.Transport.Channels
             IEnumerable<string> passedArguments = default,
             Proxy proxy = default,
             string downloadsPath = default,
+            string tracesDir = default,
             bool? chromiumSandbox = default,
             IEnumerable<KeyValuePair<string, object>> firefoxUserPrefs = default,
             bool? handleSIGINT = default,
@@ -88,6 +89,7 @@ namespace Microsoft.Playwright.Transport.Channels
             args.Add("env", env.Remap());
             args.Add("proxy", proxy);
             args.Add("downloadsPath", downloadsPath);
+            args.Add("tracesDir", tracesDir);
             args.Add("firefoxUserPrefs", firefoxUserPrefs);
             args.Add("chromiumSandbox", chromiumSandbox);
             args.Add("slowMo", slowMo);
@@ -107,6 +109,7 @@ namespace Microsoft.Playwright.Transport.Channels
             IEnumerable<string> args = default,
             Proxy proxy = default,
             string downloadsPath = default,
+            string tracesDir = default,
             bool? chromiumSandbox = default,
             bool? handleSIGINT = default,
             bool? handleSIGTERM = default,
@@ -133,10 +136,10 @@ namespace Microsoft.Playwright.Transport.Channels
             bool? offline = default,
             HttpCredentials httpCredentials = default,
             ColorScheme? colorScheme = default,
+            ReducedMotion? reducedMotion = default,
             string recordHarPath = default,
             bool? recordHarOmitContent = default,
-            string recordVideoDir = default,
-            RecordVideoSize recordVideoSize = default,
+            Dictionary<string, object> recordVideo = default,
             IEnumerable<string> ignoreDefaultArgs = default,
             bool? ignoreAllDefaultArgs = default)
         {
@@ -148,6 +151,7 @@ namespace Microsoft.Playwright.Transport.Channels
             channelArgs.Add("executablePath", executablePath);
             channelArgs.Add("args", args);
             channelArgs.Add("downloadsPath", downloadsPath);
+            channelArgs.Add("tracesDir", tracesDir);
             channelArgs.Add("proxy", proxy);
             channelArgs.Add("chromiumSandbox", chromiumSandbox);
             channelArgs.Add("handleSIGINT", handleSIGINT);
@@ -184,6 +188,8 @@ namespace Microsoft.Playwright.Transport.Channels
             channelArgs.Add("offline", offline);
             channelArgs.Add("httpCredentials", httpCredentials);
             channelArgs.Add("colorScheme", colorScheme);
+            channelArgs.Add("reducedMotion", reducedMotion);
+
             if (!string.IsNullOrEmpty(recordHarPath))
             {
                 channelArgs.Add("recordHar", new
@@ -193,13 +199,9 @@ namespace Microsoft.Playwright.Transport.Channels
                 });
             }
 
-            if (!string.IsNullOrEmpty(recordVideoDir))
+            if (recordVideo != null)
             {
-                channelArgs.Add("recordVideo", new Dictionary<string, object>()
-                {
-                    { "dir", recordVideoDir },
-                    { "size", recordVideoSize },
-                });
+                channelArgs.Add("recordVideo", recordVideo);
             }
 
             channelArgs.Add("ignoreDefaultArgs", ignoreDefaultArgs);

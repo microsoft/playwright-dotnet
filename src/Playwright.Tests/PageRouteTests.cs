@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -69,7 +69,7 @@ namespace Microsoft.Playwright.Tests
                 route.ContinueAsync();
             });
 
-            var response = await Page.GotoAsync(Server.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual(new[] { 1 }, intercepted.ToArray());
 
             intercepted.Clear();
@@ -108,7 +108,7 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync("**/*", (route) =>
             {
                 var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["foo"] = "bar" };
-                route.ContinueAsync(new RouteContinueOptions { Headers = headers });
+                route.ContinueAsync(new() { Headers = headers });
             });
             await Page.GotoAsync(Server.Prefix + "/rrredirect");
         }
@@ -121,7 +121,7 @@ namespace Microsoft.Playwright.Tests
             {
                 var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["foo"] = "bar" };
                 headers.Remove("origin");
-                route.ContinueAsync(new RouteContinueOptions { Headers = headers });
+                route.ContinueAsync(new() { Headers = headers });
             });
 
             var originRequestHeader = Server.WaitForRequest("/empty.html", request => request.Headers["origin"]);
@@ -276,7 +276,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldFailNavigationWhenAbortingMainResource()
         {
             await Page.RouteAsync("**/*", (route) => route.AbortAsync());
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(Server.EmptyPage));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync(Server.EmptyPage));
             Assert.NotNull(exception);
             if (TestConstants.IsWebKit)
             {
@@ -541,7 +541,7 @@ namespace Microsoft.Playwright.Tests
                     return;
                 }
 
-                _ = route.FulfillAsync(new RouteFulfillOptions
+                _ = route.FulfillAsync(new()
                 {
                     Status = (int)HttpStatusCode.MovedPermanently,
                     Headers = new Dictionary<string, string>
@@ -570,7 +570,7 @@ namespace Microsoft.Playwright.Tests
                     ? new Dictionary<string, string> { ["access-control-allow-origin"] = "*" }
                     : new Dictionary<string, string>();
 
-                _ = route.FulfillAsync(new RouteFulfillOptions
+                _ = route.FulfillAsync(new()
                 {
                     ContentType = "application/json",
                     Headers = headers,
@@ -586,7 +586,7 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual(new[] { "electric", "cars" }, resp);
 
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync<string>(@"async () => {
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync<string>(@"async () => {
                 const response = await fetch('https://example.com/cars?reject', { mode: 'cors' });
                 return response.json();
             }"));
@@ -601,7 +601,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.EmptyPage);
             await Page.RouteAsync("**/cars*", (route) =>
             {
-                _ = route.FulfillAsync(new RouteFulfillOptions
+                _ = route.FulfillAsync(new()
                 {
                     ContentType = "application/json",
                     Headers = new Dictionary<string, string> { ["access-control-allow-origin"] = "*" },
@@ -630,7 +630,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.EmptyPage);
             await Page.RouteAsync("**/cars*", (route) =>
             {
-                _ = route.FulfillAsync(new RouteFulfillOptions
+                _ = route.FulfillAsync(new()
                 {
                     ContentType = "application/json",
                     Headers = new Dictionary<string, string> { ["access-control-allow-origin"] = "*" },

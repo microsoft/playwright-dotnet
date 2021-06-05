@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -21,8 +19,8 @@ namespace Microsoft.Playwright.Tests
                 button.style.marginLeft = '200px';
             }");
 
-            var exception = await AssertThrowsAsync<TimeoutException>(()
-                => Page.ClickAsync("button", new PageClickOptions { Timeout = 3000 }));
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
+                => Page.ClickAsync("button", new() { Timeout = 3000 }));
 
             StringAssert.Contains("Timeout 3000ms exceeded", exception.Message);
             StringAssert.Contains("waiting for element to be visible, enabled and stable", exception.Message);

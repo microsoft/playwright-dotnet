@@ -1,8 +1,7 @@
-using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -40,7 +39,7 @@ namespace Microsoft.Playwright.Tests
             worker.Close += (sender, _) => workerDestroyedTcs.TrySetResult((IWorker)sender);
             await Page.EvaluateAsync("workerObj => workerObj.terminate()", workerObj);
             Assert.AreEqual(worker, await workerDestroyedTcs.Task);
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => workerThisObj.GetPropertyAsync("self"));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => workerThisObj.GetPropertyAsync("self"));
             StringAssert.Contains("Most likely the worker has been closed.", exception.Message);
         }
 
@@ -183,7 +182,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatNumberUsingContextLocale()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { Locale = "ru-RU" });
+            await using var context = await Browser.NewContextAsync(new() { Locale = "ru-RU" });
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
             var (worker, _) = await TaskUtils.WhenAll(

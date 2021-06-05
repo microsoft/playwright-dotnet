@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDomcontentloaded()
         {
-            await Page.SetContentAsync("<div>hello</div>", new PageSetContentOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
+            await Page.SetContentAsync("<div>hello</div>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
             string result = await Page.ContentAsync();
             Assert.AreEqual(_expectedOutput, result);
         }
@@ -57,8 +57,8 @@ namespace Microsoft.Playwright.Tests
             string imgPath = "/img.png";
             // stall for image
             Server.SetRoute(imgPath, _ => Task.Delay(Timeout.Infinite));
-            await AssertThrowsAsync<TimeoutException>(() =>
-                Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new PageSetContentOptions { Timeout = 1 })
+            await PlaywrightAssert.ThrowsAsync<TimeoutException>(() =>
+                Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new() { Timeout = 1 })
             );
         }
 
@@ -70,8 +70,8 @@ namespace Microsoft.Playwright.Tests
             string imgPath = "/img.png";
             // stall for image
             Server.SetRoute(imgPath, _ => Task.Delay(Timeout.Infinite));
-            var exception = await AssertThrowsAsync<TimeoutException>(() =>
-                Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new PageSetContentOptions { Timeout = 1 })
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() =>
+                Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new() { Timeout = 1 })
             );
 
             StringAssert.Contains("Timeout 1ms exceeded", exception.Message);

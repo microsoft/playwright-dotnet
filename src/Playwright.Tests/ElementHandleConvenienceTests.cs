@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -62,12 +62,12 @@ namespace Microsoft.Playwright.Tests
         public async Task InnerTextShouldThrow()
         {
             await Page.SetContentAsync("<svg>text</svg>");
-            var exception1 = await AssertThrowsAsync<PlaywrightException>(() => Page.InnerTextAsync("svg"));
+            var exception1 = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.InnerTextAsync("svg"));
             StringAssert.Contains("Not an HTMLElement", exception1.Message);
 
             var handle = await Page.QuerySelectorAsync("svg");
-            var exception2 = await AssertThrowsAsync<PlaywrightException>(() => handle.InnerTextAsync());
-            StringAssert.Contains("Not an HTMLElement", exception1.Message);
+            var exception2 = Assert.ThrowsAsync<PlaywrightException>(async () => await handle.InnerTextAsync());
+            StringAssert.Contains("Not an HTMLElement", exception2.Message);
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "textContent should work")]
@@ -259,7 +259,7 @@ namespace Microsoft.Playwright.Tests
             await handle.EvaluateAsync("input => input.checked = false");
             Assert.False(await handle.IsCheckedAsync());
             Assert.False(await Page.IsCheckedAsync("input"));
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.IsCheckedAsync("div"));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.IsCheckedAsync("div"));
             StringAssert.Contains("Not a checkbox or radio button", exception.Message);
         }
     }

@@ -23,35 +23,31 @@
  */
 
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Playwright;
-using Microsoft.Playwright.NUnitTest;
-using NUnit.Framework;
-using NUnit.Framework.Interfaces;
 
-namespace Microsoft.Playwright.NUnitTest
+namespace Microsoft.Playwright
 {
-    public static class TestExtensions
+    internal partial class Tracing
     {
-        public static async Task<T> AssertThrowsAsync<T>(this PlaywrightTest test, Func<Task> action) where T : System.Exception
+        public Task StartAsync(TracingStartOptions options = default)
         {
-            try
-            {
-                await action();
-                Assert.Fail();
-                return null;
-            }
-            catch (T t)
-            {
-                return t;
-            }
+            options ??= new TracingStartOptions();
+            return StartAsync(name: options.Name, screenshots: options.Screenshots, snapshots: options.Snapshots);
         }
 
-        public static void DebugLog(this PlaywrightTest test, string text)
+        public Task StopAsync(TracingStopOptions options = default)
         {
-            TestContext.Progress.WriteLine(text);
+            options ??= new TracingStopOptions();
+            return StopAsync(path: options.Path);
         }
     }
 }

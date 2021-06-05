@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -395,13 +394,13 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowOnUnknownKeys()
         {
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.Keyboard.PressAsync("NotARealKey"));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.Keyboard.PressAsync("NotARealKey"));
             Assert.AreEqual("Unknown key: \"NotARealKey\"", exception.Message);
 
-            exception = await AssertThrowsAsync<PlaywrightException>(() => Page.Keyboard.PressAsync("ё"));
+            exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.Keyboard.PressAsync("ё"));
             Assert.AreEqual("Unknown key: \"ё\"", exception.Message);
 
-            exception = await AssertThrowsAsync<PlaywrightException>(() => Page.Keyboard.PressAsync("😊"));
+            exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.Keyboard.PressAsync("😊"));
             Assert.AreEqual("Unknown key: \"😊\"", exception.Message);
         }
 

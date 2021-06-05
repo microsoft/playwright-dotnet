@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -152,7 +152,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportViewportOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 ViewportSize = new ViewportSize
                 {
@@ -173,7 +173,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportDeviceScaleFactorOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 DeviceScaleFactor = 3
             });
@@ -188,7 +188,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportUserAgentOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 UserAgent = "foobar"
             });
@@ -209,13 +209,13 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportBypassCSPOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 BypassCSP = true
             });
 
             await page.GotoAsync(Server.Prefix + "/csp.html");
-            await page.AddScriptTagAsync(new PageAddScriptTagOptions { Content = "window.__injected = 42;" });
+            await page.AddScriptTagAsync(new() { Content = "window.__injected = 42;" });
             Assert.AreEqual(42, await page.EvaluateAsync<int>("window.__injected"));
 
             tmp.Dispose();
@@ -226,13 +226,13 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportJavascriptEnabledOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 JavaScriptEnabled = false
             });
 
             await page.GotoAsync("data:text/html, <script>var something = \"forbidden\"</script>");
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => page.EvaluateAsync("something"));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.EvaluateAsync("something"));
 
             if (TestConstants.IsWebKit)
             {
@@ -251,7 +251,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRupportHttpCredentialsOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 HttpCredentials = new HttpCredentials
                 {
@@ -272,12 +272,12 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportOfflineOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 Offline = true
             });
 
-            await AssertThrowsAsync<PlaywrightException>(() => page.GotoAsync(Server.EmptyPage));
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync(Server.EmptyPage));
 
             tmp.Dispose();
             await context.DisposeAsync();

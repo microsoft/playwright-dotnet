@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -58,15 +58,15 @@ namespace Microsoft.Playwright.Tests
             await Context.ExposeFunctionAsync("foo", () => { });
             await Context.ExposeFunctionAsync("bar", () => { });
 
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Context.ExposeFunctionAsync("foo", () => { }));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Context.ExposeFunctionAsync("foo", () => { }));
             Assert.AreEqual("Function \"foo\" has been already registered", exception.Message);
 
             var page = await Context.NewPageAsync();
-            exception = await AssertThrowsAsync<PlaywrightException>(() => page.ExposeFunctionAsync("foo", () => { }));
+            exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.ExposeFunctionAsync("foo", () => { }));
             Assert.AreEqual("Function \"foo\" has been already registered in the browser context", exception.Message);
 
             await page.ExposeFunctionAsync("baz", () => { });
-            exception = await AssertThrowsAsync<PlaywrightException>(() => Context.ExposeFunctionAsync("baz", () => { }));
+            exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Context.ExposeFunctionAsync("baz", () => { }));
             Assert.AreEqual("Function \"baz\" has been already registered in one of the pages", exception.Message);
         }
 
@@ -78,9 +78,9 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             await context.ExposeFunctionAsync("woof", (string arg) => { args.Add(arg); });
 
-            await context.AddInitScriptAsync("() => woof('context')");
+            await context.AddInitScriptAsync("woof('context')");
             var page = await context.NewPageAsync();
-            await page.AddInitScriptAsync("() => woof('page')");
+            await page.AddInitScriptAsync("woof('page')");
 
             args.Clear();
             await page.ReloadAsync();

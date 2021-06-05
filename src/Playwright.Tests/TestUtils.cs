@@ -10,7 +10,9 @@ namespace Microsoft.Playwright.Tests
     {
         internal static string FindParentDirectory(string directory)
         {
-            string current = Directory.GetCurrentDirectory();
+            // when using Directory.GetCurrentDirectory, for .NET 4.8 under test explorer on Windows,
+            // the location was Local App Data
+            string current = AppContext.BaseDirectory;
             while (!Directory.Exists(Path.Combine(current, directory)))
             {
                 current = Directory.GetParent(current).FullName;
@@ -83,7 +85,7 @@ namespace Microsoft.Playwright.Tests
         {
             try
             {
-                await playwright.Selectors.RegisterAsync(name, new SelectorsRegisterOptions { Path = path });
+                await playwright.Selectors.RegisterAsync(name, new() { Path = path });
             }
             catch (PlaywrightException ex) when (ex.Message.Contains("has been already registered"))
             {
@@ -104,7 +106,7 @@ namespace Microsoft.Playwright.Tests
         {
             try
             {
-                await playwright.Selectors.RegisterAsync(name, new SelectorsRegisterOptions { Script = script, ContentScript = contentScript });
+                await playwright.Selectors.RegisterAsync(name, new() { Script = script, ContentScript = contentScript });
             }
             catch (PlaywrightException ex) when (ex.Message.Contains("has been already registered"))
             {

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -24,9 +24,9 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
-            var task = Page.WaitForURLAsync("**/frame.html", new PageWaitForURLOptions { Timeout = 2500 });
+            var task = Page.WaitForURLAsync("**/frame.html", new() { Timeout = 2500 });
             await Page.GotoAsync(Server.EmptyPage);
-            var exception = await AssertThrowsAsync<TimeoutException>(() => task);
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => task);
             StringAssert.Contains("Timeout 2500ms exceeded.", exception.Message);
         }
 
@@ -45,9 +45,9 @@ namespace Microsoft.Playwright.Tests
 
             var waitForRequestTask = Server.WaitForRequest("/one-style.css");
             var navigationTask = Page.GotoAsync(Server.Prefix + "/one-style.html");
-            var domContentLoadedTask = Page.WaitForURLAsync("**/one-style.html", new PageWaitForURLOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
+            var domContentLoadedTask = Page.WaitForURLAsync("**/one-style.html", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
             var bothFiredTask = Task.WhenAll(
-                Page.WaitForURLAsync("**/one-style.html", new PageWaitForURLOptions { WaitUntil = WaitUntilState.Load }),
+                Page.WaitForURLAsync("**/one-style.html", new() { WaitUntil = WaitUntilState.Load }),
                 domContentLoadedTask);
 
             await waitForRequestTask;
@@ -139,8 +139,10 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
             var frame = Page.Frames.ElementAt(1);
 
-            await frame.EvaluateAsync("url => window.location.href = url", Server.Prefix + "/grid.html");
-            await frame.WaitForURLAsync("**/grid.html");
+            await TaskUtils.WhenAll(
+                frame.WaitForURLAsync("**/grid.html"),
+                frame.EvaluateAsync("url => window.location.href = url", Server.Prefix + "/grid.html"));
+            ;
         }
     }
 }

@@ -45,6 +45,7 @@ namespace Microsoft.Playwright
             if (clone == null) return;
             Media = clone.Media;
             ColorScheme = clone.ColorScheme;
+            ReducedMotion = clone.ReducedMotion;
         }
 
         /// <summary>
@@ -65,5 +66,14 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("colorScheme")]
         public ColorScheme? ColorScheme { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Emulates <c>'prefers-reduced-motion'</c> media feature, supported values are <c>'reduce'</c>,
+        /// <c>'no-preference'</c>. Passing <c>null</c> disables reduced motion emulation.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("reducedMotion")]
+        public ReducedMotion? ReducedMotion { get; set; }
     }
 }

@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -28,7 +27,7 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync("**/*", (route) =>
             {
                 var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["FOO"] = "bar" };
-                route.ContinueAsync(new RouteContinueOptions { Headers = headers });
+                route.ContinueAsync(new() { Headers = headers });
             });
             await Page.GotoAsync(Server.EmptyPage);
             var requestTask = Server.WaitForRequest("/sleep.zzz", request => request.Headers["foo"]);
@@ -44,7 +43,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAmendMethodOnMainRequest()
         {
             var methodTask = Server.WaitForRequest("/empty.html", r => r.Method);
-            await Page.RouteAsync("**/*", (route) => route.ContinueAsync(new RouteContinueOptions { Method = HttpMethod.Post.Method }));
+            await Page.RouteAsync("**/*", (route) => route.ContinueAsync(new() { Method = HttpMethod.Post.Method }));
             await Page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual("POST", await methodTask);
         }
@@ -56,7 +55,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.EmptyPage);
             await Page.RouteAsync("**/*", (route) =>
             {
-                route.ContinueAsync(new RouteContinueOptions { PostData = Encoding.UTF8.GetBytes("doggo") });
+                route.ContinueAsync(new() { PostData = Encoding.UTF8.GetBytes("doggo") });
             });
             var requestTask = Server.WaitForRequest("/sleep.zzz", request =>
             {

@@ -22,33 +22,26 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.NUnitTest
+namespace Microsoft.Playwright.NUnit
 {
-    public class ContextTest : BrowserTest
+    public class PlaywrightTest : WorkerAwareTest
     {
-        public IBrowserContext Context { get; private set; }
+        public static string BrowserName => (Environment.GetEnvironmentVariable("BROWSER") ?? "chromium").ToLower();
 
-        public virtual BrowserNewContextOptions ContextOptions()
-        {
-            return null;
-        }
+        private static readonly Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
+
+        public IPlaywright Playwright { get; private set; }
+        public IBrowserType BrowserType { get; private set; }
 
         [SetUp]
-        public async Task ContextSetup()
+        public async Task PlaywrightSetup()
         {
-            Context = await Browser.NewContextAsync(ContextOptions());
-        }
-
-        [TearDown]
-        public async Task ContextTeardown()
-        {
-            if (TestOk())
-            {
-                await Context.CloseAsync();
-            }
+            Playwright = await _playwrightTask;
+            BrowserType = Playwright[BrowserName];
         }
     }
 }

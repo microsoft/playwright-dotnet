@@ -1,8 +1,6 @@
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -12,9 +10,15 @@ namespace Microsoft.Playwright.Tests
     public class ScreencastTests : BrowserTestEx
     {
         [PlaywrightTest("screencast.spec.ts", "videoSize should require videosPath")]
-        [Test, Ignore("We are not using old properties")]
-        public void VideoSizeShouldRequireVideosPath()
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task VideoSizeShouldRequireVideosPath()
         {
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new()
+            {
+                RecordVideoSize = new RecordVideoSize { Height = 100, Width = 100 }
+            }));
+
+            StringAssert.Contains("\"RecordVideoSize\" option requires \"RecordVideoDir\" to be specified", exception.Message);
         }
 
         [PlaywrightTest("screencast.spec.ts", "should work with old options")]
@@ -29,12 +33,29 @@ namespace Microsoft.Playwright.Tests
         {
         }
 
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task ShouldWorkWithoutASize()
+        {
+            using var tempDirectory = new TempDirectory();
+            var context = await Browser.NewContextAsync(new()
+            {
+                RecordVideoDir = tempDirectory.Path
+            });
+
+            var page = await context.NewPageAsync();
+            await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
+            await Task.Delay(1000);
+            await context.CloseAsync();
+
+            Assert.IsNotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
+        }
+
         [PlaywrightTest("screencast.spec.ts", "should capture static page")]
         [Test, SkipBrowserAndPlatform(skipWebkit: true, skipWindows: true)]
         public async Task ShouldCaptureStaticPage()
         {
             using var tempDirectory = new TempDirectory();
-            var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            var context = await Browser.NewContextAsync(new()
             {
                 RecordVideoDir = tempDirectory.Path,
                 RecordVideoSize = new RecordVideoSize() { Height = 100, Width = 100 }
@@ -53,7 +74,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldExposeVideoPath()
         {
             using var tempDirectory = new TempDirectory();
-            var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            var context = await Browser.NewContextAsync(new()
             {
                 RecordVideoDir = tempDirectory.Path,
                 RecordVideoSize = new RecordVideoSize { Height = 100, Width = 100 }
@@ -73,7 +94,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldExposeVideoPathBlankPage()
         {
             using var tempDirectory = new TempDirectory();
-            var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            var context = await Browser.NewContextAsync(new()
             {
                 RecordVideoDir = tempDirectory.Path,
                 RecordVideoSize = new RecordVideoSize() { Height = 100, Width = 100 }
@@ -135,7 +156,7 @@ namespace Microsoft.Playwright.Tests
         {
             using var userDirectory = new TempDirectory();
             using var tempDirectory = new TempDirectory();
-            var context = await BrowserType.LaunchPersistentContextAsync(userDirectory.Path, new BrowserTypeLaunchPersistentContextOptions
+            var context = await BrowserType.LaunchPersistentContextAsync(userDirectory.Path, new()
             {
                 RecordVideoDir = tempDirectory.Path,
                 RecordVideoSize = new RecordVideoSize() { Height = 100, Width = 100 },

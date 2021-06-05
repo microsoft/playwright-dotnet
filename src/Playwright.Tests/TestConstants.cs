@@ -1,16 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Playwright.Tests
 {
     internal static class TestConstants
     {
-        public static string BrowserName => string.IsNullOrEmpty(Environment.GetEnvironmentVariable("BROWSER")) ?
-            "chromium" : Environment.GetEnvironmentVariable("BROWSER").ToLower();
+        public static string BrowserName => NUnit.PlaywrightTest.BrowserName;
 
         public const int DefaultTestTimeout = 30_000;
         public const int DefaultTimeout = 10_000;

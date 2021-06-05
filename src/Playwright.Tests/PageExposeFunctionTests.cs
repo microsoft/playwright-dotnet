@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -96,7 +96,7 @@ namespace Microsoft.Playwright.Tests
             {
                 called = true;
             });
-            await Page.AddInitScriptAsync("() => woof()");
+            await Page.AddInitScriptAsync("woof()");
             await Page.ReloadAsync();
             Assert.True(called);
         }
@@ -210,7 +210,7 @@ namespace Microsoft.Playwright.Tests
                 });
 
             await TaskUtils.WhenAll(
-                Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { WaitUntil = WaitUntilState.Load }),
+                Page.WaitForNavigationAsync(new() { WaitUntil = WaitUntilState.Load }),
                 Page.EvaluateAsync(@"async url => {
                     window['logme']({ foo: 42 });
                     window.location.href = url;
@@ -222,7 +222,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowForDuplicateRegistrations()
         {
             await Page.ExposeFunctionAsync("foo", () => { });
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.ExposeFunctionAsync("foo", () => { }));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.ExposeFunctionAsync("foo", () => { }));
             Assert.AreEqual("Function \"foo\" has been already registered", exception.Message);
         }
 

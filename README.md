@@ -115,7 +115,7 @@ dotnet-install --global microsoft.playwright.cli
 Then, you can simply call:
 
 ```powershell
-playwrightcli codegen https://www.microsoft.com
+playwright codegen https://www.microsoft.com
 ```
 
 ## Resources

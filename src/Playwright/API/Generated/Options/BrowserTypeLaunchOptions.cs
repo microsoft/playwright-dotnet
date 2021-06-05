@@ -56,6 +56,7 @@ namespace Microsoft.Playwright
             Headless = clone.Headless;
             Proxy = clone.Proxy;
             Timeout = clone.Timeout;
+            TracesDir = clone.TracesDir;
             FirefoxUserPrefs = clone.FirefoxUserPrefs;
             SlowMo = clone.SlowMo;
             IgnoreDefaultArgs = clone.IgnoreDefaultArgs;
@@ -153,6 +154,10 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("timeout")]
         public float? Timeout { get; set; }
+
+        /// <summary><para>If specified, traces are saved into this directory.</para></summary>
+        [JsonPropertyName("tracesDir")]
+        public string TracesDir { get; set; }
 
         /// <summary><para>Firefox user preferences. Learn more about the Firefox user preferences at <a href="https://support.mozilla.org/en-US/kb/about-config-editor-firefox"><c>about:config</c></a>.</para></summary>
         [JsonPropertyName("firefoxUserPrefs")]

@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -18,7 +18,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRejectAllPromisesWhenPageIsClosed()
         {
             var newPage = await Context.NewPageAsync();
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => TaskUtils.WhenAll(
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => TaskUtils.WhenAll(
                 newPage.EvaluateAsync<string>("() => new Promise(r => { })"),
                 newPage.CloseAsync()
             ));
@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
                 context.Abort(); // is this right?
                 return Task.CompletedTask;
             });
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.GotoAsync(Server.EmptyPage));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync(Server.EmptyPage));
             StringAssert.Contains(nameof(PageBasicTests), exception.StackTrace);
         }
 
@@ -135,7 +135,7 @@ namespace Microsoft.Playwright.Tests
         {
             var task = Page.WaitForDownloadAsync();
             await Page.CloseAsync();
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => task);
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => task);
             StringAssert.Contains("Page closed", exception.Message);
         }
 
@@ -144,7 +144,6 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldHaveASaneUserAgent()
         {
             string userAgent = await Page.EvaluateAsync<string>("() => navigator.userAgent");
-            var regex = new Regex("[()]");
             string[] parts = Regex.Split(userAgent, "[()]").Select(t => t.Trim()).ToArray();
 
             Assert.AreEqual("Mozilla/5.0", parts[0]);
@@ -234,7 +233,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldTerminateNetworkWaiters()
         {
             var newPage = await Context.NewPageAsync();
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => TaskUtils.WhenAll(
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => TaskUtils.WhenAll(
                 newPage.WaitForRequestAsync(Server.EmptyPage),
                 newPage.WaitForResponseAsync(Server.EmptyPage),
                 newPage.CloseAsync()

@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -29,8 +29,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
-            var exception = await AssertThrowsAsync<TimeoutException>(
-                () => Page.WaitForResponseAsync(_ => false, new PageWaitForResponseOptions
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(
+                () => Page.WaitForResponseAsync(_ => false, new()
                 {
                     Timeout = 1,
                 }));
@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRespectDefaultTimeout()
         {
             Page.SetDefaultTimeout(1);
-            var exception = await AssertThrowsAsync<TimeoutException>(
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(
                 () => Page.WaitForResponseAsync(_ => false));
         }
 
@@ -67,7 +67,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithNoTimeout()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            var task = Page.WaitForResponseAsync(Server.Prefix + "/digits/2.png", new PageWaitForResponseOptions { Timeout = 0 });
+            var task = Page.WaitForResponseAsync(Server.Prefix + "/digits/2.png", new() { Timeout = 0 });
             var (response, _) = await TaskUtils.WhenAll(
                 task,
                 Page.EvaluateAsync(@"() => setTimeout(() => {

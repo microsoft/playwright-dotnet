@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -36,7 +36,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<div>Hello</div>");
             var div = await Page.QuerySelectorAsync("div");
             await div.EvaluateAsync("div => div.remove()");
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => div.ScrollIntoViewIfNeededAsync());
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => div.ScrollIntoViewIfNeededAsync());
             StringAssert.Contains("Element is not attached to the DOM", exception.Message);
         }
 
@@ -86,7 +86,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<div style=\"display: none\">Hello</div>");
             var div = await Page.QuerySelectorAsync("div");
-            var exception = await AssertThrowsAsync<TimeoutException>(() => div.ScrollIntoViewIfNeededAsync(new ElementHandleScrollIntoViewIfNeededOptions { Timeout = 3000 }));
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => div.ScrollIntoViewIfNeededAsync(new() { Timeout = 3000 }));
             StringAssert.Contains("element is not visible", exception.Message);
         }
 

@@ -22,30 +22,27 @@
  * SOFTWARE.
  */
 
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.NUnitTest
+namespace Microsoft.Playwright
 {
-    public class BrowserService : IWorkerService
+    public enum ReducedMotion
     {
-        public IBrowser Browser { get; internal set; }
-
-        public static async Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType)
-        {
-            return await test.RegisterService("Browser", async () =>
-            {
-                var service = new BrowserService
-                {
-                    Browser = await browserType.LaunchAsync(new BrowserTypeLaunchOptions
-                    {
-                        Headless = true
-                    })
-                };
-                return service;
-            });
-        }
-
-        public Task ResetAsync() => Task.CompletedTask;
-        public Task DisposeAsync() => Browser.CloseAsync();
-    };
+        [EnumMember(Value = "reduce")]
+        Reduce,
+        [EnumMember(Value = "no-preference")]
+        NoPreference,
+        [EnumMember(Value = "null")]
+        Null,
+    }
 }

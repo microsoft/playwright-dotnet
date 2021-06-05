@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests.Firefox
@@ -21,9 +21,9 @@ namespace Microsoft.Playwright.Tests.Firefox
                 ["network.proxy.http_port"] = 333,
             };
 
-            await using var browser = await BrowserType.LaunchAsync(new BrowserTypeLaunchOptions { FirefoxUserPrefs = firefoxUserPrefs });
+            await using var browser = await BrowserType.LaunchAsync(new() { FirefoxUserPrefs = firefoxUserPrefs });
             var page = await browser.NewPageAsync();
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => page.GotoAsync("http://example.com"));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync("http://example.com"));
 
             StringAssert.Contains("NS_ERROR_PROXY_CONNECTION_REFUSED", exception.Message);
         }

@@ -23,7 +23,7 @@ namespace Microsoft.Playwright
 
         public async Task RegisterAsync(string name, string script, string path, bool? contentScript = null)
         {
-            script = ScriptsHelper.EvaluationScript(script, path, false);
+            script = ScriptsHelper.EvaluationScript(script, path);
 
             var registerParam = new SelectorsRegisterParams
             {

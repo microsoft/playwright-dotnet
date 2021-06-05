@@ -1,9 +1,7 @@
-using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -21,7 +19,7 @@ namespace Microsoft.Playwright.Tests
             var page1 = await Context.NewPageAsync();
             await page1.RouteAsync("**/*", (route) =>
             {
-                route.FulfillAsync(new RouteFulfillOptions { Body = "<html></html>" });
+                route.FulfillAsync(new() { Body = "<html></html>" });
             });
 
             await page1.GotoAsync("https://www.example.com");
@@ -55,7 +53,7 @@ namespace Microsoft.Playwright.Tests
             var page1 = await Context.NewPageAsync();
             await page1.RouteAsync("**/*", (route) =>
             {
-                route.FulfillAsync(new RouteFulfillOptions { Body = "<html></html>" });
+                route.FulfillAsync(new() { Body = "<html></html>" });
             });
 
             await page1.GotoAsync("https://www.example.com");
@@ -66,14 +64,14 @@ namespace Microsoft.Playwright.Tests
             }");
             using var tempDir = new TempDirectory();
             string path = Path.Combine(tempDir.Path, "storage-state.json");
-            string storage = await Context.StorageStateAsync(new BrowserContextStorageStateOptions { Path = path });
+            string storage = await Context.StorageStateAsync(new() { Path = path });
             Assert.AreEqual(storage, File.ReadAllText(path));
 
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { StorageStatePath = path });
+            await using var context = await Browser.NewContextAsync(new() { StorageStatePath = path });
             var page2 = await context.NewPageAsync();
             await page2.RouteAsync("**/*", (route) =>
             {
-                route.FulfillAsync(new RouteFulfillOptions { Body = "<html></html>" });
+                route.FulfillAsync(new() { Body = "<html></html>" });
             });
 
             await page2.GotoAsync("https://www.example.com");

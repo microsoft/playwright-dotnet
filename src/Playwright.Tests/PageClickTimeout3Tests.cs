@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -41,8 +39,8 @@ namespace Microsoft.Playwright.Tests
                 document.body.appendChild(flyOver);
             }");
 
-            var exception = await AssertThrowsAsync<TimeoutException>(()
-                => button.ClickAsync(new ElementHandleClickOptions { Timeout = 5000 }));
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
+                => button.ClickAsync(new() { Timeout = 5000 }));
 
             StringAssert.Contains("Timeout 5000ms exceeded.", exception.Message);
         }

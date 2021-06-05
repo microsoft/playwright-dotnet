@@ -5,7 +5,7 @@ namespace Microsoft.Playwright.Helpers
     /// <summary>
     /// Extensions for <see cref="double"/>.
     /// </summary>
-    public static class DoubleExtensions
+    internal static class DoubleExtensions
     {
         /// <summary>
         /// Checks if the double is a negative zero.

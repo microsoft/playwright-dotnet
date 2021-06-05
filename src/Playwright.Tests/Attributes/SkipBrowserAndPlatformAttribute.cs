@@ -6,7 +6,7 @@ namespace Microsoft.Playwright.Tests
 {
     public class SkipBrowserAndPlatformAttribute : NUnitAttribute, IApplyToTest
     {
-        private bool _skip = false;
+        private readonly bool _skip = false;
 
         public SkipBrowserAndPlatformAttribute(
             bool skipFirefox = false,
@@ -22,12 +22,12 @@ namespace Microsoft.Playwright.Tests
             }
         }
 
-        public void ApplyToTest(NUnit.Framework.Internal.Test test)
+        public void ApplyToTest(global::NUnit.Framework.Internal.Test test)
         {
             if (_skip)
             {
                 test.RunState = RunState.Ignored;
-                test.Properties.Set(NUnit.Framework.Internal.PropertyNames.SkipReason, "Skipped by browser/platform");
+                test.Properties.Set(global::NUnit.Framework.Internal.PropertyNames.SkipReason, "Skipped by browser/platform");
             }
         }
 

@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithPageScale()
         {
-            var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize
                 {

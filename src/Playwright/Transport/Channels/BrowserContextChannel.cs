@@ -26,6 +26,14 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal event EventHandler<RouteEventArgs> Route;
 
+        internal event EventHandler<BrowserContextChannelRequestEventArgs> Request;
+
+        internal event EventHandler<BrowserContextChannelRequestEventArgs> RequestFinished;
+
+        internal event EventHandler<BrowserContextChannelRequestEventArgs> RequestFailed;
+
+        internal event EventHandler<BrowserContextChannelResponseEventArgs> Response;
+
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
             switch (method)
@@ -73,6 +81,18 @@ namespace Microsoft.Playwright.Transport.Channels
                         {
                             WorkerChannel = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Connection.GetDefaultJsonSerializerOptions()),
                         });
+                    break;
+                case "request":
+                    Request?.Invoke(this, serverParams?.ToObject<BrowserContextChannelRequestEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
+                    break;
+                case "requestFinished":
+                    RequestFinished?.Invoke(this, serverParams?.ToObject<BrowserContextChannelRequestEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
+                    break;
+                case "requestFailed":
+                    RequestFailed?.Invoke(this, serverParams?.ToObject<BrowserContextChannelRequestEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
+                    break;
+                case "response":
+                    Response?.Invoke(this, serverParams?.ToObject<BrowserContextChannelResponseEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
             }
         }
@@ -211,5 +231,27 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal Task<StorageState> GetStorageStateAsync()
             => Connection.SendMessageToServerAsync<StorageState>(Guid, "storageState", null);
+
+        internal Task TracingStartAsync(string name, bool? screenshots, bool? snapshots)
+            => Connection.SendMessageToServerAsync(
+                Guid,
+                "tracingStart",
+                new Dictionary<string, object>
+                {
+                    ["name"] = name,
+                    ["screenshots"] = screenshots,
+                    ["snapshots"] = snapshots,
+                });
+
+        internal Task TracingStopAsync()
+            => Connection.SendMessageToServerAsync(
+                Guid,
+                "tracingStop");
+
+        internal Task<ArtifactChannel> TracingExportAsync()
+            => Connection.SendMessageToServerAsync<ArtifactChannel>(
+                Guid,
+                "tracingExport",
+                new Dictionary<string, object>());
     }
 }

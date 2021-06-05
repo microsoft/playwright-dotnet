@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -22,7 +22,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.RouteAsync("**/*", (route) =>
             {
-                route.FulfillAsync(new RouteFulfillOptions
+                route.FulfillAsync(new()
                 {
                     Status = (int)HttpStatusCode.Created,
                     Headers = new Dictionary<string, string>
@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.RouteAsync("**/*", (route) =>
             {
-                route.FulfillAsync(new RouteFulfillOptions { Status = (int)HttpStatusCode.UpgradeRequired, Body = "Yo, page!" });
+                route.FulfillAsync(new() { Status = (int)HttpStatusCode.UpgradeRequired, Body = "Yo, page!" });
             });
             var response = await Page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual((int)HttpStatusCode.UpgradeRequired, response.Status);
@@ -65,7 +65,7 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync("**/*", (route) =>
             {
                 byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
-                route.FulfillAsync(new RouteFulfillOptions
+                route.FulfillAsync(new()
                 {
                     ContentType = "image/png",
                     BodyBytes = imageBuffer,
@@ -93,7 +93,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.RouteAsync("**/*", (route) =>
             {
-                route.FulfillAsync(new RouteFulfillOptions
+                route.FulfillAsync(new()
                 {
                     ContentType = "shouldBeIgnored",
                     Path = TestUtils.GetWebServerFile("pptr.png"),
@@ -116,7 +116,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.RouteAsync("**/*", (route) =>
             {
-                route.FulfillAsync(new RouteFulfillOptions
+                route.FulfillAsync(new()
                 {
                     Status = (int)HttpStatusCode.OK,
                     Headers = new Dictionary<string, string>
@@ -166,7 +166,7 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync(Server.CrossProcessPrefix + "/something", (route) =>
             {
                 playwrightRequest = route.Request;
-                route.ContinueAsync(new RouteContinueOptions { Headers = route.Request.Headers.ToDictionary(x => x.Key, x => x.Value) });
+                route.ContinueAsync(new() { Headers = route.Request.Headers.ToDictionary(x => x.Key, x => x.Value) });
             });
 
             string textAfterRoute = await Page.EvaluateAsync<string>(@"async url => {
@@ -190,7 +190,7 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync(Server.CrossProcessPrefix + "/something", (route) =>
             {
                 interceptedRequest = route.Request;
-                route.FulfillAsync(new RouteFulfillOptions
+                route.FulfillAsync(new()
                 {
                     Headers = new Dictionary<string, string> { ["Access-Control-Allow-Origin"] = "*" },
                     ContentType = "text/plain",

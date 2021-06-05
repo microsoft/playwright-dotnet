@@ -23,24 +23,32 @@
  */
 
 using System;
-using System.Collections.Concurrent;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
-using NUnit.Framework.Interfaces;
 
-namespace Microsoft.Playwright.NUnitTest
+namespace Microsoft.Playwright.Tests
 {
-    public class BrowserTest : PlaywrightTest
+    internal static class PlaywrightAssert
     {
-        public IBrowser Browser { get; internal set; }
-
-        [SetUp]
-        public async Task BrowserSetup()
+        /// This functions replaces the <see cref="NUnit.Framework.Assert.ThrowsAsync(NUnit.Framework.Constraints.IResolveConstraint, AsyncTestDelegate)"/> because that
+        /// particular function does not actually work correctly for Playwright Tests as it completely blocks the calling thread.
+        /// For a more detailed read on the subject, see <see href="https://github.com/nunit/nunit/issues/464"/>.
+        internal static async Task<T> ThrowsAsync<T>(Func<Task> action) where T : Exception
         {
-            var service = await BrowserService.Register(this, BrowserType);
-            Browser = service.Browser;
+            try
+            {
+                await action();
+                Assert.Fail();
+                return null;
+            }
+            catch (T t)
+            {
+                return t;
+            }
         }
+
+        internal static void DebugLog(string text) => TestContext.Progress.WriteLine(text);
     }
 }

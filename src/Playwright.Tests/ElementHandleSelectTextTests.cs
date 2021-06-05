@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -68,7 +68,7 @@ namespace Microsoft.Playwright.Tests
             var textarea = await Page.QuerySelectorAsync("textarea");
             await textarea.EvaluateAsync("e => e.style.display = 'none'");
 
-            var exception = await AssertThrowsAsync<TimeoutException>(() => textarea.SelectTextAsync(new ElementHandleSelectTextOptions { Timeout = 3000 }));
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => textarea.SelectTextAsync(new() { Timeout = 3000 }));
             StringAssert.Contains("element is not visible", exception.Message);
         }
 
@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Tests
             await textarea.EvaluateAsync("textarea => textarea.value = 'some value'");
             await textarea.EvaluateAsync("e => e.style.display = 'none'");
 
-            var task = textarea.SelectTextAsync(new ElementHandleSelectTextOptions { Timeout = 3000 });
+            var task = textarea.SelectTextAsync(new() { Timeout = 3000 });
             await Page.EvaluateAsync("() => new Promise(f => setTimeout(f, 1000))");
             Assert.False(task.IsCompleted);
             await textarea.EvaluateAsync("e => e.style.display = 'block'");

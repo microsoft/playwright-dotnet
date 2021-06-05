@@ -1,7 +1,5 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -13,7 +11,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAffectAcceptLanguageHeader()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { Locale = "fr-CH" });
+            await using var context = await Browser.NewContextAsync(new() { Locale = "fr-CH" });
             string acceptLanguage = string.Empty;
             var page = await context.NewPageAsync();
             var requestTask = Server.WaitForRequest("/empty.html", c => acceptLanguage = c.Headers["accept-language"]);
@@ -29,7 +27,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAffectNavigatorLanguage()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 Locale = "fr-CH"
             });
@@ -41,7 +39,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatNumber()
         {
-            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using (var context = await Browser.NewContextAsync(new()
             {
                 Locale = "en-US"
             }))
@@ -51,7 +49,7 @@ namespace Microsoft.Playwright.Tests
                 Assert.AreEqual("1,000,000.5", await page.EvaluateAsync<string>("() => (1000000.50).toLocaleString()"));
             }
 
-            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using (var context = await Browser.NewContextAsync(new()
             {
                 Locale = "fr-CH"
             }))
@@ -67,7 +65,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatDate()
         {
-            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using (var context = await Browser.NewContextAsync(new()
             {
                 Locale = "en-US",
                 TimezoneId = "America/Los_Angeles",
@@ -75,12 +73,21 @@ namespace Microsoft.Playwright.Tests
             {
                 var page = await context.NewPageAsync();
                 await page.GotoAsync(Server.EmptyPage);
-                Assert.AreEqual(
-                    "Sat Nov 19 2016 10:12:34 GMT-0800 (Pacific Standard Time)",
-                    await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+                if (BrowserName == "webkit")
+                {
+                    Assert.AreEqual(
+                        "Sat Nov 19 2016 10:12:34 GMT-0800",
+                        await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+                }
+                else
+                {
+                    Assert.AreEqual(
+                        "Sat Nov 19 2016 10:12:34 GMT-0800 (Pacific Standard Time)",
+                        await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+                }
             }
 
-            await using (var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using (var context = await Browser.NewContextAsync(new()
             {
                 Locale = "de-DE",
                 TimezoneId = "Europe/Berlin",
@@ -88,9 +95,18 @@ namespace Microsoft.Playwright.Tests
             {
                 var page = await context.NewPageAsync();
                 await page.GotoAsync(Server.EmptyPage);
-                Assert.AreEqual(
-                    "Sat Nov 19 2016 19:12:34 GMT+0100 (Mitteleuropäische Normalzeit)",
-                    await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+                if (BrowserName == "webkit")
+                {
+                    Assert.AreEqual(
+                        "Sat Nov 19 2016 19:12:34 GMT+0100",
+                        await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+                }
+                else
+                {
+                    Assert.AreEqual(
+                        "Sat Nov 19 2016 19:12:34 GMT+0100 (Mitteleuropäische Normalzeit)",
+                        await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
+                }
             }
         }
 
@@ -98,7 +114,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatNumberInPopups()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 Locale = "fr-CH"
             });
@@ -120,7 +136,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAffectNavigatorLanguageInPopups()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 Locale = "fr-CH"
             });

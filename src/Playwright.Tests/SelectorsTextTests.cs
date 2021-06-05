@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -52,8 +52,8 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("<div>x</div>", await Page.EvalOnSelectorAsync<string>("\"x\"", "e => e.outerHTML"));
             Assert.AreEqual("<div>x</div>", await Page.EvalOnSelectorAsync<string>("'x'", "e => e.outerHTML"));
 
-            await AssertThrowsAsync<PlaywrightException>(() => Page.QuerySelectorAsync("\""));
-            await AssertThrowsAsync<PlaywrightException>(() => Page.QuerySelectorAsync("'"));
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.QuerySelectorAsync("\""));
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.QuerySelectorAsync("'"));
 
             await Page.SetContentAsync("<div> ' </div><div> \" </div>");
             Assert.AreEqual("<div> \" </div>", await Page.EvalOnSelectorAsync<string>("text=\"", "e => e.outerHTML"));

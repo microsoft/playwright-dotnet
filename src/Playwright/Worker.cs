@@ -50,13 +50,11 @@ namespace Microsoft.Playwright
         public async Task<T> EvaluateAsync<T>(string expression, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
                 script: expression,
-                isFunction: expression.IsJavascriptFunction(),
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         public async Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = null)
             => (await _channel.EvaluateExpressionHandleAsync(
                 script: expression,
-                isFunction: expression.IsJavascriptFunction(),
                 arg: ScriptsHelper.SerializedArgument(arg))
             .ConfigureAwait(false))?.Object;
 

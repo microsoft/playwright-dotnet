@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -71,7 +69,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Ignore("Fix me #1058")]
         public async Task ShouldWorkForSSL()
         {
-            var page = await Browser.NewPageAsync(new BrowserNewPageOptions { IgnoreHTTPSErrors = true });
+            var page = await Browser.NewPageAsync(new() { IgnoreHTTPSErrors = true });
             var (request, _) = await TaskUtils.WhenAll(
                 page.WaitForRequestFinishedAsync(),
                 page.GotoAsync(HttpsServer.Prefix + "/empty.html"));

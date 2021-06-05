@@ -1,9 +1,8 @@
-using System;
 using System.Dynamic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -92,7 +91,7 @@ namespace Microsoft.Playwright.Tests
             a.a = 1;
             a.y = a;
 
-            var exception = await AssertThrowsAsync<JsonException>(() => Page.EvaluateAsync("x => x", a));
+            var exception = await PlaywrightAssert.ThrowsAsync<JsonException>(() => Page.EvaluateAsync("x => x", a));
             Assert.AreEqual("Argument is a circular structure", exception.Message);
         }
 

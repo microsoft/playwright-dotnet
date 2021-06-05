@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -192,11 +192,9 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoWaitAfterTrue()
         {
-            var messages = new List<string>();
             Server.SetRoute("/empty.html", _ => Task.CompletedTask);
-
             await Page.SetContentAsync($@"<a href=""{ Server.EmptyPage}"" target=target>empty.html</a>");
-            await Page.ClickAsync("a", new PageClickOptions { NoWaitAfter = true });
+            await Page.ClickAsync("a", new() { NoWaitAfter = true });
         }
 
         [PlaywrightTest("page-autowaiting-basic.spec.ts", "should work with waitForLoadState(load)")]
@@ -221,7 +219,7 @@ namespace Microsoft.Playwright.Tests
                     clickLoaded.TrySetResult(true);
                 })),
                 clickLoaded.Task,
-                Page.WaitForNavigationAsync(new PageWaitForNavigationOptions { WaitUntil = WaitUntilState.DOMContentLoaded }).ContinueWith(_ => messages.Add("domcontentloaded")));
+                Page.WaitForNavigationAsync(new() { WaitUntil = WaitUntilState.DOMContentLoaded }).ContinueWith(_ => messages.Add("domcontentloaded")));
 
             Assert.AreEqual("route|domcontentloaded|clickload", string.Join("|", messages));
         }

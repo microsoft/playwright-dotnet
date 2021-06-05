@@ -30,19 +30,16 @@ namespace Microsoft.Playwright
         public async Task<JsonElement?> EvaluateAsync(string expression, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
                 script: expression,
-                isFunction: expression.IsJavascriptFunction(),
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         public async Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = null)
             => (await _channel.EvaluateExpressionHandleAsync(
                 script: expression,
-                isFunction: expression.IsJavascriptFunction(),
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false))?.Object;
 
         public async Task<T> EvaluateAsync<T>(string expression, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
                 script: expression,
-                isFunction: expression.IsJavascriptFunction(),
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         public async Task<T> JsonValueAsync<T>() => ScriptsHelper.ParseEvaluateResult<T>(await _channel.JsonValueAsync().ConfigureAwait(false));

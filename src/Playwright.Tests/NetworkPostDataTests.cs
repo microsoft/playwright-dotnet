@@ -1,7 +1,7 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 
@@ -30,7 +30,7 @@ namespace Microsoft.Playwright.Tests
 
             await Task.WhenAll(task, actualTask);
 
-            string expectedJsonValue = JsonSerializer.Serialize(value, new JsonSerializerOptions
+            string expectedJsonValue = JsonSerializer.Serialize(value, new()
             {
                 Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                 WriteIndented = true

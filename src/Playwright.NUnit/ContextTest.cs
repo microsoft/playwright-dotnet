@@ -25,16 +25,21 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.NUnitTest
+namespace Microsoft.Playwright.NUnit
 {
-    public class PageTest : ContextTest
+    public class ContextTest : BrowserTest
     {
-        public IPage Page { get; private set; }
+        public IBrowserContext Context { get; private set; }
+
+        public virtual BrowserNewContextOptions ContextOptions()
+        {
+            return null;
+        }
 
         [SetUp]
-        public async Task PageSetup()
+        public async Task ContextSetup()
         {
-            Page = await Context.NewPageAsync();
+            Context = await NewContext(ContextOptions());
         }
     }
 }

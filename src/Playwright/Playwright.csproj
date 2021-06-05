@@ -18,33 +18,15 @@
     <ReleaseVersion>0.0.0</ReleaseVersion>
     <BuildFromSource>True</BuildFromSource>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <NoWarn>1701;1702;CS0067;1734</NoWarn>
+    <NoWarn>1701;1702;CS0067;1734;NU5110;NU5111</NoWarn>
     <AssemblyName>Microsoft.Playwright</AssemblyName>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyVersion>1.11.1</AssemblyVersion>
-    <PackageVersion>$(AssemblyVersion)-alpha-2</PackageVersion>
-    <DriverVersion>1.11.1-1622073148000</DriverVersion>
-    <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
-    <FileVersion>$(AssemblyVersion)</FileVersion>
-    <NoDefaultExcludes>true</NoDefaultExcludes>
-    <Authors>Microsoft</Authors>
-    <Owners>Microsoft</Owners>
-    <PackageProjectUrl>https://github.com/microsoft/playwright-sharp</PackageProjectUrl>
-    <PackageTags>headless,chrome,firefox,webkit,playwright</PackageTags>
-    <RepositoryUrl>https://github.com/microsoft/playwright-sharp.git</RepositoryUrl>
-    <PackageReleaseNotes><![CDATA[
-]]></PackageReleaseNotes>
-    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-  </PropertyGroup>
+  <Import Project="../Common/Version.props" />
   <Import Project="../Common/Dependencies.props" />
   <Import Project="../Common/SignAssembly.props" />
   <Import Project="build/netstandard2.0/Microsoft.Playwright.targets" />
   <ItemGroup>
-    <PackageReference Include="Esprima" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     <PackageReference Include="Microsoft.VisualStudioEng.MicroBuild.Core" Version="0.4.1">
       <PrivateAssets>all</PrivateAssets>
@@ -61,9 +43,6 @@
     <None Include="Drivers\win-x64\**" Pack="true" PackagePath="Drivers\win-x64\native" />
     <None Include="Drivers\win-x86\**" Pack="true" PackagePath="Drivers\win-x86\native" />
     <None Include="build\**" Pack="true" PackagePath="build" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <DriverFiles Include="Drivers\win-x64\**">

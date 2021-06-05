@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using Newtonsoft.Json;
 using NUnit.Framework;
 

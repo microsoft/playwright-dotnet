@@ -23,8 +23,8 @@ namespace Microsoft.Playwright.Tests.TestServer
         private readonly IDictionary<string, (string username, string password)> _auths;
         private readonly IDictionary<string, string> _csp;
         private readonly IWebHost _webHost;
-        private static int counter;
-        private readonly Dictionary<int, WebSocket> _clients = new Dictionary<int, WebSocket>();
+        private static int _counter;
+        private readonly Dictionary<int, WebSocket> _clients = new();
 
         public int Port { get; }
         public string Prefix { get; }
@@ -35,9 +35,9 @@ namespace Microsoft.Playwright.Tests.TestServer
 
         public event EventHandler<RequestReceivedEventArgs> RequestReceived;
 
-        public static SimpleServer Create(int port, string contentRoot) => new SimpleServer(port, contentRoot, isHttps: false);
+        public static SimpleServer Create(int port, string contentRoot) => new(port, contentRoot, isHttps: false);
 
-        public static SimpleServer CreateHttps(int port, string contentRoot) => new SimpleServer(port, contentRoot, isHttps: true);
+        public static SimpleServer CreateHttps(int port, string contentRoot) => new(port, contentRoot, isHttps: true);
 
         public SimpleServer(int port, string contentRoot, bool isHttps)
         {
@@ -282,24 +282,24 @@ namespace Microsoft.Playwright.Tests.TestServer
                 {
                     string closeMessage = string.Format("Maximum message size: {0} bytes.", MaxMessageSize);
                     await webSocket.CloseAsync(WebSocketCloseStatus.MessageTooBig, closeMessage, CancellationToken.None);
-                    return new ArraySegment<byte>();
+                    return new();
                 }
 
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer, count, MaxMessageSize - count), CancellationToken.None);
                 count += result.Count;
 
             }
-            return new ArraySegment<byte>(buffer, 0, count);
+            return new(buffer, 0, count);
         }
 
 
         private static int NextConnectionId()
         {
-            int id = Interlocked.Increment(ref counter);
+            int id = Interlocked.Increment(ref _counter);
 
             if (id == int.MaxValue)
             {
-                throw new Exception("connection id limit reached: " + id);
+                throw new("connection id limit reached: " + id);
             }
 
             return id;

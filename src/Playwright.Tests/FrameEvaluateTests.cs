@@ -1,7 +1,7 @@
 using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -69,7 +69,7 @@ namespace Microsoft.Playwright.Tests
             var childFrame = Page.MainFrame.ChildFrames.First();
             dynamic childResult = await childFrame.EvaluateAsync<ExpandoObject>("() => window.__foo");
             Assert.AreEqual("baz", childResult.bar);
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => childFrame.EvaluateAsync<string>("foo => foo.bar", handle));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => childFrame.EvaluateAsync<string>("foo => foo.bar", handle));
             Assert.AreEqual("JSHandles can be evaluated only in the context they were created!", exception.Message);
         }
 
@@ -90,7 +90,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.EmptyPage);
             var frame = await FrameUtils.AttachFrameAsync(Page, "frame1", Server.CrossProcessPrefix + "/empty.html");
             var bodyHandle = await frame.QuerySelectorAsync("body");
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("body => body.innerHTML", bodyHandle));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("body => body.innerHTML", bodyHandle));
             StringAssert.Contains("Unable to adopt element handle from a different document", exception.Message);
         }
 
@@ -100,7 +100,7 @@ namespace Microsoft.Playwright.Tests
         {
             var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             await FrameUtils.DetachFrameAsync(Page, "frame1");
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => frame1.EvaluateAsync("() => 7 * 8"));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => frame1.EvaluateAsync("() => 7 * 8"));
             StringAssert.Contains("Execution Context is not available in detached frame", exception.Message);
         }
 
@@ -134,7 +134,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync(
                 @"<meta http-equiv=""Content-Security-Policy"" content=""script-src 'none';"">
                  <iframe src='javascript:""""'></iframe>",
-                new PageSetContentOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
+                new() { WaitUntil = WaitUntilState.DOMContentLoaded });
 
             await Page.EvaluateAsync(@"() => {
                 const iframe = document.querySelector('iframe');

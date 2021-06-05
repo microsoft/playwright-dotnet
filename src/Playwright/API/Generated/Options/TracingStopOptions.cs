@@ -23,45 +23,31 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
-using NUnit.Framework;
 
-namespace Microsoft.Playwright.NUnitTest
+namespace Microsoft.Playwright
 {
-    public class PlaywrightTest : WorkerAwareTest
+    public class TracingStopOptions
     {
-        public static string BrowserName => string.IsNullOrEmpty(Environment.GetEnvironmentVariable("BROWSER")) ?
-            "chromium" : Environment.GetEnvironmentVariable("BROWSER").ToLower();
+        public TracingStopOptions() { }
 
-        private static readonly Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
-
-        public IPlaywright Playwright { get; private set; }
-        public IBrowserType BrowserType { get; private set; }
-
-        [SetUp]
-        public async Task PlaywrightSetup()
+        public TracingStopOptions(TracingStopOptions clone)
         {
-            Playwright = await _playwrightTask;
-            BrowserType = Playwright[BrowserName];
+            if (clone == null) return;
+            Path = clone.Path;
         }
 
-        public static async Task<T> AssertThrowsAsync<T>(Func<Task> action) where T : Exception
-        {
-            try
-            {
-                await action();
-                Assert.Fail();
-                return null;
-            }
-            catch (T t)
-            {
-                return t;
-            }
-        }
-
-        public static void DebugLog(string text)
-        {
-            TestContext.Progress.WriteLine(text);
-        }
+        /// <summary><para>Export trace into the file with the given name.</para></summary>
+        [JsonPropertyName("path")]
+        public string Path { get; set; }
     }
 }

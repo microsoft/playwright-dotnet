@@ -66,6 +66,7 @@ namespace Microsoft.Playwright
             bool? headless = default,
             Proxy proxy = default,
             float? timeout = default,
+            string tracesDir = default,
             IEnumerable<KeyValuePair<string, object>> firefoxUserPrefs = default,
             float? slowMo = default,
             IEnumerable<string> ignoreDefaultArgs = default,
@@ -77,6 +78,7 @@ namespace Microsoft.Playwright
                 args,
                 proxy,
                 downloadsPath,
+                tracesDir,
                 chromiumSandbox,
                 firefoxUserPrefs,
                 handleSIGINT,
@@ -104,6 +106,7 @@ namespace Microsoft.Playwright
             bool? headless = default,
             Proxy proxy = default,
             float? timeout = default,
+            string tracesDir = default,
             float? slowMo = default,
             IEnumerable<string> ignoreDefaultArgs = default,
             bool? ignoreAllDefaultArgs = default,
@@ -125,11 +128,12 @@ namespace Microsoft.Playwright
             bool? offline = default,
             HttpCredentials httpCredentials = default,
             ColorScheme? colorScheme = default,
+            ReducedMotion? reducedMotion = default,
             string recordHarPath = default,
             bool? recordHarOmitContent = default,
             string recordVideoDir = default,
-            RecordVideoSize recordVideoSize = default) =>
-            (await _channel.LaunchPersistentContextAsync(
+            RecordVideoSize recordVideoSize = default)
+            => (await _channel.LaunchPersistentContextAsync(
                 userDataDir,
                 headless,
                 channel,
@@ -137,6 +141,7 @@ namespace Microsoft.Playwright
                 args,
                 proxy,
                 downloadsPath,
+                tracesDir,
                 chromiumSandbox,
                 handleSIGINT,
                 handleSIGTERM,
@@ -163,10 +168,10 @@ namespace Microsoft.Playwright
                 offline,
                 httpCredentials,
                 colorScheme,
+                reducedMotion,
                 recordHarPath,
                 recordHarOmitContent,
-                recordVideoDir,
-                recordVideoSize,
+                Browser.GetVideoArgs(recordVideoDir, recordVideoSize),
                 ignoreDefaultArgs,
                 ignoreAllDefaultArgs).ConfigureAwait(false)).Object;
     }

@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWaitForVisible()
         {
             bool divFound = false;
-            var waitForSelector = Page.WaitForSelectorAsync("div", new PageWaitForSelectorOptions { State = WaitForSelectorState.Visible })
+            var waitForSelector = Page.WaitForSelectorAsync("div", new() { State = WaitForSelectorState.Visible })
                 .ContinueWith(_ => divFound = true);
             await Page.SetContentAsync("<div style='display: none; visibility: hidden;'>1</div>");
             Assert.False(divFound);
@@ -47,13 +47,13 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldNotConsiderVisibleWhenZeroSized()
         {
             await Page.SetContentAsync("<div style='width: 0; height: 0;'>1</div>");
-            var exception = await AssertThrowsAsync<TimeoutException>(() => Page.WaitForSelectorAsync("div", new PageWaitForSelectorOptions { Timeout = 1000 }));
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.WaitForSelectorAsync("div", new() { Timeout = 1000 }));
             StringAssert.Contains("Timeout 1000ms", exception.Message);
             await Page.EvaluateAsync("() => document.querySelector('div').style.width = '10px'");
-            exception = await AssertThrowsAsync<TimeoutException>(() => Page.WaitForSelectorAsync("div", new PageWaitForSelectorOptions { Timeout = 1000 }));
+            exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.WaitForSelectorAsync("div", new() { Timeout = 1000 }));
             StringAssert.Contains("Timeout 1000ms", exception.Message);
             await Page.EvaluateAsync("() => document.querySelector('div').style.height = '10px'");
-            Assert.NotNull(await Page.WaitForSelectorAsync("div", new PageWaitForSelectorOptions { Timeout = 1000 }));
+            Assert.NotNull(await Page.WaitForSelectorAsync("div", new() { Timeout = 1000 }));
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should wait for visible recursively")]
@@ -61,7 +61,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWaitForVisibleRecursively()
         {
             bool divVisible = false;
-            var waitForSelector = Page.WaitForSelectorAsync("div#inner", new PageWaitForSelectorOptions { State = WaitForSelectorState.Visible }).ContinueWith(_ => divVisible = true);
+            var waitForSelector = Page.WaitForSelectorAsync("div#inner", new() { State = WaitForSelectorState.Visible }).ContinueWith(_ => divVisible = true);
             await Page.SetContentAsync("<div style='display: none; visibility: hidden;'><div id='inner'>hi</div></div>");
             Assert.False(divVisible);
             await Page.EvaluateAsync("document.querySelector('div').style.removeProperty('display')");
@@ -77,7 +77,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<div>content</div>");
             bool divRemoved = false;
-            var waitForSelector = Page.WaitForSelectorAsync("div", new PageWaitForSelectorOptions { State = WaitForSelectorState.Hidden })
+            var waitForSelector = Page.WaitForSelectorAsync("div", new() { State = WaitForSelectorState.Hidden })
                 .ContinueWith(_ => divRemoved = true);
             await Page.WaitForSelectorAsync("div"); // do a round trip
             Assert.False(divRemoved);
@@ -90,7 +90,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullIfWaitingToHideNonExistingElement()
         {
-            var handle = await Page.WaitForSelectorAsync("non-existing", new PageWaitForSelectorOptions { State = WaitForSelectorState.Hidden });
+            var handle = await Page.WaitForSelectorAsync("non-existing", new() { State = WaitForSelectorState.Hidden });
             Assert.Null(handle);
         }
 
@@ -98,8 +98,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
-            var exception = await AssertThrowsAsync<TimeoutException>(()
-                => Page.WaitForSelectorAsync("div", new PageWaitForSelectorOptions { State = WaitForSelectorState.Attached, Timeout = 3000 }));
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
+                => Page.WaitForSelectorAsync("div", new() { State = WaitForSelectorState.Attached, Timeout = 3000 }));
 
             StringAssert.Contains("Timeout 3000ms exceeded", exception.Message);
             StringAssert.Contains("waiting for selector \"div\"", exception.Message);
@@ -110,8 +110,8 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldHaveAnErrorMessageSpecificallyForAwaitingAnElementToBeHidden()
         {
             await Page.SetContentAsync("<div>content</div>");
-            var exception = await AssertThrowsAsync<TimeoutException>(()
-                => Page.WaitForSelectorAsync("div", new PageWaitForSelectorOptions { State = WaitForSelectorState.Hidden, Timeout = 1000 }));
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
+                => Page.WaitForSelectorAsync("div", new() { State = WaitForSelectorState.Hidden, Timeout = 1000 }));
 
             StringAssert.Contains("Timeout 1000ms exceeded", exception.Message);
             StringAssert.Contains("waiting for selector \"div\" to be hidden", exception.Message);
@@ -122,7 +122,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRespondToNodeAttributeMutation()
         {
             bool divFound = false;
-            var waitForSelector = Page.WaitForSelectorAsync(".zombo", new PageWaitForSelectorOptions { State = WaitForSelectorState.Attached }).ContinueWith(_ => divFound = true);
+            var waitForSelector = Page.WaitForSelectorAsync(".zombo", new() { State = WaitForSelectorState.Attached }).ContinueWith(_ => divFound = true);
             await Page.SetContentAsync("<div class='notZombo'></div>");
             Assert.False(divFound);
             await Page.EvaluateAsync("document.querySelector('div').className = 'zombo'");
@@ -145,7 +145,7 @@ namespace Microsoft.Playwright.Tests
             Exception exception = null;
             try
             {
-                await Page.WaitForSelectorAsync(".zombo", new PageWaitForSelectorOptions { Timeout = 10 });
+                await Page.WaitForSelectorAsync(".zombo", new() { Timeout = 10 });
             }
             catch (Exception e)
             {
@@ -176,7 +176,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.EmptyPage);
             var frame = Page.MainFrame;
-            var watchdog = frame.WaitForSelectorAsync("css=div >> css=span", new FrameWaitForSelectorOptions { State = WaitForSelectorState.Attached });
+            var watchdog = frame.WaitForSelectorAsync("css=div >> css=span", new() { State = WaitForSelectorState.Attached });
             await frame.EvaluateAsync(AddElement, "br");
             await frame.EvaluateAsync(AddElement, "div");
             await frame.EvaluateAsync("() => document.querySelector('div').appendChild(document.createElement('span'))");
@@ -191,7 +191,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWaitForDetachedIfAlreadyDetached()
         {
             await Page.SetContentAsync("<section id=\"testAttribute\">43543</section>");
-            Assert.Null(await Page.WaitForSelectorAsync("css=div", new PageWaitForSelectorOptions { State = WaitForSelectorState.Detached }));
+            Assert.Null(await Page.WaitForSelectorAsync("css=div", new() { State = WaitForSelectorState.Detached }));
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should wait for detached")]
@@ -199,7 +199,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWaitForDetached()
         {
             await Page.SetContentAsync("<section id=\"testAttribute\"><div>43543</div></section>");
-            var waitForTask = Page.WaitForSelectorAsync("css=div", new PageWaitForSelectorOptions { State = WaitForSelectorState.Detached });
+            var waitForTask = Page.WaitForSelectorAsync("css=div", new() { State = WaitForSelectorState.Detached });
             Assert.False(waitForTask.IsCompleted);
             await Page.WaitForSelectorAsync("css=section");
             Assert.False(waitForTask.IsCompleted);
@@ -220,8 +220,8 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeoutXpath()
         {
-            var exception = await AssertThrowsAsync<TimeoutException>(()
-                    => Page.WaitForSelectorAsync("//div", new PageWaitForSelectorOptions { State = WaitForSelectorState.Attached, Timeout = 3000 }));
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
+                    => Page.WaitForSelectorAsync("//div", new() { State = WaitForSelectorState.Attached, Timeout = 3000 }));
 
             StringAssert.Contains("Timeout 3000ms exceeded", exception.Message);
             StringAssert.Contains("waiting for selector \"//div\"", exception.Message);
@@ -235,7 +235,7 @@ namespace Microsoft.Playwright.Tests
             await FrameUtils.AttachFrameAsync(Page, "frame2", Server.EmptyPage);
             var frame1 = Page.Frames.First(f => f.Name == "frame1");
             var frame2 = Page.Frames.First(f => f.Name == "frame2");
-            var waitForXPathPromise = frame2.WaitForSelectorAsync("//div", new FrameWaitForSelectorOptions { State = WaitForSelectorState.Attached });
+            var waitForXPathPromise = frame2.WaitForSelectorAsync("//div", new() { State = WaitForSelectorState.Attached });
             await frame1.EvaluateAsync(AddElement, "div");
             await frame2.EvaluateAsync(AddElement, "div");
             var eHandle = await waitForXPathPromise;
@@ -250,7 +250,7 @@ namespace Microsoft.Playwright.Tests
             var frame = Page.FirstChildFrame();
             var waitPromise = frame.WaitForSelectorAsync("//*[@class=\"box\"]");
             await FrameUtils.DetachFrameAsync(Page, "frame1");
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => waitPromise);
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => waitPromise);
             StringAssert.Contains("waitForFunction failed: frame got detached.", exception.Message);
         }
 

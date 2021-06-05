@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -12,7 +12,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldInheritUserAgentFromBrowserContext()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { UserAgent = "hey" });
+            await using var context = await Browser.NewContextAsync(new() { UserAgent = "hey" });
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
             var requestTcs = new TaskCompletionSource<string>();
@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldInheritExtraHeadersFromBrowserContext()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ExtraHTTPHeaders = new Dictionary<string, string>
                 {
@@ -99,7 +99,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldInheritHttpCredentialsFromBrowserContext()
         {
             Server.SetAuth("/title.html", "user", "pass");
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 HttpCredentials = new HttpCredentials() { Username = "user", Password = "pass" },
             });
@@ -119,7 +119,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldInheritTouchSupportFromBrowserContext()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize { Width = 400, Height = 500 },
                 HasTouch = true,
@@ -139,7 +139,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldInheritViewportSizeFromBrowserContext()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize { Width = 400, Height = 500 },
             });
@@ -158,7 +158,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUseViewportSizeFromWindowFeatures()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize { Width = 700, Height = 700 },
             });
@@ -209,7 +209,7 @@ namespace Microsoft.Playwright.Tests
         public async Task BrowserContextAddInitScriptShouldApplyToAnInProcessPopup()
         {
             await using var context = await Browser.NewContextAsync();
-            await context.AddInitScriptAsync("() => window.injected = 123");
+            await context.AddInitScriptAsync("window.injected = 123;");
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
 
@@ -226,7 +226,7 @@ namespace Microsoft.Playwright.Tests
         public async Task BrowserContextAddInitScriptShouldApplyToACrossProcessPopup()
         {
             await using var context = await Browser.NewContextAsync();
-            await context.AddInitScriptAsync("() => window.injected = 123");
+            await context.AddInitScriptAsync("window.injected = 123;");
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
 

@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -80,7 +80,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportTouchWithNullViewport()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions { ViewportSize = null, HasTouch = true });
+            await using var context = await Browser.NewContextAsync(new() { ViewportSize = null, HasTouch = true });
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.Prefix + "/mobile.html");
             Assert.True(await page.EvaluateAsync<bool>("'ontouchstart' in window"));

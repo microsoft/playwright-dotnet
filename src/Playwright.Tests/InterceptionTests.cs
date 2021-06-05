@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using Microsoft.Playwright.Tests;
 using NUnit.Framework;
 
@@ -33,6 +33,10 @@ namespace Microsoft.Playwright.Tests
             Assert.That("https://localhost:8080/foo.js", Does.Not.Match(StringExtensions.GlobToRegex("**/*.css")));
             Assert.That("https://localhost:8080/foo.js", Does.Not.Match(StringExtensions.GlobToRegex("*.js")));
             Assert.That("https://localhost:8080/c.js", Does.Not.Match(StringExtensions.GlobToRegex("**/{a,b}.js")));
+            Assert.That("foo.js", Does.Match(StringExtensions.GlobToRegex("foo*")));
+            Assert.That("foo/bar.js", Does.Not.Match(StringExtensions.GlobToRegex("foo*")));
+            Assert.That("http://localhost:3000/signin-oidc/foo", Does.Not.Match(StringExtensions.GlobToRegex("http://localhost:3000/signin-oidc*")));
+            Assert.That("http://localhost:3000/signin-oidcnice", Does.Match(StringExtensions.GlobToRegex("http://localhost:3000/signin-oidc*")));
         }
 
         [PlaywrightTest("interception.spec.ts", "should work with ignoreHTTPSErrors")]
@@ -41,7 +45,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWitIgnoreHTTPSErrors()
         {
             await using var browser = await BrowserType.LaunchAsync();
-            var context = await browser.NewContextAsync(new BrowserNewContextOptions
+            var context = await browser.NewContextAsync(new()
             {
                 IgnoreHTTPSErrors = true
             });
@@ -94,7 +98,7 @@ namespace Microsoft.Playwright.Tests
                 int slash = route.Request.Url.LastIndexOf("/");
                 string name = route.Request.Url.Substring(slash + 1);
 
-                route.FulfillAsync(new RouteFulfillOptions { Status = (int)HttpStatusCode.OK, Body = "responseFromInterception:" + name, ContentType = "text/css" });
+                route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK, Body = "responseFromInterception:" + name, ContentType = "text/css" });
             });
 
             string swResponse2 = await Page.EvaluateAsync<string>("() => fetchDummy('foo')");

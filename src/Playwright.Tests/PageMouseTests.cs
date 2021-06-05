@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -136,7 +136,7 @@ namespace Microsoft.Playwright.Tests
                     window.result.push([event.clientX, event.clientY]);
                 });
             }");
-            await Page.Mouse.MoveAsync(200, 300, new MouseMoveOptions { Steps = 5 });
+            await Page.Mouse.MoveAsync(200, 300, new() { Steps = 5 });
             Assert.AreEqual(
                 new[]
                 {
@@ -153,7 +153,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithMobileViewportsAndCrossProcessNavigations()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize { Width = 360, Height = 640 },
                 IsMobile = true,

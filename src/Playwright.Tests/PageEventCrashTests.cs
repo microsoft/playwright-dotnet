@@ -1,7 +1,6 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -33,7 +32,7 @@ namespace Microsoft.Playwright.Tests
 
             await CrashAsync(Page);
             await crashEvent.Task;
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("() => {}"));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("() => {}"));
             StringAssert.Contains("crash", exception.Message);
         }
 
@@ -45,7 +44,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<div>This page should crash</div>");
             var responseTask = Page.WaitForResponseAsync("**/*");
             await CrashAsync(Page);
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => responseTask);
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => responseTask);
             StringAssert.Contains("Page crashed", exception.Message);
         }
 

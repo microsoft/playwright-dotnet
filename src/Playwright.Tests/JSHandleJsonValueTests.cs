@@ -1,7 +1,7 @@
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowForCircularObjects()
         {
             var windowHandle = await Page.EvaluateHandleAsync("window");
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => windowHandle.JsonValueAsync<object>());
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => windowHandle.JsonValueAsync<object>());
             StringAssert.Contains("Argument is a circular structure", exception.Message);
         }
     }

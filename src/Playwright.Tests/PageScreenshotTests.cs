@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.NUnitTest;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetViewportSizeAsync(500, 500);
             await Page.GotoAsync(Server.Prefix + "/grid.html");
-            byte[] screenshot = await Page.ScreenshotAsync(new PageScreenshotOptions
+            byte[] screenshot = await Page.ScreenshotAsync(new()
             {
                 Clip = new Clip
                 {
@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetViewportSizeAsync(500, 500);
             await Page.GotoAsync(Server.Prefix + "/grid.html");
             await Page.EvaluateAsync("() => window.scrollBy(150, 200)");
-            byte[] screenshot = await Page.ScreenshotAsync(new PageScreenshotOptions
+            byte[] screenshot = await Page.ScreenshotAsync(new()
             {
                 FullPage = true,
                 Clip = new Clip
@@ -70,7 +70,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetViewportSizeAsync(500, 500);
             await Page.GotoAsync(Server.Prefix + "/grid.html");
-            byte[] screenshot = await Page.ScreenshotAsync(new PageScreenshotOptions
+            byte[] screenshot = await Page.ScreenshotAsync(new()
             {
                 Clip = new Clip
                 {
@@ -89,7 +89,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetViewportSizeAsync(500, 500);
             await Page.GotoAsync(Server.Prefix + "/grid.html");
-            var exception = await AssertThrowsAsync<PlaywrightException>(() => Page.ScreenshotAsync(new PageScreenshotOptions
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.ScreenshotAsync(new()
             {
                 Clip = new Clip
                 {
@@ -113,7 +113,7 @@ namespace Microsoft.Playwright.Tests
             var tasks = new List<Task<byte[]>>();
             for (int i = 0; i < 3; ++i)
             {
-                tasks.Add(Page.ScreenshotAsync(new PageScreenshotOptions
+                tasks.Add(Page.ScreenshotAsync(new()
                 {
                     Clip = new Clip
                     {
@@ -135,7 +135,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetViewportSizeAsync(500, 500);
             await Page.GotoAsync(Server.Prefix + "/grid.html");
-            byte[] screenshot = await Page.ScreenshotAsync(new PageScreenshotOptions { FullPage = true });
+            byte[] screenshot = await Page.ScreenshotAsync(new() { FullPage = true });
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-grid-fullpage.png", screenshot));
         }
 
@@ -145,7 +145,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetViewportSizeAsync(500, 500);
             await Page.GotoAsync(Server.Prefix + "/grid.html");
-            await Page.ScreenshotAsync(new PageScreenshotOptions { FullPage = true });
+            await Page.ScreenshotAsync(new() { FullPage = true });
 
             Assert.AreEqual(500, Page.ViewportSize.Width);
             Assert.AreEqual(500, Page.ViewportSize.Height);
@@ -174,7 +174,7 @@ namespace Microsoft.Playwright.Tests
             var screenshotTasks = new List<Task<byte[]>>();
             for (int i = 0; i < n; i++)
             {
-                screenshotTasks.Add(pageTasks[i].Result.ScreenshotAsync(new PageScreenshotOptions
+                screenshotTasks.Add(pageTasks[i].Result.ScreenshotAsync(new()
                 {
                     Clip = new Clip
                     {
@@ -208,7 +208,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetViewportSizeAsync(50, 150);
             await Page.GotoAsync(Server.EmptyPage);
-            byte[] screenshot = await Page.ScreenshotAsync(new PageScreenshotOptions { OmitBackground = true });
+            byte[] screenshot = await Page.ScreenshotAsync(new() { OmitBackground = true });
 
             Assert.True(ScreenshotHelper.PixelMatch("transparent.png", screenshot));
         }
@@ -219,7 +219,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetViewportSizeAsync(100, 100);
             await Page.GotoAsync(Server.EmptyPage);
-            byte[] screenshot = await Page.ScreenshotAsync(new PageScreenshotOptions
+            byte[] screenshot = await Page.ScreenshotAsync(new()
             {
                 OmitBackground = true,
                 Type = ScreenshotType.Jpeg,
@@ -231,7 +231,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithOddClipSizeOnRetinaDisplays()
         {
-            byte[] screenshot = await Page.ScreenshotAsync(new PageScreenshotOptions
+            byte[] screenshot = await Page.ScreenshotAsync(new()
             {
                 Clip = new Clip
                 {
@@ -249,7 +249,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithAMobileViewport()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize
                 {
@@ -269,7 +269,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithAMobileViewportAndClip()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize
                 {
@@ -280,7 +280,7 @@ namespace Microsoft.Playwright.Tests
             });
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.Prefix + "/overflow.html");
-            byte[] screenshot = await page.ScreenshotAsync(new PageScreenshotOptions
+            byte[] screenshot = await page.ScreenshotAsync(new()
             {
                 Clip = new Clip
                 {
@@ -298,7 +298,7 @@ namespace Microsoft.Playwright.Tests
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithAMobileViewportAndFullPage()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize
                 {
@@ -309,7 +309,7 @@ namespace Microsoft.Playwright.Tests
             });
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.Prefix + "/overflow-large.html");
-            byte[] screenshot = await page.ScreenshotAsync(new PageScreenshotOptions { FullPage = true });
+            byte[] screenshot = await page.ScreenshotAsync(new() { FullPage = true });
 
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-mobile-fullpage.png", screenshot));
         }
@@ -370,7 +370,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDeviceScaleFactor()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize
                 {
@@ -390,7 +390,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithiFrameInShadow()
         {
-            await using var context = await Browser.NewContextAsync(new BrowserNewContextOptions
+            await using var context = await Browser.NewContextAsync(new()
             {
                 ViewportSize = new ViewportSize
                 {
@@ -413,7 +413,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/grid.html");
             using var tmpDir = new TempDirectory();
             string outputPath = Path.Combine(tmpDir.Path, "screenshot.png");
-            await Page.ScreenshotAsync(new PageScreenshotOptions { Path = outputPath });
+            await Page.ScreenshotAsync(new() { Path = outputPath });
 
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-sanity.png", outputPath));
         }
@@ -426,7 +426,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/grid.html");
             using var tmpDir = new TempDirectory();
             string outputPath = Path.Combine(tmpDir.Path, "these", "are", "directories", "screenshot.png");
-            await Page.ScreenshotAsync(new PageScreenshotOptions { Path = outputPath });
+            await Page.ScreenshotAsync(new() { Path = outputPath });
 
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-sanity.png", outputPath));
         }
@@ -439,7 +439,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.EmptyPage);
             using var tmpDir = new TempDirectory();
             string outputPath = Path.Combine(tmpDir.Path, "screenshot.jpg");
-            await Page.ScreenshotAsync(new PageScreenshotOptions { Path = outputPath, OmitBackground = true });
+            await Page.ScreenshotAsync(new() { Path = outputPath, OmitBackground = true });
 
             Assert.True(ScreenshotHelper.PixelMatch("white.jpg", outputPath));
         }
@@ -448,7 +448,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PathOptionShouldThrowForUnsupportedMimeType()
         {
-            var exception = await AssertThrowsAsync<ArgumentException>(() => Page.ScreenshotAsync(new PageScreenshotOptions { Path = "file.txt" }));
+            var exception = await PlaywrightAssert.ThrowsAsync<ArgumentException>(() => Page.ScreenshotAsync(new() { Path = "file.txt" }));
             StringAssert.Contains("path: unsupported mime type \"text/plain\"", exception.Message);
         }
     }
