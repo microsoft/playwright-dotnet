@@ -106,10 +106,12 @@ stages:
     - task: MicroBuildCleanup@1
 
 - stage: ReleasePlaywright
+  dependsOn: BuildPackageSign
+
   jobs:
   - job: ReleaseNuget
     displayName: Publish on Nuget.org
-    condition: and(succeeded(), eq('${{parameters.doRelease}}', true))
+    condition: eq('${{parameters.doRelease}}', true)
 
     steps:
     - checkout: none
@@ -130,10 +132,12 @@ stages:
         publishFeedCredentials: 'NuGet-Playwright'
 
 - stage: ReleasePlaywrightCLI
+  dependsOn: BuildPackageSign
+
   jobs:
   - job: ReleaseNugetCLI
     displayName: Publish CLI on Nuget.org
-    condition: and(succeeded(), eq('${{parameters.doReleaseCLI}}', true))
+    condition: eq('${{parameters.doReleaseCLI}}', true)
 
     steps:
     - checkout: none
@@ -154,10 +158,12 @@ stages:
         publishFeedCredentials: 'NuGet-Playwright'
 
 - stage: ReleasePlaywrightNUnit
+  dependsOn: BuildPackageSign
+
   jobs:
   - job: ReleaseNugetNUnit
     displayName: Publish Playwright.NUnit on Nuget.org
-    condition: and(succeeded(), eq('${{parameters.doReleaseNUnit}}', true))
+    condition: eq('${{parameters.doReleaseNUnit}}', true)
 
     steps:
     - checkout: none
