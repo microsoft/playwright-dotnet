@@ -118,10 +118,7 @@ stages:
       inputs:
         buildType: 'current'
         downloadType: 'specific'
-        itemPattern: |
-          **
-          !*.CLI.*
-          !*.NUnit.*
+        itemPattern: '**/Microsoft.Playwright.1.*'
         downloadPath: '$(System.ArtifactsDirectory)'
 
     - task: NuGetCommand@2
