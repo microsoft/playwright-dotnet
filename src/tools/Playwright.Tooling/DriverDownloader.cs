@@ -16,12 +16,12 @@ namespace Playwright.Tooling
 {
     internal class DriverDownloader
     {
-        private static readonly (string Platform, string Runtime)[] _platforms = new[]
+        private static readonly string[] _platforms = new[]
         {
-            ("mac", "osx"),
-            ("linux", "unix"),
-            ("win32_x64", "win-x64"),
-            ("win32", "win-x86"),
+            "mac",
+            "linux",
+            "win32_x64",
+            "win32",
         };
 
         public string BasePath { get; set; }
@@ -112,7 +112,7 @@ namespace Playwright.Tooling
             return client.GetStringAsync(readmeUrl);
         }
 
-        private async Task DownloadDriverAsync(DirectoryInfo destinationDirectory, string driverVersion, string platform, string runtime)
+        private async Task DownloadDriverAsync(DirectoryInfo destinationDirectory, string driverVersion, string platform)
         {
             Console.WriteLine("Downloading driver for " + platform);
             string cdn = "https://playwright.azureedge.net/builds/driver/next";
@@ -124,7 +124,7 @@ namespace Playwright.Tooling
             {
                 var response = await client.GetAsync(url).ConfigureAwait(false);
 
-                var directory = new DirectoryInfo(Path.Combine(destinationDirectory.FullName, runtime));
+                var directory = new DirectoryInfo(Path.Combine(destinationDirectory.FullName, platform));
 
                 if (directory.Exists)
                 {
@@ -182,13 +182,12 @@ namespace Playwright.Tooling
                     tasks.Add(UpdateBrowserVersionsAsync(BasePath, driverVersion));
                 }
 
-                foreach (var (platform, runtime) in _platforms)
+                foreach (var platform in _platforms)
                 {
-                    tasks.Add(DownloadDriverAsync(destinationDirectory, driverVersion, platform, runtime));
+                    tasks.Add(DownloadDriverAsync(destinationDirectory, driverVersion, platform));
                 }
 
                 await Task.WhenAll(tasks).ConfigureAwait(false);
-                GenerateApiFile(destinationDirectory.FullName);
                 versionFile.CreateText();
             }
             else
@@ -199,38 +198,26 @@ namespace Playwright.Tooling
             return true;
         }
 
-        private void GenerateApiFile(string driversDirectory)
-        {
-            string executablePath = GetDriverPath(driversDirectory);
-            var process = GetProcess(executablePath);
-            process.Start();
-
-            using StreamWriter file = new(Path.Combine(driversDirectory, "api.json"));
-            process.StandardOutput.BaseStream.CopyTo(file.BaseStream);
-
-            process.WaitForExit();
-        }
-
         private string GetDriverPath(string driversDirectory)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 if (RuntimeInformation.OSArchitecture == Architecture.X64)
                 {
-                    return Path.Combine(driversDirectory, "win-x64", "playwright.cmd");
+                    return Path.Combine(driversDirectory, "win32_x64", "playwright.cmd");
                 }
                 else
                 {
-                    return Path.Combine(driversDirectory, "win-x86", "playwright.cmd");
+                    return Path.Combine(driversDirectory, "win32", "playwright.cmd");
                 }
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return Path.Combine(driversDirectory, "osx", "playwright.sh");
+                return Path.Combine(driversDirectory, "max", "playwright.sh");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return Path.Combine(driversDirectory, "unix", "playwright.sh");
+                return Path.Combine(driversDirectory, "linux", "playwright.sh");
             }
 
             throw new Exception("Unknown platform");

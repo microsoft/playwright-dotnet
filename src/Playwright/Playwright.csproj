@@ -24,7 +24,6 @@
   <Import Project="../Common/Version.props" />
   <Import Project="../Common/Dependencies.props" />
   <Import Project="../Common/SignAssembly.props" />
-  <Import Project="build/netstandard2.0/Microsoft.Playwright.targets" />
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     <PackageReference Include="Microsoft.VisualStudioEng.MicroBuild.Core" Version="0.4.1">
@@ -37,11 +36,12 @@
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Drivers\osx\**" Pack="true" PackagePath="Drivers\osx\native" />
-    <None Include="Drivers\unix\**" Pack="true" PackagePath="Drivers\unix\native" />
-    <None Include="Drivers\win-x64\**" Pack="true" PackagePath="Drivers\win-x64\native" />
-    <None Include="Drivers\win-x86\**" Pack="true" PackagePath="Drivers\win-x86\native" />
-    <None Include="build\**" Pack="true" PackagePath="build" />
+    <None Include="Drivers/linux/package/**" Pack="true" PackagePath="driver" />
+    <None Include="Drivers/linux/LICENSE" Pack="true" PackagePath="node" />
+    <None Include="Drivers/linux/node" Pack="true" PackagePath="node/linux" />
+    <None Include="Drivers/mac/node" Pack="true" PackagePath="node/mac" />
+    <None Include="Drivers/win32/node.exe" Pack="true" PackagePath="node/win32" />
+    <None Include="Drivers/win32_x64/node.exe" Pack="true" PackagePath="node/win32_x64" />
   </ItemGroup>
   <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <DriverFiles Include="Drivers\win-x64\**">

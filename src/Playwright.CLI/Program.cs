@@ -25,10 +25,16 @@ namespace Microsoft.Playwright.CLI
                 args = args[2..];
             }
 
-            string version = null;
+            string nodePath = null;
+            string packagePath = null;
             try
             {
-                version = ParsePlaywrightVersion(path);
+                var version = ParsePlaywrightVersion(path);
+                packagePath = GetNugetPackagePath(version);
+                if (Directory.Exists(packagePath))
+                {
+                    nodePath = GetNodeInPackage(packagePath);
+                }
             }
             catch (Exception e)
             {
@@ -36,16 +42,17 @@ namespace Microsoft.Playwright.CLI
                 return;
             }
 
-            string pwPath = GetPathToDriver(version);
-
-            if (string.IsNullOrEmpty(pwPath))
+            if (string.IsNullOrEmpty(nodePath))
             {
                 Console.WriteLine("Please install Playwright:");
                 Console.WriteLine("   dotnet add package Microsoft.Playwright");
                 return;
             }
 
-            var playwrightStartInfo = new ProcessStartInfo(pwPath, string.Join(' ', args))
+            var driverArgs = new string[args.Length + 1];
+            driverArgs[0] = Path.Combine(packagePath, "driver/lib/cli/cli.js");
+            args.CopyTo(driverArgs, 1);
+            var playwrightStartInfo = new ProcessStartInfo(nodePath, string.Join(' ', driverArgs))
             {
                 UseShellExecute = false,
                 CreateNoWindow = true,
@@ -170,47 +177,49 @@ namespace Microsoft.Playwright.CLI
             return version;
         }
 
-        private static string GetPathToDriver(string version)
+        private static string GetNugetPackagePath(string version)
         {
             string packagesPath = Environment.GetEnvironmentVariable("NUGET_PACKAGES")
-                ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                    ".nuget",
-                    "packages");
+                ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages");
 
-            string sourcePath = Path.Combine(packagesPath, "microsoft.playwright");
-
-            var packageDirectory = new DirectoryInfo(sourcePath);
-            if (!packageDirectory.Exists)
+            string packagePath = Path.Combine(packagesPath, "microsoft.playwright");
+            if (Directory.Exists(packagePath))
             {
-                return null;
+                foreach (var versionPath in Directory.GetDirectories(packagePath))
+                {
+                    if (versionPath.Contains(version))
+                    {
+                        return versionPath;
+                    }
+                }
             }
 
-            return GetDriverPlatformPath(Path.Combine(packageDirectory.FullName, version, "Drivers"));
+            throw new Exception($"Microsoft.Playwright installation is not found in {packagesPath}.");
         }
 
-        private static string GetDriverPlatformPath(string driversDirectory, string nativeComponent = "native")
+        private static string GetNodeInPackage(string packagePath)
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.OSArchitecture == Architecture.X64)
             {
-                if (RuntimeInformation.OSArchitecture == Architecture.X64)
-                {
-                    return Path.Combine(driversDirectory, "win-x64", nativeComponent, "playwright.cmd");
-                }
-                else
-                {
-                    return Path.Combine(driversDirectory, "win-x86", nativeComponent, "playwright.cmd");
-                }
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                return Path.Combine(driversDirectory, "osx", nativeComponent, "playwright.sh");
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                return Path.Combine(driversDirectory, "unix", nativeComponent, "playwright.sh");
+                return Path.Combine(packagePath, "node", "win32_x64", "node.exe");
             }
 
-            throw new Exception("Unknown platform");
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return Path.Combine(packagePath, "node", "win32", "node.exe");
+            }
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return Path.Combine(packagePath, "node", "mac", "node");
+            }
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return Path.Combine(packagePath, "node", "linux", "node");
+            }
+
+            throw new Exception("Unsupported platform");
         }
 
         private static IEnumerable<XElement> GetDescendants(XDocument document, string name) =>
