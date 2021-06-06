@@ -27,9 +27,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Playwright.Testing.Xunit;
 
-namespace Playwright.Tooling
+namespace Microsoft.Playwright.Tests
 {
     /// <summary>
     /// This will identify missing tests from upstream.

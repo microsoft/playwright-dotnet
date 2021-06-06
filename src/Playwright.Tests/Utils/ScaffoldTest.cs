@@ -32,7 +32,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CommandLine;
 
-namespace Playwright.Tooling
+namespace Microsoft.Playwright.Tests
 {
     [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:ParameterMustNotSpanMultipleLines", Justification = "CodeDom is complicated.")]
     internal static partial class ScaffoldTest

@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<OutputType>Exe</OutputType>
-		<TargetFramework>net5.0</TargetFramework>
-		<CodeAnalysisRuleSet>../../Playwright.ruleset</CodeAnalysisRuleSet>
-		<ReleaseVersion>0.0.0</ReleaseVersion>
-		<IsTool>true</IsTool>
-	</PropertyGroup>
-	<Import Project="../../Common/Dependencies.props" />
-	<ItemGroup>
-		<PackageReference Include="CommandLineParser" Version="2.9.0-preview1" />
-		<PackageReference Include="System.CodeDom" Version="5.0.0" />
-		<PackageReference Include="Macross.Json.Extensions" Version="1.5.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Primitives" Version="5.0.0" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\..\Playwright.Testing.Xunit\Playwright.Testing.Xunit.csproj" />
-	</ItemGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+        <CodeAnalysisRuleSet>../../Playwright.ruleset</CodeAnalysisRuleSet>
+        <ReleaseVersion>0.0.0</ReleaseVersion>
+        <IsTool>true</IsTool>
+    </PropertyGroup>
+    <Import Project="../../Common/Dependencies.props" />
+    <ItemGroup>
+        <PackageReference Include="CommandLineParser" Version="2.9.0-preview1" />
+        <PackageReference Include="Macross.Json.Extensions" Version="2.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Primitives" Version="5.0.0" />
+    </ItemGroup>
 </Project>

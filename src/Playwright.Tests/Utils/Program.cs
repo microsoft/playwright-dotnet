@@ -22,23 +22,20 @@
  * SOFTWARE.
  */
 
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using CommandLine;
 
-namespace Playwright.Tooling
+namespace Microsoft.Playwright.Tests
 {
-    /// <summary>
-    /// Describes the options for scaffolding the tests.
-    /// </summary>
-    [Verb("scaffold-test", HelpText = "Takes a spec.ts file and scaffolds the C# test.")]
-    internal class ScaffoldTestOptions
+    public static class Program
     {
-        [Option(Required = true, HelpText = "Name of the spec file to use.")]
-        public string SpecFile { get; set; }
-
-        [Option(Required = false, HelpText = "The location of the scaffold code. If not present, will output to console.")]
-        public string OutputFile { get; set; }
-
-        [Option(Required = false, HelpText = "The namespace of the generated class.", Default = "Microsoft.Playwright.Tests")]
-        public string Namespace { get; set; }
+        public static void Main(string[] args)
+        {
+            ParserResult<object> result = Parser.Default.ParseArguments<ScaffoldTestOptions, IdentifyMissingTestsOptions>(args);
+            result.WithParsed<ScaffoldTestOptions>(ScaffoldTest.Run);
+            result.WithParsed<IdentifyMissingTestsOptions>(IdentifyMissingTests.Run);
+        }
     }
 }

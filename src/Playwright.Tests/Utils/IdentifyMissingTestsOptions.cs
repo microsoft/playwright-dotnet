@@ -22,21 +22,26 @@
  * SOFTWARE.
  */
 
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using CommandLine;
-using Playwright.Tooling.Options;
 
-namespace Playwright.Tooling
+namespace Microsoft.Playwright.Tests
 {
-    internal static class Program
+    /// <summary>
+    /// Describes the options for scaffolding the tests.
+    /// </summary>
+    [Verb("missing-tests", HelpText = "Checks if there are missing tests in the C# variant, compared to the specs.")]
+    internal class IdentifyMissingTestsOptions
     {
-        internal static async Task Main(string[] args)
-        {
-            ParserResult<object> result = Parser.Default.ParseArguments<DownloadDriversOptions, ApiCheckerOptions>(args);
-            await result.WithParsedAsync<DownloadDriversOptions>(DriverDownloader.RunAsync).ConfigureAwait(false);
-            await result.WithParsedAsync<ApiCheckerOptions>(ApiChecker.RunAsync).ConfigureAwait(false);
-        }
+        [Option(Required = true, HelpText = "Location of the PlaywrightShar.Tests assembly.")]
+        public string TestsAssemblyPath { get; set; }
+
+        [Option(Required = true, HelpText = "Location of spec files.")]
+        public string SpecFileLocations { get; set; }
+
+        [Option(Required = false, HelpText = "The search pattern to use for spec files.", Default = "*.spec.ts")]
+        public string Pattern { get; set; }
+
+        [Option(Required = false, Default = true, HelpText = "When True, looks inside subdirectories of specified location as well.")]
+        public bool Recursive { get; set; }
     }
 }
