@@ -2,10 +2,17 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Target Name="CopyPlaywrightFilesToOutput" AfterTargets="CopyFilesToOutputDirectory">
     <ItemGroup>
-      <_CopyItems Include="$(MSBuildThisFileDirectory)..\..\Drivers\**" />
+      <_CopyItems Include="$(MSBuildThisFileDirectory)..\Drivers\**" />
     </ItemGroup>
     <Message Text="[Playwright] Copying drivers from $(MSBuildThisFileDirectory) to $(OutputPath)..." />
     <Copy SourceFiles="@(_CopyItems)" DestinationFiles="@(_CopyItems->'$(OutDir).playwright\%(RecursiveDir)%(Filename)%(Extension)')"/>
+  </Target>
+  <Target Name="CopyRuntimeConfigToOutput" AfterTargets="CopyFilesToOutputDirectory">
+    <ItemGroup Condition="Exists('$(MSBuildThisFileDirectory)..\lib\$(TargetFramework)\Microsoft.Playwright.runtimeconfig.json')">
+      <_CopyRuntimeConfigItems Include="$(MSBuildThisFileDirectory)..\lib\$(TargetFramework)\Microsoft.Playwright.runtimeconfig.json" />
+    </ItemGroup>
+    <Message Text="[Playwright] Copying config from $(MSBuildThisFileDirectory)..\lib\$(TargetFramework) to $(OutDir)..." />
+    <Copy SourceFiles="@(_CopyRuntimeConfigItems)" DestinationFiles="@(_CopyRuntimeConfigItems->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')"/>
   </Target>
   <Target Name="InstallBrowsers" AfterTargets="CopyPlaywrightFilesToOutput">
     <Message Text="[Playwright] Install browsers..."/>
