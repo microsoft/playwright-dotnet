@@ -38,7 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Drivers\**" Pack="true" PackagePath="Drivers" />
-    <None Include="build\**" Pack="true" PackagePath="build" />
+    <None Include="build\**" Pack="true" PackagePath="buildTransitive" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="16.9.60">
@@ -53,8 +53,4 @@
   <Target Name="EnsurePrerequisitsRan" BeforeTargets="InstallBrowsers">
     <Error Text="Playwright prerequisites are missing. Ensure you've ran `dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .`" Condition="!Exists('$(MSBuildProjectDirectory)\Drivers\linux$(NativeFolder)')" />
   </Target>
-  <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-  </PropertyGroup>
 </Project>
