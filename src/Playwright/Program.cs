@@ -32,13 +32,13 @@ namespace Microsoft.Playwright
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
             var p = new Program();
-            p.Run(args);
+            return p.Run(args);
         }
 
-        public void Run(string[] args)
+        public int Run(string[] args)
         {
             string pwPath = null;
             try
@@ -48,7 +48,7 @@ namespace Microsoft.Playwright
             catch (Exception)
             {
                 Console.WriteLine("Microsoft.Playwright is missing required assets. Please ensure to build your project before running.");
-                return;
+                return 1;
             }
 
             var playwrightStartInfo = new ProcessStartInfo(pwPath, string.Join(" ", args))
@@ -103,6 +103,7 @@ namespace Microsoft.Playwright
             pwProcess.WaitForExit();
             outputWaitHandle.WaitOne(5000);
             errorWaitHandle.WaitOne(5000);
+            return 0;
         }
     }
 }

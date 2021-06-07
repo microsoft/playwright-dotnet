@@ -37,6 +37,28 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
   </ItemGroup>
+  <Target Name="DedupeDriver" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyPlaywrightFilesToOutput">
+    <ItemGroup>
+      <DriverPackage Include="DriversRaw\linux\package\**" />
+      <DriverNodeLicense Include="DriversRaw\linux\LICENSE" />
+      <DriverNodeLinux Include="DriversRaw\linux\node" />
+      <DriverNodeMac Include="DriversRaw\mac\node" />
+      <DriverNodeWin32 Include="DriversRaw\win32\node.exe" />
+      <DriverNodeWin32_x64 Include="DriversRaw\win32_x64\node.exe" />
+      <DriverShell Include="Scripts\playwright.sh" />
+      <DriverCmd Include="Scripts\playwright.cmd" />
+    </ItemGroup>
+    <Copy SourceFiles="@(DriverPackage)" DestinationFiles="@(DriverPackage->'Drivers\package\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(DriverNodeLicense)" DestinationFiles="@(DriverNodeLicense->'Drivers\node\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(DriverNodeLinux)" DestinationFiles="@(DriverNodeLinux->'Drivers\node\linux\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(DriverNodeMac)" DestinationFiles="@(DriverNodeMac->'Drivers\node\mac\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(DriverNodeWin32)" DestinationFiles="@(DriverNodeWin32->'Drivers\node\win32\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(DriverNodeWin32_x64)" DestinationFiles="@(DriverNodeWin32_x64->'Drivers\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(DriverShell)" DestinationFiles="@(DriverShell->'Drivers\node\linux\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(DriverShell)" DestinationFiles="@(DriverShell->'Drivers\node\mac\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(DriverCmd)" DestinationFiles="@(DriverCmd->'Drivers\node\win32\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(DriverCmd)" DestinationFiles="@(DriverCmd->'Drivers\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)')"/>
+  </Target>
   <ItemGroup>
     <None Include="Drivers\**" Pack="true" PackagePath="Drivers" />
     <None Include="build\**" Pack="true" PackagePath="buildTransitive" />
