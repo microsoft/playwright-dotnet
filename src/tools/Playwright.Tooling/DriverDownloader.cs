@@ -158,22 +158,25 @@ namespace Playwright.Tooling
 
         private async Task<bool> ExecuteAsync()
         {
-            var destinationDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "Playwright", "Drivers"));
+            var destinationDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "Playwright", "DriversRaw"));
+            var dedupeDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "Playwright", "Drivers"));
             string driverVersion = DriverVersion;
-
-            if (!destinationDirectory.Exists)
-            {
-                destinationDirectory.Create();
-            }
 
             var versionFile = new FileInfo(Path.Combine(destinationDirectory.FullName, driverVersion));
 
             if (!versionFile.Exists)
             {
-                foreach (var file in destinationDirectory.GetFiles().Where(f => f.Name != "expected_api_mismatch.json"))
+                if (destinationDirectory.Exists)
                 {
-                    file.Delete();
+                    Directory.Delete(destinationDirectory.FullName, true);
                 }
+
+                if (dedupeDirectory.Exists)
+                {
+                    Directory.Delete(dedupeDirectory.FullName, true);
+                }
+
+                destinationDirectory.Create();
 
                 var tasks = new List<Task>();
 

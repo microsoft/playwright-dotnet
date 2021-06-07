@@ -69,7 +69,7 @@ namespace Microsoft.Playwright.Helpers
                 throw new PlaywrightException("Unknown platform");
             }
 
-            return Path.Combine(driversPath, ".playwright", platformId, runnerName);
+            return Path.Combine(driversPath, ".playwright", "node", platformId, runnerName);
         }
     }
 }

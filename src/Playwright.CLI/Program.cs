@@ -30,7 +30,7 @@ namespace Microsoft.Playwright.CLI
 {
     static class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             var root = Directory.GetCurrentDirectory();
             if (args.Length > 1 && args[0] == "-p")
@@ -46,7 +46,7 @@ namespace Microsoft.Playwright.CLI
                 Console.WriteLine("Please make sure Playwright is installed and built:");
                 Console.WriteLine("   dotnet add package Microsoft.Playwright");
                 Console.WriteLine("   dotnet build");
-                return;
+                return 1;
             }
 
             var dll = Assembly.LoadFile(file);
@@ -55,9 +55,11 @@ namespace Microsoft.Playwright.CLI
                 if (type.FullName == "Microsoft.Playwright.Program")
                 {
                     dynamic c = Activator.CreateInstance(type);
-                    c.Run(args);
+                    return c.Run(args);
                 }
             }
+
+            return 0;
         }
 
         private static string Traverse(DirectoryInfo root)
