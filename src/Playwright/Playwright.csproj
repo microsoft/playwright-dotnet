@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <OutputType>exe</OutputType>
     <Title>Microsoft.Playwright</Title>
     <PackageId>Microsoft.Playwright</PackageId>
     <Summary>The .NET port of Playwright, used to automate Chromium, Firefox and WebKit with a single API.</Summary>
@@ -24,7 +25,7 @@
   <Import Project="../Common/Version.props" />
   <Import Project="../Common/Dependencies.props" />
   <Import Project="../Common/SignAssembly.props" />
-  <Import Project="build/netstandard2.0/Microsoft.Playwright.targets" />
+  <Import Project="build/Microsoft.Playwright.targets" />
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     <PackageReference Include="Microsoft.VisualStudioEng.MicroBuild.Core" Version="0.4.1">
@@ -38,7 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Drivers\**" Pack="true" PackagePath="Drivers" />
-    <None Include="build\**" Pack="true" PackagePath="build" />
+    <None Include="build\**" Pack="true" PackagePath="buildTransitive" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="16.9.60">

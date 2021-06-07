@@ -23,6 +23,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -31,7 +32,6 @@ using System.Diagnostics;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -248,12 +248,12 @@ namespace Microsoft.Playwright.Transport
             }
         }
 
-        private static Process GetProcess(string driverExecutablePath = null)
+        private static Process GetProcess()
             => new()
             {
                 StartInfo =
                 {
-                    FileName = string.IsNullOrEmpty(driverExecutablePath) ? GetExecutablePath() : driverExecutablePath,
+                    FileName = Paths.GetExecutablePath(),
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardInput = true,
@@ -261,47 +261,6 @@ namespace Microsoft.Playwright.Transport
                     CreateNoWindow = true,
                 },
             };
-
-        private static string GetExecutablePath()
-        {
-            var assembly = typeof(Playwright).Assembly;
-            string driversPath = new FileInfo(assembly.Location).Directory.FullName;
-
-            string executableFile = GetPath(driversPath);
-            if (File.Exists(executableFile))
-            {
-                return executableFile;
-            }
-
-            throw new PlaywrightException($@"Driver not found: {executableFile}");
-        }
-
-        private static string GetPath(string driversPath)
-        {
-            string platformId;
-            string runnerName;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                platformId = RuntimeInformation.OSArchitecture == Architecture.X64 ? "win32_x64" : "win";
-                runnerName = "playwright.cmd";
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                runnerName = "playwright.sh";
-                platformId = "mac";
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                runnerName = "playwright.sh";
-                platformId = "linux";
-            }
-            else
-            {
-                throw new PlaywrightException("Unknown platform");
-            }
-
-            return Path.Combine(driversPath, ".playwright", platformId, runnerName);
-        }
 
         private void Transport_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
