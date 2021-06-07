@@ -51,11 +51,4 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-  <Target Name="EnsurePrerequisitsRan" BeforeTargets="InstallBrowsers">
-    <Error Text="Playwright prerequisites are missing. Ensure you've ran `dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .`" Condition="!Exists('$(MSBuildProjectDirectory)\Drivers\linux$(NativeFolder)')" />
-  </Target>
-  <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-  </PropertyGroup>
 </Project>

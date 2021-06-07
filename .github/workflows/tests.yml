@@ -46,6 +46,8 @@ jobs:
         run: dotnet clean ./src/Playwright.sln --configuration Debug && dotnet nuget locals all --clear
       - name: Download Drivers
         run: dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
+      - name: Download Browsers
+        run: dotnet run -p ./src/Playwright -f net5.0 install
       - name: Run tests (!Linux)
         if: ${{ matrix.os != 'ubuntu-latest' }}
         env:
@@ -102,6 +104,10 @@ jobs:
         run: dotnet clean ./src/Playwright.sln --configuration Debug && dotnet nuget locals all --clear
       - name: Download Drivers
         run: dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
+      - name: Build
+        run: dotnet build ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f netcoreapp3.1
+      - name: Download Browsers
+        run: ./src/Playwright/bin/Debug/netstandard2.0/playwright.ps1 install
       - name: Run tests (!Linux)
         if: ${{ matrix.os != 'ubuntu-latest' }}
         env:

@@ -14,12 +14,11 @@
     <Message Text="[Playwright] Copying config from $(MSBuildThisFileDirectory)..\lib\$(TargetFramework) to $(OutDir)..." />
     <Copy SourceFiles="@(_CopyRuntimeConfigItems)" DestinationFiles="@(_CopyRuntimeConfigItems->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')"/>
   </Target>
-  <Target Name="InstallBrowsers" AfterTargets="CopyPlaywrightFilesToOutput">
-    <Message Text="[Playwright] Install browsers..."/>
-    <Message Text="[Playwright] $(MSBuildThisFileDirectory)"/>
-    <Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" WorkingDirectory="$(OutDir).playwright\linux$(NativeFolder)" Command="./playwright.sh install" />
-    <Exec Condition="$([MSBuild]::IsOSPlatform('OSX'))" WorkingDirectory="$(OutDir).playwright\mac$(NativeFolder)" Command="./playwright.sh install" />
-    <Exec Condition="'$(PlatformTarget)' != 'x86' AND $([MSBuild]::IsOSPlatform('Windows'))" WorkingDirectory="$(OutDir).playwright\win32_x64$(NativeFolder)" Command="playwright.cmd install" />
-    <Exec Condition="'$(PlatformTarget)' == 'x86' AND $([MSBuild]::IsOSPlatform('Windows'))" WorkingDirectory="$(OutDir).playwright\win32$(NativeFolder)" Command="playwright.cmd install" />
+  <Target Name="CopyPlaywrightShellToOutput" AfterTargets="CopyFilesToOutputDirectory">
+    <ItemGroup>
+      <_CopyItems Include="$(MSBuildThisFileDirectory)playwright.ps1" />
+    </ItemGroup>
+    <Message Text="[Playwright] Copying shell script from $(MSBuildThisFileDirectory) to $(OutputPath)..." />
+    <Copy SourceFiles="@(_CopyItems)" DestinationFiles="@(_CopyItems->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')"/>
   </Target>
 </Project>
