@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.CLI
                 if (type.FullName == "Microsoft.Playwright.Program")
                 {
                     dynamic c = Activator.CreateInstance(type);
-                    c.Run(new string[] { });
+                    c.Run(args);
                 }
             }
         }
