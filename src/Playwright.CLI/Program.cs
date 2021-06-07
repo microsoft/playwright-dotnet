@@ -43,8 +43,9 @@ namespace Microsoft.Playwright.CLI
 
             if (string.IsNullOrEmpty(file))
             {
-                Console.WriteLine("Please install Playwright:");
+                Console.WriteLine("Please make sure Playwright is installed and built:");
                 Console.WriteLine("   dotnet add package Microsoft.Playwright");
+                Console.WriteLine("   dotnet build");
                 return;
             }
 

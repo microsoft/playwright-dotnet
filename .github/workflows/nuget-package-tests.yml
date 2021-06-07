@@ -30,15 +30,12 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.100
-      - name: Cache drivers
-        uses: actions/cache@v2
-        with:
-          path: ./src/Playwright/runtimes/
-          key: ${{ hashFiles('./src/Playwright/Playwright.csproj') }}
       - name: Download Drivers
         run: dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
       - name: Build Project
         run: dotnet build ./src/Playwright/Playwright.csproj -c Debug
+      - name: Download Browsers
+        run: dotnet run -p ./src/Playwright -f net5.0 install
       - name: Delete browsers on Mac
         if: matrix.os == 'macos-latest'
         run: rm -r ~/Library/Caches/ms-playwright

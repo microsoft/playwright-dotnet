@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-wait-for-url.spec.ts", "should work with both domcontentloaded and load")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldWorkWithBothDomcontentloadedAndLoad()
+        public async Task UrlShouldWorkWithBothDomcontentloadedAndLoad()
         {
             var responseTask = new TaskCompletionSource<bool>();
             Server.SetRoute("/one-style.css", async (ctx) =>
