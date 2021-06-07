@@ -37,31 +37,8 @@
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Drivers\osx\**" Pack="true" PackagePath="Drivers\osx\native" />
-    <None Include="Drivers\unix\**" Pack="true" PackagePath="Drivers\unix\native" />
-    <None Include="Drivers\win-x64\**" Pack="true" PackagePath="Drivers\win-x64\native" />
-    <None Include="Drivers\win-x86\**" Pack="true" PackagePath="Drivers\win-x86\native" />
+    <None Include="Drivers\**" Pack="true" PackagePath="Drivers" />
     <None Include="build\**" Pack="true" PackagePath="build" />
-  </ItemGroup>
-  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-    <DriverFiles Include="Drivers\win-x64\**">
-      <InProject>false</InProject>
-    </DriverFiles>
-  </ItemGroup>
-  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
-    <DriverFiles Include="Drivers\osx\**">
-      <InProject>false</InProject>
-    </DriverFiles>
-  </ItemGroup>
-  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-    <DriverFiles Include="Drivers\unix\**">
-      <InProject>false</InProject>
-    </DriverFiles>
-  </ItemGroup>
-  <ItemGroup>
-    <ContentWithTargetPath Include="@(DriverFiles)" TargetPath="%(RecursiveDir)%(Filename)%(Extension)">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </ContentWithTargetPath>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="16.9.60">
@@ -74,7 +51,7 @@
     </PackageReference>
   </ItemGroup>
   <Target Name="EnsurePrerequisitsRan" BeforeTargets="InstallBrowsers">
-    <Error Text="Playwright prerequisites are missing. Ensure you've ran `dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .`" Condition="!Exists('$(MSBuildProjectDirectory)\Drivers\unix$(NativeFolder)')" />
+    <Error Text="Playwright prerequisites are missing. Ensure you've ran `dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .`" Condition="!Exists('$(MSBuildProjectDirectory)\Drivers\linux$(NativeFolder)')" />
   </Target>
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>

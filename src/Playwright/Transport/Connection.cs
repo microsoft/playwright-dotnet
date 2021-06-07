@@ -273,18 +273,7 @@ namespace Microsoft.Playwright.Transport
                 return executableFile;
             }
 
-            string fallbackBinPath = Path.Combine(
-                driversPath,
-                RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "playwright.sh" : "playwright.cmd");
-
-            if (File.Exists(fallbackBinPath))
-            {
-                return fallbackBinPath;
-            }
-
-            throw new PlaywrightException($@"Driver not found in any of the locations. Tried:
- * {executableFile}
- * {fallbackBinPath}");
+            throw new PlaywrightException($@"Driver not found: {executableFile}");
         }
 
         private static string GetPath(string driversPath)
@@ -293,25 +282,25 @@ namespace Microsoft.Playwright.Transport
             string runnerName;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                platformId = RuntimeInformation.OSArchitecture == Architecture.X64 ? "win-x64" : "win-x86";
+                platformId = RuntimeInformation.OSArchitecture == Architecture.X64 ? "win32_x64" : "win";
                 runnerName = "playwright.cmd";
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 runnerName = "playwright.sh";
-                platformId = "osx";
+                platformId = "mac";
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 runnerName = "playwright.sh";
-                platformId = "unix";
+                platformId = "linux";
             }
             else
             {
                 throw new PlaywrightException("Unknown platform");
             }
 
-            return Path.Combine(driversPath, ".playwright", platformId, "native", runnerName);
+            return Path.Combine(driversPath, ".playwright", platformId, runnerName);
         }
 
         private void Transport_MessageReceived(object sender, MessageReceivedEventArgs e)

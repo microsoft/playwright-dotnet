@@ -194,20 +194,20 @@ namespace Microsoft.Playwright.CLI
             {
                 if (RuntimeInformation.OSArchitecture == Architecture.X64)
                 {
-                    return Path.Combine(driversDirectory, "win-x64", nativeComponent, "playwright.cmd");
+                    return Path.Combine(driversDirectory, "win32_x64", nativeComponent, "playwright.cmd");
                 }
                 else
                 {
-                    return Path.Combine(driversDirectory, "win-x86", nativeComponent, "playwright.cmd");
+                    return Path.Combine(driversDirectory, "win32", nativeComponent, "playwright.cmd");
                 }
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return Path.Combine(driversDirectory, "osx", nativeComponent, "playwright.sh");
+                return Path.Combine(driversDirectory, "mac", nativeComponent, "playwright.sh");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return Path.Combine(driversDirectory, "unix", nativeComponent, "playwright.sh");
+                return Path.Combine(driversDirectory, "linux", nativeComponent, "playwright.sh");
             }
 
             throw new Exception("Unknown platform");
