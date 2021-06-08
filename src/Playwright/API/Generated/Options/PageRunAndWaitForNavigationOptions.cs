@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -57,7 +60,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("urlString")]
-        public string UrlString { get; set; }
+        public string? UrlString { get; set; }
 
         /// <summary>
         /// <para>
@@ -66,7 +69,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("urlRegex")]
-        public Regex UrlRegex { get; set; }
+        public Regex? UrlRegex { get; set; }
 
         /// <summary>
         /// <para>
@@ -75,7 +78,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("urlFunc")]
-        public Func<string, bool> UrlFunc { get; set; }
+        public Func<string, bool>? UrlFunc { get; set; }
 
         /// <summary>
         /// <para>When to consider operation succeeded, defaults to <c>load</c>. Events can be either:</para>
@@ -109,3 +112,5 @@ namespace Microsoft.Playwright
         public float? Timeout { get; set; }
     }
 }
+
+#nullable disable

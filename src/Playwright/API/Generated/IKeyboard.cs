@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -191,7 +194,7 @@ namespace Microsoft.Playwright
         /// <c>a</c>.
         /// </param>
         /// <param name="options">Call options</param>
-        Task PressAsync(string key, KeyboardPressOptions options = default);
+        Task PressAsync(string key, KeyboardPressOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -216,7 +219,7 @@ namespace Microsoft.Playwright
         /// </remarks>
         /// <param name="text">A text to type into a focused element.</param>
         /// <param name="options">Call options</param>
-        Task TypeAsync(string text, KeyboardTypeOptions options = default);
+        Task TypeAsync(string text, KeyboardTypeOptions? options = default);
 
         /// <summary><para>Dispatches a <c>keyup</c> event.</para></summary>
         /// <param name="key">
@@ -226,3 +229,5 @@ namespace Microsoft.Playwright
         Task UpAsync(string key);
     }
 }
+
+#nullable disable

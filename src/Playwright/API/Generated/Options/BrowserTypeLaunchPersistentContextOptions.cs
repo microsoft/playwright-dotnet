@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -92,7 +95,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("args")]
-        public IEnumerable<string> Args { get; set; }
+        public IEnumerable<string>? Args { get; set; }
 
         /// <summary>
         /// <para>
@@ -103,7 +106,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("channel")]
-        public string Channel { get; set; }
+        public string? Channel { get; set; }
 
         /// <summary><para>Enable Chromium sandboxing. Defaults to <c>false</c>.</para></summary>
         [JsonPropertyName("chromiumSandbox")]
@@ -125,11 +128,11 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("downloadsPath")]
-        public string DownloadsPath { get; set; }
+        public string? DownloadsPath { get; set; }
 
         /// <summary><para>Specify environment variables that will be visible to the browser. Defaults to <c>process.env</c>.</para></summary>
         [JsonPropertyName("env")]
-        public IEnumerable<KeyValuePair<string, string>> Env { get; set; }
+        public IEnumerable<KeyValuePair<string, string>>? Env { get; set; }
 
         /// <summary>
         /// <para>
@@ -140,7 +143,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("executablePath")]
-        public string ExecutablePath { get; set; }
+        public string? ExecutablePath { get; set; }
 
         /// <summary><para>Close the browser process on Ctrl-C. Defaults to <c>true</c>.</para></summary>
         [JsonPropertyName("handleSIGINT")]
@@ -166,7 +169,7 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Network proxy settings.</para></summary>
         [JsonPropertyName("proxy")]
-        public Proxy Proxy { get; set; }
+        public Proxy? Proxy { get; set; }
 
         /// <summary>
         /// <para>
@@ -179,7 +182,7 @@ namespace Microsoft.Playwright
 
         /// <summary><para>If specified, traces are saved into this directory.</para></summary>
         [JsonPropertyName("tracesDir")]
-        public string TracesDir { get; set; }
+        public string? TracesDir { get; set; }
 
         /// <summary>
         /// <para>
@@ -197,7 +200,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("ignoreDefaultArgs")]
-        public IEnumerable<string> IgnoreDefaultArgs { get; set; }
+        public IEnumerable<string>? IgnoreDefaultArgs { get; set; }
 
         /// <summary>
         /// <para>
@@ -233,7 +236,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("viewport")]
-        public ViewportSize ViewportSize { get; set; }
+        public ViewportSize? ViewportSize { get; set; }
 
         /// <summary>
         /// <para>
@@ -242,11 +245,11 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("screen")]
-        public ScreenSize ScreenSize { get; set; }
+        public ScreenSize? ScreenSize { get; set; }
 
         /// <summary><para>Specific user agent to use in this context.</para></summary>
         [JsonPropertyName("userAgent")]
-        public string UserAgent { get; set; }
+        public string? UserAgent { get; set; }
 
         /// <summary><para>Specify device scale factor (can be thought of as dpr). Defaults to <c>1</c>.</para></summary>
         [JsonPropertyName("deviceScaleFactor")]
@@ -276,10 +279,10 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("timezoneId")]
-        public string TimezoneId { get; set; }
+        public string? TimezoneId { get; set; }
 
         [JsonPropertyName("geolocation")]
-        public Geolocation Geolocation { get; set; }
+        public Geolocation? Geolocation { get; set; }
 
         /// <summary>
         /// <para>
@@ -289,7 +292,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("locale")]
-        public string Locale { get; set; }
+        public string? Locale { get; set; }
 
         /// <summary>
         /// <para>
@@ -298,7 +301,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("permissions")]
-        public IEnumerable<string> Permissions { get; set; }
+        public IEnumerable<string>? Permissions { get; set; }
 
         /// <summary>
         /// <para>
@@ -307,7 +310,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("extraHTTPHeaders")]
-        public IEnumerable<KeyValuePair<string, string>> ExtraHTTPHeaders { get; set; }
+        public IEnumerable<KeyValuePair<string, string>>? ExtraHTTPHeaders { get; set; }
 
         /// <summary><para>Whether to emulate network being offline. Defaults to <c>false</c>.</para></summary>
         [JsonPropertyName("offline")]
@@ -320,7 +323,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("httpCredentials")]
-        public HttpCredentials HttpCredentials { get; set; }
+        public HttpCredentials? HttpCredentials { get; set; }
 
         /// <summary>
         /// <para>
@@ -351,7 +354,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("recordHarPath")]
-        public string RecordHarPath { get; set; }
+        public string? RecordHarPath { get; set; }
 
         /// <summary>
         /// <para>
@@ -370,7 +373,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("recordVideoDir")]
-        public string RecordVideoDir { get; set; }
+        public string? RecordVideoDir { get; set; }
 
         /// <summary>
         /// <para>
@@ -381,6 +384,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("recordVideoSize")]
-        public RecordVideoSize RecordVideoSize { get; set; }
+        public RecordVideoSize? RecordVideoSize { get; set; }
     }
 }
+
+#nullable disable

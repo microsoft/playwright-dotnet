@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,16 +35,22 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     public partial class Position
     {
         /// <summary><para></para></summary>
+        [Required]
         [JsonPropertyName("x")]
-        public float X { get; set; }
+        public float X { get; set; } = default!;
 
         /// <summary><para></para></summary>
+        [Required]
         [JsonPropertyName("y")]
-        public float Y { get; set; }
+        public float Y { get; set; } = default!;
     }
 }
+
+#nullable disable

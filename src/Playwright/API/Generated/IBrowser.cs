@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -120,7 +123,7 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="options">Call options</param>
-        Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions options = default);
+        Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -135,9 +138,11 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="options">Call options</param>
-        Task<IPage> NewPageAsync(BrowserNewPageOptions options = default);
+        Task<IPage> NewPageAsync(BrowserNewPageOptions? options = default);
 
         /// <summary><para>Returns the browser version.</para></summary>
         string Version { get; }
     }
 }
+
+#nullable disable

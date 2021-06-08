@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -76,6 +79,8 @@ namespace Microsoft.Playwright
         /// selectors. May only contain <c>[a-zA-Z0-9_]</c> characters.
         /// </param>
         /// <param name="options">Call options</param>
-        Task RegisterAsync(string name, SelectorsRegisterOptions options = default);
+        Task RegisterAsync(string name, SelectorsRegisterOptions? options = default);
     }
 }
+
+#nullable disable

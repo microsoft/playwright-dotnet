@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,24 +35,28 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     public partial class Margin
     {
         /// <summary><para>Top margin, accepts values labeled with units. Defaults to <c>0</c>.</para></summary>
         [JsonPropertyName("top")]
-        public string Top { get; set; }
+        public string? Top { get; set; }
 
         /// <summary><para>Right margin, accepts values labeled with units. Defaults to <c>0</c>.</para></summary>
         [JsonPropertyName("right")]
-        public string Right { get; set; }
+        public string? Right { get; set; }
 
         /// <summary><para>Bottom margin, accepts values labeled with units. Defaults to <c>0</c>.</para></summary>
         [JsonPropertyName("bottom")]
-        public string Bottom { get; set; }
+        public string? Bottom { get; set; }
 
         /// <summary><para>Left margin, accepts values labeled with units. Defaults to <c>0</c>.</para></summary>
         [JsonPropertyName("left")]
-        public string Left { get; set; }
+        public string? Left { get; set; }
     }
 }
+
+#nullable disable

@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -96,7 +99,7 @@ namespace Microsoft.Playwright
         /// <para>Adds a <c>&lt;script&gt;</c> tag into the page with the desired url or content.</para>
         /// </summary>
         /// <param name="options">Call options</param>
-        Task<IElementHandle> AddScriptTagAsync(FrameAddScriptTagOptions options = default);
+        Task<IElementHandle> AddScriptTagAsync(FrameAddScriptTagOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -109,7 +112,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="options">Call options</param>
-        Task<IElementHandle> AddStyleTagAsync(FrameAddStyleTagOptions options = default);
+        Task<IElementHandle> AddStyleTagAsync(FrameAddStyleTagOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -150,7 +153,7 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task CheckAsync(string selector, FrameCheckOptions options = default);
+        Task CheckAsync(string selector, FrameCheckOptions? options = default);
 
         IReadOnlyList<IFrame> ChildFrames { get; }
 
@@ -191,7 +194,7 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task ClickAsync(string selector, FrameClickOptions options = default);
+        Task ClickAsync(string selector, FrameClickOptions? options = default);
 
         /// <summary><para>Gets the full HTML contents of the frame, including the doctype.</para></summary>
         Task<string> ContentAsync();
@@ -240,7 +243,7 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task DblClickAsync(string selector, FrameDblClickOptions options = default);
+        Task DblClickAsync(string selector, FrameDblClickOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -285,7 +288,7 @@ namespace Microsoft.Playwright
         /// <param name="type">DOM event type: <c>"click"</c>, <c>"dragstart"</c>, etc.</param>
         /// <param name="eventInit">Optional event-specific initialization properties.</param>
         /// <param name="options">Call options</param>
-        Task DispatchEventAsync(string selector, string type, object eventInit = default, FrameDispatchEventOptions options = default);
+        Task DispatchEventAsync(string selector, string type, object? eventInit = default, FrameDispatchEventOptions? options = default);
 
         /// <summary>
         /// <para>Returns the return value of <paramref name="expression"/>.</para>
@@ -316,7 +319,7 @@ namespace Microsoft.Playwright
         /// expression.
         /// </param>
         /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-        Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg = default);
+        Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default);
 
         /// <summary>
         /// <para>Returns the return value of <paramref name="expression"/>.</para>
@@ -342,7 +345,7 @@ namespace Microsoft.Playwright
         /// expression.
         /// </param>
         /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-        Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg = default);
+        Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg = default);
 
         /// <summary>
         /// <para>Returns the return value of <paramref name="expression"/>.</para>
@@ -379,7 +382,7 @@ namespace Microsoft.Playwright
         /// expression.
         /// </param>
         /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-        Task<T> EvaluateAsync<T>(string expression, object arg = default);
+        Task<T> EvaluateAsync<T>(string expression, object? arg = default);
 
         /// <summary>
         /// <para>Returns the return value of <paramref name="expression"/> as a <see cref="IJSHandle"/>.</para>
@@ -412,7 +415,7 @@ namespace Microsoft.Playwright
         /// expression.
         /// </param>
         /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-        Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = default);
+        Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = default);
 
         /// <summary>
         /// <para>
@@ -439,7 +442,7 @@ namespace Microsoft.Playwright
         /// element.
         /// </param>
         /// <param name="options">Call options</param>
-        Task FillAsync(string selector, string value, FrameFillOptions options = default);
+        Task FillAsync(string selector, string value, FrameFillOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -454,7 +457,7 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task FocusAsync(string selector, FrameFocusOptions options = default);
+        Task FocusAsync(string selector, FrameFocusOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -485,7 +488,7 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="name">Attribute name to get the value for.</param>
         /// <param name="options">Call options</param>
-        Task<string> GetAttributeAsync(string selector, string name, FrameGetAttributeOptions options = default);
+        Task<string?> GetAttributeAsync(string selector, string name, FrameGetAttributeOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -519,7 +522,7 @@ namespace Microsoft.Playwright
         /// </remarks>
         /// <param name="url">URL to navigate frame to. The url should include scheme, e.g. <c>https://</c>.</param>
         /// <param name="options">Call options</param>
-        Task<IResponse> GotoAsync(string url, FrameGotoOptions options = default);
+        Task<IResponse?> GotoAsync(string url, FrameGotoOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -558,7 +561,7 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task HoverAsync(string selector, FrameHoverOptions options = default);
+        Task HoverAsync(string selector, FrameHoverOptions? options = default);
 
         /// <summary><para>Returns <c>element.innerHTML</c>.</para></summary>
         /// <param name="selector">
@@ -567,7 +570,7 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<string> InnerHTMLAsync(string selector, FrameInnerHTMLOptions options = default);
+        Task<string> InnerHTMLAsync(string selector, FrameInnerHTMLOptions? options = default);
 
         /// <summary><para>Returns <c>element.innerText</c>.</para></summary>
         /// <param name="selector">
@@ -576,7 +579,7 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<string> InnerTextAsync(string selector, FrameInnerTextOptions options = default);
+        Task<string> InnerTextAsync(string selector, FrameInnerTextOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -590,7 +593,7 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<bool> IsCheckedAsync(string selector, FrameIsCheckedOptions options = default);
+        Task<bool> IsCheckedAsync(string selector, FrameIsCheckedOptions? options = default);
 
         /// <summary><para>Returns <c>true</c> if the frame has been detached, or <c>false</c> otherwise.</para></summary>
         bool IsDetached { get; }
@@ -602,7 +605,7 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<bool> IsDisabledAsync(string selector, FrameIsDisabledOptions options = default);
+        Task<bool> IsDisabledAsync(string selector, FrameIsDisabledOptions? options = default);
 
         /// <summary><para>Returns whether the element is <a href="./actionability.md#editable">editable</a>.</para></summary>
         /// <param name="selector">
@@ -611,7 +614,7 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<bool> IsEditableAsync(string selector, FrameIsEditableOptions options = default);
+        Task<bool> IsEditableAsync(string selector, FrameIsEditableOptions? options = default);
 
         /// <summary><para>Returns whether the element is <a href="./actionability.md#enabled">enabled</a>.</para></summary>
         /// <param name="selector">
@@ -620,7 +623,7 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<bool> IsEnabledAsync(string selector, FrameIsEnabledOptions options = default);
+        Task<bool> IsEnabledAsync(string selector, FrameIsEnabledOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -634,7 +637,7 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<bool> IsHiddenAsync(string selector, FrameIsHiddenOptions options = default);
+        Task<bool> IsHiddenAsync(string selector, FrameIsHiddenOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -648,7 +651,7 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<bool> IsVisibleAsync(string selector, FrameIsVisibleOptions options = default);
+        Task<bool> IsVisibleAsync(string selector, FrameIsVisibleOptions? options = default);
 
         /// <summary>
         /// <para>Returns frame's name attribute as specified in the tag.</para>
@@ -666,7 +669,7 @@ namespace Microsoft.Playwright
         IPage Page { get; }
 
         /// <summary><para>Parent frame, if any. Detached frames and main frames return <c>null</c>.</para></summary>
-        IFrame ParentFrame { get; }
+        IFrame? ParentFrame { get; }
 
         /// <summary>
         /// <para>
@@ -710,7 +713,7 @@ namespace Microsoft.Playwright
         /// <c>a</c>.
         /// </param>
         /// <param name="options">Call options</param>
-        Task PressAsync(string selector, string key, FramePressOptions options = default);
+        Task PressAsync(string selector, string key, FramePressOptions? options = default);
 
         /// <summary>
         /// <para>Returns the ElementHandle pointing to the frame element.</para>
@@ -724,7 +727,7 @@ namespace Microsoft.Playwright
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        Task<IElementHandle> QuerySelectorAsync(string selector);
+        Task<IElementHandle?> QuerySelectorAsync(string selector);
 
         /// <summary>
         /// <para>Returns the ElementHandles pointing to the frame elements.</para>
@@ -777,7 +780,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, string values, FrameSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, string values, FrameSelectOptionOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -816,7 +819,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle values, FrameSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle values, FrameSelectOptionOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -855,7 +858,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, FrameSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, FrameSelectOptionOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -894,7 +897,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, FrameSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, FrameSelectOptionOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -933,7 +936,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, FrameSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, FrameSelectOptionOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -972,11 +975,11 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, FrameSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, FrameSelectOptionOptions? options = default);
 
         /// <param name="html">HTML markup to assign to the page.</param>
         /// <param name="options">Call options</param>
-        Task SetContentAsync(string html, FrameSetContentOptions options = default);
+        Task SetContentAsync(string html, FrameSetContentOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -997,7 +1000,7 @@ namespace Microsoft.Playwright
         /// <param name="files">
         /// </param>
         /// <param name="options">Call options</param>
-        Task SetInputFilesAsync(string selector, string files, FrameSetInputFilesOptions options = default);
+        Task SetInputFilesAsync(string selector, string files, FrameSetInputFilesOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -1018,7 +1021,7 @@ namespace Microsoft.Playwright
         /// <param name="files">
         /// </param>
         /// <param name="options">Call options</param>
-        Task SetInputFilesAsync(string selector, IEnumerable<string> files, FrameSetInputFilesOptions options = default);
+        Task SetInputFilesAsync(string selector, IEnumerable<string> files, FrameSetInputFilesOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -1039,7 +1042,7 @@ namespace Microsoft.Playwright
         /// <param name="files">
         /// </param>
         /// <param name="options">Call options</param>
-        Task SetInputFilesAsync(string selector, FilePayload files, FrameSetInputFilesOptions options = default);
+        Task SetInputFilesAsync(string selector, FilePayload files, FrameSetInputFilesOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -1060,7 +1063,7 @@ namespace Microsoft.Playwright
         /// <param name="files">
         /// </param>
         /// <param name="options">Call options</param>
-        Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, FrameSetInputFilesOptions options = default);
+        Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, FrameSetInputFilesOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -1105,7 +1108,7 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task TapAsync(string selector, FrameTapOptions options = default);
+        Task TapAsync(string selector, FrameTapOptions? options = default);
 
         /// <summary><para>Returns <c>element.textContent</c>.</para></summary>
         /// <param name="selector">
@@ -1114,7 +1117,7 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<string> TextContentAsync(string selector, FrameTextContentOptions options = default);
+        Task<string?> TextContentAsync(string selector, FrameTextContentOptions? options = default);
 
         /// <summary><para>Returns the page title.</para></summary>
         Task<string> TitleAsync();
@@ -1138,7 +1141,7 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="text">A text to type into a focused element.</param>
         /// <param name="options">Call options</param>
-        Task TypeAsync(string selector, string text, FrameTypeOptions options = default);
+        Task TypeAsync(string selector, string text, FrameTypeOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -1179,7 +1182,7 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task UncheckAsync(string selector, FrameUncheckOptions options = default);
+        Task UncheckAsync(string selector, FrameUncheckOptions? options = default);
 
         /// <summary><para>Returns frame's url.</para></summary>
         string Url { get; }
@@ -1222,7 +1225,7 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
         /// <param name="options">Call options</param>
-        Task<IJSHandle> WaitForFunctionAsync(string expression, object arg = default, FrameWaitForFunctionOptions options = default);
+        Task<IJSHandle> WaitForFunctionAsync(string expression, object? arg = default, FrameWaitForFunctionOptions? options = default);
 
         /// <summary>
         /// <para>Waits for the required load state to be reached.</para>
@@ -1250,7 +1253,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// </param>
         /// <param name="options">Call options</param>
-        Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions options = default);
+        Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -1280,7 +1283,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="options">Call options</param>
-        Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default);
+        Task<IResponse?> WaitForNavigationAsync(FrameWaitForNavigationOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -1311,7 +1314,7 @@ namespace Microsoft.Playwright
         /// </remarks>
         /// <param name="action">Action that triggers the event.</param>
         /// <param name="options">Call options</param>
-        Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions options = default);
+        Task<IResponse?> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -1354,7 +1357,7 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IElementHandle> WaitForSelectorAsync(string selector, FrameWaitForSelectorOptions options = default);
+        Task<IElementHandle?> WaitForSelectorAsync(string selector, FrameWaitForSelectorOptions? options = default);
 
         /// <summary>
         /// <para>Waits for the given <paramref name="timeout"/> in milliseconds.</para>
@@ -1379,7 +1382,7 @@ namespace Microsoft.Playwright
         /// while waiting for the navigation.
         /// </param>
         /// <param name="options">Call options</param>
-        Task WaitForURLAsync(string url, FrameWaitForURLOptions options = default);
+        Task WaitForURLAsync(string url, FrameWaitForURLOptions? options = default);
 
         /// <summary>
         /// <para>Waits for the frame to navigate to the given URL.</para>
@@ -1393,7 +1396,7 @@ namespace Microsoft.Playwright
         /// while waiting for the navigation.
         /// </param>
         /// <param name="options">Call options</param>
-        Task WaitForURLAsync(Regex url, FrameWaitForURLOptions options = default);
+        Task WaitForURLAsync(Regex url, FrameWaitForURLOptions? options = default);
 
         /// <summary>
         /// <para>Waits for the frame to navigate to the given URL.</para>
@@ -1407,6 +1410,8 @@ namespace Microsoft.Playwright
         /// while waiting for the navigation.
         /// </param>
         /// <param name="options">Call options</param>
-        Task WaitForURLAsync(Func<string, bool> url, FrameWaitForURLOptions options = default);
+        Task WaitForURLAsync(Func<string, bool> url, FrameWaitForURLOptions? options = default);
     }
 }
+
+#nullable disable

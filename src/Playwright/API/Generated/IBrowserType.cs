@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -98,7 +101,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="options">Call options</param>
-        Task<IBrowser> LaunchAsync(BrowserTypeLaunchOptions options = default);
+        Task<IBrowser> LaunchAsync(BrowserTypeLaunchOptions? options = default);
 
         /// <summary>
         /// <para>Returns the persistent browser context instance.</para>
@@ -116,9 +119,11 @@ namespace Microsoft.Playwright
         /// Path" seen at <c>chrome://version</c>.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions options = default);
+        Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions? options = default);
 
         /// <summary><para>Returns browser name. For example: <c>'chromium'</c>, <c>'webkit'</c> or <c>'firefox'</c>.</para></summary>
         string Name { get; }
     }
 }
+
+#nullable disable

@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -46,9 +49,11 @@ namespace Microsoft.Playwright
     public partial interface IWebSocketFrame
     {
         /// <summary><para>Returns binary payload.</para></summary>
-        byte[] Binary { get; }
+        byte[]? Binary { get; }
 
         /// <summary><para>Returns text payload.</para></summary>
-        string Text { get; }
+        string? Text { get; }
     }
 }
+
+#nullable disable

@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,6 +35,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     /// <summary><para><see cref="IResponse"/> class represents responses which are received by page.</para></summary>
@@ -43,7 +46,7 @@ namespace Microsoft.Playwright
         Task<byte[]> BodyAsync();
 
         /// <summary><para>Waits for this response to finish, returns failure error if request failed.</para></summary>
-        Task<string> FinishedAsync();
+        Task<string?> FinishedAsync();
 
         /// <summary><para>Returns the <see cref="IFrame"/> that initiated this response.</para></summary>
         IFrame Frame { get; }
@@ -86,3 +89,5 @@ namespace Microsoft.Playwright
         string Url { get; }
     }
 }
+
+#nullable disable

@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -65,7 +68,7 @@ namespace Microsoft.Playwright
         /// <param name="y">
         /// </param>
         /// <param name="options">Call options</param>
-        Task ClickAsync(float x, float y, MouseClickOptions options = default);
+        Task ClickAsync(float x, float y, MouseClickOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -78,11 +81,11 @@ namespace Microsoft.Playwright
         /// <param name="y">
         /// </param>
         /// <param name="options">Call options</param>
-        Task DblClickAsync(float x, float y, MouseDblClickOptions options = default);
+        Task DblClickAsync(float x, float y, MouseDblClickOptions? options = default);
 
         /// <summary><para>Dispatches a <c>mousedown</c> event.</para></summary>
         /// <param name="options">Call options</param>
-        Task DownAsync(MouseDownOptions options = default);
+        Task DownAsync(MouseDownOptions? options = default);
 
         /// <summary><para>Dispatches a <c>mousemove</c> event.</para></summary>
         /// <param name="x">
@@ -90,10 +93,12 @@ namespace Microsoft.Playwright
         /// <param name="y">
         /// </param>
         /// <param name="options">Call options</param>
-        Task MoveAsync(float x, float y, MouseMoveOptions options = default);
+        Task MoveAsync(float x, float y, MouseMoveOptions? options = default);
 
         /// <summary><para>Dispatches a <c>mouseup</c> event.</para></summary>
         /// <param name="options">Call options</param>
-        Task UpAsync(MouseUpOptions options = default);
+        Task UpAsync(MouseUpOptions? options = default);
     }
 }
+
+#nullable disable

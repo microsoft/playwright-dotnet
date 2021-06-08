@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -80,7 +83,7 @@ namespace Microsoft.Playwright
         /// A text to enter in prompt. Does not cause any effects if the dialog's <c>type</c>
         /// is not prompt. Optional.
         /// </param>
-        Task AcceptAsync(string promptText = default);
+        Task AcceptAsync(string? promptText = default);
 
         /// <summary><para>If dialog is prompt, returns default prompt value. Otherwise, returns empty string.</para></summary>
         string DefaultValue { get; }
@@ -100,3 +103,5 @@ namespace Microsoft.Playwright
         string Type { get; }
     }
 }
+
+#nullable disable

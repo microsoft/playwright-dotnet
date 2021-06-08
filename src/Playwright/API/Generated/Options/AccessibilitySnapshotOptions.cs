@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -53,6 +56,8 @@ namespace Microsoft.Playwright
 
         /// <summary><para>The root DOM element for the snapshot. Defaults to the whole page.</para></summary>
         [JsonPropertyName("root")]
-        public IElementHandle Root { get; set; }
+        public IElementHandle? Root { get; set; }
     }
 }
+
+#nullable disable

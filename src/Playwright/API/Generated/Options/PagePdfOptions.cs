@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -66,7 +69,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("path")]
-        public string Path { get; set; }
+        public string? Path { get; set; }
 
         /// <summary>
         /// <para>
@@ -95,7 +98,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// </summary>
         [JsonPropertyName("headerTemplate")]
-        public string HeaderTemplate { get; set; }
+        public string? HeaderTemplate { get; set; }
 
         /// <summary>
         /// <para>
@@ -104,7 +107,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("footerTemplate")]
-        public string FooterTemplate { get; set; }
+        public string? FooterTemplate { get; set; }
 
         /// <summary><para>Print background graphics. Defaults to <c>false</c>.</para></summary>
         [JsonPropertyName("printBackground")]
@@ -121,7 +124,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("pageRanges")]
-        public string PageRanges { get; set; }
+        public string? PageRanges { get; set; }
 
         /// <summary>
         /// <para>
@@ -130,19 +133,19 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("format")]
-        public string Format { get; set; }
+        public string? Format { get; set; }
 
         /// <summary><para>Paper width, accepts values labeled with units.</para></summary>
         [JsonPropertyName("width")]
-        public string Width { get; set; }
+        public string? Width { get; set; }
 
         /// <summary><para>Paper height, accepts values labeled with units.</para></summary>
         [JsonPropertyName("height")]
-        public string Height { get; set; }
+        public string? Height { get; set; }
 
         /// <summary><para>Paper margins, defaults to none.</para></summary>
         [JsonPropertyName("margin")]
-        public Margin Margin { get; set; }
+        public Margin? Margin { get; set; }
 
         /// <summary>
         /// <para>
@@ -156,3 +159,5 @@ namespace Microsoft.Playwright
         public bool? PreferCSSPageSize { get; set; }
     }
 }
+
+#nullable disable

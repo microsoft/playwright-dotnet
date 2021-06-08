@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,6 +35,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     /// <summary>
@@ -42,35 +45,45 @@ namespace Microsoft.Playwright
     public partial class BrowserContextCookiesResult
     {
         /// <summary><para></para></summary>
+        [Required]
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = default!;
 
         /// <summary><para></para></summary>
+        [Required]
         [JsonPropertyName("value")]
-        public string Value { get; set; }
+        public string Value { get; set; } = default!;
 
         /// <summary><para></para></summary>
+        [Required]
         [JsonPropertyName("domain")]
-        public string Domain { get; set; }
+        public string Domain { get; set; } = default!;
 
         /// <summary><para></para></summary>
+        [Required]
         [JsonPropertyName("path")]
-        public string Path { get; set; }
+        public string Path { get; set; } = default!;
 
         /// <summary><para>Unix time in seconds.</para></summary>
+        [Required]
         [JsonPropertyName("expires")]
-        public float Expires { get; set; }
+        public float Expires { get; set; } = default!;
 
         /// <summary><para></para></summary>
+        [Required]
         [JsonPropertyName("httpOnly")]
-        public bool HttpOnly { get; set; }
+        public bool HttpOnly { get; set; } = default!;
 
         /// <summary><para></para></summary>
+        [Required]
         [JsonPropertyName("secure")]
-        public bool Secure { get; set; }
+        public bool Secure { get; set; } = default!;
 
         /// <summary><para></para></summary>
+        [Required]
         [JsonPropertyName("sameSite")]
-        public SameSiteAttribute SameSite { get; set; }
+        public SameSiteAttribute SameSite { get; set; } = default!;
     }
 }
+
+#nullable disable

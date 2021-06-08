@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,16 +35,22 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     public partial class ViewportSize
     {
         /// <summary><para>page width in pixels.</para></summary>
+        [Required]
         [JsonPropertyName("width")]
-        public int Width { get; set; }
+        public int Width { get; set; } = default!;
 
         /// <summary><para>page height in pixels.</para></summary>
+        [Required]
         [JsonPropertyName("height")]
-        public int Height { get; set; }
+        public int Height { get; set; } = default!;
     }
 }
+
+#nullable disable

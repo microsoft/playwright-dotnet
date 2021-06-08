@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,38 +35,42 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     internal partial class Mouse
     {
-        public Task ClickAsync(float x, float y, MouseClickOptions options = default)
+        public Task ClickAsync(float x, float y, MouseClickOptions? options = default)
         {
             options ??= new MouseClickOptions();
             return ClickAsync(x, y, button: options.Button, clickCount: options.ClickCount, delay: options.Delay);
         }
 
-        public Task DblClickAsync(float x, float y, MouseDblClickOptions options = default)
+        public Task DblClickAsync(float x, float y, MouseDblClickOptions? options = default)
         {
             options ??= new MouseDblClickOptions();
             return DblClickAsync(x, y, button: options.Button, delay: options.Delay);
         }
 
-        public Task DownAsync(MouseDownOptions options = default)
+        public Task DownAsync(MouseDownOptions? options = default)
         {
             options ??= new MouseDownOptions();
             return DownAsync(button: options.Button, clickCount: options.ClickCount);
         }
 
-        public Task MoveAsync(float x, float y, MouseMoveOptions options = default)
+        public Task MoveAsync(float x, float y, MouseMoveOptions? options = default)
         {
             options ??= new MouseMoveOptions();
             return MoveAsync(x, y, steps: options.Steps);
         }
 
-        public Task UpAsync(MouseUpOptions options = default)
+        public Task UpAsync(MouseUpOptions? options = default)
         {
             options ??= new MouseUpOptions();
             return UpAsync(button: options.Button, clickCount: options.ClickCount);
         }
     }
 }
+
+#nullable disable

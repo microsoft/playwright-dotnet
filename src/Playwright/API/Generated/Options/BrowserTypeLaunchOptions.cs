@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -70,7 +73,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("args")]
-        public IEnumerable<string> Args { get; set; }
+        public IEnumerable<string>? Args { get; set; }
 
         /// <summary>
         /// <para>
@@ -81,7 +84,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("channel")]
-        public string Channel { get; set; }
+        public string? Channel { get; set; }
 
         /// <summary><para>Enable Chromium sandboxing. Defaults to <c>false</c>.</para></summary>
         [JsonPropertyName("chromiumSandbox")]
@@ -103,11 +106,11 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("downloadsPath")]
-        public string DownloadsPath { get; set; }
+        public string? DownloadsPath { get; set; }
 
         /// <summary><para>Specify environment variables that will be visible to the browser. Defaults to <c>process.env</c>.</para></summary>
         [JsonPropertyName("env")]
-        public IEnumerable<KeyValuePair<string, string>> Env { get; set; }
+        public IEnumerable<KeyValuePair<string, string>>? Env { get; set; }
 
         /// <summary>
         /// <para>
@@ -118,7 +121,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("executablePath")]
-        public string ExecutablePath { get; set; }
+        public string? ExecutablePath { get; set; }
 
         /// <summary><para>Close the browser process on Ctrl-C. Defaults to <c>true</c>.</para></summary>
         [JsonPropertyName("handleSIGINT")]
@@ -144,7 +147,7 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Network proxy settings.</para></summary>
         [JsonPropertyName("proxy")]
-        public Proxy Proxy { get; set; }
+        public Proxy? Proxy { get; set; }
 
         /// <summary>
         /// <para>
@@ -157,11 +160,11 @@ namespace Microsoft.Playwright
 
         /// <summary><para>If specified, traces are saved into this directory.</para></summary>
         [JsonPropertyName("tracesDir")]
-        public string TracesDir { get; set; }
+        public string? TracesDir { get; set; }
 
         /// <summary><para>Firefox user preferences. Learn more about the Firefox user preferences at <a href="https://support.mozilla.org/en-US/kb/about-config-editor-firefox"><c>about:config</c></a>.</para></summary>
         [JsonPropertyName("firefoxUserPrefs")]
-        public IEnumerable<KeyValuePair<string, object>> FirefoxUserPrefs { get; set; }
+        public IEnumerable<KeyValuePair<string, object>>? FirefoxUserPrefs { get; set; }
 
         /// <summary>
         /// <para>
@@ -179,7 +182,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("ignoreDefaultArgs")]
-        public IEnumerable<string> IgnoreDefaultArgs { get; set; }
+        public IEnumerable<string>? IgnoreDefaultArgs { get; set; }
 
         /// <summary>
         /// <para>
@@ -192,3 +195,5 @@ namespace Microsoft.Playwright
         public bool? IgnoreAllDefaultArgs { get; set; }
     }
 }
+
+#nullable disable

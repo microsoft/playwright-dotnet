@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,20 +35,24 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     internal partial class Keyboard
     {
-        public Task PressAsync(string key, KeyboardPressOptions options = default)
+        public Task PressAsync(string key, KeyboardPressOptions? options = default)
         {
             options ??= new KeyboardPressOptions();
             return PressAsync(key, delay: options.Delay);
         }
 
-        public Task TypeAsync(string text, KeyboardTypeOptions options = default)
+        public Task TypeAsync(string text, KeyboardTypeOptions? options = default)
         {
             options ??= new KeyboardTypeOptions();
             return TypeAsync(text, delay: options.Delay);
         }
     }
 }
+
+#nullable disable

@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -48,6 +51,8 @@ namespace Microsoft.Playwright
 
         /// <summary><para>The <see cref="origin"/> to grant permissions to, e.g. "https://example.com".</para></summary>
         [JsonPropertyName("origin")]
-        public string Origin { get; set; }
+        public string? Origin { get; set; }
     }
 }
+
+#nullable disable

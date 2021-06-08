@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,20 +35,24 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     internal partial class Browser
     {
-        public Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions options = default)
+        public Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions? options = default)
         {
             options ??= new BrowserNewContextOptions();
             return NewContextAsync(acceptDownloads: options.AcceptDownloads, ignoreHTTPSErrors: options.IgnoreHTTPSErrors, bypassCSP: options.BypassCSP, viewportSize: options.ViewportSize, screenSize: options.ScreenSize, userAgent: options.UserAgent, deviceScaleFactor: options.DeviceScaleFactor, isMobile: options.IsMobile, hasTouch: options.HasTouch, javaScriptEnabled: options.JavaScriptEnabled, timezoneId: options.TimezoneId, geolocation: options.Geolocation, locale: options.Locale, permissions: options.Permissions, extraHTTPHeaders: options.ExtraHTTPHeaders, offline: options.Offline, httpCredentials: options.HttpCredentials, colorScheme: options.ColorScheme, reducedMotion: options.ReducedMotion, recordHarPath: options.RecordHarPath, recordHarOmitContent: options.RecordHarOmitContent, recordVideoDir: options.RecordVideoDir, recordVideoSize: options.RecordVideoSize, proxy: options.Proxy, storageState: options.StorageState, storageStatePath: options.StorageStatePath);
         }
 
-        public Task<IPage> NewPageAsync(BrowserNewPageOptions options = default)
+        public Task<IPage> NewPageAsync(BrowserNewPageOptions? options = default)
         {
             options ??= new BrowserNewPageOptions();
             return NewPageAsync(acceptDownloads: options.AcceptDownloads, ignoreHTTPSErrors: options.IgnoreHTTPSErrors, bypassCSP: options.BypassCSP, viewportSize: options.ViewportSize, screenSize: options.ScreenSize, userAgent: options.UserAgent, deviceScaleFactor: options.DeviceScaleFactor, isMobile: options.IsMobile, hasTouch: options.HasTouch, javaScriptEnabled: options.JavaScriptEnabled, timezoneId: options.TimezoneId, geolocation: options.Geolocation, locale: options.Locale, permissions: options.Permissions, extraHTTPHeaders: options.ExtraHTTPHeaders, offline: options.Offline, httpCredentials: options.HttpCredentials, colorScheme: options.ColorScheme, reducedMotion: options.ReducedMotion, recordHarPath: options.RecordHarPath, recordHarOmitContent: options.RecordHarOmitContent, recordVideoDir: options.RecordVideoDir, recordVideoSize: options.RecordVideoSize, proxy: options.Proxy, storageState: options.StorageState, storageStatePath: options.StorageStatePath);
         }
     }
 }
+
+#nullable disable

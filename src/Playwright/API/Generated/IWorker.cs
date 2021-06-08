@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -86,7 +89,7 @@ namespace Microsoft.Playwright
         /// expression.
         /// </param>
         /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-        Task<T> EvaluateAsync<T>(string expression, object arg = default);
+        Task<T> EvaluateAsync<T>(string expression, object? arg = default);
 
         /// <summary>
         /// <para>Returns the return value of <paramref name="expression"/> as a <see cref="IJSHandle"/>.</para>
@@ -106,8 +109,10 @@ namespace Microsoft.Playwright
         /// expression.
         /// </param>
         /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-        Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = default);
+        Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = default);
 
         string Url { get; }
     }
 }
+
+#nullable disable

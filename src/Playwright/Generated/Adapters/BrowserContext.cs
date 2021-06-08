@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,38 +35,42 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     internal partial class BrowserContext
     {
-        public Task ExposeBindingAsync(string name, Action callback, BrowserContextExposeBindingOptions options = default)
+        public Task ExposeBindingAsync(string name, Action callback, BrowserContextExposeBindingOptions? options = default)
         {
             options ??= new BrowserContextExposeBindingOptions();
             return ExposeBindingAsync(name, callback, handle: options.Handle);
         }
 
-        public Task GrantPermissionsAsync(IEnumerable<string> permissions, BrowserContextGrantPermissionsOptions options = default)
+        public Task GrantPermissionsAsync(IEnumerable<string> permissions, BrowserContextGrantPermissionsOptions? options = default)
         {
             options ??= new BrowserContextGrantPermissionsOptions();
             return GrantPermissionsAsync(permissions, origin: options.Origin);
         }
 
-        public Task<string> StorageStateAsync(BrowserContextStorageStateOptions options = default)
+        public Task<string> StorageStateAsync(BrowserContextStorageStateOptions? options = default)
         {
             options ??= new BrowserContextStorageStateOptions();
             return StorageStateAsync(path: options.Path);
         }
 
-        public Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions options = default)
+        public Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions? options = default)
         {
             options ??= new BrowserContextWaitForPageOptions();
             return WaitForPageAsync(predicate: options.Predicate, timeout: options.Timeout);
         }
 
-        public Task<IPage> RunAndWaitForPageAsync(Func<Task> action, BrowserContextRunAndWaitForPageOptions options = default)
+        public Task<IPage> RunAndWaitForPageAsync(Func<Task> action, BrowserContextRunAndWaitForPageOptions? options = default)
         {
             options ??= new BrowserContextRunAndWaitForPageOptions();
             return RunAndWaitForPageAsync(action, predicate: options.Predicate, timeout: options.Timeout);
         }
     }
 }
+
+#nullable disable
