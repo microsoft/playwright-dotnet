@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,20 +35,24 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     internal partial class Route
     {
-        public Task ContinueAsync(RouteContinueOptions options = default)
+        public Task ContinueAsync(RouteContinueOptions? options = default)
         {
             options ??= new RouteContinueOptions();
             return ContinueAsync(url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers);
         }
 
-        public Task FulfillAsync(RouteFulfillOptions options = default)
+        public Task FulfillAsync(RouteFulfillOptions? options = default)
         {
             options ??= new RouteFulfillOptions();
             return FulfillAsync(status: options.Status, headers: options.Headers, contentType: options.ContentType, body: options.Body, bodyBytes: options.BodyBytes, path: options.Path);
         }
     }
 }
+
+#nullable disable

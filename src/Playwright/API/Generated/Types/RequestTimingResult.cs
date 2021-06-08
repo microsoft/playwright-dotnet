@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,6 +35,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     /// <summary>
@@ -42,8 +45,9 @@ namespace Microsoft.Playwright
     public partial class RequestTimingResult
     {
         /// <summary><para>Request start time in milliseconds elapsed since January 1, 1970 00:00:00 UTC</para></summary>
+        [Required]
         [JsonPropertyName("startTime")]
-        public float StartTime { get; set; }
+        public float StartTime { get; set; } = default!;
 
         /// <summary>
         /// <para>
@@ -51,8 +55,9 @@ namespace Microsoft.Playwright
         /// The value is given in milliseconds relative to <c>startTime</c>, -1 if not available.
         /// </para>
         /// </summary>
+        [Required]
         [JsonPropertyName("domainLookupStart")]
-        public float DomainLookupStart { get; set; }
+        public float DomainLookupStart { get; set; } = default!;
 
         /// <summary>
         /// <para>
@@ -60,8 +65,9 @@ namespace Microsoft.Playwright
         /// The value is given in milliseconds relative to <c>startTime</c>, -1 if not available.
         /// </para>
         /// </summary>
+        [Required]
         [JsonPropertyName("domainLookupEnd")]
-        public float DomainLookupEnd { get; set; }
+        public float DomainLookupEnd { get; set; } = default!;
 
         /// <summary>
         /// <para>
@@ -70,8 +76,9 @@ namespace Microsoft.Playwright
         /// <c>startTime</c>, -1 if not available.
         /// </para>
         /// </summary>
+        [Required]
         [JsonPropertyName("connectStart")]
-        public float ConnectStart { get; set; }
+        public float ConnectStart { get; set; } = default!;
 
         /// <summary>
         /// <para>
@@ -80,8 +87,9 @@ namespace Microsoft.Playwright
         /// if not available.
         /// </para>
         /// </summary>
+        [Required]
         [JsonPropertyName("secureConnectionStart")]
-        public float SecureConnectionStart { get; set; }
+        public float SecureConnectionStart { get; set; } = default!;
 
         /// <summary>
         /// <para>
@@ -90,8 +98,9 @@ namespace Microsoft.Playwright
         /// <c>startTime</c>, -1 if not available.
         /// </para>
         /// </summary>
+        [Required]
         [JsonPropertyName("connectEnd")]
-        public float ConnectEnd { get; set; }
+        public float ConnectEnd { get; set; } = default!;
 
         /// <summary>
         /// <para>
@@ -100,8 +109,9 @@ namespace Microsoft.Playwright
         /// -1 if not available.
         /// </para>
         /// </summary>
+        [Required]
         [JsonPropertyName("requestStart")]
-        public float RequestStart { get; set; }
+        public float RequestStart { get; set; } = default!;
 
         /// <summary>
         /// <para>
@@ -110,8 +120,9 @@ namespace Microsoft.Playwright
         /// -1 if not available.
         /// </para>
         /// </summary>
+        [Required]
         [JsonPropertyName("responseStart")]
-        public float ResponseStart { get; set; }
+        public float ResponseStart { get; set; } = default!;
 
         /// <summary>
         /// <para>
@@ -120,7 +131,10 @@ namespace Microsoft.Playwright
         /// in milliseconds relative to <c>startTime</c>, -1 if not available.
         /// </para>
         /// </summary>
+        [Required]
         [JsonPropertyName("responseEnd")]
-        public float ResponseEnd { get; set; }
+        public float ResponseEnd { get; set; } = default!;
     }
 }
+
+#nullable disable

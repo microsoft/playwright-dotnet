@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -77,7 +80,7 @@ namespace Microsoft.Playwright
         /// <item><description><c>'failed'</c> - A generic failure occurred.</description></item>
         /// </list>
         /// </param>
-        Task AbortAsync(string errorCode = default);
+        Task AbortAsync(string? errorCode = default);
 
         /// <summary>
         /// <para>Continues route's request with optional overrides.</para>
@@ -91,7 +94,7 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="options">Call options</param>
-        Task ContinueAsync(RouteContinueOptions options = default);
+        Task ContinueAsync(RouteContinueOptions? options = default);
 
         /// <summary>
         /// <para>Fulfills route's request with given response.</para>
@@ -106,9 +109,11 @@ namespace Microsoft.Playwright
         /// <code>await page.RouteAsync("**/xhr_endpoint", route =&gt; route.FulfillAsync(new RouteFulfillOptions { Path = "mock_data.json" }));</code>
         /// </summary>
         /// <param name="options">Call options</param>
-        Task FulfillAsync(RouteFulfillOptions options = default);
+        Task FulfillAsync(RouteFulfillOptions? options = default);
 
         /// <summary><para>A request to be routed.</para></summary>
         IRequest Request { get; }
     }
 }
+
+#nullable disable

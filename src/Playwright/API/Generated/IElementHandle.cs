@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -94,7 +97,7 @@ namespace Microsoft.Playwright
         /// await page.Mouse.ClickAsync(box.X + box.Width / 2, box.Y + box.Height / 2);
         /// </code>
         /// </summary>
-        Task<ElementHandleBoundingBoxResult> BoundingBoxAsync();
+        Task<ElementHandleBoundingBoxResult?> BoundingBoxAsync();
 
         /// <summary>
         /// <para>This method checks the element by performing the following steps:</para>
@@ -126,7 +129,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="options">Call options</param>
-        Task CheckAsync(ElementHandleCheckOptions options = default);
+        Task CheckAsync(ElementHandleCheckOptions? options = default);
 
         /// <summary>
         /// <para>This method clicks the element by performing the following steps:</para>
@@ -156,7 +159,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="options">Call options</param>
-        Task ClickAsync(ElementHandleClickOptions options = default);
+        Task ClickAsync(ElementHandleClickOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -164,7 +167,7 @@ namespace Microsoft.Playwright
         /// otherwise
         /// </para>
         /// </summary>
-        Task<IFrame> ContentFrameAsync();
+        Task<IFrame?> ContentFrameAsync();
 
         /// <summary>
         /// <para>This method double clicks the element by performing the following steps:</para>
@@ -201,7 +204,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="options">Call options</param>
-        Task DblClickAsync(ElementHandleDblClickOptions options = default);
+        Task DblClickAsync(ElementHandleDblClickOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -242,7 +245,7 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="type">DOM event type: <c>"click"</c>, <c>"dragstart"</c>, etc.</param>
         /// <param name="eventInit">Optional event-specific initialization properties.</param>
-        Task DispatchEventAsync(string type, object eventInit = default);
+        Task DispatchEventAsync(string type, object? eventInit = default);
 
         /// <summary>
         /// <para>Returns the return value of <paramref name="expression"/>.</para>
@@ -273,7 +276,7 @@ namespace Microsoft.Playwright
         /// expression.
         /// </param>
         /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-        Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg = default);
+        Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default);
 
         /// <summary>
         /// <para>Returns the return value of <paramref name="expression"/>.</para>
@@ -303,7 +306,7 @@ namespace Microsoft.Playwright
         /// expression.
         /// </param>
         /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-        Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg = default);
+        Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg = default);
 
         /// <summary>
         /// <para>
@@ -324,7 +327,7 @@ namespace Microsoft.Playwright
         /// element.
         /// </param>
         /// <param name="options">Call options</param>
-        Task FillAsync(string value, ElementHandleFillOptions options = default);
+        Task FillAsync(string value, ElementHandleFillOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -336,7 +339,7 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Returns element attribute value.</para></summary>
         /// <param name="name">Attribute name to get the value for.</param>
-        Task<string> GetAttributeAsync(string name);
+        Task<string?> GetAttributeAsync(string name);
 
         /// <summary>
         /// <para>This method hovers over the element by performing the following steps:</para>
@@ -366,7 +369,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="options">Call options</param>
-        Task HoverAsync(ElementHandleHoverOptions options = default);
+        Task HoverAsync(ElementHandleHoverOptions? options = default);
 
         /// <summary><para>Returns the <c>element.innerHTML</c>.</para></summary>
         Task<string> InnerHTMLAsync();
@@ -398,7 +401,7 @@ namespace Microsoft.Playwright
         Task<bool> IsVisibleAsync();
 
         /// <summary><para>Returns the frame containing the given element.</para></summary>
-        Task<IFrame> OwnerFrameAsync();
+        Task<IFrame?> OwnerFrameAsync();
 
         /// <summary>
         /// <para>Focuses the element, and then uses <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.</para>
@@ -438,7 +441,7 @@ namespace Microsoft.Playwright
         /// <c>a</c>.
         /// </param>
         /// <param name="options">Call options</param>
-        Task PressAsync(string key, ElementHandlePressOptions options = default);
+        Task PressAsync(string key, ElementHandlePressOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -451,7 +454,7 @@ namespace Microsoft.Playwright
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        Task<IElementHandle> QuerySelectorAsync(string selector);
+        Task<IElementHandle?> QuerySelectorAsync(string selector);
 
         /// <summary>
         /// <para>
@@ -475,7 +478,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="options">Call options</param>
-        Task<byte[]> ScreenshotAsync(ElementHandleScreenshotOptions options = default);
+        Task<byte[]> ScreenshotAsync(ElementHandleScreenshotOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -490,7 +493,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="options">Call options</param>
-        Task ScrollIntoViewIfNeededAsync(ElementHandleScrollIntoViewIfNeededOptions options = default);
+        Task ScrollIntoViewIfNeededAsync(ElementHandleScrollIntoViewIfNeededOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -530,7 +533,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyList<string>> SelectOptionAsync(string values, ElementHandleSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(string values, ElementHandleSelectOptionOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -570,7 +573,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyList<string>> SelectOptionAsync(IElementHandle values, ElementHandleSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(IElementHandle values, ElementHandleSelectOptionOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -610,7 +613,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<string> values, ElementHandleSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<string> values, ElementHandleSelectOptionOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -650,7 +653,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyList<string>> SelectOptionAsync(SelectOptionValue values, ElementHandleSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(SelectOptionValue values, ElementHandleSelectOptionOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -690,7 +693,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, ElementHandleSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, ElementHandleSelectOptionOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -730,7 +733,7 @@ namespace Microsoft.Playwright
         /// Option is considered matching if all specified properties match.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, ElementHandleSelectOptionOptions options = default);
+        Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, ElementHandleSelectOptionOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -739,7 +742,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="options">Call options</param>
-        Task SelectTextAsync(ElementHandleSelectTextOptions options = default);
+        Task SelectTextAsync(ElementHandleSelectTextOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -755,7 +758,7 @@ namespace Microsoft.Playwright
         /// <param name="files">
         /// </param>
         /// <param name="options">Call options</param>
-        Task SetInputFilesAsync(string files, ElementHandleSetInputFilesOptions options = default);
+        Task SetInputFilesAsync(string files, ElementHandleSetInputFilesOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -771,7 +774,7 @@ namespace Microsoft.Playwright
         /// <param name="files">
         /// </param>
         /// <param name="options">Call options</param>
-        Task SetInputFilesAsync(IEnumerable<string> files, ElementHandleSetInputFilesOptions options = default);
+        Task SetInputFilesAsync(IEnumerable<string> files, ElementHandleSetInputFilesOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -787,7 +790,7 @@ namespace Microsoft.Playwright
         /// <param name="files">
         /// </param>
         /// <param name="options">Call options</param>
-        Task SetInputFilesAsync(FilePayload files, ElementHandleSetInputFilesOptions options = default);
+        Task SetInputFilesAsync(FilePayload files, ElementHandleSetInputFilesOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -803,7 +806,7 @@ namespace Microsoft.Playwright
         /// <param name="files">
         /// </param>
         /// <param name="options">Call options</param>
-        Task SetInputFilesAsync(IEnumerable<FilePayload> files, ElementHandleSetInputFilesOptions options = default);
+        Task SetInputFilesAsync(IEnumerable<FilePayload> files, ElementHandleSetInputFilesOptions? options = default);
 
         /// <summary>
         /// <para>This method taps the element by performing the following steps:</para>
@@ -839,10 +842,10 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="options">Call options</param>
-        Task TapAsync(ElementHandleTapOptions options = default);
+        Task TapAsync(ElementHandleTapOptions? options = default);
 
         /// <summary><para>Returns the <c>node.textContent</c>.</para></summary>
-        Task<string> TextContentAsync();
+        Task<string?> TextContentAsync();
 
         /// <summary>
         /// <para>
@@ -863,7 +866,7 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="text">A text to type into a focused element.</param>
         /// <param name="options">Call options</param>
-        Task TypeAsync(string text, ElementHandleTypeOptions options = default);
+        Task TypeAsync(string text, ElementHandleTypeOptions? options = default);
 
         /// <summary>
         /// <para>This method checks the element by performing the following steps:</para>
@@ -895,7 +898,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="options">Call options</param>
-        Task UncheckAsync(ElementHandleUncheckOptions options = default);
+        Task UncheckAsync(ElementHandleUncheckOptions? options = default);
 
         /// <summary>
         /// <para>Returns when the element satisfies the <paramref name="state"/>.</para>
@@ -930,7 +933,7 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="state">A state to wait for, see below for more details.</param>
         /// <param name="options">Call options</param>
-        Task WaitForElementStateAsync(ElementState state, ElementHandleWaitForElementStateOptions options = default);
+        Task WaitForElementStateAsync(ElementState state, ElementHandleWaitForElementStateOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -963,6 +966,8 @@ namespace Microsoft.Playwright
         /// for more details.
         /// </param>
         /// <param name="options">Call options</param>
-        Task<IElementHandle> WaitForSelectorAsync(string selector, ElementHandleWaitForSelectorOptions options = default);
+        Task<IElementHandle?> WaitForSelectorAsync(string selector, ElementHandleWaitForSelectorOptions? options = default);
     }
 }
+
+#nullable disable

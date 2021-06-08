@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -70,7 +73,7 @@ namespace Microsoft.Playwright
         /// <param name="files">
         /// </param>
         /// <param name="options">Call options</param>
-        Task SetFilesAsync(string files, FileChooserSetFilesOptions options = default);
+        Task SetFilesAsync(string files, FileChooserSetFilesOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -82,7 +85,7 @@ namespace Microsoft.Playwright
         /// <param name="files">
         /// </param>
         /// <param name="options">Call options</param>
-        Task SetFilesAsync(IEnumerable<string> files, FileChooserSetFilesOptions options = default);
+        Task SetFilesAsync(IEnumerable<string> files, FileChooserSetFilesOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -94,7 +97,7 @@ namespace Microsoft.Playwright
         /// <param name="files">
         /// </param>
         /// <param name="options">Call options</param>
-        Task SetFilesAsync(FilePayload files, FileChooserSetFilesOptions options = default);
+        Task SetFilesAsync(FilePayload files, FileChooserSetFilesOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -106,6 +109,8 @@ namespace Microsoft.Playwright
         /// <param name="files">
         /// </param>
         /// <param name="options">Call options</param>
-        Task SetFilesAsync(IEnumerable<FilePayload> files, FileChooserSetFilesOptions options = default);
+        Task SetFilesAsync(IEnumerable<FilePayload> files, FileChooserSetFilesOptions? options = default);
     }
 }
+
+#nullable disable

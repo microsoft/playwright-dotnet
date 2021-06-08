@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -79,10 +82,12 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="options">Call options</param>
-        Task StartAsync(TracingStartOptions options = default);
+        Task StartAsync(TracingStartOptions? options = default);
 
         /// <summary><para>Stop tracing.</para></summary>
         /// <param name="options">Call options</param>
-        Task StopAsync(TracingStopOptions options = default);
+        Task StopAsync(TracingStopOptions? options = default);
     }
 }
+
+#nullable disable

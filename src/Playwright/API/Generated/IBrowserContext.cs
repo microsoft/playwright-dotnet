@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -184,7 +187,7 @@ namespace Microsoft.Playwright
         /// </remarks>
         /// <param name="script">Script to be evaluated in all pages in the browser context.</param>
         /// <param name="scriptPath">Instead of specifying <paramref name="script"/>, gives the file name to load from.</param>
-        Task AddInitScriptAsync(string script = null, string scriptPath = null);
+        Task AddInitScriptAsync(string? script = default, string? scriptPath = default);
 
         /// <summary>
         /// <para>
@@ -192,7 +195,7 @@ namespace Microsoft.Playwright
         /// context null gets returned.
         /// </para>
         /// </summary>
-        IBrowser Browser { get; }
+        IBrowser? Browser { get; }
 
         /// <summary><para>Clears context cookies.</para></summary>
         Task ClearCookiesAsync();
@@ -226,7 +229,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="urls">Optional list of URLs.</param>
-        Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls = default);
+        Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string>? urls = default);
 
         /// <summary>
         /// <para>
@@ -292,7 +295,7 @@ namespace Microsoft.Playwright
         /// <param name="name">Name of the function on the window object.</param>
         /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
         /// <param name="options">Call options</param>
-        Task ExposeBindingAsync(string name, Action callback, BrowserContextExposeBindingOptions options = default);
+        Task ExposeBindingAsync(string name, Action callback, BrowserContextExposeBindingOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -372,7 +375,7 @@ namespace Microsoft.Playwright
         /// </list>
         /// </param>
         /// <param name="options">Call options</param>
-        Task GrantPermissionsAsync(IEnumerable<string> permissions, BrowserContextGrantPermissionsOptions options = default);
+        Task GrantPermissionsAsync(IEnumerable<string> permissions, BrowserContextGrantPermissionsOptions? options = default);
 
         /// <summary><para>Creates a new page in the browser context.</para></summary>
         Task<IPage> NewPageAsync();
@@ -608,7 +611,7 @@ namespace Microsoft.Playwright
         /// </remarks>
         /// <param name="geolocation">
         /// </param>
-        Task SetGeolocationAsync(Geolocation geolocation);
+        Task SetGeolocationAsync(Geolocation? geolocation);
 
         /// <param name="offline">Whether to emulate network being offline for the browser context.</param>
         Task SetOfflineAsync(bool offline);
@@ -620,7 +623,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="options">Call options</param>
-        Task<string> StorageStateAsync(BrowserContextStorageStateOptions options = default);
+        Task<string> StorageStateAsync(BrowserContextStorageStateOptions? options = default);
 
         public ITracing Tracing { get; }
 
@@ -635,7 +638,7 @@ namespace Microsoft.Playwright
         /// a routing with <see cref="IBrowserContext.RouteAsync"/>.
         /// </param>
         /// <param name="handler">Optional handler function used to register a routing with <see cref="IBrowserContext.RouteAsync"/>.</param>
-        Task UnrouteAsync(string url, Action<IRoute> handler = default);
+        Task UnrouteAsync(string url, Action<IRoute>? handler = default);
 
         /// <summary>
         /// <para>
@@ -648,7 +651,7 @@ namespace Microsoft.Playwright
         /// a routing with <see cref="IBrowserContext.RouteAsync"/>.
         /// </param>
         /// <param name="handler">Optional handler function used to register a routing with <see cref="IBrowserContext.RouteAsync"/>.</param>
-        Task UnrouteAsync(Regex url, Action<IRoute> handler = default);
+        Task UnrouteAsync(Regex url, Action<IRoute>? handler = default);
 
         /// <summary>
         /// <para>
@@ -661,7 +664,7 @@ namespace Microsoft.Playwright
         /// a routing with <see cref="IBrowserContext.RouteAsync"/>.
         /// </param>
         /// <param name="handler">Optional handler function used to register a routing with <see cref="IBrowserContext.RouteAsync"/>.</param>
-        Task UnrouteAsync(Func<string, bool> url, Action<IRoute> handler = default);
+        Task UnrouteAsync(Func<string, bool> url, Action<IRoute>? handler = default);
 
         /// <summary>
         /// <para>
@@ -672,7 +675,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="options">Call options</param>
-        Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions options = default);
+        Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -684,6 +687,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="action">Action that triggers the event.</param>
         /// <param name="options">Call options</param>
-        Task<IPage> RunAndWaitForPageAsync(Func<Task> action, BrowserContextRunAndWaitForPageOptions options = default);
+        Task<IPage> RunAndWaitForPageAsync(Func<Task> action, BrowserContextRunAndWaitForPageOptions? options = default);
     }
 }
+
+#nullable disable

@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,16 +35,22 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     public partial class HttpCredentials
     {
         /// <summary><para></para></summary>
+        [Required]
         [JsonPropertyName("username")]
-        public string Username { get; set; }
+        public string Username { get; set; } = default!;
 
         /// <summary><para></para></summary>
+        [Required]
         [JsonPropertyName("password")]
-        public string Password { get; set; }
+        public string Password { get; set; } = default!;
     }
 }
+
+#nullable disable

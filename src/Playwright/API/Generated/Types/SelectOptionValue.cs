@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,20 +35,24 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     public partial class SelectOptionValue
     {
         /// <summary><para>Matches by <c>option.value</c>. Optional.</para></summary>
         [JsonPropertyName("value")]
-        public string Value { get; set; }
+        public string? Value { get; set; }
 
         /// <summary><para>Matches by <c>option.label</c>. Optional.</para></summary>
         [JsonPropertyName("label")]
-        public string Label { get; set; }
+        public string? Label { get; set; }
 
         /// <summary><para>Matches by the index. Optional.</para></summary>
         [JsonPropertyName("index")]
         public int? Index { get; set; }
     }
 }
+
+#nullable disable

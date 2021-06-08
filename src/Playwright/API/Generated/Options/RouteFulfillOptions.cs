@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -57,19 +60,19 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Response headers. Header values will be converted to a string.</para></summary>
         [JsonPropertyName("headers")]
-        public IEnumerable<KeyValuePair<string, string>> Headers { get; set; }
+        public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
 
         /// <summary><para>If set, equals to setting <c>Content-Type</c> response header.</para></summary>
         [JsonPropertyName("contentType")]
-        public string ContentType { get; set; }
+        public string? ContentType { get; set; }
 
         /// <summary><para>Optional response body as text.</para></summary>
         [JsonPropertyName("body")]
-        public string Body { get; set; }
+        public string? Body { get; set; }
 
         /// <summary><para>Optional response body as raw bytes.</para></summary>
         [JsonPropertyName("bodyBytes")]
-        public byte[] BodyBytes { get; set; }
+        public byte[]? BodyBytes { get; set; }
 
         /// <summary>
         /// <para>
@@ -79,6 +82,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("path")]
-        public string Path { get; set; }
+        public string? Path { get; set; }
     }
 }
+
+#nullable disable

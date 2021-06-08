@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -83,7 +86,7 @@ namespace Microsoft.Playwright
         /// };
         /// </code>
         /// </summary>
-        string Failure { get; }
+        string? Failure { get; }
 
         /// <summary><para>Returns the <see cref="IFrame"/> that initiated this request.</para></summary>
         IFrame Frame { get; }
@@ -98,10 +101,10 @@ namespace Microsoft.Playwright
         string Method { get; }
 
         /// <summary><para>Request's post body, if any.</para></summary>
-        string PostData { get; }
+        string? PostData { get; }
 
         /// <summary><para>Request's post body in a binary form, if any.</para></summary>
-        byte[] PostDataBuffer { get; }
+        byte[]? PostDataBuffer { get; }
 
         /// <summary>
         /// <para>Request that was redirected by the server to this one, if any.</para>
@@ -122,14 +125,14 @@ namespace Microsoft.Playwright
         /// Console.WriteLine(response.Request.RedirectedFrom?.Url); // null
         /// </code>
         /// </summary>
-        IRequest RedirectedFrom { get; }
+        IRequest? RedirectedFrom { get; }
 
         /// <summary>
         /// <para>New request issued by the browser if the server responded with redirect.</para>
         /// <para>This method is the opposite of <see cref="IRequest.RedirectedFrom"/>:</para>
         /// <code>Console.WriteLine(request.RedirectedFrom?.RedirectedTo == request); // True</code>
         /// </summary>
-        IRequest RedirectedTo { get; }
+        IRequest? RedirectedTo { get; }
 
         /// <summary>
         /// <para>
@@ -147,7 +150,7 @@ namespace Microsoft.Playwright
         /// was not received due to error.
         /// </para>
         /// </summary>
-        Task<IResponse> ResponseAsync();
+        Task<IResponse?> ResponseAsync();
 
         /// <summary>
         /// <para>
@@ -182,3 +185,5 @@ namespace Microsoft.Playwright
         JsonElement? PostDataJSON();
     }
 }
+
+#nullable disable

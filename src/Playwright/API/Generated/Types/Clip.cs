@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,24 +35,32 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     public partial class Clip
     {
         /// <summary><para>x-coordinate of top-left corner of clip area</para></summary>
+        [Required]
         [JsonPropertyName("x")]
-        public float X { get; set; }
+        public float X { get; set; } = default!;
 
         /// <summary><para>y-coordinate of top-left corner of clip area</para></summary>
+        [Required]
         [JsonPropertyName("y")]
-        public float Y { get; set; }
+        public float Y { get; set; } = default!;
 
         /// <summary><para>width of clipping area</para></summary>
+        [Required]
         [JsonPropertyName("width")]
-        public float Width { get; set; }
+        public float Width { get; set; } = default!;
 
         /// <summary><para>height of clipping area</para></summary>
+        [Required]
         [JsonPropertyName("height")]
-        public float Height { get; set; }
+        public float Height { get; set; } = default!;
     }
 }
+
+#nullable disable

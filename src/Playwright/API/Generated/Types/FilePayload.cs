@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,20 +35,27 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     public partial class FilePayload
     {
         /// <summary><para>File name</para></summary>
+        [Required]
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = default!;
 
         /// <summary><para>File type</para></summary>
+        [Required]
         [JsonPropertyName("mimeType")]
-        public string MimeType { get; set; }
+        public string MimeType { get; set; } = default!;
 
         /// <summary><para>File content</para></summary>
+        [Required]
         [JsonPropertyName("buffer")]
-        public byte[] Buffer { get; set; }
+        public byte[] Buffer { get; set; } = default!;
     }
 }
+
+#nullable disable

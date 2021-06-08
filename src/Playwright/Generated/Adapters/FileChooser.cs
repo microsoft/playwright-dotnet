@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,32 +35,36 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     internal partial class FileChooser
     {
-        public Task SetFilesAsync(string files, FileChooserSetFilesOptions options = default)
+        public Task SetFilesAsync(string files, FileChooserSetFilesOptions? options = default)
         {
             options ??= new FileChooserSetFilesOptions();
             return SetFilesAsync(files, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
-        public Task SetFilesAsync(IEnumerable<string> files, FileChooserSetFilesOptions options = default)
+        public Task SetFilesAsync(IEnumerable<string> files, FileChooserSetFilesOptions? options = default)
         {
             options ??= new FileChooserSetFilesOptions();
             return SetFilesAsync(files, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
-        public Task SetFilesAsync(FilePayload files, FileChooserSetFilesOptions options = default)
+        public Task SetFilesAsync(FilePayload files, FileChooserSetFilesOptions? options = default)
         {
             options ??= new FileChooserSetFilesOptions();
             return SetFilesAsync(files, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
-        public Task SetFilesAsync(IEnumerable<FilePayload> files, FileChooserSetFilesOptions options = default)
+        public Task SetFilesAsync(IEnumerable<FilePayload> files, FileChooserSetFilesOptions? options = default)
         {
             options ??= new FileChooserSetFilesOptions();
             return SetFilesAsync(files, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
     }
 }
+
+#nullable disable

@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,20 +35,24 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     internal partial class BrowserType
     {
-        public Task<IBrowser> LaunchAsync(BrowserTypeLaunchOptions options = default)
+        public Task<IBrowser> LaunchAsync(BrowserTypeLaunchOptions? options = default)
         {
             options ??= new BrowserTypeLaunchOptions();
             return LaunchAsync(args: options.Args, channel: options.Channel, chromiumSandbox: options.ChromiumSandbox, devtools: options.Devtools, downloadsPath: options.DownloadsPath, env: options.Env, executablePath: options.ExecutablePath, handleSIGINT: options.HandleSIGINT, handleSIGTERM: options.HandleSIGTERM, handleSIGHUP: options.HandleSIGHUP, headless: options.Headless, proxy: options.Proxy, timeout: options.Timeout, tracesDir: options.TracesDir, firefoxUserPrefs: options.FirefoxUserPrefs, slowMo: options.SlowMo, ignoreDefaultArgs: options.IgnoreDefaultArgs, ignoreAllDefaultArgs: options.IgnoreAllDefaultArgs);
         }
 
-        public Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions options = default)
+        public Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions? options = default)
         {
             options ??= new BrowserTypeLaunchPersistentContextOptions();
             return LaunchPersistentContextAsync(userDataDir, args: options.Args, channel: options.Channel, chromiumSandbox: options.ChromiumSandbox, devtools: options.Devtools, downloadsPath: options.DownloadsPath, env: options.Env, executablePath: options.ExecutablePath, handleSIGINT: options.HandleSIGINT, handleSIGTERM: options.HandleSIGTERM, handleSIGHUP: options.HandleSIGHUP, headless: options.Headless, proxy: options.Proxy, timeout: options.Timeout, tracesDir: options.TracesDir, slowMo: options.SlowMo, ignoreDefaultArgs: options.IgnoreDefaultArgs, ignoreAllDefaultArgs: options.IgnoreAllDefaultArgs, acceptDownloads: options.AcceptDownloads, ignoreHTTPSErrors: options.IgnoreHTTPSErrors, bypassCSP: options.BypassCSP, viewportSize: options.ViewportSize, screenSize: options.ScreenSize, userAgent: options.UserAgent, deviceScaleFactor: options.DeviceScaleFactor, isMobile: options.IsMobile, hasTouch: options.HasTouch, javaScriptEnabled: options.JavaScriptEnabled, timezoneId: options.TimezoneId, geolocation: options.Geolocation, locale: options.Locale, permissions: options.Permissions, extraHTTPHeaders: options.ExtraHTTPHeaders, offline: options.Offline, httpCredentials: options.HttpCredentials, colorScheme: options.ColorScheme, reducedMotion: options.ReducedMotion, recordHarPath: options.RecordHarPath, recordHarOmitContent: options.RecordHarOmitContent, recordVideoDir: options.RecordVideoDir, recordVideoSize: options.RecordVideoSize);
         }
     }
 }
+
+#nullable disable

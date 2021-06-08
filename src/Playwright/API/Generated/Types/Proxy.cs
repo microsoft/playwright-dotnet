@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -45,8 +48,9 @@ namespace Microsoft.Playwright
         /// is considered an HTTP proxy.
         /// </para>
         /// </summary>
+        [Required]
         [JsonPropertyName("server")]
-        public string Server { get; set; }
+        public string Server { get; set; } = default!;
 
         /// <summary>
         /// <para>
@@ -55,14 +59,16 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("bypass")]
-        public string Bypass { get; set; }
+        public string? Bypass { get; set; }
 
         /// <summary><para>Optional username to use if HTTP proxy requires authentication.</para></summary>
         [JsonPropertyName("username")]
-        public string Username { get; set; }
+        public string? Username { get; set; }
 
         /// <summary><para>Optional password to use if HTTP proxy requires authentication.</para></summary>
         [JsonPropertyName("password")]
-        public string Password { get; set; }
+        public string? Password { get; set; }
     }
 }
+
+#nullable disable

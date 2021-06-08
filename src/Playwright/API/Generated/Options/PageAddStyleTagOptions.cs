@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,8 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -50,7 +53,7 @@ namespace Microsoft.Playwright
 
         /// <summary><para>URL of the <c>&lt;link&gt;</c> tag.</para></summary>
         [JsonPropertyName("url")]
-        public string Url { get; set; }
+        public string? Url { get; set; }
 
         /// <summary>
         /// <para>
@@ -59,10 +62,12 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         [JsonPropertyName("path")]
-        public string Path { get; set; }
+        public string? Path { get; set; }
 
         /// <summary><para>Raw CSS content to be injected into frame.</para></summary>
         [JsonPropertyName("content")]
-        public string Content { get; set; }
+        public string? Content { get; set; }
     }
 }
+
+#nullable disable

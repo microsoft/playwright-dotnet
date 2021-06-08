@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,20 +35,24 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     internal partial class Tracing
     {
-        public Task StartAsync(TracingStartOptions options = default)
+        public Task StartAsync(TracingStartOptions? options = default)
         {
             options ??= new TracingStartOptions();
             return StartAsync(name: options.Name, screenshots: options.Screenshots, snapshots: options.Snapshots);
         }
 
-        public Task StopAsync(TracingStopOptions options = default)
+        public Task StopAsync(TracingStopOptions? options = default)
         {
             options ??= new TracingStopOptions();
             return StopAsync(path: options.Path);
         }
     }
 }
+
+#nullable disable
