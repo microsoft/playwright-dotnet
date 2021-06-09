@@ -109,7 +109,7 @@ actions you perform, generating the relevant source code as you do.
 To use it, you need to install the dotnet tool:
 
 ```powershell
-dotnet-install --global microsoft.playwright.cli
+dotnet tool install --global microsoft.playwright.cli
 ```
 
 Then, you can simply call:
