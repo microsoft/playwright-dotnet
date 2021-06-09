@@ -32,21 +32,41 @@ namespace Microsoft.Playwright.CLI
     {
         static int Main(string[] args)
         {
-            var root = Directory.GetCurrentDirectory();
+            var path = Directory.GetCurrentDirectory();
             if (args.Length > 1 && args[0] == "-p")
             {
-                root = Path.Combine(Directory.GetCurrentDirectory(), args[1]);
+                path = Path.Combine(Directory.GetCurrentDirectory(), args[1]);
+                var isFile = File.Exists(path);
+                if (!isFile && !Directory.Exists(path))
+                {
+                    return PrintError($"Couldn't find project using Playwright. Ensure a project or a solution exists in {path}, or provide another path using -p.");
+                }
+
+                if (isFile)
+                {
+                    path = Path.Combine(path, "..");
+                }
+
                 args = args[2..];
             }
 
-            var file = Traverse(new DirectoryInfo(root));
+            if (File.GetAttributes(path).HasFlag(FileAttributes.Directory))
+            {
+                var solutions = Directory.GetFiles(path, "*.sln");
+                var projects = Directory.GetFiles(path, "*.*proj");
+                if (solutions.Length == 0 && projects.Length == 0)
+                {
+                    return PrintError($"Couldn't find project using Playwright. Ensure a project or a solution exists in {path}, or provide another path using -p.");
+                }
+            }
+
+            var file = Traverse(new DirectoryInfo(path));
 
             if (string.IsNullOrEmpty(file))
             {
-                Console.WriteLine("Please make sure Playwright is installed and built:");
-                Console.WriteLine("   dotnet add package Microsoft.Playwright");
-                Console.WriteLine("   dotnet build");
-                return 1;
+                return PrintError(@"Please make sure Playwright is installed and built prior to using Playwright tool:
+   dotnet add package Microsoft.Playwright
+   dotnet build");
             }
 
             var dll = Assembly.LoadFile(file);
@@ -78,6 +98,12 @@ namespace Microsoft.Playwright.CLI
                 }
             }
             return null;
+        }
+
+        private static int PrintError(string error)
+        {
+            Console.Error.WriteLine("\x1b[91m" + error + "\x1b[0m");
+            return 1;
         }
     }
 }
