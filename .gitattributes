@@ -1,2 +1,1 @@
-# text files must be lf for golden file tests to work
 *.sh eol=lf
