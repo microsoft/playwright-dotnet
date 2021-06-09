@@ -74,4 +74,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+  <Target Name="EnsurePrerequisitsRan" BeforeTargets="DedupeDriver">
+    <Error Text="Playwright prerequisites are missing. Ensure you've ran `dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .`" Condition="!Exists('$(MSBuildProjectDirectory)\DriversRaw')" />
+  </Target>
 </Project>
