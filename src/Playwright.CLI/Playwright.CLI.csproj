@@ -27,9 +27,9 @@
     <NoDefaultExcludes>true</NoDefaultExcludes>
     <Authors>Microsoft</Authors>
     <Owners>Microsoft</Owners>
-    <PackageProjectUrl>https://github.com/microsoft/playwright-sharp</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/microsoft/playwright-dotnet</PackageProjectUrl>
     <PackageTags>headless,chrome,firefox,webkit,playwright</PackageTags>
-    <RepositoryUrl>https://github.com/microsoft/playwright-sharp.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/microsoft/playwright-dotnet.git</RepositoryUrl>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes><![CDATA[
