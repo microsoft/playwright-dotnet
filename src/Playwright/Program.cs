@@ -47,8 +47,7 @@ namespace Microsoft.Playwright
             }
             catch (Exception)
             {
-                Console.WriteLine("Microsoft.Playwright is missing required assets. Please ensure to build your project before running.");
-                return 1;
+                return PrintError("Microsoft.Playwright assembly was found, but is missing required assets. Please ensure to build your project before running Playwright tool.");
             }
 
             var playwrightStartInfo = new ProcessStartInfo(pwPath, string.Join(" ", args))
@@ -104,6 +103,12 @@ namespace Microsoft.Playwright
             outputWaitHandle.WaitOne(5000);
             errorWaitHandle.WaitOne(5000);
             return 0;
+        }
+
+        private static int PrintError(string error)
+        {
+            Console.Error.WriteLine("\x1b[91m" + error + "\x1b[0m");
+            return 1;
         }
     }
 }
