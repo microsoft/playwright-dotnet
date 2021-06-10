@@ -24,7 +24,7 @@ playwright install
 
 The last command invokes the global tool you've installed earlier, to install the browsers needed for Playwright to work.
 
-Create a `Program.cs` that navigates to `https://playwright.dev/dotnet` adn takes a screenshot in Chromium.
+Create a `Program.cs` that navigates to `https://playwright.dev/dotnet` and takes a screenshot in Chromium.
 
 ```cs
 using System.Threading.Tasks;
