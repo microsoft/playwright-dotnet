@@ -9,21 +9,6 @@ namespace Microsoft.Playwright
 {
     internal partial class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrowserType
     {
-        /// <summary>
-        /// Browser type Chromium.
-        /// </summary>
-        public const string Chromium = "chromium";
-
-        /// <summary>
-        /// Browser type Firefox.
-        /// </summary>
-        public const string Firefox = "firefox";
-
-        /// <summary>
-        /// Browser type WebKit.
-        /// </summary>
-        public const string Webkit = "webkit";
-
         private readonly BrowserTypeInitializer _initializer;
         private readonly BrowserTypeChannel _channel;
 
