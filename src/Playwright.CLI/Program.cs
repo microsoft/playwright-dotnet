@@ -47,7 +47,9 @@ namespace Microsoft.Playwright.CLI
                     path = Path.Combine(path, "..");
                 }
 
-                args = args[2..];
+                var argsCloned = new string[args.Length - 2];
+                Array.Copy(args, 2, argsCloned, 0, args.Length - 2);
+                args = argsCloned;
             }
 
             if (File.GetAttributes(path).HasFlag(FileAttributes.Directory))

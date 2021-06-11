@@ -7,6 +7,13 @@ Playwright for .NET is the official language port of [Playwright](https://playwr
 * .NET API Reference: [https://playwright.dev/dotnet/docs/api/class-playwright](https://playwright.dev/dotnet/docs/api/class-playwright) Note: 🚧🏗 _we're still working on this, so it might not be 100% up to date_
 * Getting Started: [https://playwright.dev/dotnet/docs/intro](https://playwright.dev/dotnet/docs/intro)
 
+> More comfortable in another programming language? [Playwright](https://github.com/microsoft/playwright) is also available for [Java](https://github.com/microsoft/playwright-java) and [Python](https://github.com/microsoft/playwright-python).
+
+## Requirements
+- Playwright for .NET targets [`netstandard2.0`](https://docs.microsoft.com/en-us/dotnet/standard/net-standard). You can use it if you're targeting the following versions: >= .NET 5.0, >= .NET Core 2.0, >= .NET Framework 4.6.1.
+- The CLI requires at least >= .NET 5.0 or >= .NET Core 3.0. For older projects that still want access to the functionality, we also ship a `.ps1` file (available in the `bin/debug/...` location after build), that you can use to install the browsers: `playwright.ps1 install` or run codegen: `playwright.ps codegen https://playwright.dev`.
+- Node.js is required, as Playwright core is based on it
+
 # Getting Started
 To get started with Playwright, you need to have `Microsoft.Playwright.CLI` global dotnet tool install. You only need to do this once. 
 
