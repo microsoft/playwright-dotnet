@@ -34,8 +34,8 @@ namespace Microsoft.Playwright
         /// <summary>
         /// Gets a <see cref="IBrowserType"/>.
         /// </summary>
-        /// <param name="browserType"><see cref="IBrowserType"/> name. You can get the names from <see cref="BrowserTypes"/>.
-        /// e.g.: <see cref="BrowserTypes.Chromium"/>, <see cref="BrowserTypes.Firefox"/> or <see cref="BrowserTypes.Webkit"/>.
+        /// <param name="browserType"><see cref="IBrowserType"/> name. You can get the names from <see cref="BrowserType"/>.
+        /// e.g.: <see cref="BrowserType.Chromium"/>, <see cref="BrowserType.Firefox"/> or <see cref="BrowserType.Webkit"/>.
         /// </param>
         IBrowserType this[string browserType] { get; }
     }

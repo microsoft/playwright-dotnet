@@ -335,7 +335,7 @@ namespace Microsoft.Playwright.Transport
                     break;
                 case ChannelOwnerType.BrowserType:
                     var browserTypeInitializer = initializer?.ToObject<BrowserTypeInitializer>(GetDefaultJsonSerializerOptions());
-                    result = new BrowserType(parent, guid, browserTypeInitializer);
+                    result = new Core.BrowserType(parent, guid, browserTypeInitializer);
                     break;
                 case ChannelOwnerType.BrowserContext:
                     var browserContextInitializer = initializer?.ToObject<BrowserContextInitializer>(GetDefaultJsonSerializerOptions());

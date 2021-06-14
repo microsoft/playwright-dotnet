@@ -60,15 +60,16 @@ namespace Microsoft.Playwright.Core
         /// <summary>
         /// Gets a <see cref="IBrowserType"/>.
         /// </summary>
-        /// <param name="browserType"><see cref="IBrowserType"/> name. You can get the names from <see cref="BrowserTypes"/>.
-        /// e.g.: <see cref="BrowserTypes.Chromium"/>, <see cref="BrowserTypes.Firefox"/> or <see cref="BrowserTypes.Webkit"/>.
+        /// <param name="browserType"><see cref="IBrowserType"/> name. You can get the names from <see cref="global::Microsoft.Playwright.BrowserType"/>.
+        /// e.g.: <see cref="global::Microsoft.Playwright.BrowserType.Chromium"/>,
+        /// <see cref="global::Microsoft.Playwright.BrowserType.Firefox"/> or <see cref="global::Microsoft.Playwright.BrowserType.Webkit"/>.
         /// </param>
         public IBrowserType this[string browserType]
             => browserType?.ToLower() switch
             {
-                BrowserTypes.Chromium => Chromium,
-                BrowserTypes.Firefox => Firefox,
-                BrowserTypes.Webkit => Webkit,
+                global::Microsoft.Playwright.BrowserType.Chromium => Chromium,
+                global::Microsoft.Playwright.BrowserType.Firefox => Firefox,
+                global::Microsoft.Playwright.BrowserType.Webkit => Webkit,
                 _ => null,
             };
 

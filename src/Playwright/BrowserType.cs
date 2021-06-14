@@ -3,7 +3,7 @@ namespace Microsoft.Playwright
     /// <summary>
     /// Contains the browser types names.
     /// </summary>
-    public static class BrowserTypes
+    public static class BrowserType
     {
         /// <summary>
         /// Browser type Chromium.
