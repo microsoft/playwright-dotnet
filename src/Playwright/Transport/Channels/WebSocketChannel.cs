@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Text.Json;
-using System.Threading.Tasks;
+using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Transport.Converters;
 
 namespace Microsoft.Playwright.Transport.Channels
 {

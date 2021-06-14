@@ -1,5 +1,3 @@
-using System;
-
 namespace Microsoft.Playwright.Transport.Channels
 {
     internal class Channel<T> : ChannelBase, IChannel<T>
