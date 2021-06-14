@@ -33,7 +33,7 @@ namespace Microsoft.Playwright.Helpers
     {
         internal static string GetExecutablePath()
         {
-            var assemblyDirectory = new FileInfo(typeof(Playwright).Assembly.Location).Directory;
+            var assemblyDirectory = new DirectoryInfo(AppContext.BaseDirectory);
             string executableFile = GetPath(assemblyDirectory.FullName);
             if (File.Exists(executableFile))
             {
@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Helpers
             }
 
             // if the above fails, we can assume we're in the nuget registry
-            executableFile = GetPath(assemblyDirectory.Parent.Parent.FullName, "Drivers");
+            executableFile = GetPath(assemblyDirectory.Parent.Parent.FullName);
             if (File.Exists(executableFile))
             {
                 return executableFile;
@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Helpers
             throw new PlaywrightException($"Driver not found: {executableFile}");
         }
 
-        private static string GetPath(string driversPath, string containingFolder = ".playwright")
+        private static string GetPath(string driversPath)
         {
             string platformId;
             string runnerName;
@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Helpers
                 throw new PlaywrightException("Unknown platform");
             }
 
-            return Path.Combine(driversPath, containingFolder, "node", platformId, runnerName);
+            return Path.Combine(driversPath, ".playwright", "node", platformId, runnerName);
         }
     }
 }
