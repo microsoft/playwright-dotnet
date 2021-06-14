@@ -33,7 +33,13 @@ namespace Microsoft.Playwright.Helpers
     {
         internal static string GetExecutablePath()
         {
-            var assemblyDirectory = new DirectoryInfo(AppContext.BaseDirectory);
+            DirectoryInfo assemblyDirectory = new(AppContext.BaseDirectory);
+            if (!assemblyDirectory.Exists || !File.Exists(Path.Combine(assemblyDirectory.FullName, "Microsoft.Playwright.dll")))
+            {
+                var assemblyLocation = typeof(Playwright).Assembly.Location;
+                assemblyDirectory = new FileInfo(assemblyLocation).Directory;
+            }
+
             string executableFile = GetPath(assemblyDirectory.FullName);
             if (File.Exists(executableFile))
             {

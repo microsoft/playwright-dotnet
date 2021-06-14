@@ -45,7 +45,7 @@ namespace Microsoft.Playwright
             {
                 pwPath = Paths.GetExecutablePath();
             }
-            catch (Exception)
+            catch
             {
                 return PrintError("Microsoft.Playwright assembly was found, but is missing required assets. Please ensure to build your project before running Playwright tool.");
             }

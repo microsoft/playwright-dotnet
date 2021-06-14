@@ -30,4 +30,12 @@
       SourceFiles="@(_PublishCopyItems)"
       DestinationFiles="@(_PublishCopyItems->'$(PublishDir)\.playwright\%(RecursiveDir)%(Filename)%(Extension)')"/>
   </Target>
+  <Target
+    Name="PlaywrightCleanup"
+    AfterTargets="CopyFilesToOutputDirectory"
+    Condition="Exists('$(MSBuildProjectDirectory)\Drivers')">
+    <Message Text="[Playwright] Cleaning up old Drivers folder..."/>
+    <RemoveDir
+        Directories="$(MSBuildProjectDirectory)\Drivers" />
+  </Target>
 </Project>
