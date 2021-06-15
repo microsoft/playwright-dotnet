@@ -31,11 +31,24 @@
       DestinationFiles="@(_PublishCopyItems->'$(PublishDir)\.playwright\%(RecursiveDir)%(Filename)%(Extension)')"/>
   </Target>
   <Target
-    Name="PlaywrightCleanup"
-    AfterTargets="CopyFilesToOutputDirectory"
-    Condition="Exists('$(MSBuildProjectDirectory)\Drivers')">
-    <Message Text="[Playwright] Cleaning up old Drivers folder..."/>
+    Name="PlaywrightLegacyCleanup"
+    AfterTargets="Clean">
+    <Message Text="[Playwright] Removing up old Drivers folder..."/>
     <RemoveDir
-        Directories="$(MSBuildProjectDirectory)\Drivers" />
+        Directories="$(MSBuildProjectDirectory)\Drivers" Condition="Exists('$(MSBuildProjectDirectory)\Drivers')" />
+    <RemoveDir
+        Directories="$(MSBuildProjectDirectory)\DriversRaw" Condition="Exists('$(MSBuildProjectDirectory)\DriversRaw')" />
+    <RemoveDir
+      Directories="$(OutDir)\node" Condition="Exists('$(OutDir)\node')"/>
+    <RemoveDir
+          Directories="$(OutDir)\package" Condition="Exists('$(OutDir)\package')"/>
+  </Target>
+  <Target
+    Name="PlaywrightBuildCleanup"
+    AfterTargets="Clean">
+    <Message Text="[Playwright] Cleaning up .playwright folder and artifacts..."/>
+    <RemoveDir
+        Directories="$(OutDir)\.playwright" Condition="Exists('$(OutDir)\.playwright')"/>
+    <Delete Files="$(OutDir)\playwright.ps1" Condition="Exists('$(OutDir)\playwright.ps1')" />
   </Target>
 </Project>
