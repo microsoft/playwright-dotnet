@@ -16,10 +16,10 @@
   </Target>
   <Target Name="CopyPlaywrightShellToOutput" AfterTargets="CopyFilesToOutputDirectory">
     <ItemGroup>
-      <_CopyItems Include="$(MSBuildThisFileDirectory)playwright.ps1" />
+      <_CopyItemsShell Include="$(MSBuildThisFileDirectory)playwright.ps1" />
     </ItemGroup>
     <Message Text="[Playwright] Copying shell script from $(MSBuildThisFileDirectory) to $(OutputPath)..." />
-    <Copy SourceFiles="@(_CopyItems)" DestinationFiles="@(_CopyItems->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(_CopyItemsShell)" DestinationFiles="@(_CopyItemsShell->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')"/>
   </Target>
   <Target Name="PlaywrightCopyAfterPublish" AfterTargets="Publish">
     <ItemGroup>
