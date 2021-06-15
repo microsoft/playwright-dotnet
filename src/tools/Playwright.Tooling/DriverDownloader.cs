@@ -158,8 +158,8 @@ namespace Playwright.Tooling
 
         private async Task<bool> ExecuteAsync()
         {
-            var destinationDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "Playwright", "DriversRaw"));
-            var dedupeDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "Playwright", "Drivers"));
+            var destinationDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "Playwright", ".drivers"));
+            var dedupeDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "Playwright", ".playwright"));
             string driverVersion = DriverVersion;
 
             var versionFile = new FileInfo(Path.Combine(destinationDirectory.FullName, driverVersion));

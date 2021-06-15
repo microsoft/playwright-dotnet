@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Target Name="CopyPlaywrightFilesToOutput" AfterTargets="CopyFilesToOutputDirectory">
     <ItemGroup>
-      <_CopyItems Include="$(MSBuildThisFileDirectory)..\Drivers\**" />
+      <_CopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\**" />
     </ItemGroup>
     <Message Text="[Playwright] Copying drivers from $(MSBuildThisFileDirectory) to $(OutputPath)..." />
     <Copy SourceFiles="@(_CopyItems)" DestinationFiles="@(_CopyItems->'$(OutDir).playwright\%(RecursiveDir)%(Filename)%(Extension)')"/>
@@ -20,5 +20,22 @@
     </ItemGroup>
     <Message Text="[Playwright] Copying shell script from $(MSBuildThisFileDirectory) to $(OutputPath)..." />
     <Copy SourceFiles="@(_CopyItems)" DestinationFiles="@(_CopyItems->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+  </Target>
+  <Target Name="PlaywrightCopyAfterPublish" AfterTargets="Publish">
+    <ItemGroup>
+      <_PublishCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\**" />
+    </ItemGroup>
+    <Message Text="[Playwright] Copying files to publish folder..."/>
+    <Copy
+      SourceFiles="@(_PublishCopyItems)"
+      DestinationFiles="@(_PublishCopyItems->'$(PublishDir)\.playwright\%(RecursiveDir)%(Filename)%(Extension)')"/>
+  </Target>
+  <Target
+    Name="PlaywrightCleanup"
+    AfterTargets="CopyFilesToOutputDirectory"
+    Condition="Exists('$(MSBuildProjectDirectory)\Drivers')">
+    <Message Text="[Playwright] Cleaning up old Drivers folder..."/>
+    <RemoveDir
+        Directories="$(MSBuildProjectDirectory)\Drivers" />
   </Target>
 </Project>

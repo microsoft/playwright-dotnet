@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Target Name="CopyPlaywrightFilesToOutput" AfterTargets="CopyFilesToOutputDirectory">
     <ItemGroup>
-      <_CopyItems Include="$(MSBuildThisFileDirectory)..\..\Playwright\Drivers\**" />
+      <_CopyItems Include="$(MSBuildThisFileDirectory)..\..\Playwright\.playwright\**" />
     </ItemGroup>
     <Message Text="[Playwright] Copying drivers from $(MSBuildThisFileDirectory) to $(OutputPath)..." />
     <Copy SourceFiles="@(_CopyItems)" DestinationFiles="@(_CopyItems->'$(OutDir).playwright\%(RecursiveDir)%(Filename)%(Extension)')"/>
