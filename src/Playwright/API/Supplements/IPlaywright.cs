@@ -23,13 +23,11 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Microsoft.Playwright
 {
     /// <summary>
-    /// ...
+    /// The main entry point for Playwright.
     /// </summary>
     public partial interface IPlaywright : IDisposable
     {

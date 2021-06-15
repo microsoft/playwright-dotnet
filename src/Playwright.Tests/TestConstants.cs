@@ -14,9 +14,9 @@ namespace Microsoft.Playwright.Tests
 
         public const string AboutBlank = "about:blank";
 
-        internal static readonly bool IsWebKit = BrowserName == "webkit";
-        internal static readonly bool IsFirefox = BrowserName == "firefox";
-        internal static readonly bool IsChromium = BrowserName == "chromium";
+        internal static readonly bool IsWebKit = BrowserName == BrowserType.Webkit;
+        internal static readonly bool IsFirefox = BrowserName == BrowserType.Firefox;
+        internal static readonly bool IsChromium = BrowserName == BrowserType.Chromium;
         internal static readonly bool IsMacOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
         internal static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 

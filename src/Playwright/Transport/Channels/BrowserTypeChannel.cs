@@ -1,14 +1,12 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
-    internal class BrowserTypeChannel : Channel<BrowserType>
+    internal class BrowserTypeChannel : Channel<Core.BrowserType>
     {
-        public BrowserTypeChannel(string guid, Connection connection, BrowserType owner) : base(guid, connection, owner)
+        public BrowserTypeChannel(string guid, Connection connection, Core.BrowserType owner) : base(guid, connection, owner)
         {
         }
 

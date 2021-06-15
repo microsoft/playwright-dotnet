@@ -1,3 +1,5 @@
+using Microsoft.Playwright.Core;
+
 namespace Microsoft.Playwright.Transport.Channels
 {
     internal class PageChannelPopupEventArgs

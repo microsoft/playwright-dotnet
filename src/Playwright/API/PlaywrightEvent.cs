@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
-
 namespace Microsoft.Playwright
 {
     public class PlaywrightEvent<T> : IEvent

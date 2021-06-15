@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Helpers
 {
