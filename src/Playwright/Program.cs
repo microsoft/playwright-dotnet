@@ -37,7 +37,7 @@ namespace Microsoft.Playwright
             return p.Run(args);
         }
 
-        public int Run(string[] args)
+        public int Run(string[] args, string browserPath = null)
         {
             string pwPath = null;
             try
@@ -65,6 +65,10 @@ namespace Microsoft.Playwright
 
             playwrightStartInfo.EnvironmentVariables.Add("PW_CLI_TARGET_LANG", "csharp");
             playwrightStartInfo.EnvironmentVariables.Add("PW_CLI_NAME ", "playwright");
+            if (!string.IsNullOrEmpty(browserPath))
+            {
+                playwrightStartInfo.EnvironmentVariables.Add("PLAYWRIGHT_BROWSERS_PATH", browserPath);
+            }
 
             using var outputWaitHandle = new AutoResetEvent(false);
             using var errorWaitHandle = new AutoResetEvent(false);
