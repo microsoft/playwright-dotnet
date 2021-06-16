@@ -16,9 +16,11 @@ namespace Microsoft.Playwright.Core
 
         public Task UpAsync(string key) => _channel.KeyboardUpAsync(key);
 
-        public Task PressAsync(string key, float? delay) => _channel.PressAsync(key, delay);
+        public Task PressAsync(string key, KeyboardPressOptions options = default)
+           => _channel.PressAsync(key, options?.Delay);
 
-        public Task TypeAsync(string text, float? delay) => _channel.TypeAsync(text, delay);
+        public Task TypeAsync(string text, KeyboardTypeOptions options = default)
+           => _channel.TypeAsync(text, options?.Delay);
 
         public Task InsertTextAsync(string text) => _channel.InsertTextAsync(text);
     }
