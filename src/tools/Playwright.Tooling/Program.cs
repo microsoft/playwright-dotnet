@@ -22,21 +22,10 @@
  * SOFTWARE.
  */
 
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using CommandLine;
+using Playwright.Tooling;
 using Playwright.Tooling.Options;
 
-namespace Playwright.Tooling
-{
-    internal static class Program
-    {
-        internal static async Task Main(string[] args)
-        {
-            ParserResult<object> result = Parser.Default.ParseArguments<DownloadDriversOptions, ApiCheckerOptions>(args);
-            await result.WithParsedAsync<DownloadDriversOptions>(DriverDownloader.RunAsync).ConfigureAwait(false);
-            await result.WithParsedAsync<ApiCheckerOptions>(ApiChecker.RunAsync).ConfigureAwait(false);
-        }
-    }
-}
+ParserResult<object> result = Parser.Default.ParseArguments<DownloadDriversOptions, ApiCheckerOptions>(args);
+await result.WithParsedAsync<DownloadDriversOptions>(Playwright.Tooling.DriverDownloader.RunAsync).ConfigureAwait(false);
+await result.WithParsedAsync<ApiCheckerOptions>(ApiChecker.RunAsync).ConfigureAwait(false);

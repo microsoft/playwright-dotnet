@@ -27,87 +27,72 @@ using System.Diagnostics;
 using System.Threading;
 using Microsoft.Playwright.Helpers;
 
-namespace Microsoft.Playwright
+string pwPath = null;
+try
 {
-    public class Program
+    pwPath = Paths.GetExecutablePath();
+}
+catch
+{
+    return PrintError("Microsoft.Playwright assembly was found, but is missing required assets. Please ensure to build your project before running Playwright tool.");
+}
+
+var playwrightStartInfo = new ProcessStartInfo(pwPath, string.Join(" ", args))
+{
+    UseShellExecute = false,
+    CreateNoWindow = true,
+    RedirectStandardError = true,
+    RedirectStandardInput = true,
+    RedirectStandardOutput = true,
+};
+
+using var pwProcess = new Process()
+{
+    StartInfo = playwrightStartInfo,
+};
+
+playwrightStartInfo.EnvironmentVariables.Add("PW_CLI_TARGET_LANG", "csharp");
+playwrightStartInfo.EnvironmentVariables.Add("PW_CLI_NAME ", "playwright");
+
+using var outputWaitHandle = new AutoResetEvent(false);
+using var errorWaitHandle = new AutoResetEvent(false);
+
+pwProcess.OutputDataReceived += (_, e) =>
+{
+    if (e.Data == null)
     {
-        public static int Main(string[] args)
-        {
-            var p = new Program();
-            return p.Run(args);
-        }
-
-        public int Run(string[] args)
-        {
-            string pwPath = null;
-            try
-            {
-                pwPath = Paths.GetExecutablePath();
-            }
-            catch
-            {
-                return PrintError("Microsoft.Playwright assembly was found, but is missing required assets. Please ensure to build your project before running Playwright tool.");
-            }
-
-            var playwrightStartInfo = new ProcessStartInfo(pwPath, string.Join(" ", args))
-            {
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                RedirectStandardError = true,
-                RedirectStandardInput = true,
-                RedirectStandardOutput = true,
-            };
-
-            using var pwProcess = new Process()
-            {
-                StartInfo = playwrightStartInfo,
-            };
-
-            playwrightStartInfo.EnvironmentVariables.Add("PW_CLI_TARGET_LANG", "csharp");
-            playwrightStartInfo.EnvironmentVariables.Add("PW_CLI_NAME ", "playwright");
-
-            using var outputWaitHandle = new AutoResetEvent(false);
-            using var errorWaitHandle = new AutoResetEvent(false);
-
-            pwProcess.OutputDataReceived += (_, e) =>
-            {
-                if (e.Data == null)
-                {
-                    outputWaitHandle.Set();
-                }
-                else
-                {
-                    Console.WriteLine(e.Data);
-                }
-            };
-
-            pwProcess.ErrorDataReceived += (_, e) =>
-            {
-                if (e.Data == null)
-                {
-                    errorWaitHandle.Set();
-                }
-                else
-                {
-                    Console.Error.WriteLine(e.Data);
-                }
-            };
-
-            pwProcess.Start();
-
-            pwProcess.BeginOutputReadLine();
-            pwProcess.BeginErrorReadLine();
-
-            pwProcess.WaitForExit();
-            outputWaitHandle.WaitOne(5000);
-            errorWaitHandle.WaitOne(5000);
-            return 0;
-        }
-
-        private static int PrintError(string error)
-        {
-            Console.Error.WriteLine("\x1b[91m" + error + "\x1b[0m");
-            return 1;
-        }
+        outputWaitHandle.Set();
     }
+    else
+    {
+        Console.WriteLine(e.Data);
+    }
+};
+
+pwProcess.ErrorDataReceived += (_, e) =>
+{
+    if (e.Data == null)
+    {
+        errorWaitHandle.Set();
+    }
+    else
+    {
+        Console.Error.WriteLine(e.Data);
+    }
+};
+
+pwProcess.Start();
+
+pwProcess.BeginOutputReadLine();
+pwProcess.BeginErrorReadLine();
+
+pwProcess.WaitForExit();
+outputWaitHandle.WaitOne(5000);
+errorWaitHandle.WaitOne(5000);
+return 0;
+
+static int PrintError(string error)
+{
+    Console.Error.WriteLine("\x1b[91m" + error + "\x1b[0m");
+    return 1;
 }
