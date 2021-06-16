@@ -85,5 +85,50 @@ namespace Microsoft.Playwright.Tests
             await page.GotoAsync(Server.Prefix + "/mobile.html");
             Assert.True(await page.EvaluateAsync<bool>("'ontouchstart' in window"));
         }
+
+
+        [PlaywrightTest("browsercontext-viewport.spec.ts", "should respect screensize")]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task ShouldSupportScreenSize()
+        {
+            await using var context = await Browser.NewContextAsync(new()
+            {
+                ScreenSize = new ScreenSize()
+                {
+                    Width = 750,
+                    Height = 1334,
+                },
+                ViewportSize = new ViewportSize()
+                {
+                    Width = 375,
+                    Height = 667
+                }
+            });
+
+            var page = await context.NewPageAsync();
+            Assert.True(await page.EvaluateAsync<bool?>("() => matchMedia('(device-height: 1334px)').matches"));
+            Assert.True(await page.EvaluateAsync<bool?>("() => matchMedia('(device-width: 750px)').matches"));
+            await TestUtils.VerifyViewportAsync(page, 375, 667);
+        }
+
+        [PlaywrightTest("browsercontext-viewport.spec.ts", "should ignore screensize when viewport is null")]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task ShouldIgnoreScreensizeWhenViewportIsNull()
+        {
+            await using var context = await Browser.NewContextAsync(new()
+            {
+                ScreenSize = new ScreenSize()
+                {
+                    Width = 750,
+                    Height = 1334,
+                },
+                ViewportSize = ViewportSize.NoViewport
+            });
+
+            var page = await context.NewPageAsync();
+            Assert.False(await page.EvaluateAsync<bool?>("() => matchMedia('(device-height: 1334px)').matches"));
+            Assert.False(await page.EvaluateAsync<bool?>("() => matchMedia('(device-width: 750px)').matches"));
+            Assert.IsNull(page.ViewportSize);
+        }
     }
 }

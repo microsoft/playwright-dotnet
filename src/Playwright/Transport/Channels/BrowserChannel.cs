@@ -51,7 +51,8 @@ namespace Microsoft.Playwright.Transport.Channels
             string storageStatePath = null,
             string timezoneId = null,
             string userAgent = null,
-            ViewportSize viewportSize = default)
+            ViewportSize viewportSize = default,
+            ScreenSize screenSize = default)
         {
             var args = new Dictionary<string, object>();
             args.Add("acceptDownloads", acceptDownloads);
@@ -115,6 +116,7 @@ namespace Microsoft.Playwright.Transport.Channels
             else
             {
                 args.Add("viewport", viewportSize);
+                args.Add("screen", screenSize);
             }
 
             args["sdkLanguage"] = "csharp";
