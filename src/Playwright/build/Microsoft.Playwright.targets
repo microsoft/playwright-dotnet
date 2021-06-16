@@ -16,26 +16,28 @@
   </Target>
   <Target Name="CopyPlaywrightShellToOutput" AfterTargets="CopyFilesToOutputDirectory">
     <ItemGroup>
-      <_CopyItems Include="$(MSBuildThisFileDirectory)playwright.ps1" />
+      <_CopyItemsShell Include="$(MSBuildThisFileDirectory)playwright.ps1" />
     </ItemGroup>
     <Message Text="[Playwright] Copying shell script from $(MSBuildThisFileDirectory) to $(OutputPath)..." />
-    <Copy SourceFiles="@(_CopyItems)" DestinationFiles="@(_CopyItems->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(_CopyItemsShell)" DestinationFiles="@(_CopyItemsShell->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')"/>
   </Target>
   <Target Name="PlaywrightCopyAfterPublish" AfterTargets="Publish">
     <ItemGroup>
       <_PublishCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\**" />
     </ItemGroup>
     <Message Text="[Playwright] Copying files to publish folder..."/>
-    <Copy
-      SourceFiles="@(_PublishCopyItems)"
-      DestinationFiles="@(_PublishCopyItems->'$(PublishDir)\.playwright\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(_PublishCopyItems)" DestinationFiles="@(_PublishCopyItems->'$(PublishDir)\.playwright\%(RecursiveDir)%(Filename)%(Extension)')"/>
   </Target>
-  <Target
-    Name="PlaywrightCleanup"
-    AfterTargets="CopyFilesToOutputDirectory"
-    Condition="Exists('$(MSBuildProjectDirectory)\Drivers')">
-    <Message Text="[Playwright] Cleaning up old Drivers folder..."/>
-    <RemoveDir
-        Directories="$(MSBuildProjectDirectory)\Drivers" />
+  <Target Name="PlaywrightLegacyCleanup" AfterTargets="Clean">
+    <Message Text="[Playwright] Removing up old Drivers folder..."/>
+    <RemoveDir Directories="$(MSBuildProjectDirectory)\Drivers" Condition="Exists('$(MSBuildProjectDirectory)\Drivers')" />
+    <RemoveDir Directories="$(MSBuildProjectDirectory)\DriversRaw" Condition="Exists('$(MSBuildProjectDirectory)\DriversRaw')" />
+    <RemoveDir Directories="$(OutDir)\node" Condition="Exists('$(OutDir)\node')"/>
+    <RemoveDir Directories="$(OutDir)\package" Condition="Exists('$(OutDir)\package')"/>
+  </Target>
+  <Target Name="PlaywrightBuildCleanup" AfterTargets="Clean">
+    <Message Text="[Playwright] Cleaning up .playwright folder and artifacts..."/>
+    <RemoveDir Directories="$(OutDir)\.playwright" Condition="Exists('$(OutDir)\.playwright')"/>
+    <Delete Files="$(OutDir)\playwright.ps1" Condition="Exists('$(OutDir)\playwright.ps1')" />
   </Target>
 </Project>
