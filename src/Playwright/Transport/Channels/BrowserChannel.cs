@@ -51,7 +51,8 @@ namespace Microsoft.Playwright.Transport.Channels
             string storageStatePath = null,
             string timezoneId = null,
             string userAgent = null,
-            ViewportSize viewportSize = default)
+            ViewportSize viewportSize = default,
+            ScreenSize screenSize = default)
         {
             var args = new Dictionary<string, object>();
             args.Add("acceptDownloads", acceptDownloads);
@@ -59,6 +60,7 @@ namespace Microsoft.Playwright.Transport.Channels
             args.Add("colorScheme", colorScheme);
             args.Add("reducedMotion", reducedMotion);
             args.Add("deviceScaleFactor", deviceScaleFactor);
+            args.Add("screensize", screenSize);
 
             if (extraHTTPHeaders != null)
             {
