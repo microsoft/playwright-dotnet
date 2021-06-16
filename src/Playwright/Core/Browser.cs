@@ -48,121 +48,77 @@ namespace Microsoft.Playwright.Core
             await _closedTcs.Task.ConfigureAwait(false);
         }
 
-        public async Task<IBrowserContext> NewContextAsync(
-            bool? acceptDownloads,
-            bool? ignoreHTTPSErrors,
-            bool? bypassCSP,
-            ViewportSize viewportSize,
-            ScreenSize screenSize,
-            string userAgent,
-            float? deviceScaleFactor,
-            bool? isMobile,
-            bool? hasTouch,
-            bool? javaScriptEnabled,
-            string timezoneId,
-            Geolocation geolocation,
-            string locale,
-            IEnumerable<string> permissions,
-            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders,
-            bool? offline,
-            HttpCredentials httpCredentials,
-            ColorScheme? colorScheme,
-            ReducedMotion? reducedMotion,
-            string recordHarPath,
-            bool? recordHarOmitContent,
-            string recordVideoDir,
-            RecordVideoSize recordVideoSize,
-            Proxy proxy,
-            string storageState,
-            string storageStatePath)
+        public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions options = default)
         {
+            options ??= new BrowserNewContextOptions();
             var context = (await Channel.NewContextAsync(
-                acceptDownloads,
-                bypassCSP,
-                colorScheme,
-                reducedMotion,
-                deviceScaleFactor,
-                extraHTTPHeaders,
-                geolocation,
-                hasTouch,
-                httpCredentials,
-                ignoreHTTPSErrors,
-                isMobile,
-                javaScriptEnabled,
-                locale,
-                offline,
-                permissions,
-                proxy,
-                recordHarOmitContent,
-                recordHarPath,
-                GetVideoArgs(recordVideoDir, recordVideoSize),
-                storageState,
-                storageStatePath,
-                timezoneId,
-                userAgent,
-                viewportSize).ConfigureAwait(false)).Object;
+               acceptDownloads: options.AcceptDownloads,
+               bypassCSP: options.BypassCSP,
+               colorScheme: options.ColorScheme,
+               reducedMotion: options.ReducedMotion,
+               deviceScaleFactor: options.DeviceScaleFactor,
+               extraHTTPHeaders: options.ExtraHTTPHeaders,
+               geolocation: options.Geolocation,
+               hasTouch: options.HasTouch,
+               httpCredentials: options.HttpCredentials,
+               ignoreHTTPSErrors: options.IgnoreHTTPSErrors,
+               isMobile: options.IsMobile,
+               javaScriptEnabled: options.JavaScriptEnabled,
+               locale: options.Locale,
+               offline: options.Offline,
+               permissions: options.Permissions,
+               proxy: options.Proxy,
+               recordHarOmitContent: options.RecordHarOmitContent,
+               recordHarPath: options.RecordHarPath,
+               recordVideo: GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize),
+               storageState: options.StorageState,
+               storageStatePath: options.StorageStatePath,
+               timezoneId: options.TimezoneId,
+               userAgent: options.UserAgent,
+               viewportSize: options.ViewportSize).ConfigureAwait(false)).Object;
 
-            context.RecordVideo = !string.IsNullOrEmpty(recordVideoDir);
+            context.RecordVideo = !string.IsNullOrEmpty(options.RecordVideoDir);
 
             BrowserContextsList.Add(context);
             return context;
         }
 
-        public async Task<IPage> NewPageAsync(
-            bool? acceptDownloads,
-            bool? ignoreHTTPSErrors,
-            bool? bypassCSP,
-            ViewportSize viewportSize,
-            ScreenSize screenSize,
-            string userAgent,
-            float? deviceScaleFactor,
-            bool? isMobile,
-            bool? hasTouch,
-            bool? javaScriptEnabled,
-            string timezoneId,
-            Geolocation geolocation,
-            string locale,
-            IEnumerable<string> permissions,
-            IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders,
-            bool? offline,
-            HttpCredentials httpCredentials,
-            ColorScheme? colorScheme,
-            ReducedMotion? reducedMotion,
-            string recordHarPath,
-            bool? recordHarOmitContent,
-            string recordVideoDir,
-            RecordVideoSize recordVideoSize,
-            Proxy proxy,
-            string storageState,
-            string storageStatePath)
+        public async Task<IPage> NewPageAsync(BrowserNewPageOptions options = default)
         {
-            var context = (BrowserContext)await NewContextAsync(
-                acceptDownloads,
-                ignoreHTTPSErrors,
-                bypassCSP,
-                viewportSize,
-                screenSize,
-                userAgent,
-                deviceScaleFactor,
-                isMobile,
-                hasTouch,
-                javaScriptEnabled,
-                timezoneId,
-                geolocation,
-                locale,
-                permissions,
-                extraHTTPHeaders,
-                offline,
-                httpCredentials,
-                colorScheme,
-                reducedMotion,
-                recordHarPath,
-                recordHarOmitContent,
-                recordVideoDir,
-                recordVideoSize,
-                proxy,
-                storageState,
-                storageStatePath).ConfigureAwait(false);
+            options ??= new BrowserNewPageOptions();
+
+            var contextOptions = new BrowserNewContextOptions()
+            {
+                AcceptDownloads = options.AcceptDownloads,
+                IgnoreHTTPSErrors = options.IgnoreHTTPSErrors,
+                BypassCSP = options.BypassCSP,
+                ViewportSize = options.ViewportSize,
+                ScreenSize = options.ScreenSize,
+                UserAgent = options.UserAgent,
+                DeviceScaleFactor = options.DeviceScaleFactor,
+                IsMobile = options.IsMobile,
+                HasTouch = options.HasTouch,
+                JavaScriptEnabled = options.JavaScriptEnabled,
+                TimezoneId = options.TimezoneId,
+                Geolocation = options.Geolocation,
+                Locale = options.Locale,
+                Permissions = options.Permissions,
+                ExtraHTTPHeaders = options.ExtraHTTPHeaders,
+                Offline = options.Offline,
+                HttpCredentials = options.HttpCredentials,
+                ColorScheme = options.ColorScheme,
+                ReducedMotion = options.ReducedMotion,
+                RecordHarPath = options.RecordHarPath,
+                RecordHarOmitContent = options.RecordHarOmitContent,
+                RecordVideoDir = options.RecordVideoDir,
+                RecordVideoSize = options.RecordVideoSize,
+                Proxy = options.Proxy,
+                StorageState = options.StorageState,
+                StorageStatePath = options.StorageStatePath,
+            };
+
+            var context = (BrowserContext)await NewContextAsync(contextOptions).ConfigureAwait(false);
+
             var page = (Page)await context.NewPageAsync().ConfigureAwait(false);
             page.OwnedContext = context;
             context.OwnerPage = page;

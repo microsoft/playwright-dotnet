@@ -13,7 +13,10 @@ namespace Microsoft.Playwright.Core
             _channel = channel;
         }
 
-        public Task<JsonElement?> SnapshotAsync(bool? interestingOnly = null, IElementHandle root = null)
-            => _channel.AccessibilitySnapshotAsync(interestingOnly, (root as ElementHandle)?.ElementChannel);
+        public Task<JsonElement?> SnapshotAsync(AccessibilitySnapshotOptions options = default)
+        {
+            options ??= new AccessibilitySnapshotOptions();
+            return _channel.AccessibilitySnapshotAsync(options.InterestingOnly, (options.Root as ElementHandle)?.ElementChannel);
+        }
     }
 }
