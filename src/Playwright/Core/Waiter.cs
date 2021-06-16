@@ -9,11 +9,11 @@ using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Core
 {
-    internal class Waiter : IDisposable
+    internal class Waiter : IAsyncDisposable
     {
         private readonly List<string> _logs = new();
         private readonly List<Task> _failures = new();
-        private readonly List<Action> _dispose = new();
+        private readonly List<Func<Task>> _dispose = new();
         private readonly CancellationTokenSource _cts = new();
         private readonly string _waitId = Guid.NewGuid().ToString();
         private readonly ChannelBase _channel;
@@ -32,18 +32,18 @@ namespace Microsoft.Playwright.Core
             {
                 var afterArgs = new { info = new { waitId = _waitId, phase = "after", error = _error } };
 
-                _ = _channel.Connection.SendMessageToServerAsync(channel.Guid, "waitForEventInfo", afterArgs);
+                return _channel.Connection.SendMessageToServerAsync(channel.Guid, "waitForEventInfo", afterArgs);
             });
         }
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
             if (!_disposed)
             {
                 _disposed = true;
                 foreach (var dispose in _dispose)
                 {
-                    dispose();
+                    await dispose().ConfigureAwait(false);
                 }
 
                 _cts.Cancel();
@@ -87,7 +87,11 @@ namespace Microsoft.Playwright.Core
 #pragma warning restore CA2000 // Dispose objects before losing scope
             RejectOn(
                 new TaskCompletionSource<bool>().Task.WithTimeout(timeout.Value, _ => new TimeoutException(message), cts.Token),
-                () => cts.Cancel());
+                () =>
+                {
+                    cts.Cancel();
+                    return Task.CompletedTask;
+                });
         }
 
         internal Task<T> WaitForEventAsync<T>(object eventSource, string e, Func<T, bool> predicate)
@@ -102,7 +106,7 @@ namespace Microsoft.Playwright.Core
             return WaitForPromiseAsync(task, dispose);
         }
 
-        internal (Task<T> Task, Action Dispose) GetWaitForEventTask<T>(object eventSource, string e, Func<T, bool> predicate)
+        internal (Task<T> Task, Func<Task> Dispose) GetWaitForEventTask<T>(object eventSource, string e, Func<T, bool> predicate)
         {
             var info = eventSource.GetType().GetEvent(e) ?? eventSource.GetType().BaseType.GetEvent(e);
 
@@ -129,10 +133,14 @@ namespace Microsoft.Playwright.Core
             }
 
             info.AddEventHandler(eventSource, (EventHandler<T>)EventHandler);
-            return (eventTsc.Task, () => info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler));
+            return (eventTsc.Task, () =>
+            {
+                info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler);
+                return Task.CompletedTask;
+            });
         }
 
-        internal async Task<T> WaitForPromiseAsync<T>(Task<T> task, Action dispose = null)
+        internal async Task<T> WaitForPromiseAsync<T>(Task<T> task, Func<Task> dispose = null)
         {
             try
             {
@@ -145,14 +153,14 @@ namespace Microsoft.Playwright.Core
             {
                 dispose?.Invoke();
                 _error = ex.ToString();
-                Dispose();
+                await DisposeAsync().ConfigureAwait(false);
                 throw new TimeoutException(ex.Message + FormatLogRecording(_logs), ex);
             }
             catch (Exception ex)
             {
                 dispose?.Invoke();
                 _error = ex.ToString();
-                Dispose();
+                await DisposeAsync().ConfigureAwait(false);
                 throw new PlaywrightException(ex.Message + FormatLogRecording(_logs), ex);
             }
         }
@@ -173,7 +181,7 @@ namespace Microsoft.Playwright.Core
             return $"\n{new string('=', leftLength)}{header}{new string('=', rightLength)}\n{log}\n{new string('=', headerLength)}";
         }
 
-        private void RejectOn(Task task, Action dispose)
+        private void RejectOn(Task task, Func<Task> dispose)
         {
             _failures.Add(task);
             if (dispose != null)

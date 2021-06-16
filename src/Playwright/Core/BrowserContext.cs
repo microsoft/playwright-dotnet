@@ -263,7 +263,7 @@ namespace Microsoft.Playwright.Core
             }
 
             timeout ??= DefaultTimeout;
-            using var waiter = new Waiter(Channel, $"context.WaitForEventAsync(\"{playwrightEvent.Name}\")");
+            await using var waiter = new Waiter(Channel, $"context.WaitForEventAsync(\"{playwrightEvent.Name}\")");
             waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{playwrightEvent.Name}\"");
 
             if (playwrightEvent.Name != BrowserContextEvent.Close.Name)

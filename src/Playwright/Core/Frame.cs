@@ -166,7 +166,10 @@ namespace Microsoft.Playwright.Core
             }
             finally
             {
-                waiter?.Dispose();
+                if (waiter != null)
+                {
+                    await waiter.DisposeAsync().ConfigureAwait(false);
+                }
             }
         }
 
@@ -234,7 +237,7 @@ namespace Microsoft.Playwright.Core
                 ? await waiter.WaitForPromiseAsync(request.FinalRequest.ResponseAsync()).ConfigureAwait(false)
                 : null;
 
-            waiter.Dispose();
+            await waiter.DisposeAsync().ConfigureAwait(false);
             return response;
         }
 
