@@ -156,9 +156,7 @@ namespace Microsoft.Playwright.Core
         public Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls = null) => Channel.CookiesAsync(urls);
 
         public Task ExposeBindingAsync(string name, Action callback, bool? handle = null)
-        {
-            return ExposeBindingAsync(name, (Delegate)callback, handle.GetValueOrDefault());
-        }
+            => ExposeBindingAsync(name, (Delegate)callback, handle.GetValueOrDefault());
 
         public Task ExposeBindingAsync(string name, Action<BindingSource> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
