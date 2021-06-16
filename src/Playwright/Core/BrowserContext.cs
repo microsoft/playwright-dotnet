@@ -155,8 +155,8 @@ namespace Microsoft.Playwright.Core
 
         public Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls = null) => Channel.CookiesAsync(urls);
 
-        public Task ExposeBindingAsync(string name, Action callback, bool? handle = null)
-            => ExposeBindingAsync(name, _ => callback());
+        public Task ExposeBindingAsync(string name, Action callback, BrowserContextExposeBindingOptions options = default)
+            => ExposeBindingAsync(name, callback, handle: options?.Handle ?? false);
 
         public Task ExposeBindingAsync(string name, Action<BindingSource> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
@@ -203,7 +203,8 @@ namespace Microsoft.Playwright.Core
         public Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback)
             => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => callback(t1, t2, t3, t4));
 
-        public Task GrantPermissionsAsync(IEnumerable<string> permissions, string origin = null) => Channel.GrantPermissionsAsync(permissions, origin);
+        public Task GrantPermissionsAsync(IEnumerable<string> permissions, BrowserContextGrantPermissionsOptions options = default)
+            => Channel.GrantPermissionsAsync(permissions, options?.Origin);
 
         public async Task<IPage> NewPageAsync()
         {
@@ -231,16 +232,17 @@ namespace Microsoft.Playwright.Core
 
         public Task SetOfflineAsync(bool offline) => Channel.SetOfflineAsync(offline);
 
-        public async Task<string> StorageStateAsync(string path = null)
+        public async Task<string> StorageStateAsync(BrowserContextStorageStateOptions options = default)
         {
-            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            var serializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+
             string state = JsonSerializer.Serialize(
                 await Channel.GetStorageStateAsync().ConfigureAwait(false),
-                options);
+                serializerOptions);
 
-            if (!string.IsNullOrEmpty(path))
+            if (!string.IsNullOrEmpty(options?.Path))
             {
-                File.WriteAllText(path, state);
+                File.WriteAllText(options?.Path, state);
             }
 
             return state;
@@ -280,11 +282,11 @@ namespace Microsoft.Playwright.Core
             return await result.ConfigureAwait(false);
         }
 
-        public Task<IPage> WaitForPageAsync(Func<IPage, bool> predicate, float? timeout = default)
-            => InnerWaitForEventAsync(BrowserContextEvent.Page, null, predicate, timeout);
+        public Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions options = default)
+            => InnerWaitForEventAsync(BrowserContextEvent.Page, null, options?.Predicate, options?.Timeout);
 
-        public Task<IPage> RunAndWaitForPageAsync(Func<Task> action = default, Func<IPage, bool> predicate = default, float? timeout = default)
-            => InnerWaitForEventAsync(BrowserContextEvent.Page, action, predicate, timeout);
+        public Task<IPage> RunAndWaitForPageAsync(Func<Task> action, BrowserContextRunAndWaitForPageOptions options = default)
+            => InnerWaitForEventAsync(BrowserContextEvent.Page, action, options?.Predicate, options?.Timeout);
 
         public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
 
