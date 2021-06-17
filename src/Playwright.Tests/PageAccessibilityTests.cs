@@ -1,6 +1,5 @@
 using System.Text.Json;
 using System.Threading.Tasks;
-using KellermanSoftware.CompareNetObjects;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
