@@ -46,5 +46,7 @@ namespace Microsoft.Playwright.Tests
                 return t;
             }
         }
+
+        internal static void DebugLog(string text) => TestContext.Progress.WriteLine(text);
     }
 }
