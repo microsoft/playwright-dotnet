@@ -33,7 +33,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("ignorehttpserrors.spec.ts", "should isolate contexts")]
-        /// [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        // [Test, Timeout(TestConstants.DefaultTestTimeout)]
         [Test, Ignore("Fix me #1058")]
         public async Task ShouldIsolateContexts()
         {
