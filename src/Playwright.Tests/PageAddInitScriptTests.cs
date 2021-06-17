@@ -38,9 +38,9 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should throw without path and content")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldThrowWithoutPathAndContent()
+        public Task ShouldThrowWithoutPathAndContent()
         {
-            await PlaywrightAssert.ThrowsAsync<ArgumentException>(() => Page.AddInitScriptAsync());
+            return PlaywrightAssert.ThrowsAsync<ArgumentException>(() => Page.AddInitScriptAsync());
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should work with browser context scripts")]

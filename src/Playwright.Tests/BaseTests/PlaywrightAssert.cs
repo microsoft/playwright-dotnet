@@ -24,15 +24,14 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace Microsoft.Playwright.Tests
 {
     internal static class PlaywrightAssert
     {
-        /// This functions replaces the <see cref="NUnit.Framework.Assert.ThrowsAsync(NUnit.Framework.Constraints.IResolveConstraint, AsyncTestDelegate)"/> because that
+        /// This functions replaces the <see cref="Assert.ThrowsAsync(IResolveConstraint, AsyncTestDelegate,string,object[])"/> because that
         /// particular function does not actually work correctly for Playwright Tests as it completely blocks the calling thread.
         /// For a more detailed read on the subject, see <see href="https://github.com/nunit/nunit/issues/464"/>.
         internal static async Task<T> ThrowsAsync<T>(Func<Task> action) where T : Exception

@@ -171,11 +171,11 @@ namespace Microsoft.Playwright.Tests.TestServer
 
         public Task StartAsync() => _webHost.StartAsync();
 
-        public async Task StopAsync()
+        public Task StopAsync()
         {
             Reset();
 
-            await _webHost.StopAsync();
+            return _webHost.StopAsync();
         }
 
         public void Reset()

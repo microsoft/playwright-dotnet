@@ -153,14 +153,14 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-goto.spec.ts", "should work with subframes return 204")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldWorkWithSubframesReturn204()
+        public Task ShouldWorkWithSubframesReturn204()
         {
             Server.SetRoute("/frames/frame.html", context =>
             {
                 context.Response.StatusCode = 204;
                 return Task.CompletedTask;
             });
-            await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+            return Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work with subframes return 204")]

@@ -21,7 +21,7 @@ namespace Microsoft.Playwright.Core
 
         IChannel<Selectors> IChannelOwner<Selectors>.Channel => _channel;
 
-        public async Task RegisterAsync(string name, string script, string path, bool? contentScript = null)
+        public Task RegisterAsync(string name, string script, string path, bool? contentScript = null)
         {
             script = ScriptsHelper.EvaluationScript(script, path);
 
@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Core
                 Source = script,
                 ContentScript = contentScript,
             };
-            await _channel.RegisterAsync(registerParam).ConfigureAwait(false);
+            return _channel.RegisterAsync(registerParam);
         }
     }
 }

@@ -31,18 +31,14 @@ namespace Microsoft.Playwright.NUnit
     {
         public IBrowser Browser { get; internal set; }
 
-        public static async Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType)
+        public static Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType)
         {
-            return await test.RegisterService("Browser", async () =>
+            return test.RegisterService("Browser", async () => new BrowserService
             {
-                var service = new BrowserService
+                Browser = await browserType.LaunchAsync(new()
                 {
-                    Browser = await browserType.LaunchAsync(new()
-                    {
-                        Headless = Environment.GetEnvironmentVariable("HEADED") != "1"
-                    })
-                };
-                return service;
+                    Headless = Environment.GetEnvironmentVariable("HEADED") != "1"
+                })
             });
         }
 
