@@ -61,7 +61,7 @@ namespace Microsoft.Playwright.NUnit
         {
             if (!_allWorkers.TryPop(out _currentWorker))
             {
-                _currentWorker = new Worker();
+                _currentWorker = new();
             }
             WorkerIndex = _currentWorker.WorkerIndex;
         }

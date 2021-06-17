@@ -75,7 +75,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
             await Page.EvalOnSelectorAsync("select", "s => s.value = undefined");
-            await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.SelectOptionAsync("select", new SelectOptionValue { Value = "green", Label = "Brown" }, new PageSelectOptionOptions { Timeout = 300 }));
+            await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.SelectOptionAsync("select", new SelectOptionValue { Value = "green", Label = "Brown" }, new() { Timeout = 300 }));
             Assert.IsEmpty(await Page.EvaluateAsync<string>("() => document.querySelector('select').value"));
         }
 

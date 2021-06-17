@@ -234,7 +234,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new()
             {
-                ViewportSize = new ViewportSize
+                ViewportSize = new()
                 {
                     Width = 320,
                     Height = 480,
@@ -256,7 +256,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new()
             {
-                ViewportSize = new ViewportSize
+                ViewportSize = new()
                 {
                     Width = 320,
                     Height = 480,
@@ -332,7 +332,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new()
             {
-                ViewportSize = new ViewportSize { Width = 456, Height = 789 },
+                ViewportSize = new() { Width = 456, Height = 789 },
             });
             var page = await context.NewPageAsync();
             await TestUtils.VerifyViewportAsync(page, 456, 789);

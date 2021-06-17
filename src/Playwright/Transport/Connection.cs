@@ -66,7 +66,7 @@ namespace Microsoft.Playwright.Transport
             _logger = _loggerFactory.CreateLogger<Connection>();
             var debugLogger = _loggerFactory?.CreateLogger<PlaywrightImpl>();
 
-            _rootObject = new ChannelOwnerBase(null, this, string.Empty);
+            _rootObject = new(null, this, string.Empty);
 
             _playwrightServerProcess = GetProcess();
             _playwrightServerProcess.StartInfo.Arguments = "run-driver";
@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Transport
         /// <inheritdoc cref="IDisposable.Dispose"/>
         ~Connection() => Dispose(false);
 
-        public ConcurrentDictionary<string, IChannelOwner> Objects { get; } = new ConcurrentDictionary<string, IChannelOwner>();
+        public ConcurrentDictionary<string, IChannelOwner> Objects { get; } = new();
 
         public bool IsClosed { get; private set; }
 

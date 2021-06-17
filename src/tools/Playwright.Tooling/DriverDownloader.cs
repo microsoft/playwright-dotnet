@@ -142,7 +142,7 @@ namespace Playwright.Tooling
                     {
                         if (new FileInfo(executable).Exists && LinuxSysCall.Chmod(executable, LinuxSysCall.ExecutableFilePermissions) != 0)
                         {
-                            throw new Exception($"Unable to chmod {executable} ({Marshal.GetLastWin32Error()})");
+                            throw new($"Unable to chmod {executable} ({Marshal.GetLastWin32Error()})");
                         }
                     }
                 }
@@ -152,7 +152,7 @@ namespace Playwright.Tooling
             catch (Exception ex)
             {
                 Console.WriteLine($"Unable to download driver for {driverVersion} using url {url}");
-                throw new Exception($"Unable to download driver for {driverVersion} using url {url}", ex);
+                throw new($"Unable to download driver for {driverVersion} using url {url}", ex);
             }
         }
 

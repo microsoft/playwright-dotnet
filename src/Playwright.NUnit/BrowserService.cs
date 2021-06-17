@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.NUnit
             {
                 var service = new BrowserService
                 {
-                    Browser = await browserType.LaunchAsync(new BrowserTypeLaunchOptions
+                    Browser = await browserType.LaunchAsync(new()
                     {
                         Headless = Environment.GetEnvironmentVariable("HEADED") != "1"
                     })

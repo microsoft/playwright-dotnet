@@ -14,7 +14,7 @@ namespace Microsoft.Playwright.Core
 
         internal ConsoleMessage(IChannelOwner parent, string guid, ConsoleMessageInitializer initializer) : base(parent, guid)
         {
-            _channel = new ConsoleMessageChannel(guid, parent.Connection, this);
+            _channel = new(guid, parent.Connection, this);
             _initializer = initializer;
         }
 

@@ -43,13 +43,13 @@ namespace Microsoft.Playwright.Core
     {
         public Task StartAsync(TracingStartOptions? options = default)
         {
-            options ??= new TracingStartOptions();
+            options ??= new();
             return StartAsync(name: options.Name, screenshots: options.Screenshots, snapshots: options.Snapshots);
         }
 
         public Task StopAsync(TracingStopOptions? options = default)
         {
-            options ??= new TracingStopOptions();
+            options ??= new();
             return StopAsync(path: options.Path);
         }
     }

@@ -10,12 +10,12 @@ namespace Microsoft.Playwright.Core
     internal partial class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
     {
         private readonly BrowserInitializer _initializer;
-        private readonly TaskCompletionSource<bool> _closedTcs = new TaskCompletionSource<bool>();
+        private readonly TaskCompletionSource<bool> _closedTcs = new();
         private bool _isClosedOrClosing;
 
         internal Browser(IChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
         {
-            Channel = new BrowserChannel(guid, parent.Connection, this);
+            Channel = new(guid, parent.Connection, this);
             IsConnected = true;
             Channel.Closed += (_, _) => DidClose();
             _initializer = initializer;
@@ -35,7 +35,7 @@ namespace Microsoft.Playwright.Core
 
         internal BrowserChannel Channel { get; }
 
-        internal List<BrowserContext> BrowserContextsList { get; } = new List<BrowserContext>();
+        internal List<BrowserContext> BrowserContextsList { get; } = new();
 
         public async Task CloseAsync()
         {
@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Core
 
         public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions options = default)
         {
-            options ??= new BrowserNewContextOptions();
+            options ??= new();
             var context = (await Channel.NewContextAsync(
                acceptDownloads: options.AcceptDownloads,
                bypassCSP: options.BypassCSP,
@@ -85,7 +85,7 @@ namespace Microsoft.Playwright.Core
 
         public async Task<IPage> NewPageAsync(BrowserNewPageOptions options = default)
         {
-            options ??= new BrowserNewPageOptions();
+            options ??= new();
 
             var contextOptions = new BrowserNewContextOptions()
             {
@@ -138,7 +138,7 @@ namespace Microsoft.Playwright.Core
 
             if (!string.IsNullOrEmpty(recordVideoDir))
             {
-                recordVideoArgs = new Dictionary<string, object>()
+                recordVideoArgs = new()
                 {
                     { "dir", recordVideoDir },
                 };

@@ -62,7 +62,7 @@ namespace Microsoft.Playwright.Tests
         /// <param name="testDescribe">The original test name.</param>
         /// <returns>Returns a "clean" string, suitable for C# method names.</returns>
         public static string CleanName(string testDescribe)
-            => new string(Array.FindAll(_textInfo.ToTitleCase(testDescribe).ToCharArray(), c => char.IsLetterOrDigit(c)));
+            => new(Array.FindAll(_textInfo.ToTitleCase(testDescribe).ToCharArray(), c => char.IsLetterOrDigit(c)));
 
         public static void Run(ScaffoldTestOptions options)
         {
@@ -96,10 +96,10 @@ namespace Microsoft.Playwright.Tests
             var globalNamespace = new CodeNamespace();
 
             // add imports
-            globalNamespace.Imports.Add(new CodeNamespaceImport("System.Threading.Tasks"));
-            globalNamespace.Imports.Add(new CodeNamespaceImport("Microsoft.Playwright.Tests.BaseTests"));
-            globalNamespace.Imports.Add(new CodeNamespaceImport("Xunit"));
-            globalNamespace.Imports.Add(new CodeNamespaceImport("Xunit.Abstractions"));
+            globalNamespace.Imports.Add(new("System.Threading.Tasks"));
+            globalNamespace.Imports.Add(new("Microsoft.Playwright.Tests.BaseTests"));
+            globalNamespace.Imports.Add(new("Xunit"));
+            globalNamespace.Imports.Add(new("Xunit.Abstractions"));
 
             targetUnit.Namespaces.Add(globalNamespace);
 
@@ -112,17 +112,17 @@ namespace Microsoft.Playwright.Tests
 
             targetClass.BaseTypes.Add(new CodeTypeReference("MicrosoftPlaywrightPageBaseTest"));
 
-            _ = targetClass.CustomAttributes.Add(new CodeAttributeDeclaration(
+            _ = targetClass.CustomAttributes.Add(new(
                 "Collection",
                 new CodeAttributeArgument[]
                 {
-                    new CodeAttributeArgument(
+                    new(
                         new CodeFieldReferenceExpression(
                             new CodeTypeReferenceExpression("TestConstants"),
                             "TestFixtureBrowserCollectionName")),
                 }));
 
-            targetClass.Comments.Add(new CodeCommentStatement($"<playwright-file>{fileOrigin}</playwright-file>", true));
+            targetClass.Comments.Add(new($"<playwright-file>{fileOrigin}</playwright-file>", true));
             codeNamespace.Types.Add(targetClass);
 
             targetUnit.Namespaces.Add(codeNamespace);
@@ -133,9 +133,9 @@ namespace Microsoft.Playwright.Tests
                 Attributes = MemberAttributes.Public,
             };
 
-            constructor.Parameters.Add(new CodeParameterDeclarationExpression("ITestOutputHelper", "output"));
+            constructor.Parameters.Add(new("ITestOutputHelper", "output"));
             constructor.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("output"));
-            constructor.Comments.Add(new CodeCommentStatement("<inheritdoc/>", true));
+            constructor.Comments.Add(new("<inheritdoc/>", true));
             targetClass.Members.Add(constructor);
 
             return targetUnit;
@@ -151,24 +151,24 @@ namespace Microsoft.Playwright.Tests
             CodeMemberMethod method = new CodeMemberMethod()
             {
                 Attributes = MemberAttributes.Public | MemberAttributes.Final,
-                ReturnType = new CodeTypeReference("async Task"),
+                ReturnType = new("async Task"),
                 Name = name,
             };
 
             @class.Namespaces[1].Types[0].Members.Add(method);
 
-            method.Comments.Add(new CodeCommentStatement($"<playwright-file>{testOrigin}</playwright-file>", true));
-            method.Comments.Add(new CodeCommentStatement($"<playwright-it>{testDescribe}</playwright-it>", true));
-            method.CustomAttributes.Add(new CodeAttributeDeclaration(
+            method.Comments.Add(new($"<playwright-file>{testOrigin}</playwright-file>", true));
+            method.Comments.Add(new($"<playwright-it>{testDescribe}</playwright-it>", true));
+            method.CustomAttributes.Add(new(
                 "Fact",
                 new CodeAttributeArgument[]
                 {
-                    new CodeAttributeArgument(
+                    new(
                         "Timeout",
                         new CodeFieldReferenceExpression(
                             new CodeTypeReferenceExpression("Microsoft.Playwright"),
                             "DefaultTimeout")),
-                    new CodeAttributeArgument(
+                    new(
                         "Skip",
                         new CodePrimitiveExpression("This test is not yet implemented.")),
                 }));

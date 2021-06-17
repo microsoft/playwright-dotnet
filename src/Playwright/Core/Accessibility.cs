@@ -15,7 +15,7 @@ namespace Microsoft.Playwright.Core
 
         public Task<JsonElement?> SnapshotAsync(AccessibilitySnapshotOptions options = default)
         {
-            options ??= new AccessibilitySnapshotOptions();
+            options ??= new();
             return _channel.AccessibilitySnapshotAsync(options.InterestingOnly, (options.Root as ElementHandle)?.ElementChannel);
         }
     }

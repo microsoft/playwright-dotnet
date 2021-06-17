@@ -144,12 +144,12 @@ namespace Microsoft.Playwright.Tests
                 await context.Response.WriteAsync("File not found");
             }
 
-            fetches["/fetch-request-a.js"] = new TaskCompletionSource<bool>();
+            fetches["/fetch-request-a.js"] = new();
             Server.SetRoute("/fetch-request-a.js", RequestDelegate);
 
             var firstFetchResourceRequested = Server.WaitForRequest("/fetch-request-a.js");
 
-            fetches["/fetch-request-b.js"] = new TaskCompletionSource<bool>();
+            fetches["/fetch-request-b.js"] = new();
             Server.SetRoute("/fetch-request-b.js", RequestDelegate);
             var secondFetchResourceRequested = Server.WaitForRequest("/fetch-request-b.js");
 

@@ -8,7 +8,7 @@ namespace Microsoft.Playwright.Helpers
     {
         private readonly SemaphoreSlim _semaphore;
 
-        internal TaskQueue() => _semaphore = new SemaphoreSlim(1, 1);
+        internal TaskQueue() => _semaphore = new(1, 1);
 
         public void Dispose()
         {

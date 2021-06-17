@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Core
 
         internal ElementHandle(IChannelOwner parent, string guid, ElementHandleInitializer initializer) : base(parent, guid, initializer)
         {
-            _channel = new ElementHandleChannel(guid, parent.Connection, this);
+            _channel = new(guid, parent.Connection, this);
             _channel.PreviewUpdated += (_, e) => Preview = e.Preview;
         }
 

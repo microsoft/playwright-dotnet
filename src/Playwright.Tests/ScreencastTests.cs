@@ -15,7 +15,7 @@ namespace Microsoft.Playwright.Tests
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new()
             {
-                RecordVideoSize = new RecordVideoSize { Height = 100, Width = 100 }
+                RecordVideoSize = new() { Height = 100, Width = 100 }
             }));
 
             StringAssert.Contains("\"RecordVideoSize\" option requires \"RecordVideoDir\" to be specified", exception.Message);
@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.Tests
             var context = await Browser.NewContextAsync(new()
             {
                 RecordVideoDir = tempDirectory.Path,
-                RecordVideoSize = new RecordVideoSize() { Height = 100, Width = 100 }
+                RecordVideoSize = new() { Height = 100, Width = 100 }
             });
 
             var page = await context.NewPageAsync();
@@ -77,7 +77,7 @@ namespace Microsoft.Playwright.Tests
             var context = await Browser.NewContextAsync(new()
             {
                 RecordVideoDir = tempDirectory.Path,
-                RecordVideoSize = new RecordVideoSize { Height = 100, Width = 100 }
+                RecordVideoSize = new() { Height = 100, Width = 100 }
             });
 
             var page = await context.NewPageAsync();
@@ -97,7 +97,7 @@ namespace Microsoft.Playwright.Tests
             var context = await Browser.NewContextAsync(new()
             {
                 RecordVideoDir = tempDirectory.Path,
-                RecordVideoSize = new RecordVideoSize() { Height = 100, Width = 100 }
+                RecordVideoSize = new() { Height = 100, Width = 100 }
             });
 
             var page = await context.NewPageAsync();
@@ -159,7 +159,7 @@ namespace Microsoft.Playwright.Tests
             var context = await BrowserType.LaunchPersistentContextAsync(userDirectory.Path, new()
             {
                 RecordVideoDir = tempDirectory.Path,
-                RecordVideoSize = new RecordVideoSize() { Height = 100, Width = 100 },
+                RecordVideoSize = new() { Height = 100, Width = 100 },
             });
 
             var page = await context.NewPageAsync();

@@ -19,18 +19,18 @@ namespace Microsoft.Playwright.Core
         internal Request(IChannelOwner parent, string guid, RequestInitializer initializer) : base(parent, guid)
         {
             // TODO: Consider using a mapper between RequestInitiliazer and this object
-            _channel = new RequestChannel(guid, parent.Connection, this);
+            _channel = new(guid, parent.Connection, this);
             _initializer = initializer;
             RedirectedFrom = _initializer.RedirectedFrom;
             PostDataBuffer = _initializer.PostData != null ? Convert.FromBase64String(_initializer.PostData) : null;
-            Timing = new RequestTimingResult();
+            Timing = new();
 
             if (RedirectedFrom != null)
             {
                 _initializer.RedirectedFrom.RedirectedTo = this;
             }
 
-            Headers = new Dictionary<string, string>();
+            Headers = new();
             foreach (var kv in initializer.Headers)
             {
                 var name = kv.Name.ToLower();

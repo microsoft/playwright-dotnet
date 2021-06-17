@@ -73,14 +73,14 @@ namespace Microsoft.Playwright.Tests.TestServer
 #endif
                     .Use(async (context, next) =>
                     {
-                        RequestReceived?.Invoke(this, new RequestReceivedEventArgs { Request = context.Request });
+                        RequestReceived?.Invoke(this, new() { Request = context.Request });
 
                         if (context.Request.Path == "/ws")
                         {
                             if (context.WebSockets.IsWebSocketRequest)
                             {
                                 var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                                await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes("incoming")), WebSocketMessageType.Text, true, CancellationToken.None);
+                                await webSocket.SendAsync(new(Encoding.UTF8.GetBytes("incoming")), WebSocketMessageType.Text, true, CancellationToken.None);
                                 await ReceiveLoopAsync(webSocket, context.Request.Headers["User-Agent"].ToString().Contains("Firefox"), CancellationToken.None);
                             }
                             else if (!context.Response.HasStarted)
@@ -247,7 +247,7 @@ namespace Microsoft.Playwright.Tests.TestServer
             {
                 while (true)
                 {
-                    var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), token);
+                    var result = await webSocket.ReceiveAsync(new(buffer), token);
 
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
@@ -285,7 +285,7 @@ namespace Microsoft.Playwright.Tests.TestServer
                     return new();
                 }
 
-                result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer, count, MaxMessageSize - count), token);
+                result = await webSocket.ReceiveAsync(new(buffer, count, MaxMessageSize - count), token);
                 count += result.Count;
 
             }

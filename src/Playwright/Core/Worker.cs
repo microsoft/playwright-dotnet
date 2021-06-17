@@ -16,7 +16,7 @@ namespace Microsoft.Playwright.Core
 
         public Worker(IChannelOwner parent, string guid, WorkerInitializer initializer) : base(parent, guid)
         {
-            _channel = new WorkerChannel(guid, parent.Connection, this);
+            _channel = new(guid, parent.Connection, this);
             _initializer = initializer;
 
             _channel.Closed += (_, _) =>

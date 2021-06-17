@@ -69,7 +69,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportReducedMotionOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new BrowserTypeLaunchPersistentContextOptions()
+            var (tmp, context, page) = await LaunchAsync(new()
             {
                 ReducedMotion = ReducedMotion.Reduce
             });
@@ -117,7 +117,7 @@ namespace Microsoft.Playwright.Tests
         {
             var (tmp, context, page) = await LaunchAsync(new()
             {
-                Geolocation = new Geolocation
+                Geolocation = new()
                 {
                     Latitude = 10,
                     Longitude = 10,

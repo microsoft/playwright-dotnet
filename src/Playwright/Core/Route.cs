@@ -22,7 +22,7 @@ namespace Microsoft.Playwright.Core
 
         internal Route(IChannelOwner parent, string guid, RouteInitializer initializer) : base(parent, guid)
         {
-            _channel = new RouteChannel(guid, parent.Connection, this);
+            _channel = new(guid, parent.Connection, this);
             _initializer = initializer;
         }
 
@@ -121,7 +121,7 @@ namespace Microsoft.Playwright.Core
                 resultHeaders["content-length"] = length.ToString();
             }
 
-            return new NormalizedFulfillResponse
+            return new()
             {
                 Status = status ?? (int)HttpStatusCode.OK,
                 Headers = resultHeaders.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),

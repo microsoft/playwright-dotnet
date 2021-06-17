@@ -16,7 +16,7 @@ namespace Microsoft.Playwright.Core
 
         public BindingCall(IChannelOwner parent, string guid, BindingCallInitializer initializer) : base(parent, guid)
         {
-            _channel = new BindingCallChannel(guid, parent.Connection, this);
+            _channel = new(guid, parent.Connection, this);
             _initializer = initializer;
         }
 

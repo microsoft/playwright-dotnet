@@ -43,13 +43,13 @@ namespace Microsoft.Playwright.Core
     {
         public Task ContinueAsync(RouteContinueOptions? options = default)
         {
-            options ??= new RouteContinueOptions();
+            options ??= new();
             return ContinueAsync(url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers);
         }
 
         public Task FulfillAsync(RouteFulfillOptions? options = default)
         {
-            options ??= new RouteFulfillOptions();
+            options ??= new();
             return FulfillAsync(status: options.Status, headers: options.Headers, contentType: options.ContentType, body: options.Body, bodyBytes: options.BodyBytes, path: options.Path);
         }
     }

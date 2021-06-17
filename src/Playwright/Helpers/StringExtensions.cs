@@ -757,7 +757,7 @@ namespace Microsoft.Playwright.Helpers
         {
             var fileInfo = new FileInfo(file);
 
-            return new FilePayload
+            return new()
             {
                 Name = fileInfo.Name,
                 Buffer = File.ReadAllBytes(file),

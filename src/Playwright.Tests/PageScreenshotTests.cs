@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/grid.html");
             byte[] screenshot = await Page.ScreenshotAsync(new()
             {
-                Clip = new Clip
+                Clip = new()
                 {
                     X = 50,
                     Y = 100,
@@ -53,7 +53,7 @@ namespace Microsoft.Playwright.Tests
             byte[] screenshot = await Page.ScreenshotAsync(new()
             {
                 FullPage = true,
-                Clip = new Clip
+                Clip = new()
                 {
                     X = 50,
                     Y = 100,
@@ -72,7 +72,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/grid.html");
             byte[] screenshot = await Page.ScreenshotAsync(new()
             {
-                Clip = new Clip
+                Clip = new()
                 {
                     X = 50,
                     Y = 450,
@@ -91,7 +91,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/grid.html");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.ScreenshotAsync(new()
             {
-                Clip = new Clip
+                Clip = new()
                 {
                     X = 50,
                     Y = 650,
@@ -115,7 +115,7 @@ namespace Microsoft.Playwright.Tests
             {
                 tasks.Add(Page.ScreenshotAsync(new()
                 {
-                    Clip = new Clip
+                    Clip = new()
                     {
                         X = 50 * i,
                         Y = 0,
@@ -176,7 +176,7 @@ namespace Microsoft.Playwright.Tests
             {
                 screenshotTasks.Add(pageTasks[i].Result.ScreenshotAsync(new()
                 {
-                    Clip = new Clip
+                    Clip = new()
                     {
                         X = 50 * (i % 2),
                         Y = 0,
@@ -233,7 +233,7 @@ namespace Microsoft.Playwright.Tests
         {
             byte[] screenshot = await Page.ScreenshotAsync(new()
             {
-                Clip = new Clip
+                Clip = new()
                 {
                     X = 0,
                     Y = 0,
@@ -251,7 +251,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new()
             {
-                ViewportSize = new ViewportSize
+                ViewportSize = new()
                 {
                     Width = 320,
                     Height = 480,
@@ -271,7 +271,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new()
             {
-                ViewportSize = new ViewportSize
+                ViewportSize = new()
                 {
                     Width = 320,
                     Height = 480,
@@ -282,7 +282,7 @@ namespace Microsoft.Playwright.Tests
             await page.GotoAsync(Server.Prefix + "/overflow.html");
             byte[] screenshot = await page.ScreenshotAsync(new()
             {
-                Clip = new Clip
+                Clip = new()
                 {
                     X = 10,
                     Y = 10,
@@ -300,7 +300,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new()
             {
-                ViewportSize = new ViewportSize
+                ViewportSize = new()
                 {
                     Width = 320,
                     Height = 480,
@@ -372,7 +372,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new()
             {
-                ViewportSize = new ViewportSize
+                ViewportSize = new()
                 {
                     Width = 320,
                     Height = 480,
@@ -392,7 +392,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new()
             {
-                ViewportSize = new ViewportSize
+                ViewportSize = new()
                 {
                     Width = 500,
                     Height = 500,

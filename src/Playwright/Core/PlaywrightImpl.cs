@@ -28,7 +28,7 @@ namespace Microsoft.Playwright.Core
         {
             _connection = parent.Connection;
             _initializer = initializer;
-            _channel = new PlaywrightChannel(guid, parent.Connection, this);
+            _channel = new(guid, parent.Connection, this);
             _loggerFactory = loggerFactory;
 
             foreach (var entry in initializer.DeviceDescriptors)

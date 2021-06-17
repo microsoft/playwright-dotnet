@@ -43,13 +43,13 @@ namespace Microsoft.Playwright.Core
     {
         public Task PressAsync(string key, KeyboardPressOptions? options = default)
         {
-            options ??= new KeyboardPressOptions();
+            options ??= new();
             return PressAsync(key, delay: options.Delay);
         }
 
         public Task TypeAsync(string text, KeyboardTypeOptions? options = default)
         {
-            options ??= new KeyboardTypeOptions();
+            options ??= new();
             return TypeAsync(text, delay: options.Delay);
         }
     }

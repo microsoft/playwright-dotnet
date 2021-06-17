@@ -29,7 +29,7 @@ namespace Playwright.Tooling
             var report = new StringBuilder("<html><body><ul>");
             string json = await File.ReadAllTextAsync(Path.Combine(BasePath, "src", "Playwright", ".playwright", "api.json")).ConfigureAwait(false);
 
-            var api = JsonSerializer.Deserialize<PlaywrightEntity[]>(json, new JsonSerializerOptions
+            var api = JsonSerializer.Deserialize<PlaywrightEntity[]>(json, new()
             {
                 PropertyNameCaseInsensitive = true,
                 Converters =
@@ -44,14 +44,14 @@ namespace Playwright.Tooling
 
             try
             {
-                mismatches = JsonSerializer.Deserialize<Mismatch>(mismatchJson, new JsonSerializerOptions
+                mismatches = JsonSerializer.Deserialize<Mismatch>(mismatchJson, new()
                 {
                     PropertyNameCaseInsensitive = true,
                 });
             }
             catch (Exception ex)
             {
-                throw new Exception($"Unable to parse file {mismatchJsonFile} with content {mismatchJson}", ex);
+                throw new($"Unable to parse file {mismatchJsonFile} with content {mismatchJson}", ex);
             }
 
             foreach (var entity in api)

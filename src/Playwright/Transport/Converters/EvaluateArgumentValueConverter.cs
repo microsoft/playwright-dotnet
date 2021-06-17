@@ -14,9 +14,9 @@ namespace Microsoft.Playwright.Transport.Converters
 {
     internal class EvaluateArgumentValueConverter<T> : JsonConverter<T>
     {
-        private readonly List<object> _visited = new List<object>();
+        private readonly List<object> _visited = new();
 
-        public List<EvaluateArgumentGuidElement> Handles { get; } = new List<EvaluateArgumentGuidElement>();
+        public List<EvaluateArgumentGuidElement> Handles { get; } = new();
 
         public override bool CanConvert(Type type) => true;
 
@@ -132,7 +132,7 @@ namespace Microsoft.Playwright.Transport.Converters
 
             if (value is IChannelOwner channelOwner)
             {
-                Handles.Add(new EvaluateArgumentGuidElement { Guid = channelOwner.Channel.Guid });
+                Handles.Add(new() { Guid = channelOwner.Channel.Guid });
                 return new { h = Handles.Count - 1 };
             }
 

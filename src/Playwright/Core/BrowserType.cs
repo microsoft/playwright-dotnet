@@ -15,7 +15,7 @@ namespace Microsoft.Playwright.Core
         internal BrowserType(IChannelOwner parent, string guid, BrowserTypeInitializer initializer) : base(parent, guid)
         {
             _initializer = initializer;
-            _channel = new BrowserTypeChannel(guid, parent.Connection, this);
+            _channel = new(guid, parent.Connection, this);
         }
 
         ChannelBase IChannelOwner.Channel => _channel;

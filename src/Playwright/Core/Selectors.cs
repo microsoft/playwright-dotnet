@@ -14,7 +14,7 @@ namespace Microsoft.Playwright.Core
 
         internal Selectors(IChannelOwner parent, string guid) : base(parent, guid)
         {
-            _channel = new SelectorsChannel(guid, parent.Connection, this);
+            _channel = new(guid, parent.Connection, this);
         }
 
         ChannelBase IChannelOwner.Channel => _channel;

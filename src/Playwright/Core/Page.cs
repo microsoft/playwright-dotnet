@@ -61,14 +61,14 @@ namespace Microsoft.Playwright.Core
         {
             Context = (BrowserContext)parent;
 
-            _channel = new PageChannel(guid, parent.Connection, this);
+            _channel = new(guid, parent.Connection, this);
 
             MainFrame = initializer.MainFrame;
             MainFrame.Page = this;
             _frames.Add(MainFrame);
             if (initializer.ViewportSize != null)
             {
-                ViewportSize = new PageViewportSizeResult { Width = initializer.ViewportSize.Width, Height = initializer.ViewportSize.Height };
+                ViewportSize = new() { Width = initializer.ViewportSize.Width, Height = initializer.ViewportSize.Height };
             }
 
             IsClosed = initializer.IsClosed;
@@ -238,9 +238,9 @@ namespace Microsoft.Playwright.Core
 
         internal BrowserContext OwnedContext { get; set; }
 
-        internal Dictionary<string, Delegate> Bindings { get; } = new Dictionary<string, Delegate>();
+        internal Dictionary<string, Delegate> Bindings { get; } = new();
 
-        internal List<Worker> WorkersList { get; } = new List<Worker>();
+        internal List<Worker> WorkersList { get; } = new();
 
         internal Page Opener => _initializer.Opener;
 
@@ -404,12 +404,12 @@ namespace Microsoft.Playwright.Core
 
             if (pageEvent.Name != PageEvent.Crash.Name)
             {
-                waiter.RejectOnEvent<IPage>(this, PageEvent.Crash.Name, new PlaywrightException("Page crashed"));
+                waiter.RejectOnEvent<IPage>(this, PageEvent.Crash.Name, new("Page crashed"));
             }
 
             if (pageEvent.Name != PageEvent.Close.Name)
             {
-                waiter.RejectOnEvent<IPage>(this, PageEvent.Close.Name, new PlaywrightException("Page closed"));
+                waiter.RejectOnEvent<IPage>(this, PageEvent.Close.Name, new("Page closed"));
             }
 
             var result = waiter.WaitForEventAsync(this, pageEvent.Name, predicate);
@@ -687,7 +687,7 @@ namespace Microsoft.Playwright.Core
 
         public Task RouteAsync(string urlString, Action<IRoute> handler)
             => RouteAsync(
-                new RouteSetting
+                new()
                 {
                     Url = urlString,
                     Handler = handler,
@@ -695,7 +695,7 @@ namespace Microsoft.Playwright.Core
 
         public Task RouteAsync(Regex urlRegex, Action<IRoute> handler)
             => RouteAsync(
-                new RouteSetting
+                new()
                 {
                     Regex = urlRegex,
                     Handler = handler,
@@ -703,7 +703,7 @@ namespace Microsoft.Playwright.Core
 
         public Task RouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler)
             => RouteAsync(
-                new RouteSetting
+                new()
                 {
                     Function = urlFunc,
                     Handler = handler,
@@ -711,7 +711,7 @@ namespace Microsoft.Playwright.Core
 
         public Task UnrouteAsync(string urlString, Action<IRoute> handler)
             => UnrouteAsync(
-                new RouteSetting
+                new()
                 {
                     Url = urlString,
                     Handler = handler,
@@ -719,7 +719,7 @@ namespace Microsoft.Playwright.Core
 
         public Task UnrouteAsync(Regex urlString, Action<IRoute> handler)
             => UnrouteAsync(
-                new RouteSetting
+                new()
                 {
                     Regex = urlString,
                     Handler = handler,
@@ -727,7 +727,7 @@ namespace Microsoft.Playwright.Core
 
         public Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler)
             => UnrouteAsync(
-                new RouteSetting
+                new()
                 {
                     Function = urlFunc,
                     Handler = handler,
@@ -738,7 +738,7 @@ namespace Microsoft.Playwright.Core
 
         public Task SetViewportSizeAsync(int width, int height)
         {
-            ViewportSize = new PageViewportSizeResult { Width = width, Height = height };
+            ViewportSize = new() { Width = width, Height = height };
             return _channel.SetViewportSizeAsync(ViewportSize);
         }
 
@@ -910,6 +910,6 @@ namespace Microsoft.Playwright.Core
             return _channel.ExposeBindingAsync(name, handle);
         }
 
-        private Video ForceVideo() => _video ??= new Video(this);
+        private Video ForceVideo() => _video ??= new(this);
     }
 }

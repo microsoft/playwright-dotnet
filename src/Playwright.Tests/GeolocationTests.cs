@@ -14,7 +14,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Context.GrantPermissionsAsync(new[] { "geolocation" });
             await Page.GotoAsync(Server.EmptyPage);
-            await Context.SetGeolocationAsync(new Geolocation
+            await Context.SetGeolocationAsync(new()
             {
                 Longitude = 10,
                 Latitude = 10
@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowWhenInvalidLongitude()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() =>
-                Context.SetGeolocationAsync(new Geolocation
+                Context.SetGeolocationAsync(new()
                 {
                     Longitude = 200,
                     Latitude = 100
@@ -45,7 +45,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldIsolateContexts()
         {
             await Context.GrantPermissionsAsync(new[] { "geolocation" });
-            await Context.SetGeolocationAsync(new Geolocation
+            await Context.SetGeolocationAsync(new()
             {
                 Longitude = 10,
                 Latitude = 10
@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Tests
             await using var context2 = await Browser.NewContextAsync(new()
             {
                 Permissions = new[] { "geolocation" },
-                Geolocation = new Geolocation { Latitude = 20, Longitude = 20 },
+                Geolocation = new() { Latitude = 20, Longitude = 20 },
             });
 
             var page2 = await context2.NewPageAsync();
@@ -87,7 +87,7 @@ namespace Microsoft.Playwright.Tests
             BrowserNewContextOptions options = new() { Geolocation = geolocation };
             await using var context = await Browser.NewContextAsync(options);
             await Page.GotoAsync(Server.EmptyPage);
-            await Context.SetGeolocationAsync(new Geolocation
+            await Context.SetGeolocationAsync(new()
             {
                 Longitude = 20,
                 Latitude = 20
@@ -106,7 +106,7 @@ namespace Microsoft.Playwright.Tests
         {
             var options = new BrowserNewContextOptions()
             {
-                Geolocation = new Geolocation
+                Geolocation = new()
                 {
                     Latitude = 10,
                     Longitude = 10
@@ -135,7 +135,7 @@ namespace Microsoft.Playwright.Tests
             var messages = new List<string>();
             Page.Console += (_, e) => messages.Add(e.Text);
 
-            await Context.SetGeolocationAsync(new Geolocation
+            await Context.SetGeolocationAsync(new()
             {
                 Longitude = 0,
                 Latitude = 0
@@ -150,7 +150,7 @@ namespace Microsoft.Playwright.Tests
 
             await Page.RunAndWaitForConsoleMessageAsync(async () =>
             {
-                await Context.SetGeolocationAsync(new Geolocation { Latitude = 0, Longitude = 10 });
+                await Context.SetGeolocationAsync(new() { Latitude = 0, Longitude = 10 });
             }, new()
             {
                 Predicate = e => e.Text.Contains("lat=0 lng=10")
@@ -161,14 +161,14 @@ namespace Microsoft.Playwright.Tests
                 {
                     Predicate = e => e.Text.Contains("lat=20 lng=30")
                 }),
-                Context.SetGeolocationAsync(new Geolocation { Latitude = 20, Longitude = 30 }));
+                Context.SetGeolocationAsync(new() { Latitude = 20, Longitude = 30 }));
 
             await TaskUtils.WhenAll(
                 Page.WaitForConsoleMessageAsync(new()
                 {
                     Predicate = e => e.Text.Contains("lat=40 lng=50")
                 }),
-                Context.SetGeolocationAsync(new Geolocation { Latitude = 40, Longitude = 50 }));
+                Context.SetGeolocationAsync(new() { Latitude = 40, Longitude = 50 }));
 
             string allMessages = string.Join("|", messages);
             StringAssert.Contains("lat=0 lng=10", allMessages);
@@ -181,7 +181,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldUseContextOptionsForPopup()
         {
             await Context.GrantPermissionsAsync(new[] { "geolocation" });
-            await Context.SetGeolocationAsync(new Geolocation
+            await Context.SetGeolocationAsync(new()
             {
                 Longitude = 10,
                 Latitude = 10,

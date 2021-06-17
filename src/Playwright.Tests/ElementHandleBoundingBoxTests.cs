@@ -76,7 +76,7 @@ namespace Microsoft.Playwright.Tests
         {
             var context = await Browser.NewContextAsync(new()
             {
-                ViewportSize = new ViewportSize
+                ViewportSize = new()
                 {
                     Height = 400,
                     Width = 400,

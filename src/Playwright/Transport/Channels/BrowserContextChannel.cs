@@ -45,43 +45,29 @@ namespace Microsoft.Playwright.Transport.Channels
                 case "bindingCall":
                     BindingCall?.Invoke(
                         this,
-                        new BindingCallEventArgs
-                        {
-                            BidingCall = serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Connection.GetDefaultJsonSerializerOptions()).Object,
-                        });
+                        new() { BidingCall = serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
                     break;
                 case "route":
+                    var route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Connection.GetDefaultJsonSerializerOptions()).Object;
+                    var request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.GetDefaultJsonSerializerOptions()).Object;
                     Route?.Invoke(
                         this,
-                        new RouteEventArgs
-                        {
-                            Route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Connection.GetDefaultJsonSerializerOptions()).Object,
-                            Request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.GetDefaultJsonSerializerOptions()).Object,
-                        });
+                        new() { Route = route, Request = request });
                     break;
                 case "page":
                     Page?.Invoke(
                         this,
-                        new BrowserContextPageEventArgs
-                        {
-                            PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.GetDefaultJsonSerializerOptions()),
-                        });
+                        new() { PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.GetDefaultJsonSerializerOptions()) });
                     break;
                 case "crBackgroundPage":
                     BackgroundPage?.Invoke(
                         this,
-                        new BrowserContextPageEventArgs
-                        {
-                            PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.GetDefaultJsonSerializerOptions()),
-                        });
+                        new() { PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.GetDefaultJsonSerializerOptions()) });
                     break;
                 case "crServiceWorker":
                     ServiceWorker?.Invoke(
                         this,
-                        new WorkerChannelEventArgs
-                        {
-                            WorkerChannel = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Connection.GetDefaultJsonSerializerOptions()),
-                        });
+                        new() { WorkerChannel = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Connection.GetDefaultJsonSerializerOptions()) });
                     break;
                 case "request":
                     Request?.Invoke(this, serverParams?.ToObject<BrowserContextChannelRequestEventArgs>(Connection.GetDefaultJsonSerializerOptions()));

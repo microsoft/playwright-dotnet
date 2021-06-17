@@ -154,7 +154,7 @@ namespace Microsoft.Playwright.Tests
         {
             var (tmp, context, page) = await LaunchAsync(new()
             {
-                ViewportSize = new ViewportSize
+                ViewportSize = new()
                 {
                     Width = 456,
                     Height = 789
@@ -253,7 +253,7 @@ namespace Microsoft.Playwright.Tests
         {
             var (tmp, context, page) = await LaunchAsync(new()
             {
-                HttpCredentials = new HttpCredentials
+                HttpCredentials = new()
                 {
                     Username = "user",
                     Password = "pass",

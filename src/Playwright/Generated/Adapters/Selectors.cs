@@ -43,7 +43,7 @@ namespace Microsoft.Playwright.Core
     {
         public Task RegisterAsync(string name, SelectorsRegisterOptions? options = default)
         {
-            options ??= new SelectorsRegisterOptions();
+            options ??= new();
             return RegisterAsync(name, script: options.Script, path: options.Path, contentScript: options.ContentScript);
         }
     }
