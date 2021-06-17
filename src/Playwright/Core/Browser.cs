@@ -125,7 +125,7 @@ namespace Microsoft.Playwright.Core
             return page;
         }
 
-        public ValueTask DisposeAsync() => CloseAsync();
+        public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
 
         internal static Dictionary<string, object> GetVideoArgs(string recordVideoDir, RecordVideoSize recordVideoSize)
         {
