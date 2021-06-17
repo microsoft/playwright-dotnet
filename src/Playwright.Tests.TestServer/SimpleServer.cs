@@ -281,11 +281,11 @@ namespace Microsoft.Playwright.Tests.TestServer
                 if (count >= MaxMessageSize)
                 {
                     string closeMessage = string.Format("Maximum message size: {0} bytes.", MaxMessageSize);
-                    await webSocket.CloseAsync(WebSocketCloseStatus.MessageTooBig, closeMessage, CancellationToken.None);
+                    await webSocket.CloseAsync(WebSocketCloseStatus.MessageTooBig, closeMessage, token);
                     return new();
                 }
 
-                result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer, count, MaxMessageSize - count), CancellationToken.None);
+                result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer, count, MaxMessageSize - count), token);
                 count += result.Count;
 
             }
