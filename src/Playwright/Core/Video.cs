@@ -15,8 +15,8 @@ namespace Microsoft.Playwright.Core
         {
             _page = page;
 
-            page.Close += (_, __) => _artifactTcs.TrySetCanceled();
-            page.Crash += (_, __) => _artifactTcs.TrySetCanceled();
+            page.Close += (_, _) => _artifactTcs.TrySetCanceled();
+            page.Crash += (_, _) => _artifactTcs.TrySetCanceled();
         }
 
         public async Task DeleteAsync()

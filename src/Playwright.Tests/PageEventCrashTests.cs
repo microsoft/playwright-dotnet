@@ -63,7 +63,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<div>This page should crash</div>");
 
             var crashEvent = new TaskCompletionSource<bool>();
-            Page.Crash += (_, dialog) => crashEvent.TrySetResult(true);
+            Page.Crash += (_, _) => crashEvent.TrySetResult(true);
 
             await CrashAsync(Page);
             await crashEvent.Task;

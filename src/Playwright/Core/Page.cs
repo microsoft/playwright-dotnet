@@ -96,10 +96,10 @@ namespace Microsoft.Playwright.Core
                 }
             };
             _channel.Console += (_, e) => Console?.Invoke(this, e);
-            _channel.DOMContentLoaded += (_, e) => DOMContentLoaded?.Invoke(this, this);
+            _channel.DOMContentLoaded += (_, _) => DOMContentLoaded?.Invoke(this, this);
             _channel.Download += (_, e) => Download?.Invoke(this, new Download(this, e.Url, e.SuggestedFilename, e.Artifact.Object));
             _channel.PageError += (_, e) => PageError?.Invoke(this, e.ToString());
-            _channel.Load += (_, e) => Load?.Invoke(this, this);
+            _channel.Load += (_, _) => Load?.Invoke(this, this);
             _channel.Video += (_, e) => ForceVideo().ArtifactReady(e.Artifact);
 
             _channel.FileChooser += (_, e) => _fileChooserEventHandler?.Invoke(this, new FileChooser(this, e.Element.Object, e.IsMultiple));
