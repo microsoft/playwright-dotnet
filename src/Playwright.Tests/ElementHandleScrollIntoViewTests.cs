@@ -66,7 +66,7 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should wait for zero-sized element to become visible")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldWaitForZeroSiedElementToBecomeVisible()
+        public async Task ShouldWaitForZeroSizedElementToBecomeVisible()
         {
             await Page.SetContentAsync("<div style=\"height:0\">Hello</div>");
             await TestWaitingAsync(Page, "div => div.style.height = '100px'");

@@ -249,7 +249,7 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support httpCredentials option")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldRupportHttpCredentialsOption()
+        public async Task ShouldSupportHttpCredentialsOption()
         {
             var (tmp, context, page) = await LaunchAsync(new()
             {

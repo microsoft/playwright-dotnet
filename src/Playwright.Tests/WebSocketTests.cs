@@ -127,7 +127,6 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldEmitError()
         {
             var socketErrorTcs = new TaskCompletionSource<string>();
-            var log = new List<IWebSocketFrame>();
 
             Page.WebSocket += (_, e) =>
             {

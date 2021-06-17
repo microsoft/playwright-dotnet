@@ -13,7 +13,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.EmptyPage);
             var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
-            var frame2 = await FrameUtils.AttachFrameAsync(Page, "frame2", Server.EmptyPage);
+            await FrameUtils.AttachFrameAsync(Page, "frame2", Server.EmptyPage);
             var frame3 = await FrameUtils.AttachFrameAsync(Page, "frame3", Server.EmptyPage);
 
             var frame1handle1 = await Page.QuerySelectorAsync("#frame1");
