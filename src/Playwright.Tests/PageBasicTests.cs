@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -9,10 +8,6 @@ namespace Microsoft.Playwright.Tests
     [Parallelizable(ParallelScope.Self)]
     public class PageBasicTests : PageTestEx
     {
-        public PageBasicTests()
-        {
-        }
-
         [PlaywrightTest("page-basic.spec.ts", "should reject all promises when page is closed")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectAllPromisesWhenPageIsClosed()

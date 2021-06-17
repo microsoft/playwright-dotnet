@@ -9,7 +9,7 @@ namespace Microsoft.Playwright.Tests
     {
         [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should clear cookies")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldClearCookes()
+        public async Task ShouldClearCookies()
         {
             await Page.GotoAsync(Server.EmptyPage);
             await Context.AddCookiesAsync(new[]

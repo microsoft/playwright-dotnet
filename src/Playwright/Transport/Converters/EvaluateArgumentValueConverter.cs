@@ -16,10 +16,6 @@ namespace Microsoft.Playwright.Transport.Converters
     {
         private readonly List<object> _visited = new List<object>();
 
-        public EvaluateArgumentValueConverter()
-        {
-        }
-
         public List<EvaluateArgumentGuidElement> Handles { get; } = new List<EvaluateArgumentGuidElement>();
 
         public override bool CanConvert(Type type) => true;
@@ -189,9 +185,9 @@ namespace Microsoft.Playwright.Transport.Converters
                 return stringValue.ToObject(t);
             }
 
-            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("n", out var numbericValue))
+            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("n", out var numericValue))
             {
-                return numbericValue.ToObject(t);
+                return numericValue.ToObject(t);
             }
 
             if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("o", out var obj))
@@ -308,28 +304,27 @@ namespace Microsoft.Playwright.Transport.Converters
         {
             if (element.ValueKind == JsonValueKind.Object)
             {
-                if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("d", out var _))
+                if (element.TryGetProperty("d", out _))
                 {
                     return typeof(DateTime);
                 }
 
-                if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("b", out var _))
+                if (element.TryGetProperty("b", out _))
                 {
                     return typeof(bool);
                 }
 
-                if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("s", out var _))
+                if (element.TryGetProperty("s", out _))
                 {
                     return typeof(string);
                 }
 
-                if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("n", out var _))
+                if (element.TryGetProperty("n", out _))
                 {
                     return typeof(decimal);
                 }
 
                 if (
-                    element.ValueKind == JsonValueKind.Object &&
                     element.TryGetProperty("v", out var number) &&
                     (number.ToString() == "Infinity" || number.ToString() == "-Infinity" || number.ToString() == "-0" || number.ToString() == "NaN"))
                 {

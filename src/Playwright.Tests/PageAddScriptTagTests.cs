@@ -110,7 +110,7 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-add-script-tag.spec.ts", "should throw a nice error when the request fails")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldThrowANiceErrorWhenTheEequestFails()
+        public async Task ShouldThrowANiceErrorWhenTheRequestFails()
         {
             await Page.GotoAsync(Server.EmptyPage);
             string url = Server.Prefix + "/this_does_not_exists.js";

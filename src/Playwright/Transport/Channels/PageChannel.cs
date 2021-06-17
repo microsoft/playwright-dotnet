@@ -251,7 +251,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
             if ((await Connection.SendMessageToServerAsync(Guid, "accessibilitySnapshot", args).ConfigureAwait(false)).Value.TryGetProperty("rootAXNode", out var jsonElement))
             {
-                var options = Connection.GetDefaultJsonSerializerOptions();
+                Connection.GetDefaultJsonSerializerOptions();
                 return jsonElement;
             }
 

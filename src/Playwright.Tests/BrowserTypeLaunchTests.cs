@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should throw if port option is passed for persistent context")]
         [Test, Ignore("We don't need this test")]
-        public void ShouldThrowIfPortOptionIsPassedForPersistenContext()
+        public void ShouldThrowIfPortOptionIsPassedForPersistentContext()
         {
         }
 
