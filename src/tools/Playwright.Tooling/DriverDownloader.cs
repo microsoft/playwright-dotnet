@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -40,21 +39,6 @@ namespace Playwright.Tooling
                 DriverVersion = driverVersion,
             }.ExecuteAsync();
         }
-
-        private static Process GetProcess(string driverExecutablePath)
-            => new()
-            {
-                StartInfo =
-                {
-                    FileName = driverExecutablePath,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardInput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true,
-                    Arguments = "print-api-json",
-                },
-            };
 
         private static async Task UpdateBrowserVersionsAsync(string basePath, string driverVersion)
         {

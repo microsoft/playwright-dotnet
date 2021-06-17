@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -9,8 +8,6 @@ namespace Microsoft.Playwright.Tests
         public static string BrowserName => NUnit.PlaywrightTest.BrowserName;
 
         public const int DefaultTestTimeout = 30_000;
-        public const int DefaultTimeout = 10_000;
-        public const int DefaultTaskTimeout = 5_000;
 
         public const string AboutBlank = "about:blank";
 

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Microsoft.Playwright
 {
@@ -578,46 +577,6 @@ namespace Microsoft.Playwright
         };
 
         /// <summary>
-        /// Quotes the specified <see cref="string"/>.
-        /// </summary>
-        /// <param name="value">The string to quote.</param>
-        /// <returns>A quoted string.</returns>
-        public static string Quote(this string value)
-        {
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            if (!IsQuoted(value))
-            {
-                value = string.Concat("\"", value, "\"");
-            }
-
-            return value;
-        }
-
-        /// <summary>
-        /// Unquote the specified <see cref="string"/>.
-        /// </summary>
-        /// <param name="value">The string to unquote.</param>
-        /// <returns>An unquoted string.</returns>
-        public static string UnQuote(this string value)
-        {
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            if (IsQuoted(value))
-            {
-                value = value.Trim('"');
-            }
-
-            return value;
-        }
-
-        /// <summary>
         /// Parse the query string.
         /// </summary>
         /// <param name="query">Query string.</param>
@@ -729,59 +688,7 @@ namespace Microsoft.Playwright
             return string.Concat(tokens.ToArray());
         }
 
-        /// <summary>
-        /// Converts a string to a byte array. It's a shortcut for Convert.FromBase64String.
-        /// </summary>
-        /// <param name="value">Value to parse.</param>
-        /// <returns>Value as an array of bytes.</returns>
-        public static byte[] AsBinary(this string value) => Convert.FromBase64String(value);
-
-        internal static string GetContentType(this string path)
-        {
-            const string defaultContentType = "application/octet-stream";
-            string extension = GetExtension(path);
-            if (extension == null)
-            {
-                return defaultContentType;
-            }
-
-            return _mappings.TryGetValue(extension, out string contentType) ? contentType : defaultContentType;
-        }
-
-        internal static bool UrlMatches(this string url, string glob) => new Regex(GlobToRegex(glob)).Match(url).Success;
-
         internal static string MimeType(this string file)
             => _mappings.TryGetValue(new FileInfo(file).Extension, out string mime) ? mime : "application/octet-stream";
-
-        internal static FilePayload ToFilePayload(this string file)
-        {
-            var fileInfo = new FileInfo(file);
-
-            return new FilePayload
-            {
-                Name = fileInfo.Name,
-                Buffer = File.ReadAllBytes(file),
-                MimeType = file.MimeType(),
-            };
-        }
-
-        private static bool IsQuoted(this string value)
-            => value.StartsWith("\"", StringComparison.OrdinalIgnoreCase) && value.EndsWith("\"", StringComparison.OrdinalIgnoreCase);
-
-        private static string GetExtension(string path)
-        {
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                return null;
-            }
-
-            int index = path.LastIndexOf('.');
-            if (index < 0)
-            {
-                return null;
-            }
-
-            return path.Substring(index);
-        }
     }
 }

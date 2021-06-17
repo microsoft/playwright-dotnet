@@ -24,8 +24,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -48,7 +46,5 @@ namespace Microsoft.Playwright.Tests
                 return t;
             }
         }
-
-        internal static void DebugLog(string text) => TestContext.Progress.WriteLine(text);
     }
 }
