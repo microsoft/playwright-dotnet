@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
-using Microsoft.Playwright.Transport;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
