@@ -53,7 +53,7 @@ namespace Microsoft.Playwright
         Task ExposeBindingAsync(string name, Action<BindingSource> callback);
 
         /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
-        Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback);
+        Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback, BrowserContextExposeBindingOptions options = default);
 
         /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
         Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback);

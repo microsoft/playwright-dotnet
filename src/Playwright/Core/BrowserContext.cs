@@ -161,8 +161,8 @@ namespace Microsoft.Playwright.Core
         public Task ExposeBindingAsync(string name, Action<BindingSource> callback)
             => ExposeBindingAsync(name, (Delegate)callback);
 
-        public Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback)
-            => ExposeBindingAsync(name, (Delegate)callback);
+        public Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback, BrowserContextExposeBindingOptions options = default)
+            => ExposeBindingAsync(name, (Delegate)callback, handle: options?.Handle ?? false);
 
         public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback)
             => ExposeBindingAsync(name, (Delegate)callback);

@@ -129,5 +129,47 @@ namespace Microsoft.Playwright.Tests
             await page.ClickAsync("div");
             Assert.AreEqual("Click me", await result.Task);
         }
+
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task ExposeBindingHandleShouldNotBeNullWhenRequested()
+        {
+            var result = new TaskCompletionSource<string>();
+            var page = await Context.NewPageAsync();
+            System.Action<BindingSource, IJSHandle> act = async (_, t) =>
+            {
+                Assert.NotNull(t);
+                result.TrySetResult(await t.AsElement().TextContentAsync());
+            };
+
+            await Context.ExposeBindingAsync("clicked", act, new() { Handle = true });
+
+            await page.SetContentAsync("<script>\n" +
+             "  document.addEventListener('click', event => window.clicked(event.target));\n" +
+             "</script>\n" +
+             "<div>Click me</div>\n" +
+             "<div>Or click me</div>\n");
+
+            await page.ClickAsync("div");
+            Assert.AreEqual("Click me", await result.Task);
+        }
+
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task ExposeBindingHandleShouldBeNullWhenNotRequested()
+        {
+            var result = new TaskCompletionSource<bool>();
+            var page = await Context.NewPageAsync();
+            System.Action<BindingSource, IJSHandle> act = (_, t) => result.SetResult(t == null);
+
+            await Context.ExposeBindingAsync("clicked", act);
+
+            await page.SetContentAsync("<script>\n" +
+             "  document.addEventListener('click', event => window.clicked(event.target));\n" +
+             "</script>\n" +
+             "<div>Click me</div>\n" +
+             "<div>Or click me</div>\n");
+
+            await page.ClickAsync("div");
+            Assert.IsTrue(await result.Task);
+        }
     }
 }
