@@ -19,9 +19,9 @@ namespace Microsoft.Playwright.Tests
             return await handle.ContentFrameAsync();
         }
 
-        public static async Task DetachFrameAsync(IPage page, string frameId)
+        public static Task DetachFrameAsync(IPage page, string frameId)
         {
-            await page.EvaluateAsync(@"function detachFrame(frameId) {
+            return page.EvaluateAsync(@"function detachFrame(frameId) {
               const frame = document.getElementById(frameId);
               frame.remove();
             }", frameId);

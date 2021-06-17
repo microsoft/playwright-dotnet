@@ -45,18 +45,18 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-wait-for-request.spec.ts", "should respect timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldRespectTimeout()
+        public Task ShouldRespectTimeout()
         {
-            await PlaywrightAssert.ThrowsAsync<TimeoutException>(
+            return PlaywrightAssert.ThrowsAsync<TimeoutException>(
                 () => Page.WaitForRequestAsync(_ => false, new() { Timeout = 1 }));
         }
 
         [PlaywrightTest("page-wait-for-request.spec.ts", "should respect default timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldRespectDefaultTimeout()
+        public Task ShouldRespectDefaultTimeout()
         {
             Page.SetDefaultTimeout(1);
-            await PlaywrightAssert.ThrowsAsync<TimeoutException>(
+            return PlaywrightAssert.ThrowsAsync<TimeoutException>(
                 () => Page.WaitForRequestAsync(_ => false));
         }
 

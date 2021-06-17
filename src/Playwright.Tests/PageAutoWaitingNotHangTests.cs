@@ -18,11 +18,11 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "calling window.stop async")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task CallingWindowStopAsync()
+        public Task CallingWindowStopAsync()
         {
             Server.SetRoute("/empty.html", _ => Task.CompletedTask);
 
-            await Page.EvaluateAsync($@"(url) => {{
+            return Page.EvaluateAsync($@"(url) => {{
                 window.location.href = url;
                 setTimeout(() => window.stop(), 100);
              }}", Server.EmptyPage);
@@ -30,11 +30,11 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "calling window.stop")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task CallingWindowStop()
+        public Task CallingWindowStop()
         {
             Server.SetRoute("/empty.html", _ => Task.CompletedTask);
 
-            await Page.EvaluateAsync($@"(url) => {{
+            return Page.EvaluateAsync($@"(url) => {{
                 window.location.href = url;
                 window.stop();
              }}", Server.EmptyPage);
@@ -50,11 +50,11 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "assigning location to about:blank after non-about:blank")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task AssigningLocationToAboutBlankAfterNonAboutBlank()
+        public Task AssigningLocationToAboutBlankAfterNonAboutBlank()
         {
             Server.SetRoute("/empty.html", _ => Task.CompletedTask);
 
-            await Page.EvaluateAsync($@"(url) => {{
+            return Page.EvaluateAsync($@"(url) => {{
                 window.location.href = '{Server.EmptyPage}';
                 window.location.href = 'about:blank';
              }}", Server.EmptyPage);

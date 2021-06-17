@@ -193,12 +193,12 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-basic.spec.ts", "should fire load when expected")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldFireLoadWhenExpected()
+        public Task ShouldFireLoadWhenExpected()
         {
             var loadEvent = new TaskCompletionSource<bool>();
             Page.Load += (_, _) => loadEvent.TrySetResult(true);
 
-            await TaskUtils.WhenAll(
+            return TaskUtils.WhenAll(
                 loadEvent.Task,
                 Page.GotoAsync("about:blank")
             );

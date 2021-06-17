@@ -9,7 +9,7 @@ namespace Microsoft.Playwright.Tests
     {
         [PlaywrightTest("page-dialog.spec.ts", "should fire")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldFire()
+        public Task ShouldFire()
         {
             Page.Dialog += async (_, e) =>
             {
@@ -20,7 +20,7 @@ namespace Microsoft.Playwright.Tests
                 await e.AcceptAsync();
             };
 
-            await Page.EvaluateAsync("alert('yo');");
+            return Page.EvaluateAsync("alert('yo');");
         }
 
         [PlaywrightTest("page-dialog.spec.ts", "should allow accepting prompts")]

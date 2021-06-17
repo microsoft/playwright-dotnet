@@ -52,13 +52,13 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-set-content.spec.ts", "should respect timeout")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldRespectTimeout()
+        public Task ShouldRespectTimeout()
         {
             string imgPath = "/img.png";
             // stall for image
             Server.SetRoute(imgPath, _ => Task.Delay(Timeout.Infinite));
-            await PlaywrightAssert.ThrowsAsync<TimeoutException>(() =>
-                Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new() { Timeout = 1 })
+            return PlaywrightAssert.ThrowsAsync<TimeoutException>(() =>
+                 Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new() { Timeout = 1 })
             );
         }
 

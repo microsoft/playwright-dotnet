@@ -9,10 +9,10 @@ namespace Microsoft.Playwright.Tests
         public SimpleServer Server { get; internal set; }
         public SimpleServer HttpsServer { get; internal set; }
 
-        public static async Task<HttpService> Register(WorkerAwareTest test)
+        public static Task<HttpService> Register(WorkerAwareTest test)
         {
             var workerIndex = test.WorkerIndex;
-            return await test.RegisterService("Http", async () =>
+            return test.RegisterService("Http", async () =>
             {
                 var http = new HttpService
                 {
@@ -31,9 +31,9 @@ namespace Microsoft.Playwright.Tests
             return Task.CompletedTask;
         }
 
-        public async Task DisposeAsync()
+        public Task DisposeAsync()
         {
-            await Task.WhenAll(Server.StopAsync(), HttpsServer.StopAsync());
+            return Task.WhenAll(Server.StopAsync(), HttpsServer.StopAsync());
         }
     }
 }
