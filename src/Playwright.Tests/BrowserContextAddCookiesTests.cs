@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Tests
                 }
             });
 
-            var page = await Context.NewPageAsync();
+            await Context.NewPageAsync();
             await Page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual("cookie=value", cookie);
         }
@@ -199,9 +199,9 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateCookiesBetweenLaunches()
         {
-            await using (var browser1 = await Playwright[TestConstants.BrowserName].LaunchAsync())
+            await using (await Playwright[TestConstants.BrowserName].LaunchAsync())
             {
-                var context1 = await Browser.NewContextAsync();
+                await Browser.NewContextAsync();
 
                 await Context.AddCookiesAsync(new[]
                 {
@@ -215,7 +215,7 @@ namespace Microsoft.Playwright.Tests
                 });
             }
 
-            await using (var browser2 = await Playwright[TestConstants.BrowserName].LaunchAsync())
+            await using (await Playwright[TestConstants.BrowserName].LaunchAsync())
             {
                 var context1 = await Browser.NewContextAsync();
                 var cookies = await context1.CookiesAsync();
