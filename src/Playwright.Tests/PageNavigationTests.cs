@@ -10,7 +10,7 @@ namespace Microsoft.Playwright.Tests
     {
         [PlaywrightTest("page-navigation.spec.ts", "should work with _blank target")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldWorkWithBblankTarget()
+        public async Task ShouldWorkWithBlankTarget()
         {
             Server.SetRoute("/empty.html", ctx =>
             ctx.Response.WriteAsync($"<a href=\"{Server.EmptyPage}\" target=\"_blank\">Click me</a>"));

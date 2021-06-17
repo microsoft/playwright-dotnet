@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-wait-for-load-state.ts", "should throw for bad state")]
         [Test, Ignore("We don't need this test")]
-        public void ShouldTthrowForBadState()
+        public void ShouldThrowForBadState()
         {
         }
 

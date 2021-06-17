@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("page-click-timeout-2.spec.ts", "should timeout waiting for visbility:hidden to be gone")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldTimeoutWaitingForVisbilityHiddenToBeGone()
+        public async Task ShouldTimeoutWaitingForVisibilityHiddenToBeGone()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "b => b.style.visibility = 'hidden'");

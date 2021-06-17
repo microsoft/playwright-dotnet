@@ -152,10 +152,10 @@ namespace Playwright.Tooling
                     }
                 }
 
-                foreach (object memberInPLaywrightSharp in membersQueue)
+                foreach (object memberInPlaywrightSharp in membersQueue)
                 {
                     report.AppendLine("<li style='color: blue'>");
-                    report.AppendLine($"{memberInPLaywrightSharp} FOUND IN PLAYWRIGHT SHARP");
+                    report.AppendLine($"{memberInPlaywrightSharp} FOUND IN PLAYWRIGHT SHARP");
                     report.AppendLine("</li>");
                 }
 
