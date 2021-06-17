@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
         {
             var (tmp, context, page) = await LaunchAsync(new()
             {
-                ViewportSize = new ViewportSize
+                ViewportSize = new()
                 {
                     Width = 320,
                     Height = 480,
