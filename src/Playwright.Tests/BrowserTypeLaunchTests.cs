@@ -43,10 +43,10 @@ namespace Microsoft.Playwright.Tests
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should throw if page argument is passed")]
         [Test, SkipBrowserAndPlatform(skipFirefox: true)]
-        public async Task ShouldThrowIfPageArgumentIsPassed()
+        public Task ShouldThrowIfPageArgumentIsPassed()
         {
             var args = new[] { Server.EmptyPage };
-            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new() { Args = args }));
+            return PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new() { Args = args }));
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should reject if launched browser fails immediately")]

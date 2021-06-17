@@ -153,10 +153,10 @@ namespace Microsoft.Playwright.Tests
         }
 
         [TearDown]
-        public async Task DisposeAsync()
+        public Task DisposeAsync()
         {
             _tmp?.Dispose();
-            await _browser.CloseAsync();
+            return _browser.CloseAsync();
         }
     }
 }
