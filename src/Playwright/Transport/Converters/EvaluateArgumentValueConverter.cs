@@ -308,28 +308,27 @@ namespace Microsoft.Playwright.Transport.Converters
         {
             if (element.ValueKind == JsonValueKind.Object)
             {
-                if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("d", out var _))
+                if (element.TryGetProperty("d", out _))
                 {
                     return typeof(DateTime);
                 }
 
-                if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("b", out var _))
+                if (element.TryGetProperty("b", out _))
                 {
                     return typeof(bool);
                 }
 
-                if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("s", out var _))
+                if (element.TryGetProperty("s", out _))
                 {
                     return typeof(string);
                 }
 
-                if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("n", out var _))
+                if (element.TryGetProperty("n", out _))
                 {
                     return typeof(decimal);
                 }
 
                 if (
-                    element.ValueKind == JsonValueKind.Object &&
                     element.TryGetProperty("v", out var number) &&
                     (number.ToString() == "Infinity" || number.ToString() == "-Infinity" || number.ToString() == "-0" || number.ToString() == "NaN"))
                 {
