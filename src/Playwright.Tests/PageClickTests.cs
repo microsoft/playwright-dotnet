@@ -627,7 +627,7 @@ namespace Microsoft.Playwright.Tests
         public async Task TrialRunShouldWorkWithShortTimeout()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
-            var button = await Page.QuerySelectorAsync("button");
+            await Page.QuerySelectorAsync("button");
             await Page.EvalOnSelectorAsync("button", @"button => button.disabled = true");
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.ClickAsync("button", new() { Trial = true, Timeout = 500 }));
             StringAssert.Contains("click action (trial run)", exception.Message);

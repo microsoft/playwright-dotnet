@@ -64,8 +64,6 @@ namespace Microsoft.Playwright.Tests
             Assert.Null(await failedRequests[0].ResponseAsync());
             Assert.AreEqual("stylesheet", failedRequests[0].ResourceType);
 
-            string error = string.Empty;
-
             //We just need to test that we had a failure.
             Assert.NotNull(failedRequests[0].Failure);
             Assert.NotNull(failedRequests[0].Frame);
