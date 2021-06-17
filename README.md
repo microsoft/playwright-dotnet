@@ -34,4 +34,9 @@ class Program
 }
 ```
 
-> More comfortable in another programming language? [Playwright](https://playwright.dev) is also available in [TypeScript](https://playwright.dev/docs/intro), [Python](https://playwright.dev/python/docs/intro) and [Java](https://playwright.dev/java/docs/intro).
+## Other languages
+
+More comfortable in another programming language? [Playwright](https://playwright.dev) is also available in
+- [TypeScript](https://playwright.dev/docs/intro),
+- [Python](https://playwright.dev/python/docs/intro)
+- [Java](https://playwright.dev/java/docs/intro).
