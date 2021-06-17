@@ -189,9 +189,9 @@ namespace Microsoft.Playwright.Transport.Converters
                 return stringValue.ToObject(t);
             }
 
-            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("n", out var numbericValue))
+            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("n", out var numericValue))
             {
-                return numbericValue.ToObject(t);
+                return numericValue.ToObject(t);
             }
 
             if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("o", out var obj))
