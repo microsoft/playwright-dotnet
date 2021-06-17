@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -12,10 +11,6 @@ namespace Microsoft.Playwright.Tests
     [Parallelizable(ParallelScope.Self)]
     public class RequestFulfillTests : PageTestEx
     {
-        public RequestFulfillTests()
-        {
-        }
-
         [PlaywrightTest("page-request-fulfill.spec.ts", "should work")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()

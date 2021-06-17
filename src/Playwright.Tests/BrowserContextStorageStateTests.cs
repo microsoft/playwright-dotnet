@@ -1,17 +1,11 @@
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
     public sealed class BrowsercontextStorageStateTests : PageTestEx
     {
-        public BrowsercontextStorageStateTests()
-        {
-        }
-
         [PlaywrightTest("browsercontext-storage-state.spec.ts", "should capture local storage")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCaptureLocalStorage()
