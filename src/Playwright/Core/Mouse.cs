@@ -19,10 +19,10 @@ namespace Microsoft.Playwright.Core
             => _channel.MouseClickAsync(x, y, delay: options?.Delay, button: options?.Button, 2);
 
         public Task DownAsync(MouseDownOptions options = default)
-            => _channel.MouseDownAsync(button: options.Button, clickCount: options.ClickCount);
+            => _channel.MouseDownAsync(button: options?.Button, clickCount: options?.ClickCount);
 
         public Task MoveAsync(float x, float y, MouseMoveOptions options = default)
-            => _channel.MouseMoveAsync(x, y, steps: options.Steps);
+            => _channel.MouseMoveAsync(x, y, steps: options?.Steps);
 
         public Task UpAsync(MouseUpOptions options = default)
             => _channel.MouseUpAsync(button: options?.Button, clickCount: options?.ClickCount);

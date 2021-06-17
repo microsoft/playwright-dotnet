@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Core
                 timeout: options?.Timeout).ConfigureAwait(false))?.Object;
 
         public Task WaitForElementStateAsync(ElementState state, ElementHandleWaitForElementStateOptions options = default)
-            => _channel.WaitForElementStateAsync(state, timeout: options.Timeout);
+            => _channel.WaitForElementStateAsync(state, timeout: options?.Timeout);
 
         public Task PressAsync(string key, ElementHandlePressOptions options = default)
             => _channel.PressAsync(
@@ -67,7 +67,7 @@ namespace Microsoft.Playwright.Core
                 noWaitAfter: options?.NoWaitAfter);
 
         public Task TypeAsync(string text, ElementHandleTypeOptions options = default)
-            => _channel.TypeAsync(text, delay: options?.Delay, noWaitAfter: options?.NoWaitAfter, timeout: options?.Timeout);
+            => _channel.TypeAsync(text, delay: options?.Delay, timeout: options?.Timeout, noWaitAfter: options?.NoWaitAfter);
 
         public async Task<byte[]> ScreenshotAsync(ElementHandleScreenshotOptions options = default)
         {
@@ -143,7 +143,7 @@ namespace Microsoft.Playwright.Core
             => SetInputFilesAsync(new[] { files }, options);
 
         public Task SetInputFilesAsync(IEnumerable<string> files, ElementHandleSetInputFilesOptions options = default)
-            => SetInputFilesAsync(files.Select(x => new FilePayload() { Name = x }), options);
+            => SetInputFilesAsync(files.Select(f => f.ToFilePayload()), options);
 
         public Task SetInputFilesAsync(FilePayload files, ElementHandleSetInputFilesOptions options = default)
             => SetInputFilesAsync(new[] { files }, options);
