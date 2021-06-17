@@ -2,9 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.NUnit;
-using Microsoft.Playwright.Tests;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -12,10 +9,6 @@ namespace Microsoft.Playwright.Tests
     [Parallelizable(ParallelScope.Self)]
     public class GlobTests : PageTestEx
     {
-        public GlobTests()
-        {
-        }
-
         [PlaywrightTest("interception.spec.ts", "should work with glob")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public void ShouldWorkWithGlob()

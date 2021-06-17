@@ -1,6 +1,5 @@
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -8,10 +7,6 @@ namespace Microsoft.Playwright.Tests
     [Parallelizable(ParallelScope.Self)]
     public class BrowserContextCredentialsTests : BrowserTestEx
     {
-        public BrowserContextCredentialsTests()
-        {
-        }
-
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should fail without credentials")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWithoutCredentials()

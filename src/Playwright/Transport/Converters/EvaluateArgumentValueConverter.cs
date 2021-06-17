@@ -16,10 +16,6 @@ namespace Microsoft.Playwright.Transport.Converters
     {
         private readonly List<object> _visited = new List<object>();
 
-        public EvaluateArgumentValueConverter()
-        {
-        }
-
         public List<EvaluateArgumentGuidElement> Handles { get; } = new List<EvaluateArgumentGuidElement>();
 
         public override bool CanConvert(Type type) => true;
