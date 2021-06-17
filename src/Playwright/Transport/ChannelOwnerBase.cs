@@ -12,7 +12,7 @@ namespace Microsoft.Playwright.Transport
     internal class ChannelOwnerBase : IChannelOwner
     {
         private readonly Connection _connection;
-        private readonly ConcurrentDictionary<string, IChannelOwner> _objects = new ConcurrentDictionary<string, IChannelOwner>();
+        private readonly ConcurrentDictionary<string, IChannelOwner> _objects = new();
 
         internal ChannelOwnerBase(IChannelOwner parent, string guid) : this(parent, null, guid)
         {

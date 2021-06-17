@@ -9,7 +9,7 @@ namespace Microsoft.Playwright.Helpers
     internal static class EnumHelper
     {
         private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Enum, string>> EnumToStringCache
-            = new ConcurrentDictionary<Type, IReadOnlyDictionary<Enum, string>>();
+            = new();
 
         public static string ToValueString<TEnum>(this TEnum value)
             where TEnum : Enum

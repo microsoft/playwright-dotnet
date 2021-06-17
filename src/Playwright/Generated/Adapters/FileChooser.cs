@@ -43,25 +43,25 @@ namespace Microsoft.Playwright.Core
     {
         public Task SetFilesAsync(string files, FileChooserSetFilesOptions? options = default)
         {
-            options ??= new FileChooserSetFilesOptions();
+            options ??= new();
             return SetFilesAsync(files, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
         public Task SetFilesAsync(IEnumerable<string> files, FileChooserSetFilesOptions? options = default)
         {
-            options ??= new FileChooserSetFilesOptions();
+            options ??= new();
             return SetFilesAsync(files, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
         public Task SetFilesAsync(FilePayload files, FileChooserSetFilesOptions? options = default)
         {
-            options ??= new FileChooserSetFilesOptions();
+            options ??= new();
             return SetFilesAsync(files, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
 
         public Task SetFilesAsync(IEnumerable<FilePayload> files, FileChooserSetFilesOptions? options = default)
         {
-            options ??= new FileChooserSetFilesOptions();
+            options ??= new();
             return SetFilesAsync(files, noWaitAfter: options.NoWaitAfter, timeout: options.Timeout);
         }
     }

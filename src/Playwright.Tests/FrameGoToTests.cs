@@ -58,9 +58,9 @@ namespace Microsoft.Playwright.Tests
             // Attach three frames.
             var matchingData = new MatchingResponseData[]
             {
-                new MatchingResponseData{ FrameTask =  FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage)},
-                new MatchingResponseData{ FrameTask =  FrameUtils.AttachFrameAsync(Page, "frame2", Server.EmptyPage)},
-                new MatchingResponseData{ FrameTask =  FrameUtils.AttachFrameAsync(Page, "frame3", Server.EmptyPage)}
+                new() { FrameTask =  FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage)},
+                new() { FrameTask =  FrameUtils.AttachFrameAsync(Page, "frame2", Server.EmptyPage)},
+                new() { FrameTask =  FrameUtils.AttachFrameAsync(Page, "frame3", Server.EmptyPage)}
             };
 
             await TaskUtils.WhenAll(matchingData.Select(m => m.FrameTask));
@@ -98,7 +98,7 @@ namespace Microsoft.Playwright.Tests
         class MatchingResponseData
         {
             public Task<IFrame> FrameTask { get; internal set; }
-            public TaskCompletionSource<string> ServerResponseTcs { get; internal set; } = new TaskCompletionSource<string>();
+            public TaskCompletionSource<string> ServerResponseTcs { get; internal set; } = new();
             public Task<IResponse> NavigationTask { get; internal set; }
         }
     }

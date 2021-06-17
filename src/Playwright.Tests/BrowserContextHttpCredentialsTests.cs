@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Tests
             Server.SetAuth("/empty.html", "user", "pass");
             await using var context = await Browser.NewContextAsync(new()
             {
-                HttpCredentials = new HttpCredentials
+                HttpCredentials = new()
                 {
                     Username = "user",
                     Password = "pass"
@@ -52,7 +52,7 @@ namespace Microsoft.Playwright.Tests
             Server.SetAuth("/empty.html", "user", "pass");
             await using var context = await Browser.NewContextAsync(new()
             {
-                HttpCredentials = new HttpCredentials
+                HttpCredentials = new()
                 {
                     Username = "foo",
                     Password = "bar"
@@ -71,7 +71,7 @@ namespace Microsoft.Playwright.Tests
             Server.SetAuth("/playground.html", "user", "pass");
             await using var context = await Browser.NewContextAsync(new()
             {
-                HttpCredentials = new HttpCredentials
+                HttpCredentials = new()
                 {
                     Username = "user",
                     Password = "pass"

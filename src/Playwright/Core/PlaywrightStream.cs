@@ -15,7 +15,7 @@ namespace Microsoft.Playwright.Core
 
         internal PlaywrightStream(IChannelOwner parent, string guid) : base(parent, guid)
         {
-            _channel = new StreamChannel(guid, parent.Connection, this);
+            _channel = new(guid, parent.Connection, this);
         }
 
         ChannelBase IChannelOwner.Channel => _channel;

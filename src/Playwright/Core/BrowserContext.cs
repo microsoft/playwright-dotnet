@@ -26,7 +26,7 @@ namespace Microsoft.Playwright.Core
 
         internal BrowserContext(IChannelOwner parent, string guid, BrowserContextInitializer initializer) : base(parent, guid)
         {
-            Channel = new BrowserContextChannel(guid, parent.Connection, this);
+            Channel = new(guid, parent.Connection, this);
             Channel.Close += Channel_Closed;
             Channel.Page += Channel_OnPage;
             Channel.BindingCall += Channel_BindingCall;
@@ -108,11 +108,11 @@ namespace Microsoft.Playwright.Core
 
         internal BrowserContextChannel Channel { get; }
 
-        internal List<Page> PagesList { get; } = new List<Page>();
+        internal List<Page> PagesList { get; } = new();
 
         internal Page OwnerPage { get; set; }
 
-        internal List<Worker> ServiceWorkersList { get; } = new List<Worker>();
+        internal List<Worker> ServiceWorkersList { get; } = new();
 
         internal bool IsChromium => _initializer.IsChromium;
 
@@ -268,7 +268,7 @@ namespace Microsoft.Playwright.Core
 
             if (playwrightEvent.Name != BrowserContextEvent.Close.Name)
             {
-                waiter.RejectOnEvent<IBrowserContext>(this, BrowserContextEvent.Close.Name, new PlaywrightException("Context closed"));
+                waiter.RejectOnEvent<IBrowserContext>(this, BrowserContextEvent.Close.Name, new("Context closed"));
             }
 
             var result = waiter.WaitForEventAsync(this, playwrightEvent.Name, predicate);
@@ -306,11 +306,11 @@ namespace Microsoft.Playwright.Core
                 }
             }
 
-            _ = route.ContinueAsync(new RouteContinueOptions());
+            _ = route.ContinueAsync(new());
         }
 
         private Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler)
-            => RouteAsync(new RouteSetting()
+            => RouteAsync(new()
             {
                 Regex = urlRegex,
                 Url = urlString,
@@ -331,7 +331,7 @@ namespace Microsoft.Playwright.Core
         }
 
         private Task UnrouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler = null)
-            => UnrouteAsync(new RouteSetting()
+            => UnrouteAsync(new()
             {
                 Function = urlFunc,
                 Url = urlString,

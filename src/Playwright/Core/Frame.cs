@@ -40,11 +40,11 @@ namespace Microsoft.Playwright.Core
     internal partial class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     {
         private readonly FrameChannel _channel;
-        private readonly List<LoadState> _loadStates = new List<LoadState>();
+        private readonly List<LoadState> _loadStates = new();
 
         internal Frame(IChannelOwner parent, string guid, FrameInitializer initializer) : base(parent, guid)
         {
-            _channel = new FrameChannel(guid, parent.Connection, this);
+            _channel = new(guid, parent.Connection, this);
             Url = initializer.Url;
             Name = initializer.Name;
             ParentFrame = initializer.ParentFrame;
@@ -108,7 +108,7 @@ namespace Microsoft.Playwright.Core
 
         public bool IsDetached { get; internal set; }
 
-        internal List<Frame> ChildFramesList { get; } = new List<Frame>();
+        internal List<Frame> ChildFramesList { get; } = new();
 
         public async Task<IElementHandle> FrameElementAsync()
             => (await _channel.FrameElementAsync().ConfigureAwait(false)).Object;
@@ -477,12 +477,12 @@ namespace Microsoft.Playwright.Core
         private Waiter SetupNavigationWaiter(string apiName, float? timeout)
         {
             var waiter = new Waiter(_channel, apiName);
-            waiter.RejectOnEvent<IPage>(Page, PageEvent.Close.Name, new PlaywrightException("Navigation failed because page was closed!"));
-            waiter.RejectOnEvent<IPage>(Page, PageEvent.Crash.Name, new PlaywrightException("Navigation failed because page was crashed!"));
+            waiter.RejectOnEvent<IPage>(Page, PageEvent.Close.Name, new("Navigation failed because page was closed!"));
+            waiter.RejectOnEvent<IPage>(Page, PageEvent.Crash.Name, new("Navigation failed because page was crashed!"));
             waiter.RejectOnEvent<IFrame>(
                 Page,
                 "FrameDetached",
-                new PlaywrightException("Navigating frame was detached!"),
+                new("Navigating frame was detached!"),
                 e => e == this);
             timeout ??= (Page as Page)?.DefaultNavigationTimeout ?? PlaywrightImpl.DefaultTimeout;
             waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout {timeout}ms exceeded.");
@@ -499,7 +499,7 @@ namespace Microsoft.Playwright.Core
 
             if (!string.IsNullOrEmpty(matchUrl))
             {
-                regex = new Regex(matchUrl.GlobToRegex());
+                regex = new(matchUrl.GlobToRegex());
             }
 
             if (matchUrl != null && url == matchUrl)

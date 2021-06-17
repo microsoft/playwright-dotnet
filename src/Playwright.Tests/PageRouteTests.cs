@@ -567,7 +567,7 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync("**/cars*", (route) =>
             {
                 var headers = route.Request.Url.EndsWith("allow")
-                    ? new Dictionary<string, string> { ["access-control-allow-origin"] = "*" }
+                    ? new() { ["access-control-allow-origin"] = "*" }
                     : new Dictionary<string, string>();
 
                 _ = route.FulfillAsync(new()

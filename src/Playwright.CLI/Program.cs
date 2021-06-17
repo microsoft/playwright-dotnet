@@ -62,7 +62,7 @@ namespace Microsoft.Playwright.CLI
                 }
             }
 
-            var file = Traverse(new DirectoryInfo(path));
+            var file = Traverse(new(path));
 
             if (string.IsNullOrEmpty(file))
             {

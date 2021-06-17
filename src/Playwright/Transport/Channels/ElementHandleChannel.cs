@@ -48,7 +48,7 @@ namespace Microsoft.Playwright.Transport.Channels
             switch (method)
             {
                 case "previewUpdated":
-                    PreviewUpdated?.Invoke(this, new PreviewUpdatedEventArgs { Preview = serverParams.Value.GetProperty("preview").ToString() });
+                    PreviewUpdated?.Invoke(this, new() { Preview = serverParams.Value.GetProperty("preview").ToString() });
                     break;
             }
         }

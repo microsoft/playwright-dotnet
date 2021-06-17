@@ -78,12 +78,12 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReportDownloadsInDownloadsPathFolderWithARelativePath()
         {
             var browser = await Playwright[TestConstants.BrowserName]
-                .LaunchAsync(new BrowserTypeLaunchOptions
+                .LaunchAsync(new()
                 {
                     DownloadsPath = "."
                 });
 
-            var page = await browser.NewPageAsync(new BrowserNewPageOptions
+            var page = await browser.NewPageAsync(new()
             {
                 AcceptDownloads = true
             });
@@ -148,7 +148,7 @@ namespace Microsoft.Playwright.Tests
                 return context.Response.WriteAsync("Hello world");
             });
 
-            _tmp = new TempDirectory();
+            _tmp = new();
             _browser = await Playwright[TestConstants.BrowserName].LaunchAsync(new() { DownloadsPath = _tmp.Path });
         }
 

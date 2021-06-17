@@ -19,7 +19,7 @@ namespace Microsoft.Playwright.Core
 
         internal WebSocket(IChannelOwner parent, string guid, WebSocketInitializer initializer) : base(parent, guid)
         {
-            _channel = new WebSocketChannel(guid, parent.Connection, this);
+            _channel = new(guid, parent.Connection, this);
             _initializer = initializer;
 
             _channel.Close += (_, _) =>

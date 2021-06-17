@@ -15,7 +15,7 @@ namespace Microsoft.Playwright.Core
 
         internal JSHandle(IChannelOwner parent, string guid, JSHandleInitializer initializer) : base(parent, guid)
         {
-            _channel = new JSHandleChannel(guid, parent.Connection, this);
+            _channel = new(guid, parent.Connection, this);
             Preview = initializer.Preview;
         }
 

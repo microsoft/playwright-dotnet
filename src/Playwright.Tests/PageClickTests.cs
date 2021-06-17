@@ -411,7 +411,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new()
             {
-                ViewportSize = new ViewportSize
+                ViewportSize = new()
                 {
                     Width = 400,
                     Height = 400,
@@ -435,7 +435,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '8px'");
-            await Page.ClickAsync("button", new() { Position = new Position { X = 20, Y = 10 } });
+            await Page.ClickAsync("button", new() { Position = new() { X = 20, Y = 10 } });
             Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
             Assert.AreEqual(TestConstants.IsWebKit ? 20 + 8 : 20, await Page.EvaluateAsync<int>("offsetX"));
@@ -449,7 +449,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '2em'");
             await Page.EvalOnSelectorAsync("button", "button => button.style.fontSize = '12px'");
-            await Page.ClickAsync("button", new() { Position = new Position { X = 20, Y = 10 } });
+            await Page.ClickAsync("button", new() { Position = new() { X = 20, Y = 10 } });
             Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
             Assert.AreEqual(TestConstants.IsWebKit ? 12 * 2 + 20 : 20, await Page.EvaluateAsync<int>("offsetX"));
@@ -463,7 +463,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '8px'");
             await Page.EvalOnSelectorAsync("button", "button => button.style.height = button.style.width = '2000px'");
-            await Page.ClickAsync("button", new() { Position = new Position { X = 1900, Y = 1910 } });
+            await Page.ClickAsync("button", new() { Position = new() { X = 1900, Y = 1910 } });
             Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
             Assert.AreEqual(TestConstants.IsWebKit ? 1900 + 8 : 1900, await Page.EvaluateAsync<int>("offsetX"));
@@ -487,7 +487,7 @@ namespace Microsoft.Playwright.Tests
                 button.style.borderWidth = '8px';
             }");
 
-            await Page.ClickAsync("button", new() { Position = new Position { X = 1900, Y = 1910 } });
+            await Page.ClickAsync("button", new() { Position = new() { X = 1900, Y = 1910 } });
             Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("window.result"));
             // Safari reports border-relative offsetX/offsetY.
             Assert.AreEqual(TestConstants.IsWebKit ? 1900 + 8 : 1900, await Page.EvaluateAsync<int>("offsetX"));
@@ -500,7 +500,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new()
             {
-                ViewportSize = new ViewportSize
+                ViewportSize = new()
                 {
                     Width = 400,
                     Height = 400,
@@ -516,13 +516,13 @@ namespace Microsoft.Playwright.Tests
                 document.body.style.margin = '0';
             }");
 
-            await page.ClickAsync("button", new() { Position = new Position { X = 20, Y = 10 } });
+            await page.ClickAsync("button", new() { Position = new() { X = 20, Y = 10 } });
             Assert.AreEqual("Clicked", await page.EvaluateAsync<string>("window.result"));
 
             var point = BrowserName switch
             {
-                "chromium" => new Point(27, 18),
-                "webkit" => new Point(29, 19),
+                "chromium" => new(27, 18),
+                "webkit" => new(29, 19),
                 _ => new Point(28, 18),
             };
 

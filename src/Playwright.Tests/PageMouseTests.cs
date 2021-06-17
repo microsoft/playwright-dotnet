@@ -155,7 +155,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new()
             {
-                ViewportSize = new ViewportSize { Width = 360, Height = 640 },
+                ViewportSize = new() { Width = 360, Height = 640 },
                 IsMobile = true,
             });
             var page = await context.NewPageAsync();

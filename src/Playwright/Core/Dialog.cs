@@ -13,7 +13,7 @@ namespace Microsoft.Playwright.Core
 
         public Dialog(IChannelOwner parent, string guid, DialogInitializer initializer) : base(parent, guid)
         {
-            _channel = new DialogChannel(guid, parent.Connection, this);
+            _channel = new(guid, parent.Connection, this);
             _initializer = initializer;
         }
 

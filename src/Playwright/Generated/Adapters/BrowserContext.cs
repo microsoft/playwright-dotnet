@@ -43,31 +43,31 @@ namespace Microsoft.Playwright.Core
     {
         public Task ExposeBindingAsync(string name, Action callback, BrowserContextExposeBindingOptions? options = default)
         {
-            options ??= new BrowserContextExposeBindingOptions();
+            options ??= new();
             return ExposeBindingAsync(name, callback, handle: options.Handle);
         }
 
         public Task GrantPermissionsAsync(IEnumerable<string> permissions, BrowserContextGrantPermissionsOptions? options = default)
         {
-            options ??= new BrowserContextGrantPermissionsOptions();
+            options ??= new();
             return GrantPermissionsAsync(permissions, origin: options.Origin);
         }
 
         public Task<string> StorageStateAsync(BrowserContextStorageStateOptions? options = default)
         {
-            options ??= new BrowserContextStorageStateOptions();
+            options ??= new();
             return StorageStateAsync(path: options.Path);
         }
 
         public Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions? options = default)
         {
-            options ??= new BrowserContextWaitForPageOptions();
+            options ??= new();
             return WaitForPageAsync(predicate: options.Predicate, timeout: options.Timeout);
         }
 
         public Task<IPage> RunAndWaitForPageAsync(Func<Task> action, BrowserContextRunAndWaitForPageOptions? options = default)
         {
-            options ??= new BrowserContextRunAndWaitForPageOptions();
+            options ??= new();
             return RunAndWaitForPageAsync(action, predicate: options.Predicate, timeout: options.Timeout);
         }
     }

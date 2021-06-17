@@ -64,7 +64,7 @@ namespace Microsoft.Playwright.Helpers
         }
 
         internal static JsonSerializerOptions GetNewDefaultSerializerOptions()
-            => new JsonSerializerOptions
+            => new()
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 IgnoreNullValues = true,

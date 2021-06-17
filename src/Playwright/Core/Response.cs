@@ -18,11 +18,11 @@ namespace Microsoft.Playwright.Core
 
         internal Response(IChannelOwner parent, string guid, ResponseInitializer initializer) : base(parent, guid)
         {
-            _channel = new ResponseChannel(guid, parent.Connection, this);
+            _channel = new(guid, parent.Connection, this);
             _initializer = initializer;
             _initializer.Request.Timing = _initializer.Timing;
 
-            Headers = new Dictionary<string, string>();
+            Headers = new();
             foreach (var kv in initializer.Headers)
             {
                 var name = kv.Name.ToLower();

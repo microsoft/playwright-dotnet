@@ -43,13 +43,13 @@ namespace Microsoft.Playwright.Core
     {
         public Task<IBrowser> LaunchAsync(BrowserTypeLaunchOptions? options = default)
         {
-            options ??= new BrowserTypeLaunchOptions();
+            options ??= new();
             return LaunchAsync(args: options.Args, channel: options.Channel, chromiumSandbox: options.ChromiumSandbox, devtools: options.Devtools, downloadsPath: options.DownloadsPath, env: options.Env, executablePath: options.ExecutablePath, handleSIGINT: options.HandleSIGINT, handleSIGTERM: options.HandleSIGTERM, handleSIGHUP: options.HandleSIGHUP, headless: options.Headless, proxy: options.Proxy, timeout: options.Timeout, tracesDir: options.TracesDir, firefoxUserPrefs: options.FirefoxUserPrefs, slowMo: options.SlowMo, ignoreDefaultArgs: options.IgnoreDefaultArgs, ignoreAllDefaultArgs: options.IgnoreAllDefaultArgs);
         }
 
         public Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions? options = default)
         {
-            options ??= new BrowserTypeLaunchPersistentContextOptions();
+            options ??= new();
             return LaunchPersistentContextAsync(userDataDir, args: options.Args, channel: options.Channel, chromiumSandbox: options.ChromiumSandbox, devtools: options.Devtools, downloadsPath: options.DownloadsPath, env: options.Env, executablePath: options.ExecutablePath, handleSIGINT: options.HandleSIGINT, handleSIGTERM: options.HandleSIGTERM, handleSIGHUP: options.HandleSIGHUP, headless: options.Headless, proxy: options.Proxy, timeout: options.Timeout, tracesDir: options.TracesDir, slowMo: options.SlowMo, ignoreDefaultArgs: options.IgnoreDefaultArgs, ignoreAllDefaultArgs: options.IgnoreAllDefaultArgs, acceptDownloads: options.AcceptDownloads, ignoreHTTPSErrors: options.IgnoreHTTPSErrors, bypassCSP: options.BypassCSP, viewportSize: options.ViewportSize, screenSize: options.ScreenSize, userAgent: options.UserAgent, deviceScaleFactor: options.DeviceScaleFactor, isMobile: options.IsMobile, hasTouch: options.HasTouch, javaScriptEnabled: options.JavaScriptEnabled, timezoneId: options.TimezoneId, geolocation: options.Geolocation, locale: options.Locale, permissions: options.Permissions, extraHTTPHeaders: options.ExtraHTTPHeaders, offline: options.Offline, httpCredentials: options.HttpCredentials, colorScheme: options.ColorScheme, reducedMotion: options.ReducedMotion, recordHarPath: options.RecordHarPath, recordHarOmitContent: options.RecordHarOmitContent, recordVideoDir: options.RecordVideoDir, recordVideoSize: options.RecordVideoSize);
         }
     }

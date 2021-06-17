@@ -219,9 +219,9 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithUrlMatch()
         {
             IResponse response1 = null;
-            var response1Task = Page.WaitForNavigationAsync(new() { UrlRegex = new Regex("one-style\\.html") }).ContinueWith(t => response1 = t.Result);
+            var response1Task = Page.WaitForNavigationAsync(new() { UrlRegex = new("one-style\\.html") }).ContinueWith(t => response1 = t.Result);
             IResponse response2 = null;
-            var response2Task = Page.WaitForNavigationAsync(new() { UrlRegex = new Regex("\\/frame.html") }).ContinueWith(t => response2 = t.Result);
+            var response2Task = Page.WaitForNavigationAsync(new() { UrlRegex = new("\\/frame.html") }).ContinueWith(t => response2 = t.Result);
             IResponse response3 = null;
             var response3Task = Page.WaitForNavigationAsync(new()
             {
@@ -266,7 +266,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.EmptyPage);
             bool resolved = false;
-            var waitTask = Page.WaitForNavigationAsync(new() { UrlRegex = new Regex("third\\.html") }).ContinueWith(_ => resolved = true);
+            var waitTask = Page.WaitForNavigationAsync(new() { UrlRegex = new("third\\.html") }).ContinueWith(_ => resolved = true);
 
             Assert.False(resolved);
 

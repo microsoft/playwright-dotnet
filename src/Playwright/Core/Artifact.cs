@@ -15,7 +15,7 @@ namespace Microsoft.Playwright.Core
         internal Artifact(IChannelOwner parent, string guid, ArtifactInitializer initializer) : base(parent, guid)
         {
             _connection = parent.Connection;
-            _channel = new ArtifactChannel(guid, parent.Connection, this);
+            _channel = new(guid, parent.Connection, this);
             AbsolutePath = initializer.AbsolutePath;
         }
 

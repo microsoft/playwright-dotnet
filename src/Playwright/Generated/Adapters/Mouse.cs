@@ -43,31 +43,31 @@ namespace Microsoft.Playwright.Core
     {
         public Task ClickAsync(float x, float y, MouseClickOptions? options = default)
         {
-            options ??= new MouseClickOptions();
+            options ??= new();
             return ClickAsync(x, y, button: options.Button, clickCount: options.ClickCount, delay: options.Delay);
         }
 
         public Task DblClickAsync(float x, float y, MouseDblClickOptions? options = default)
         {
-            options ??= new MouseDblClickOptions();
+            options ??= new();
             return DblClickAsync(x, y, button: options.Button, delay: options.Delay);
         }
 
         public Task DownAsync(MouseDownOptions? options = default)
         {
-            options ??= new MouseDownOptions();
+            options ??= new();
             return DownAsync(button: options.Button, clickCount: options.ClickCount);
         }
 
         public Task MoveAsync(float x, float y, MouseMoveOptions? options = default)
         {
-            options ??= new MouseMoveOptions();
+            options ??= new();
             return MoveAsync(x, y, steps: options.Steps);
         }
 
         public Task UpAsync(MouseUpOptions? options = default)
         {
-            options ??= new MouseUpOptions();
+            options ??= new();
             return UpAsync(button: options.Button, clickCount: options.ClickCount);
         }
     }

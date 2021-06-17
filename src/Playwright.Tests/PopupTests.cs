@@ -101,7 +101,7 @@ namespace Microsoft.Playwright.Tests
             Server.SetAuth("/title.html", "user", "pass");
             await using var context = await Browser.NewContextAsync(new()
             {
-                HttpCredentials = new HttpCredentials() { Username = "user", Password = "pass" },
+                HttpCredentials = new() { Username = "user", Password = "pass" },
             });
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
@@ -121,7 +121,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new()
             {
-                ViewportSize = new ViewportSize { Width = 400, Height = 500 },
+                ViewportSize = new() { Width = 400, Height = 500 },
                 HasTouch = true,
             });
             var page = await context.NewPageAsync();
@@ -141,7 +141,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new()
             {
-                ViewportSize = new ViewportSize { Width = 400, Height = 500 },
+                ViewportSize = new() { Width = 400, Height = 500 },
             });
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
@@ -160,7 +160,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new()
             {
-                ViewportSize = new ViewportSize { Width = 700, Height = 700 },
+                ViewportSize = new() { Width = 700, Height = 700 },
             });
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
