@@ -42,15 +42,18 @@ namespace Microsoft.Playwright.Core
                     },
                 };
 
-                if (methodParams.Length == 1 && methodParams[0] == typeof(IJSHandle))
+                if (_initializer != null)
                 {
-                    args.Add(_initializer.Handle);
-                }
-                else
-                {
-                    for (int i = 0; i < methodParams.Length; i++)
+                    if (methodParams.Length == 1 && methodParams[0] == typeof(IJSHandle))
                     {
-                        args.Add(ScriptsHelper.ParseEvaluateResult(_initializer.Args[i], methodParams[i]));
+                        args.Add(_initializer.Handle);
+                    }
+                    else
+                    {
+                        for (int i = 0; i < methodParams.Length; i++)
+                        {
+                            args.Add(ScriptsHelper.ParseEvaluateResult(_initializer.Args[i], methodParams[i]));
+                        }
                     }
                 }
 
