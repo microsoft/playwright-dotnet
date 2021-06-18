@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
-using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core
 {
@@ -21,17 +17,19 @@ namespace Microsoft.Playwright.Core
 
         IChannel<Selectors> IChannelOwner<Selectors>.Channel => _channel;
 
-        public Task RegisterAsync(string name, string script, string path, bool? contentScript = null)
+        public async Task RegisterAsync(string name, SelectorsRegisterOptions options = default)
         {
-            script = ScriptsHelper.EvaluationScript(script, path);
+            options ??= new SelectorsRegisterOptions();
 
+            var script = ScriptsHelper.EvaluationScript(options?.Script, options?.Path);
             var registerParam = new SelectorsRegisterParams
             {
                 Name = name,
                 Source = script,
-                ContentScript = contentScript,
+                ContentScript = options?.ContentScript,
             };
-            return _channel.RegisterAsync(registerParam);
+
+            await _channel.RegisterAsync(registerParam).ConfigureAwait(false);
         }
     }
 }
