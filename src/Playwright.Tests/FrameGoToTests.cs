@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -66,7 +65,7 @@ namespace Microsoft.Playwright.Tests
             await TaskUtils.WhenAll(matchingData.Select(m => m.FrameTask));
 
             // Navigate all frames to the same URL.
-            var requestHandler = new RequestDelegate(async (context) =>
+            var requestHandler = new RequestDelegate(async context =>
             {
                 if (int.TryParse(context.Request.Query["index"], out int index))
                 {

@@ -1,5 +1,3 @@
-using System;
-
 namespace Microsoft.Playwright.Transport.Channels
 {
     internal class PageErrorEventArgs

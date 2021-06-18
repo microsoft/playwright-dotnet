@@ -15,7 +15,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.RouteAsync("**/*", (route) =>
+            await Page.RouteAsync("**/*", route =>
             {
                 route.FulfillAsync(new()
                 {
@@ -43,7 +43,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithStatusCode422()
         {
-            await Page.RouteAsync("**/*", (route) =>
+            await Page.RouteAsync("**/*", route =>
             {
                 route.FulfillAsync(new() { Status = (int)HttpStatusCode.UpgradeRequired, Body = "Yo, page!" });
             });
@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Ignore("We need screenshots for this")]
         public async Task ShouldAllowMockingBinaryResponses()
         {
-            await Page.RouteAsync("**/*", (route) =>
+            await Page.RouteAsync("**/*", route =>
             {
                 byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
                 route.FulfillAsync(new()
@@ -86,7 +86,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Ignore("We need screenshots for this")]
         public async Task ShouldWorkWithFilePath()
         {
-            await Page.RouteAsync("**/*", (route) =>
+            await Page.RouteAsync("**/*", route =>
             {
                 route.FulfillAsync(new()
                 {
@@ -109,7 +109,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldStringifyInterceptedRequestResponseHeaders()
         {
-            await Page.RouteAsync("**/*", (route) =>
+            await Page.RouteAsync("**/*", route =>
             {
                 route.FulfillAsync(new()
                 {
@@ -158,7 +158,7 @@ namespace Microsoft.Playwright.Tests
 
             IRequest playwrightRequest = null;
 
-            await Page.RouteAsync(Server.CrossProcessPrefix + "/something", (route) =>
+            await Page.RouteAsync(Server.CrossProcessPrefix + "/something", route =>
             {
                 playwrightRequest = route.Request;
                 route.ContinueAsync(new() { Headers = route.Request.Headers.ToDictionary(x => x.Key, x => x.Value) });
@@ -182,7 +182,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.EmptyPage);
             IRequest interceptedRequest = null;
 
-            await Page.RouteAsync(Server.CrossProcessPrefix + "/something", (route) =>
+            await Page.RouteAsync(Server.CrossProcessPrefix + "/something", route =>
             {
                 interceptedRequest = route.Request;
                 route.FulfillAsync(new()

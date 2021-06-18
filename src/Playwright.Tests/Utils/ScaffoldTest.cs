@@ -75,10 +75,10 @@ namespace Microsoft.Playwright.Tests
             string name = _textInfo.ToTitleCase(fileInfo.Name.Substring(0, dotSeparator)) + "Tests";
             var targetClass = GenerateClass(options.Namespace, name, fileInfo.Name);
 
-            FindTestsInFile(options.SpecFile, (name) => AddTest(targetClass, name, fileInfo.Name));
+            FindTestsInFile(options.SpecFile, name => AddTest(targetClass, name, fileInfo.Name));
 
             using CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
-            CodeGeneratorOptions codegenOptions = new CodeGeneratorOptions()
+            CodeGeneratorOptions codegenOptions = new CodeGeneratorOptions
             {
                 BracingStyle = "C",
             };
@@ -126,7 +126,7 @@ namespace Microsoft.Playwright.Tests
             targetUnit.Namespaces.Add(codeNamespace);
 
             // add constructor
-            var constructor = new CodeConstructor()
+            var constructor = new CodeConstructor
             {
                 Attributes = MemberAttributes.Public,
             };
@@ -146,7 +146,7 @@ namespace Microsoft.Playwright.Tests
 
             Console.WriteLine($"Adding {name}");
 
-            CodeMemberMethod method = new CodeMemberMethod()
+            CodeMemberMethod method = new CodeMemberMethod
             {
                 Attributes = MemberAttributes.Public | MemberAttributes.Final,
                 ReturnType = new("async Task"),

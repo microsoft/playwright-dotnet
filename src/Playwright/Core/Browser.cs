@@ -87,7 +87,7 @@ namespace Microsoft.Playwright.Core
         {
             options ??= new();
 
-            var contextOptions = new BrowserNewContextOptions()
+            var contextOptions = new BrowserNewContextOptions
             {
                 AcceptDownloads = options.AcceptDownloads,
                 IgnoreHTTPSErrors = options.IgnoreHTTPSErrors,

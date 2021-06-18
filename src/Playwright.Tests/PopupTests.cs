@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -41,7 +40,7 @@ namespace Microsoft.Playwright.Tests
             await page.SetContentAsync("<a target=_blank rel=noopener href=\"empty.html\">link</a>");
             bool intercepted = false;
 
-            await context.RouteAsync("**/empty.html", (route) =>
+            await context.RouteAsync("**/empty.html", route =>
             {
                 route.ContinueAsync();
                 intercepted = true;
@@ -190,7 +189,7 @@ namespace Microsoft.Playwright.Tests
 
             bool intercepted = false;
 
-            await context.RouteAsync("**/empty.html", (route) =>
+            await context.RouteAsync("**/empty.html", route =>
             {
                 route.ContinueAsync();
                 intercepted = true;

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -16,7 +15,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            await Page.RouteAsync("**/*", (route) => route.ContinueAsync());
+            await Page.RouteAsync("**/*", route => route.ContinueAsync());
             await Page.GotoAsync(Server.EmptyPage);
         }
 
@@ -24,7 +23,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAmendHTTPHeaders()
         {
-            await Page.RouteAsync("**/*", (route) =>
+            await Page.RouteAsync("**/*", route =>
             {
                 var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["FOO"] = "bar" };
                 route.ContinueAsync(new() { Headers = headers });
@@ -43,7 +42,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAmendMethodOnMainRequest()
         {
             var methodTask = Server.WaitForRequest("/empty.html", r => r.Method);
-            await Page.RouteAsync("**/*", (route) => route.ContinueAsync(new() { Method = HttpMethod.Post.Method }));
+            await Page.RouteAsync("**/*", route => route.ContinueAsync(new() { Method = HttpMethod.Post.Method }));
             await Page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual("POST", await methodTask);
         }
@@ -53,7 +52,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAmendPostData()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            await Page.RouteAsync("**/*", (route) =>
+            await Page.RouteAsync("**/*", route =>
             {
                 route.ContinueAsync(new() { PostData = Encoding.UTF8.GetBytes("doggo") });
             });

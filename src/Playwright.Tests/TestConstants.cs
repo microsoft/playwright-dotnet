@@ -21,7 +21,7 @@ namespace Microsoft.Playwright.Tests
 
         public static string FileToUpload => TestUtils.GetWebServerFile("file-to-upload.txt");
 
-        public static readonly IEnumerable<string> NestedFramesDumpResult = new List<string>()
+        public static readonly IEnumerable<string> NestedFramesDumpResult = new List<string>
         {
             "http://localhost:<PORT>/frames/nested-frames.html",
             "    http://localhost:<PORT>/frames/two-frames.html (2frames)",

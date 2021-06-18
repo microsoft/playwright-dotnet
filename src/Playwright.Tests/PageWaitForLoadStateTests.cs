@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -19,7 +18,7 @@ namespace Microsoft.Playwright.Tests
             var responseTask = new TaskCompletionSource<bool>();
             var waitForRequestTask = Server.WaitForRequest("/one-style.css");
 
-            Server.SetRoute("/one-style.css", async (ctx) =>
+            Server.SetRoute("/one-style.css", async ctx =>
             {
                 if (await responseTask.Task)
                 {
@@ -67,7 +66,7 @@ namespace Microsoft.Playwright.Tests
             var responseTask = new TaskCompletionSource<bool>();
             var waitForRequestTask = Server.WaitForRequest("/one-style.css");
 
-            Server.SetRoute("/one-style.css", async (ctx) =>
+            Server.SetRoute("/one-style.css", async ctx =>
             {
                 if (await responseTask.Task)
                 {
@@ -117,7 +116,7 @@ namespace Microsoft.Playwright.Tests
 
             TaskCompletionSource<bool> requestTask = new TaskCompletionSource<bool>();
             TaskCompletionSource<bool> routeReachedTask = new TaskCompletionSource<bool>();
-            await Page.RouteAsync(Server.Prefix + "/one-style.css", async (route) =>
+            await Page.RouteAsync(Server.Prefix + "/one-style.css", async route =>
             {
                 routeReachedTask.TrySetResult(true);
                 await requestTask.Task;

@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Core

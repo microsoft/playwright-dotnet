@@ -45,7 +45,7 @@ namespace Microsoft.Playwright.Tests
 
             var page = await context.NewPageAsync();
 
-            await page.RouteAsync("**/*", (route) => route.ContinueAsync());
+            await page.RouteAsync("**/*", route => route.ContinueAsync());
             var response = await page.GotoAsync(HttpsServer.Prefix + "/empty.html");
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
         }
@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithNavigation()
         {
             var requests = new Dictionary<string, IRequest>();
-            await Page.RouteAsync("**/*", (route) =>
+            await Page.RouteAsync("**/*", route =>
             {
                 requests.Add(route.Request.Url.Split('/').Last(), route.Request);
                 route.ContinueAsync();
@@ -86,7 +86,7 @@ namespace Microsoft.Playwright.Tests
             string swResponse = await Page.EvaluateAsync<string>("() => fetchDummy('foo')");
             Assert.AreEqual("responseFromServiceWorker:foo", swResponse);
 
-            await Page.RouteAsync("**/foo", (route) =>
+            await Page.RouteAsync("**/foo", route =>
             {
                 int slash = route.Request.Url.LastIndexOf("/");
                 string name = route.Request.Url.Substring(slash + 1);

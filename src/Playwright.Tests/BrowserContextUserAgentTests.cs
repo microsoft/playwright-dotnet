@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -44,7 +43,7 @@ namespace Microsoft.Playwright.Tests
                 var page = await context.NewPageAsync();
 
                 var (userAgent, _) = await TaskUtils.WhenAll(
-                    Server.WaitForRequest<string>("/empty.html", (request) => request.Headers["user-agent"]),
+                    Server.WaitForRequest<string>("/empty.html", request => request.Headers["user-agent"]),
                     FrameUtils.AttachFrameAsync(page, "frame1", Server.EmptyPage));
 
                 Assert.AreEqual("foobar", userAgent);
@@ -74,7 +73,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldMakeACopyOfDefaultOptions()
         {
-            var options = new BrowserNewContextOptions()
+            var options = new BrowserNewContextOptions
             {
                 UserAgent = "foobar"
             };

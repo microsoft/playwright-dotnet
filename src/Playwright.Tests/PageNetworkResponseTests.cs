@@ -3,7 +3,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -34,7 +33,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
-            Server.SetRoute("/empty.html", (context) =>
+            Server.SetRoute("/empty.html", context =>
             {
                 context.Response.Headers["foo"] = "bar";
                 return Task.CompletedTask;
@@ -64,7 +63,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnStatusText()
         {
-            Server.SetRoute("/cool", (context) =>
+            Server.SetRoute("/cool", context =>
             {
                 context.Response.StatusCode = 200;
                 //There are some debates about this on these issues

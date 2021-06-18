@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -177,7 +176,7 @@ namespace Microsoft.Playwright.Tests
             await page.GotoAsync(Server.EmptyPage);
             await page.CloseAsync();
             Assert.AreEqual(
-                new List<string>()
+                new List<string>
                 {
                     "CREATED: about:blank",
                     $"DESTROYED: {Server.EmptyPage}"

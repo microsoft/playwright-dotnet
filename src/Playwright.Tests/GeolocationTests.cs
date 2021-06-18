@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -104,7 +103,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUseContextOptions()
         {
-            var options = new BrowserNewContextOptions()
+            var options = new BrowserNewContextOptions
             {
                 Geolocation = new()
                 {

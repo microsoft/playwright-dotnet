@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -15,7 +14,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWork()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            await Context.AddCookiesAsync(new[] { new Cookie()
+            await Context.AddCookiesAsync(new[] { new Cookie
             {
                 Url = Server.EmptyPage,
                 Name = "password",
@@ -37,7 +36,7 @@ namespace Microsoft.Playwright.Tests
             var cookies = await Context.CookiesAsync();
             await Context.ClearCookiesAsync();
             Assert.IsEmpty(await Context.CookiesAsync());
-            await Context.AddCookiesAsync(cookies.Select(c => new Cookie()
+            await Context.AddCookiesAsync(cookies.Select(c => new Cookie
             {
                 Domain = c.Domain,
                 Expires = c.Expires,

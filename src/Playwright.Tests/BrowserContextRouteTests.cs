@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -20,7 +19,7 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             IPage page = null;
 
-            await context.RouteAsync("**/empty.html", (route) =>
+            await context.RouteAsync("**/empty.html", route =>
             {
                 intercepted = true;
 
@@ -50,43 +49,43 @@ namespace Microsoft.Playwright.Tests
             var page = await context.NewPageAsync();
             var intercepted = new List<int>();
 
-            Action<IRoute> handler1 = (route) =>
+            Action<IRoute> handler1 = route =>
             {
                 intercepted.Add(1);
                 route.ContinueAsync();
             };
 
             await context.RouteAsync("**/empty.html", handler1);
-            await context.RouteAsync("**/empty.html", (route) =>
+            await context.RouteAsync("**/empty.html", route =>
             {
                 intercepted.Add(2);
                 route.ContinueAsync();
             });
 
-            await context.RouteAsync("**/empty.html", (route) =>
+            await context.RouteAsync("**/empty.html", route =>
             {
                 intercepted.Add(3);
                 route.ContinueAsync();
             });
 
-            await context.RouteAsync("**/*", (route) =>
+            await context.RouteAsync("**/*", route =>
             {
                 intercepted.Add(4);
                 route.ContinueAsync();
             });
 
             await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new List<int>() { 1 }, intercepted);
+            Assert.AreEqual(new List<int> { 1 }, intercepted);
 
             intercepted.Clear();
             await context.UnrouteAsync("**/empty.html", handler1);
             await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new List<int>() { 2 }, intercepted);
+            Assert.AreEqual(new List<int> { 2 }, intercepted);
 
             intercepted.Clear();
             await context.UnrouteAsync("**/empty.html");
             await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new List<int>() { 4 }, intercepted);
+            Assert.AreEqual(new List<int> { 4 }, intercepted);
         }
 
         [PlaywrightTest("browsercontext-route.spec.ts", "should yield to page.route")]
@@ -94,13 +93,13 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldYieldToPageRoute()
         {
             await using var context = await Browser.NewContextAsync();
-            await context.RouteAsync("**/empty.html", (route) =>
+            await context.RouteAsync("**/empty.html", route =>
             {
                 route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK, Body = "context" });
             });
 
             var page = await context.NewPageAsync();
-            await page.RouteAsync("**/empty.html", (route) =>
+            await page.RouteAsync("**/empty.html", route =>
             {
                 route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK, Body = "page" });
             });
@@ -114,13 +113,13 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldFallBackToContextRoute()
         {
             await using var context = await Browser.NewContextAsync();
-            await context.RouteAsync("**/empty.html", (route) =>
+            await context.RouteAsync("**/empty.html", route =>
             {
                 route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK, Body = "context" });
             });
 
             var page = await context.NewPageAsync();
-            await page.RouteAsync("**/non-empty.html", (route) =>
+            await page.RouteAsync("**/non-empty.html", route =>
             {
                 route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK, Body = "page" });
             });

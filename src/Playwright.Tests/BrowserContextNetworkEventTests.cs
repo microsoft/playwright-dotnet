@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -61,7 +60,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task BrowserContextEventsRequestfailed()
         {
-            Server.SetRoute("/one-style.css", (ctx) =>
+            Server.SetRoute("/one-style.css", ctx =>
             {
                 ctx.Response.Headers["Content-Type"] = "text/css";
                 ctx.Abort();

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -35,7 +34,7 @@ namespace Microsoft.Playwright.Tests
         public async Task UrlShouldWorkWithBothDomcontentloadedAndLoad()
         {
             var responseTask = new TaskCompletionSource<bool>();
-            Server.SetRoute("/one-style.css", async (ctx) =>
+            Server.SetRoute("/one-style.css", async ctx =>
             {
                 if (await responseTask.Task)
                 {
@@ -142,7 +141,6 @@ namespace Microsoft.Playwright.Tests
             await TaskUtils.WhenAll(
                 frame.WaitForURLAsync("**/grid.html"),
                 frame.EvaluateAsync("url => window.location.href = url", Server.Prefix + "/grid.html"));
-            ;
         }
     }
 }

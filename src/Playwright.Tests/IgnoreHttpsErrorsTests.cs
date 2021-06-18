@@ -2,7 +2,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -57,7 +56,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Ignore("Fix me #1058")]
         public async Task ShouldWorkWithMixedContent()
         {
-            Server.SetRoute("/mixedcontent.html", async (context) =>
+            Server.SetRoute("/mixedcontent.html", async context =>
             {
                 await context.Response.WriteAsync($"<iframe src='{Server.EmptyPage}'></iframe>");
             });

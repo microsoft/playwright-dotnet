@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Playwright.Tooling.Models.Api
 {
     internal class PlaywrightEntity

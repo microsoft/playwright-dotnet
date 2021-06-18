@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -225,7 +223,7 @@ namespace Microsoft.Playwright.Tests
             IResponse response3 = null;
             var response3Task = Page.WaitForNavigationAsync(new()
             {
-                UrlFunc = (url) =>
+                UrlFunc = url =>
                 {
                     var query = new Uri(url).Query.ParseQueryString();
                     return query.ContainsKey("foo") && query["foo"] == "bar";

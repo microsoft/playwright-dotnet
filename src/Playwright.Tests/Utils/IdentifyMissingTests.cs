@@ -133,7 +133,7 @@ namespace Microsoft.Playwright.Tests
             {
                 ScaffoldTest.FindTestsInFile(
                     fileInfo.FullName,
-                    (testName) =>
+                    testName =>
                     {
                         _testPairs.Add(new(basePath + fileInfo.Name.Substring(0, fileInfo.Name.IndexOf('.')), testName));
                     });

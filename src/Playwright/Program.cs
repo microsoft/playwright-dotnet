@@ -58,7 +58,7 @@ namespace Microsoft.Playwright
                 RedirectStandardOutput = true,
             };
 
-            using var pwProcess = new Process()
+            using var pwProcess = new Process
             {
                 StartInfo = playwrightStartInfo,
             };

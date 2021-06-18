@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Net;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core

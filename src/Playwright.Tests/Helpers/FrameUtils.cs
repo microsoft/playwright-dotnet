@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
             {
                 description += $" ({frame.Name})";
             }
-            var result = new List<string>() { description };
+            var result = new List<string> { description };
             foreach (var child in frame.ChildFrames)
             {
                 result.AddRange(DumpFrames(child, "    " + indentation));
