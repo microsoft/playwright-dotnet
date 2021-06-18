@@ -6,7 +6,6 @@
     <ReleaseVersion>0.0.0</ReleaseVersion>
     <RootNamespace>Microsoft.Playwright.Tests.TestServer</RootNamespace>
     <AssemblyName>Microsoft.Playwright.Tests.TestServer</AssemblyName>
-    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <Import Project="../Common/SignAssembly.props" />
   <ItemGroup>
