@@ -75,7 +75,8 @@ namespace Microsoft.Playwright.Core
                storageStatePath: options.StorageStatePath,
                timezoneId: options.TimezoneId,
                userAgent: options.UserAgent,
-               viewportSize: options.ViewportSize).ConfigureAwait(false)).Object;
+               viewportSize: options.ViewportSize,
+               screenSize: options.ScreenSize).ConfigureAwait(false)).Object;
 
             context.RecordVideo = !string.IsNullOrEmpty(options.RecordVideoDir);
 
