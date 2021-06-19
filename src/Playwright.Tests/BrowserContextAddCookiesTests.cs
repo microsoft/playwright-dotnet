@@ -24,6 +24,20 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("password=123456", await Page.EvaluateAsync<string>("document.cookie"));
         }
 
+        [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should work")]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task ShouldWorkParams()
+        {
+            await Page.GotoAsync(Server.EmptyPage);
+            await Context.AddCookiesAsync(new Cookie
+            {
+                Url = Server.EmptyPage,
+                Name = "password",
+                Value = "123456"
+            });
+            Assert.AreEqual("password=123456", await Page.EvaluateAsync<string>("document.cookie"));
+        }
+
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should roundtrip cookie")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRoundtripCookie()

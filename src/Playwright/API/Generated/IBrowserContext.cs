@@ -164,6 +164,17 @@ namespace Microsoft.Playwright
         Task AddCookiesAsync(IEnumerable<Cookie> cookies);
 
         /// <summary>
+        /// <para>
+        /// Adds cookies into this browser context. All pages within this context will have
+        /// these cookies installed. Cookies can be obtained via <see cref="IBrowserContext.CookiesAsync"/>.
+        /// </para>
+        /// <code>await context.AddCookiesAsync(cookie1, cookie2);</code>
+        /// </summary>
+        /// <param name="cookies">
+        /// </param>
+        Task AddCookiesAsync(params Cookie[] cookies);
+
+        /// <summary>
         /// <para>Adds a script which would be evaluated in one of the following scenarios:</para>
         /// <list type="bullet">
         /// <item><description>Whenever a page is created in the browser context or is navigated.</description></item>

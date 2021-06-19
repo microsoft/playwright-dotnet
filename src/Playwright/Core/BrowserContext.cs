@@ -120,6 +120,8 @@ namespace Microsoft.Playwright.Core
 
         public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => Channel.AddCookiesAsync(cookies);
 
+        public Task AddCookiesAsync(params Cookie[] cookies) => Channel.AddCookiesAsync(cookies);
+
         public Task AddInitScriptAsync(string script = null, string scriptPath = null)
         {
             if (string.IsNullOrEmpty(script))
