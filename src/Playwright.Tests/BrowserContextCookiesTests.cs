@@ -64,7 +64,7 @@ namespace Microsoft.Playwright.Tests
         {
             Server.SetRoute("/empty.html", context =>
             {
-                context.Response.Headers["Set-Cookie"] = "name=vaue;HttpOnly; Path=/";
+                context.Response.Headers["Set-Cookie"] = "name=value;HttpOnly; Path=/";
                 return Task.CompletedTask;
             });
             await Page.GotoAsync(Server.EmptyPage);
