@@ -4,7 +4,7 @@ using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Core
 {
-    internal partial class Accessibility : IAccessibility
+    internal class Accessibility : IAccessibility
     {
         private readonly PageChannel _channel;
 

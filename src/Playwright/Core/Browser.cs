@@ -7,7 +7,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core
 {
-    internal partial class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
+    internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
     {
         private readonly BrowserInitializer _initializer;
         private readonly TaskCompletionSource<bool> _closedTcs = new();

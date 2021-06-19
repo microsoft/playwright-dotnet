@@ -4,7 +4,7 @@ using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Core
 {
-    internal partial class Selectors : ChannelOwnerBase, IChannelOwner<Selectors>, ISelectors
+    internal class Selectors : ChannelOwnerBase, IChannelOwner<Selectors>, ISelectors
     {
         private readonly SelectorsChannel _channel;
 
