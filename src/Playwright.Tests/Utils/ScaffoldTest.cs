@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.Tests
 
         public static void FindTestsInFile(string path, Action<string> callback)
         {
-            var rx = new Regex(@"it\(\'(.*)\',");
+            var rx = new Regex(@"it\('(.*)',");
             foreach (string line in File.ReadAllLines(path))
             {
                 var m = rx.Match(line);
