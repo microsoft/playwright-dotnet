@@ -36,15 +36,6 @@ namespace Microsoft.Playwright.Core
         IChannel<Route> IChannelOwner<Route>.Channel => _channel;
 
         public Task FulfillAsync(
-            HttpStatusCode status,
-            IEnumerable<KeyValuePair<string, string>> headers = default,
-            string contentType = default,
-            string body = default,
-            byte[] bodyBytes = default,
-            string path = default)
-            => FulfillAsync((int?)status, headers: headers, contentType: contentType, body: body, bodyBytes: bodyBytes, path: path);
-
-        public Task FulfillAsync(
             int? status = default,
             IEnumerable<KeyValuePair<string, string>> headers = default,
             string contentType = default,
