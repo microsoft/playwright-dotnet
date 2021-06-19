@@ -15,7 +15,6 @@ namespace Microsoft.Playwright.Core
     {
         private readonly WebSocketChannel _channel;
         private readonly WebSocketInitializer _initializer;
-        private readonly Page _page;
 
         internal WebSocket(IChannelOwner parent, string guid, WebSocketInitializer initializer) : base(parent, guid)
         {
@@ -27,7 +26,6 @@ namespace Microsoft.Playwright.Core
                 IsClosed = true;
                 Close?.Invoke(this, this);
             };
-            _page = parent as Page;
             _channel.FrameReceived += (_, e) => FrameReceived?.Invoke(this, e);
             _channel.FrameSent += (_, e) => FrameSent?.Invoke(this, e);
             _channel.SocketError += (_, e) => SocketError?.Invoke(this, e);
