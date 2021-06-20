@@ -12,7 +12,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core
 {
-    internal partial class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>, IBrowserContext
+    internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>, IBrowserContext
     {
         private readonly TaskCompletionSource<bool> _closeTcs = new();
         private readonly Dictionary<string, Delegate> _bindings = new();

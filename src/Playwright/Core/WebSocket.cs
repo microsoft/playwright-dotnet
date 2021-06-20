@@ -11,7 +11,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core
 {
-    internal partial class WebSocket : ChannelOwnerBase, IChannelOwner<WebSocket>, IWebSocket
+    internal class WebSocket : ChannelOwnerBase, IChannelOwner<WebSocket>, IWebSocket
     {
         private readonly WebSocketChannel _channel;
         private readonly WebSocketInitializer _initializer;

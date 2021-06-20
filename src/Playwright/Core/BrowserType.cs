@@ -5,7 +5,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core
 {
-    internal partial class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrowserType
+    internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrowserType
     {
         private readonly BrowserTypeInitializer _initializer;
         private readonly BrowserTypeChannel _channel;
