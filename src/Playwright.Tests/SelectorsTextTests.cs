@@ -39,16 +39,16 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("<div>yo<span id=\"s1\"></span></div>\n<div>yo<span id=\"s2\"></span><span id=\"s3\"></span></div>", await Page.EvalOnSelectorAllAsync<string>("text=yo", "es => es.map(e => e.outerHTML).join('\\n')"));
 
             await Page.SetContentAsync("<div>'</div><div>\"</div><div>\\</div><div>x</div>");
-            Assert.AreEqual("<div>\'</div>", await Page.EvalOnSelectorAsync<string>("text='\\''", "e => e.outerHTML"));
+            Assert.AreEqual("<div>'</div>", await Page.EvalOnSelectorAsync<string>("text='\\''", "e => e.outerHTML"));
             Assert.AreEqual("<div>\"</div>", await Page.EvalOnSelectorAsync<string>("text='\"'", "e => e.outerHTML"));
             Assert.AreEqual("<div>\"</div>", await Page.EvalOnSelectorAsync<string>("text=\"\\\"\"", "e => e.outerHTML"));
-            Assert.AreEqual("<div>\'</div>", await Page.EvalOnSelectorAsync<string>("text=\"'\"", "e => e.outerHTML"));
+            Assert.AreEqual("<div>'</div>", await Page.EvalOnSelectorAsync<string>("text=\"'\"", "e => e.outerHTML"));
             Assert.AreEqual("<div>x</div>", await Page.EvalOnSelectorAsync<string>("text=\"\\x\"", "e => e.outerHTML"));
             Assert.AreEqual("<div>x</div>", await Page.EvalOnSelectorAsync<string>("text='\\x'", "e => e.outerHTML"));
             Assert.AreEqual("<div>\\</div>", await Page.EvalOnSelectorAsync<string>("text='\\\\'", "e => e.outerHTML"));
             Assert.AreEqual("<div>\\</div>", await Page.EvalOnSelectorAsync<string>("text=\"\\\\\"", "e => e.outerHTML"));
             Assert.AreEqual("<div>\"</div>", await Page.EvalOnSelectorAsync<string>("text=\"", "e => e.outerHTML"));
-            Assert.AreEqual("<div>\'</div>", await Page.EvalOnSelectorAsync<string>("text='", "e => e.outerHTML"));
+            Assert.AreEqual("<div>'</div>", await Page.EvalOnSelectorAsync<string>("text='", "e => e.outerHTML"));
             Assert.AreEqual("<div>x</div>", await Page.EvalOnSelectorAsync<string>("\"x\"", "e => e.outerHTML"));
             Assert.AreEqual("<div>x</div>", await Page.EvalOnSelectorAsync<string>("'x'", "e => e.outerHTML"));
 
@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
 
             await Page.SetContentAsync("<div> ' </div><div> \" </div>");
             Assert.AreEqual("<div> \" </div>", await Page.EvalOnSelectorAsync<string>("text=\"", "e => e.outerHTML"));
-            Assert.AreEqual("<div> \' </div>", await Page.EvalOnSelectorAsync<string>("text='", "e => e.outerHTML"));
+            Assert.AreEqual("<div> ' </div>", await Page.EvalOnSelectorAsync<string>("text='", "e => e.outerHTML"));
 
             await Page.SetContentAsync("<div>Hi''&gt;&gt;foo=bar</div>");
             Assert.AreEqual("<div>Hi''&gt;&gt;foo=bar</div>", await Page.EvalOnSelectorAsync<string>("text=\"Hi''>>foo=bar\"", "e => e.outerHTML"));

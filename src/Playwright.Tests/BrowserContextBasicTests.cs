@@ -255,7 +255,7 @@ namespace Microsoft.Playwright.Tests
                 var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.EvaluateAsync("something"));
 
                 StringAssert.Contains(
-                    TestConstants.IsWebKit ? "Can\'t find variable: something" : "something is not defined",
+                    TestConstants.IsWebKit ? "Can't find variable: something" : "something is not defined",
                     exception.Message);
             }
 

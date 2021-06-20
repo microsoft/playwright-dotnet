@@ -80,7 +80,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
             var bodyHandle = await Page.MainFrame.ChildFrames.First().QuerySelectorAsync("body");
             string result = await Page.EvaluateAsync<string>("body => body.innerHTML", bodyHandle);
-            Assert.AreEqual("<div>Hi, I\'m frame</div>", result.Trim());
+            Assert.AreEqual("<div>Hi, I'm frame</div>", result.Trim());
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should not allow cross-frame element handles when frames do not script each other")]

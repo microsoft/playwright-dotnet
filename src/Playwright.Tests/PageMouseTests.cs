@@ -43,7 +43,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             await Page.FocusAsync("textarea");
-            const string text = "This is the text that we are going to try to select. Let\'s see how it goes.";
+            const string text = "This is the text that we are going to try to select. Let's see how it goes.";
             await Page.Keyboard.TypeAsync(text);
             // Firefox needs an extra frame here after typing or it will fail to set the scrollTop
             await Page.EvaluateAsync("() => new Promise(requestAnimationFrame)");
