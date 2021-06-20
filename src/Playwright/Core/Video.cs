@@ -8,13 +8,10 @@ namespace Microsoft.Playwright.Core
 {
     internal class Video : IVideo
     {
-        private readonly Page _page;
         private readonly TaskCompletionSource<Artifact> _artifactTcs = new();
 
         public Video(Page page)
         {
-            _page = page;
-
             page.Close += (_, _) => _artifactTcs.TrySetCanceled();
             page.Crash += (_, _) => _artifactTcs.TrySetCanceled();
         }
