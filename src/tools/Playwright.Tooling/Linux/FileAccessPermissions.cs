@@ -16,12 +16,5 @@ namespace DriverDownloader.Linux
         UserExecute = 64,
         UserWrite = 128,
         UserRead = 256,
-
-        OtherReadWriteExecute = OtherRead | OtherWrite | OtherExecute,
-        GroupReadWriteExecute = GroupRead | GroupWrite | GroupExecute,
-        UserReadWriteExecute = UserRead | UserWrite | UserExecute,
-
-        DefaultPermissions = OtherWrite | OtherRead | GroupWrite | GroupRead | UserWrite | UserRead,
-        AllPermissions = DefaultPermissions | OtherExecute | GroupExecute | UserExecute,
     }
 }
