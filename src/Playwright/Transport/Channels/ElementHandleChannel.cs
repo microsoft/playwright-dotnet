@@ -166,7 +166,7 @@ namespace Microsoft.Playwright.Transport.Channels
             args["button"] = button;
             args["clickCount"] = clickCount;
             args["force"] = force;
-            args["noWaitAter"] = noWaitAfter;
+            args["noWaitAfter"] = noWaitAfter;
             args["timeout"] = timeout;
             args["trial"] = trial;
             args["position"] = position;
@@ -189,7 +189,7 @@ namespace Microsoft.Playwright.Transport.Channels
             args["delay"] = delay;
             args["button"] = button;
             args["force"] = force;
-            args["noWaitAter"] = noWaitAfter;
+            args["noWaitAfter"] = noWaitAfter;
             args["timeout"] = timeout;
             args["trial"] = trial;
             args["position"] = position;
@@ -223,7 +223,7 @@ namespace Microsoft.Playwright.Transport.Channels
             var args = new Dictionary<string, object>();
             args["value"] = value;
             args["timeout"] = timeout;
-            args["noWaitAter"] = noWaitAfter;
+            args["noWaitAfter"] = noWaitAfter;
 
             return Connection.SendMessageToServerAsync(Guid, "fill", args);
         }
@@ -247,7 +247,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 f.MimeType,
             });
             args["timeout"] = timeout;
-            args["noWaitAter"] = noWaitAfter;
+            args["noWaitAfter"] = noWaitAfter;
 
             return Connection.SendMessageToServerAsync<string>(Guid, "setInputFiles", args);
         }
@@ -293,7 +293,7 @@ namespace Microsoft.Playwright.Transport.Channels
             }
 
             args["timeout"] = timeout;
-            args["noWaitAter"] = noWaitAfter;
+            args["noWaitAfter"] = noWaitAfter;
 
             return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<List<string>>().AsReadOnly();
         }
@@ -323,7 +323,7 @@ namespace Microsoft.Playwright.Transport.Channels
             args["position"] = position;
             args["trial"] = trial;
             args["timeout"] = timeout;
-            args["noWaitAter"] = noWaitAfter;
+            args["noWaitAfter"] = noWaitAfter;
 
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "check", args);
         }
@@ -335,7 +335,7 @@ namespace Microsoft.Playwright.Transport.Channels
             args["position"] = position;
             args["trial"] = trial;
             args["timeout"] = timeout;
-            args["noWaitAter"] = noWaitAfter;
+            args["noWaitAfter"] = noWaitAfter;
 
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "uncheck", args);
         }
@@ -346,7 +346,7 @@ namespace Microsoft.Playwright.Transport.Channels
             args["text"] = text;
             args["delay"] = delay;
             args["timeout"] = timeout;
-            args["noWaitAter"] = noWaitAfter;
+            args["noWaitAfter"] = noWaitAfter;
 
             return Connection.SendMessageToServerAsync(Guid, "type", args);
         }
@@ -357,7 +357,7 @@ namespace Microsoft.Playwright.Transport.Channels
             args["key"] = key;
             args["delay"] = delay;
             args["timeout"] = timeout;
-            args["noWaitAter"] = noWaitAfter;
+            args["noWaitAfter"] = noWaitAfter;
 
             return Connection.SendMessageToServerAsync(Guid, "press", args);
         }

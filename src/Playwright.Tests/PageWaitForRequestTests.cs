@@ -93,7 +93,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-request.spec.ts", "should work with url match regular expression from a different context")]
-        [Test, Ignore("We dont't need to test this")]
+        [Test, Ignore("We don't need to test this")]
         public void ShouldWorkWithUrlMatchRegularExpressionFromADifferentContext()
         {
         }

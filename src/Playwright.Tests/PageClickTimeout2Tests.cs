@@ -22,7 +22,7 @@ namespace Microsoft.Playwright.Tests
             StringAssert.Contains("element is not visible - waiting", exception.Message);
         }
 
-        [PlaywrightTest("page-click-timeout-2.spec.ts", "should timeout waiting for visbility:hidden to be gone")]
+        [PlaywrightTest("page-click-timeout-2.spec.ts", "should timeout waiting for visibility:hidden to be gone")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForVisibilityHiddenToBeGone()
         {

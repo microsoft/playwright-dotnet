@@ -79,13 +79,13 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should emit event on/off")]
-        [Test, Ignore("We dont'need to test this")]
+        [Test, Ignore("We don't need to test this")]
         public void ShouldEmitEventOnOff()
         {
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should emit addListener/removeListener")]
-        [Test, Ignore("We dont'need to test this")]
+        [Test, Ignore("We don't need to test this")]
         public void ShouldEmitEventAddListenerRemoveListener()
         {
         }
