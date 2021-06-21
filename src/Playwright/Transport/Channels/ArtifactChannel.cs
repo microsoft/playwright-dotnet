@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 

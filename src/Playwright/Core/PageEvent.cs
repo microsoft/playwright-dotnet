@@ -22,9 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections.Generic;
-
 namespace Microsoft.Playwright.Core
 {
     internal static class PageEvent

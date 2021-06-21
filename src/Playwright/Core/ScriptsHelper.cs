@@ -23,14 +23,11 @@
  */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Converters;
 
 namespace Microsoft.Playwright.Core

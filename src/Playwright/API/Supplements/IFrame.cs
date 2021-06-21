@@ -22,10 +22,7 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections.Generic;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright

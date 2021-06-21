@@ -22,9 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections.Generic;
-
 namespace Microsoft.Playwright
 {
     public static class PaperFormat

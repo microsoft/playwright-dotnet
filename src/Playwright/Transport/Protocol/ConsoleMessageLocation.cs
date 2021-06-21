@@ -23,9 +23,6 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections.Generic;
-
 namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class ConsoleMessageLocation
