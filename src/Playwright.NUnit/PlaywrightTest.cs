@@ -42,6 +42,7 @@ namespace Microsoft.Playwright.NUnit
         {
             Playwright = await _playwrightTask;
             BrowserType = Playwright[BrowserName];
+            Assert.IsNotNull(BrowserType, $"The requested browser ({BrowserName}) could not be found - make sure your BROWSER env variable is set correctly.");
         }
     }
 }
