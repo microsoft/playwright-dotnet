@@ -23,7 +23,6 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Core
@@ -37,19 +36,19 @@ namespace Microsoft.Playwright.Core
             _channel = channel;
         }
 
-        public Task ClickAsync(float x, float y, MouseButton? button, int? clickCount, float? delay)
-            => _channel.MouseClickAsync(x, y, delay, button, clickCount);
+        public Task ClickAsync(float x, float y, MouseClickOptions options = default)
+            => _channel.MouseClickAsync(x, y, delay: options?.Delay, button: options?.Button, clickCount: options?.ClickCount);
 
-        public Task DblClickAsync(float x, float y, MouseButton? button, float? delay)
-            => _channel.MouseClickAsync(x, y, delay, button, 2);
+        public Task DblClickAsync(float x, float y, MouseDblClickOptions options = default)
+            => _channel.MouseClickAsync(x, y, delay: options?.Delay, button: options?.Button, 2);
 
-        public Task DownAsync(MouseButton? button, int? clickCount)
-            => _channel.MouseDownAsync(button, clickCount);
+        public Task DownAsync(MouseDownOptions options = default)
+            => _channel.MouseDownAsync(button: options?.Button, clickCount: options?.ClickCount);
 
-        public Task MoveAsync(float x, float y, int? steps)
-            => _channel.MouseMoveAsync(x, y, steps ?? 1);
+        public Task MoveAsync(float x, float y, MouseMoveOptions options = default)
+            => _channel.MouseMoveAsync(x, y, steps: options?.Steps);
 
-        public Task UpAsync(MouseButton? button, int? clickCount)
-            => _channel.MouseUpAsync(button, clickCount);
+        public Task UpAsync(MouseUpOptions options = default)
+            => _channel.MouseUpAsync(button: options?.Button, clickCount: options?.ClickCount);
     }
 }

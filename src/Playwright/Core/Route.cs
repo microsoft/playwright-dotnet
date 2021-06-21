@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -59,26 +58,27 @@ namespace Microsoft.Playwright.Core
 
         IChannel<Route> IChannelOwner<Route>.Channel => _channel;
 
-        public Task FulfillAsync(
-            int? status = default,
-            IEnumerable<KeyValuePair<string, string>> headers = default,
-            string contentType = default,
-            string body = default,
-            byte[] bodyBytes = default,
-            string path = default)
+        public Task FulfillAsync(RouteFulfillOptions options = default)
         {
-            var normalized = NormalizeFulfillParameters(status, headers, contentType, body, bodyBytes, path);
+            options ??= new RouteFulfillOptions();
+            var normalized = NormalizeFulfillParameters(
+                options.Status,
+                options.Headers,
+                options.ContentType,
+                options.Body,
+                options.BodyBytes,
+                options.Path);
+
             return _channel.FulfillAsync(normalized);
         }
 
         public Task AbortAsync(string errorCode = RequestAbortErrorCode.Failed) => _channel.AbortAsync(errorCode);
 
-        public Task ContinueAsync(
-            string url = default,
-            string method = default,
-            byte[] postData = default,
-            IEnumerable<KeyValuePair<string, string>> headers = default)
-            => _channel.ContinueAsync(url, method, postData, headers);
+        public Task ContinueAsync(RouteContinueOptions options = default)
+        {
+            options ??= new RouteContinueOptions();
+            return _channel.ContinueAsync(url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers);
+        }
 
         private NormalizedFulfillResponse NormalizeFulfillParameters(
             int? status,

@@ -36,7 +36,7 @@ namespace Microsoft.Playwright.NUnit
     public class BrowserTest : PlaywrightTest
     {
         public IBrowser Browser { get; internal set; }
-        private List<IBrowserContext> _contexts = new();
+        private readonly List<IBrowserContext> _contexts = new();
 
         public async Task<IBrowserContext> NewContext(BrowserNewContextOptions options)
         {

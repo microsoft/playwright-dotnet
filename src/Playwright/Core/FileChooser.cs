@@ -21,10 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright.Core
@@ -56,16 +53,30 @@ namespace Microsoft.Playwright.Core
 
         public bool IsMultiple { get; set; }
 
-        public Task SetFilesAsync(string filesString, bool? noWaitAfter, float? timeout)
-            => ElementImpl.SetInputFilesAsync(filesString, noWaitAfter, timeout);
+        public Task SetFilesAsync(string files, FileChooserSetFilesOptions options = default)
+            => ElementImpl.SetInputFilesAsync(files, Map(options));
 
-        public Task SetFilesAsync(IEnumerable<string> filesString, bool? noWaitAfter, float? timeout)
-            => ElementImpl.SetInputFilesAsync(filesString, noWaitAfter, timeout);
+        public Task SetFilesAsync(IEnumerable<string> files, FileChooserSetFilesOptions options = default)
+            => ElementImpl.SetInputFilesAsync(files, Map(options));
 
-        public Task SetFilesAsync(FilePayload filesFilePayload, bool? noWaitAfter, float? timeout)
-            => ElementImpl.SetInputFilesAsync(filesFilePayload, noWaitAfter, timeout);
+        public Task SetFilesAsync(FilePayload files, FileChooserSetFilesOptions options = default)
+            => ElementImpl.SetInputFilesAsync(files, Map(options));
 
-        public Task SetFilesAsync(IEnumerable<FilePayload> filesEnumerableFilePayload, bool? noWaitAfter, float? timeout)
-            => ElementImpl.SetInputFilesAsync(filesEnumerableFilePayload, noWaitAfter, timeout);
+        public Task SetFilesAsync(IEnumerable<FilePayload> files, FileChooserSetFilesOptions options = default)
+            => ElementImpl.SetInputFilesAsync(files, Map(options));
+
+        private ElementHandleSetInputFilesOptions Map(FileChooserSetFilesOptions options)
+        {
+            if (options == null)
+            {
+                return null;
+            }
+
+            return new()
+            {
+                NoWaitAfter = options?.NoWaitAfter,
+                Timeout = options?.Timeout,
+            };
+        }
     }
 }

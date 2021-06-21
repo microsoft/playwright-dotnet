@@ -117,29 +117,33 @@ namespace Microsoft.Playwright.Core
 
         public Task WaitForTimeoutAsync(float timeout) => Task.Delay(Convert.ToInt32(timeout));
 
-        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, string value, bool? noWaitAfter, float? timeout)
-            => SelectOptionAsync(selector, new[] { new SelectOptionValue { Value = value } }, noWaitAfter, timeout);
+        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, string values, FrameSelectOptionOptions options = default)
+            => SelectOptionAsync(selector, new[] { values }, options);
 
-        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, bool? noWaitAfter, float? timeout)
-            => SelectOptionAsync(selector, values.Select(v => new SelectOptionValue { Value = v }), noWaitAfter, timeout);
+        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, FrameSelectOptionOptions options = default)
+            => SelectOptionAsync(selector, values.Select(x => new SelectOptionValue() { Value = x }), options);
 
-        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue value, bool? noWaitAfter, float? timeout)
-            => SelectOptionAsync(selector, new[] { value }, noWaitAfter, timeout);
+        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle values, FrameSelectOptionOptions options = default)
+            => SelectOptionAsync(selector, new[] { values }, options);
 
-        public async Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, bool? noWaitAfter, float? timeout)
-        {
-            return (await _channel.SelectOptionAsync(selector, values, noWaitAfter, timeout).ConfigureAwait(false)).ToList().AsReadOnly();
-        }
+        public async Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, FrameSelectOptionOptions options = default)
+            => (await _channel.SelectOptionAsync(
+                selector,
+                values.Select(x => x as ElementHandle),
+                noWaitAfter: options?.NoWaitAfter,
+                timeout: options?.Timeout).ConfigureAwait(false)).ToList().AsReadOnly();
 
-        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle value, bool? noWaitAfter, float? timeout)
-            => SelectOptionAsync(selector, new ElementHandle[] { (ElementHandle)value }, noWaitAfter, timeout);
+        public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, FrameSelectOptionOptions options = default)
+            => SelectOptionAsync(selector, new[] { values }, options);
 
-        public async Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, bool? noWaitAfter, float? timeout)
-        {
-            return (await _channel.SelectOptionAsync(selector, values.Select(v => (ElementHandle)v), noWaitAfter, timeout).ConfigureAwait(false)).ToList().AsReadOnly();
-        }
+        public async Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, FrameSelectOptionOptions options = default)
+            => (await _channel.SelectOptionAsync(
+                selector,
+                values,
+                noWaitAfter: options?.NoWaitAfter,
+                timeout: options?.Timeout).ConfigureAwait(false)).ToList().AsReadOnly();
 
-        public async Task WaitForLoadStateAsync(LoadState? state, float? timeout)
+        public async Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions options = default)
         {
             Task<LoadState> task;
             Waiter waiter = null;
@@ -154,7 +158,7 @@ namespace Microsoft.Playwright.Core
                         return;
                     }
 
-                    waiter = SetupNavigationWaiter("frame.WaitForLoadStateAsync", timeout);
+                    waiter = SetupNavigationWaiter("frame.WaitForLoadStateAsync", options?.Timeout);
                     task = waiter.WaitForEventAsync<LoadState>(this, "LoadState", s =>
                     {
                         waiter.Log($"  \"{s}\" event fired");
@@ -170,25 +174,11 @@ namespace Microsoft.Playwright.Core
             }
         }
 
-        public Task WaitForURLAsync(string urlString, float? timeout = default, WaitUntilState? waitUntil = default)
-            => WaitForURLAsync(urlString, null, null, timeout, waitUntil);
-
-        public Task WaitForURLAsync(Regex urlRegex, float? timeout = default, WaitUntilState? waitUntil = default)
-            => WaitForURLAsync(null, urlRegex, null, timeout, waitUntil);
-
-        public Task WaitForURLAsync(Func<string, bool> urlFunc, float? timeout = default, WaitUntilState? waitUntil = default)
-            => WaitForURLAsync(null, null, urlFunc, timeout, waitUntil);
-
-        public async Task<IResponse> WaitForNavigationAsync(
-            string urlString = default,
-            Regex urlRegex = default,
-            Func<string, bool> urlFunc = default,
-            WaitUntilState? waitUntil = default,
-            float? timeout = default)
+        public async Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default)
         {
-            WaitUntilState waitUntil2 = waitUntil ?? WaitUntilState.Load;
-            var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", timeout);
-            string toUrl = !string.IsNullOrEmpty(urlString) ? $" to \"{urlString}\"" : string.Empty;
+            WaitUntilState waitUntil2 = options?.WaitUntil ?? WaitUntilState.Load;
+            var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", options?.Timeout);
+            string toUrl = !string.IsNullOrEmpty(options?.UrlString) ? $" to \"{options?.UrlString}\"" : string.Empty;
 
             waiter.Log($"waiting for navigation{toUrl} until \"{waitUntil2}\"");
 
@@ -204,7 +194,7 @@ namespace Microsoft.Playwright.Core
                     }
 
                     waiter.Log($"  navigated to \"{e.Url}\"");
-                    return UrlMatches(e.Url, urlString, urlRegex, urlFunc);
+                    return UrlMatches(e.Url, options?.UrlString, options?.UrlRegex, options?.UrlFunc);
                 });
 
             var navigatedEvent = await navigatedEventTask.ConfigureAwait(false);
@@ -238,15 +228,17 @@ namespace Microsoft.Playwright.Core
             return response;
         }
 
-        public async Task<IResponse> RunAndWaitForNavigationAsync(
-            Func<Task> action,
-            string urlString = default,
-            Regex urlRegex = default,
-            Func<string, bool> urlFunc = default,
-            WaitUntilState? waitUntil = default,
-            float? timeout = default)
+        public async Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions options = default)
         {
-            var result = WaitForNavigationAsync(urlString, urlRegex, urlFunc, waitUntil, timeout);
+            var result = WaitForNavigationAsync(options == null ? null :
+                new()
+                {
+                    UrlString = options?.UrlString,
+                    UrlRegex = options?.UrlRegex,
+                    UrlFunc = options?.UrlFunc,
+                    WaitUntil = options?.WaitUntil,
+                    Timeout = options?.Timeout,
+                });
             if (action != null)
             {
                 await Task.WhenAll(result, action()).ConfigureAwait(false);
@@ -255,119 +247,149 @@ namespace Microsoft.Playwright.Core
             return await result.ConfigureAwait(false);
         }
 
-        public Task TapAsync(
-            string selector,
-            IEnumerable<KeyboardModifier> modifiers,
-            Position position,
-            bool? force,
-            bool? noWaitAfter,
-            float? timeout,
-            bool? trial)
-            => _channel.TapAsync(selector, modifiers, position, timeout, force, noWaitAfter, trial);
+        public Task TapAsync(string selector, FrameTapOptions options = default)
+            => _channel.TapAsync(
+                selector,
+                modifiers: options?.Modifiers,
+                position: options?.Position,
+                timeout: options?.Timeout,
+                force: options?.Force,
+                noWaitAfter: options?.NoWaitAfter,
+                trial: options?.Trial);
 
         public Task<string> ContentAsync() => _channel.ContentAsync();
 
-        public Task FocusAsync(string selector, float? timeout)
-            => _channel.FocusAsync(selector, timeout);
+        public Task FocusAsync(string selector, FrameFocusOptions options = default)
+            => _channel.FocusAsync(selector, options?.Timeout);
 
-        public Task TypeAsync(string selector, string text, float? delay, bool? noWaitAfter, float? timeout)
-            => _channel.TypeAsync(selector, text, delay, timeout, noWaitAfter);
+        public Task TypeAsync(string selector, string text, FrameTypeOptions options = default)
+            => _channel.TypeAsync(
+                selector,
+                text,
+                delay: options?.Delay,
+                timeout: options?.Timeout,
+                noWaitAfter: options?.NoWaitAfter);
 
-        public Task<string> GetAttributeAsync(string selector, string name, float? timeout)
-            => _channel.GetAttributeAsync(selector, name, timeout);
+        public Task<string> GetAttributeAsync(string selector, string name, FrameGetAttributeOptions options = default)
+            => _channel.GetAttributeAsync(selector, name, options?.Timeout);
 
-        public Task<string> InnerHTMLAsync(string selector, float? timeout)
-            => _channel.InnerHTMLAsync(selector, timeout);
+        public Task<string> InnerHTMLAsync(string selector, FrameInnerHTMLOptions options = default)
+            => _channel.InnerHTMLAsync(selector, options?.Timeout);
 
-        public Task<string> InnerTextAsync(string selector, float? timeout)
-            => _channel.InnerTextAsync(selector, timeout);
+        public Task<string> InnerTextAsync(string selector, FrameInnerTextOptions options = default)
+            => _channel.InnerTextAsync(selector, options?.Timeout);
 
-        public Task<string> TextContentAsync(string selector, float? timeout)
-            => _channel.TextContentAsync(selector, timeout);
+        public Task<string> TextContentAsync(string selector, FrameTextContentOptions options = default)
+            => _channel.TextContentAsync(selector, options?.Timeout);
 
-        public Task HoverAsync(string selector, Position position, IEnumerable<KeyboardModifier> modifiers, bool? force, float? timeout, bool? trial)
-            => _channel.HoverAsync(selector, position, modifiers, force, timeout, trial);
+        public Task HoverAsync(string selector, FrameHoverOptions options = default)
+            => _channel.HoverAsync(
+                selector,
+                position: options?.Position,
+                modifiers: options?.Modifiers,
+                force: options?.Force,
+                timeout: options?.Timeout,
+                trial: options?.Trial);
 
-        public Task<string[]> PressAsync(string selector, string key, float? delay, bool? noWaitAfter, float? timeout)
-            => _channel.PressAsync(selector, key, delay, timeout, noWaitAfter);
+        public Task PressAsync(string selector, string key, FramePressOptions options = default)
+            => _channel.PressAsync(
+                selector,
+                key,
+                delay: options?.Delay,
+                timeout: options?.Timeout,
+                noWaitAfter: options?.NoWaitAfter);
 
-        public Task DispatchEventAsync(string selector, string type, object eventInit, float? timeout)
+        public Task DispatchEventAsync(string selector, string type, object eventInit = default, FrameDispatchEventOptions options = default)
             => _channel.DispatchEventAsync(
                     selector,
                     type,
-                    eventInit = ScriptsHelper.SerializedArgument(eventInit),
-                    timeout);
+                    ScriptsHelper.SerializedArgument(eventInit),
+                    options?.Timeout);
 
-        public Task FillAsync(string selector, string value, bool? noWaitAfter, float? timeout)
-            => _channel.FillAsync(selector, value, timeout, noWaitAfter);
+        public Task FillAsync(string selector, string value, FrameFillOptions options = default)
+            => _channel.FillAsync(selector, value, timeout: options?.Timeout, noWaitAfter: options?.NoWaitAfter);
 
-        public async Task<IElementHandle> AddScriptTagAsync(string url, string path, string content, string type)
+        public async Task<IElementHandle> AddScriptTagAsync(FrameAddScriptTagOptions options = default)
         {
-            if (!string.IsNullOrEmpty(path))
+            var content = options?.Content;
+            if (!string.IsNullOrEmpty(options?.Path))
             {
-                content = File.ReadAllText(path);
-                content += "//# sourceURL=" + path.Replace("\n", string.Empty);
+                content = File.ReadAllText(options.Path);
+                content += "//# sourceURL=" + options.Path.Replace("\n", string.Empty);
             }
 
-            return (await _channel.AddScriptTagAsync(url, path, content, type).ConfigureAwait(false)).Object;
+            return (await _channel.AddScriptTagAsync(options?.Url, options?.Path, content, options?.Type).ConfigureAwait(false)).Object;
         }
 
-        public async Task<IElementHandle> AddStyleTagAsync(string url, string path, string content)
+        public async Task<IElementHandle> AddStyleTagAsync(FrameAddStyleTagOptions options = default)
         {
-            if (!string.IsNullOrEmpty(path))
+            var content = options?.Content;
+            if (!string.IsNullOrEmpty(options?.Path))
             {
-                content = File.ReadAllText(path);
-                content += "//# sourceURL=" + path.Replace("\n", string.Empty);
+                content = File.ReadAllText(options.Path);
+                content += "//# sourceURL=" + options.Path.Replace("\n", string.Empty);
             }
 
-            return (await _channel.AddStyleTagAsync(url, path, content).ConfigureAwait(false)).Object;
+            return (await _channel.AddStyleTagAsync(options?.Url, options?.Path, content).ConfigureAwait(false)).Object;
         }
 
-        public Task SetInputFilesAsync(string selector, IEnumerable<string> files, bool? noWaitAfter, float? timeout)
-            => _channel.SetInputFilesAsync(selector, files.Select(f => f.ToFilePayload()).ToArray(), noWaitAfter, timeout);
+        public Task SetInputFilesAsync(string selector, string files, FrameSetInputFilesOptions options = default)
+            => SetInputFilesAsync(selector, new[] { files }, options);
 
-        public Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, bool? noWaitAfter = null, float? timeout = null)
-            => _channel.SetInputFilesAsync(selector, files, noWaitAfter, timeout);
+        public Task SetInputFilesAsync(string selector, IEnumerable<string> files, FrameSetInputFilesOptions options = default)
+            => SetInputFilesAsync(selector, files.Select(x => x.ToFilePayload()), options);
 
-        public Task SetInputFilesAsync(string selector, string files, bool? noWaitAfter, float? timeout)
-            => SetInputFilesAsync(selector, new[] { files }, noWaitAfter, timeout);
+        public Task SetInputFilesAsync(string selector, FilePayload files, FrameSetInputFilesOptions options = default)
+            => SetInputFilesAsync(selector, new[] { files }, options);
 
-        public Task SetInputFilesAsync(string selector, FilePayload files, bool? noWaitAfter, float? timeout)
-            => SetInputFilesAsync(selector, new[] { files }, noWaitAfter, timeout);
+        public Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, FrameSetInputFilesOptions options = default)
+            => _channel.SetInputFilesAsync(selector, files, noWaitAfter: options?.NoWaitAfter, timeout: options?.Timeout);
 
-        public Task ClickAsync(
-            string selector,
-            float? delay,
-            MouseButton? button,
-            int? clickCount,
-            IEnumerable<KeyboardModifier> modifiers,
-            Position position,
-            float? timeout,
-            bool? force,
-            bool? noWaitAfter,
-            bool? trial)
-            => _channel.ClickAsync(selector, delay, button, clickCount, modifiers, position, timeout, force, noWaitAfter, trial);
+        public Task ClickAsync(string selector, FrameClickOptions options = default)
+            => _channel.ClickAsync(
+                selector,
+                delay: options?.Delay,
+                button: options?.Button,
+                clickCount: options?.ClickCount,
+                modifiers: options?.Modifiers,
+                position: options?.Position,
+                timeout: options?.Timeout,
+                force: options?.Force,
+                noWaitAfter: options?.NoWaitAfter,
+                trial: options?.Trial);
 
-        public Task DblClickAsync(
-            string selector,
-            float? delay,
-            MouseButton? button,
-            Position position,
-            IEnumerable<KeyboardModifier> modifiers,
-            float? timeout,
-            bool? force,
-            bool? noWaitAfter,
-            bool? trial)
-            => _channel.DblClickAsync(selector, delay, button, position, modifiers, timeout, force, noWaitAfter, trial);
+        public Task DblClickAsync(string selector, FrameDblClickOptions options = default)
+            => _channel.DblClickAsync(
+                selector,
+                delay: options?.Delay,
+                button: options?.Button,
+                position: options?.Position,
+                modifiers: options?.Modifiers,
+                timeout: options?.Timeout,
+                force: options?.Force,
+                noWaitAfter: options?.NoWaitAfter,
+                trial: options?.Trial);
 
-        public Task CheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
-            => _channel.CheckAsync(selector, position, timeout, force, noWaitAfter, trial);
+        public Task CheckAsync(string selector, FrameCheckOptions options = default)
+            => _channel.CheckAsync(
+                selector,
+                position: options?.Position,
+                timeout: options?.Timeout,
+                force: options?.Force,
+                noWaitAfter: options?.NoWaitAfter,
+                trial: options?.Trial);
 
-        public Task UncheckAsync(string selector, Position position, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
-            => _channel.UncheckAsync(selector, position, timeout, force, noWaitAfter, trial);
+        public Task UncheckAsync(string selector, FrameUncheckOptions options = default)
+            => _channel.UncheckAsync(
+                selector,
+                position: options?.Position,
+                timeout: options?.Timeout,
+                force: options?.Force,
+                noWaitAfter: options?.NoWaitAfter,
+                trial: options?.Trial);
 
-        public Task SetContentAsync(string html, WaitUntilState? waitUntil, float? timeout)
-            => _channel.SetContentAsync(html, timeout, waitUntil);
+        public Task SetContentAsync(string html, FrameSetContentOptions options = default)
+            => _channel.SetContentAsync(html, timeout: options?.Timeout, waitUntil: options?.WaitUntil);
 
         public async Task<IElementHandle> QuerySelectorAsync(string selector)
             => (await _channel.QuerySelectorAsync(selector).ConfigureAwait(false))?.Object;
@@ -375,18 +397,18 @@ namespace Microsoft.Playwright.Core
         public async Task<IReadOnlyList<IElementHandle>> QuerySelectorAllAsync(string selector)
             => (await _channel.QuerySelectorAllAsync(selector).ConfigureAwait(false)).Select(c => ((ElementHandleChannel)c).Object).ToList().AsReadOnly();
 
-        public async Task<IJSHandle> WaitForFunctionAsync(string expression, object args, float? pollingInterval, float? timeout)
+        public async Task<IJSHandle> WaitForFunctionAsync(string expression, object arg = default, FrameWaitForFunctionOptions options = default)
              => (await _channel.WaitForFunctionAsync(
                 expression: expression,
-                arg: ScriptsHelper.SerializedArgument(args),
-                timeout: timeout,
-                polling: pollingInterval).ConfigureAwait(false)).Object;
+                arg: ScriptsHelper.SerializedArgument(arg),
+                timeout: options?.Timeout,
+                polling: options?.PollingInterval).ConfigureAwait(false)).Object;
 
-        public async Task<IElementHandle> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout)
+        public async Task<IElementHandle> WaitForSelectorAsync(string selector, FrameWaitForSelectorOptions options = default)
             => (await _channel.WaitForSelectorAsync(
                 selector: selector,
-                state: state,
-                timeout: timeout).ConfigureAwait(false))?.Object;
+                state: options?.State,
+                timeout: options?.Timeout).ConfigureAwait(false))?.Object;
 
         public async Task<IJSHandle> EvaluateHandleAsync(string script, object args = null)
             => (await _channel.EvaluateExpressionHandleAsync(
@@ -427,35 +449,56 @@ namespace Microsoft.Playwright.Core
                 script,
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
-        public async Task<IResponse> GotoAsync(string url, WaitUntilState? waitUntil, string referer, float? timeout)
-            => (await _channel.GotoAsync(url, timeout, waitUntil, referer).ConfigureAwait(false))?.Object;
+        public async Task<IResponse> GotoAsync(string url, FrameGotoOptions options = default)
+            => (await _channel.GotoAsync(
+                url,
+                timeout: options?.Timeout,
+                waitUntil: options?.WaitUntil,
+                referer: options?.Referer).ConfigureAwait(false))?.Object;
 
-        public Task<bool> IsCheckedAsync(string selector, float? timeout)
-            => _channel.IsCheckedAsync(selector, timeout);
+        public Task<bool> IsCheckedAsync(string selector, FrameIsCheckedOptions options = default)
+            => _channel.IsCheckedAsync(selector, timeout: options?.Timeout);
 
-        public Task<bool> IsDisabledAsync(string selector, float? timeout)
-            => _channel.IsDisabledAsync(selector, timeout);
+        public Task<bool> IsDisabledAsync(string selector, FrameIsDisabledOptions options = default)
+            => _channel.IsDisabledAsync(selector, timeout: options?.Timeout);
 
-        public Task<bool> IsEditableAsync(string selector, float? timeout)
-            => _channel.IsEditableAsync(selector, timeout);
+        public Task<bool> IsEditableAsync(string selector, FrameIsEditableOptions options = default)
+            => _channel.IsEditableAsync(selector, timeout: options?.Timeout);
 
-        public Task<bool> IsEnabledAsync(string selector, float? timeout)
-            => _channel.IsEnabledAsync(selector, timeout);
+        public Task<bool> IsEnabledAsync(string selector, FrameIsEnabledOptions options = default)
+            => _channel.IsEnabledAsync(selector, timeout: options?.Timeout);
 
-        public Task<bool> IsHiddenAsync(string selector, float? timeout)
-            => _channel.IsHiddenAsync(selector, timeout);
+        public Task<bool> IsHiddenAsync(string selector, FrameIsHiddenOptions options = default)
+            => _channel.IsHiddenAsync(selector, timeout: options?.Timeout);
 
-        public Task<bool> IsVisibleAsync(string selector, float? timeout)
-            => _channel.IsVisibleAsync(selector, timeout);
+        public Task<bool> IsVisibleAsync(string selector, FrameIsVisibleOptions options = default)
+            => _channel.IsVisibleAsync(selector, timeout: options?.Timeout);
 
-        private Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, float? timeout, WaitUntilState? waitUntil)
+        public Task WaitForURLAsync(string url, FrameWaitForURLOptions options = default)
+            => WaitForURLAsync(url, null, null, options);
+
+        public Task WaitForURLAsync(Regex url, FrameWaitForURLOptions options = default)
+            => WaitForURLAsync(null, url, null, options);
+
+        public Task WaitForURLAsync(Func<string, bool> url, FrameWaitForURLOptions options = default)
+            => WaitForURLAsync(null, null, url, options);
+
+        private Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, FrameWaitForURLOptions options = default)
         {
             if (UrlMatches(Url, urlString, urlRegex, urlFunc))
             {
-                return WaitForLoadStateAsync(ToLoadState(waitUntil), timeout);
+                return WaitForLoadStateAsync(ToLoadState(options?.WaitUntil), options != null ? new() { Timeout = options?.Timeout } : null);
             }
 
-            return WaitForNavigationAsync(urlString, urlRegex, urlFunc, waitUntil, timeout);
+            return WaitForNavigationAsync(
+                new()
+                {
+                    UrlString = urlString,
+                    UrlRegex = urlRegex,
+                    UrlFunc = urlFunc,
+                    Timeout = options?.Timeout,
+                    WaitUntil = options?.WaitUntil,
+                });
         }
 
         private LoadState? ToLoadState(WaitUntilState? waitUntilState)
