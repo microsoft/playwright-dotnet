@@ -33,16 +33,27 @@ namespace Microsoft.Playwright.Helpers
     {
         internal static string GetExecutablePath()
         {
-            var assembly = typeof(Playwright).Assembly;
-            string driversPath = new FileInfo(assembly.Location).Directory.FullName;
+            DirectoryInfo assemblyDirectory = new(AppContext.BaseDirectory);
+            if (!assemblyDirectory.Exists || !File.Exists(Path.Combine(assemblyDirectory.FullName, "Microsoft.Playwright.dll")))
+            {
+                var assemblyLocation = typeof(Playwright).Assembly.Location;
+                assemblyDirectory = new FileInfo(assemblyLocation).Directory;
+            }
 
-            string executableFile = GetPath(driversPath);
+            string executableFile = GetPath(assemblyDirectory.FullName);
             if (File.Exists(executableFile))
             {
                 return executableFile;
             }
 
-            throw new PlaywrightException($@"Driver not found: {executableFile}");
+            // if the above fails, we can assume we're in the nuget registry
+            executableFile = GetPath(assemblyDirectory.Parent.Parent.FullName);
+            if (File.Exists(executableFile))
+            {
+                return executableFile;
+            }
+
+            throw new PlaywrightException($"Driver not found: {executableFile}");
         }
 
         private static string GetPath(string driversPath)
