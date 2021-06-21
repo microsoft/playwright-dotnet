@@ -30,19 +30,7 @@ namespace Microsoft.Playwright.NUnit
 {
     public class PlaywrightTest : WorkerAwareTest
     {
-        static PlaywrightTest()
-        {
-            var name = (Environment.GetEnvironmentVariable("BROWSER") ?? Microsoft.Playwright.BrowserType.Chromium).ToLower();
-            BrowserName = name switch
-            {
-                Microsoft.Playwright.BrowserType.Chromium => name,
-                Microsoft.Playwright.BrowserType.Firefox => name,
-                Microsoft.Playwright.BrowserType.Webkit => name,
-                _ => Microsoft.Playwright.BrowserType.Chromium
-            };
-        }
-
-        public static string BrowserName { get; }
+        public static string BrowserName => (Environment.GetEnvironmentVariable("BROWSER") ?? Microsoft.Playwright.BrowserType.Chromium).ToLower();
 
         private static readonly Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
 
@@ -54,6 +42,7 @@ namespace Microsoft.Playwright.NUnit
         {
             Playwright = await _playwrightTask;
             BrowserType = Playwright[BrowserName];
+            Assert.IsNotNull(BrowserType, $"The requested browser ({BrowserName}) could not be found - make sure your BROWSER env variable is set correctly.");
         }
     }
 }

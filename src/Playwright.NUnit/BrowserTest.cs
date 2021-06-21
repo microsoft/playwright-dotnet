@@ -22,21 +22,16 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Playwright;
 using NUnit.Framework;
-using NUnit.Framework.Interfaces;
 
 namespace Microsoft.Playwright.NUnit
 {
     public class BrowserTest : PlaywrightTest
     {
         public IBrowser Browser { get; internal set; }
-        private List<IBrowserContext> _contexts = new();
+        private readonly List<IBrowserContext> _contexts = new();
 
         public async Task<IBrowserContext> NewContext(BrowserNewContextOptions options)
         {
