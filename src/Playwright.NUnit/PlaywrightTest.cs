@@ -30,7 +30,19 @@ namespace Microsoft.Playwright.NUnit
 {
     public class PlaywrightTest : WorkerAwareTest
     {
-        public static string BrowserName => (Environment.GetEnvironmentVariable("BROWSER") ?? Microsoft.Playwright.BrowserType.Chromium).ToLower();
+        static PlaywrightTest()
+        {
+            var name = (Environment.GetEnvironmentVariable("BROWSER") ?? Microsoft.Playwright.BrowserType.Chromium).ToLower();
+            BrowserName = name switch
+            {
+                Microsoft.Playwright.BrowserType.Chromium => name,
+                Microsoft.Playwright.BrowserType.Firefox => name,
+                Microsoft.Playwright.BrowserType.Webkit => name,
+                _ => Microsoft.Playwright.BrowserType.Chromium
+            };
+        }
+
+        public static string BrowserName { get; }
 
         private static readonly Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
 
