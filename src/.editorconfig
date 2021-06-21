@@ -181,3 +181,6 @@ dotnet_diagnostic.SA1201.severity = none
 # Docs are generated in Playwright
 dotnet_diagnostic.CS1591.severity = none
 dotnet_diagnostic.SA1600.severity = none
+
+[Playwright/Core/*.cs]
+dotnet_diagnostic.SA1118.severity = none # This should be removed when we finish
