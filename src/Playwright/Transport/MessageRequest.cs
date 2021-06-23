@@ -23,8 +23,6 @@
  * SOFTWARE.
  */
 
-using System.Text.Json.Serialization;
-
 namespace Microsoft.Playwright.Transport
 {
     internal class MessageRequest

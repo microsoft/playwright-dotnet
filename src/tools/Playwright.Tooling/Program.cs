@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
-using System.IO;
 using System.Threading.Tasks;
 using CommandLine;
 using Playwright.Tooling.Options;

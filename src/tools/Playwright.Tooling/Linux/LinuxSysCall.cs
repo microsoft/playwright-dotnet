@@ -23,7 +23,6 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Runtime.InteropServices;
 
 namespace DriverDownloader.Linux
