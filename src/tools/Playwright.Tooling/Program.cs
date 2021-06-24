@@ -32,9 +32,8 @@ namespace Playwright.Tooling
     {
         internal static async Task Main(string[] args)
         {
-            ParserResult<object> result = Parser.Default.ParseArguments<DownloadDriversOptions, ApiCheckerOptions>(args);
-            await result.WithParsedAsync<DownloadDriversOptions>(DriverDownloader.RunAsync).ConfigureAwait(false);
-            await result.WithParsedAsync<ApiCheckerOptions>(ApiChecker.RunAsync).ConfigureAwait(false);
+            ParserResult<DownloadDriversOptions> result = Parser.Default.ParseArguments<DownloadDriversOptions>(args);
+            await result.WithParsedAsync(DriverDownloader.RunAsync).ConfigureAwait(false);
         }
     }
 }
