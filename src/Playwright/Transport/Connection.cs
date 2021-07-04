@@ -47,35 +47,25 @@ namespace Microsoft.Playwright.Transport
         private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new();
         private readonly ConcurrentDictionary<int, ConnectionCallback> _callbacks = new();
         private readonly ChannelOwnerBase _rootObject;
-        private readonly Process _playwrightServerProcess;
-        private readonly IConnectionTransport _transport;
         private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger<Connection> _logger;
         private readonly TaskQueue _queue = new();
         private int _lastId;
         private string _reason = string.Empty;
 
-        public Connection()
+        public Connection(IConnectionTransport connectionTransport, ILoggerFactory loggerFactory)
         {
-            _loggerFactory = LoggerFactory.Create(builder =>
-            {
-                builder.SetMinimumLevel(LogLevel.Debug);
-                builder.AddFilter((f, _) => f == "PlaywrightSharp.Playwright");
-            });
+            _loggerFactory = loggerFactory;
 
             _logger = _loggerFactory.CreateLogger<Connection>();
             var debugLogger = _loggerFactory?.CreateLogger<PlaywrightImpl>();
 
             _rootObject = new(null, this, string.Empty);
 
-            _playwrightServerProcess = GetProcess();
-            _playwrightServerProcess.StartInfo.Arguments = "run-driver";
-            _playwrightServerProcess.Start();
-            _playwrightServerProcess.Exited += (_, _) => Close("Process exited");
-            _transport = new StdIOTransport(_playwrightServerProcess, _loggerFactory);
-            _transport.MessageReceived += Transport_MessageReceived;
-            _transport.LogReceived += (_, e) => debugLogger?.LogInformation(e.Message);
-            _transport.TransportClosed += (_, e) => Close(e.CloseReason);
+            Transport = connectionTransport;
+            Transport.MessageReceived += Transport_MessageReceived;
+            Transport.LogReceived += (_, e) => debugLogger?.LogInformation(e.Message);
+            Transport.TransportClosed += (_, e) => Close(e.CloseReason);
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
@@ -85,11 +75,33 @@ namespace Microsoft.Playwright.Transport
 
         public bool IsClosed { get; private set; }
 
+        public IConnectionTransport Transport { get; set; }
+
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
             _loggerFactory.Dispose();
+        }
+
+        public void Close(string reason)
+        {
+            _reason = string.IsNullOrEmpty(_reason) ? reason : _reason;
+            if (!IsClosed)
+            {
+                foreach (var callback in _callbacks)
+                {
+                    callback.Value.TaskCompletionSource.TrySetException(new PlaywrightException(reason));
+                }
+
+                foreach (var callback in _waitingForObject)
+                {
+                    callback.Value.TrySetException(new PlaywrightException(reason));
+                }
+
+                Dispose();
+                IsClosed = true;
+            }
         }
 
         internal Task<JsonElement?> SendMessageToServerAsync(
@@ -175,7 +187,7 @@ namespace Microsoft.Playwright.Transport
                 string messageString = JsonSerializer.Serialize(message, GetDefaultJsonSerializerOptions());
                 _logger?.LogInformation($"pw:channel:command {messageString}");
 
-                return _transport.SendAsync(messageString);
+                return Transport.SendAsync(messageString);
             }).ConfigureAwait(false);
 
             var result = await tcs.Task.ConfigureAwait(false);
@@ -247,20 +259,6 @@ namespace Microsoft.Playwright.Transport
             }
         }
 
-        private static Process GetProcess()
-            => new()
-            {
-                StartInfo =
-                {
-                    FileName = Paths.GetExecutablePath(),
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardInput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true,
-                },
-            };
-
         private void Transport_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
             var message = JsonSerializer.Deserialize<PlaywrightServerMessage>(e.Message, JsonExtensions.DefaultJsonSerializerOptions);
@@ -315,6 +313,7 @@ namespace Microsoft.Playwright.Transport
 
         private void CreateRemoteObject(string parentGuid, ChannelOwnerType type, string guid, JsonElement? initializer)
         {
+#pragma warning disable CA2000 // Dispose objects before losing scope
             IChannelOwner result = null;
             var parent = string.IsNullOrEmpty(parentGuid) ? _rootObject : Objects[parentGuid];
 
@@ -387,26 +386,7 @@ namespace Microsoft.Playwright.Transport
 
             Objects.TryAdd(guid, result);
             OnObjectCreated(guid, result);
-        }
-
-        private void Close(string reason)
-        {
-            _reason = string.IsNullOrEmpty(_reason) ? reason : _reason;
-            if (!IsClosed)
-            {
-                foreach (var callback in _callbacks)
-                {
-                    callback.Value.TaskCompletionSource.TrySetException(new PlaywrightException(reason));
-                }
-
-                foreach (var callback in _waitingForObject)
-                {
-                    callback.Value.TrySetException(new PlaywrightException(reason));
-                }
-
-                Dispose();
-                IsClosed = true;
-            }
+#pragma warning restore CA2000 // Dispose objects before losing scope
         }
 
         private Exception CreateException(PlaywrightServerError error)
@@ -450,16 +430,7 @@ namespace Microsoft.Playwright.Transport
             }
 
             _queue.Dispose();
-            _transport.Close("Connection disposed");
-
-            try
-            {
-                _playwrightServerProcess?.Kill();
-                _playwrightServerProcess?.Dispose();
-            }
-            catch
-            {
-            }
+            Transport.Close("Connection disposed");
         }
     }
 }

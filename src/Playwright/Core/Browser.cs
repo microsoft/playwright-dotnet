@@ -55,6 +55,8 @@ namespace Microsoft.Playwright.Core
 
         public bool IsConnected { get; private set; }
 
+        public bool IsRemote { get; set; }
+
         public string Version => _initializer.Version;
 
         internal BrowserChannel Channel { get; }

@@ -76,6 +76,8 @@ namespace Microsoft.Playwright.Core
 
         public ISelectors Selectors { get => _initializer.Selectors; }
 
+        public PlaywrightInitializer Intitializer { get => _initializer; }
+
         public IReadOnlyDictionary<string, BrowserNewContextOptions> Devices => _devices;
 
         internal Connection Connection { get; set; }
