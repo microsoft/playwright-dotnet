@@ -77,7 +77,7 @@ namespace Microsoft.Playwright
         /// and returns the remote browser.
         /// </para>
         /// <code>
-        /// var browser = await playwright.Chromium.ConnectAsync("ws://url")
+        /// var browser = await playwright.Chromium.ConnectAsync("ws://url");
         /// </code>
         /// </summary>
         /// <param name="wsEndpoint">WebSocket Endpoing</param>
