@@ -131,11 +131,11 @@ namespace Microsoft.Playwright.Core
                 builder.SetMinimumLevel(LogLevel.Debug);
                 builder.AddFilter((f, _) => f == "PlaywrightSharp.Playwright");
             });
-            WebSocketTransport webSocketTransport = new WebSocketTransport(wsEndpoint, options, loggerFactory);
+            var webSocketTransport = new WebSocketTransport(wsEndpoint, options, loggerFactory);
             await webSocketTransport.ConnectAsync().ConfigureAwait(false);
             _parent.Connection.Transport = webSocketTransport;
 
-            Connection connection = new Connection(webSocketTransport, loggerFactory);
+            var connection = new Connection(webSocketTransport, loggerFactory);
             var playwright = await connection.WaitForObjectWithKnownNameAsync<PlaywrightImpl>("Playwright").ConfigureAwait(false);
             playwright.Connection = connection;
 
@@ -145,7 +145,7 @@ namespace Microsoft.Playwright.Core
                 throw new PlaywrightException("Malformed endpoint. Did you use launchServer method?");
             }
 
-            Browser browser = playwright.PreLaunchedBrowser;
+            var browser = playwright.PreLaunchedBrowser;
             browser.IsRemote = true;
             browser.Disconnected += Browser_Disconnected;
             return browser;
