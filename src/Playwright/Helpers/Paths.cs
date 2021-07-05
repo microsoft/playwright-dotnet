@@ -33,31 +33,38 @@ namespace Microsoft.Playwright.Helpers
     {
         internal static string GetExecutablePath()
         {
-            DirectoryInfo assemblyDirectory = new(AppContext.BaseDirectory);
-            if (!assemblyDirectory.Exists || !File.Exists(Path.Combine(assemblyDirectory.FullName, "Microsoft.Playwright.dll")))
+            /*
+             * Scenarios this has to cover:
+             * 1) The simple one, where the .playwright folder is next to the BaseDirectory, which is almost always
+             * 2) Scenarios where we have to rely on the assembly location of Microsoft.Playwright.dll, but can't be
+             *      sure that's always correct, because it can be empty for some cases (hence 1. is first)
+             * 3) Scenarios where we get loaded from NuGet and **NOT** copied, which is rare, but implies we're loaded
+             *      from the NuGet cache.
+             */
+            var location = typeof(Playwright).Assembly.Location;
+            var potentialPaths = new string[]
             {
-                var assemblyLocation = typeof(Playwright).Assembly.Location;
-                assemblyDirectory = new FileInfo(assemblyLocation).Directory;
+                GetPath(AppContext.BaseDirectory),
+                GetPath(Path.GetDirectoryName(location)),
+                !string.IsNullOrEmpty(location) ? GetPath(new FileInfo(location)?.Directory?.Parent?.Parent?.FullName) : null,
+            };
+
+            var path = Array.Find(potentialPaths, x => File.Exists(x));
+            if (path != null)
+            {
+                return path;
             }
 
-            string executableFile = GetPath(assemblyDirectory.FullName);
-            if (File.Exists(executableFile))
-            {
-                return executableFile;
-            }
-
-            // if the above fails, we can assume we're in the nuget registry
-            executableFile = GetPath(assemblyDirectory.Parent.Parent.FullName);
-            if (File.Exists(executableFile))
-            {
-                return executableFile;
-            }
-
-            throw new PlaywrightException($"Driver not found: {executableFile}");
+            throw new PlaywrightException($"Driver not found in any location: {string.Join(Environment.NewLine, potentialPaths)}");
         }
 
         private static string GetPath(string driversPath)
         {
+            if (string.IsNullOrEmpty(driversPath))
+            {
+                return null;
+            }
+
             string platformId;
             string runnerName;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
