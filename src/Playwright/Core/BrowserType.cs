@@ -25,7 +25,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Playwright.API.Generated.Options;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
@@ -140,21 +139,18 @@ namespace Microsoft.Playwright.Core
             var playwright = await connection.WaitForObjectWithKnownNameAsync<PlaywrightImpl>("Playwright").ConfigureAwait(false);
             playwright.Connection = connection;
 
-            if (playwright.Intitializer.PreLaunchedBrowser == null)
+            if (playwright.PreLaunchedBrowser == null)
             {
                 _parent.Connection.Close("Disconnected");
                 throw new PlaywrightException("Malformed endpoint. Did you use launchServer method?");
             }
 
-            Browser browser = playwright.Intitializer.PreLaunchedBrowser;
+            Browser browser = playwright.PreLaunchedBrowser;
             browser.IsRemote = true;
             browser.Disconnected += Browser_Disconnected;
             return browser;
         }
 
-        private void Browser_Disconnected(object sender, IBrowser e)
-        {
-            _parent.Connection.Close("Browser Disconnected");
-        }
+        private void Browser_Disconnected(object sender, IBrowser e) => _parent.Connection.Close("Browser Disconnected");
     }
 }

@@ -34,7 +34,6 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Playwright.API.Generated.Options;
 
 #nullable enable
 
@@ -67,22 +66,13 @@ namespace Microsoft.Playwright
     /// </summary>
     public partial interface IBrowserType
     {
+        /// <summary><para>This methods attaches Playwright to an existing browser instance.</para></summary>
+        /// <param name="wsEndpoint">A browser websocket endpoint to connect to.</param>
+        /// <param name="options">Call options</param>
+        Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions? options = default);
+
         /// <summary><para>A path where Playwright expects to find a bundled browser executable.</para></summary>
         string ExecutablePath { get; }
-
-        /// <summary>
-        /// <para>Returns the remote browser instance.</para>
-        /// <para>
-        /// Connect the remote browser with <paramref name="wsEndpoint"/>
-        /// and returns the remote browser.
-        /// </para>
-        /// <code>
-        /// var browser = await playwright.Chromium.ConnectAsync("ws://url");
-        /// </code>
-        /// </summary>
-        /// <param name="wsEndpoint">WebSocket Endpoing</param>
-        /// /// <param name="options">Connect options</param>
-        Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions? options = default);
 
         /// <summary>
         /// <para>Returns the browser instance.</para>

@@ -313,7 +313,6 @@ namespace Microsoft.Playwright.Transport
 
         private void CreateRemoteObject(string parentGuid, ChannelOwnerType type, string guid, JsonElement? initializer)
         {
-#pragma warning disable CA2000 // Dispose objects before losing scope
             IChannelOwner result = null;
             var parent = string.IsNullOrEmpty(parentGuid) ? _rootObject : Objects[parentGuid];
 
@@ -386,7 +385,6 @@ namespace Microsoft.Playwright.Transport
 
             Objects.TryAdd(guid, result);
             OnObjectCreated(guid, result);
-#pragma warning restore CA2000 // Dispose objects before losing scope
         }
 
         private Exception CreateException(PlaywrightServerError error)

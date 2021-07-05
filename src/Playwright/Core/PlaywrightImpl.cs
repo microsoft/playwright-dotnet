@@ -76,7 +76,7 @@ namespace Microsoft.Playwright.Core
 
         public ISelectors Selectors { get => _initializer.Selectors; }
 
-        public PlaywrightInitializer Intitializer { get => _initializer; }
+        public Browser PreLaunchedBrowser { get => _initializer.PreLaunchedBrowser; }
 
         public IReadOnlyDictionary<string, BrowserNewContextOptions> Devices => _devices;
 
