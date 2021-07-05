@@ -55,14 +55,9 @@ namespace Microsoft.Playwright.Transport
         private int _lastId;
         private string _reason = string.Empty;
 
-        public Connection()
+        public Connection(ILoggerFactory loggerFactory)
         {
-            _loggerFactory = LoggerFactory.Create(builder =>
-            {
-                builder.SetMinimumLevel(LogLevel.Debug);
-                builder.AddFilter((f, _) => f == "PlaywrightSharp.Playwright");
-            });
-
+            _loggerFactory = loggerFactory;
             _logger = _loggerFactory.CreateLogger<Connection>();
             var debugLogger = _loggerFactory?.CreateLogger<PlaywrightImpl>();
 
@@ -74,7 +69,7 @@ namespace Microsoft.Playwright.Transport
             _playwrightServerProcess.Exited += (_, _) => Close("Process exited");
             _transport = new StdIOTransport(_playwrightServerProcess, _loggerFactory);
             _transport.MessageReceived += Transport_MessageReceived;
-            _transport.LogReceived += (_, e) => debugLogger?.LogInformation(e.Message);
+            _transport.LogReceived += (_, e) => debugLogger?.LogDebug(e.Message);
             _transport.TransportClosed += (_, e) => Close(e.CloseReason);
         }
 
@@ -173,7 +168,7 @@ namespace Microsoft.Playwright.Transport
                 };
 
                 string messageString = JsonSerializer.Serialize(message, GetDefaultJsonSerializerOptions());
-                _logger?.LogInformation($"pw:channel:command {messageString}");
+                _logger?.LogTrace($"pw:channel:command {messageString}");
 
                 return _transport.SendAsync(messageString);
             }).ConfigureAwait(false);
@@ -267,7 +262,7 @@ namespace Microsoft.Playwright.Transport
 
             if (message.Id.HasValue)
             {
-                _logger?.LogInformation($"pw:channel:response {e.Message}");
+                _logger?.LogTrace($"pw:channel:response {e.Message}");
 
                 if (_callbacks.TryRemove(message.Id.Value, out var callback))
                 {
@@ -284,7 +279,7 @@ namespace Microsoft.Playwright.Transport
                 return;
             }
 
-            _logger?.LogInformation($"pw:channel:event {e.Message}");
+            _logger?.LogTrace($"pw:channel:event {e.Message}");
 
             try
             {
@@ -381,7 +376,7 @@ namespace Microsoft.Playwright.Transport
                     result = new PlaywrightStream(parent, guid);
                     break;
                 default:
-                    _logger?.LogInformation("Missing type " + type);
+                    _logger?.LogTrace("pw:dotnet Missing type " + type);
                     break;
             }
 

@@ -24,6 +24,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.NUnit
@@ -32,7 +33,24 @@ namespace Microsoft.Playwright.NUnit
     {
         public static string BrowserName => (Environment.GetEnvironmentVariable("BROWSER") ?? Microsoft.Playwright.BrowserType.Chromium).ToLower();
 
-        private static readonly Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
+        private static readonly ILoggerFactory _defaultLoggerFactory = null;
+
+        private static ILoggerFactory _loggerFactory = _defaultLoggerFactory;
+        public static ILoggerFactory LoggerFactory
+        {
+            get => _loggerFactory;
+            set
+            {
+                if (_playwrightTask.IsValueCreated)
+                {
+                    throw new PlaywrightException("Logging cannot be configured after the Playwright process is already started.");
+                }
+
+                _loggerFactory = value ?? _defaultLoggerFactory;
+            }
+        }
+
+        private static readonly Lazy<Task<IPlaywright>> _playwrightTask = new(() => Microsoft.Playwright.Playwright.CreateAsync(LoggerFactory));
 
         public IPlaywright Playwright { get; private set; }
         public IBrowserType BrowserType { get; private set; }
@@ -40,7 +58,7 @@ namespace Microsoft.Playwright.NUnit
         [SetUp]
         public async Task PlaywrightSetup()
         {
-            Playwright = await _playwrightTask;
+            Playwright = await _playwrightTask.Value;
             BrowserType = Playwright[BrowserName];
             Assert.IsNotNull(BrowserType, $"The requested browser ({BrowserName}) could not be found - make sure your BROWSER env variable is set correctly.");
         }

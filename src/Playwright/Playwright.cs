@@ -22,8 +22,12 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Transport;
 
@@ -38,7 +42,18 @@ namespace Microsoft.Playwright
         /// <returns>A <see cref="Task"/> that completes when the playwright driver is ready to be used.</returns>
         public static async Task<IPlaywright> CreateAsync()
         {
-            var connection = new Connection();
+            return await CreateAsync(null).ConfigureAwait(false);
+        }
+
+        public static async Task<IPlaywright> CreateAsync(ILoggerFactory loggerFactory)
+        {
+            loggerFactory ??= LoggerFactory.Create(builder =>
+            {
+                builder.SetMinimumLevel(LogLevel.Debug);
+                builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, PlaywrightLogger.PlaywrightLoggerProvider>());
+            });
+
+            var connection = new Connection(loggerFactory);
             var playwright = await connection.WaitForObjectWithKnownNameAsync<PlaywrightImpl>("Playwright").ConfigureAwait(false);
             playwright.Connection = connection;
             return playwright;
