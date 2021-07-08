@@ -22,6 +22,11 @@
  * SOFTWARE.
  */
 
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
@@ -32,26 +37,16 @@ namespace Microsoft.Playwright.Tests
     public class BrowserTypeConnectTests : PlaywrightTestEx
     {
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to reconnect to a browser")]
-        [Test, Ignore("SKIP WIRE")]
-        public void ShouldBeAbleToReconnectToABrowser()
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task ShouldBeAbleToReconnectToABrowserAsync()
         {
-            /*
-            await using var browserServer = await BrowserType.LaunchServerAsync(TestConstants.GetDefaultBrowserOptions());
-            await using var browser = await BrowserType.ConnectAsync(browserServer.WSEndpoint);
+            var _browserServer = launchServer(BrowserType);
+            var browser = await BrowserType.ConnectAsync(_browserServer.wsEndpoint);
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GotoAsync(Server.EmptyPage);
-
-            await browser.CloseAsync();
-
-            await using var remote = await BrowserType.ConnectAsync(browserServer.WSEndpoint);
-
-            context = await remote.NewContextAsync();
-            page = await context.NewPageAsync();
-            await page.GotoAsync(Server.EmptyPage);
-            await remote.CloseAsync();
-            await browserServer.CloseAsync();
-            */
+            await page.GotoAsync("https://google.com");
+            Assert.AreEqual("https://www.google.com/", page.Url);
+            _browserServer.process.Kill();
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to connect two browsers at the same time")]
@@ -91,7 +86,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should reject waitForSelector when browser closes")]
-        [Test, Ignore("SKIP WIRE")]
         public void ShouldRejectWaitForSelectorWhenBrowserCloses()
         {
         }
@@ -109,9 +103,53 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should respect selectors")]
-        [Test, Ignore("SKIP WIRE")]
         public void ShouldRespectSelectors()
         {
         }
+
+
+        private class BrowserServer
+        {
+            public Process process { get; set; }
+            public string wsEndpoint { get; set; }
+
+        }
+
+        private BrowserServer launchServer(IBrowserType browserType)
+        {
+            try
+            {
+                var browserServer = new BrowserServer();
+                browserServer.process = GetProcess(browserType.Name); ;
+                browserServer.process.Start();
+                browserServer.process.Exited += (_, _) => browserServer.process.Kill();
+                browserServer.wsEndpoint = browserServer.process.StandardOutput.ReadLine();
+                
+                if (!browserServer.wsEndpoint.StartsWith("ws://"))
+                {
+                    throw new PlaywrightException("Invalid web socket address: " + browserServer.wsEndpoint);
+                }
+                return browserServer;
+            }
+            catch (IOException ex)
+            {
+                throw new PlaywrightException("Failed to launch server", ex);
+            }
+        }
+
+        private static Process GetProcess(string browserType)
+            => new()
+            {
+                StartInfo =
+                {
+                    FileName = Paths.GetExecutablePath(),
+                    Arguments = $"launch-server {browserType}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardInput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true,
+                },
+            };
     }
 }
