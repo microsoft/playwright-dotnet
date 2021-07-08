@@ -33,7 +33,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Channels;
@@ -49,32 +48,21 @@ namespace Microsoft.Playwright.Transport
         private readonly ChannelOwnerBase _rootObject;
         private readonly Process _playwrightServerProcess;
         private readonly IConnectionTransport _transport;
-        private readonly ILoggerFactory _loggerFactory;
-        private readonly ILogger<Connection> _logger;
         private readonly TaskQueue _queue = new();
         private int _lastId;
         private string _reason = string.Empty;
 
         public Connection()
         {
-            _loggerFactory = LoggerFactory.Create(builder =>
-            {
-                builder.SetMinimumLevel(LogLevel.Debug);
-                builder.AddFilter((f, _) => f == "PlaywrightSharp.Playwright");
-            });
-
-            _logger = _loggerFactory.CreateLogger<Connection>();
-            var debugLogger = _loggerFactory?.CreateLogger<PlaywrightImpl>();
-
             _rootObject = new(null, this, string.Empty);
 
             _playwrightServerProcess = GetProcess();
             _playwrightServerProcess.StartInfo.Arguments = "run-driver";
             _playwrightServerProcess.Start();
             _playwrightServerProcess.Exited += (_, _) => Close("Process exited");
-            _transport = new StdIOTransport(_playwrightServerProcess, _loggerFactory);
+            _transport = new StdIOTransport(_playwrightServerProcess);
             _transport.MessageReceived += Transport_MessageReceived;
-            _transport.LogReceived += (_, e) => debugLogger?.LogInformation(e.Message);
+            _transport.LogReceived += (_, e) => Console.Error.WriteLine(e.Message);
             _transport.TransportClosed += (_, e) => Close(e.CloseReason);
         }
 
@@ -89,7 +77,6 @@ namespace Microsoft.Playwright.Transport
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-            _loggerFactory.Dispose();
         }
 
         internal Task<JsonElement?> SendMessageToServerAsync(
@@ -173,7 +160,7 @@ namespace Microsoft.Playwright.Transport
                 };
 
                 string messageString = JsonSerializer.Serialize(message, GetDefaultJsonSerializerOptions());
-                _logger?.LogInformation($"pw:channel:command {messageString}");
+                TraceMessage($"pw:channel:command {messageString}");
 
                 return _transport.SendAsync(messageString);
             }).ConfigureAwait(false);
@@ -267,7 +254,7 @@ namespace Microsoft.Playwright.Transport
 
             if (message.Id.HasValue)
             {
-                _logger?.LogInformation($"pw:channel:response {e.Message}");
+                TraceMessage($"pw:channel:response {e.Message}");
 
                 if (_callbacks.TryRemove(message.Id.Value, out var callback))
                 {
@@ -284,7 +271,7 @@ namespace Microsoft.Playwright.Transport
                 return;
             }
 
-            _logger?.LogInformation($"pw:channel:event {e.Message}");
+            TraceMessage($"pw:channel:event {e.Message}");
 
             try
             {
@@ -308,8 +295,7 @@ namespace Microsoft.Playwright.Transport
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "Connection Error");
-                Close(ex.ToString());
+                Close(ex);
             }
         }
 
@@ -327,7 +313,7 @@ namespace Microsoft.Playwright.Transport
                     result = new BindingCall(parent, guid, initializer?.ToObject<BindingCallInitializer>(GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.Playwright:
-                    result = new PlaywrightImpl(parent, guid, initializer?.ToObject<PlaywrightInitializer>(GetDefaultJsonSerializerOptions()), _loggerFactory);
+                    result = new PlaywrightImpl(parent, guid, initializer?.ToObject<PlaywrightInitializer>(GetDefaultJsonSerializerOptions()));
                     break;
                 case ChannelOwnerType.Browser:
                     var browserInitializer = initializer?.ToObject<BrowserInitializer>(GetDefaultJsonSerializerOptions());
@@ -381,12 +367,18 @@ namespace Microsoft.Playwright.Transport
                     result = new PlaywrightStream(parent, guid);
                     break;
                 default:
-                    _logger?.LogInformation("Missing type " + type);
+                    TraceMessage("Missing type " + type);
                     break;
             }
 
             Objects.TryAdd(guid, result);
             OnObjectCreated(guid, result);
+        }
+
+        private void Close(Exception ex)
+        {
+            TraceMessage(ex.ToString());
+            Close(ex.Message);
         }
 
         private void Close(string reason)
@@ -459,6 +451,15 @@ namespace Microsoft.Playwright.Transport
             }
             catch
             {
+            }
+        }
+
+        [Conditional("DEBUG")]
+        private void TraceMessage(string message)
+        {
+            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DEBUGPWD")))
+            {
+                Trace.WriteLine(message);
             }
         }
     }
