@@ -39,10 +39,20 @@ namespace Microsoft.Playwright.Transport.Channels
         internal Task SaveAsAsync(string path) => Connection.SendMessageToServerAsync(Guid, "saveAs", new { path });
 
         internal async Task<string> GetFailureAsync()
-            => (await Connection.SendMessageToServerAsync(Guid, "failure").ConfigureAwait(false))?.GetProperty("error").ToString();
+        {
+            var result = await Connection.SendMessageToServerAsync(Guid, "failure").ConfigureAwait(false);
+            if (result?.TryGetProperty("error", out System.Text.Json.JsonElement failureValue) ?? false)
+            {
+                return failureValue.GetString();
+            }
+
+            return null;
+        }
 
         internal Task DeleteAsync() => Connection.SendMessageToServerAsync(Guid, "delete", null);
 
         internal Task<ArtifactStreamResult> GetStreamAsync() => Connection.SendMessageToServerAsync<ArtifactStreamResult>(Guid, "stream", null);
+
+        internal Task CancelAsync() => Connection.SendMessageToServerAsync(Guid, "cancel", null);
     }
 }

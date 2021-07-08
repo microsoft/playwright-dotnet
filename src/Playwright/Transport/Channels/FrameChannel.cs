@@ -517,22 +517,28 @@ namespace Microsoft.Playwright.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "isEnabled", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
         }
 
-        internal async Task<bool> IsHiddenAsync(string selector, float? timeout)
+        internal async Task<bool> IsHiddenAsync(string selector)
         {
             var args = new Dictionary<string, object>();
             args["selector"] = selector;
-            args["timeout"] = timeout;
 
             return (await Connection.SendMessageToServerAsync(Guid, "isHidden", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
         }
 
-        internal async Task<bool> IsVisibleAsync(string selector, float? timeout)
+        internal async Task<bool> IsVisibleAsync(string selector)
         {
             var args = new Dictionary<string, object>();
             args["selector"] = selector;
-            args["timeout"] = timeout;
 
             return (await Connection.SendMessageToServerAsync(Guid, "isVisible", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        }
+
+        internal async Task<string> InputValueAsync(string selector)
+        {
+            var args = new Dictionary<string, object>();
+            args["selector"] = selector;
+
+            return (await Connection.SendMessageToServerAsync(Guid, "inputValue", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
     }
 }

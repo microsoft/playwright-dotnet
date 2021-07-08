@@ -583,6 +583,20 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
+        /// Returns <c>input.value</c> for the selected <c>&lt;input&gt;</c> or <c>&lt;textarea&gt;</c>
+        /// element. Throws for non-input elements.
+        /// </para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to search for element. If there are multiple elements satisfying the
+        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task<string> InputValueAsync(string selector, FrameInputValueOptions? options = default);
+
+        /// <summary>
+        /// <para>
         /// Returns whether the element is checked. Throws if the element is not a checkbox
         /// or radio input.
         /// </para>
@@ -636,8 +650,7 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="options">Call options</param>
-        Task<bool> IsHiddenAsync(string selector, FrameIsHiddenOptions? options = default);
+        Task<bool> IsHiddenAsync(string selector);
 
         /// <summary>
         /// <para>
@@ -650,8 +663,7 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        /// <param name="options">Call options</param>
-        Task<bool> IsVisibleAsync(string selector, FrameIsVisibleOptions? options = default);
+        Task<bool> IsVisibleAsync(string selector);
 
         /// <summary>
         /// <para>Returns frame's name attribute as specified in the tag.</para>

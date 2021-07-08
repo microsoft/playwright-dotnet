@@ -76,7 +76,8 @@ namespace Microsoft.Playwright.Transport.Channels
             string timezoneId = null,
             string userAgent = null,
             ViewportSize viewportSize = default,
-            ScreenSize screenSize = default)
+            ScreenSize screenSize = default,
+            string baseUrl = default)
         {
             var args = new Dictionary<string, object>();
             args.Add("acceptDownloads", acceptDownloads);
@@ -143,6 +144,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 args.Add("screen", screenSize);
             }
 
+            args.Add("baseURL", baseUrl);
             args["sdkLanguage"] = "csharp";
 
             return Connection.SendMessageToServerAsync<BrowserContextChannel>(

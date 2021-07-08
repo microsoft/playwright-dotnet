@@ -391,6 +391,9 @@ namespace Microsoft.Playwright.Core
         public Task SetContentAsync(string html, FrameSetContentOptions options = default)
             => _channel.SetContentAsync(html, timeout: options?.Timeout, waitUntil: options?.WaitUntil);
 
+        public Task<string> InputValueAsync(string selector, FrameInputValueOptions options = null)
+            => _channel.InputValueAsync(selector);
+
         public async Task<IElementHandle> QuerySelectorAsync(string selector)
             => (await _channel.QuerySelectorAsync(selector).ConfigureAwait(false))?.Object;
 
@@ -468,11 +471,11 @@ namespace Microsoft.Playwright.Core
         public Task<bool> IsEnabledAsync(string selector, FrameIsEnabledOptions options = default)
             => _channel.IsEnabledAsync(selector, timeout: options?.Timeout);
 
-        public Task<bool> IsHiddenAsync(string selector, FrameIsHiddenOptions options = default)
-            => _channel.IsHiddenAsync(selector, timeout: options?.Timeout);
+        public Task<bool> IsHiddenAsync(string selector)
+            => _channel.IsHiddenAsync(selector);
 
-        public Task<bool> IsVisibleAsync(string selector, FrameIsVisibleOptions options = default)
-            => _channel.IsVisibleAsync(selector, timeout: options?.Timeout);
+        public Task<bool> IsVisibleAsync(string selector)
+            => _channel.IsVisibleAsync(selector);
 
         public Task WaitForURLAsync(string url, FrameWaitForURLOptions options = default)
             => WaitForURLAsync(url, null, null, options);
@@ -535,6 +538,9 @@ namespace Microsoft.Playwright.Core
 
         private bool UrlMatches(string url, string matchUrl, Regex regex, Func<string, bool> match)
         {
+            var baseUrl = (Page.Context as BrowserContext)?.BaseUrl;
+            matchUrl = matchUrl.CombineUrlWithBase(baseUrl);
+
             if (matchUrl == null && regex == null && match == null)
             {
                 return true;

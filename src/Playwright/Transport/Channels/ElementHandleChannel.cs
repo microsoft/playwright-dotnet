@@ -313,6 +313,16 @@ namespace Microsoft.Playwright.Transport.Channels
         internal async Task<bool> IsDisabledAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "isDisabled", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
+        internal async Task<string> InputValueAsync(float? timeout)
+        {
+            var args = new Dictionary<string, object>()
+            {
+                { "timeout", timeout },
+            };
+
+            return (await Connection.SendMessageToServerAsync(Guid, "inputValue", args).ConfigureAwait(false))?.GetProperty("value").GetString();
+        }
+
         internal async Task<bool> IsCheckedAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "isChecked", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 

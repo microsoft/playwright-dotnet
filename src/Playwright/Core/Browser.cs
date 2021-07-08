@@ -100,7 +100,8 @@ namespace Microsoft.Playwright.Core
                timezoneId: options.TimezoneId,
                userAgent: options.UserAgent,
                viewportSize: options.ViewportSize,
-               screenSize: options.ScreenSize).ConfigureAwait(false)).Object;
+               screenSize: options.ScreenSize,
+               baseUrl: options.BaseURL).ConfigureAwait(false)).Object;
 
             context.RecordVideo = !string.IsNullOrEmpty(options.RecordVideoDir);
 
@@ -140,12 +141,14 @@ namespace Microsoft.Playwright.Core
                 Proxy = options.Proxy,
                 StorageState = options.StorageState,
                 StorageStatePath = options.StorageStatePath,
+                BaseURL = options.BaseURL,
             };
 
             var context = (BrowserContext)await NewContextAsync(contextOptions).ConfigureAwait(false);
 
             var page = (Page)await context.NewPageAsync().ConfigureAwait(false);
             page.OwnedContext = context;
+            context.BaseUrl = options.BaseURL;
             context.OwnerPage = page;
             return page;
         }

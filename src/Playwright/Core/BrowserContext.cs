@@ -142,6 +142,8 @@ namespace Microsoft.Playwright.Core
 
         internal bool RecordVideo { get; set; }
 
+        internal string BaseUrl { get; set; }
+
         public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => Channel.AddCookiesAsync(cookies);
 
         public Task AddInitScriptAsync(string script = null, string scriptPath = null)

@@ -337,7 +337,7 @@ namespace Microsoft.Playwright.Core
             });
 
         public Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions options = default)
-            => InnerWaitForEventAsync(PageEvent.Request, null, e => e.Url.UrlMatches(urlOrPredicate), options?.Timeout);
+            => InnerWaitForEventAsync(PageEvent.Request, null, e => e.Url.UrlMatches(urlOrPredicate.CombineUrlWithBase(Context.BaseUrl)), options?.Timeout);
 
         public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, PageWaitForRequestOptions options = default)
             => InnerWaitForEventAsync(PageEvent.Request, null, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
@@ -349,7 +349,7 @@ namespace Microsoft.Playwright.Core
             => InnerWaitForEventAsync(PageEvent.RequestFinished, null, options?.Predicate, options?.Timeout);
 
         public Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions options = default)
-            => InnerWaitForEventAsync(PageEvent.Response, null, e => e.Url.UrlMatches(urlOrPredicate), options?.Timeout);
+            => InnerWaitForEventAsync(PageEvent.Response, null, e => e.Url.UrlMatches(urlOrPredicate.CombineUrlWithBase(Context.BaseUrl)), options?.Timeout);
 
         public Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, PageWaitForResponseOptions options = default)
             => InnerWaitForEventAsync(PageEvent.Response, null, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
@@ -382,7 +382,7 @@ namespace Microsoft.Playwright.Core
             => InnerWaitForEventAsync(PageEvent.Worker, action, options?.Predicate, options?.Timeout);
 
         public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForRequestOptions options = default)
-            => InnerWaitForEventAsync(PageEvent.Request, action, e => e.Url.UrlMatches(urlOrPredicate), options?.Timeout);
+            => InnerWaitForEventAsync(PageEvent.Request, action, e => e.Url.UrlMatches(urlOrPredicate.CombineUrlWithBase(Context.BaseUrl)), options?.Timeout);
 
         public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForRequestOptions options = default)
             => InnerWaitForEventAsync(PageEvent.Request, action, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
@@ -391,7 +391,7 @@ namespace Microsoft.Playwright.Core
             => InnerWaitForEventAsync(PageEvent.Request, action, e => urlOrPredicate(e), options?.Timeout);
 
         public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForResponseOptions options = default)
-            => InnerWaitForEventAsync(PageEvent.Response, action, e => e.Url.UrlMatches(urlOrPredicate), options?.Timeout);
+            => InnerWaitForEventAsync(PageEvent.Response, action, e => e.Url.UrlMatches(urlOrPredicate.CombineUrlWithBase(Context.BaseUrl)), options?.Timeout);
 
         public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForResponseOptions options = default)
             => InnerWaitForEventAsync(PageEvent.Response, action, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
@@ -705,7 +705,7 @@ namespace Microsoft.Playwright.Core
             => RouteAsync(
                 new()
                 {
-                    Url = urlString,
+                    Url = urlString.CombineUrlWithBase(Context.BaseUrl),
                     Handler = handler,
                 });
 
@@ -729,7 +729,7 @@ namespace Microsoft.Playwright.Core
             => UnrouteAsync(
                 new()
                 {
-                    Url = urlString,
+                    Url = urlString.CombineUrlWithBase(Context.BaseUrl),
                     Handler = handler,
                 });
 
@@ -818,17 +818,20 @@ namespace Microsoft.Playwright.Core
         public Task<bool> IsEnabledAsync(string selector, PageIsEnabledOptions options = default)
             => MainFrame.IsEnabledAsync(selector, new() { Timeout = options?.Timeout });
 
-        public Task<bool> IsHiddenAsync(string selector, PageIsHiddenOptions options = default)
-            => MainFrame.IsHiddenAsync(selector, new() { Timeout = options?.Timeout });
+        public Task<bool> IsHiddenAsync(string selector)
+            => MainFrame.IsHiddenAsync(selector);
 
-        public Task<bool> IsVisibleAsync(string selector, PageIsVisibleOptions options = default)
-            => MainFrame.IsVisibleAsync(selector, new() { Timeout = options?.Timeout });
+        public Task<bool> IsVisibleAsync(string selector)
+            => MainFrame.IsVisibleAsync(selector);
 
         public Task PauseAsync() => Context.Channel.PauseAsync();
 
         public void SetDefaultNavigationTimeout(float timeout) => DefaultNavigationTimeout = timeout;
 
         public void SetDefaultTimeout(float timeout) => DefaultTimeout = timeout;
+
+        public Task<string> InputValueAsync(string selector, PageInputValueOptions options = null)
+            => MainFrame.InputValueAsync(selector, new() { Timeout = options?.Timeout });
 
         internal void NotifyPopup(Page page) => Popup?.Invoke(this, page);
 

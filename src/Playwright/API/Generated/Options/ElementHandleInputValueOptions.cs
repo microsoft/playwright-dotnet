@@ -39,37 +39,15 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class FrameSelectOptionOptions
+    public class ElementHandleInputValueOptions
     {
-        public FrameSelectOptionOptions() { }
+        public ElementHandleInputValueOptions() { }
 
-        public FrameSelectOptionOptions(FrameSelectOptionOptions clone)
+        public ElementHandleInputValueOptions(ElementHandleInputValueOptions clone)
         {
             if (clone == null) return;
-            Force = clone.Force;
-            NoWaitAfter = clone.NoWaitAfter;
             Timeout = clone.Timeout;
         }
-
-        /// <summary>
-        /// <para>
-        /// Whether to bypass the <a href="./actionability.md">actionability</a> checks. Defaults
-        /// to <c>false</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("force")]
-        public bool? Force { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("noWaitAfter")]
-        public bool? NoWaitAfter { get; set; }
 
         /// <summary>
         /// <para>

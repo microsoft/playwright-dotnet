@@ -59,5 +59,7 @@ namespace Microsoft.Playwright.Core
         public Task SaveAsAsync(string path) => _artifact.SaveAsAsync(path);
 
         public Task<Stream> CreateReadStreamAsync() => _artifact.CreateReadStreamAsync();
+
+        public Task CancelAsync() => _artifact.CancelAsync();
     }
 }

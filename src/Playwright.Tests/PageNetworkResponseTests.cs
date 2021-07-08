@@ -174,5 +174,25 @@ namespace Microsoft.Playwright.Tests
             serverResponseCompletion.SetResult(true);
             Assert.AreEqual("hello world!", await responseText);
         }
+
+        [PlaywrightTest("har.spec.ts", "should return security details directly from response")]
+        [Test, SkipBrowserAndPlatform(skipLinux: true, skipFirefox: true)]
+        public async Task ShouldReturnSecurityDetails()
+        {
+            var response = await Page.GotoAsync(HttpsServer.EmptyPage);
+            var details = await response.SecurityDetailsAsync();
+            Assert.IsNotEmpty(details.Issuer);
+            Assert.IsNotEmpty(details.Protocol);
+        }
+
+        [PlaywrightTest("har.spec.ts", "should return server address directly from response")]
+        [Test, SkipBrowserAndPlatform(skipLinux: true, skipFirefox: true)]
+        public async Task ShouldReturnServerAddressFromResponse()
+        {
+            var response = await Page.GotoAsync(HttpsServer.EmptyPage);
+            var details = await response.ServerAddrAsync();
+            Assert.IsNotEmpty(details.IpAddress);
+            Assert.Greater(details.Port, 0);
+        }
     }
 }

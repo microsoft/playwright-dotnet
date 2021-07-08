@@ -251,6 +251,9 @@ namespace Microsoft.Playwright.Core
 
         public Task<bool> IsVisibleAsync() => _channel.IsVisibleAsync();
 
+        public Task<string> InputValueAsync(ElementHandleInputValueOptions options = null)
+            => _channel.InputValueAsync(options?.Timeout);
+
         internal static ScreenshotType DetermineScreenshotType(string path)
         {
             string mimeType = path.MimeType();

@@ -97,6 +97,10 @@ namespace Microsoft.Playwright.Core
             return JsonDocument.Parse(content).RootElement;
         }
 
+        public Task<ResponseSecurityDetailsResult> SecurityDetailsAsync() => _channel.SecurityDetailsAsync();
+
+        public Task<ResponseServerAddrResult> ServerAddrAsync() => _channel.ServerAddrAsync();
+
         public async Task<string> TextAsync()
         {
             byte[] content = await BodyAsync().ConfigureAwait(false);

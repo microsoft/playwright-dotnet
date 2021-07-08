@@ -462,5 +462,62 @@ namespace Microsoft.Playwright.Tests
             Assert.False(new FileInfo(path2).Exists);
             Assert.False(new FileInfo(Path.Combine(path1, "..")).Exists);
         }
+
+        [PlaywrightTest("download.spec.ts", "should be able to cancel pending downloads")]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task ShouldBeAbleToCancelPendingDownload()
+        {
+            var browser = await BrowserType.LaunchAsync();
+            var page = await browser.NewPageAsync(new() { AcceptDownloads = true });
+            await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
+            var download = await page.RunAndWaitForDownloadAsync(() => page.ClickAsync("a"));
+            await download.CancelAsync();
+
+            var failure = await download.FailureAsync();
+            Assert.AreEqual("canceled", failure);
+
+            await page.CloseAsync();
+        }
+
+        [PlaywrightTest("download.spec.ts", "should not fail explicitly to cancel a download even if that is already finished")]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task ShouldNotFailWhenCancellingACompletedDownload()
+        {
+            var browser = await BrowserType.LaunchAsync();
+            var page = await browser.NewPageAsync(new() { AcceptDownloads = true });
+            await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
+            var download = await page.RunAndWaitForDownloadAsync(() => page.ClickAsync("a"));
+
+            using var tmpDir = new TempDirectory();
+            string userPath = Path.Combine(tmpDir.Path, "download.txt");
+            await download.SaveAsAsync(userPath);
+
+            Assert.IsTrue(File.Exists(userPath));
+
+            await download.CancelAsync();
+
+            var failure = await download.FailureAsync();
+            Assert.IsNull(failure);
+
+            await page.CloseAsync();
+        }
+
+
+        [PlaywrightTest("download.spec.ts", "should report downloads with interception")]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task ShouldReportDownloadsWithInterception()
+        {
+            var browser = await BrowserType.LaunchAsync();
+            var page = await browser.NewPageAsync(new() { AcceptDownloads = true });
+            await page.RouteAsync("*", r => r.ContinueAsync());
+            await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
+            var download = await page.RunAndWaitForDownloadAsync(() => page.ClickAsync("a"));
+
+            var path = await download.PathAsync();
+            Assert.IsTrue(File.Exists(path));
+
+            await page.CloseAsync();
+        }
+
     }
 }

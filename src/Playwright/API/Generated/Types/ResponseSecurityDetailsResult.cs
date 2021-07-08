@@ -39,47 +39,40 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class FrameSelectOptionOptions
+    /// <summary>
+    /// Result of calling <see cref="IResponse.SecurityDetailsAsync"/>.
+    /// </summary>
+    public partial class ResponseSecurityDetailsResult
     {
-        public FrameSelectOptionOptions() { }
+        /// <summary>
+        /// <para>
+        /// Common Name component of the Issuer field. from the certificate. This should only
+        /// be used for informational purposes. Optional.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("issuer")]
+        public string? Issuer { get; set; }
 
-        public FrameSelectOptionOptions(FrameSelectOptionOptions clone)
-        {
-            if (clone == null) return;
-            Force = clone.Force;
-            NoWaitAfter = clone.NoWaitAfter;
-            Timeout = clone.Timeout;
-        }
+        /// <summary><para>The specific TLS protocol used. (e.g. <c>TLS 1.3</c>). Optional.</para></summary>
+        [JsonPropertyName("protocol")]
+        public string? Protocol { get; set; }
 
         /// <summary>
         /// <para>
-        /// Whether to bypass the <a href="./actionability.md">actionability</a> checks. Defaults
-        /// to <c>false</c>.
+        /// Common Name component of the Subject field from the certificate. This should only
+        /// be used for informational purposes. Optional.
         /// </para>
         /// </summary>
-        [JsonPropertyName("force")]
-        public bool? Force { get; set; }
+        [JsonPropertyName("subjectName")]
+        public string? SubjectName { get; set; }
 
-        /// <summary>
-        /// <para>
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("noWaitAfter")]
-        public bool? NoWaitAfter { get; set; }
+        /// <summary><para>Unix timestamp (in seconds) specifying when this cert becomes valid. Optional.</para></summary>
+        [JsonPropertyName("validFrom")]
+        public int? ValidFrom { get; set; }
 
-        /// <summary>
-        /// <para>
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        /// <summary><para>Unix timestamp (in seconds) specifying when this cert becomes invalid. Optional.</para></summary>
+        [JsonPropertyName("validTo")]
+        public int? ValidTo { get; set; }
     }
 }
 
