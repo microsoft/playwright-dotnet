@@ -41,7 +41,10 @@ namespace Microsoft.Playwright.Transport.Channels
         internal async Task<string> GetFailureAsync()
         {
             var result = await Connection.SendMessageToServerAsync(Guid, "failure").ConfigureAwait(false);
-            if (result?.TryGetProperty("error", out System.Text.Json.JsonElement failureValue) ?? false)
+#pragma warning disable IDE0018 // Inline variable declaration will cause issues due to Roslyn design: https://github.com/dotnet/roslyn/issues/54711
+            System.Text.Json.JsonElement failureValue = default;
+#pragma warning restore IDE0018 // Inline variable declaration
+            if (result?.TryGetProperty("error", out failureValue) ?? false)
             {
                 return failureValue.GetString();
             }
