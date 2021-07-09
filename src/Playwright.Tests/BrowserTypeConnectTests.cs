@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToReconnectToABrowserAsync()
         {
-            var _browserServer = launchServer(BrowserType);
+            var _browserServer = LaunchServer(BrowserType);
             var browser = await BrowserType.ConnectAsync(_browserServer.wsEndpoint);
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
@@ -115,7 +115,7 @@ namespace Microsoft.Playwright.Tests
 
         }
 
-        private BrowserServer launchServer(IBrowserType browserType)
+        private BrowserServer LaunchServer(IBrowserType browserType)
         {
             try
             {

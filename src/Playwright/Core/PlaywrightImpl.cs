@@ -74,9 +74,9 @@ namespace Microsoft.Playwright.Core
 
         public IBrowserType Webkit { get => _initializer.Webkit; set => throw new NotSupportedException(); }
 
-        public ISelectors Selectors { get => _initializer.Selectors; }
+        public ISelectors Selectors => _initializer.Selectors;
 
-        public Browser PreLaunchedBrowser { get => _initializer.PreLaunchedBrowser; }
+        public Browser PreLaunchedBrowser => _initializer.PreLaunchedBrowser;
 
         public IReadOnlyDictionary<string, BrowserNewContextOptions> Devices => _devices;
 
