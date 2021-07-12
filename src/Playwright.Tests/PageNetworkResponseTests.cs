@@ -194,5 +194,7 @@ namespace Microsoft.Playwright.Tests
             Assert.IsNotEmpty(details.IpAddress);
             Assert.Greater(details.Port, 0);
         }
+
+        public override BrowserNewContextOptions ContextOptions() => new() { IgnoreHTTPSErrors = true };
     }
 }

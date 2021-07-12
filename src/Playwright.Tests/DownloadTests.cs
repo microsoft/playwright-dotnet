@@ -50,6 +50,16 @@ namespace Microsoft.Playwright.Tests
                 context.Response.Headers["Content-Disposition"] = "attachment; filename=file.txt";
                 return context.Response.WriteAsync("Hello world");
             });
+
+            Server.SetRoute("/downloadWithDelay", async context =>
+            {
+                context.Response.Headers["Content-Type"] = "application/octet-stream";
+                context.Response.Headers["Content-Disposition"] = "attachment;";
+                // Chromium requires a large enough payload to trigger the download event soon enough
+                await context.Response.WriteAsync("a".PadLeft(4096, 'a'));
+                await Task.Delay(3000);
+                await context.Response.WriteAsync("foo hello world");
+            });
         }
 
         [PlaywrightTest("download.spec.ts", "should report downloads with acceptDownloads: false")]
@@ -469,7 +479,8 @@ namespace Microsoft.Playwright.Tests
         {
             var browser = await BrowserType.LaunchAsync();
             var page = await browser.NewPageAsync(new() { AcceptDownloads = true });
-            await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
+            await page.SetContentAsync($"<a href=\"{Server.Prefix}/downloadWithDelay\">download</a>");
+
             var download = await page.RunAndWaitForDownloadAsync(() => page.ClickAsync("a"));
             await download.CancelAsync();
 
