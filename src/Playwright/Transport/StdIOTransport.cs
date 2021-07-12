@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport
 {
@@ -38,11 +39,14 @@ namespace Microsoft.Playwright.Transport
         private readonly List<byte> _data = new();
         private int? _currentMessageSize;
 
-        internal StdIOTransport(Process process)
+        internal StdIOTransport()
         {
-            _process = process;
-            process.ErrorDataReceived += (_, e) => LogReceived?.Invoke(this, new(e.Data));
-            process.BeginErrorReadLine();
+            _process = GetProcess();
+            _process.StartInfo.Arguments = "run-driver";
+            _process.Start();
+            _process.Exited += (_, _) => Close("Process exited");
+            _process.ErrorDataReceived += (_, e) => LogReceived?.Invoke(this, new(e.Data));
+            _process.BeginErrorReadLine();
 
             ScheduleTransportTask(GetResponseAsync, _readerCancellationSource.Token);
         }
@@ -71,6 +75,8 @@ namespace Microsoft.Playwright.Transport
             if (!IsClosed)
             {
                 IsClosed = true;
+                _process?.Kill();
+                _process?.Dispose();
                 TransportClosed?.Invoke(this, new() { CloseReason = closeReason });
                 _readerCancellationSource.Cancel();
             }
@@ -108,6 +114,20 @@ namespace Microsoft.Playwright.Transport
             }
         }
 
+        private static Process GetProcess()
+            => new()
+            {
+                StartInfo =
+                {
+                    FileName = Paths.GetExecutablePath(),
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardInput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true,
+                },
+            };
+
         private static void ScheduleTransportTask(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
             => Task.Factory.StartNew(() => func(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
 
@@ -128,6 +148,11 @@ namespace Microsoft.Playwright.Transport
             {
                 _readerCancellationSource.Cancel();
                 _readerCancellationSource.Dispose();
+            }
+
+            if (_process != null)
+            {
+                _process.Dispose();
             }
         }
 

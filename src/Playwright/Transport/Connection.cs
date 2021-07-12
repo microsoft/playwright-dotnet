@@ -46,21 +46,16 @@ namespace Microsoft.Playwright.Transport
         private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new();
         private readonly ConcurrentDictionary<int, ConnectionCallback> _callbacks = new();
         private readonly ChannelOwnerBase _rootObject;
-        private readonly Process _playwrightServerProcess;
         private readonly IConnectionTransport _transport;
         private readonly TaskQueue _queue = new();
         private int _lastId;
         private string _reason = string.Empty;
 
-        public Connection(IConnectionTransport connectionTransport, ILoggerFactory loggerFactory)
+        public Connection(IConnectionTransport connectionTransport)
         {
             _rootObject = new(null, this, string.Empty);
 
-            _playwrightServerProcess = GetProcess();
-            _playwrightServerProcess.StartInfo.Arguments = "run-driver";
-            _playwrightServerProcess.Start();
-            _playwrightServerProcess.Exited += (_, _) => Close("Process exited");
-            _transport = new StdIOTransport(_playwrightServerProcess);
+            _transport = connectionTransport;
             _transport.MessageReceived += Transport_MessageReceived;
             _transport.LogReceived += (_, e) => Console.Error.WriteLine(e.Message);
             _transport.TransportClosed += (_, e) => Close(e.CloseReason);
@@ -73,32 +68,10 @@ namespace Microsoft.Playwright.Transport
 
         public bool IsClosed { get; private set; }
 
-        public IConnectionTransport Transport { get; set; }
-
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        public void Close(string reason)
-        {
-            _reason = string.IsNullOrEmpty(_reason) ? reason : _reason;
-            if (!IsClosed)
-            {
-                foreach (var callback in _callbacks)
-                {
-                    callback.Value.TaskCompletionSource.TrySetException(new PlaywrightException(reason));
-                }
-
-                foreach (var callback in _waitingForObject)
-                {
-                    callback.Value.TrySetException(new PlaywrightException(reason));
-                }
-
-                Dispose();
-                IsClosed = true;
-            }
         }
 
         internal Task<JsonElement?> SendMessageToServerAsync(
@@ -184,7 +157,7 @@ namespace Microsoft.Playwright.Transport
                 string messageString = JsonSerializer.Serialize(message, GetDefaultJsonSerializerOptions());
                 TraceMessage($"pw:channel:command {messageString}");
 
-                return Transport.SendAsync(messageString);
+                return _transport.SendAsync(messageString);
             }).ConfigureAwait(false);
 
             var result = await tcs.Task.ConfigureAwait(false);
@@ -450,7 +423,7 @@ namespace Microsoft.Playwright.Transport
             }
 
             _queue.Dispose();
-            Transport.Close("Connection disposed");
+            _transport.Close("Connection disposed");
         }
 
         [Conditional("DEBUG")]

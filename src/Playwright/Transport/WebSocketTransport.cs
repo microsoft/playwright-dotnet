@@ -8,7 +8,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Playwright.Transport
 {
@@ -17,20 +16,18 @@ namespace Microsoft.Playwright.Transport
         private const int DefaultBufferSize = 1024;  // Byte buffer size
         private readonly ClientWebSocket _webSocket;
         private readonly string _wsEndpoint;
-        private readonly ILogger<WebSocketTransport> _logger;
         private readonly CancellationTokenSource _readerCancellationSource = new();
         private readonly BrowserTypeConnectOptions _options;
 
         internal WebSocketTransport(
             string wsEndpoint = default,
-            BrowserTypeConnectOptions options = default,
-            ILoggerFactory loggerFactory = default)
+            BrowserTypeConnectOptions options = default)
         {
-            _logger = loggerFactory?.CreateLogger<WebSocketTransport>();
             _webSocket = new ClientWebSocket();
             _wsEndpoint = wsEndpoint;
             _options = options;
             SetHeaders();
+            _ = ConnectAsync();
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
@@ -43,12 +40,6 @@ namespace Microsoft.Playwright.Transport
         public event EventHandler<TransportClosedEventArgs> TransportClosed;
 
         public bool IsClosed { get; private set; }
-
-        public async Task ConnectAsync()
-        {
-            await _webSocket.ConnectAsync(new Uri(_wsEndpoint), _readerCancellationSource.Token).ConfigureAwait(false);
-            ScheduleTransportTask(ReceiveAsync, _readerCancellationSource.Token);
-        }
 
         public async Task SendAsync(string message)
         {
@@ -76,8 +67,7 @@ namespace Microsoft.Playwright.Transport
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "Transport Error");
-                Close(ex.ToString());
+                Close(ex);
             }
         }
 
@@ -106,6 +96,18 @@ namespace Microsoft.Playwright.Transport
             }
         }
 
+        private void Close(Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(ex);
+            Close(ex.ToString());
+        }
+
+        private async Task ConnectAsync()
+        {
+            await _webSocket.ConnectAsync(new Uri(_wsEndpoint), _readerCancellationSource.Token).ConfigureAwait(false);
+            ScheduleTransportTask(ReceiveAsync, _readerCancellationSource.Token);
+        }
+
         private void ScheduleTransportTask(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
             => Task.Factory.StartNew(() => func(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
 
@@ -113,37 +115,43 @@ namespace Microsoft.Playwright.Transport
         {
             try
             {
-                byte[] buffer = new byte[DefaultBufferSize];
-
-                while (!token.IsCancellationRequested && _webSocket.State == WebSocketState.Open)
+                if (_webSocket.State == WebSocketState.Closed)
                 {
-                    var stringResult = new StringBuilder();
+                    Close("Closed");
+                }
+                else
+                {
+                    byte[] buffer = new byte[DefaultBufferSize];
 
-                    WebSocketReceiveResult result;
-
-                    do
+                    while (!token.IsCancellationRequested && _webSocket.State == WebSocketState.Open)
                     {
-                        result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), _readerCancellationSource.Token).ConfigureAwait(false);
+                        var stringResult = new StringBuilder();
 
-                        if (result.MessageType == WebSocketMessageType.Close)
+                        WebSocketReceiveResult result;
+
+                        do
                         {
-                            await
-                                _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, _readerCancellationSource.Token).ConfigureAwait(false);
+                            result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), _readerCancellationSource.Token).ConfigureAwait(false);
+
+                            if (result.MessageType == WebSocketMessageType.Close)
+                            {
+                                await
+                                    _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, _readerCancellationSource.Token).ConfigureAwait(false);
+                            }
+                            else
+                            {
+                                var str = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                                stringResult.Append(str);
+                            }
                         }
-                        else
-                        {
-                            var str = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                            stringResult.Append(str);
-                        }
+                        while (!result.EndOfMessage);
+                        MessageReceived?.Invoke(this, new MessageReceivedEventArgs(stringResult.ToString()));
                     }
-                    while (!result.EndOfMessage);
-                    MessageReceived?.Invoke(this, new MessageReceivedEventArgs(stringResult.ToString()));
                 }
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "Transport Error");
-                Close(ex.ToString());
+                Close(ex);
             }
         }
 

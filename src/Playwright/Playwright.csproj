@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>exe</OutputType>
+    <OutputType>Exe</OutputType>
     <Title>Microsoft.Playwright</Title>
     <PackageId>Microsoft.Playwright</PackageId>
     <Summary>The .NET port of Playwright, used to automate Chromium, Firefox and WebKit with a single API.</Summary>
@@ -27,6 +27,7 @@
   <Import Project="../Common/SignAssembly.props" />
   <Import Project="build/Microsoft.Playwright.targets" />
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     <PackageReference Include="Microsoft.VisualStudioEng.MicroBuild.Core" Version="0.4.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -48,16 +49,16 @@
       <DriverShell Include="Scripts\playwright.sh" />
       <DriverCmd Include="Scripts\playwright.cmd" />
     </ItemGroup>
-    <Copy SourceFiles="@(DriverPackage)" DestinationFiles="@(DriverPackage->'.playwright\package\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverNodeLicense)" DestinationFiles="@(DriverNodeLicense->'.playwright\node\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverNodeLinux)" DestinationFiles="@(DriverNodeLinux->'.playwright\node\linux\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverNodeMac)" DestinationFiles="@(DriverNodeMac->'.playwright\node\mac\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverNodeWin32)" DestinationFiles="@(DriverNodeWin32->'.playwright\node\win32\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverNodeWin32_x64)" DestinationFiles="@(DriverNodeWin32_x64->'.playwright\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverShell)" DestinationFiles="@(DriverShell->'.playwright\node\linux\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverShell)" DestinationFiles="@(DriverShell->'.playwright\node\mac\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverCmd)" DestinationFiles="@(DriverCmd->'.playwright\node\win32\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverCmd)" DestinationFiles="@(DriverCmd->'.playwright\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverPackage)" DestinationFiles="@(DriverPackage-&gt;'.playwright\package\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverNodeLicense)" DestinationFiles="@(DriverNodeLicense-&gt;'.playwright\node\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverNodeLinux)" DestinationFiles="@(DriverNodeLinux-&gt;'.playwright\node\linux\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverNodeMac)" DestinationFiles="@(DriverNodeMac-&gt;'.playwright\node\mac\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverNodeWin32)" DestinationFiles="@(DriverNodeWin32-&gt;'.playwright\node\win32\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverNodeWin32_x64)" DestinationFiles="@(DriverNodeWin32_x64-&gt;'.playwright\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverShell)" DestinationFiles="@(DriverShell-&gt;'.playwright\node\linux\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverShell)" DestinationFiles="@(DriverShell-&gt;'.playwright\node\mac\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverCmd)" DestinationFiles="@(DriverCmd-&gt;'.playwright\node\win32\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverCmd)" DestinationFiles="@(DriverCmd-&gt;'.playwright\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
   <ItemGroup>
     <None Include=".playwright\**" Pack="true" PackagePath=".playwright" />

@@ -24,7 +24,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
@@ -125,32 +124,20 @@ namespace Microsoft.Playwright.Core
         public async Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions options = null)
         {
             options ??= new BrowserTypeConnectOptions();
-
-            var loggerFactory = LoggerFactory.Create(builder =>
-            {
-                builder.SetMinimumLevel(LogLevel.Debug);
-                builder.AddFilter((f, _) => f == "PlaywrightSharp.Playwright");
-            });
-            var webSocketTransport = new WebSocketTransport(wsEndpoint, options, loggerFactory);
-            await webSocketTransport.ConnectAsync().ConfigureAwait(false);
-            _parent.Connection.Transport = webSocketTransport;
-
-            var connection = new Connection(webSocketTransport, loggerFactory);
+#pragma warning disable CA2000
+            var transport = new WebSocketTransport(wsEndpoint, options);
+#pragma warning restore CA2000
+            var connection = new Connection(transport);
             var playwright = await connection.WaitForObjectWithKnownNameAsync<PlaywrightImpl>("Playwright").ConfigureAwait(false);
             playwright.Connection = connection;
 
             if (playwright.PreLaunchedBrowser == null)
             {
-                _parent.Connection.Close("Disconnected");
+                transport.Close("Disconnected");
                 throw new PlaywrightException("Malformed endpoint. Did you use launchServer method?");
             }
 
-            var browser = playwright.PreLaunchedBrowser;
-            browser.IsRemote = true;
-            browser.Disconnected += Browser_Disconnected;
-            return browser;
+            return playwright.PreLaunchedBrowser;
         }
-
-        private void Browser_Disconnected(object sender, IBrowser e) => _parent.Connection.Close("Browser Disconnected");
     }
 }

@@ -29,9 +29,9 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Playwright.Helpers
 {
-    public static class Paths
+    internal static class Paths
     {
-        public static string GetExecutablePath()
+        internal static string GetExecutablePath()
         {
             DirectoryInfo assemblyDirectory = new(AppContext.BaseDirectory);
             if (!assemblyDirectory.Exists || !File.Exists(Path.Combine(assemblyDirectory.FullName, "Microsoft.Playwright.dll")))

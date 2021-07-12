@@ -73,11 +73,11 @@ namespace Microsoft.Playwright.Core
 
         public ISelectors Selectors => _initializer.Selectors;
 
-        public Browser PreLaunchedBrowser => _initializer.PreLaunchedBrowser;
-
         public IReadOnlyDictionary<string, BrowserNewContextOptions> Devices => _devices;
 
         internal Connection Connection { get; set; }
+
+        internal Browser PreLaunchedBrowser => _initializer.PreLaunchedBrowser;
 
         /// <summary>
         /// Gets a <see cref="IBrowserType"/>.

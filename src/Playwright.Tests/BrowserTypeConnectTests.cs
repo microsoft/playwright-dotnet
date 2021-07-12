@@ -26,7 +26,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
@@ -36,17 +35,30 @@ namespace Microsoft.Playwright.Tests
     [Parallelizable(ParallelScope.Self)]
     public class BrowserTypeConnectTests : PlaywrightTestEx
     {
+        private BrowserServer _browserServer;
+
+        [SetUp]
+        public void SetUpAsync()
+        {
+            _browserServer = LaunchServer(BrowserType);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _browserServer.Process.Kill();
+            _browserServer = null;
+        }
+
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to reconnect to a browser")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        public async Task ShouldBeAbleToReconnectToABrowserAsync()
-        {
-            var _browserServer = LaunchServer(BrowserType);
-            var browser = await BrowserType.ConnectAsync(_browserServer.wsEndpoint);
+        public async Task ShouldBeAbleToReconnectToBrowserAsync()
+        { 
+            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
             await page.GotoAsync("https://google.com");
             Assert.AreEqual("https://www.google.com/", page.Url);
-            _browserServer.process.Kill();
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to connect two browsers at the same time")]
@@ -110,8 +122,8 @@ namespace Microsoft.Playwright.Tests
 
         private class BrowserServer
         {
-            public Process process { get; set; }
-            public string wsEndpoint { get; set; }
+            public Process Process { get; set; }
+            public string WSEndpoint { get; set; }
 
         }
 
@@ -119,15 +131,16 @@ namespace Microsoft.Playwright.Tests
         {
             try
             {
-                var browserServer = new BrowserServer();
-                browserServer.process = GetProcess(browserType.Name); ;
-                browserServer.process.Start();
-                browserServer.process.Exited += (_, _) => browserServer.process.Kill();
-                browserServer.wsEndpoint = browserServer.process.StandardOutput.ReadLine();
+                Console.WriteLine(browserType);
+                BrowserServer browserServer = new();
+                browserServer.Process = GetProcess(browserType.Name);
+                browserServer.Process.Start();
+                browserServer.Process.Exited += (_, _) => browserServer.Process.Kill();
+                browserServer.WSEndpoint = browserServer.Process.StandardOutput.ReadLine();
 
-                if (!browserServer.wsEndpoint.StartsWith("ws://"))
+                if (!browserServer.WSEndpoint.StartsWith("ws://"))
                 {
-                    throw new PlaywrightException("Invalid web socket address: " + browserServer.wsEndpoint);
+                    throw new PlaywrightException("Invalid web socket address: " + browserServer.WSEndpoint);
                 }
                 return browserServer;
             }
@@ -142,7 +155,7 @@ namespace Microsoft.Playwright.Tests
             {
                 StartInfo =
                 {
-                    FileName = Paths.GetExecutablePath(),
+                    FileName = Microsoft.Playwright.Program.GetExecutablePath(),
                     Arguments = $"launch-server {browserType}",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
