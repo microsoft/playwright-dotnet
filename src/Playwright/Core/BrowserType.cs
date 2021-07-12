@@ -32,14 +32,12 @@ namespace Microsoft.Playwright.Core
 {
     internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrowserType
     {
-        private readonly IChannelOwner _parent;
         private readonly BrowserTypeInitializer _initializer;
         private readonly BrowserTypeChannel _channel;
 
         internal BrowserType(IChannelOwner parent, string guid, BrowserTypeInitializer initializer) : base(parent, guid)
         {
             _initializer = initializer;
-            _parent = parent;
             _channel = new(guid, parent.Connection, this);
         }
 
