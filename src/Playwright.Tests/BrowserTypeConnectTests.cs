@@ -53,7 +53,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to reconnect to a browser")]
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToReconnectToBrowserAsync()
-        { 
+        {
             var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
