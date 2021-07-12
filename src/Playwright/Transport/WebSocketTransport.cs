@@ -160,7 +160,7 @@ namespace Microsoft.Playwright.Transport
             }
         }
 
-        private string GetUserAgent()
+        private string GenerateUserAgent()
         {
             var architecture = Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432");
             var osAndVersion = RuntimeInformation.OSDescription;
@@ -170,7 +170,7 @@ namespace Microsoft.Playwright.Transport
 
         private void SetHeaders()
         {
-            _webSocket.Options.SetRequestHeader("User-Agent", GetUserAgent());
+            _webSocket.Options.SetRequestHeader("User-Agent", GenerateUserAgent());
             if (_options.Headers is IDictionary<string, string> dictionary && dictionary.Keys.Any(f => f != null))
             {
                 foreach (var kv in dictionary)
