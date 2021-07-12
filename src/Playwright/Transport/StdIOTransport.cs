@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Playwright.Transport
 {
@@ -35,15 +34,13 @@ namespace Microsoft.Playwright.Transport
     {
         private const int DefaultBufferSize = 1024;  // Byte buffer size
         private readonly Process _process;
-        private readonly ILogger<StdIOTransport> _logger;
         private readonly CancellationTokenSource _readerCancellationSource = new();
         private readonly List<byte> _data = new();
         private int? _currentMessageSize;
 
-        internal StdIOTransport(Process process, ILoggerFactory loggerFactory)
+        internal StdIOTransport(Process process)
         {
             _process = process;
-            _logger = loggerFactory?.CreateLogger<StdIOTransport>();
             process.ErrorDataReceived += (_, e) => LogReceived?.Invoke(this, new(e.Data));
             process.BeginErrorReadLine();
 
@@ -107,13 +104,18 @@ namespace Microsoft.Playwright.Transport
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "Transport Error");
-                Close(ex.ToString());
+                Close(ex);
             }
         }
 
         private static void ScheduleTransportTask(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
             => Task.Factory.StartNew(() => func(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+
+        private void Close(Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(ex);
+            Close(ex.ToString());
+        }
 
         private void Dispose(bool disposing)
         {
@@ -155,8 +157,7 @@ namespace Microsoft.Playwright.Transport
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "Transport Error");
-                Close(ex.ToString());
+                Close(ex);
             }
         }
 

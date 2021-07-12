@@ -25,7 +25,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.Extensions.Logging;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
@@ -40,19 +39,17 @@ namespace Microsoft.Playwright.Core
         /// </summary>
         public const int DefaultTimeout = 30_000;
 
-        private readonly ILoggerFactory _loggerFactory;
         private readonly PlaywrightInitializer _initializer;
         private readonly PlaywrightChannel _channel;
         private readonly Connection _connection;
         private readonly Dictionary<string, BrowserNewContextOptions> _devices = new(StringComparer.InvariantCultureIgnoreCase);
 
-        internal PlaywrightImpl(IChannelOwner parent, string guid, PlaywrightInitializer initializer, ILoggerFactory loggerFactory)
+        internal PlaywrightImpl(IChannelOwner parent, string guid, PlaywrightInitializer initializer)
              : base(parent, guid)
         {
             _connection = parent.Connection;
             _initializer = initializer;
             _channel = new(guid, parent.Connection, this);
-            _loggerFactory = loggerFactory;
 
             foreach (var entry in initializer.DeviceDescriptors)
             {
@@ -111,7 +108,6 @@ namespace Microsoft.Playwright.Core
                 return;
             }
 
-            _loggerFactory?.Dispose();
             Connection?.Dispose();
         }
     }
