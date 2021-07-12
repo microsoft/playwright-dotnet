@@ -124,7 +124,7 @@ namespace Microsoft.Playwright.Tests
                 browserServer.process.Start();
                 browserServer.process.Exited += (_, _) => browserServer.process.Kill();
                 browserServer.wsEndpoint = browserServer.process.StandardOutput.ReadLine();
-                
+
                 if (!browserServer.wsEndpoint.StartsWith("ws://"))
                 {
                     throw new PlaywrightException("Invalid web socket address: " + browserServer.wsEndpoint);
