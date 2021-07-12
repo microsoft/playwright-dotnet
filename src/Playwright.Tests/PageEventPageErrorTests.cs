@@ -44,16 +44,35 @@ namespace Microsoft.Playwright.Tests
                 Page.GotoAsync(Server.Prefix + "/error.html")
             );
 
-            StringAssert.Contains("Error", error);
-            StringAssert.Contains("Fancy error!", error);
-            string stack = await Page.EvaluateAsync<string>("() => window.e.stack");
-
-            if (TestConstants.IsWebKit)
+            string expectedError = "";
+            if (TestConstants.IsFirefox)
             {
-                stack = stack.Replace("14:25", "15:19");
+                expectedError = @"Error: Fancy error!
+    at c (myscript.js:14:11)
+    at b (myscript.js:10:5)
+    at a (myscript.js:6:5)
+    at  (myscript.js:3:1)";
+            }
+            else if (TestConstants.IsChromium)
+            {
+                expectedError = @"Error: Fancy error!
+    at c (myscript.js:14:11)
+    at b (myscript.js:10:5)
+    at a (myscript.js:6:5)
+    at myscript.js:3:1";
+            }
+            else if (TestConstants.IsWebKit)
+            {
+                expectedError = @$"Error: Fancy error!
+    at c ({Page.Url}:14:36)
+    at b ({Page.Url}:10:6)
+    at a ({Page.Url}:6:6)
+    at global code ({Page.Url}:3:2)";
             }
 
-            StringAssert.Contains(stack, error);
+            expectedError = expectedError.Replace("\r", "");
+
+            StringAssert.AreEqualIgnoringCase(expectedError, error);
         }
 
         [PlaywrightTest("page-event-pageerror.spec.ts", "should contain sourceURL")]
