@@ -40,7 +40,36 @@ namespace Microsoft.Playwright.Tests
         [SetUp]
         public void SetUpAsync()
         {
-            _browserServer = LaunchServer(BrowserType);
+            try
+            {
+                BrowserServer browserServer = new();
+                browserServer.Process = new()
+                {
+                    StartInfo =
+                    {
+                        FileName = Microsoft.Playwright.Program.GetExecutablePath(),
+                        Arguments = $"launch-server {BrowserType.Name}",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardInput = true,
+                        RedirectStandardError = true,
+                        CreateNoWindow = true,
+                    },
+                };
+                browserServer.Process.Start();
+                browserServer.Process.Exited += (_, _) => browserServer.Process.Kill();
+                browserServer.WSEndpoint = browserServer.Process.StandardOutput.ReadLine();
+
+                if (!browserServer.WSEndpoint.StartsWith("ws://"))
+                {
+                    throw new PlaywrightException("Invalid web socket address: " + browserServer.WSEndpoint);
+                }
+                _browserServer = browserServer;
+            }
+            catch (IOException ex)
+            {
+                throw new PlaywrightException("Failed to launch server", ex);
+            }
         }
 
         [TearDown]
@@ -98,6 +127,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should reject waitForSelector when browser closes")]
+        [Test, Ignore("SKIP WIRE")]
         public void ShouldRejectWaitForSelectorWhenBrowserCloses()
         {
         }
@@ -115,6 +145,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should respect selectors")]
+        [Test, Ignore("SKIP WIRE")]
         public void ShouldRespectSelectors()
         {
         }
@@ -124,45 +155,6 @@ namespace Microsoft.Playwright.Tests
         {
             public Process Process { get; set; }
             public string WSEndpoint { get; set; }
-
         }
-
-        private BrowserServer LaunchServer(IBrowserType browserType)
-        {
-            try
-            {
-                Console.WriteLine(browserType);
-                BrowserServer browserServer = new();
-                browserServer.Process = GetProcess(browserType.Name);
-                browserServer.Process.Start();
-                browserServer.Process.Exited += (_, _) => browserServer.Process.Kill();
-                browserServer.WSEndpoint = browserServer.Process.StandardOutput.ReadLine();
-
-                if (!browserServer.WSEndpoint.StartsWith("ws://"))
-                {
-                    throw new PlaywrightException("Invalid web socket address: " + browserServer.WSEndpoint);
-                }
-                return browserServer;
-            }
-            catch (IOException ex)
-            {
-                throw new PlaywrightException("Failed to launch server", ex);
-            }
-        }
-
-        private static Process GetProcess(string browserType)
-            => new()
-            {
-                StartInfo =
-                {
-                    FileName = Microsoft.Playwright.Program.GetExecutablePath(),
-                    Arguments = $"launch-server {browserType}",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardInput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true,
-                },
-            };
     }
 }

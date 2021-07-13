@@ -122,7 +122,7 @@ namespace Microsoft.Playwright.Core
         public async Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions options = null)
         {
             options ??= new BrowserTypeConnectOptions();
-#pragma warning disable CA2000
+#pragma warning disable CA2000 // Dispose objects before losing scope
             var transport = new WebSocketTransport(wsEndpoint, options);
 #pragma warning restore CA2000
             var connection = new Connection(transport);

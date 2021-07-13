@@ -39,7 +39,7 @@ namespace Microsoft.Playwright
         /// <returns>A <see cref="Task"/> that completes when the playwright driver is ready to be used.</returns>
         public static async Task<IPlaywright> CreateAsync()
         {
-#pragma warning disable CA2000
+#pragma warning disable CA2000 // Dispose objects before losing scope
             var connection = new Connection(new StdIOTransport());
 #pragma warning restore CA2000
             var playwright = await connection.WaitForObjectWithKnownNameAsync<PlaywrightImpl>("Playwright").ConfigureAwait(false);
