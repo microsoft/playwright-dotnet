@@ -150,10 +150,7 @@ namespace Microsoft.Playwright.Transport
                 _readerCancellationSource.Dispose();
             }
 
-            if (_process != null)
-            {
-                _process.Dispose();
-            }
+            _process?.Dispose();
         }
 
         private async Task GetResponseAsync(CancellationToken token)
