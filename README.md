@@ -11,12 +11,11 @@ Playwright for .NET is the official language port of [Playwright](https://playwr
 
 ## Documentation
 
-[https://playwright.dev/dotnet/docs/intro](https://playwright.dev/dotnet/docs/intro)
+[https://playwright.dev/dotnet/docs/intro](https://playwright.dev/dotnet/docs/intro) 
 
 ## API Reference
 [https://playwright.dev/dotnet/docs/api/class-playwright](https://playwright.dev/dotnet/docs/api/class-playwright)
 
-### Local Browser
 
 ```cs
 using System.Threading.Tasks;
@@ -28,25 +27,6 @@ class Program
     {
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = false });
-        var page = await browser.NewPageAsync();
-        await page.GotoAsync("https://playwright.dev/dotnet");
-        await page.ScreenshotAsync(new() { Path = "screenshot.png" });
-    }
-}
-```
-
-### Remote Browser
-
-```cs
-using System.Threading.Tasks;
-using Microsoft.Playwright;
-
-class Program
-{
-    public static async Task Main()
-    {
-        using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.ConnectAsync("wss://<ip>:<port>/");
         var page = await browser.NewPageAsync();
         await page.GotoAsync("https://playwright.dev/dotnet");
         await page.ScreenshotAsync(new() { Path = "screenshot.png" });
