@@ -86,8 +86,8 @@ namespace Microsoft.Playwright.Tests
             var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GotoAsync("https://google.com");
-            Assert.AreEqual("https://www.google.com/", page.Url);
+            await page.GotoAsync(Server.EmptyPage);
+            Assert.AreEqual(Server.EmptyPage, page.Url);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to connect two browsers at the same time")]

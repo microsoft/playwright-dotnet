@@ -79,7 +79,7 @@ namespace Microsoft.Playwright.Transport
                 IsClosed = true;
                 _ = _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, closeReason, _readerCancellationSource.Token).ConfigureAwait(false);
                 TransportClosed?.Invoke(this, new TransportClosedEventArgs { CloseReason = closeReason });
-                _readerCancellationSource.Cancel();
+                _readerCancellationSource?.Cancel();
             }
         }
 
@@ -88,12 +88,6 @@ namespace Microsoft.Playwright.Transport
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-
-            if (_readerCancellationSource != null)
-            {
-                _readerCancellationSource.Cancel();
-                _readerCancellationSource.Dispose();
-            }
         }
 
         private void Close(Exception ex)
@@ -162,10 +156,8 @@ namespace Microsoft.Playwright.Transport
                 return;
             }
 
-            if (_webSocket != null)
-            {
-                _webSocket.Dispose();
-            }
+            _readerCancellationSource?.Dispose();
+            _webSocket?.Dispose();
         }
 
         private string GenerateUserAgent()

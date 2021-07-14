@@ -74,11 +74,16 @@ namespace Microsoft.Playwright.Transport
         {
             if (!IsClosed)
             {
-                IsClosed = true;
-                _process?.Kill();
-                _process?.Dispose();
-                TransportClosed?.Invoke(this, new() { CloseReason = closeReason });
-                _readerCancellationSource.Cancel();
+                try
+                {
+                    IsClosed = true;
+                    TransportClosed?.Invoke(this, new() { CloseReason = closeReason });
+                    _readerCancellationSource?.Cancel();
+                    _process?.Kill();
+                }
+                catch
+                {
+                }
             }
         }
 
@@ -144,12 +149,7 @@ namespace Microsoft.Playwright.Transport
                 return;
             }
 
-            if (_readerCancellationSource != null)
-            {
-                _readerCancellationSource.Cancel();
-                _readerCancellationSource.Dispose();
-            }
-
+            _readerCancellationSource?.Dispose();
             _process?.Dispose();
         }
 
