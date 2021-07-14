@@ -46,22 +46,22 @@ namespace Microsoft.Playwright
         public ElementHandleTapOptions(ElementHandleTapOptions clone)
         {
             if (clone == null) return;
-            Position = clone.Position;
-            Modifiers = clone.Modifiers;
             Force = clone.Force;
+            Modifiers = clone.Modifiers;
             NoWaitAfter = clone.NoWaitAfter;
+            Position = clone.Position;
             Timeout = clone.Timeout;
             Trial = clone.Trial;
         }
 
         /// <summary>
         /// <para>
-        /// A point to use relative to the top-left corner of element padding box. If not specified,
-        /// uses some visible point of the element.
+        /// Whether to bypass the <a href="./actionability.md">actionability</a> checks. Defaults
+        /// to <c>false</c>.
         /// </para>
         /// </summary>
-        [JsonPropertyName("position")]
-        public Position? Position { get; set; }
+        [JsonPropertyName("force")]
+        public bool? Force { get; set; }
 
         /// <summary>
         /// <para>
@@ -75,15 +75,6 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Whether to bypass the <a href="./actionability.md">actionability</a> checks. Defaults
-        /// to <c>false</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("force")]
-        public bool? Force { get; set; }
-
-        /// <summary>
-        /// <para>
         /// Actions that initiate navigations are waiting for these navigations to happen and
         /// for pages to start loading. You can opt out of waiting via setting this flag. You
         /// would only need this option in the exceptional cases such as navigating to inaccessible
@@ -92,6 +83,15 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("noWaitAfter")]
         public bool? NoWaitAfter { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// A point to use relative to the top-left corner of element padding box. If not specified,
+        /// uses some visible point of the element.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("position")]
+        public Position? Position { get; set; }
 
         /// <summary>
         /// <para>

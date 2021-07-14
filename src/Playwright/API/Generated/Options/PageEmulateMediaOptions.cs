@@ -46,19 +46,10 @@ namespace Microsoft.Playwright
         public PageEmulateMediaOptions(PageEmulateMediaOptions clone)
         {
             if (clone == null) return;
-            Media = clone.Media;
             ColorScheme = clone.ColorScheme;
+            Media = clone.Media;
             ReducedMotion = clone.ReducedMotion;
         }
-
-        /// <summary>
-        /// <para>
-        /// Changes the CSS media type of the page. The only allowed values are <c>'Screen'</c>,
-        /// <c>'Print'</c> and <c>'Null'</c>. Passing <c>'Null'</c> disables CSS media emulation.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("media")]
-        public Media? Media { get; set; }
 
         /// <summary>
         /// <para>
@@ -69,6 +60,15 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("colorScheme")]
         public ColorScheme? ColorScheme { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Changes the CSS media type of the page. The only allowed values are <c>'Screen'</c>,
+        /// <c>'Print'</c> and <c>'Null'</c>. Passing <c>'Null'</c> disables CSS media emulation.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("media")]
+        public Media? Media { get; set; }
 
         /// <summary>
         /// <para>

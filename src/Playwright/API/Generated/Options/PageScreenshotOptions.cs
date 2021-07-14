@@ -46,42 +46,14 @@ namespace Microsoft.Playwright
         public PageScreenshotOptions(PageScreenshotOptions clone)
         {
             if (clone == null) return;
-            Path = clone.Path;
-            Type = clone.Type;
-            Quality = clone.Quality;
-            FullPage = clone.FullPage;
             Clip = clone.Clip;
+            FullPage = clone.FullPage;
             OmitBackground = clone.OmitBackground;
+            Path = clone.Path;
+            Quality = clone.Quality;
             Timeout = clone.Timeout;
+            Type = clone.Type;
         }
-
-        /// <summary>
-        /// <para>
-        /// The file path to save the image to. The screenshot type will be inferred from file
-        /// extension. If <paramref name="path"/> is a relative path, then it is resolved relative
-        /// to the current working directory. If no path is provided, the image won't be saved
-        /// to the disk.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("path")]
-        public string? Path { get; set; }
-
-        /// <summary><para>Specify screenshot type, defaults to <c>png</c>.</para></summary>
-        [JsonPropertyName("type")]
-        public ScreenshotType? Type { get; set; }
-
-        /// <summary><para>The quality of the image, between 0-100. Not applicable to <c>png</c> images.</para></summary>
-        [JsonPropertyName("quality")]
-        public int? Quality { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// When true, takes a screenshot of the full scrollable page, instead of the currently
-        /// visible viewport. Defaults to <c>false</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("fullPage")]
-        public bool? FullPage { get; set; }
 
         /// <summary>
         /// <para>
@@ -94,12 +66,36 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
+        /// When true, takes a screenshot of the full scrollable page, instead of the currently
+        /// visible viewport. Defaults to <c>false</c>.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("fullPage")]
+        public bool? FullPage { get; set; }
+
+        /// <summary>
+        /// <para>
         /// Hides default white background and allows capturing screenshots with transparency.
         /// Not applicable to <c>jpeg</c> images. Defaults to <c>false</c>.
         /// </para>
         /// </summary>
         [JsonPropertyName("omitBackground")]
         public bool? OmitBackground { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// The file path to save the image to. The screenshot type will be inferred from file
+        /// extension. If <paramref name="path"/> is a relative path, then it is resolved relative
+        /// to the current working directory. If no path is provided, the image won't be saved
+        /// to the disk.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("path")]
+        public string? Path { get; set; }
+
+        /// <summary><para>The quality of the image, between 0-100. Not applicable to <c>png</c> images.</para></summary>
+        [JsonPropertyName("quality")]
+        public int? Quality { get; set; }
 
         /// <summary>
         /// <para>
@@ -110,6 +106,10 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("timeout")]
         public float? Timeout { get; set; }
+
+        /// <summary><para>Specify screenshot type, defaults to <c>png</c>.</para></summary>
+        [JsonPropertyName("type")]
+        public ScreenshotType? Type { get; set; }
     }
 }
 
