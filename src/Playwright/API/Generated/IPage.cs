@@ -1089,7 +1089,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        Task<bool> IsHiddenAsync(string selector);
+        /// <param name="options">Call options</param>
+        Task<bool> IsHiddenAsync(string selector, PageIsHiddenOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -1102,7 +1103,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        Task<bool> IsVisibleAsync(string selector);
+        /// <param name="options">Call options</param>
+        Task<bool> IsVisibleAsync(string selector, PageIsVisibleOptions? options = default);
 
         public IKeyboard Keyboard { get; }
 
@@ -1470,7 +1472,7 @@ namespace Microsoft.Playwright
         /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
         /// // single selection matching both the value and the label<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-        /// // multiple<br/>
+        /// // multiple <br/>
         /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
         /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
@@ -1511,7 +1513,7 @@ namespace Microsoft.Playwright
         /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
         /// // single selection matching both the value and the label<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-        /// // multiple<br/>
+        /// // multiple <br/>
         /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
         /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
@@ -1552,7 +1554,7 @@ namespace Microsoft.Playwright
         /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
         /// // single selection matching both the value and the label<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-        /// // multiple<br/>
+        /// // multiple <br/>
         /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
         /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
@@ -1593,7 +1595,7 @@ namespace Microsoft.Playwright
         /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
         /// // single selection matching both the value and the label<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-        /// // multiple<br/>
+        /// // multiple <br/>
         /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
         /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
@@ -1634,7 +1636,7 @@ namespace Microsoft.Playwright
         /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
         /// // single selection matching both the value and the label<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-        /// // multiple<br/>
+        /// // multiple <br/>
         /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
         /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
@@ -1675,7 +1677,7 @@ namespace Microsoft.Playwright
         /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
         /// // single selection matching both the value and the label<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-        /// // multiple<br/>
+        /// // multiple <br/>
         /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
         /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>

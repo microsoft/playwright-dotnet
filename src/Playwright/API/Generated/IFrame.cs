@@ -650,7 +650,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        Task<bool> IsHiddenAsync(string selector);
+        /// <param name="options">Call options</param>
+        Task<bool> IsHiddenAsync(string selector, FrameIsHiddenOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -663,7 +664,8 @@ namespace Microsoft.Playwright
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        Task<bool> IsVisibleAsync(string selector);
+        /// <param name="options">Call options</param>
+        Task<bool> IsVisibleAsync(string selector, FrameIsVisibleOptions? options = default);
 
         /// <summary>
         /// <para>Returns frame's name attribute as specified in the tag.</para>

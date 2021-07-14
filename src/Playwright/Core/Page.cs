@@ -818,11 +818,11 @@ namespace Microsoft.Playwright.Core
         public Task<bool> IsEnabledAsync(string selector, PageIsEnabledOptions options = default)
             => MainFrame.IsEnabledAsync(selector, new() { Timeout = options?.Timeout });
 
-        public Task<bool> IsHiddenAsync(string selector)
-            => MainFrame.IsHiddenAsync(selector);
+        public Task<bool> IsHiddenAsync(string selector, PageIsHiddenOptions options = default)
+            => MainFrame.IsHiddenAsync(selector, new() { Timeout = options?.Timeout });
 
-        public Task<bool> IsVisibleAsync(string selector)
-            => MainFrame.IsVisibleAsync(selector);
+        public Task<bool> IsVisibleAsync(string selector, PageIsVisibleOptions options = default)
+            => MainFrame.IsVisibleAsync(selector, new() { Timeout = options?.Timeout });
 
         public Task PauseAsync() => Context.Channel.PauseAsync();
 

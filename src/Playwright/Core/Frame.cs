@@ -471,11 +471,11 @@ namespace Microsoft.Playwright.Core
         public Task<bool> IsEnabledAsync(string selector, FrameIsEnabledOptions options = default)
             => _channel.IsEnabledAsync(selector, timeout: options?.Timeout);
 
-        public Task<bool> IsHiddenAsync(string selector)
-            => _channel.IsHiddenAsync(selector);
+        public Task<bool> IsHiddenAsync(string selector, FrameIsHiddenOptions options = default)
+            => _channel.IsHiddenAsync(selector, timeout: options?.Timeout);
 
-        public Task<bool> IsVisibleAsync(string selector)
-            => _channel.IsVisibleAsync(selector);
+        public Task<bool> IsVisibleAsync(string selector, FrameIsVisibleOptions options = default)
+            => _channel.IsVisibleAsync(selector, timeout: options?.Timeout);
 
         public Task WaitForURLAsync(string url, FrameWaitForURLOptions options = default)
             => WaitForURLAsync(url, null, null, options);
