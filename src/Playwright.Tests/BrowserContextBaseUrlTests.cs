@@ -22,9 +22,7 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Text;
-using System.Text.Unicode;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
@@ -58,12 +56,11 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldConstructTheURLsCorrectlyWihoutTrailingSlash()
         {
-            var serverUri = new Uri(Server.Prefix);
-            var page = await Browser.NewPageAsync(new() { BaseURL = new Uri(serverUri, "/url-construction").ToString() });
+            var page = await Browser.NewPageAsync(new() { BaseURL = Server.Prefix + "/url-construction".ToString() });
 
-            Assert.AreEqual(new Uri(serverUri, "/mypage.html"), (await page.GotoAsync("mypage.html")).Url);
-            Assert.AreEqual(new Uri(serverUri, "/mypage.html"), (await page.GotoAsync("./mypage.html")).Url);
-            Assert.AreEqual(new Uri(serverUri, "/mypage.html"), (await page.GotoAsync("/mypage.html")).Url);
+            Assert.AreEqual(Server.Prefix + "/mypage.html", (await page.GotoAsync("mypage.html")).Url);
+            Assert.AreEqual(Server.Prefix + "/mypage.html", (await page.GotoAsync("./mypage.html")).Url);
+            Assert.AreEqual(Server.Prefix + "/mypage.html", (await page.GotoAsync("/mypage.html")).Url);
 
             await page.CloseAsync();
         }
@@ -72,14 +69,13 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldConstructTheURLsCorrectlyWithATrailingSlash()
         {
-            var serverUri = new Uri(Server.Prefix);
-            var page = await Browser.NewPageAsync(new() { BaseURL = new Uri(serverUri, "/url-construction/").ToString() });
+            var page = await Browser.NewPageAsync(new() { BaseURL = Server.Prefix + "/url-construction/" });
 
-            Assert.AreEqual(new Uri(serverUri, "/url-construction/mypage.html"), (await page.GotoAsync("mypage.html")).Url);
-            Assert.AreEqual(new Uri(serverUri, "/url-construction/mypage.html"), (await page.GotoAsync("./mypage.html")).Url);
-            Assert.AreEqual(new Uri(serverUri, "/mypage.html"), (await page.GotoAsync("/mypage.html")).Url);
-            Assert.AreEqual(new Uri(serverUri, "/url-construction/"), (await page.GotoAsync(".")).Url);
-            Assert.AreEqual(new Uri(serverUri, "/"), (await page.GotoAsync("/")).Url);
+            Assert.AreEqual(Server.Prefix + "/url-construction/mypage.html", (await page.GotoAsync("mypage.html")).Url);
+            Assert.AreEqual(Server.Prefix + "/url-construction/mypage.html", (await page.GotoAsync("./mypage.html")).Url);
+            Assert.AreEqual(Server.Prefix + "/mypage.html", (await page.GotoAsync("/mypage.html")).Url);
+            Assert.AreEqual(Server.Prefix + "/url-construction/", (await page.GotoAsync(".")).Url);
+            Assert.AreEqual(Server.Prefix + "/", (await page.GotoAsync("/")).Url);
 
             await page.CloseAsync();
         }
@@ -105,8 +101,7 @@ namespace Microsoft.Playwright.Tests
         [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToMatchURLRelativeToItsGivenURL()
         {
-            var serverUri = new Uri(Server.Prefix);
-            var page = await Browser.NewPageAsync(new() { BaseURL = new Uri(serverUri, "/foobar/").ToString() });
+            var page = await Browser.NewPageAsync(new() { BaseURL = Server.Prefix + "/foobar/" });
 
             await page.GotoAsync("/kek/index.html");
             await page.WaitForURLAsync("/kek/index.html");
