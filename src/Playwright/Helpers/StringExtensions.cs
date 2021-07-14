@@ -774,7 +774,9 @@ namespace Microsoft.Playwright.Helpers
 
         internal static string CombineUrlWithBase(this string url, string baseUrl)
         {
-            if (string.IsNullOrEmpty(baseUrl) || !Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
+            if (string.IsNullOrEmpty(baseUrl)
+                || (url?.StartsWith("*", StringComparison.InvariantCultureIgnoreCase) ?? false)
+                || !Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
             {
                 return url;
             }

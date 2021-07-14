@@ -131,5 +131,26 @@ namespace Microsoft.Playwright.Tests
             await page.CloseAsync();
         }
 
+        [PlaywrightTest("browsercontext-base-url.spec.ts", "should construct a new URL when a baseURL in browserType.launchPersistentContext is passed to page.goto")]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task ShouldConstructANewURLWhenABaseURLIsInPersistentContext()
+        {
+            using var dir = new TempDirectory();
+            await using var context = await BrowserType.LaunchPersistentContextAsync(dir.Path, new() { BaseURL = Server.Prefix });
+
+            var page = await context.NewPageAsync();
+            Assert.AreEqual(Server.EmptyPage, (await page.GotoAsync("/empty.html")).Url);
+        }
+
+        [PlaywrightTest("browsercontext-base-url.spec.ts", "should not construct a new URL with baseURL when a glob was used")]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task ShouldNotConstructANewUrlWithBaseURLWhenAGlobWasUsed()
+        {
+            var page = await Browser.NewPageAsync(new() { BaseURL = Server.Prefix + "/foobar/" });
+            await page.GotoAsync("./kek/index.html");
+            await page.WaitForURLAsync("**/foobar/kek/index.html");
+            await page.CloseAsync();
+        }
+
     }
 }
