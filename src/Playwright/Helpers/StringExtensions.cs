@@ -772,27 +772,6 @@ namespace Microsoft.Playwright.Helpers
             return _mappings.TryGetValue(extension, out string contentType) ? contentType : defaultContentType;
         }
 
-        internal static string CombineUrlWithBase(this string url, string baseUrl)
-        {
-            if (string.IsNullOrEmpty(baseUrl)
-                || (url?.StartsWith("*", StringComparison.InvariantCultureIgnoreCase) ?? false)
-                || !Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
-            {
-                return url;
-            }
-
-            var mUri = new Uri(url, UriKind.RelativeOrAbsolute);
-            if (!mUri.IsAbsoluteUri)
-            {
-                return new Uri(new Uri(baseUrl), mUri).ToString();
-            }
-
-            return url;
-        }
-
-        internal static bool UrlMatches(this string url, string glob)
-            => new Regex(GlobToRegex(glob)).Match(url).Success;
-
         internal static string MimeType(this string file)
             => _mappings.TryGetValue(new FileInfo(file).Extension, out string mime) ? mime : "application/octet-stream";
 

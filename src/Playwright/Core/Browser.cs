@@ -148,7 +148,7 @@ namespace Microsoft.Playwright.Core
 
             var page = (Page)await context.NewPageAsync().ConfigureAwait(false);
             page.OwnedContext = context;
-            context.BaseUrl = options.BaseURL;
+            context.Options = contextOptions;
             context.OwnerPage = page;
             return page;
         }

@@ -538,8 +538,7 @@ namespace Microsoft.Playwright.Core
 
         private bool UrlMatches(string url, string matchUrl, Regex regex, Func<string, bool> match)
         {
-            var baseUrl = (Page.Context as BrowserContext)?.BaseUrl;
-            matchUrl = matchUrl.CombineUrlWithBase(baseUrl);
+            matchUrl = (Page.Context as BrowserContext)?.CombineUrlWithBase(matchUrl);
 
             if (matchUrl == null && regex == null && match == null)
             {
