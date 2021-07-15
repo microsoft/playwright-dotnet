@@ -26,7 +26,7 @@ namespace Microsoft.Playwright.Transport
             _webSocket = new ClientWebSocket();
             _wsEndpoint = wsEndpoint;
             _options = options;
-            SetHeaders();
+            SetOptions();
             _ = ConnectAsync();
         }
 
@@ -43,6 +43,12 @@ namespace Microsoft.Playwright.Transport
 
         public async Task SendAsync(string message)
         {
+            var slowMo = _options.SlowMo;
+            if (slowMo != null && slowMo > 0)
+            {
+                await Task.Delay((int)slowMo).ConfigureAwait(false);
+            }
+
             var messageBuffer = Encoding.UTF8.GetBytes(message);
             var messagesCount = (int)Math.Ceiling((double)messageBuffer.Length / DefaultBufferSize);
 
@@ -168,7 +174,7 @@ namespace Microsoft.Playwright.Transport
             return $"Playwright/{architecture}/{osAndVersion}/{assemblyVersion}";
         }
 
-        private void SetHeaders()
+        private void SetOptions()
         {
             _webSocket.Options.SetRequestHeader("User-Agent", GenerateUserAgent());
             if (_options.Headers is IDictionary<string, string> dictionary && dictionary.Keys.Any(f => f != null))
@@ -180,6 +186,12 @@ namespace Microsoft.Playwright.Transport
                         _webSocket.Options.SetRequestHeader(kv.Key, kv.Value);
                     }
                 }
+            }
+
+            var timeout = _options.Timeout;
+            if (timeout != null)
+            {
+                _webSocket.Options.KeepAliveInterval = TimeSpan.FromMilliseconds((double)timeout);
             }
         }
     }
