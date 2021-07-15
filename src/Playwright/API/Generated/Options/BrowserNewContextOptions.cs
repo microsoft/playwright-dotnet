@@ -83,12 +83,6 @@ namespace Microsoft.Playwright
         [JsonPropertyName("acceptDownloads")]
         public bool? AcceptDownloads { get; set; }
 
-        /// <summary><para>Toggles bypassing page's Content-Security-Policy.</para></summary>
-        [JsonPropertyName("bypassCSP")]
-        public bool? BypassCSP { get; set; }
-
-        /// <summary>
-        /// <para>
         /// <summary>
         /// <para>
         /// When using <see cref="IPage.GotoAsync"/>, <see cref="IPage.RouteAsync"/>, <see cref="IPage.WaitForURLAsync"/>,
