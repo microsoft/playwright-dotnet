@@ -46,47 +46,56 @@ namespace Microsoft.Playwright
         public BrowserTypeLaunchPersistentContextOptions(BrowserTypeLaunchPersistentContextOptions clone)
         {
             if (clone == null) return;
+            AcceptDownloads = clone.AcceptDownloads;
             Args = clone.Args;
+            BypassCSP = clone.BypassCSP;
             Channel = clone.Channel;
             ChromiumSandbox = clone.ChromiumSandbox;
+            ColorScheme = clone.ColorScheme;
+            DeviceScaleFactor = clone.DeviceScaleFactor;
             Devtools = clone.Devtools;
             DownloadsPath = clone.DownloadsPath;
             Env = clone.Env;
             ExecutablePath = clone.ExecutablePath;
+            ExtraHTTPHeaders = clone.ExtraHTTPHeaders;
+            Geolocation = clone.Geolocation;
+            HandleSIGHUP = clone.HandleSIGHUP;
             HandleSIGINT = clone.HandleSIGINT;
             HandleSIGTERM = clone.HandleSIGTERM;
-            HandleSIGHUP = clone.HandleSIGHUP;
-            Headless = clone.Headless;
-            Proxy = clone.Proxy;
-            Timeout = clone.Timeout;
-            TracesDir = clone.TracesDir;
-            SlowMo = clone.SlowMo;
-            IgnoreDefaultArgs = clone.IgnoreDefaultArgs;
-            IgnoreAllDefaultArgs = clone.IgnoreAllDefaultArgs;
-            AcceptDownloads = clone.AcceptDownloads;
-            IgnoreHTTPSErrors = clone.IgnoreHTTPSErrors;
-            BypassCSP = clone.BypassCSP;
-            ViewportSize = clone.ViewportSize;
-            ScreenSize = clone.ScreenSize;
-            UserAgent = clone.UserAgent;
-            DeviceScaleFactor = clone.DeviceScaleFactor;
-            IsMobile = clone.IsMobile;
             HasTouch = clone.HasTouch;
-            JavaScriptEnabled = clone.JavaScriptEnabled;
-            TimezoneId = clone.TimezoneId;
-            Geolocation = clone.Geolocation;
-            Locale = clone.Locale;
-            Permissions = clone.Permissions;
-            ExtraHTTPHeaders = clone.ExtraHTTPHeaders;
-            Offline = clone.Offline;
+            Headless = clone.Headless;
             HttpCredentials = clone.HttpCredentials;
-            ColorScheme = clone.ColorScheme;
-            ReducedMotion = clone.ReducedMotion;
-            RecordHarPath = clone.RecordHarPath;
+            IgnoreAllDefaultArgs = clone.IgnoreAllDefaultArgs;
+            IgnoreDefaultArgs = clone.IgnoreDefaultArgs;
+            IgnoreHTTPSErrors = clone.IgnoreHTTPSErrors;
+            IsMobile = clone.IsMobile;
+            JavaScriptEnabled = clone.JavaScriptEnabled;
+            Locale = clone.Locale;
+            Offline = clone.Offline;
+            Permissions = clone.Permissions;
+            Proxy = clone.Proxy;
             RecordHarOmitContent = clone.RecordHarOmitContent;
+            RecordHarPath = clone.RecordHarPath;
             RecordVideoDir = clone.RecordVideoDir;
             RecordVideoSize = clone.RecordVideoSize;
+            ReducedMotion = clone.ReducedMotion;
+            ScreenSize = clone.ScreenSize;
+            SlowMo = clone.SlowMo;
+            Timeout = clone.Timeout;
+            TimezoneId = clone.TimezoneId;
+            TracesDir = clone.TracesDir;
+            UserAgent = clone.UserAgent;
+            ViewportSize = clone.ViewportSize;
         }
+
+        /// <summary>
+        /// <para>
+        /// Whether to automatically download all the attachments. Defaults to <c>false</c>
+        /// where all the downloads are canceled.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("acceptDownloads")]
+        public bool? AcceptDownloads { get; set; }
 
         /// <summary>
         /// <para>
@@ -96,6 +105,10 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("args")]
         public IEnumerable<string>? Args { get; set; }
+
+        /// <summary><para>Toggles bypassing page's Content-Security-Policy.</para></summary>
+        [JsonPropertyName("bypassCSP")]
+        public bool? BypassCSP { get; set; }
 
         /// <summary>
         /// <para>
@@ -111,6 +124,20 @@ namespace Microsoft.Playwright
         /// <summary><para>Enable Chromium sandboxing. Defaults to <c>false</c>.</para></summary>
         [JsonPropertyName("chromiumSandbox")]
         public bool? ChromiumSandbox { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Emulates <c>'prefers-colors-scheme'</c> media feature, supported values are <c>'light'</c>,
+        /// <c>'dark'</c>, <c>'no-preference'</c>. See <see cref="IPage.EmulateMediaAsync"/>
+        /// for more details. Defaults to <c>'light'</c>.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("colorScheme")]
+        public ColorScheme? ColorScheme { get; set; }
+
+        /// <summary><para>Specify device scale factor (can be thought of as dpr). Defaults to <c>1</c>.</para></summary>
+        [JsonPropertyName("deviceScaleFactor")]
+        public float? DeviceScaleFactor { get; set; }
 
         /// <summary>
         /// <para>
@@ -145,6 +172,22 @@ namespace Microsoft.Playwright
         [JsonPropertyName("executablePath")]
         public string? ExecutablePath { get; set; }
 
+        /// <summary>
+        /// <para>
+        /// An object containing additional HTTP headers to be sent with every request. All
+        /// header values must be strings.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("extraHTTPHeaders")]
+        public IEnumerable<KeyValuePair<string, string>>? ExtraHTTPHeaders { get; set; }
+
+        [JsonPropertyName("geolocation")]
+        public Geolocation? Geolocation { get; set; }
+
+        /// <summary><para>Close the browser process on SIGHUP. Defaults to <c>true</c>.</para></summary>
+        [JsonPropertyName("handleSIGHUP")]
+        public bool? HandleSIGHUP { get; set; }
+
         /// <summary><para>Close the browser process on Ctrl-C. Defaults to <c>true</c>.</para></summary>
         [JsonPropertyName("handleSIGINT")]
         public bool? HandleSIGINT { get; set; }
@@ -153,9 +196,9 @@ namespace Microsoft.Playwright
         [JsonPropertyName("handleSIGTERM")]
         public bool? HandleSIGTERM { get; set; }
 
-        /// <summary><para>Close the browser process on SIGHUP. Defaults to <c>true</c>.</para></summary>
-        [JsonPropertyName("handleSIGHUP")]
-        public bool? HandleSIGHUP { get; set; }
+        /// <summary><para>Specifies if viewport supports touch events. Defaults to false.</para></summary>
+        [JsonPropertyName("hasTouch")]
+        public bool? HasTouch { get; set; }
 
         /// <summary>
         /// <para>
@@ -167,40 +210,14 @@ namespace Microsoft.Playwright
         [JsonPropertyName("headless")]
         public bool? Headless { get; set; }
 
-        /// <summary><para>Network proxy settings.</para></summary>
-        [JsonPropertyName("proxy")]
-        public Proxy? Proxy { get; set; }
-
         /// <summary>
         /// <para>
-        /// Maximum time in milliseconds to wait for the browser instance to start. Defaults
-        /// to <c>30000</c> (30 seconds). Pass <c>0</c> to disable timeout.
+        /// Credentials for <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication">HTTP
+        /// authentication</a>.
         /// </para>
         /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
-
-        /// <summary><para>If specified, traces are saved into this directory.</para></summary>
-        [JsonPropertyName("tracesDir")]
-        public string? TracesDir { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Slows down Playwright operations by the specified amount of milliseconds. Useful
-        /// so that you can see what is going on.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("slowMo")]
-        public float? SlowMo { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// If <c>true</c>, Playwright does not pass its own configurations args and only uses
-        /// the ones from <paramref name="args"/>. Dangerous option; use with care.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("ignoreDefaultArgs")]
-        public IEnumerable<string>? IgnoreDefaultArgs { get; set; }
+        [JsonPropertyName("httpCredentials")]
+        public HttpCredentials? HttpCredentials { get; set; }
 
         /// <summary>
         /// <para>
@@ -214,46 +231,16 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Whether to automatically download all the attachments. Defaults to <c>false</c>
-        /// where all the downloads are canceled.
+        /// If <c>true</c>, Playwright does not pass its own configurations args and only uses
+        /// the ones from <paramref name="args"/>. Dangerous option; use with care.
         /// </para>
         /// </summary>
-        [JsonPropertyName("acceptDownloads")]
-        public bool? AcceptDownloads { get; set; }
+        [JsonPropertyName("ignoreDefaultArgs")]
+        public IEnumerable<string>? IgnoreDefaultArgs { get; set; }
 
         /// <summary><para>Whether to ignore HTTPS errors during navigation. Defaults to <c>false</c>.</para></summary>
         [JsonPropertyName("ignoreHTTPSErrors")]
         public bool? IgnoreHTTPSErrors { get; set; }
-
-        /// <summary><para>Toggles bypassing page's Content-Security-Policy.</para></summary>
-        [JsonPropertyName("bypassCSP")]
-        public bool? BypassCSP { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Emulates consistent viewport for each page. Defaults to an 1280x720 viewport. Use
-        /// <c>ViewportSize.NoViewport</c> to disable the default viewport.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("viewport")]
-        public ViewportSize? ViewportSize { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Emulates consistent window screen size available inside web page via <c>window.screen</c>.
-        /// Is only used when the <paramref name="viewport"/> is set.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("screen")]
-        public ScreenSize? ScreenSize { get; set; }
-
-        /// <summary><para>Specific user agent to use in this context.</para></summary>
-        [JsonPropertyName("userAgent")]
-        public string? UserAgent { get; set; }
-
-        /// <summary><para>Specify device scale factor (can be thought of as dpr). Defaults to <c>1</c>.</para></summary>
-        [JsonPropertyName("deviceScaleFactor")]
-        public float? DeviceScaleFactor { get; set; }
 
         /// <summary>
         /// <para>
@@ -264,25 +251,9 @@ namespace Microsoft.Playwright
         [JsonPropertyName("isMobile")]
         public bool? IsMobile { get; set; }
 
-        /// <summary><para>Specifies if viewport supports touch events. Defaults to false.</para></summary>
-        [JsonPropertyName("hasTouch")]
-        public bool? HasTouch { get; set; }
-
         /// <summary><para>Whether or not to enable JavaScript in the context. Defaults to <c>true</c>.</para></summary>
         [JsonPropertyName("javaScriptEnabled")]
         public bool? JavaScriptEnabled { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Changes the timezone of the context. See <a href="https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1">ICU's
-        /// metaZones.txt</a> for a list of supported timezone IDs.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timezoneId")]
-        public string? TimezoneId { get; set; }
-
-        [JsonPropertyName("geolocation")]
-        public Geolocation? Geolocation { get; set; }
 
         /// <summary>
         /// <para>
@@ -294,6 +265,10 @@ namespace Microsoft.Playwright
         [JsonPropertyName("locale")]
         public string? Locale { get; set; }
 
+        /// <summary><para>Whether to emulate network being offline. Defaults to <c>false</c>.</para></summary>
+        [JsonPropertyName("offline")]
+        public bool? Offline { get; set; }
+
         /// <summary>
         /// <para>
         /// A list of permissions to grant to all pages in this context. See <see cref="IBrowserContext.GrantPermissionsAsync"/>
@@ -303,47 +278,18 @@ namespace Microsoft.Playwright
         [JsonPropertyName("permissions")]
         public IEnumerable<string>? Permissions { get; set; }
 
-        /// <summary>
-        /// <para>
-        /// An object containing additional HTTP headers to be sent with every request. All
-        /// header values must be strings.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("extraHTTPHeaders")]
-        public IEnumerable<KeyValuePair<string, string>>? ExtraHTTPHeaders { get; set; }
-
-        /// <summary><para>Whether to emulate network being offline. Defaults to <c>false</c>.</para></summary>
-        [JsonPropertyName("offline")]
-        public bool? Offline { get; set; }
+        /// <summary><para>Network proxy settings.</para></summary>
+        [JsonPropertyName("proxy")]
+        public Proxy? Proxy { get; set; }
 
         /// <summary>
         /// <para>
-        /// Credentials for <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication">HTTP
-        /// authentication</a>.
+        /// Optional setting to control whether to omit request content from the HAR. Defaults
+        /// to <c>false</c>.
         /// </para>
         /// </summary>
-        [JsonPropertyName("httpCredentials")]
-        public HttpCredentials? HttpCredentials { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Emulates <c>'prefers-colors-scheme'</c> media feature, supported values are <c>'light'</c>,
-        /// <c>'dark'</c>, <c>'no-preference'</c>. See <see cref="IPage.EmulateMediaAsync"/>
-        /// for more details. Defaults to <c>'light'</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("colorScheme")]
-        public ColorScheme? ColorScheme { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Emulates <c>'prefers-reduced-motion'</c> media feature, supported values are <c>'reduce'</c>,
-        /// <c>'no-preference'</c>. See <see cref="IPage.EmulateMediaAsync"/> for more details.
-        /// Defaults to <c>'no-preference'</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("reducedMotion")]
-        public ReducedMotion? ReducedMotion { get; set; }
+        [JsonPropertyName("recordHarOmitContent")]
+        public bool? RecordHarOmitContent { get; set; }
 
         /// <summary>
         /// <para>
@@ -355,15 +301,6 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("recordHarPath")]
         public string? RecordHarPath { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Optional setting to control whether to omit request content from the HAR. Defaults
-        /// to <c>false</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("recordHarOmitContent")]
-        public bool? RecordHarOmitContent { get; set; }
 
         /// <summary>
         /// <para>
@@ -385,6 +322,69 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("recordVideoSize")]
         public RecordVideoSize? RecordVideoSize { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Emulates <c>'prefers-reduced-motion'</c> media feature, supported values are <c>'reduce'</c>,
+        /// <c>'no-preference'</c>. See <see cref="IPage.EmulateMediaAsync"/> for more details.
+        /// Defaults to <c>'no-preference'</c>.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("reducedMotion")]
+        public ReducedMotion? ReducedMotion { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Emulates consistent window screen size available inside web page via <c>window.screen</c>.
+        /// Is only used when the <paramref name="viewport"/> is set.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("screen")]
+        public ScreenSize? ScreenSize { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Slows down Playwright operations by the specified amount of milliseconds. Useful
+        /// so that you can see what is going on.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("slowMo")]
+        public float? SlowMo { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Maximum time in milliseconds to wait for the browser instance to start. Defaults
+        /// to <c>30000</c> (30 seconds). Pass <c>0</c> to disable timeout.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("timeout")]
+        public float? Timeout { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Changes the timezone of the context. See <a href="https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1">ICU's
+        /// metaZones.txt</a> for a list of supported timezone IDs.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("timezoneId")]
+        public string? TimezoneId { get; set; }
+
+        /// <summary><para>If specified, traces are saved into this directory.</para></summary>
+        [JsonPropertyName("tracesDir")]
+        public string? TracesDir { get; set; }
+
+        /// <summary><para>Specific user agent to use in this context.</para></summary>
+        [JsonPropertyName("userAgent")]
+        public string? UserAgent { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Emulates consistent viewport for each page. Defaults to an 1280x720 viewport. Use
+        /// <c>ViewportSize.NoViewport</c> to disable the default viewport.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("viewport")]
+        public ViewportSize? ViewportSize { get; set; }
     }
 }
 

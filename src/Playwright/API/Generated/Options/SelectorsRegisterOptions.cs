@@ -46,18 +46,10 @@ namespace Microsoft.Playwright
         public SelectorsRegisterOptions(SelectorsRegisterOptions clone)
         {
             if (clone == null) return;
-            Script = clone.Script;
-            Path = clone.Path;
             ContentScript = clone.ContentScript;
+            Path = clone.Path;
+            Script = clone.Script;
         }
-
-        /// <summary><para>Script that evaluates to a selector engine instance.</para></summary>
-        [JsonPropertyName("script")]
-        public string? Script { get; set; }
-
-        /// <summary><para>Script that evaluates to a selector engine instance.</para></summary>
-        [JsonPropertyName("path")]
-        public string? Path { get; set; }
 
         /// <summary>
         /// <para>
@@ -69,6 +61,14 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("contentScript")]
         public bool? ContentScript { get; set; }
+
+        /// <summary><para>Script that evaluates to a selector engine instance.</para></summary>
+        [JsonPropertyName("path")]
+        public string? Path { get; set; }
+
+        /// <summary><para>Script that evaluates to a selector engine instance.</para></summary>
+        [JsonPropertyName("script")]
+        public string? Script { get; set; }
     }
 }
 

@@ -46,14 +46,14 @@ namespace Microsoft.Playwright
         public PageAddStyleTagOptions(PageAddStyleTagOptions clone)
         {
             if (clone == null) return;
-            Url = clone.Url;
-            Path = clone.Path;
             Content = clone.Content;
+            Path = clone.Path;
+            Url = clone.Url;
         }
 
-        /// <summary><para>URL of the <c>&lt;link&gt;</c> tag.</para></summary>
-        [JsonPropertyName("url")]
-        public string? Url { get; set; }
+        /// <summary><para>Raw CSS content to be injected into frame.</para></summary>
+        [JsonPropertyName("content")]
+        public string? Content { get; set; }
 
         /// <summary>
         /// <para>
@@ -64,9 +64,9 @@ namespace Microsoft.Playwright
         [JsonPropertyName("path")]
         public string? Path { get; set; }
 
-        /// <summary><para>Raw CSS content to be injected into frame.</para></summary>
-        [JsonPropertyName("content")]
-        public string? Content { get; set; }
+        /// <summary><para>URL of the <c>&lt;link&gt;</c> tag.</para></summary>
+        [JsonPropertyName("url")]
+        public string? Url { get; set; }
     }
 }
 

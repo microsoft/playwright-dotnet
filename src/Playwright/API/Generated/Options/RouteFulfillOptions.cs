@@ -46,25 +46,13 @@ namespace Microsoft.Playwright
         public RouteFulfillOptions(RouteFulfillOptions clone)
         {
             if (clone == null) return;
-            Status = clone.Status;
-            Headers = clone.Headers;
-            ContentType = clone.ContentType;
             Body = clone.Body;
             BodyBytes = clone.BodyBytes;
+            ContentType = clone.ContentType;
+            Headers = clone.Headers;
             Path = clone.Path;
+            Status = clone.Status;
         }
-
-        /// <summary><para>Response status code, defaults to <c>200</c>.</para></summary>
-        [JsonPropertyName("status")]
-        public int? Status { get; set; }
-
-        /// <summary><para>Response headers. Header values will be converted to a string.</para></summary>
-        [JsonPropertyName("headers")]
-        public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
-
-        /// <summary><para>If set, equals to setting <c>Content-Type</c> response header.</para></summary>
-        [JsonPropertyName("contentType")]
-        public string? ContentType { get; set; }
 
         /// <summary><para>Optional response body as text.</para></summary>
         [JsonPropertyName("body")]
@@ -73,6 +61,14 @@ namespace Microsoft.Playwright
         /// <summary><para>Optional response body as raw bytes.</para></summary>
         [JsonPropertyName("bodyBytes")]
         public byte[]? BodyBytes { get; set; }
+
+        /// <summary><para>If set, equals to setting <c>Content-Type</c> response header.</para></summary>
+        [JsonPropertyName("contentType")]
+        public string? ContentType { get; set; }
+
+        /// <summary><para>Response headers. Header values will be converted to a string.</para></summary>
+        [JsonPropertyName("headers")]
+        public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
 
         /// <summary>
         /// <para>
@@ -83,6 +79,10 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("path")]
         public string? Path { get; set; }
+
+        /// <summary><para>Response status code, defaults to <c>200</c>.</para></summary>
+        [JsonPropertyName("status")]
+        public int? Status { get; set; }
     }
 }
 

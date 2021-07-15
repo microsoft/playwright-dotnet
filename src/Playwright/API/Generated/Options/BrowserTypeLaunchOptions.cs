@@ -53,17 +53,17 @@ namespace Microsoft.Playwright
             DownloadsPath = clone.DownloadsPath;
             Env = clone.Env;
             ExecutablePath = clone.ExecutablePath;
+            FirefoxUserPrefs = clone.FirefoxUserPrefs;
+            HandleSIGHUP = clone.HandleSIGHUP;
             HandleSIGINT = clone.HandleSIGINT;
             HandleSIGTERM = clone.HandleSIGTERM;
-            HandleSIGHUP = clone.HandleSIGHUP;
             Headless = clone.Headless;
+            IgnoreAllDefaultArgs = clone.IgnoreAllDefaultArgs;
+            IgnoreDefaultArgs = clone.IgnoreDefaultArgs;
             Proxy = clone.Proxy;
+            SlowMo = clone.SlowMo;
             Timeout = clone.Timeout;
             TracesDir = clone.TracesDir;
-            FirefoxUserPrefs = clone.FirefoxUserPrefs;
-            SlowMo = clone.SlowMo;
-            IgnoreDefaultArgs = clone.IgnoreDefaultArgs;
-            IgnoreAllDefaultArgs = clone.IgnoreAllDefaultArgs;
         }
 
         /// <summary>
@@ -123,6 +123,14 @@ namespace Microsoft.Playwright
         [JsonPropertyName("executablePath")]
         public string? ExecutablePath { get; set; }
 
+        /// <summary><para>Firefox user preferences. Learn more about the Firefox user preferences at <a href="https://support.mozilla.org/en-US/kb/about-config-editor-firefox"><c>about:config</c></a>.</para></summary>
+        [JsonPropertyName("firefoxUserPrefs")]
+        public IEnumerable<KeyValuePair<string, object>>? FirefoxUserPrefs { get; set; }
+
+        /// <summary><para>Close the browser process on SIGHUP. Defaults to <c>true</c>.</para></summary>
+        [JsonPropertyName("handleSIGHUP")]
+        public bool? HandleSIGHUP { get; set; }
+
         /// <summary><para>Close the browser process on Ctrl-C. Defaults to <c>true</c>.</para></summary>
         [JsonPropertyName("handleSIGINT")]
         public bool? HandleSIGINT { get; set; }
@@ -130,10 +138,6 @@ namespace Microsoft.Playwright
         /// <summary><para>Close the browser process on SIGTERM. Defaults to <c>true</c>.</para></summary>
         [JsonPropertyName("handleSIGTERM")]
         public bool? HandleSIGTERM { get; set; }
-
-        /// <summary><para>Close the browser process on SIGHUP. Defaults to <c>true</c>.</para></summary>
-        [JsonPropertyName("handleSIGHUP")]
-        public bool? HandleSIGHUP { get; set; }
 
         /// <summary>
         /// <para>
@@ -145,9 +149,37 @@ namespace Microsoft.Playwright
         [JsonPropertyName("headless")]
         public bool? Headless { get; set; }
 
+        /// <summary>
+        /// <para>
+        /// If <c>true</c>, Playwright does not pass its own configurations args and only uses
+        /// the ones from <paramref name="args"/>. Dangerous option; use with care. Defaults
+        /// to <c>false</c>.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("ignoreAllDefaultArgs")]
+        public bool? IgnoreAllDefaultArgs { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// If <c>true</c>, Playwright does not pass its own configurations args and only uses
+        /// the ones from <paramref name="args"/>. Dangerous option; use with care.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("ignoreDefaultArgs")]
+        public IEnumerable<string>? IgnoreDefaultArgs { get; set; }
+
         /// <summary><para>Network proxy settings.</para></summary>
         [JsonPropertyName("proxy")]
         public Proxy? Proxy { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Slows down Playwright operations by the specified amount of milliseconds. Useful
+        /// so that you can see what is going on.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("slowMo")]
+        public float? SlowMo { get; set; }
 
         /// <summary>
         /// <para>
@@ -161,38 +193,6 @@ namespace Microsoft.Playwright
         /// <summary><para>If specified, traces are saved into this directory.</para></summary>
         [JsonPropertyName("tracesDir")]
         public string? TracesDir { get; set; }
-
-        /// <summary><para>Firefox user preferences. Learn more about the Firefox user preferences at <a href="https://support.mozilla.org/en-US/kb/about-config-editor-firefox"><c>about:config</c></a>.</para></summary>
-        [JsonPropertyName("firefoxUserPrefs")]
-        public IEnumerable<KeyValuePair<string, object>>? FirefoxUserPrefs { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Slows down Playwright operations by the specified amount of milliseconds. Useful
-        /// so that you can see what is going on.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("slowMo")]
-        public float? SlowMo { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// If <c>true</c>, Playwright does not pass its own configurations args and only uses
-        /// the ones from <paramref name="args"/>. Dangerous option; use with care.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("ignoreDefaultArgs")]
-        public IEnumerable<string>? IgnoreDefaultArgs { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// If <c>true</c>, Playwright does not pass its own configurations args and only uses
-        /// the ones from <paramref name="args"/>. Dangerous option; use with care. Defaults
-        /// to <c>false</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("ignoreAllDefaultArgs")]
-        public bool? IgnoreAllDefaultArgs { get; set; }
     }
 }
 

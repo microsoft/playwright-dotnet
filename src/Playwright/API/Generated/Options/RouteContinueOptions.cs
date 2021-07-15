@@ -46,15 +46,15 @@ namespace Microsoft.Playwright
         public RouteContinueOptions(RouteContinueOptions clone)
         {
             if (clone == null) return;
-            Url = clone.Url;
+            Headers = clone.Headers;
             Method = clone.Method;
             PostData = clone.PostData;
-            Headers = clone.Headers;
+            Url = clone.Url;
         }
 
-        /// <summary><para>If set changes the request URL. New URL must have same protocol as original one.</para></summary>
-        [JsonPropertyName("url")]
-        public string? Url { get; set; }
+        /// <summary><para>If set changes the request HTTP headers. Header values will be converted to a string.</para></summary>
+        [JsonPropertyName("headers")]
+        public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
 
         /// <summary><para>If set changes the request method (e.g. GET or POST)</para></summary>
         [JsonPropertyName("method")]
@@ -64,9 +64,9 @@ namespace Microsoft.Playwright
         [JsonPropertyName("postData")]
         public byte[]? PostData { get; set; }
 
-        /// <summary><para>If set changes the request HTTP headers. Header values will be converted to a string.</para></summary>
-        [JsonPropertyName("headers")]
-        public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
+        /// <summary><para>If set changes the request URL. New URL must have same protocol as original one.</para></summary>
+        [JsonPropertyName("url")]
+        public string? Url { get; set; }
     }
 }
 

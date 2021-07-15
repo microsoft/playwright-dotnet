@@ -46,21 +46,12 @@ namespace Microsoft.Playwright
         public FrameCheckOptions(FrameCheckOptions clone)
         {
             if (clone == null) return;
-            Position = clone.Position;
             Force = clone.Force;
             NoWaitAfter = clone.NoWaitAfter;
+            Position = clone.Position;
             Timeout = clone.Timeout;
             Trial = clone.Trial;
         }
-
-        /// <summary>
-        /// <para>
-        /// A point to use relative to the top-left corner of element padding box. If not specified,
-        /// uses some visible point of the element.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("position")]
-        public Position? Position { get; set; }
 
         /// <summary>
         /// <para>
@@ -81,6 +72,15 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("noWaitAfter")]
         public bool? NoWaitAfter { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// A point to use relative to the top-left corner of element padding box. If not specified,
+        /// uses some visible point of the element.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("position")]
+        public Position? Position { get; set; }
 
         /// <summary>
         /// <para>

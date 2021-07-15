@@ -46,12 +46,23 @@ namespace Microsoft.Playwright
         public FrameWaitForNavigationOptions(FrameWaitForNavigationOptions clone)
         {
             if (clone == null) return;
+            Timeout = clone.Timeout;
             UrlString = clone.UrlString;
             UrlRegex = clone.UrlRegex;
             UrlFunc = clone.UrlFunc;
             WaitUntil = clone.WaitUntil;
-            Timeout = clone.Timeout;
         }
+
+        /// <summary>
+        /// <para>
+        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
+        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
+        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("timeout")]
+        public float? Timeout { get; set; }
 
         /// <summary>
         /// <para>
@@ -99,17 +110,6 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("waitUntil")]
         public WaitUntilState? WaitUntil { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
     }
 }
 
