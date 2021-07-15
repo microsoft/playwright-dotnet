@@ -131,6 +131,7 @@ namespace Microsoft.Playwright.Core
                 selector,
                 values.Select(x => x as ElementHandle),
                 noWaitAfter: options?.NoWaitAfter,
+                force: options?.Force,
                 timeout: options?.Timeout).ConfigureAwait(false)).ToList().AsReadOnly();
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, FrameSelectOptionOptions options = default)
@@ -141,6 +142,7 @@ namespace Microsoft.Playwright.Core
                 selector,
                 values,
                 noWaitAfter: options?.NoWaitAfter,
+                force: options?.Force,
                 timeout: options?.Timeout).ConfigureAwait(false)).ToList().AsReadOnly();
 
         public async Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions options = default)
@@ -307,7 +309,7 @@ namespace Microsoft.Playwright.Core
                     options?.Timeout);
 
         public Task FillAsync(string selector, string value, FrameFillOptions options = default)
-            => _channel.FillAsync(selector, value, timeout: options?.Timeout, noWaitAfter: options?.NoWaitAfter);
+            => _channel.FillAsync(selector, value, force: options?.Force, timeout: options?.Timeout, noWaitAfter: options?.NoWaitAfter);
 
         public async Task<IElementHandle> AddScriptTagAsync(FrameAddScriptTagOptions options = default)
         {

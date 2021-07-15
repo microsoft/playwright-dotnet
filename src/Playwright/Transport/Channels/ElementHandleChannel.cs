@@ -218,11 +218,12 @@ namespace Microsoft.Playwright.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "scrollIntoViewIfNeeded", args);
         }
 
-        internal Task FillAsync(string value, bool? noWaitAfter, float? timeout)
+        internal Task FillAsync(string value, bool? noWaitAfter, bool? force, float? timeout)
         {
             var args = new Dictionary<string, object>();
             args["value"] = value;
             args["timeout"] = timeout;
+            args["force"] = force;
             args["noWaitAfter"] = noWaitAfter;
 
             return Connection.SendMessageToServerAsync(Guid, "fill", args);
@@ -271,15 +272,16 @@ namespace Microsoft.Playwright.Transport.Channels
         internal async Task<string> TextContentAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "textContent").ConfigureAwait(false))?.GetProperty("value").ToString();
 
-        internal Task SelectTextAsync(float? timeout)
+        internal Task SelectTextAsync(bool? force = null, float? timeout = null)
         {
             var args = new Dictionary<string, object>();
+            args["force"] = force;
             args["timeout"] = timeout;
 
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "selectText", args);
         }
 
-        internal async Task<IReadOnlyList<string>> SelectOptionAsync(object values, bool? noWaitAfter = null, float? timeout = null)
+        internal async Task<IReadOnlyList<string>> SelectOptionAsync(object values, bool? noWaitAfter = null, bool? force = null, float? timeout = null)
         {
             var args = new Dictionary<string, object>();
 
@@ -292,6 +294,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 args["options"] = values;
             }
 
+            args["force"] = force;
             args["timeout"] = timeout;
             args["noWaitAfter"] = noWaitAfter;
 

@@ -279,11 +279,12 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["selector"] = selector,
                 });
 
-        internal Task FillAsync(string selector, string value, float? timeout, bool? noWaitAfter)
+        internal Task FillAsync(string selector, string value, bool? force, float? timeout, bool? noWaitAfter)
         {
             var args = new Dictionary<string, object>();
             args["selector"] = selector;
             args["value"] = value;
+            args["force"] = force;
             args["timeout"] = timeout;
             args["noWaitAfter"] = noWaitAfter;
 
@@ -358,23 +359,25 @@ namespace Microsoft.Playwright.Transport.Channels
             return Connection.SendMessageToServerAsync<string[]>(Guid, "press", args);
         }
 
-        internal async Task<string[]> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, bool? noWaitAfter, float? timeout)
+        internal async Task<string[]> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, bool? noWaitAfter, bool? force, float? timeout)
         {
             var args = new Dictionary<string, object>();
             args["selector"] = selector;
             args["options"] = values;
             args["noWaitAfter"] = noWaitAfter;
+            args["force"] = force;
             args["timeout"] = timeout;
 
             return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();
         }
 
-        internal async Task<string[]> SelectOptionAsync(string selector, IEnumerable<ElementHandle> values, bool? noWaitAfter, float? timeout)
+        internal async Task<string[]> SelectOptionAsync(string selector, IEnumerable<ElementHandle> values, bool? noWaitAfter, bool? force, float? timeout)
         {
             var args = new Dictionary<string, object>();
             args["selector"] = selector;
             args["elements"] = values;
             args["noWaitAfter"] = noWaitAfter;
+            args["force"] = force;
             args["timeout"] = timeout;
 
             return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();

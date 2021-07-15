@@ -459,7 +459,7 @@ namespace Microsoft.Playwright.Core
         public Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAllAsync<T>(selector, expression, arg);
 
         public Task FillAsync(string selector, string value, PageFillOptions options = default)
-            => MainFrame.FillAsync(selector, value, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout });
+            => MainFrame.FillAsync(selector, value, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force });
 
         public Task SetInputFilesAsync(string selector, string files, PageSetInputFilesOptions options = default)
             => MainFrame.SetInputFilesAsync(selector, files, Map(options));
@@ -509,13 +509,13 @@ namespace Microsoft.Playwright.Core
             => SelectOptionAsync(selector, new[] { values }, options);
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, PageSelectOptionOptions options = default)
-            => MainFrame.SelectOptionAsync(selector, values, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout });
+            => MainFrame.SelectOptionAsync(selector, values, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force });
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, PageSelectOptionOptions options = default)
             => SelectOptionAsync(selector, new[] { values }, options);
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, PageSelectOptionOptions options = default)
-            => MainFrame.SelectOptionAsync(selector, values, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout });
+            => MainFrame.SelectOptionAsync(selector, values, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force });
 
         public Task WaitForTimeoutAsync(float timeout) => Task.Delay(Convert.ToInt32(timeout));
 
