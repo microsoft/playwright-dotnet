@@ -71,6 +71,14 @@ namespace Microsoft.Playwright
     /// </remarks>
     public partial interface IDownload
     {
+        /// <summary>
+        /// <para>
+        /// Cancels a download. Will not fail if the download is already finished or canceled.
+        /// Upon successful cancellations, <c>download.failure()</c> would resolve to <c>'canceled'</c>.
+        /// </para>
+        /// </summary>
+        Task CancelAsync();
+
         /// <summary><para>Returns readable stream for current download or <c>null</c> if download failed.</para></summary>
         Task<Stream?> CreateReadStreamAsync();
 
@@ -87,6 +95,10 @@ namespace Microsoft.Playwright
         /// <para>
         /// Returns path to the downloaded file in case of successful download. The method will
         /// wait for the download to finish if necessary. The method throws when connected remotely.
+        /// </para>
+        /// <para>
+        /// Note that the download's file name is a random GUID, use <see cref="IDownload.SuggestedFilename"/>
+        /// to get suggested file name.
         /// </para>
         /// </summary>
         Task<string?> PathAsync();

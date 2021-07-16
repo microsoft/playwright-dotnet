@@ -427,7 +427,9 @@ namespace Microsoft.Playwright
         /// <remarks><para>Enabling routing disables http cache.</para></remarks>
         /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while routing.
+        /// while routing. When a <paramref name="baseURL"/> via the context options was provided
+        /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
         Task RouteAsync(string url, Action<IRoute> handler);
@@ -476,7 +478,9 @@ namespace Microsoft.Playwright
         /// <remarks><para>Enabling routing disables http cache.</para></remarks>
         /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while routing.
+        /// while routing. When a <paramref name="baseURL"/> via the context options was provided
+        /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
         Task RouteAsync(Regex url, Action<IRoute> handler);
@@ -525,7 +529,9 @@ namespace Microsoft.Playwright
         /// <remarks><para>Enabling routing disables http cache.</para></remarks>
         /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while routing.
+        /// while routing. When a <paramref name="baseURL"/> via the context options was provided
+        /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
         Task RouteAsync(Func<string, bool> url, Action<IRoute> handler);

@@ -39,10 +39,23 @@ namespace Microsoft.Playwright.Transport.Channels
         internal Task SaveAsAsync(string path) => Connection.SendMessageToServerAsync(Guid, "saveAs", new { path });
 
         internal async Task<string> GetFailureAsync()
-            => (await Connection.SendMessageToServerAsync(Guid, "failure").ConfigureAwait(false))?.GetProperty("error").ToString();
+        {
+            var result = await Connection.SendMessageToServerAsync(Guid, "failure").ConfigureAwait(false);
+#pragma warning disable IDE0018 // Inline variable declaration will cause issues due to Roslyn design: https://github.com/dotnet/roslyn/issues/54711
+            System.Text.Json.JsonElement failureValue = default;
+#pragma warning restore IDE0018 // Inline variable declaration
+            if (result?.TryGetProperty("error", out failureValue) ?? false)
+            {
+                return failureValue.GetString();
+            }
+
+            return null;
+        }
 
         internal Task DeleteAsync() => Connection.SendMessageToServerAsync(Guid, "delete", null);
 
         internal Task<ArtifactStreamResult> GetStreamAsync() => Connection.SendMessageToServerAsync<ArtifactStreamResult>(Guid, "stream", null);
+
+        internal Task CancelAsync() => Connection.SendMessageToServerAsync(Guid, "cancel", null);
     }
 }

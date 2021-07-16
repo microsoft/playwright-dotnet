@@ -266,7 +266,7 @@ namespace Microsoft.Playwright.Core
         public IFrame Frame(string name)
             => Frames.FirstOrDefault(f => f.Name == name);
 
-        public IFrame FrameByUrl(string urlString) => Frames.FirstOrDefault(f => urlString.UrlMatches(f.Url));
+        public IFrame FrameByUrl(string urlString) => Frames.FirstOrDefault(f => Context.UrlMatches(urlString, f.Url));
 
         public IFrame FrameByUrl(Regex urlRegex) => Frames.FirstOrDefault(f => urlRegex.IsMatch(f.Url));
 
@@ -337,7 +337,7 @@ namespace Microsoft.Playwright.Core
             });
 
         public Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions options = default)
-            => InnerWaitForEventAsync(PageEvent.Request, null, e => e.Url.UrlMatches(urlOrPredicate), options?.Timeout);
+            => InnerWaitForEventAsync(PageEvent.Request, null, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
 
         public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, PageWaitForRequestOptions options = default)
             => InnerWaitForEventAsync(PageEvent.Request, null, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
@@ -349,7 +349,7 @@ namespace Microsoft.Playwright.Core
             => InnerWaitForEventAsync(PageEvent.RequestFinished, null, options?.Predicate, options?.Timeout);
 
         public Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions options = default)
-            => InnerWaitForEventAsync(PageEvent.Response, null, e => e.Url.UrlMatches(urlOrPredicate), options?.Timeout);
+            => InnerWaitForEventAsync(PageEvent.Response, null, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
 
         public Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, PageWaitForResponseOptions options = default)
             => InnerWaitForEventAsync(PageEvent.Response, null, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
@@ -382,7 +382,7 @@ namespace Microsoft.Playwright.Core
             => InnerWaitForEventAsync(PageEvent.Worker, action, options?.Predicate, options?.Timeout);
 
         public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForRequestOptions options = default)
-            => InnerWaitForEventAsync(PageEvent.Request, action, e => e.Url.UrlMatches(urlOrPredicate), options?.Timeout);
+            => InnerWaitForEventAsync(PageEvent.Request, action, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
 
         public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForRequestOptions options = default)
             => InnerWaitForEventAsync(PageEvent.Request, action, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
@@ -391,7 +391,7 @@ namespace Microsoft.Playwright.Core
             => InnerWaitForEventAsync(PageEvent.Request, action, e => urlOrPredicate(e), options?.Timeout);
 
         public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForResponseOptions options = default)
-            => InnerWaitForEventAsync(PageEvent.Response, action, e => e.Url.UrlMatches(urlOrPredicate), options?.Timeout);
+            => InnerWaitForEventAsync(PageEvent.Response, action, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
 
         public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForResponseOptions options = default)
             => InnerWaitForEventAsync(PageEvent.Response, action, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
@@ -459,7 +459,7 @@ namespace Microsoft.Playwright.Core
         public Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAllAsync<T>(selector, expression, arg);
 
         public Task FillAsync(string selector, string value, PageFillOptions options = default)
-            => MainFrame.FillAsync(selector, value, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout });
+            => MainFrame.FillAsync(selector, value, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force });
 
         public Task SetInputFilesAsync(string selector, string files, PageSetInputFilesOptions options = default)
             => MainFrame.SetInputFilesAsync(selector, files, Map(options));
@@ -509,13 +509,13 @@ namespace Microsoft.Playwright.Core
             => SelectOptionAsync(selector, new[] { values }, options);
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, PageSelectOptionOptions options = default)
-            => MainFrame.SelectOptionAsync(selector, values, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout });
+            => MainFrame.SelectOptionAsync(selector, values, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force });
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, PageSelectOptionOptions options = default)
             => SelectOptionAsync(selector, new[] { values }, options);
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, PageSelectOptionOptions options = default)
-            => MainFrame.SelectOptionAsync(selector, values, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout });
+            => MainFrame.SelectOptionAsync(selector, values, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force });
 
         public Task WaitForTimeoutAsync(float timeout) => Task.Delay(Convert.ToInt32(timeout));
 
@@ -830,6 +830,9 @@ namespace Microsoft.Playwright.Core
 
         public void SetDefaultTimeout(float timeout) => DefaultTimeout = timeout;
 
+        public Task<string> InputValueAsync(string selector, PageInputValueOptions options = null)
+            => MainFrame.InputValueAsync(selector, new() { Timeout = options?.Timeout });
+
         internal void NotifyPopup(Page page) => Popup?.Invoke(this, page);
 
         internal void OnFrameNavigated(Frame frame)
@@ -845,6 +848,7 @@ namespace Microsoft.Playwright.Core
 
         private Task RouteAsync(RouteSetting setting)
         {
+            setting.Url = Context.CombineUrlWithBase(setting.Url);
             _routes.Add(setting);
 
             if (_routes.Count == 1)
@@ -904,7 +908,7 @@ namespace Microsoft.Playwright.Core
             foreach (var route in _routes)
             {
                 if (
-                    (route.Url != null && e.Request.Url.UrlMatches(route.Url)) ||
+                    (route.Url != null && Context.UrlMatches(e.Request.Url, route.Url)) ||
                     (route.Regex?.IsMatch(e.Request.Url) == true) ||
                     (route.Function?.Invoke(e.Request.Url) == true))
                 {

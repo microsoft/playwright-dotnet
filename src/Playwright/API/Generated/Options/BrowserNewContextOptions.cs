@@ -83,6 +83,27 @@ namespace Microsoft.Playwright
         [JsonPropertyName("acceptDownloads")]
         public bool? AcceptDownloads { get; set; }
 
+        /// <summary>
+        /// <para>
+        /// When using <see cref="IPage.GotoAsync"/>, <see cref="IPage.RouteAsync"/>, <see cref="IPage.WaitForURLAsync"/>,
+        /// <see cref="IPage.RunAndWaitForRequestAsync"/>, or <see cref="IPage.RunAndWaitForResponseAsync"/>
+        /// it takes the base URL in consideration by using the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>URL()</c></a>
+        /// constructor for building the corresponding URL. Examples:
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>
+        /// baseURL: <c>http://localhost:3000</c> and navigating to <c>/bar.html</c> results
+        /// in <c>http://localhost:3000/bar.html</c>
+        /// </description></item>
+        /// <item><description>
+        /// baseURL: <c>http://localhost:3000/foo/</c> and navigating to <c>./bar.html</c> results
+        /// in <c>http://localhost:3000/foo/bar.html</c>
+        /// </description></item>
+        /// </list>
+        /// </summary>
+        [JsonPropertyName("baseURL")]
+        public string? BaseURL { get; set; }
+
         /// <summary><para>Toggles bypassing page's Content-Security-Policy.</para></summary>
         [JsonPropertyName("bypassCSP")]
         public bool? BypassCSP { get; set; }

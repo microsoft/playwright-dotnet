@@ -24,6 +24,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
+using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
@@ -49,5 +50,13 @@ namespace Microsoft.Playwright.Transport.Channels
 
             return null;
         }
+
+        internal async Task<ResponseServerAddrResult> ServerAddrAsync()
+            => (await Connection.SendMessageToServerAsync(Guid, "serverAddr", null).ConfigureAwait(false))
+                ?.GetProperty("value").ToObject<ResponseServerAddrResult>(Connection.GetDefaultJsonSerializerOptions());
+
+        internal async Task<ResponseSecurityDetailsResult> SecurityDetailsAsync()
+            => (await Connection.SendMessageToServerAsync(Guid, "securityDetails", null).ConfigureAwait(false))
+                ?.GetProperty("value").ToObject<ResponseSecurityDetailsResult>(Connection.GetDefaultJsonSerializerOptions());
     }
 }

@@ -59,7 +59,7 @@ namespace Microsoft.Playwright
     ///         await using var browser = await playwright.Webkit.LaunchAsync();<br/>
     ///         var page = await browser.NewPageAsync();<br/>
     ///         await page.GotoAsync("https://www.theverge.com");<br/>
-    ///         await page.ScreenshotAsync("theverge.png");<br/>
+    ///         await page.ScreenshotAsync(new PageScreenshotOptions { Path = "theverge.png" });<br/>
     ///     }<br/>
     /// }
     /// </code>
@@ -953,7 +953,12 @@ namespace Microsoft.Playwright
         /// issue</a>.
         /// </para>
         /// </remarks>
-        /// <param name="url">URL to navigate page to. The url should include scheme, e.g. <c>https://</c>.</param>
+        /// <param name="url">
+        /// URL to navigate page to. The url should include scheme, e.g. <c>https://</c>. When
+        /// a <paramref name="baseURL"/> via the context options was provided and the passed
+        /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
+        /// </param>
         /// <param name="options">Call options</param>
         Task<IResponse?> GotoAsync(string url, PageGotoOptions? options = default);
 
@@ -1014,6 +1019,20 @@ namespace Microsoft.Playwright
         /// </param>
         /// <param name="options">Call options</param>
         Task<string> InnerTextAsync(string selector, PageInnerTextOptions? options = default);
+
+        /// <summary>
+        /// <para>
+        /// Returns <c>input.value</c> for the selected <c>&lt;input&gt;</c> or <c>&lt;textarea&gt;</c>
+        /// element. Throws for non-input elements.
+        /// </para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to search for element. If there are multiple elements satisfying the
+        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task<string> InputValueAsync(string selector, PageInputValueOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -1222,11 +1241,11 @@ namespace Microsoft.Playwright
         /// var page = await browser.NewPageAsync();<br/>
         /// await page.GotoAsync("https://keycode.info");<br/>
         /// await page.PressAsync("body", "A");<br/>
-        /// await page.ScreenshotAsync("A.png");<br/>
+        /// await page.ScreenshotAsync(new PageScreenshotOptions { Path = "A.png" });<br/>
         /// await page.PressAsync("body", "ArrowLeft");<br/>
-        /// await page.ScreenshotAsync("ArrowLeft.png");<br/>
+        /// await page.ScreenshotAsync(new PageScreenshotOptions { Path = "ArrowLeft.png" });<br/>
         /// await page.PressAsync("body", "Shift+O");<br/>
-        /// await page.ScreenshotAsync("O.png");
+        /// await page.ScreenshotAsync(new PageScreenshotOptions { Path = "O.png" });
         /// </code>
         /// </summary>
         /// <param name="selector">
@@ -1320,7 +1339,9 @@ namespace Microsoft.Playwright
         /// </remarks>
         /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while routing.
+        /// while routing. When a <paramref name="baseURL"/> via the context options was provided
+        /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
         Task RouteAsync(string url, Action<IRoute> handler);
@@ -1368,7 +1389,9 @@ namespace Microsoft.Playwright
         /// </remarks>
         /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while routing.
+        /// while routing. When a <paramref name="baseURL"/> via the context options was provided
+        /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
         Task RouteAsync(Regex url, Action<IRoute> handler);
@@ -1416,7 +1439,9 @@ namespace Microsoft.Playwright
         /// </remarks>
         /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while routing.
+        /// while routing. When a <paramref name="baseURL"/> via the context options was provided
+        /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
         Task RouteAsync(Func<string, bool> url, Action<IRoute> handler);
@@ -2244,7 +2269,7 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Waits for the matching request and returns it.  See <a href="./events.md#waiting-for-event">waiting
+        /// Waits for the matching request and returns it. See <a href="./events.md#waiting-for-event">waiting
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
@@ -2261,13 +2286,18 @@ namespace Microsoft.Playwright
         /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
         /// </code>
         /// </summary>
-        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+        /// <param name="urlOrPredicate">
+        /// Request URL string, regex or predicate receiving <see cref="IRequest"/> object.
+        /// When a <paramref name="baseURL"/> via the context options was provided and the passed
+        /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
+        /// </param>
         /// <param name="options">Call options</param>
         Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions? options = default);
 
         /// <summary>
         /// <para>
-        /// Waits for the matching request and returns it.  See <a href="./events.md#waiting-for-event">waiting
+        /// Waits for the matching request and returns it. See <a href="./events.md#waiting-for-event">waiting
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
@@ -2284,13 +2314,18 @@ namespace Microsoft.Playwright
         /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
         /// </code>
         /// </summary>
-        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+        /// <param name="urlOrPredicate">
+        /// Request URL string, regex or predicate receiving <see cref="IRequest"/> object.
+        /// When a <paramref name="baseURL"/> via the context options was provided and the passed
+        /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
+        /// </param>
         /// <param name="options">Call options</param>
         Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, PageWaitForRequestOptions? options = default);
 
         /// <summary>
         /// <para>
-        /// Waits for the matching request and returns it.  See <a href="./events.md#waiting-for-event">waiting
+        /// Waits for the matching request and returns it. See <a href="./events.md#waiting-for-event">waiting
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
@@ -2307,13 +2342,18 @@ namespace Microsoft.Playwright
         /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
         /// </code>
         /// </summary>
-        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+        /// <param name="urlOrPredicate">
+        /// Request URL string, regex or predicate receiving <see cref="IRequest"/> object.
+        /// When a <paramref name="baseURL"/> via the context options was provided and the passed
+        /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
+        /// </param>
         /// <param name="options">Call options</param>
         Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicate, PageWaitForRequestOptions? options = default);
 
         /// <summary>
         /// <para>
-        /// Waits for the matching request and returns it.  See <a href="./events.md#waiting-for-event">waiting
+        /// Waits for the matching request and returns it. See <a href="./events.md#waiting-for-event">waiting
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
@@ -2331,13 +2371,18 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="action">Action that triggers the event.</param>
-        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+        /// <param name="urlOrPredicate">
+        /// Request URL string, regex or predicate receiving <see cref="IRequest"/> object.
+        /// When a <paramref name="baseURL"/> via the context options was provided and the passed
+        /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
+        /// </param>
         /// <param name="options">Call options</param>
         Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForRequestOptions? options = default);
 
         /// <summary>
         /// <para>
-        /// Waits for the matching request and returns it.  See <a href="./events.md#waiting-for-event">waiting
+        /// Waits for the matching request and returns it. See <a href="./events.md#waiting-for-event">waiting
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
@@ -2355,13 +2400,18 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="action">Action that triggers the event.</param>
-        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+        /// <param name="urlOrPredicate">
+        /// Request URL string, regex or predicate receiving <see cref="IRequest"/> object.
+        /// When a <paramref name="baseURL"/> via the context options was provided and the passed
+        /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
+        /// </param>
         /// <param name="options">Call options</param>
         Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForRequestOptions? options = default);
 
         /// <summary>
         /// <para>
-        /// Waits for the matching request and returns it.  See <a href="./events.md#waiting-for-event">waiting
+        /// Waits for the matching request and returns it. See <a href="./events.md#waiting-for-event">waiting
         /// for event</a> for more details about events.
         /// </para>
         /// <code>
@@ -2379,7 +2429,12 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="action">Action that triggers the event.</param>
-        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IRequest"/> object.</param>
+        /// <param name="urlOrPredicate">
+        /// Request URL string, regex or predicate receiving <see cref="IRequest"/> object.
+        /// When a <paramref name="baseURL"/> via the context options was provided and the passed
+        /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
+        /// </param>
         /// <param name="options">Call options</param>
         Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Func<IRequest, bool> urlOrPredicate, PageRunAndWaitForRequestOptions? options = default);
 
@@ -2427,7 +2482,12 @@ namespace Microsoft.Playwright
         /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
         /// </code>
         /// </summary>
-        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="urlOrPredicate">
+        /// Request URL string, regex or predicate receiving <see cref="IResponse"/> object.
+        /// When a <paramref name="baseURL"/> via the context options was provided and the passed
+        /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
+        /// </param>
         /// <param name="options">Call options</param>
         Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions? options = default);
 
@@ -2450,7 +2510,12 @@ namespace Microsoft.Playwright
         /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
         /// </code>
         /// </summary>
-        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="urlOrPredicate">
+        /// Request URL string, regex or predicate receiving <see cref="IResponse"/> object.
+        /// When a <paramref name="baseURL"/> via the context options was provided and the passed
+        /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
+        /// </param>
         /// <param name="options">Call options</param>
         Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, PageWaitForResponseOptions? options = default);
 
@@ -2473,7 +2538,12 @@ namespace Microsoft.Playwright
         /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
         /// </code>
         /// </summary>
-        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="urlOrPredicate">
+        /// Request URL string, regex or predicate receiving <see cref="IResponse"/> object.
+        /// When a <paramref name="baseURL"/> via the context options was provided and the passed
+        /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
+        /// </param>
         /// <param name="options">Call options</param>
         Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicate, PageWaitForResponseOptions? options = default);
 
@@ -2497,7 +2567,12 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="action">Action that triggers the event.</param>
-        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="urlOrPredicate">
+        /// Request URL string, regex or predicate receiving <see cref="IResponse"/> object.
+        /// When a <paramref name="baseURL"/> via the context options was provided and the passed
+        /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
+        /// </param>
         /// <param name="options">Call options</param>
         Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForResponseOptions? options = default);
 
@@ -2521,7 +2596,12 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="action">Action that triggers the event.</param>
-        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="urlOrPredicate">
+        /// Request URL string, regex or predicate receiving <see cref="IResponse"/> object.
+        /// When a <paramref name="baseURL"/> via the context options was provided and the passed
+        /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
+        /// </param>
         /// <param name="options">Call options</param>
         Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForResponseOptions? options = default);
 
@@ -2545,7 +2625,12 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="action">Action that triggers the event.</param>
-        /// <param name="urlOrPredicate">Request URL string, regex or predicate receiving <see cref="IResponse"/> object.</param>
+        /// <param name="urlOrPredicate">
+        /// Request URL string, regex or predicate receiving <see cref="IResponse"/> object.
+        /// When a <paramref name="baseURL"/> via the context options was provided and the passed
+        /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+        /// URL()</c></a> constructor.
+        /// </param>
         /// <param name="options">Call options</param>
         Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Func<IResponse, bool> urlOrPredicate, PageRunAndWaitForResponseOptions? options = default);
 

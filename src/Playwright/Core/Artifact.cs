@@ -63,6 +63,8 @@ namespace Microsoft.Playwright.Core
             return new MemoryStream(Convert.FromBase64String(base64));
         }
 
+        internal Task CancelAsync() => _channel.CancelAsync();
+
         internal Task<string> FailureAsync() => _channel.GetFailureAsync();
 
         internal Task DeleteAsync() => _channel.DeleteAsync();
