@@ -37,8 +37,6 @@ namespace Microsoft.Playwright
             return p.Run(args);
         }
 
-        public static string GetExecutablePath() => Paths.GetExecutablePath();
-
         public int Run(string[] args)
         {
             string pwPath = null;

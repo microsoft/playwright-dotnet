@@ -25,6 +25,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
@@ -42,13 +43,14 @@ namespace Microsoft.Playwright.Tests
         {
             try
             {
+                DirectoryInfo assemblyDirectory = new(AppContext.BaseDirectory);
                 BrowserServer browserServer = new();
                 browserServer.Process = new()
                 {
                     StartInfo =
                     {
-                        FileName = Microsoft.Playwright.Program.GetExecutablePath(),
-                        Arguments = $"launch-server {BrowserType.Name}",
+                        FileName = "dotnet",
+                        Arguments = $"{typeof(Playwright).Assembly.Location} launch-server {BrowserType.Name}",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardInput = true,
