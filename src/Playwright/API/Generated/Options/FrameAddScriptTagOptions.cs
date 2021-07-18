@@ -46,15 +46,15 @@ namespace Microsoft.Playwright
         public FrameAddScriptTagOptions(FrameAddScriptTagOptions clone)
         {
             if (clone == null) return;
-            Url = clone.Url;
-            Path = clone.Path;
             Content = clone.Content;
+            Path = clone.Path;
             Type = clone.Type;
+            Url = clone.Url;
         }
 
-        /// <summary><para>URL of a script to be added.</para></summary>
-        [JsonPropertyName("url")]
-        public string? Url { get; set; }
+        /// <summary><para>Raw JavaScript content to be injected into frame.</para></summary>
+        [JsonPropertyName("content")]
+        public string? Content { get; set; }
 
         /// <summary>
         /// <para>
@@ -65,10 +65,6 @@ namespace Microsoft.Playwright
         [JsonPropertyName("path")]
         public string? Path { get; set; }
 
-        /// <summary><para>Raw JavaScript content to be injected into frame.</para></summary>
-        [JsonPropertyName("content")]
-        public string? Content { get; set; }
-
         /// <summary>
         /// <para>
         /// Script type. Use 'module' in order to load a Javascript ES6 module. See <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script">script</a>
@@ -77,6 +73,10 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("type")]
         public string? Type { get; set; }
+
+        /// <summary><para>URL of a script to be added.</para></summary>
+        [JsonPropertyName("url")]
+        public string? Url { get; set; }
     }
 }
 

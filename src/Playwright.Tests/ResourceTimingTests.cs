@@ -33,6 +33,20 @@ namespace Microsoft.Playwright.Tests
     [Parallelizable(ParallelScope.Self)]
     public class ResourceTimingTests : PageTestEx
     {
+        private void VerifyConnectionTimingConsistency(RequestTimingResult timing)
+        {
+            static void verifyTimingValue(float value, float previous)
+            {
+                Assert.IsTrue(value == -1 || value > 0 && value >= previous);
+            }
+
+            verifyTimingValue(timing.DomainLookupStart, -1);
+            verifyTimingValue(timing.DomainLookupEnd, timing.DomainLookupStart);
+            verifyTimingValue(timing.ConnectStart, timing.DomainLookupEnd);
+            verifyTimingValue(timing.SecureConnectionStart, timing.ConnectStart);
+            verifyTimingValue(timing.ConnectEnd, timing.SecureConnectionStart);
+        }
+
         [PlaywrightTest("resource-timing.spec.ts", "should work")]
         [Test]
         public async Task ShouldWork()
@@ -42,15 +56,12 @@ namespace Microsoft.Playwright.Tests
                 Page.GotoAsync(Server.EmptyPage));
 
             var timing = request.Timing;
-            Assert.True(timing.DomainLookupStart >= -1);
-            Assert.True(timing.DomainLookupEnd >= timing.DomainLookupStart);
-            Assert.True(timing.ConnectStart >= timing.DomainLookupEnd);
-            Assert.AreEqual(-1, timing.SecureConnectionStart);
-            Assert.True(VerifyTimingValue(timing.ConnectEnd, timing.SecureConnectionStart));
-            Assert.True(VerifyTimingValue(timing.RequestStart, timing.ConnectEnd));
-            Assert.True(timing.ResponseStart > timing.RequestStart);
-            Assert.True(timing.ResponseEnd >= timing.ResponseStart);
-            Assert.True(timing.ResponseEnd < 10000);
+
+            VerifyConnectionTimingConsistency(timing);
+            Assert.GreaterOrEqual(timing.RequestStart, timing.ConnectEnd);
+            Assert.GreaterOrEqual(timing.ResponseStart, timing.RequestStart);
+            Assert.GreaterOrEqual(timing.ResponseEnd, timing.ResponseStart);
+            Assert.Less(timing.ResponseEnd, 10000);
         }
 
         [PlaywrightTest("resource-timing.spec.ts", "should work for subresource")]
@@ -65,31 +76,17 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(2, requests.Count);
 
             var timing = requests[1].Timing;
-            if (TestConstants.IsWebKit && TestConstants.IsWindows)
-            {
-                Assert.True(timing.DomainLookupStart >= 0);
-                Assert.True(timing.DomainLookupEnd >= timing.DomainLookupStart);
-                Assert.True(timing.ConnectStart >= timing.DomainLookupEnd);
-                Assert.AreEqual(-1, timing.SecureConnectionStart);
-                Assert.True(timing.ConnectEnd > timing.SecureConnectionStart);
-            }
-            else
-            {
-                Assert.True(timing.DomainLookupStart == 0 || timing.DomainLookupStart == -1);
-                Assert.AreEqual(-1, timing.DomainLookupEnd);
-                Assert.AreEqual(-1, timing.ConnectStart);
-                Assert.AreEqual(-1, timing.SecureConnectionStart);
-                Assert.AreEqual(-1, timing.ConnectEnd);
-            }
 
-            Assert.True(timing.RequestStart >= 0);
-            Assert.True(timing.ResponseStart >= timing.RequestStart);
-            Assert.True(timing.ResponseEnd >= timing.ResponseStart);
-            Assert.True(timing.ResponseEnd < 10000);
+            VerifyConnectionTimingConsistency(timing);
+
+            Assert.GreaterOrEqual(timing.RequestStart, 0);
+            Assert.GreaterOrEqual(timing.ResponseStart, timing.RequestStart);
+            Assert.GreaterOrEqual(timing.ResponseEnd, timing.ResponseStart);
+            Assert.Less(timing.ResponseEnd, 10000);
         }
 
         [PlaywrightTest("resource-timing.spec.ts", "should work for SSL")]
-        [Test, Ignore("Fix me #1058")]
+        [Test]
         public async Task ShouldWorkForSSL()
         {
             var page = await Browser.NewPageAsync(new() { IgnoreHTTPSErrors = true });
@@ -98,19 +95,11 @@ namespace Microsoft.Playwright.Tests
                 page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
 
             var timing = request.Timing;
-            if (!(TestConstants.IsWebKit && TestConstants.IsMacOSX))
-            {
-                Assert.True(timing.DomainLookupStart >= 0);
-                Assert.True(timing.DomainLookupEnd >= timing.DomainLookupStart);
-                Assert.True(timing.ConnectStart >= timing.DomainLookupEnd);
-                Assert.True(timing.SecureConnectionStart >= timing.ConnectStart);
-                Assert.True(timing.ConnectEnd > timing.SecureConnectionStart);
-                Assert.True(timing.RequestStart >= timing.ConnectEnd);
-            }
-
-            Assert.True(timing.ResponseStart > timing.RequestStart);
-            Assert.True(timing.ResponseEnd >= timing.ResponseStart);
-            Assert.True(timing.ResponseEnd < 10000);
+            VerifyConnectionTimingConsistency(timing);
+            Assert.GreaterOrEqual(timing.RequestStart, timing.ConnectEnd);
+            Assert.GreaterOrEqual(timing.ResponseStart, timing.RequestStart);
+            Assert.GreaterOrEqual(timing.ResponseEnd, timing.ResponseStart);
+            Assert.Less(timing.ResponseEnd, 10000);
             await page.CloseAsync();
         }
 
@@ -132,28 +121,19 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(Server.Prefix + "/empty.html", responses[1].Url);
 
             var timing1 = responses[0].Request.Timing;
-            Assert.True(timing1.DomainLookupStart >= 0);
-            Assert.True(timing1.DomainLookupEnd >= timing1.DomainLookupStart);
-            Assert.True(timing1.ConnectStart >= timing1.DomainLookupEnd);
-            Assert.AreEqual(-1, timing1.SecureConnectionStart);
-            Assert.True(timing1.ConnectEnd > timing1.SecureConnectionStart);
-            Assert.True(timing1.RequestStart >= timing1.ConnectEnd);
-            Assert.True(timing1.ResponseStart > timing1.RequestStart);
-            Assert.True(timing1.ResponseEnd >= timing1.ResponseStart);
-            Assert.True(timing1.ResponseEnd < 10000);
+            VerifyConnectionTimingConsistency(timing1);
+            Assert.GreaterOrEqual(timing1.RequestStart, timing1.ConnectEnd);
+            Assert.GreaterOrEqual(timing1.ResponseStart, timing1.RequestStart);
+            Assert.GreaterOrEqual(timing1.ResponseEnd, timing1.ResponseStart);
+            Assert.Less(timing1.ResponseEnd, 10000);
+
 
             var timing2 = responses[1].Request.Timing;
-            Assert.AreEqual(-1, timing2.DomainLookupStart);
-            Assert.AreEqual(-1, timing2.DomainLookupEnd);
-            Assert.AreEqual(-1, timing2.ConnectStart);
-            Assert.AreEqual(-1, timing2.SecureConnectionStart);
-            Assert.AreEqual(-1, timing2.ConnectEnd);
-            Assert.True(timing2.RequestStart >= 0);
-            Assert.True(timing2.ResponseStart >= timing2.RequestStart);
-            Assert.True(timing2.ResponseEnd >= timing2.ResponseStart);
-            Assert.True(timing2.ResponseEnd < 10000);
+            VerifyConnectionTimingConsistency(timing2);
+            Assert.GreaterOrEqual(timing2.RequestStart, timing2.ConnectEnd);
+            Assert.GreaterOrEqual(timing2.ResponseStart, timing2.RequestStart);
+            Assert.GreaterOrEqual(timing2.ResponseEnd, timing2.ResponseStart);
+            Assert.Less(timing2.ResponseEnd, 10000);
         }
-
-        private bool VerifyTimingValue(float value, float previous) => value == -1 || value > 0 && value >= previous;
     }
 }

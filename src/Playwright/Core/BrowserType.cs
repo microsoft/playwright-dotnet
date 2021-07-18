@@ -78,23 +78,21 @@ namespace Microsoft.Playwright.Core
             options ??= new BrowserTypeLaunchPersistentContextOptions();
             return (await _channel.LaunchPersistentContextAsync(
                 userDataDir,
-                args: options.Args,
+                headless: options.Headless,
                 channel: options.Channel,
-                chromiumSandbox: options.ChromiumSandbox,
-                devtools: options.Devtools,
-                downloadsPath: options.DownloadsPath,
-                env: options.Env,
                 executablePath: options.ExecutablePath,
+                args: options.Args,
+                proxy: options.Proxy,
+                downloadsPath: options.DownloadsPath,
+                tracesDir: options.TracesDir,
+                chromiumSandbox: options.ChromiumSandbox,
                 handleSIGINT: options.HandleSIGINT,
                 handleSIGTERM: options.HandleSIGTERM,
                 handleSIGHUP: options.HandleSIGHUP,
-                headless: options.Headless,
-                proxy: options.Proxy,
                 timeout: options.Timeout,
-                tracesDir: options.TracesDir,
+                env: options.Env,
+                devtools: options.Devtools,
                 slowMo: options.SlowMo,
-                ignoreDefaultArgs: options.IgnoreDefaultArgs,
-                ignoreAllDefaultArgs: options.IgnoreAllDefaultArgs,
                 acceptDownloads: options.AcceptDownloads,
                 ignoreHTTPSErrors: options.IgnoreHTTPSErrors,
                 bypassCSP: options.BypassCSP,
@@ -116,7 +114,10 @@ namespace Microsoft.Playwright.Core
                 reducedMotion: options.ReducedMotion,
                 recordHarPath: options.RecordHarPath,
                 recordHarOmitContent: options.RecordHarOmitContent,
-                recordVideo: Browser.GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize)).ConfigureAwait(false)).Object;
+                recordVideo: Browser.GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize),
+                ignoreDefaultArgs: options.IgnoreDefaultArgs,
+                ignoreAllDefaultArgs: options.IgnoreAllDefaultArgs,
+                baseUrl: options.BaseURL).ConfigureAwait(false)).Object;
         }
 
         public async Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions options = null)

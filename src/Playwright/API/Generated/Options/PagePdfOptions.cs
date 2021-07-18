@@ -46,43 +46,42 @@ namespace Microsoft.Playwright
         public PagePdfOptions(PagePdfOptions clone)
         {
             if (clone == null) return;
-            Path = clone.Path;
-            Scale = clone.Scale;
             DisplayHeaderFooter = clone.DisplayHeaderFooter;
-            HeaderTemplate = clone.HeaderTemplate;
             FooterTemplate = clone.FooterTemplate;
-            PrintBackground = clone.PrintBackground;
-            Landscape = clone.Landscape;
-            PageRanges = clone.PageRanges;
             Format = clone.Format;
-            Width = clone.Width;
+            HeaderTemplate = clone.HeaderTemplate;
             Height = clone.Height;
+            Landscape = clone.Landscape;
             Margin = clone.Margin;
+            PageRanges = clone.PageRanges;
+            Path = clone.Path;
             PreferCSSPageSize = clone.PreferCSSPageSize;
+            PrintBackground = clone.PrintBackground;
+            Scale = clone.Scale;
+            Width = clone.Width;
         }
-
-        /// <summary>
-        /// <para>
-        /// The file path to save the PDF to. If <paramref name="path"/> is a relative path,
-        /// then it is resolved relative to the current working directory. If no path is provided,
-        /// the PDF won't be saved to the disk.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("path")]
-        public string? Path { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Scale of the webpage rendering. Defaults to <c>1</c>. Scale amount must be between
-        /// 0.1 and 2.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("scale")]
-        public float? Scale { get; set; }
 
         /// <summary><para>Display header and footer. Defaults to <c>false</c>.</para></summary>
         [JsonPropertyName("displayHeaderFooter")]
         public bool? DisplayHeaderFooter { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// HTML template for the print footer. Should use the same format as the <paramref
+        /// name="headerTemplate"/>.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("footerTemplate")]
+        public string? FooterTemplate { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Paper format. If set, takes priority over <paramref name="width"/> or <paramref
+        /// name="height"/> options. Defaults to 'Letter'.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("format")]
+        public string? Format { get; set; }
 
         /// <summary>
         /// <para>
@@ -100,22 +99,17 @@ namespace Microsoft.Playwright
         [JsonPropertyName("headerTemplate")]
         public string? HeaderTemplate { get; set; }
 
-        /// <summary>
-        /// <para>
-        /// HTML template for the print footer. Should use the same format as the <paramref
-        /// name="headerTemplate"/>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("footerTemplate")]
-        public string? FooterTemplate { get; set; }
-
-        /// <summary><para>Print background graphics. Defaults to <c>false</c>.</para></summary>
-        [JsonPropertyName("printBackground")]
-        public bool? PrintBackground { get; set; }
+        /// <summary><para>Paper height, accepts values labeled with units.</para></summary>
+        [JsonPropertyName("height")]
+        public string? Height { get; set; }
 
         /// <summary><para>Paper orientation. Defaults to <c>false</c>.</para></summary>
         [JsonPropertyName("landscape")]
         public bool? Landscape { get; set; }
+
+        /// <summary><para>Paper margins, defaults to none.</para></summary>
+        [JsonPropertyName("margin")]
+        public Margin? Margin { get; set; }
 
         /// <summary>
         /// <para>
@@ -128,24 +122,13 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Paper format. If set, takes priority over <paramref name="width"/> or <paramref
-        /// name="height"/> options. Defaults to 'Letter'.
+        /// The file path to save the PDF to. If <paramref name="path"/> is a relative path,
+        /// then it is resolved relative to the current working directory. If no path is provided,
+        /// the PDF won't be saved to the disk.
         /// </para>
         /// </summary>
-        [JsonPropertyName("format")]
-        public string? Format { get; set; }
-
-        /// <summary><para>Paper width, accepts values labeled with units.</para></summary>
-        [JsonPropertyName("width")]
-        public string? Width { get; set; }
-
-        /// <summary><para>Paper height, accepts values labeled with units.</para></summary>
-        [JsonPropertyName("height")]
-        public string? Height { get; set; }
-
-        /// <summary><para>Paper margins, defaults to none.</para></summary>
-        [JsonPropertyName("margin")]
-        public Margin? Margin { get; set; }
+        [JsonPropertyName("path")]
+        public string? Path { get; set; }
 
         /// <summary>
         /// <para>
@@ -157,6 +140,23 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("preferCSSPageSize")]
         public bool? PreferCSSPageSize { get; set; }
+
+        /// <summary><para>Print background graphics. Defaults to <c>false</c>.</para></summary>
+        [JsonPropertyName("printBackground")]
+        public bool? PrintBackground { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Scale of the webpage rendering. Defaults to <c>1</c>. Scale amount must be between
+        /// 0.1 and 2.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("scale")]
+        public float? Scale { get; set; }
+
+        /// <summary><para>Paper width, accepts values labeled with units.</para></summary>
+        [JsonPropertyName("width")]
+        public string? Width { get; set; }
     }
 }
 

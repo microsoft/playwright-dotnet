@@ -772,8 +772,6 @@ namespace Microsoft.Playwright.Helpers
             return _mappings.TryGetValue(extension, out string contentType) ? contentType : defaultContentType;
         }
 
-        internal static bool UrlMatches(this string url, string glob) => new Regex(GlobToRegex(glob)).Match(url).Success;
-
         internal static string MimeType(this string file)
             => _mappings.TryGetValue(new FileInfo(file).Extension, out string mime) ? mime : "application/octet-stream";
 

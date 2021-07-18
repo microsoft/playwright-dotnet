@@ -39,34 +39,25 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class FrameAddStyleTagOptions
+    public class PageInputValueOptions
     {
-        public FrameAddStyleTagOptions() { }
+        public PageInputValueOptions() { }
 
-        public FrameAddStyleTagOptions(FrameAddStyleTagOptions clone)
+        public PageInputValueOptions(PageInputValueOptions clone)
         {
             if (clone == null) return;
-            Content = clone.Content;
-            Path = clone.Path;
-            Url = clone.Url;
+            Timeout = clone.Timeout;
         }
-
-        /// <summary><para>Raw CSS content to be injected into frame.</para></summary>
-        [JsonPropertyName("content")]
-        public string? Content { get; set; }
 
         /// <summary>
         /// <para>
-        /// Path to the CSS file to be injected into frame. If <c>path</c> is a relative path,
-        /// then it is resolved relative to the current working directory.
+        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </para>
         /// </summary>
-        [JsonPropertyName("path")]
-        public string? Path { get; set; }
-
-        /// <summary><para>URL of the <c>&lt;link&gt;</c> tag.</para></summary>
-        [JsonPropertyName("url")]
-        public string? Url { get; set; }
+        [JsonPropertyName("timeout")]
+        public float? Timeout { get; set; }
     }
 }
 

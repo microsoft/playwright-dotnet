@@ -142,6 +142,8 @@ namespace Microsoft.Playwright.Core
 
         internal bool RecordVideo { get; set; }
 
+        internal BrowserNewContextOptions Options { get; set; }
+
         public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => Channel.AddCookiesAsync(cookies);
 
         public Task AddInitScriptAsync(string script = null, string scriptPath = null)
@@ -323,7 +325,7 @@ namespace Microsoft.Playwright.Core
             foreach (var item in _routes)
             {
                 if (
-                    (item.Url != null && request.Url.UrlMatches(item.Url)) ||
+                    (item.Url != null && UrlMatches(request.Url, item.Url)) ||
                     (item.Regex?.IsMatch(request.Url) == true) ||
                     (item.Function?.Invoke(request.Url) == true))
                 {
@@ -333,6 +335,28 @@ namespace Microsoft.Playwright.Core
             }
 
             _ = route.ContinueAsync(new());
+        }
+
+        internal bool UrlMatches(string url, string glob)
+           => new Regex(CombineUrlWithBase(glob).GlobToRegex()).Match(url).Success;
+
+        internal string CombineUrlWithBase(string url)
+        {
+            var baseUrl = Options?.BaseURL;
+            if (string.IsNullOrEmpty(baseUrl)
+                || (url?.StartsWith("*", StringComparison.InvariantCultureIgnoreCase) ?? false)
+                || !Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
+            {
+                return url;
+            }
+
+            var mUri = new Uri(url, UriKind.RelativeOrAbsolute);
+            if (!mUri.IsAbsoluteUri)
+            {
+                return new Uri(new Uri(baseUrl), mUri).ToString();
+            }
+
+            return url;
         }
 
         private Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler)

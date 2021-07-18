@@ -46,9 +46,20 @@ namespace Microsoft.Playwright
         public PageReloadOptions(PageReloadOptions clone)
         {
             if (clone == null) return;
-            WaitUntil = clone.WaitUntil;
             Timeout = clone.Timeout;
+            WaitUntil = clone.WaitUntil;
         }
+
+        /// <summary>
+        /// <para>
+        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
+        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
+        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("timeout")]
+        public float? Timeout { get; set; }
 
         /// <summary>
         /// <para>When to consider operation succeeded, defaults to <c>load</c>. Events can be either:</para>
@@ -69,17 +80,6 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("waitUntil")]
         public WaitUntilState? WaitUntil { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
     }
 }
 

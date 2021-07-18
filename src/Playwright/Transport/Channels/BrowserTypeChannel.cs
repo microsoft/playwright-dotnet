@@ -120,7 +120,8 @@ namespace Microsoft.Playwright.Transport.Channels
             bool? recordHarOmitContent = default,
             Dictionary<string, object> recordVideo = default,
             IEnumerable<string> ignoreDefaultArgs = default,
-            bool? ignoreAllDefaultArgs = default)
+            bool? ignoreAllDefaultArgs = default,
+            string baseUrl = default)
         {
             var channelArgs = new Dictionary<string, object>();
 
@@ -185,6 +186,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
             channelArgs.Add("ignoreDefaultArgs", ignoreDefaultArgs);
             channelArgs.Add("ignoreAllDefaultArgs", ignoreAllDefaultArgs);
+            channelArgs.Add("baseURL", baseUrl);
             channelArgs.Add("sdkLanguage", "csharp");
 
             return Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "launchPersistentContext", channelArgs);

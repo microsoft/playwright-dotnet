@@ -97,6 +97,7 @@ namespace Microsoft.Playwright.Core
             => _channel.FillAsync(
                 value,
                 noWaitAfter: options?.NoWaitAfter,
+                force: options?.Force,
                 timeout: options?.Timeout);
 
         public async Task<IFrame> ContentFrameAsync() => (await _channel.ContentFrameAsync().ConfigureAwait(false))?.Object;
@@ -191,28 +192,25 @@ namespace Microsoft.Playwright.Core
         public Task<string> TextContentAsync() => _channel.TextContentAsync();
 
         public Task SelectTextAsync(ElementHandleSelectTextOptions options = default)
-            => _channel.SelectTextAsync(options?.Timeout);
+            => _channel.SelectTextAsync(options?.Force, options?.Timeout);
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(string values, ElementHandleSelectOptionOptions options = default)
-            => _channel.SelectOptionAsync(new[] { new SelectOptionValue() { Value = values } }, options?.NoWaitAfter, options?.Timeout);
+            => _channel.SelectOptionAsync(new[] { new SelectOptionValue() { Value = values } }, options?.NoWaitAfter, options?.Force, options?.Timeout);
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(IElementHandle values, ElementHandleSelectOptionOptions options = default)
-            => _channel.SelectOptionAsync(new[] { values }, options?.NoWaitAfter, options?.Timeout);
+            => _channel.SelectOptionAsync(new[] { values }, options?.NoWaitAfter, options?.Force, options?.Timeout);
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<string> values, ElementHandleSelectOptionOptions options = default)
-            => _channel.SelectOptionAsync(values.Select(x => new SelectOptionValue() { Value = x }), options?.NoWaitAfter, options?.Timeout);
+            => _channel.SelectOptionAsync(values.Select(x => new SelectOptionValue() { Value = x }), options?.NoWaitAfter, options?.Force, options?.Timeout);
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(SelectOptionValue values, ElementHandleSelectOptionOptions options = default)
-            => _channel.SelectOptionAsync(new[] { values }, options?.NoWaitAfter, options?.Timeout);
+            => _channel.SelectOptionAsync(new[] { values }, options?.NoWaitAfter, options?.Force, options?.Timeout);
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, ElementHandleSelectOptionOptions options = default)
-            => _channel.SelectOptionAsync(values, options?.NoWaitAfter, options?.Timeout);
+            => _channel.SelectOptionAsync(values, options?.NoWaitAfter, options?.Force, options?.Timeout);
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, ElementHandleSelectOptionOptions options = default)
-            => _channel.SelectOptionAsync(values, options?.NoWaitAfter, options?.Timeout);
-
-        public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, bool? noWaitAfter, float? timeout)
-            => _channel.SelectOptionAsync(values, noWaitAfter, timeout);
+            => _channel.SelectOptionAsync(values, options?.NoWaitAfter, options?.Force, options?.Timeout);
 
         public Task CheckAsync(ElementHandleCheckOptions options = default)
             => _channel.CheckAsync(
@@ -250,6 +248,9 @@ namespace Microsoft.Playwright.Core
         public Task<bool> IsHiddenAsync() => _channel.IsHiddenAsync();
 
         public Task<bool> IsVisibleAsync() => _channel.IsVisibleAsync();
+
+        public Task<string> InputValueAsync(ElementHandleInputValueOptions options = null)
+            => _channel.InputValueAsync(options?.Timeout);
 
         internal static ScreenshotType DetermineScreenshotType(string path)
         {

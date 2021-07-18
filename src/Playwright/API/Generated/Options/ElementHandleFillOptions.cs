@@ -46,9 +46,19 @@ namespace Microsoft.Playwright
         public ElementHandleFillOptions(ElementHandleFillOptions clone)
         {
             if (clone == null) return;
+            Force = clone.Force;
             NoWaitAfter = clone.NoWaitAfter;
             Timeout = clone.Timeout;
         }
+
+        /// <summary>
+        /// <para>
+        /// Whether to bypass the <a href="./actionability.md">actionability</a> checks. Defaults
+        /// to <c>false</c>.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("force")]
+        public bool? Force { get; set; }
 
         /// <summary>
         /// <para>

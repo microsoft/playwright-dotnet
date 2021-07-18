@@ -76,6 +76,12 @@ namespace Microsoft.Playwright
         /// <summary><para>Returns the matching <see cref="IRequest"/> object.</para></summary>
         IRequest Request { get; }
 
+        /// <summary><para>Returns SSL and other security information.</para></summary>
+        Task<ResponseSecurityDetailsResult?> SecurityDetailsAsync();
+
+        /// <summary><para>Returns the IP address and port of the server.</para></summary>
+        Task<ResponseServerAddrResult?> ServerAddrAsync();
+
         /// <summary><para>Contains the status code of the response (e.g., 200 for a success).</para></summary>
         int Status { get; }
 

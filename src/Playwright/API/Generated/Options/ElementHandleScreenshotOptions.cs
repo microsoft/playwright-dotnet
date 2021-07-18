@@ -46,31 +46,12 @@ namespace Microsoft.Playwright
         public ElementHandleScreenshotOptions(ElementHandleScreenshotOptions clone)
         {
             if (clone == null) return;
-            Path = clone.Path;
-            Type = clone.Type;
-            Quality = clone.Quality;
             OmitBackground = clone.OmitBackground;
+            Path = clone.Path;
+            Quality = clone.Quality;
             Timeout = clone.Timeout;
+            Type = clone.Type;
         }
-
-        /// <summary>
-        /// <para>
-        /// The file path to save the image to. The screenshot type will be inferred from file
-        /// extension. If <paramref name="path"/> is a relative path, then it is resolved relative
-        /// to the current working directory. If no path is provided, the image won't be saved
-        /// to the disk.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("path")]
-        public string? Path { get; set; }
-
-        /// <summary><para>Specify screenshot type, defaults to <c>png</c>.</para></summary>
-        [JsonPropertyName("type")]
-        public ScreenshotType? Type { get; set; }
-
-        /// <summary><para>The quality of the image, between 0-100. Not applicable to <c>png</c> images.</para></summary>
-        [JsonPropertyName("quality")]
-        public int? Quality { get; set; }
 
         /// <summary>
         /// <para>
@@ -83,6 +64,21 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
+        /// The file path to save the image to. The screenshot type will be inferred from file
+        /// extension. If <paramref name="path"/> is a relative path, then it is resolved relative
+        /// to the current working directory. If no path is provided, the image won't be saved
+        /// to the disk.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("path")]
+        public string? Path { get; set; }
+
+        /// <summary><para>The quality of the image, between 0-100. Not applicable to <c>png</c> images.</para></summary>
+        [JsonPropertyName("quality")]
+        public int? Quality { get; set; }
+
+        /// <summary>
+        /// <para>
         /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
         /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
         /// or <see cref="IPage.SetDefaultTimeout"/> methods.
@@ -90,6 +86,10 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("timeout")]
         public float? Timeout { get; set; }
+
+        /// <summary><para>Specify screenshot type, defaults to <c>png</c>.</para></summary>
+        [JsonPropertyName("type")]
+        public ScreenshotType? Type { get; set; }
     }
 }
 

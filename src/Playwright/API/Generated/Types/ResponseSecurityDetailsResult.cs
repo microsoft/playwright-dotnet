@@ -39,34 +39,40 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class FrameAddStyleTagOptions
+    /// <summary>
+    /// Result of calling <see cref="IResponse.SecurityDetailsAsync"/>.
+    /// </summary>
+    public partial class ResponseSecurityDetailsResult
     {
-        public FrameAddStyleTagOptions() { }
+        /// <summary>
+        /// <para>
+        /// Common Name component of the Issuer field. from the certificate. This should only
+        /// be used for informational purposes. Optional.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("issuer")]
+        public string? Issuer { get; set; }
 
-        public FrameAddStyleTagOptions(FrameAddStyleTagOptions clone)
-        {
-            if (clone == null) return;
-            Content = clone.Content;
-            Path = clone.Path;
-            Url = clone.Url;
-        }
-
-        /// <summary><para>Raw CSS content to be injected into frame.</para></summary>
-        [JsonPropertyName("content")]
-        public string? Content { get; set; }
+        /// <summary><para>The specific TLS protocol used. (e.g. <c>TLS 1.3</c>). Optional.</para></summary>
+        [JsonPropertyName("protocol")]
+        public string? Protocol { get; set; }
 
         /// <summary>
         /// <para>
-        /// Path to the CSS file to be injected into frame. If <c>path</c> is a relative path,
-        /// then it is resolved relative to the current working directory.
+        /// Common Name component of the Subject field from the certificate. This should only
+        /// be used for informational purposes. Optional.
         /// </para>
         /// </summary>
-        [JsonPropertyName("path")]
-        public string? Path { get; set; }
+        [JsonPropertyName("subjectName")]
+        public string? SubjectName { get; set; }
 
-        /// <summary><para>URL of the <c>&lt;link&gt;</c> tag.</para></summary>
-        [JsonPropertyName("url")]
-        public string? Url { get; set; }
+        /// <summary><para>Unix timestamp (in seconds) specifying when this cert becomes valid. Optional.</para></summary>
+        [JsonPropertyName("validFrom")]
+        public float? ValidFrom { get; set; }
+
+        /// <summary><para>Unix timestamp (in seconds) specifying when this cert becomes invalid. Optional.</para></summary>
+        [JsonPropertyName("validTo")]
+        public float? ValidTo { get; set; }
     }
 }
 

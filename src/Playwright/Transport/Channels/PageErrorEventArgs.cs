@@ -54,13 +54,12 @@ namespace Microsoft.Playwright.Transport.Channels
 
         public override string ToString()
         {
-            string result = $"{Name}: {Message}";
             if (!string.IsNullOrEmpty(Stack))
             {
-                result += $"\n{Stack}";
+                return $"{Stack}";
             }
 
-            return result;
+            return $"{Name}: {Message}";
         }
     }
 }

@@ -39,34 +39,20 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class FrameAddStyleTagOptions
+    /// <summary>
+    /// Result of calling <see cref="IResponse.ServerAddrAsync"/>.
+    /// </summary>
+    public partial class ResponseServerAddrResult
     {
-        public FrameAddStyleTagOptions() { }
+        /// <summary><para>IPv4 or IPV6 address of the server.</para></summary>
+        [Required]
+        [JsonPropertyName("ipAddress")]
+        public string IpAddress { get; set; } = default!;
 
-        public FrameAddStyleTagOptions(FrameAddStyleTagOptions clone)
-        {
-            if (clone == null) return;
-            Content = clone.Content;
-            Path = clone.Path;
-            Url = clone.Url;
-        }
-
-        /// <summary><para>Raw CSS content to be injected into frame.</para></summary>
-        [JsonPropertyName("content")]
-        public string? Content { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Path to the CSS file to be injected into frame. If <c>path</c> is a relative path,
-        /// then it is resolved relative to the current working directory.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("path")]
-        public string? Path { get; set; }
-
-        /// <summary><para>URL of the <c>&lt;link&gt;</c> tag.</para></summary>
-        [JsonPropertyName("url")]
-        public string? Url { get; set; }
+        /// <summary><para></para></summary>
+        [Required]
+        [JsonPropertyName("port")]
+        public int Port { get; set; } = default!;
     }
 }
 

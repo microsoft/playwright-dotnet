@@ -379,6 +379,15 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
+        /// Returns <c>input.value</c> for <c>&lt;input&gt;</c> or <c>&lt;textarea&gt;</c> element.
+        /// Throws for non-input elements.
+        /// </para>
+        /// </summary>
+        /// <param name="options">Call options</param>
+        Task<string> InputValueAsync(ElementHandleInputValueOptions? options = default);
+
+        /// <summary>
+        /// <para>
         /// Returns whether the element is checked. Throws if the element is not a checkbox
         /// or radio input.
         /// </para>
