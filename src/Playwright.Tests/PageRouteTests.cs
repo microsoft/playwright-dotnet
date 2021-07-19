@@ -68,13 +68,13 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldUnroute()
         {
             var intercepted = new List<int>();
-            Action<IRoute> handler1 = (route) =>
+
+            await Page.RouteAsync("**/*", (route) =>
             {
                 intercepted.Add(1);
                 route.ContinueAsync();
-            };
+            });
 
-            await Page.RouteAsync("**/empty.html", handler1);
             await Page.RouteAsync("**/empty.html", (route) =>
             {
                 intercepted.Add(2);
@@ -87,24 +87,26 @@ namespace Microsoft.Playwright.Tests
                 route.ContinueAsync();
             });
 
-            await Page.RouteAsync("**/*", (route) =>
+
+            Action<IRoute> handler4 = (route) =>
             {
                 intercepted.Add(4);
                 route.ContinueAsync();
-            });
+            };
 
+            await Page.RouteAsync("**/empty.html", handler4);
             await Page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new[] { 1 }, intercepted.ToArray());
+            Assert.AreEqual(new[] { 4 }, intercepted.ToArray());
 
             intercepted.Clear();
-            await Page.UnrouteAsync("**/empty.html", handler1);
+            await Page.UnrouteAsync("**/empty.html", handler4);
             await Page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new[] { 2 }, intercepted.ToArray());
+            Assert.AreEqual(new[] { 3 }, intercepted.ToArray());
 
             intercepted.Clear();
             await Page.UnrouteAsync("**/empty.html");
             await Page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new[] { 4 }, intercepted.ToArray());
+            Assert.AreEqual(new[] { 1 }, intercepted.ToArray());
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work when POST is redirected with 302")]
