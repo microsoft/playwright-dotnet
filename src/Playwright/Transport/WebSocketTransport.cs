@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Reflection;
@@ -125,27 +126,34 @@ namespace Microsoft.Playwright.Transport
 
                     while (!token.IsCancellationRequested && _webSocket.State == WebSocketState.Open)
                     {
-                        var stringResult = new StringBuilder();
-
                         WebSocketReceiveResult result;
-
-                        do
+                        using (MemoryStream memoryStream = new())
                         {
-                            result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), _readerCancellationSource.Token).ConfigureAwait(false);
+                            do
+                            {
+                                result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), _readerCancellationSource.Token).ConfigureAwait(false);
 
-                            if (result.MessageType == WebSocketMessageType.Close)
-                            {
-                                await
-                                    _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, _readerCancellationSource.Token).ConfigureAwait(false);
+                                if (result.MessageType == WebSocketMessageType.Close)
+                                {
+                                    await
+                                        _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, _readerCancellationSource.Token).ConfigureAwait(false);
+                                }
+                                else
+                                {
+#if NETSTANDARD
+#pragma warning disable CA1835 // We can't use ReadOnlyMemory on netstandard
+                                    await memoryStream.WriteAsync(buffer, 0, result.Count, _readerCancellationSource.Token).ConfigureAwait(false);
+#pragma warning restore CA1835
+#else
+                                await memoryStream.WriteAsync(new(buffer, 0, result.Count), _readerCancellationSource.Token).ConfigureAwait(false);
+#endif
+                                }
                             }
-                            else
-                            {
-                                var str = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                                stringResult.Append(str);
-                            }
+                            while (!result.EndOfMessage);
+
+                            string output = Encoding.UTF8.GetString(memoryStream.ToArray());
+                            MessageReceived?.Invoke(this, new MessageReceivedEventArgs(output));
                         }
-                        while (!result.EndOfMessage);
-                        MessageReceived?.Invoke(this, new MessageReceivedEventArgs(stringResult.ToString()));
                     }
                 }
             }
@@ -168,10 +176,11 @@ namespace Microsoft.Playwright.Transport
 
         private string GenerateUserAgent()
         {
-            var architecture = Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432");
+            var architecture = RuntimeInformation.OSArchitecture;
             var osAndVersion = RuntimeInformation.OSDescription;
+            var frameworkDescription = RuntimeInformation.FrameworkDescription;
             var assemblyVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
-            return $"Playwright/{architecture}/{osAndVersion}/{assemblyVersion}";
+            return $"Playwright/{assemblyVersion} {frameworkDescription} ({architecture}/{osAndVersion})";
         }
 
         private void SetOptions()
