@@ -77,7 +77,7 @@ namespace Microsoft.Playwright.Tests
         [TearDown]
         public void TearDown()
         {
-            _browserServer.Process.Kill();
+            _browserServer?.Process?.Kill();
             _browserServer = null;
         }
 

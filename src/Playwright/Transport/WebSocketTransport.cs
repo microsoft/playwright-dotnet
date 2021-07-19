@@ -184,15 +184,9 @@ namespace Microsoft.Playwright.Transport
         private void SetOptions()
         {
             _webSocket.Options.SetRequestHeader("User-Agent", GenerateUserAgent());
-            if (_options.Headers is IDictionary<string, string> dictionary && dictionary.Keys.Any(f => f != null))
+            foreach (var item in _options?.Headers ?? Array.Empty<KeyValuePair<string, string>>())
             {
-                foreach (var kv in dictionary)
-                {
-                    if (kv.Value != null)
-                    {
-                        _webSocket.Options.SetRequestHeader(kv.Key, kv.Value);
-                    }
-                }
+                _webSocket.Options.SetRequestHeader(item.Key, item.Value);
             }
 
             var timeout = _options.Timeout;
