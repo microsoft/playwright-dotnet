@@ -143,7 +143,7 @@ namespace Microsoft.Playwright.Transport
 #if NETSTANDARD
                                     await memoryStream.WriteAsync(buffer.Array, 0, result.Count, _readerCancellationSource.Token).ConfigureAwait(false);
 #else
-                                await memoryStream.WriteAsync(new(buffer.Array, 0, result.Count), _readerCancellationSource.Token).ConfigureAwait(false);
+                                    await memoryStream.WriteAsync(new(buffer.Array, 0, result.Count), _readerCancellationSource.Token).ConfigureAwait(false);
 #endif
                                 }
                             }
