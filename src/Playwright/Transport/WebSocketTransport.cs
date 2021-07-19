@@ -122,7 +122,7 @@ namespace Microsoft.Playwright.Transport
                 }
                 else
                 {
-                    byte[] buffer = new byte[DefaultBufferSize];
+                    var buffer = WebSocket.CreateClientBuffer(DefaultBufferSize, DefaultBufferSize);
 
                     while (!token.IsCancellationRequested && _webSocket.State == WebSocketState.Open)
                     {
@@ -131,7 +131,7 @@ namespace Microsoft.Playwright.Transport
                         {
                             do
                             {
-                                result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), _readerCancellationSource.Token).ConfigureAwait(false);
+                                result = await _webSocket.ReceiveAsync(buffer, token).ConfigureAwait(false);
 
                                 if (result.MessageType == WebSocketMessageType.Close)
                                 {
@@ -141,11 +141,9 @@ namespace Microsoft.Playwright.Transport
                                 else
                                 {
 #if NETSTANDARD
-#pragma warning disable CA1835 // We can't use ReadOnlyMemory on netstandard
-                                    await memoryStream.WriteAsync(buffer, 0, result.Count, _readerCancellationSource.Token).ConfigureAwait(false);
-#pragma warning restore CA1835
+                                    await memoryStream.WriteAsync(buffer.Array, 0, result.Count, _readerCancellationSource.Token).ConfigureAwait(false);
 #else
-                                await memoryStream.WriteAsync(new(buffer, 0, result.Count), _readerCancellationSource.Token).ConfigureAwait(false);
+                                await memoryStream.WriteAsync(new(buffer.Array, 0, result.Count), _readerCancellationSource.Token).ConfigureAwait(false);
 #endif
                                 }
                             }
