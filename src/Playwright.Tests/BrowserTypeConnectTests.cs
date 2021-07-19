@@ -58,13 +58,9 @@ namespace Microsoft.Playwright.Tests
                         CreateNoWindow = true,
                     },
                 };
-                Console.WriteLine($"{browserServer.Process.StartInfo.FileName} {browserServer.Process.StartInfo.Arguments}");
                 browserServer.Process.Start();
                 browserServer.Process.Exited += (_, _) => browserServer.Process.Kill();
                 browserServer.WSEndpoint = browserServer.Process.StandardOutput.ReadLine();
-
-                Console.WriteLine($"{typeof(Playwright).Assembly.Location}");
-                Console.WriteLine($"{browserServer.WSEndpoint}");
 
                 if (browserServer.WSEndpoint != null && !browserServer.WSEndpoint.StartsWith("ws://"))
                 {
