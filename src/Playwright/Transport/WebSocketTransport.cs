@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net.WebSockets;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -14,11 +13,13 @@ namespace Microsoft.Playwright.Transport
 {
     internal class WebSocketTransport : IConnectionTransport, IDisposable
     {
-        private const int DefaultBufferSize = 1024;  // Byte buffer size
+        private const int DefaultBufferSize = 16000;  // Byte buffer size
         private readonly ClientWebSocket _webSocket;
         private readonly string _wsEndpoint;
-        private readonly CancellationTokenSource _readerCancellationSource = new();
+        private readonly CancellationTokenSource _readerCancellationSource;
         private readonly BrowserTypeConnectOptions _options;
+        private readonly int _slowMo;
+        private readonly int _timeout;
 
         internal WebSocketTransport(
             string wsEndpoint = default,
@@ -27,7 +28,10 @@ namespace Microsoft.Playwright.Transport
             _webSocket = new ClientWebSocket();
             _wsEndpoint = wsEndpoint;
             _options = options;
-            SetOptions();
+            _slowMo = _options?.SlowMo != null ? (int)_options?.SlowMo : 0;
+            _timeout = _options?.Timeout != null ? (int)_options?.Timeout : 30000;
+            _readerCancellationSource = new CancellationTokenSource(_timeout);
+            SetRequestHeaders();
             _ = ConnectAsync();
         }
 
@@ -44,32 +48,14 @@ namespace Microsoft.Playwright.Transport
 
         public async Task SendAsync(string message)
         {
-            var slowMo = _options.SlowMo;
-            if (slowMo != null && slowMo > 0)
-            {
-                await Task.Delay((int)slowMo).ConfigureAwait(false);
-            }
-
-            var messageBuffer = Encoding.UTF8.GetBytes(message);
-            var messagesCount = (int)Math.Ceiling((double)messageBuffer.Length / DefaultBufferSize);
+            await Task.Delay(_slowMo).ConfigureAwait(false);
 
             try
             {
+                var messageBuffer = Encoding.UTF8.GetBytes(message);
                 if (!_readerCancellationSource.IsCancellationRequested)
                 {
-                    for (var i = 0; i < messagesCount; i++)
-                    {
-                        var offset = DefaultBufferSize * i;
-                        var count = DefaultBufferSize;
-                        var lastMessage = (i + 1) == messagesCount;
-
-                        if ((count * (i + 1)) > messageBuffer.Length)
-                        {
-                            count = messageBuffer.Length - offset;
-                        }
-
-                        await _webSocket.SendAsync(new ArraySegment<byte>(messageBuffer, offset, count), WebSocketMessageType.Text, lastMessage, _readerCancellationSource.Token).ConfigureAwait(false);
-                    }
+                    await _webSocket.SendAsync(new ArraySegment<byte>(messageBuffer, 0, messageBuffer.Length), WebSocketMessageType.Text, true, _readerCancellationSource.Token).ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
@@ -84,7 +70,7 @@ namespace Microsoft.Playwright.Transport
             if (!IsClosed)
             {
                 IsClosed = true;
-                _ = _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, closeReason, _readerCancellationSource.Token).ConfigureAwait(false);
+                HandleSocketClose(closeReason);
                 TransportClosed?.Invoke(this, new TransportClosedEventArgs { CloseReason = closeReason });
                 _readerCancellationSource?.Cancel();
             }
@@ -103,16 +89,21 @@ namespace Microsoft.Playwright.Transport
             Close(ex.ToString());
         }
 
+        private void HandleSocketClose(string closeReason)
+        {
+            _webSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, closeReason, _readerCancellationSource.Token).ConfigureAwait(false);
+        }
+
         private async Task ConnectAsync()
         {
             await _webSocket.ConnectAsync(new Uri(_wsEndpoint), _readerCancellationSource.Token).ConfigureAwait(false);
-            ScheduleTransportTask(ReceiveAsync, _readerCancellationSource.Token);
+            ScheduleTransportTask(DispatchIncomingMessagesAsync, _readerCancellationSource.Token);
         }
 
         private void ScheduleTransportTask(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
             => Task.Factory.StartNew(() => func(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
 
-        private async Task ReceiveAsync(CancellationToken token)
+        private async Task DispatchIncomingMessagesAsync(CancellationToken token)
         {
             try
             {
@@ -135,8 +126,7 @@ namespace Microsoft.Playwright.Transport
 
                                 if (result.MessageType == WebSocketMessageType.Close)
                                 {
-                                    await
-                                        _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, _readerCancellationSource.Token).ConfigureAwait(false);
+                                    Close("Closed");
                                 }
                                 else
                                 {
@@ -181,18 +171,12 @@ namespace Microsoft.Playwright.Transport
             return $"Playwright/{assemblyVersion} {frameworkDescription} ({architecture}/{osAndVersion})";
         }
 
-        private void SetOptions()
+        private void SetRequestHeaders()
         {
             _webSocket.Options.SetRequestHeader("User-Agent", GenerateUserAgent());
             foreach (var item in _options?.Headers ?? Array.Empty<KeyValuePair<string, string>>())
             {
                 _webSocket.Options.SetRequestHeader(item.Key, item.Value);
-            }
-
-            var timeout = _options.Timeout;
-            if (timeout != null)
-            {
-                _webSocket.Options.KeepAliveInterval = TimeSpan.FromMilliseconds((double)timeout);
             }
         }
     }
