@@ -833,6 +833,15 @@ namespace Microsoft.Playwright.Core
         public Task<string> InputValueAsync(string selector, PageInputValueOptions options = null)
             => MainFrame.InputValueAsync(selector, new() { Timeout = options?.Timeout });
 
+        public Task DragAndDropAsync(string source, string target, PageDragAndDropOptions options = null)
+            => MainFrame.DragAndDropAsync(source, target, new()
+            {
+                Force = options?.Force,
+                NoWaitAfter = options?.NoWaitAfter,
+                Timeout = options?.Timeout,
+                Trial = options?.Trial,
+            });
+
         internal void NotifyPopup(Page page) => Popup?.Invoke(this, page);
 
         internal void OnFrameNavigated(Frame frame)

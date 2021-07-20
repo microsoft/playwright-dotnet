@@ -545,5 +545,18 @@ namespace Microsoft.Playwright.Transport.Channels
 
             return (await Connection.SendMessageToServerAsync(Guid, "inputValue", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
+
+        internal Task DragAndDropAsync(string source, string target, bool? force, bool? noWaitAfter, float? timeout, bool? trial)
+        {
+            var args = new Dictionary<string, object>();
+            args["source"] = source;
+            args["target"] = target;
+            args["force"] = force;
+            args["noWaitAfter"] = noWaitAfter;
+            args["timeout"] = timeout;
+            args["trial"] = trial;
+
+            return Connection.SendMessageToServerAsync(Guid, "dragAndDrop", args);
+        }
     }
 }
