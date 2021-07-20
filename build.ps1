@@ -1,69 +1,94 @@
-[CmdletBinding(PositionalBinding=$false)]
+[CmdletBinding(PositionalBinding = $false)]
 Param(
-  [switch][Alias('a')]$api,
-  [switch]$certs,
-  [switch][Alias('d')]$driver,
-  [switch][Alias('r')]$restore,
-  [switch][Alias('b')]$build,
-  [switch][Alias('e')]$all,
-  [switch][Alias('t')]$test,
-  [switch][Alias('h')]$help,
-  [switch]$prereqs,
-  [ValidateSet("Debug", "Release")][Alias('c')][string]$configuration = "Debug",
-  [ValidateSet("net5.0", "netcoreapp3.1")][Alias('f')][string]$framework = "net5.0",
-  [int]$workers = 6,
-  [Parameter(ValueFromRemainingArguments=$true)][String[]]$properties
+  [Parameter(ValueFromRemainingArguments = $true)][String[]]$verbs,
+  [Switch]$reset,
+  [Switch]$prereqs
 )
 
-function Get-Help() 
-{
-  Write-Host "Actions (defaults to -help):"
-  Write-Host "  -api                    Performs the API generation using the currently checked out submodule."
-  Write-Host "  -certs                  Installs the https certificates for localhost tests."
-  Write-Host "  -driver                 Downloads the drivers."
-  Write-Host "  -restore                Performs a dotnet restore command."
-  Write-Host "  -build                  Builds the project."
-  Write-Host "  -prereqs                Installs the pre-requisites needed to build this project."
-  Write-Host "  -prereqs                Installs the prerequisites needed to build this project."
-  Write-Host "  -test                   Runs the test suite with the default browser."
-  Write-Host "                          You can specify the number of workers to use, by passing"
-  Write-Host "                          the -workers parameter."
-  Write-Host "  -all                    Same as calling with -driver -restore -certs -build"
-  Write-Host "  -help                   Prints this message."
-  Write-Host " "
-  Write-Host " "
-  Write-Host "Common settings:"
-  Write-Host "  -configuration (-c)     Build configuration: Debug (default) or Release."
-  Write-Host "  -framework (-f)         The .NET framework to use, either net5.0 (default) or netcoreapp3.1."
+function Get-Help() {
+  Write-Host "Actions (defaults to help):"
+  Write-Host "  init                      Performs the initalization of the repository, and installs/downloads"
+  Write-Host "                            all the required artifacts (i.e. driver), and initializes the submodule."
+  Write-Host "                            -reset     Forces the submodule to be updated."
+  Write-Host "                            -prereqs   Installs all the required prerequisites and dev certificates."
   Write-Host ""
+  Write-Host "  roll [commit sha]         Moves the submodule to the commit specified, generates the API, and downloads"
+  Write-Host "                            downloads the new driver."
+  Write-Host "  driver                    Downloads the driver."
+  Write-Host "  -help                     Prints this message."
 }
 
-$exec = "";
+function Invoke-Init() {
+  Invoke-InitializeSubmodule
+  if ($prereqs) { Invoke-InstallRequirements }
+  Invoke-DownloadDriver
+}
 
-foreach ($argument in $PSBoundParameters.Keys)
-{
-  $exec = "";
-  switch($argument) 
-  {
-    "help"      { Get-Help; return; }
-    "driver"    { $exec += "dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath ." }
-    "api"       { $exec += "node ""playwright/utils/doclint/generateDotnetApi.js"" ""src/Playwright""" }
-    "certs"     { $exec += "dotnet dev-certs https -ep src/Playwright.Tests.TestServer/testCert.cer" }
-    "restore"   { $exec += "dotnet restore ./src/Playwright.sln" }
-    "build"     { $exec += "dotnet build --configuration " + "--configuration " + $configuration + " --framework " + $framework + " ./src/Playwright.sln" }
-    "all"       { $exec += ".\build.ps1 -driver -restore -certs -build" }
-    "test"      { $exec += "dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c " + $configuration + " -f " + $framework +  " " + $properties + " -- NUnit.NumberOfTestWorkers=" + $workers}
-    "prereqs"   { Invoke-Expression "& dotnet tool install --global dotnet-format"; $exec += ".\build.ps1 -certs"; }
-  }
+function Get-SubmoduleStatus() {
+  $smStatus = git submodule status
+  return $smStatus
+}
 
-  if($exec) 
-  {
-    Write-Host "Executing: " $exec
-    Invoke-Expression "& $exec"
+function Invoke-InitializeSubmodule($enableReset = $true) {
+  # Check the status of the submodule, if not initialized, let's do that
+  if ((Get-SubmoduleStatus).StartsWith("-") -or ($enableReset -and $reset)) {
+    Write-Host "🔨 Initializing git submodule..." -NoNewline
+    git submodule update --init >$null 2>&1
+    if ((Get-SubmoduleStatus).StartsWith("-")) { throw 'Could not initialize git submodule' }
+    Write-Host "`r✅ Finished initializing git submodule."
   }
 }
 
-if (!$exec) 
-{
+function Invoke-InstallRequirements() {
+  Write-Host "🔨 Installing requirements..." -NoNewline
+  dotnet tool install --global dotnet-format >$null 2>&1
+  Write-Host " ✔ Dotnet tooling" -NoNewline
+  dotnet dev-certs https -ep src/Playwright.Tests.TestServer/testCert.cer >$null 2>&1
+  Write-Host "`r✅ Finished initializing tooling requirements."
+}
+
+function Invoke-DownloadDriver() {
+  # We need the submodule to be initialized for this, so we're forcing the check
+  Invoke-InitializeSubmodule $false
+  Write-Host "🚀 Downloading drivers..." -NoNewline
+  dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
+}
+
+function Invoke-Roll() {
+  if ($verbs.Length -ne 2) {
+    Write-Error "Roll needs to be invoked with a commit sha, i.e. 'roll master'."
+    return;
+  }
+
+  if ((Get-SubmoduleStatus).StartsWith("+")) {
+    $decision = $Host.UI.PromptForChoice("Update Submodule", 
+      "The Submodule is already at a different commit, do you want to still use the new sha?", 
+      @('&Yes, update', "E&xit"),
+      0)
+    if ($decision -eq 1) {
+      Write-Host "⚠ Stopping roll."
+      return;
+    }
+  }
+
+  Push-Location "playwright"
+  Write-Host "🚀 Moving submodule to" $verbs[1]
+  git fetch
+  git checkout $verbs[1]
+  Pop-Location
+
+  Write-Host "🚀 Generating API..."
+  node "playwright/utils/doclint/generateDotnetApi.js" "src/Playwright"
+}
+
+if ($verbs.Length -eq 0) {
   Get-Help
+  return;
+}
+
+switch ($verbs[0]) {
+  "init"    { Invoke-Init }
+  "help"    { Get-Help }
+  "roll"    { Invoke-Roll }
+  "driver"  { Invoke-DownloadDriver }
 }
