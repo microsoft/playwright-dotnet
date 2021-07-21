@@ -71,8 +71,6 @@ namespace Microsoft.Playwright.Transport
             {
                 IsClosed = true;
                 HandleSocketClose(closeReason);
-                TransportClosed?.Invoke(this, new TransportClosedEventArgs { CloseReason = closeReason });
-                _readerCancellationSource?.Cancel();
             }
         }
 
@@ -91,7 +89,8 @@ namespace Microsoft.Playwright.Transport
 
         private void HandleSocketClose(string closeReason)
         {
-            _webSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, closeReason, _readerCancellationSource.Token).ConfigureAwait(false);
+            TransportClosed?.Invoke(this, new TransportClosedEventArgs { CloseReason = closeReason });
+            _readerCancellationSource?.Cancel();
         }
 
         private async Task ConnectAsync()
@@ -130,11 +129,9 @@ namespace Microsoft.Playwright.Transport
                                 }
                                 else
                                 {
-#if NETSTANDARD
-                                    await memoryStream.WriteAsync(buffer.Array, 0, result.Count, _readerCancellationSource.Token).ConfigureAwait(false);
-#else
-                                    await memoryStream.WriteAsync(new(buffer.Array, 0, result.Count), _readerCancellationSource.Token).ConfigureAwait(false);
-#endif
+#pragma warning disable VSTHRD103 // Call async methods when in an async method
+                                    memoryStream.Write(buffer.Array, 0, result.Count);
+#pragma warning restore VSTHRD103
                                 }
                             }
                             while (!result.EndOfMessage);
