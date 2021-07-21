@@ -1,4 +1,4 @@
-name: Tests Nuget Packages
+name: NuGet Package Smoke Test
 
 on:
   push:
@@ -18,32 +18,21 @@ jobs:
         os: [windows-latest, ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .NET Core 5 (On Mac)
-        if: ${{ matrix.os == 'macos-latest' }}
+        with:
+          submodules: true
+          fetch-depth: 0
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100
-        env:
-          DOTNET_INSTALL_DIR: /users/runner/alternate/dotnet
-      - name: Setup .NET Core 5 (Not on mac)
-        if: ${{ matrix.os != 'macos-latest' }}
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 5.0.100
-      - name: Download Drivers
-        run: dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
-      - name: Build Project
-        run: dotnet build ./src/Playwright/Playwright.csproj -c Debug
-      - name: Download Browsers
+          dotnet-version: 5.0.x
+      - name: Install prerequisites and download drivers
+        shell: pwsh
+        run: .\build.ps1 driver
+      - name: Build NUnit Package
+        run: dotnet build -c Debug ./src/Playwright.NUnit/Playwright.NUnit.csproj
+      - name: Install Browsers
         run: dotnet run -p ./src/Playwright -f net5.0 install
-      - name: Delete browsers on Mac
-        if: matrix.os == 'macos-latest'
-        run: rm -r ~/Library/Caches/ms-playwright
-      - name: Delete browsers on Linux
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-        run: rm -r ~/.cache/ms-playwright
-      - name: Delete browsers on windows
-        if: matrix.os == 'windows-latest'
-        run: Remove-Item -path $env:USERPROFILE\AppData\Local\ms-playwright -recurse
+      - name: Build Test  Project
+        run: dotnet build -c Debug ./src/Playwright.LocalNugetTest/Playwright.LocalNugetTest.csproj
       - name: Run Tests
-        run: dotnet test ./src/Playwright.LocalNugetTest/Playwright.LocalNugetTest.csproj
+        run: dotnet test -c Debug ./src/Playwright.LocalNugetTest/Playwright.LocalNugetTest.csproj

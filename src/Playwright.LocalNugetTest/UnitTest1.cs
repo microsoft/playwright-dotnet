@@ -22,26 +22,21 @@
  * SOFTWARE.
  */
 
-using System;
-using System.IO;
 using System.Threading.Tasks;
-using Xunit;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.LocalNugetTest
 {
-    public class NugetTests
+    [Parallelizable(ParallelScope.Self)]
+    public class NugetTests : PageTest
     {
-        [Fact]
+        [Test]
         public async Task ShouldWork()
         {
-            using var playwright = await Playwright.CreateAsync();
-            await using var browser = await playwright.Chromium.LaunchAsync();
-
-            var page = await browser.NewPageAsync();
-            Console.WriteLine("Navigating google");
-            await page.GotoAsync("http://www.google.com");
-
-            Assert.Contains("Google", await page.TitleAsync());
+            TestContext.WriteLine("Navigating to Microsoft.com...");
+            await Page.GotoAsync("https://microsoft.com");
+            Assert.IsTrue((await Page.TitleAsync() ?? string.Empty).Contains("Microsoft"));
         }
     }
 }
