@@ -148,7 +148,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -189,7 +189,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -238,7 +238,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -281,7 +281,7 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -289,6 +289,13 @@ namespace Microsoft.Playwright
         /// <param name="eventInit">Optional event-specific initialization properties.</param>
         /// <param name="options">Call options</param>
         Task DispatchEventAsync(string selector, string type, object? eventInit = default, FrameDispatchEventOptions? options = default);
+
+        /// <param name="source">
+        /// </param>
+        /// <param name="target">
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task DragAndDropAsync(string source, string target, FrameDragAndDropOptions? options = default);
 
         /// <summary>
         /// <para>Returns the return value of <paramref name="expression"/>.</para>
@@ -433,7 +440,7 @@ namespace Microsoft.Playwright
         /// <para>To send fine-grained keyboard events, use <see cref="IFrame.TypeAsync"/>.</para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -452,7 +459,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -482,7 +489,7 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Returns element attribute value.</para></summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -556,7 +563,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -565,7 +572,7 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Returns <c>element.innerHTML</c>.</para></summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -574,7 +581,7 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Returns <c>element.innerText</c>.</para></summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -588,7 +595,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -602,7 +609,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -614,7 +621,7 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Returns whether the element is disabled, the opposite of <a href="./actionability.md#enabled">enabled</a>.</para></summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -623,7 +630,7 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Returns whether the element is <a href="./actionability.md#editable">editable</a>.</para></summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -632,7 +639,7 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Returns whether the element is <a href="./actionability.md#enabled">enabled</a>.</para></summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -646,7 +653,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -660,7 +667,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -718,7 +725,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -1007,7 +1014,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -1028,7 +1035,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -1049,7 +1056,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -1070,7 +1077,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -1117,7 +1124,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -1126,7 +1133,7 @@ namespace Microsoft.Playwright
 
         /// <summary><para>Returns <c>element.textContent</c>.</para></summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -1149,7 +1156,7 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
@@ -1191,7 +1198,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to search for element. If there are multiple elements satisfying the
+        /// A selector to search for an element. If there are multiple elements satisfying the
         /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>

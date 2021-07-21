@@ -286,5 +286,15 @@ namespace Microsoft.Playwright.Tests
             await newPage.CloseAsync();
             CollectionAssert.DoesNotContain(Context.Pages, newPage);
         }
+
+        [PlaywrightTest("page-basic.spec.ts", "")]
+        [Test, Timeout(TestConstants.DefaultTestTimeout)]
+        public async Task DragAndDropShouldWork()
+        {
+            var page = await Context.NewPageAsync();
+            await page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
+            await page.DragAndDropAsync("#source", "#target");
+            Assert.IsTrue(await page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"));
+        }
     }
 }
