@@ -1,5 +1,5 @@
 # Playwright for .NET 🎭
-[![NuGet version](https://img.shields.io/nuget/vpre/Microsoft.Playwright?color=%2345ba4b)](https://www.nuget.org/packages/Microsoft.Playwright) [![Join Slack](https://img.shields.io/badge/join-slack-infomational)](https://aka.ms/playwright-slack)
+[![NuGet version](https://img.shields.io/nuget/v/Microsoft.Playwright?color=%2345ba4b)](https://www.nuget.org/packages/Microsoft.Playwright) [![Join Slack](https://img.shields.io/badge/join-slack-infomational)](https://aka.ms/playwright-slack)
 
 |          | Linux | macOS | Windows |
 |   :---   | :---: | :---: | :---:   |
