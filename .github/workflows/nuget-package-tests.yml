@@ -29,7 +29,7 @@ jobs:
         shell: pwsh
         run: .\build.ps1 driver -prereqs
       - name: Install Playwright CLI
-        run: dotnet tool install --global Microsoft.Playwright.CLI --version 1.0.1-next-1
+        run: dotnet tool install --global Microsoft.Playwright.CLI
       - name: Build NUnit Package
         run: dotnet build -c Debug ./src/Playwright.NUnit/Playwright.NUnit.csproj
       - name: Generate NuGet packages 
