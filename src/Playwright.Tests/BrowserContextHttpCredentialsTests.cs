@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextCredentialsTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should fail without credentials")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWithoutCredentials()
         {
             Server.SetAuth("/empty.html", "user", "pass");
@@ -43,13 +42,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with setHTTPCredentials")]
-        [Test, Ignore("This test is no longer applicable as the API no longer exists.")]
+        [Ignore("This test is no longer applicable as the API no longer exists.")]
         public void ShouldWorkWithSetHTTPCredentials()
         {
         }
 
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with correct credentials")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCorrectCredentials()
         {
             // Use unique user/password since Chromium caches credentials per origin.
@@ -69,7 +67,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should fail if wrong credentials")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailIfWrongCredentials()
         {
             // Use unique user/password since Chromium caches credentials per origin.
@@ -89,7 +86,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should return resource body")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnResourceBody()
         {
             Server.SetAuth("/playground.html", "user", "pass");

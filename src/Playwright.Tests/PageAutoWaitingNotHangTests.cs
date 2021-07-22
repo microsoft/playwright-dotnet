@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class PageAutoWaitingNotHangTests : PageTestEx
     {
         [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "clicking on links which do not commit navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ClickingOnLinksWhichDoNotCommitNavigation()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -41,7 +40,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "calling window.stop async")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public Task CallingWindowStopAsync()
         {
             Server.SetRoute("/empty.html", _ => Task.CompletedTask);
@@ -53,7 +51,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "calling window.stop")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public Task CallingWindowStop()
         {
             Server.SetRoute("/empty.html", _ => Task.CompletedTask);
@@ -65,7 +62,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "assigning location to about:blank")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task AssigningLocationToAboutBlank()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -73,7 +69,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "assigning location to about:blank after non-about:blank")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public Task AssigningLocationToAboutBlankAfterNonAboutBlank()
         {
             Server.SetRoute("/empty.html", _ => Task.CompletedTask);
@@ -85,7 +80,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "calling window.open and window.close")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task CallingWindowOpenAndWindowClose()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -97,7 +91,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-no-hang.spec.ts", "opening a popup")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task OpeningAPopup()
         {
             await Page.GotoAsync(Server.EmptyPage);

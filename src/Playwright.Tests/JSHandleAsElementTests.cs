@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class JSHandleAsElementTests : PageTestEx
     {
         [PlaywrightTest("jshandle-as-element.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => document.body");
@@ -41,7 +40,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("jshandle-as-element.spec.ts", "should return null for non-elements")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullForNonElements()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => 2");
@@ -50,7 +48,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("jshandle-as-element.spec.ts", "should return ElementHandle for TextNodes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnElementHandleForTextNodes()
         {
             await Page.SetContentAsync("<div>ee!</div>");
@@ -61,7 +58,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("jshandle-as-element.spec.ts", "should work with nullified Node")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNullifiedNode()
         {
             await Page.SetContentAsync("<section>test</section>");

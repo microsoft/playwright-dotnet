@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextBaseUrlTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-base-url.spec.ts", "should construct a new URL when a baseURL in browser.newContext is passed to page.goto")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldConstructANewURLInBrowserNewContextWhenGoto()
         {
             await using var context = await Browser.NewContextAsync(new() { BaseURL = Server.Prefix });
@@ -43,7 +42,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-base-url.spec.ts", "should construct a new URL when a baseURL in browser.newPage is passed to page.goto")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldConstructANewURLInBrowserNewPageWhenGoto()
         {
             var page = await Browser.NewPageAsync(new() { BaseURL = Server.Prefix });
@@ -53,7 +51,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-base-url.spec.ts", "should construct the URLs correctly when a baseURL without a trailing slash in browser.newPage is passed to page.goto")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldConstructTheURLsCorrectlyWihoutTrailingSlash()
         {
             var page = await Browser.NewPageAsync(new() { BaseURL = Server.Prefix + "/url-construction".ToString() });
@@ -66,7 +63,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-base-url.spec.ts", "should construct the URLs correctly when a baseURL with a trailing slash in browser.newPage is passed to page.goto")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldConstructTheURLsCorrectlyWithATrailingSlash()
         {
             var page = await Browser.NewPageAsync(new() { BaseURL = Server.Prefix + "/url-construction/" });
@@ -81,7 +77,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-base-url.spec.ts", "should not construct a new URL when valid URLs are passed")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotConstructANewURLWhenValidURLsArePassed()
         {
             var page = await Browser.NewPageAsync(new() { BaseURL = "http://microsoft.com" });
@@ -98,7 +93,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-base-url.spec.ts", "should be able to match a URL relative to its given URL with urlMatcher")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToMatchURLRelativeToItsGivenURL()
         {
             var page = await Browser.NewPageAsync(new() { BaseURL = Server.Prefix + "/foobar/" });
@@ -127,7 +121,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-base-url.spec.ts", "should construct a new URL when a baseURL in browserType.launchPersistentContext is passed to page.goto")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldConstructANewURLWhenABaseURLIsInPersistentContext()
         {
             using var dir = new TempDirectory();
@@ -138,7 +131,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-base-url.spec.ts", "should not construct a new URL with baseURL when a glob was used")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotConstructANewUrlWithBaseURLWhenAGlobWasUsed()
         {
             var page = await Browser.NewPageAsync(new() { BaseURL = Server.Prefix + "/foobar/" });

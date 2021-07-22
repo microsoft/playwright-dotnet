@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextUserAgentTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-user-agent.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await using (var context = await Browser.NewContextAsync())
@@ -54,7 +53,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-user-agent.spec.ts", "should work for subframes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForSubframes()
         {
             await using (var context = await Browser.NewContextAsync())
@@ -76,7 +74,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-user-agent.spec.ts", "should emulate device user-agent")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmulateDeviceUserAgent()
         {
             await using (var context = await Browser.NewContextAsync())
@@ -95,7 +92,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-user-agent.spec.ts", "should make a copy of default options")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldMakeACopyOfDefaultOptions()
         {
             var options = new BrowserNewContextOptions()

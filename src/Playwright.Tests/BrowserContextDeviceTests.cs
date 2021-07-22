@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextDeviceTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-device.spec.ts", "should work")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWork()
         {
             await using var context = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
@@ -44,7 +44,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-device.spec.ts", "should support clicking")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldSupportClicking()
         {
             await using var context = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-device.spec.ts", "should scroll to click")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldScrollToClick()
         {
             await using var context = await Browser.NewContextAsync(new()

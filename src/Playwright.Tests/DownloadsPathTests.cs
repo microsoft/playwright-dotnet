@@ -37,7 +37,6 @@ namespace Microsoft.Playwright.Tests
         private TempDirectory _tmp = null;
 
         [PlaywrightTest("downloads-path.spec.ts", "should keep downloadsPath folder")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldKeepDownloadsPathFolder()
         {
             var page = await _browser.NewPageAsync();
@@ -60,7 +59,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("downloads-path.spec.ts", "should delete downloads when context closes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeleteDownloadsWhenContextCloses()
         {
             var page = await _browser.NewPageAsync(new() { AcceptDownloads = true });
@@ -79,7 +77,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("downloads-path.spec.ts", "should report downloads in downloadsPath folder")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDownloadsInDownloadsPathFolder()
         {
             var page = await _browser.NewPageAsync(new() { AcceptDownloads = true });
@@ -98,7 +95,6 @@ namespace Microsoft.Playwright.Tests
 
 
         [PlaywrightTest("downloads-path.spec.ts", "should report downloads in downloadsPath folder with a relative path")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDownloadsInDownloadsPathFolderWithARelativePath()
         {
             var browser = await Playwright[TestConstants.BrowserName]
@@ -120,7 +116,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("downloads-path.spec.ts", "should accept downloads in persistent context")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptDownloadsInPersistentContext()
         {
             var userProfile = new TempDirectory();
@@ -142,7 +137,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("downloads-path.spec.ts", "should delete downloads when persistent context closes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeleteDownloadsWhenPersistentContextCloses()
         {
             var userProfile = new TempDirectory();

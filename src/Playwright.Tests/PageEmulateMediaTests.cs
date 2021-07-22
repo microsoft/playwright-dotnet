@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class PageEmulateMediaTests : PageTestEx
     {
         [PlaywrightTest("page-emulate-media.spec.ts", "should emulate scheme work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmulateSchemeWork()
         {
             await Page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Light });
@@ -46,7 +45,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-emulate-media.spec.ts", "should default to light")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDefaultToLight()
         {
             Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
@@ -62,11 +60,11 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-emulate-media.spec.ts", "should throw in case of bad media argument")]
-        [Test, Ignore("We don't need this test. Leaving for tracking purposes")]
+        [Ignore("We don't need this test. Leaving for tracking purposes")]
         public void ShouldThrowInCaseOfBadMediaArgument() { }
 
         [PlaywrightTest("page-emulate-media.spec.ts", "should work during navigation")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkDuringNavigation()
         {
             await Page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Light });
@@ -83,7 +81,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-emulate-media.spec.ts", "should work in popup")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkInPopup()
         {
             await using (var context = await Browser.NewContextAsync(new()
@@ -126,7 +123,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-emulate-media.spec.ts", "should work in cross-process iframe")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkInCrossProcessIframe()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -143,7 +139,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-emulate-media.spec.ts", "should emulate type")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmulateType()
         {
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
@@ -160,11 +155,10 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-emulate-media.spec.ts", "should throw in case of bad colorScheme argument")]
-        [Test, Ignore("We don't need this test. Leaving for tracking purposes")]
+        [Ignore("We don't need this test. Leaving for tracking purposes")]
         public void ShouldThrowInCaseOfBadColorSchemeArgument() { }
 
         [PlaywrightTest("page-emulate-media.spec.ts", "should emulate reduced motion")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmulateReducedMotion()
         {
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('(prefers-reduced-motion: no-preference)').matches"));

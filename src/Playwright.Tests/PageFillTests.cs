@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class PageFillTests : PageTestEx
     {
         [PlaywrightTest("page-fill.spec.ts", "should fill textarea")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillTextarea()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -41,7 +40,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should fill input")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillInput()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -50,7 +48,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should throw on unsupported inputs")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowOnUnsupportedInputs()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -63,7 +60,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should fill different input types")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillDifferentInputTypes()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -76,7 +72,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should fill date input after clicking")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillDateInputAfterClicking()
         {
             await Page.SetContentAsync("<input type=date>");
@@ -86,7 +81,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should throw on incorrect date")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldThrowOnIncorrectDate()
         {
             await Page.SetContentAsync("<input type=date>");
@@ -96,7 +91,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should fill time input after clicking")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillTimeInputAfterClicking()
         {
             await Page.SetContentAsync("<input type=time>");
@@ -106,7 +100,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should throw on incorrect time")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldThrowOnIncorrectTime()
         {
             await Page.SetContentAsync("<input type=time>");
@@ -116,7 +110,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should fill datetime-local input")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillDatetimeLocalInput()
         {
             await Page.SetContentAsync("<input type=datetime-local>");
@@ -126,7 +119,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should throw on incorrect datetime-local")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true, skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldThrowOnIncorrectDateTimeLocal()
         {
             await Page.SetContentAsync("<input type=datetime-local>");
@@ -136,7 +129,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should fill contenteditable")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillContenteditable()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -145,7 +137,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should fill elements with existing value and selection")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillElementsWithExistingValueAndSelection()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -174,7 +165,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should throw when element is not an &lt;input&gt;, &lt;textarea&gt; or [contenteditable]")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenElementIsNotAnInputOrTextareaOrContenteditable()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -183,13 +173,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should throw if passed a non-string value")]
-        [Test, Ignore("Not relevant for C#, js specific")]
+        [Ignore("Not relevant for C#, js specific")]
         public void ShouldThrowIfPassedANonStringValue()
         {
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should retry on disabled element")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetryOnDisabledElement()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -206,7 +195,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should retry on readonly element")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetryOnReadonlyElement()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -222,7 +210,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should retry on invisible element")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetryOnInvisibleElement()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -239,7 +226,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should be able to fill the body")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToFillTheBody()
         {
             await Page.SetContentAsync("<body contentEditable=\"true\"></body>");
@@ -248,7 +234,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should fill fixed position input")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillFixedPositionInput()
         {
             await Page.SetContentAsync("<input style='position: fixed;' />");
@@ -257,7 +242,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should be able to fill when focus is in the wrong frame")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToFillWhenFocusIsInTheWrongFrame()
         {
             await Page.SetContentAsync("<div contentEditable=\"true\"></div><iframe></iframe>");
@@ -267,7 +251,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should be able to fill the input[type=number]")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToFillTheInputTypeNumber()
         {
             await Page.SetContentAsync("<input id=\"input\" type=\"number\"></input>");
@@ -276,7 +259,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should be able to fill exponent into the input[type=number]")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToFillTheInputExponentIntoTypeNumber()
         {
             await Page.SetContentAsync("<input id=\"input\" type=\"number\"></input>");
@@ -285,7 +267,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should be able to fill the input[type=number] with empty string")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToFillTheInputTypeNumberWithEmptyString()
         {
             await Page.SetContentAsync("<input id=\"input\" type=\"number\"></input>");
@@ -294,7 +275,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should not be able to fill text into the input[type=number]")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotBeAbleToFillTextIntoTheInputTypeNumber()
         {
             await Page.SetContentAsync("<input id=\"input\" type=\"number\"></input>");
@@ -303,7 +283,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should be able to clear")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToClear()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");

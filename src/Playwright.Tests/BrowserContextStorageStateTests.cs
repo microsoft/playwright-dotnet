@@ -31,7 +31,6 @@ namespace Microsoft.Playwright.Tests
     public sealed class BrowsercontextStorageStateTests : PageTestEx
     {
         [PlaywrightTest("browsercontext-storage-state.spec.ts", "should capture local storage")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCaptureLocalStorage()
         {
             var page1 = await Context.NewPageAsync();
@@ -59,13 +58,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-storage-state.spec.ts", "should set local storage")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout), Ignore("Needs to be implemented.")]
+        [Timeout(TestConstants.DefaultTestTimeout), Ignore("Needs to be implemented.")]
         public void ShouldSetLocalStorage()
         {
         }
 
         [PlaywrightTest("browsercontext-storage-state.spec.ts", "should round-trip through the file")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRoundTripThroughTheFile()
         {
             var page1 = await Context.NewPageAsync();

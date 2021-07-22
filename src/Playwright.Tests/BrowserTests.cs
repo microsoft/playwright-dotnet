@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class BrowserTests : BrowserTestEx
     {
         [PlaywrightTest("browser.spec.ts", "should create new page")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCreateNewPage()
         {
             var browser = await Playwright[TestConstants.BrowserName].LaunchAsync();
@@ -50,7 +49,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browser.spec.ts", "should throw upon second create new page")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowUponSecondCreateNewPage()
         {
             var page = await Browser.NewPageAsync();
@@ -60,7 +58,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browser.spec.ts", "version should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public void VersionShouldWork()
         {
             string version = Browser.Version;

@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class PageEventPageErrorTests : PageTestEx
     {
         [PlaywrightTest("page-event-pageerror.spec.ts", "should fire")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFire()
         {
             var errorEvent = new TaskCompletionSource<string>();
@@ -76,7 +75,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-pageerror.spec.ts", "should contain sourceURL")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldContainSourceURL()
         {
             var pageError = new TaskCompletionSource<string>();
@@ -89,7 +88,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-pageerror.spec.ts", "should handle odd values")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHandleOddValues()
         {
             object[][] cases = new object[][]
@@ -113,7 +111,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-pageerror.spec.ts", "should handle object")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldHandleObject()
         {
             var pageError = new TaskCompletionSource<string>();
@@ -126,7 +124,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-pageerror.spec.ts", "should handle window")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldHandleWindow()
         {
             var pageError = new TaskCompletionSource<string>();

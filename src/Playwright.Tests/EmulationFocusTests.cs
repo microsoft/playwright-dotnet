@@ -32,14 +32,12 @@ namespace Microsoft.Playwright.Tests
     public class EmulationFocusTests : PageTestEx
     {
         [PlaywrightTest("emulation-focus.spec.ts", "should think that it is focused by default")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThinkThatItIsFocusedByDefault()
         {
             Assert.True(await Page.EvaluateAsync<bool>("document.hasFocus()"));
         }
 
         [PlaywrightTest("emulation-focus.spec.ts", "should think that all pages are focused")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThinkThatAllPagesAreFocused()
         {
             var page2 = await Page.Context.NewPageAsync();
@@ -48,7 +46,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("emulation-focus.spec.ts", "should focus popups by default")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFocusPopupsByDefault()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -65,7 +62,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("emulation-focus.spec.ts", "should provide target for keyboard events")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldProvideTargetForKeyboardEvents()
         {
             var page2 = await Page.Context.NewPageAsync();
@@ -94,7 +90,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("emulation-focus.spec.ts", "should not affect mouse event target page")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAffectMouseEventTargetPage()
         {
             var page2 = await Page.Context.NewPageAsync();
@@ -121,7 +116,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("emulation-focus.spec.ts", "should change document.activeElement")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldChangeDocumentActiveElement()
         {
             var page2 = await Page.Context.NewPageAsync();
@@ -143,13 +137,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("emulation-focus.spec.ts", "should not affect screenshots")]
-        [Test, Ignore("We need screenshot features first")]
+        [Ignore("We need screenshot features first")]
         public void ShouldNotAffectScreenshots()
         {
         }
 
         [PlaywrightTest("emulation-focus.spec.ts", "should change focused iframe")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldChangeFocusedIframe()
         {
             await Page.GotoAsync(Server.EmptyPage);

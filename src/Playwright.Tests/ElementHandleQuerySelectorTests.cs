@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class ElementHandleQuerySelectorTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-query-selector.spec.ts", "should query existing element")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldQueryExistingElement()
         {
             await Page.GotoAsync(Server.Prefix + "/playground.html");
@@ -46,7 +45,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-query-selector.spec.ts", "should return null for non-existing element")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullForNonExistingElement()
         {
             await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">B</div></div></body></html>");
@@ -56,7 +54,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-query-selector.spec.ts", "should work for adopted elements")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForAdoptedElements()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -88,7 +85,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-query-selector.spec.ts", "should query existing elements")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldQueryExistingElements()
         {
             await Page.SetContentAsync("<html><body><div>A</div><br/><div>B</div></body></html>");
@@ -100,7 +96,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-query-selector.spec.ts", "should return empty array for non-existing elements")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEmptyArrayForNonExistingElements()
         {
             await Page.SetContentAsync("<html><body><span>A</span><br/><span>B</span></body></html>");
@@ -110,7 +105,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-query-selector.spec.ts", "xpath should query existing element")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task XPathShouldQueryExistingElement()
         {
             await Page.GotoAsync(Server.Prefix + "/playground.html");
@@ -123,7 +117,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-query-selector.spec.ts", "xpath should return null for non-existing element")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task XPathShouldReturnNullForNonExistingElement()
         {
             await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">B</div></div></body></html>");

@@ -36,7 +36,6 @@ namespace Microsoft.Playwright.Tests
         private const string AddElement = "tag => document.body.appendChild(document.createElement(tag))";
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should survive cross-process navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSurviveCrossProcessNavigation()
         {
             bool boxFound = false;
@@ -51,7 +50,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should wait for visible")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisible()
         {
             bool divFound = false;
@@ -67,7 +65,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should not consider visible when zero-sized")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotConsiderVisibleWhenZeroSized()
         {
             await Page.SetContentAsync("<div style='width: 0; height: 0;'>1</div>");
@@ -81,7 +78,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should wait for visible recursively")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisibleRecursively()
         {
             bool divVisible = false;
@@ -96,7 +92,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "hidden should wait for removal")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task HiddenShouldWaitForRemoval()
         {
             await Page.SetContentAsync("<div>content</div>");
@@ -111,7 +106,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should return null if waiting to hide non-existing element")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullIfWaitingToHideNonExistingElement()
         {
             var handle = await Page.WaitForSelectorAsync("non-existing", new() { State = WaitForSelectorState.Hidden });
@@ -119,7 +113,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should respect timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
@@ -130,7 +123,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should have an error message specifically for awaiting an element to be hidden")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveAnErrorMessageSpecificallyForAwaitingAnElementToBeHidden()
         {
             await Page.SetContentAsync("<div>content</div>");
@@ -142,7 +134,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should respond to node attribute mutation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespondToNodeAttributeMutation()
         {
             bool divFound = false;
@@ -154,7 +145,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should return the element handle")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnTheElementHandle()
         {
             var waitForSelector = Page.WaitForSelectorAsync(".zombo");
@@ -163,7 +153,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should have correct stack trace for timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveCorrectStackTraceForTimeout()
         {
             Exception exception = null;
@@ -179,23 +168,22 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should throw for unknown state option")]
-        [Test, Ignore("We don't need this test")]
+        [Ignore("We don't need this test")]
         public void ShouldThrowForUnknownStateOption() { }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should throw for visibility option")]
-        [Test, Ignore("We don't need this test")]
+        [Ignore("We don't need this test")]
         public void ShouldThrowForVisibilityOption() { }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should throw for true state option")]
-        [Test, Ignore("We don't need this test")]
+        [Ignore("We don't need this test")]
         public void ShouldThrowForTrueStateOption() { }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should throw for false state option")]
-        [Test, Ignore("We don't need this test")]
+        [Ignore("We don't need this test")]
         public void ShouldThrowForFalseStateOption() { }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should support >> selector syntax")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportSelectorSyntax()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -211,7 +199,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should wait for detached if already detached")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForDetachedIfAlreadyDetached()
         {
             await Page.SetContentAsync("<section id=\"testAttribute\">43543</section>");
@@ -219,7 +206,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should wait for detached")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForDetached()
         {
             await Page.SetContentAsync("<section id=\"testAttribute\"><div>43543</div></section>");
@@ -232,7 +218,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should support some fancy xpath")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportSomeFancyXpath()
         {
             await Page.SetContentAsync("<p>red herring</p><p>hello  world  </p>");
@@ -241,7 +226,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should respect timeout xpath")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeoutXpath()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
@@ -252,7 +236,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should run in specified frame xpath")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRunInSpecifiedFrameXPath()
         {
             await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
@@ -267,7 +250,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should throw when frame is detached xpath")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenFrameIsDetachedXPath()
         {
             await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
@@ -279,7 +261,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should return the element handle xpath")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnTheElementHandleXPath()
         {
             var waitForXPath = Page.WaitForSelectorAsync("//*[@class=\"zombo\"]");
@@ -288,7 +269,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should allow you to select an element with single slash xpath")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAllowYouToSelectAnElementWithSingleSlashXPath()
         {
             await Page.SetContentAsync("<div>some text</div>");

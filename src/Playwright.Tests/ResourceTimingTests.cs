@@ -104,7 +104,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("resource-timing.spec.ts", "should work for redirect")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldWorkForRedirect()
         {
             Server.SetRedirect("/foo.html", "/empty.html");

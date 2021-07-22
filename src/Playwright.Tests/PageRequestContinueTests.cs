@@ -37,7 +37,6 @@ namespace Microsoft.Playwright.Tests
     public class PageRequestContinueTests : PageTestEx
     {
         [PlaywrightTest("page-request-continue.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.RouteAsync("**/*", (route) => route.ContinueAsync());
@@ -45,7 +44,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-request-continue.spec.ts", "should amend HTTP headers")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAmendHTTPHeaders()
         {
             await Page.RouteAsync("**/*", (route) =>
@@ -63,7 +61,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-request-continue.spec.ts", "should amend method on main request")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAmendMethodOnMainRequest()
         {
             var methodTask = Server.WaitForRequest("/empty.html", r => r.Method);
@@ -73,7 +70,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-request-continue.spec.ts", "should amend post data")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAmendPostData()
         {
             await Page.GotoAsync(Server.EmptyPage);

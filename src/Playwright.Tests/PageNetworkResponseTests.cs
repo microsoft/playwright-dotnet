@@ -36,7 +36,6 @@ namespace Microsoft.Playwright.Tests
     public class PageNetworkResponseTests : PageTestEx
     {
         [PlaywrightTest("page-network-response.spec.ts", "should return body")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnBody()
         {
             var response = await Page.GotoAsync(Server.Prefix + "/pptr.png");
@@ -45,7 +44,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should return body with compression")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnBodyWithCompression()
         {
             Server.EnableGzip("/pptr.png");
@@ -55,7 +53,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             Server.SetRoute("/empty.html", (context) =>
@@ -69,14 +66,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should return json")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnJson()
         {
             var response = await Page.GotoAsync(Server.Prefix + "/simple.json");
             Assert.AreEqual("{\"foo\": \"bar\"}", (await response.JsonAsync())?.GetRawText());
         }
 
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithGenerics()
         {
             var response = await Page.GotoAsync(Server.Prefix + "/simple.json");
@@ -85,7 +80,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should return status text")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnStatusText()
         {
             Server.SetRoute("/cool", (context) =>
@@ -103,7 +97,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should return text")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnText()
         {
             var response = await Page.GotoAsync(Server.Prefix + "/simple.json");
@@ -111,7 +104,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should return uncompressed text")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnUncompressedText()
         {
             Server.EnableGzip("/simple.json");
@@ -121,7 +113,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should throw when requesting body of redirected response")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenRequestingBodyOfRedirectedResponse()
         {
             Server.SetRedirect("/foo.html", "/empty.html");
@@ -136,7 +127,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should wait until response completes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitUntilResponseCompletes()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -176,7 +166,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("har.spec.ts", "should return security details directly from response")]
-        [Test, SkipBrowserAndPlatform(skipLinux: true, skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipLinux: true, skipWebkit: true)]
         public async Task ShouldReturnSecurityDetails()
         {
             var response = await Page.GotoAsync(HttpsServer.EmptyPage);

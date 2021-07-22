@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Tests
     public class ChromiumJSCoverageTests : PageTestEx
     {
         [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "should work")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldWork()
         {
             /*
@@ -46,7 +46,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "should report sourceURLs")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldReportSourceUrls()
         {
             /*
@@ -59,7 +59,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "should ignore eval() scripts by default")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldIgnoreEvalScriptsByDefault()
         {
             /*
@@ -71,7 +71,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "shouldn't ignore eval() scripts if reportAnonymousScripts is true")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldNotIgnoreEvalScriptsIfReportAnonymousScriptsIsTrue()
         {
             /*
@@ -84,7 +84,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "should report multiple scripts")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldReportMultipleScripts()
         {
             /*
@@ -99,7 +99,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "should report scripts across navigations when disabled")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldReportScriptsAcrossNavigationsWhenDisabled()
         {
             /*
@@ -112,7 +112,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "should NOT report scripts across navigations when enabled")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldNotReportScriptsAcrossNavigationsWhenEnabled()
         {
             /*
@@ -125,7 +125,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "should not hang when there is a debugger statement")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldNotHangWhenThereIsADebuggerStatement()
         {
             /*

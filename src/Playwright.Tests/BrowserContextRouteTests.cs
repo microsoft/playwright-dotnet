@@ -36,7 +36,6 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextRouteTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-route.spec.ts", "should intercept")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIntercept()
         {
             bool intercepted = false;
@@ -67,7 +66,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-route.spec.ts", "should unroute")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUnroute()
         {
             await using var context = await Browser.NewContextAsync();
@@ -115,7 +113,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-route.spec.ts", "should yield to page.route")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldYieldToPageRoute()
         {
             await using var context = await Browser.NewContextAsync();
@@ -135,7 +132,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-route.spec.ts", "should fall back to context.route")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFallBackToContextRoute()
         {
             await using var context = await Browser.NewContextAsync();

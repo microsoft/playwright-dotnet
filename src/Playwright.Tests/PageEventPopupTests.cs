@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class PageEventPopupTests : PageTestEx
     {
         [PlaywrightTest("page-event-popup.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             var popupTask = Page.WaitForPopupAsync();
@@ -46,7 +45,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with window features")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithWindowFeatures()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -61,7 +59,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should emit for immediately closed popups")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitForImmediatelyClosedPopups()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -77,7 +74,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should emit for immediately closed popups")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitForImmediatelyClosedPopupsWithLocation()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -92,14 +88,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should be able to capture alert")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public void ShouldBeAbleToCaptureAlert()
         {
             // Too fancy.
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with empty url")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithEmptyUrl()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -114,7 +108,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with noopener and no url")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoopenerAndNoUrl()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -130,7 +123,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with noopener and about:blank")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoopenerAndAboutBlank()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -145,7 +137,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with noopener and url")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoopenerAndUrl()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -160,7 +151,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with clicking target=_blank")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithClickingTargetBlank()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -182,7 +173,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with fake-clicking target=_blank and rel=noopener")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithFakeClickingTargetBlankAndRelNoopener()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -203,7 +194,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with clicking target=_blank and rel=noopener")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithClickingTargetBlankAndRelNoopener()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -224,7 +215,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should not treat navigations as new popups")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldNotTreatNavigationsAsNewPopups()
         {
             await Page.GotoAsync(Server.EmptyPage);

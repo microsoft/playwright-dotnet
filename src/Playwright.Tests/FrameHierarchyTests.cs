@@ -34,7 +34,6 @@ namespace Microsoft.Playwright.Tests
     public class FrameHierarchyTests : PageTestEx
     {
         [PlaywrightTest("frame-hierarchy.spec.ts", "should handle nested frames")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHandleNestedFrames()
         {
             await Page.GotoAsync(Server.Prefix + "/frames/nested-frames.html");
@@ -42,7 +41,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-hierarchy.spec.ts", "should send events when frames are manipulated dynamically")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendEventsWhenFramesAreManipulatedDynamically()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -73,7 +71,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-hierarchy.spec.ts", @"should send ""framenavigated"" when navigating on anchor URLs")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendFrameNavigatedWhenNavigatingOnAnchorURLs()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -86,7 +83,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-hierarchy.spec.ts", "should persist mainFrame on cross-process navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPersistMainFrameOnCrossProcessNavigation()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -96,7 +92,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-hierarchy.spec.ts", "should not send attach/detach events for main frame")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotSendAttachDetachEventsForMainFrame()
         {
             bool hasEvents = false;
@@ -107,7 +102,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-hierarchy.spec.ts", "should detach child frames on navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDetachChildFramesOnNavigation()
         {
             var attachedFrames = new List<IFrame>();
@@ -131,7 +125,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-hierarchy.spec.ts", "should support framesets")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportFramesets()
         {
             var attachedFrames = new List<IFrame>();
@@ -155,7 +148,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-hierarchy.spec.ts", "should report frame from-inside shadow DOM")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportFrameFromInsideShadowDOM()
         {
             await Page.GotoAsync(Server.Prefix + "/shadow.html");
@@ -170,7 +162,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-hierarchy.spec.ts", "should report frame.name()")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportFrameName()
         {
             await FrameUtils.AttachFrameAsync(Page, "theFrameId", Server.EmptyPage);
@@ -187,7 +178,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-hierarchy.spec.ts", "should report frame.parent()")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportFrameParent()
         {
             await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
@@ -198,7 +188,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-hierarchy.spec.ts", "should report different frame instance when frame re-attaches")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDifferentFrameInstanceWhenFrameReAttaches()
         {
             var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);

@@ -36,7 +36,6 @@ namespace Microsoft.Playwright.Tests
     public class HeadfulTests : PlaywrightTestEx
     {
         [PlaywrightTest("headful.spec.ts", "should have default url when launching browser")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveDefaultUrlWhenLaunchingBrowser()
         {
             using var tempDir = new TempDirectory();
@@ -47,7 +46,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("headful.spec.ts", "headless should be able to read cookies written by headful")]
-        [Test, Ignore("Flaky")]
+        [Ignore("Flaky")]
         public async Task HeadlessShouldBeAbleToReadCookiesWrittenByHeadful()
         {
             using var userDataDir = new TempDirectory();
@@ -69,7 +68,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("headful.spec.ts", "should close browser with beforeunload page")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCloseBrowserWithBeforeunloadPage()
         {
             using var userDataDir = new TempDirectory();
@@ -82,7 +80,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("headful.spec.ts", "should not crash when creating second context")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotCrashWhenCreatingSecondContext()
         {
             await using var browser = await LaunchHeaded();
@@ -99,7 +96,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("headful.spec.ts", "should click background tab")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickBackgroundTab()
         {
             await using var browser = await LaunchHeaded();
@@ -110,7 +106,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("headful.spec.ts", "should close browser after context menu was triggered")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCloseBrowserAfterContextMenuWasTriggered()
         {
             await using var browser = await LaunchHeaded();
@@ -120,7 +115,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("headful.spec.ts", "should(not) block third party cookies")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotBlockThirdPartyCookies()
         {
             await using var browser = await LaunchHeaded();
@@ -167,7 +161,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("headful.spec.ts", "should not override viewport size when passed null")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldNotOverrideViewportSizeWhenPassedNull()
         {
             await using var browser = await LaunchHeaded();
@@ -189,7 +183,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("headful.spec.ts", "Page.bringToFront should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PageBringToFrontShouldWork()
         {
             await using var browser = await LaunchHeaded();

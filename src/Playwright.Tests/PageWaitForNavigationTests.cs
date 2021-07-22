@@ -37,7 +37,6 @@ namespace Microsoft.Playwright.Tests
     public class PageWaitForNavigationTests : PageTestEx
     {
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -52,7 +51,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should respect timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
             var waitForNavigationResult = Page.WaitForNavigationAsync(new() { UrlString = "**/frame.html", Timeout = 5000 });
@@ -67,7 +65,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work with both domcontentloaded and load")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout), Ignore("Flakes")]
+        [Timeout(TestConstants.DefaultTestTimeout), Ignore("Flakes")]
         public async Task NavShouldWorkWithBothDomcontentloadedAndLoad()
         {
             var responseCompleted = new TaskCompletionSource<bool>();
@@ -91,7 +89,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work with clicking on anchor links")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithClickingOnAnchorLinks()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -106,8 +103,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work with clicking on links which do not commit navigation")]
-        // [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        [Test, Ignore("Fix me #1058")]
+        [Ignore("Fix me #1058")]
         public async Task ShouldWorkWithClickingOnLinksWhichDoNotCommitNavigation()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -121,7 +117,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work with history.pushState()")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithHistoryPushState()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -141,7 +136,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work with history.replaceState()")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithHistoryReplaceState()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -161,7 +155,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work with DOM history.back()/history.forward()")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDOMHistoryBackAndHistoryForward()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -193,7 +186,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work when subframe issues window.stop()")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenSubframeIssuesWindowStop()
         {
             //This test is slightly different from the one in PW because of .NET Threads (or thanks to .NET Threads)
@@ -239,7 +231,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work with url match")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithUrlMatch()
         {
             IResponse response1 = null;
@@ -285,7 +276,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work with url match for same document navigations")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithUrlMatchForSameDocumentNavigations()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -306,7 +296,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work for cross-process navigations")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForCrossProcessNavigations()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -322,7 +311,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work on frame")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkOnFrame()
         {
             await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");

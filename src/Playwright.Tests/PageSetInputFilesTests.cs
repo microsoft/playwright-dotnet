@@ -38,7 +38,6 @@ namespace Microsoft.Playwright.Tests
     public class PageSetInputFilesTests : PageTestEx
     {
         [PlaywrightTest("page-set-input-files.spec.ts", "should upload the file")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUploadTheFile()
         {
             await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
@@ -55,7 +54,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.SetContentAsync("<input type=file>");
@@ -67,7 +65,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should set from memory")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetFromMemory()
         {
             await Page.SetContentAsync("<input type=file>");
@@ -84,7 +81,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should emit event once")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitEventOnce()
         {
             await Page.SetContentAsync("<input type=file>");
@@ -103,19 +99,18 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should emit event on/off")]
-        [Test, Ignore("We don't need to test this")]
+        [Ignore("We don't need to test this")]
         public void ShouldEmitEventOnOff()
         {
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should emit addListener/removeListener")]
-        [Test, Ignore("We don't need to test this")]
+        [Ignore("We don't need to test this")]
         public void ShouldEmitEventAddListenerRemoveListener()
         {
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should work when file input is attached to DOM")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenFileInputIsAttachedToDOM()
         {
             await Page.SetContentAsync("<input type=file>");
@@ -127,7 +122,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should work when file input is not attached to DOM")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenFileInputIsNotAttachedToDOM()
         {
             var (chooser, _) = await TaskUtils.WhenAll(
@@ -143,7 +137,6 @@ namespace Microsoft.Playwright.Tests
 
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should work with CSP")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCSP()
         {
             Server.SetCSP("/empty.html", "default-src \"none\"");
@@ -156,7 +149,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should respect timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public Task ShouldRespectTimeout()
         {
             return PlaywrightAssert.ThrowsAsync<TimeoutException>(()
@@ -164,7 +156,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should respect default timeout when there is no custom timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public Task ShouldRespectDefaultTimeoutWhenThereIsNoCustomTimeout()
         {
             Page.SetDefaultTimeout(1);
@@ -172,7 +163,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should prioritize exact timeout over default timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public Task ShouldPrioritizeExactTimeoutOverDefaultTimeout()
         {
             Page.SetDefaultTimeout(0);
@@ -180,7 +170,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should work with no timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoTimeout()
         {
             var (chooser, _) = await TaskUtils.WhenAll(
@@ -195,7 +184,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should return the same file chooser when there are many watchdogs simultaneously")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnTheSameFileChooserWhenThereAreManyWatchdogsSimultaneously()
         {
             await Page.SetContentAsync("<input type=file>");
@@ -208,7 +196,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should accept single file")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptSingleFile()
         {
             await Page.SetContentAsync("<input type=file oninput='javascript:console.timeStamp()'>");
@@ -225,7 +212,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should detect mime type")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDetectMimeType()
         {
             var files = new List<(string name, string mime, byte[] content)>();
@@ -268,7 +254,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should be able to read selected file")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToReadSelectedFile()
         {
             await Page.SetContentAsync("<input type=file>");
@@ -285,7 +270,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should be able to reset selected files with empty file list")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToResetSelectedFilesWithEmptyFileList()
         {
             await Page.SetContentAsync("<input type=file>");
@@ -306,7 +290,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should not accept multiple files for single-file input")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAcceptMultipleFilesForSingleFileInput()
         {
             await Page.SetContentAsync("<input type=file>");
@@ -323,7 +306,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should emit input and change events")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitInputAndChangeEvents()
         {
             var events = new List<string>();
@@ -344,7 +326,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should work for single file pick")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForSingleFilePick()
         {
             await Page.SetContentAsync("<input type=file>");
@@ -358,7 +339,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", @"should work for ""multiple""")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForMultiple()
         {
             await Page.SetContentAsync("<input multiple type=file>");
@@ -370,7 +350,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", @"should work for ""webkitdirectory""")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForWebkitdirectory()
         {
             await Page.SetContentAsync("<input multiple webkitdirectory type=file>");

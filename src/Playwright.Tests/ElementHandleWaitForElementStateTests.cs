@@ -34,7 +34,6 @@ namespace Microsoft.Playwright.Tests
     public class ElementHandleWaitForElementStateTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for visible")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisible()
         {
             await Page.SetContentAsync("<div style='display:none'>content</div>");
@@ -47,7 +46,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for already visible")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForAlreadyVisible()
         {
             await Page.SetContentAsync("<div>content</div>");
@@ -56,7 +54,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should timeout waiting for visible")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForVisible()
         {
             await Page.SetContentAsync("<div style='display:none'>content</div>");
@@ -66,7 +63,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should throw waiting for visible when detached")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWaitingForVisibleWhenDetached()
         {
             await Page.SetContentAsync("<div style='display:none'>content</div>");
@@ -78,7 +74,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for hidden")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForHidden()
         {
             await Page.SetContentAsync("<div>content</div>");
@@ -91,7 +86,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for already hidden")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForAlreadyHidden()
         {
             await Page.SetContentAsync("<div></div>");
@@ -100,7 +94,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should throw waiting for hidden when detached")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWaitingForHiddenWhenDetached()
         {
             await Page.SetContentAsync("<div>content</div>");
@@ -113,7 +106,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for enabled button")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForEnabledButton()
         {
             await Page.SetContentAsync("<button disabled><span>Target</span></button>");
@@ -126,7 +118,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should throw waiting for enabled when detached")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWaitingForEnabledWhenDetached()
         {
             await Page.SetContentAsync("<button disabled>Target</button>");
@@ -138,7 +129,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for disabled button")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForDisabledButton()
         {
             await Page.SetContentAsync("<button><span>Target</span></button>");
@@ -151,7 +141,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for stable position")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWaitForStablePosition()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");

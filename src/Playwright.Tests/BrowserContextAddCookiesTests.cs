@@ -36,7 +36,6 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextAddCookiesTests : PageTestEx
     {
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -50,7 +49,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should roundtrip cookie")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRoundtripCookie()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -78,7 +76,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should send cookie header")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendCookieHeader()
         {
             string cookie = string.Empty;
@@ -104,7 +101,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should isolate cookies in browser contexts")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateCookiesInBrowserContexts()
         {
             await using var anotherContext = await Browser.NewContextAsync();
@@ -140,7 +136,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should isolate session cookies")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateSessionCookies()
         {
             Server.SetRoute("/setcookie.html", context =>
@@ -163,7 +158,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should isolate persistent cookies")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolatePersistentCookies()
         {
             Server.SetRoute("/setcookie.html", context =>
@@ -189,7 +183,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should isolate send cookie header")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateSendCookieHeader()
         {
             string cookie = string.Empty;
@@ -220,7 +213,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should isolate cookies between launches")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateCookiesBetweenLaunches()
         {
             await using (await Playwright[TestConstants.BrowserName].LaunchAsync())
@@ -248,7 +240,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should set multiple cookies")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetMultipleCookies()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -283,7 +274,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should have |expires| set to |-1| for session cookies")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveExpiresSetToMinus1ForSessionCookies()
         {
             await Context.AddCookiesAsync(new[]
@@ -302,7 +292,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should set cookie with reasonable defaults")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetCookieWithReasonableDefaults()
         {
             await Context.AddCookiesAsync(new[]
@@ -329,7 +318,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should set a cookie with a path")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetACookieWithAPath()
         {
             await Page.GotoAsync(Server.Prefix + "/grid.html");
@@ -364,7 +352,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should not set a cookie with blank page URL")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotSetACookieWithBlankPageURL()
         {
             await Page.GotoAsync(TestConstants.AboutBlank);
@@ -389,7 +376,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should not set a cookie on a data URL page")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotSetACookieOnADataURLPage()
         {
             await Page.GotoAsync("data:,Hello%2C%20World!");
@@ -408,7 +394,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should default to setting secure cookie for HTTPS websites")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDefaultToSettingSecureCookieForHttpsWebsites()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -431,7 +416,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should be able to set unsecure cookie for HTTP website")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToSetUnsecureCookieForHttpWebSite()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -455,7 +439,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should set a cookie on a different domain")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetACookieOnADifferentDomain()
         {
             await Page.GotoAsync(Server.Prefix + "/grid.html");
@@ -485,7 +468,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should set cookies for a frame")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetCookiesForAFrame()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -513,7 +495,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should(not) block third party cookies")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotBlockThirdPartyCookies()
         {
             await Page.GotoAsync(Server.EmptyPage);

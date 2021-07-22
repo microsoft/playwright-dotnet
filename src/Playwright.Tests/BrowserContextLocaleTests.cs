@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextLocaleTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-locale.spec.ts", "should affect accept-language header")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAffectAcceptLanguageHeader()
         {
             await using var context = await Browser.NewContextAsync(new() { Locale = "fr-CH" });
@@ -48,7 +47,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-locale.spec.ts", "should affect navigator.language")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAffectNavigatorLanguage()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -60,7 +58,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-locale.spec.ts", "should format number")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatNumber()
         {
             await using (var context = await Browser.NewContextAsync(new()
@@ -86,7 +83,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-locale.spec.ts", "should format date")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatDate()
         {
             await using (var context = await Browser.NewContextAsync(new()
@@ -117,7 +113,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-locale.spec.ts", "should format number in popups")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatNumberInPopups()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -139,7 +134,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-locale.spec.ts", "should affect navigator.language in popups")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAffectNavigatorLanguageInPopups()
         {
             await using var context = await Browser.NewContextAsync(new()

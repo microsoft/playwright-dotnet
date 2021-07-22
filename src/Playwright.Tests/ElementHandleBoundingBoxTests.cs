@@ -34,7 +34,6 @@ namespace Microsoft.Playwright.Tests
     public class ElementHandleBoundingBoxTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.SetViewportSizeAsync(500, 500);
@@ -45,7 +44,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should handle nested frames")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHandleNestedFrames()
         {
             await Page.SetViewportSizeAsync(500, 500);
@@ -57,7 +55,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should return null for invisible elements")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullForInvisibleElements()
         {
             await Page.SetContentAsync("<div style=\"display:none\">hi</div>");
@@ -66,7 +63,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should force a layout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldForceALayout()
         {
             await Page.SetViewportSizeAsync(500, 500);
@@ -78,7 +74,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should work with SVG nodes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithSVGNodes()
         {
             await Page.SetContentAsync(@"
@@ -95,7 +90,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should work with page scale")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithPageScale()
         {
             var context = await Browser.NewContextAsync(new()
@@ -128,7 +123,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should work when inline box child is outside of viewport")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenInlineBoxChildIsOutsideOfViewport()
         {
             await Page.SetContentAsync(@"

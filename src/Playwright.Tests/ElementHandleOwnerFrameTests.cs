@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class ElementHandleOwnerFrameTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -44,7 +43,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for cross-process iframes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForCrossProcessIframes()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -55,7 +53,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for document")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForDocument()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -66,7 +63,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for iframe elements")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForIframeElements()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -77,7 +73,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for cross-frame evaluations")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForCrossFrameEvaluations()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -88,7 +83,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for detached elements")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForDetachedElements()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -106,7 +100,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for adopted elements")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkForAdoptedElements()
         {
             await Page.GotoAsync(Server.EmptyPage);

@@ -35,7 +35,6 @@ namespace Microsoft.Playwright.Tests
     public class PageEventConsoleTests2 : PageTestEx
     {
         [PlaywrightTest("page-event-console.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             IConsoleMessage message = null;
@@ -57,7 +56,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should emit same log twice")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitSameLogTwice()
         {
             var messages = new List<string>();
@@ -69,7 +67,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should work for different console API calls")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForDifferentConsoleAPICalls()
         {
             var messages = new List<IConsoleMessage>();
@@ -98,7 +95,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should not fail for window object")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotFailForWindowObject()
         {
             IConsoleMessage message = null;
@@ -116,7 +112,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should trigger correct Log")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTriggerCorrectLog()
         {
             await Page.GotoAsync("about:blank");
@@ -129,7 +124,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should have location for console API calls")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveLocationForConsoleAPICalls()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -143,7 +137,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should not throw when there are console messages in detached iframes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotThrowWhenThereAreConsoleMessagesInDetachedIframes()
         {
             await Page.GotoAsync(Server.EmptyPage);

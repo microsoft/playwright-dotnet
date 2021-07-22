@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class ElementHandleClickTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-click.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -42,7 +41,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-click.spec.ts", "should work with Node removed")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNodeRemoved()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -53,7 +51,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-click.spec.ts", "should work for Shadow DOM v1")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForShadowDOMV1()
         {
             await Page.GotoAsync(Server.Prefix + "/shadow.html");
@@ -63,7 +60,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-click.spec.ts", "should work for TextNodes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForTextNodes()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -73,7 +69,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-click.spec.ts", "should throw for detached nodes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForDetachedNodes()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -84,7 +79,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-click.spec.ts", "should throw for hidden nodes with force")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForHiddenNodesWithForce()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -95,7 +89,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-click.spec.ts", "should throw for recursively hidden nodes with force")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForRecursivelyHiddenNodesWithForce()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -106,7 +99,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-click.spec.ts", "should throw for &lt;br&gt; elements with force")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForBrElementsWithforce()
         {
             await Page.SetContentAsync("hello<br>goodbye");
@@ -116,7 +108,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-click.spec.ts", "should double click the button")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDoubleClickTheButton()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");

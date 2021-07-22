@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Tests
     public class SelectorsTextTests : PageTestEx
     {
         [PlaywrightTest("selectors-text.spec.ts", "query")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout), Ignore("We need to update this test")]
+        [Timeout(TestConstants.DefaultTestTimeout), Ignore("We need to update this test")]
         public async Task Query()
         {
             await Page.SetContentAsync("<div>yo</div><div>ya</div><div>\nye  </div>");
@@ -116,13 +116,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("selectors-text.spec.ts", "create")]
-        [Test, Ignore("Skip Hooks")]
+        [Ignore("Skip Hooks")]
         public void Create()
         {
         }
 
         [PlaywrightTest("selectors-text.spec.ts", "should be case sensitive if quotes are specified")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeCaseSensitiveIfQuotesAreSpecified()
         {
             await Page.SetContentAsync("<div>yo</div><div>ya</div><div>\nye  </div>");
@@ -131,7 +130,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("selectors-text.spec.ts", "should search for a substring without quotes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSearchForASubstringWithoutQuotes()
         {
             await Page.SetContentAsync("<div>textwithsubstring</div>");
@@ -140,7 +138,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("selectors-text.spec.ts", "should skip head, script and style")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSkipHeadScriptAndStyle()
         {
             await Page.SetContentAsync(@"
@@ -174,7 +171,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("selectors-text.spec.ts", "should match input[type=button|submit]")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldMatchInputTypeButtonSubmit()
         {
             await Page.SetContentAsync("<input type=\"submit\" value=\"hello\"><input type=\"button\" value=\"world\">");
@@ -183,7 +179,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("selectors-text.spec.ts", "should work for open shadow roots")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForOpenShadowRoots()
         {
             await Page.GotoAsync(Server.Prefix + "/deep-shadow.html");
@@ -199,7 +194,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("selectors-text.spec.ts", "should prioritize light dom over shadow dom in the same parent")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPrioritizeLightDomOverShadowDomInTheSameParent()
         {
             await Page.EvaluateAsync(@"
@@ -220,7 +214,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("selectors-text.spec.ts", "should waitForSelector with distributed elements")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForSelectorWithDistributedElements()
         {
             var task = Page.WaitForSelectorAsync("div >> text=Hello");

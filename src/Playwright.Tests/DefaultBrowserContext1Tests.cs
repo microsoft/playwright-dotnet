@@ -34,7 +34,6 @@ namespace Microsoft.Playwright.Tests
     public class DefaultBrowserContext1Tests : PlaywrightTestEx
     {
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "context.cookies() should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ContextCookiesShouldWork()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -62,7 +61,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "context.addCookies() should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ContextAddCookiesShouldWork()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -95,7 +93,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "context.clearCookies() should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ContextClearCookiesShouldWork()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -129,7 +126,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should(not) block third party cookies")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotBlockThirdPartyCookies()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -173,7 +169,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support viewport option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportViewportOption()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -194,7 +189,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support deviceScaleFactor option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportDeviceScaleFactorOption()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -209,7 +203,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support userAgent option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportUserAgentOption()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -230,7 +223,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support bypassCSP option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportBypassCSPOption()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -247,7 +239,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support javascriptEnabled option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportJavascriptEnabledOption()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -272,7 +263,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support httpCredentials option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportHttpCredentialsOption()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -293,7 +283,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support offline option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportOfflineOption()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -308,7 +297,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support acceptDownloads option")]
-        [Test, Ignore("Skipped on playwright")]
+        [Ignore("Skipped on playwright")]
         public void ShouldSupportAcceptDownloadsOption()
         {
         }

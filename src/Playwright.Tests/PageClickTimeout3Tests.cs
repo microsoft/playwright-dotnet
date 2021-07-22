@@ -33,13 +33,12 @@ namespace Microsoft.Playwright.Tests
     public class PageClickTimeout3Tests : PageTestEx
     {
         [PlaywrightTest("page-click-timeout-3.spec.ts", "should fail when element jumps during hit testing")]
-        [Test, Ignore(" Skip USES_HOOKS")]
+        [Ignore(" Skip USES_HOOKS")]
         public void ShouldFailWhenElementJumpsDuringHitTesting()
         {
         }
 
         [PlaywrightTest("page-click-timeout-3.spec.ts", "should timeout waiting for hit target")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForHitTarget()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");

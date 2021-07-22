@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class QuerySelectorTests : PageTestEx
     {
         [PlaywrightTest("queryselector.spec.ts", "should query existing elements")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldQueryExistingElements()
         {
             await Page.SetContentAsync("<div>A</div><br/><div>B</div>");
@@ -44,7 +43,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should return empty array if nothing is found")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEmptyArrayIfNothingIsFound()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -53,7 +51,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("queryselector.spec.ts", "xpath should query existing element")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task XpathShouldQueryExistingElement()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -63,7 +60,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should return empty array for non-existing element")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEmptyArrayForNonExistingElement()
         {
             var elements = await Page.QuerySelectorAllAsync("//html/body/non-existing-element");
@@ -71,7 +67,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should return multiple elements")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnMultipleElements()
         {
             await Page.SetContentAsync("<div></div><div></div>");
@@ -80,7 +75,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should query existing element with css selector")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldQueryExistingElementWithCssSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -89,7 +83,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should query existing element with text selector")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldQueryExistingElementWithTextSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -98,7 +91,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should query existing element with xpath selector")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldQueryExistingElementWithXpathSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -107,7 +99,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should return null for non-existing element")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullForNonExistingElement()
         {
             var element = await Page.QuerySelectorAsync("non-existing-element");
@@ -115,7 +106,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should auto-detect xpath selector")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAutoDetectXpathSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -124,7 +114,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should auto-detect xpath selector with starting parenthesis")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAutoDetectXpathSelectorWithStartingParenthesis()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -133,7 +122,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should auto-detect text selector")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAutoDetectTextSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -142,7 +130,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should auto-detect css selector")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAutoDetectCssSelector()
         {
             await Page.SetContentAsync("<section>test</section>");
@@ -151,7 +138,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should support >> syntax")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportDoubleGreaterThanSyntax()
         {
             await Page.SetContentAsync("<section><div>test</div></section>");

@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class SelectorMiscTests : PageTestEx
     {
         [PlaywrightTest("selectors-misc.spec.ts", "should work for open shadow roots")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForOpenShadowRoots()
         {
             await Page.GotoAsync(Server.Prefix + "/deep-shadow.html");

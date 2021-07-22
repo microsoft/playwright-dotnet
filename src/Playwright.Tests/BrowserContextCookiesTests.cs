@@ -35,12 +35,10 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextCookiesTests : PageTestEx
     {
         [PlaywrightTest("browsercontext-cookies.spec.ts", "should return no cookies in pristine browser context")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNoCookiesInPristineBrowserContext()
             => Assert.IsEmpty(await Context.CookiesAsync());
 
         [PlaywrightTest("browsercontext-cookies.spec.ts", "should get a cookie")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldGetACookie()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -61,7 +59,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-cookies.spec.ts", "should get a non-session cookie")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldGetANonSessionCookie()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -84,7 +81,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-cookies.spec.ts", "should properly report httpOnly cookie")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldProperlyReportHttpOnlyCookie()
         {
             Server.SetRoute("/empty.html", context =>
@@ -99,7 +95,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-cookies.spec.ts", @"should properly report ""Strict"" sameSite cookie")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true, skipWindows: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true, skipWindows: true)]
         public async Task ShouldProperlyReportStrictSameSiteCookie()
         {
             Server.SetRoute("/empty.html", context =>
@@ -114,7 +110,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-cookies.spec.ts", @"should properly report ""Lax"" sameSite cookie")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true, skipWindows: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true, skipWindows: true)]
         public async Task ShouldProperlyReportLaxSameSiteCookie()
         {
             Server.SetRoute("/empty.html", context =>
@@ -129,7 +125,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-cookies.spec.ts", "should get multiple cookies")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldGetMultipleCookies()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -165,7 +160,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-cookies.spec.ts", "should get cookies from multiple urls")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldGetCookiesFromMultipleUrls()
         {
             await Context.AddCookiesAsync(new[]

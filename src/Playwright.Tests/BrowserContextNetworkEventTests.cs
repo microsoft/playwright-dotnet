@@ -34,7 +34,6 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextNetworkEventTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-network-event.spec.ts", "BrowserContext.Events.Request")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task BrowserContextEventsRequest()
         {
             await using var context = await Browser.NewContextAsync();
@@ -58,7 +57,6 @@ namespace Microsoft.Playwright.Tests
         /// <playwright-file>browsercontext-network-event.spec.ts</playwright-file>
         /// <playwright-it>BrowserContext.Events.Response</playwright-it>
         [PlaywrightTest("browsercontext-network-event.spec.ts", "BrowserContext.Events.Response")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task BrowserContextEventsResponse()
         {
             await using var context = await Browser.NewContextAsync();
@@ -82,7 +80,6 @@ namespace Microsoft.Playwright.Tests
         /// <playwright-file>browsercontext-network-event.spec.ts</playwright-file>
         /// <playwright-it>BrowserContext.Events.RequestFailed</playwright-it>
         [PlaywrightTest("browsercontext-network-event.spec.ts", "BrowserContext.Events.RequestFailed")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task BrowserContextEventsRequestfailed()
         {
             Server.SetRoute("/one-style.css", (ctx) =>
@@ -111,7 +108,6 @@ namespace Microsoft.Playwright.Tests
         /// <playwright-file>browsercontext-network-event.spec.ts</playwright-file>
         /// <playwright-it>BrowserContext.Events.RequestFinished</playwright-it>
         [PlaywrightTest("browsercontext-network-event.spec.ts", "BrowserContext.Events.RequestFinished")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task BrowserContextEventsRequestfinished()
         {
             await using var context = await Browser.NewContextAsync();
@@ -130,7 +126,6 @@ namespace Microsoft.Playwright.Tests
         /// <playwright-file>browsercontext-network-event.spec.ts</playwright-file>
         /// <playwright-it>should fire events in proper order</playwright-it>
         [PlaywrightTest("browsercontext-network-event.spec.ts", "should fire events in proper order")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireEventsInProperOrder()
         {
             await using var context = await Browser.NewContextAsync();

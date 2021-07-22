@@ -39,7 +39,6 @@ namespace Microsoft.Playwright.Tests
     public class TracingTests : ContextTestEx
     {
         [PlaywrightTest("tracing.spec.ts", "should collect trace")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCollectTrace()
         {
             await Context.Tracing.StartAsync(new()
@@ -75,7 +74,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("tracing.spec.ts", "should exclude internal pages")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         [Ignore("Fails due to https://github.com/microsoft/playwright/issues/6743")]
         public async Task ShouldExcludeInternalPages()
         {
@@ -95,7 +93,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("tracing.spec.ts", "should collect two traces")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCollectTwoTraces()
         {
             var page = await Context.NewPageAsync();

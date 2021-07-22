@@ -34,7 +34,6 @@ namespace Microsoft.Playwright.Tests
     public class PageSelectOptionTests : PageTestEx
     {
         [PlaywrightTest("page-select-option.spec.ts", "should select single option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOption()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -44,7 +43,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should select single option by value")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOptionByValue()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -54,7 +52,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should select single option by label")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOptionByLabel()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -64,7 +61,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should select single option by handle")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOptionByHandle()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -74,7 +70,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should select single option by index")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOptionByIndex()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -84,7 +79,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should select single option by multiple attributes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOptionByMultipleAttributes()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -94,7 +88,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should not select single option when some attributes do not match")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotSelectSingleOptionWhenSomeAttributesDoNotMatch()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -104,7 +97,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should select only first option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectOnlyFirstOption()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -114,7 +106,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should not throw when select causes navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotThrowWhenSelectCausesNavigation()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -127,7 +118,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should select multiple options")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectMultipleOptions()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -138,7 +128,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should select multiple options with attributes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectMultipleOptionsWithAttributes()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -155,7 +144,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should respect event bubbling")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectEventBubbling()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -165,7 +153,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should throw when element is not a &lt;select&gt;")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenElementIsNotASelect()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -174,7 +161,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should return [] on no matched values")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEmptyArrayOnNoMatchedValues()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -183,7 +169,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should return an array of matched values")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnAnArrayOfMatchedValues()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -193,7 +178,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should return an array of one element when multiple is not set")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnAnArrayOfOneElementWhenMultipleIsNotSet()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -202,7 +186,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should return [] on no values")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEmptyArrayOnNoValues()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -211,7 +194,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should unselect with null")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUnselectWithNull()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -223,7 +205,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should deselect all options when passed no values for a multiple select")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeselectAllOptionsWhenPassedNoValuesForAMultipleSelect()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -234,7 +215,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should deselect all options when passed no values for a select without multiple")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeselectAllOptionsWhenPassedNoValuesForASelectWithoutMultiple()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -244,13 +224,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should throw if passed wrong types")]
-        [Test, Ignore("Not relevant for C#, js specific")]
+        [Ignore("Not relevant for C#, js specific")]
         public void ShouldThrowIfPassedWrongTypes()
         {
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should work when re-defining top-level Event class")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenReDefiningTopLevelEventClass()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");

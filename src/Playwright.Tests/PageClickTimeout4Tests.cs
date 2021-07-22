@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class PageClickTimeout4Tests : PageTestEx
     {
         [PlaywrightTest("page-click-timeout-4.spec.ts", "should timeout waiting for stable position")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForStablePosition()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");

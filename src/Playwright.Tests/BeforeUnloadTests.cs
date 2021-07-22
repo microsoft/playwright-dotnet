@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     {
 
         [PlaywrightTest("beforeunload.spec.ts", "should run beforeunload if asked for")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRunBeforeunloadIfAskedFor()
         {
             var newPage = await Context.NewPageAsync();
@@ -67,7 +66,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("beforeunload.spec.ts", "should *not* run beforeunload by default")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotRunBeforeunloadByDefault()
         {
             var newPage = await Context.NewPageAsync();

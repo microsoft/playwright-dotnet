@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
     public class PermissionsTests : PageTestEx
     {
         [PlaywrightTest("permissions.spec.ts", "should be prompt by default")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldBePromptByDefault()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -42,7 +42,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should deny permission when not listed")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldDenyPermissionWhenNotListed()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -51,11 +51,11 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should fail when bad permission is given")]
-        [Test, Ignore("We don't need this test")]
+        [Ignore("We don't need this test")]
         public void ShouldFailWhenBadPermissionIsGiven() { }
 
         [PlaywrightTest("permissions.spec.ts", "should grant geolocation permission when listed")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldGrantGeolocationPermissionWhenListed()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -64,7 +64,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should grant notifications permission when listed")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldGrantNotificationsPermissionWhenListed()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -73,7 +73,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should accumulate when adding")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldAccumulateWhenAdding()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -84,7 +84,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should clear permissions")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldClearPermissions()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -98,7 +98,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should grant permission when listed for all domains")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldGrantPermissionWhenListedForAllDomains()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -107,7 +107,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should grant permission when creating context")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldGrantPermissionWhenCreatingContext()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -121,7 +121,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should reset permissions")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldResetPermissions()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -132,7 +132,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should trigger permission onchange")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldTriggerPermissionOnchange()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -159,7 +159,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should trigger permission onchange")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldIsolatePermissionsBetweenBrowserContexts()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -183,7 +183,7 @@ namespace Microsoft.Playwright.Tests
 
 
         [PlaywrightTest("permissions.spec.ts", "should support clipboard read")]
-        [Test, Ignore("Skipped in Playwright")]
+        [Ignore("Skipped in Playwright")]
         public void ShouldSupportClipboardRead()
         {
         }
