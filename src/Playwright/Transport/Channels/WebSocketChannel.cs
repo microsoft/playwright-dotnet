@@ -60,7 +60,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     Close?.Invoke(this, EventArgs.Empty);
                     break;
                 case "frameSent":
-                    if (ShouldFilterOpCode(out opcode))
+                    if (IsTextOrBinaryFrame(out opcode))
                     {
                         break;
                     }
@@ -72,7 +72,7 @@ namespace Microsoft.Playwright.Transport.Channels
                             opcode == OpcodeBase64));
                     break;
                 case "frameReceived":
-                    if (ShouldFilterOpCode(out opcode))
+                    if (IsTextOrBinaryFrame(out opcode))
                     {
                         break;
                     }
