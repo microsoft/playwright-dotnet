@@ -26,7 +26,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-[assembly:NUnit.Framework.Timeout(Microsoft.Playwright.Tests.TestConstants.DefaultTestTimeout)]
+[assembly: NUnit.Framework.Timeout(Microsoft.Playwright.Tests.TestConstants.DefaultTestTimeout)]
 
 namespace Microsoft.Playwright.Tests
 {
