@@ -36,7 +36,7 @@ namespace Microsoft.Playwright.Tests
     public class PdfTests : PageTestEx
     {
         [PlaywrightTest("pdf.spec.ts", "should be able to save file")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true, skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldBeAbleToSaveFile()
         {
             var baseDirectory = Path.Combine(Directory.GetCurrentDirectory(), "workspace");
@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("pdf.spec.ts", "should only have pdf in chromium")]
-        [Test, SkipBrowserAndPlatform(skipChromium: true)]
+        [SkipBrowserAndPlatform(skipChromium: true)]
         public Task ShouldOnlyHavePdfInChromium()
             => PlaywrightAssert.ThrowsAsync<NotSupportedException>(() => Page.PdfAsync());
     }

@@ -35,7 +35,6 @@ namespace Microsoft.Playwright.Tests
     public class PageEvaluateHandleTests : PageTestEx
     {
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             var windowHandle = await Page.EvaluateHandleAsync("() => window");
@@ -43,7 +42,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept object handle as an argument")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptObjectHandleAsAnArgument()
         {
             var navigatorHandle = await Page.EvaluateHandleAsync("() => navigator");
@@ -52,7 +50,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept object handle to primitive types")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptObjectHandleToPrimitiveTypes()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => 5");
@@ -61,7 +58,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept nested handle")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptNestedHandle()
         {
             var foo = await Page.EvaluateHandleAsync("() => ({x: 1, y: 'foo'})");
@@ -72,7 +68,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept nested window handle")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptNestedWindowHandle()
         {
             var foo = await Page.EvaluateHandleAsync("() => window");
@@ -80,7 +75,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept multiple nested handles")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptMultipleNestedHandles()
         {
             var foo = await Page.EvaluateHandleAsync("() => ({ x: 1, y: 'foo' })");
@@ -108,7 +102,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should throw for circular objects")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForCircularObjects()
         {
             dynamic a = new ExpandoObject();
@@ -120,7 +113,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept same nested object multiple times")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptSameNestedObjectMultipleTimes()
         {
             dynamic foo = new { x = 1 };
@@ -141,7 +133,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept object handle to unserializable value")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptObjectHandleToUnserializableValue()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => Infinity");
@@ -149,7 +140,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should pass configurable args")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPassConfigurableArgs()
         {
             JsonElement result = await Page.EvaluateAsync<JsonElement>(
@@ -170,7 +160,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should work with primitives")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithPrimitives()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => {

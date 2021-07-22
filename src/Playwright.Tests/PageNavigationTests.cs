@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class PageNavigationTests : PageTestEx
     {
         [PlaywrightTest("page-navigation.spec.ts", "should work with _blank target")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBlankTarget()
         {
             Server.SetRoute("/empty.html", ctx =>
@@ -43,7 +42,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-navigation.spec.ts", "should work with cross-process _blank target")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCrossProcessBlankTarget()
         {
             Server.SetRoute("/empty.html", ctx =>

@@ -34,7 +34,6 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextExposeFunctionTests : ContextTestEx
     {
         [PlaywrightTest("browsercontext-expose-function.spec.ts", "expose binding should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ExposeBindingShouldWork()
         {
             BindingSource bindingSource = null;
@@ -58,7 +57,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-expose-function.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Context.ExposeFunctionAsync("add", (int a, int b) => a + b);
@@ -76,7 +74,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-expose-function.spec.ts", "should throw for duplicate registrations")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForDuplicateRegistrations()
         {
             await Context.ExposeFunctionAsync("foo", () => { });
@@ -95,7 +92,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-expose-function.spec.ts", "should be callable from-inside addInitScript")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeCallableFromInsideAddInitScript()
         {
             var args = new List<object>();
@@ -113,7 +109,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-expose-function.spec.ts", "exposeBindingHandle should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ExposeBindingHandleShouldWork()
         {
             IJSHandle target = null;
@@ -134,7 +129,6 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(17, result);
         }
 
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ExposeBindingHandleLikeInDocumentation()
         {
             var result = new TaskCompletionSource<string>();

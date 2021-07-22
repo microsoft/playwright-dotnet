@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class PageAddInitScriptTests : PageTestEx
     {
         [PlaywrightTest("page-add-init-script.spec.ts", "should evaluate before anything else on the page")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEvaluateBeforeAnythingElseOnThePage()
         {
             await Page.AddInitScriptAsync("window.injected = 123;");
@@ -42,7 +41,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should work with a path")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAPath()
         {
             await Page.AddInitScriptAsync(scriptPath: TestUtils.GetWebServerFile("injectedfile.js"));
@@ -52,7 +50,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should work with a path")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithContents()
         {
             await Page.AddInitScriptAsync("window.injected = 123;");
@@ -61,14 +58,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should throw without path and content")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public Task ShouldThrowWithoutPathAndContent()
         {
             return PlaywrightAssert.ThrowsAsync<ArgumentException>(() => Page.AddInitScriptAsync());
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should work with browser context scripts")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBrowserContextScripts()
         {
             await using var context = await Browser.NewContextAsync();
@@ -81,7 +76,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should work with browser context scripts with path")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBrowserContextScriptsWithPath()
         {
             await using var context = await Browser.NewContextAsync();
@@ -94,7 +88,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should work with browser context scripts for already created pages")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBrowserContextScriptsForAlreadyCreatedPages()
         {
             await using var context = await Browser.NewContextAsync();
@@ -109,7 +102,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should support multiple scripts")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportMultipleScripts()
         {
             await Page.AddInitScriptAsync("window.script1 = 1;");
@@ -120,7 +112,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should work with CSP")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCSP()
         {
             Server.SetCSP("/empty.html", "script-src " + Server.Prefix);
@@ -142,7 +133,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should work after a cross origin navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkAfterACrossOriginNavigation()
         {
             await Page.GotoAsync(Server.CrossProcessPrefix);

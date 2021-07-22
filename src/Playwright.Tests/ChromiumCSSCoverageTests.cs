@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Tests
     public class ChromiumCSSCoverageTests : PageTestEx
     {
         [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should work")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldWork()
         {
             /*
@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should report sourceURLs")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldReportSourceUrls()
         {
             /*
@@ -67,7 +67,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should report multiple stylesheets")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldReportMultipleStylesheets()
         {
             /*
@@ -82,7 +82,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should report stylesheets that have no coverage")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldReportStylesheetsThatHaveNoCoverage()
         {
             /*
@@ -97,7 +97,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should work with media queries")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldWorkWithMediaQueries()
         {
             /*
@@ -119,7 +119,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should work with complicated usecases")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldWorkWithComplicatedUseCases()
         {
             /*
@@ -149,7 +149,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should ignore injected stylesheets")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldIgnoreInjectedStylesheets()
         {
             /*
@@ -164,7 +164,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should report stylesheets across navigations")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldReportStylesheetsAcrossNavigations()
         {
             /*
@@ -177,7 +177,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should NOT report stylesheets across navigations")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldNotReportScriptsAcrossNavigations()
         {
             /*
@@ -190,7 +190,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("chromium-css-coverage.spec.ts", "CSS Coverage", "should work with a recently loaded stylesheet")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void ShouldWorkWithArRecentlyLoadedStylesheet()
         {
             /*

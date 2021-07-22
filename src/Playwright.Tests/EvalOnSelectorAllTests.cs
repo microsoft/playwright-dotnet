@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class EvalOnSelectorAllTests : PageTestEx
     {
         [PlaywrightTest("eval-on-selector-all.spec.ts", "should work with css selector")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCssSelector()
         {
             await Page.SetContentAsync("<div>hello</div><div>beautiful</div><div>world!</div>");
@@ -41,7 +40,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("eval-on-selector-all.spec.ts", "should work with text selector")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithTextSelector()
         {
             await Page.SetContentAsync("<div>hello</div><div>beautiful</div><div>beautiful</div><div>world!</div>");
@@ -50,7 +48,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("eval-on-selector-all.spec.ts", "should work with xpath selector")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithXpathSelector()
         {
             await Page.SetContentAsync("<div>hello</div><div>beautiful</div><div>world!</div>");
@@ -59,7 +56,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("eval-on-selector-all.spec.ts", "should auto-detect css selector")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAutoDetectCssSelector()
         {
             await Page.SetContentAsync("<div>hello</div><div>beautiful</div><div>world!</div>");
@@ -68,7 +64,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("eval-on-selector-all.spec.ts", "should support >> syntax")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportDoubleGreaterThanSyntax()
         {
             await Page.SetContentAsync("<div><span>hello</span></div><div>beautiful</div><div><span>wo</span><span>rld!</span></div><span>Not this one</span>");
@@ -77,7 +72,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("eval-on-selector-all.spec.ts", "should should support * capture")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportStarCapture()
         {
             await Page.SetContentAsync("<section><div><span>a</span></div></section><section><div><span>b</span></div></section>");
@@ -95,7 +89,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("eval-on-selector-all.spec.ts", "should support * capture when multiple paths match")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportStarCaptureWhenMultiplePathsMatch()
         {
             await Page.SetContentAsync("<div><div><span></span></div></div><div></div>");

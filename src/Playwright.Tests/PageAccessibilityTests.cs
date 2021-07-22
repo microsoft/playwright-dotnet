@@ -34,7 +34,6 @@ namespace Microsoft.Playwright.Tests
     public class PageAccessibilityTests : PageTestEx
     {
         [PlaywrightTest("page-accessibility.spec.ts", "should work with regular text")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithRegularText()
         {
             await Page.SetContentAsync("<div>Hello World</div>");

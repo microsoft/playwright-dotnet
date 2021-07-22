@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class PageClickTimeout2Tests : PageTestEx
     {
         [PlaywrightTest("page-click-timeout-2.spec.ts", "should timeout waiting for display:none to be gone")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForDisplayNoneToBeGone()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -47,7 +46,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click-timeout-2.spec.ts", "should timeout waiting for visibility:hidden to be gone")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForVisibilityHiddenToBeGone()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");

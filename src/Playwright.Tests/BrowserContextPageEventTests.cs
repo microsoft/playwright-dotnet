@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextPageEventTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should have url")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveUrl()
         {
             await using var context = await Browser.NewContextAsync();
@@ -47,7 +46,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should have url after domcontentloaded")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveUrlAfterDomcontentloaded()
         {
             await using var context = await Browser.NewContextAsync();
@@ -62,7 +60,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should have about:blank url with domcontentloaded")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveAboutBlankUrlWithDomcontentloaded()
         {
             await using var context = await Browser.NewContextAsync();
@@ -77,7 +74,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should have about:blank for empty url with domcontentloaded")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveAboutBlankUrlForEmptyUrlWithDomcontentloaded()
         {
             await using var context = await Browser.NewContextAsync();
@@ -92,7 +88,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should report when a new page is created and closed")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportWhenANewPageIsCreatedAndClosed()
         {
             await using var context = await Browser.NewContextAsync();
@@ -124,7 +119,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should report initialized pages")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportInitializedPages()
         {
             await using var context = await Browser.NewContextAsync();
@@ -141,7 +135,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should not crash while redirecting of original request was missed")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotCrashWhileRedirectingOfOriginalRequestWasMissed()
         {
             await using var context = await Browser.NewContextAsync();
@@ -167,7 +160,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should have an opener")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveAnOpener()
         {
             await using var context = await Browser.NewContextAsync();
@@ -185,7 +177,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should fire page lifecycle events")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFirePageLoadStates()
         {
             await using var context = await Browser.NewContextAsync();
@@ -210,7 +201,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should work with Shift-clicking")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldWorkWithShiftClicking()
         {
             // WebKit: Shift+Click does not open a new window.
@@ -228,7 +219,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should report when a new page is created and closed")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true, skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true, skipFirefox: true)]
         public async Task ShouldWorkWithCtrlClicking()
         {
             // Firefox: reports an opener in this case.

@@ -38,8 +38,7 @@ namespace Microsoft.Playwright.Tests
     public class IgnoreHttpsErrorsTests : BrowserTestEx
     {
         [PlaywrightTest("ignorehttpserrors.spec.ts", "should work")]
-        // [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        [Test, Ignore("Fix me #1058")]
+        [Ignore("Fix me #1058")]
         public async Task ShouldWork()
         {
             await using var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true });
@@ -58,8 +57,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("ignorehttpserrors.spec.ts", "should isolate contexts")]
-        // [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        [Test, Ignore("Fix me #1058")]
+        [Ignore("Fix me #1058")]
         public async Task ShouldIsolateContexts()
         {
             await using (var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true }))
@@ -78,8 +76,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("ignorehttpserrors.spec.ts", "should work with mixed content")]
-        // [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        [Test, Ignore("Fix me #1058")]
+        [Ignore("Fix me #1058")]
         public async Task ShouldWorkWithMixedContent()
         {
             Server.SetRoute("/mixedcontent.html", async (context) =>
@@ -95,8 +92,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("ignorehttpserrors.spec.ts", "should work with WebSocket")]
-        // [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        [Test, Ignore("Fix me #1058")]
+        [Ignore("Fix me #1058")]
         public async Task ShouldWorkWithWebSocket()
         {
             await using var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true });
@@ -114,8 +110,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("ignorehttpserrors.spec.ts", "should fail with WebSocket if not ignored")]
-        // [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        [Test, Ignore("Fix me #1058")]
+        [Ignore("Fix me #1058")]
         public async Task ShouldFailWithWebSocketIfNotIgnored()
         {
             await using var context = await Browser.NewContextAsync();

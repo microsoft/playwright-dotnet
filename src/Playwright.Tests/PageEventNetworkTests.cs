@@ -37,7 +37,6 @@ namespace Microsoft.Playwright.Tests
     public class PageEventNetworkTests : PageTestEx
     {
         [PlaywrightTest("page-event-network.spec.ts", "Page.Events.Request")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PageEventsRequest()
         {
             var requests = new List<IRequest>();
@@ -53,7 +52,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-network.spec.ts", "Page.Events.Response")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PageEventsResponse()
         {
             var responses = new List<IResponse>();
@@ -67,7 +65,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-network.spec.ts", "Page.Events.RequestFailed")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PageEventsRequestFailed()
         {
             int port = Server.Port + 100;
@@ -95,7 +92,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-network.spec.ts", "Page.Events.RequestFinished")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PageEventsRequestFinished()
         {
             var (_, response) = await TaskUtils.WhenAll(
@@ -111,7 +107,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-network.spec.ts", "should fire events in proper order")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireEventsInProperOrder()
         {
             var events = new List<string>();
@@ -124,7 +119,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-network.spec.ts", "should support redirects")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportRedirects()
         {
             var events = new List<string>();

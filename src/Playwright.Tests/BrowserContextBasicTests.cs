@@ -36,7 +36,6 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextBasicTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-basic.spec.ts", "should create new context")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCreateNewContext()
         {
             await using var browser = await BrowserType.LaunchAsync();
@@ -51,7 +50,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "window.open should use parent tab context")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task WindowOpenShouldUseParentTabContext()
         {
             await using var context = await Browser.NewContextAsync();
@@ -70,7 +68,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should isolate localStorage and cookies")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateLocalStorageAndCookies()
         {
             // Create two incognito contexts.
@@ -116,7 +113,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should propagate default viewport to the page")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPropagateDefaultViewportToThePage()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -133,7 +129,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should make a copy of default viewport")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldMakeACopyOfDefaultViewport()
         {
             var viewport = new ViewportSize
@@ -152,7 +147,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should respect deviceScaleFactor")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectDeviceScaleFactor()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -165,7 +159,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should not allow deviceScaleFactor with null viewport")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowDeviceScaleFactorWithViewportDisabled()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new()
@@ -177,7 +170,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should not allow isMobile with null viewport")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowIsMobileWithViewportDisabled()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new()
@@ -189,7 +181,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "close() should work for empty context")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task CloseShouldWorkForEmptyContext()
         {
             var context = await Browser.NewContextAsync();
@@ -197,7 +188,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "close() should abort waitForEvent")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task CloseShouldAbortWaitForEvent()
         {
             var context = await Browser.NewContextAsync();
@@ -208,7 +198,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should not report frameless pages on error")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotReportFramelessPagesOnError()
         {
             var context = await Browser.NewContextAsync();
@@ -233,7 +222,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "close() should be callable twice")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task CloseShouldBeCallableTwice()
         {
             var context = await Browser.NewContextAsync();
@@ -242,7 +230,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should return all of the pages")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnAllOfThePages()
         {
             await using var context = await Browser.NewContextAsync();
@@ -255,7 +242,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "BrowserContext.pages()", "should close all belonging pages once closing context")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCloseAllBelongingPagesOnceClosingContext()
         {
             await using var context = await Browser.NewContextAsync();
@@ -269,7 +255,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should disable javascript")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDisableJavascript()
         {
             await using (var context = await Browser.NewContextAsync(new() { JavaScriptEnabled = false }))
@@ -293,7 +278,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should be able to navigate after disabling javascript")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToNavigateAfterDisablingJavascript()
         {
             await using var context = await Browser.NewContextAsync(new() { JavaScriptEnabled = false });
@@ -302,7 +286,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should work with offline option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithOfflineOption()
         {
             await using var context = await Browser.NewContextAsync(new() { Offline = true });
@@ -314,7 +297,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should emulate navigator.onLine")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldEmulateNavigatorOnLine()
         {
             await using var context = await Browser.NewContextAsync();

@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
     public class PageMouseTests : PageTestEx
     {
         [PlaywrightTest("page-mouse.spec.ts", "should click the document")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true, skipWindows: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true, skipWindows: true)]
         public async Task ShouldClickTheDocument()
         {
             await Page.EvaluateAsync(@"() => {
@@ -62,7 +62,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-mouse.spec.ts", "should select the text with mouse")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectTheTextWithMouse()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -94,7 +93,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-mouse.spec.ts", "should trigger hover state")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTriggerHoverState()
         {
             await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
@@ -107,7 +105,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-mouse.spec.ts", "should trigger hover state with removed window.Node")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTriggerHoverStateWithRemovedWindowNode()
         {
             await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
@@ -117,7 +114,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-mouse.spec.ts", "should set modifier keys on click")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetModifierKeysOnClick()
         {
             await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
@@ -145,7 +141,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-mouse.spec.ts", "should tween mouse movement")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTweenMouseMovement()
         {
             // The test becomes flaky on WebKit without next line.
@@ -174,7 +169,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-mouse.spec.ts", "should work with mobile viewports and cross process navigations")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldWorkWithMobileViewportsAndCrossProcessNavigations()
         {
             await using var context = await Browser.NewContextAsync(new()

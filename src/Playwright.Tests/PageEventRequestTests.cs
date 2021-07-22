@@ -34,7 +34,6 @@ namespace Microsoft.Playwright.Tests
     public class PageEventRequestTests : PageTestEx
     {
         [PlaywrightTest("page-event-request.spec.ts", "should fire for navigation requests")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireForNavigationRequests()
         {
             var requests = new List<IRequest>();
@@ -44,7 +43,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-request.spec.ts", "should fire for iframes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireForIframes()
         {
             var requests = new List<IRequest>();
@@ -55,7 +53,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-request.spec.ts", "should fire for fetches")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireForFetches()
         {
             var requests = new List<IRequest>();
@@ -66,7 +63,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-request.spec.ts", "should report requests and responses handled by service worker")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportRequestsAndResponsesHandledByServiceWorker()
         {
             await Page.GotoAsync(Server.Prefix + "/serviceworkers/fetchdummy/sw.html");

@@ -36,7 +36,6 @@ namespace Microsoft.Playwright.Tests
     public class RequestFulfillTests : PageTestEx
     {
         [PlaywrightTest("page-request-fulfill.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.RouteAsync("**/*", (route) =>
@@ -64,7 +63,6 @@ namespace Microsoft.Playwright.Tests
         /// As the goal here is testing HTTP codes that are not in Chromium (see https://cs.chromium.org/chromium/src/net/http/http_status_code_list.h?sq=package:chromium) we will use code 426: Upgrade Required
         /// </summary>
         [PlaywrightTest("page-request-fulfill.spec.ts", "should work with status code 422")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithStatusCode422()
         {
             await Page.RouteAsync("**/*", (route) =>
@@ -78,7 +76,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-request-fulfill.spec.ts", "should allow mocking binary responses")]
-        [Test, Ignore("We need screenshots for this")]
+        [Ignore("We need screenshots for this")]
         public async Task ShouldAllowMockingBinaryResponses()
         {
             await Page.RouteAsync("**/*", (route) =>
@@ -101,13 +99,13 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-request-fulfill.spec.ts", "should allow mocking svg with charset")]
-        [Test, Ignore("We need screenshots for this")]
+        [Ignore("We need screenshots for this")]
         public void ShouldAllowMockingSvgWithCharset()
         {
         }
 
         [PlaywrightTest("page-request-fulfill.spec.ts", "should work with file path")]
-        [Test, Ignore("We need screenshots for this")]
+        [Ignore("We need screenshots for this")]
         public async Task ShouldWorkWithFilePath()
         {
             await Page.RouteAsync("**/*", (route) =>
@@ -130,7 +128,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-request-fulfill.spec.ts", "should stringify intercepted request response headers")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldStringifyInterceptedRequestResponseHeaders()
         {
             await Page.RouteAsync("**/*", (route) =>
@@ -153,7 +150,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-request-fulfill.spec.ts", "should not modify the headers sent to the server")]
-        [Test, Ignore("Flacky with the ASP.NET server")]
+        [Ignore("Flacky with the ASP.NET server")]
         public async Task ShouldNotModifyTheHeadersSentToTheServer()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -200,7 +197,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-request-fulfill.spec.ts", "should include the origin header")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeTheOriginHeader()
         {
             await Page.GotoAsync(Server.EmptyPage);

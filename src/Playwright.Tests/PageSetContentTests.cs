@@ -37,7 +37,6 @@ namespace Microsoft.Playwright.Tests
 
         /// <inheritdoc />
         [PlaywrightTest("page-set-content.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.SetContentAsync("<div>hello</div>");
@@ -46,7 +45,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-content.spec.ts", "should work with domcontentloaded")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDomcontentloaded()
         {
             await Page.SetContentAsync("<div>hello</div>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
@@ -55,7 +53,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-content.spec.ts", "should work with doctype")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDoctype()
         {
             string doctype = "<!DOCTYPE html>";
@@ -65,7 +62,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-content.spec.ts", "should work with HTML 4 doctype")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithHTML4Doctype()
         {
             string doctype = "<!DOCTYPE html PUBLIC \" -//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">";
@@ -75,7 +71,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-content.spec.ts", "should respect timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public Task ShouldRespectTimeout()
         {
             string imgPath = "/img.png";
@@ -87,7 +82,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-content.spec.ts", "should respect default navigation timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectDefaultNavigationTimeout()
         {
             Page.SetDefaultNavigationTimeout(1);
@@ -102,7 +96,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-content.spec.ts", "should await resources to load")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAwaitResourcesToLoad()
         {
             string imgPath = "/img.png";
@@ -117,7 +110,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-content.spec.ts", "should work fast enough")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkFastEnough()
         {
             for (int i = 0; i < 20; ++i)
@@ -127,7 +119,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-content.spec.ts", "should work with tricky content")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithTrickyContent()
         {
             await Page.SetContentAsync("<div>hello world</div>" + "\x7F");
@@ -135,7 +126,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-content.spec.ts", "should work with accents")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAccents()
         {
             await Page.SetContentAsync("<div>aberración</div>");
@@ -143,7 +133,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-content.spec.ts", "should work with emojis")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithEmojis()
         {
             await Page.SetContentAsync("<div>🐥</div>");
@@ -151,7 +140,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-content.spec.ts", "should work with newline")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNewline()
         {
             await Page.SetContentAsync("<div>\n</div>");

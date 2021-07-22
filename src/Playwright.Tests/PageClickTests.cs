@@ -35,7 +35,6 @@ namespace Microsoft.Playwright.Tests
     public class PageClickTests : PageTestEx
     {
         [PlaywrightTest("page-click.spec.ts", "should click the button")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButton()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -44,7 +43,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click svg")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickSvg()
         {
             await Page.SetContentAsync($@"
@@ -57,7 +55,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click svg")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonIfWindowNodeIsRemoved()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -67,7 +64,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click on a span with an inline element inside")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickOnASpanWithAnInlineElementInside()
         {
             await Page.SetContentAsync($@"
@@ -83,13 +79,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should not throw UnhandledPromiseRejection when page closes")]
-        [Test, Ignore("We don't need to test this race condition")]
+        [Ignore("We don't need to test this race condition")]
         public void ShouldGracefullyFailWhenPageCloses()
         {
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click the button after navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonAfterNavigation()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -100,7 +95,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click the button after a cross origin navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonAfterACrossOriginNavigation()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -111,7 +105,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click with disabled javascript")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickWithDisabledJavascript()
         {
             await using var context = await Browser.NewContextAsync(new() { JavaScriptEnabled = false });
@@ -125,7 +118,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click when one of inline box children is outside of viewport")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickWhenOneOfInlineBoxChildrenIsOutsideOfViewport()
         {
             await Page.SetContentAsync($@"
@@ -143,7 +135,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should select the text by triple clicking")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectTheTextByTripleClicking()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -157,7 +148,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click offscreen buttons")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickOffscreenButtons()
         {
             await Page.GotoAsync(Server.Prefix + "/offscreenbuttons.html");
@@ -187,7 +177,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should waitFor visible when already visible")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisibleWhenAlreadyVisible()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -196,7 +185,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should not wait with force")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotWaitWithForce()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -210,7 +198,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should waitFor display:none to be gone")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForDisplayNoneToBeGone()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -229,7 +216,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should waitFor visibility:hidden to be gone")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisibilityhiddenToBeGone()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -248,7 +234,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should waitFor visible when parent is hidden")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisibleWhenParentIsHidden()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -267,7 +252,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click wrapped links")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickWrappedLinks()
         {
             await Page.GotoAsync(Server.Prefix + "/wrappedlink.html");
@@ -276,7 +260,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click on checkbox input and toggle")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickOnCheckboxInputAndToggle()
         {
             await Page.GotoAsync(Server.Prefix + "/input/checkbox.html");
@@ -298,7 +281,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click on checkbox label and toggle")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickOnCheckboxLabelAndToggle()
         {
             await Page.GotoAsync(Server.Prefix + "/input/checkbox.html");
@@ -315,7 +297,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should not hang with touch-enabled viewports")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotHangWithTouchEnabledViewports()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -331,7 +312,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should scroll and click the button")]
-        [Test, Ignore("Flacky")]
+        [Ignore("Flacky")]
         public async Task ShouldScrollAndClickTheButton()
         {
             await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
@@ -342,7 +323,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should double click the button")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDoubleClickTheButton()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -360,7 +340,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click a partially obscured button")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickAPartiallyObscuredButton()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -376,7 +355,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click a rotated button")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickARotatedButton()
         {
             await Page.GotoAsync(Server.Prefix + "/input/rotatedButton.html");
@@ -385,7 +363,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should fire contextmenu event on right click")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireContextmenuEventOnRightClick()
         {
             await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
@@ -394,7 +371,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click links which cause navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickLinksWhichCauseNavigation()
         {
             await Page.SetContentAsync($"<a href=\"{Server.EmptyPage}\">empty.html</a>");
@@ -403,7 +379,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click the button inside an iframe")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonInsideAnIframe()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -416,7 +391,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click the button with fixed position inside an iframe")]
-        [Test, SkipBrowserAndPlatform(skipChromium: true, skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipChromium: true, skipWebkit: true)]
         public async Task ShouldClickTheButtonWithFixedPositionInsideAnIframe()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -430,7 +405,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click the button with deviceScaleFactor set")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonWithDeviceScaleFactorSet()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -454,7 +428,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click the button with px border with relative point")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonWithPxBorderWithRelativePoint()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -467,7 +440,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click the button with em border with offset")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonWithEmBorderWithOffset()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -481,7 +453,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click a very large button with offset")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickAVeryLargeButtonWithOffset()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -495,7 +466,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click a button in scrolling container with offset")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickAButtonInScrollingContainerWithOffset()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -519,7 +489,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click the button with offset with page scale")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true)]
         public async Task ShouldClickTheButtonWithOffsetWithPageScale()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -555,7 +525,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should wait for stable position")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForStablePosition()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -578,7 +547,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should wait for becoming hit target")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForBecomingHitTarget()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -612,7 +580,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should wait for becoming hit target with trial run")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForBecomingHitTargetWithTrialRun()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -646,7 +613,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "trial run should work with short timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task TrialRunShouldWorkWithShortTimeout()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -658,7 +624,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "trial run should not click")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task TrialRunShouldNotClick()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -667,7 +632,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "trial run should not double click")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task TrialRunShouldNotDoubleClick()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -684,7 +648,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should fail when obscured and not waiting for hit target")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenObscuredAndNotWaitingForHitTarget()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -705,7 +668,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should wait for button to be enabled")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForButtonToBeEnabled()
         {
             await Page.SetContentAsync("<button onclick=\"javascript: window.__CLICKED = true;\" disabled><span>Click target</span></button>");
@@ -719,7 +681,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should wait for input to be enabled")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForInputToBeEnabled()
         {
             await Page.SetContentAsync("<input onclick=\"javascript: window.__CLICKED = true;\" disabled>");
@@ -733,7 +694,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should wait for select to be enabled")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForSelectToBeEnabled()
         {
             await Page.SetContentAsync("<select onclick=\"javascript: window.__CLICKED = true;\" disabled><option selected>Hello</option></select>");
@@ -747,7 +707,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click disabled div")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickDisabledDiv()
         {
             await Page.SetContentAsync("<div onclick=\"javascript: window.__CLICKED = true;\" disabled>Click target</div>");
@@ -756,7 +715,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should climb dom for inner label with pointer-events:none")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClimbDomForInnerLabelWithPointerEventsNone()
         {
             await Page.SetContentAsync("<button onclick=\"javascript: window.__CLICKED = true;\"><label style=\"pointer-events:none\">Click target</label></button>");
@@ -765,7 +723,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should climb up to [role=button]")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClimbUpToRoleButton()
         {
             await Page.SetContentAsync("<div role=button onclick=\"javascript: window.__CLICKED = true;\"><div style=\"pointer-events:none\"><span><div>Click target</div></span></div>");
@@ -774,7 +731,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should wait for BUTTON to be clickable when it has pointer-events:none")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForButtonToBeClickableWhenItHasPointerEventsNone()
         {
             await Page.SetContentAsync("<button onclick=\"javascript: window.__CLICKED = true;\" style=\"pointer-events:none\"><span>Click target</span></button>");
@@ -788,7 +744,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should wait for LABEL to be clickable when it has pointer-events:none")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForLabelToBeClickableWhenItHasPointerEventsNone()
         {
             await Page.SetContentAsync("<label onclick=\"javascript: window.__CLICKED = true;\" style=\"pointer-events:none\"><span>Click target</span></label>");
@@ -806,7 +761,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should update modifiers correctly")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUpdateModifiersCorrectly()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -830,7 +784,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click an offscreen element when scroll-behavior is smooth")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickAnOffscreenElementWhenScrollBehaviorIsSmooth()
         {
             await Page.SetContentAsync(@$"
@@ -843,7 +796,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should report nice error when element is detached and force-clicked")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNiceErrorWhenElementIsDetachedAndForceClicked()
         {
             await Page.GotoAsync(Server.Prefix + "/input/animating-button.html");
@@ -857,7 +809,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should fail when element detaches after animation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenElementDetachesAfterAnimation()
         {
             await Page.GotoAsync(Server.Prefix + "/input/animating-button.html");
@@ -871,7 +822,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should retry when element detaches after animation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetryWhenElementDetachesAfterAnimation()
         {
             await Page.GotoAsync(Server.Prefix + "/input/animating-button.html");
@@ -893,7 +843,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should retry when element is animating from outside the viewport")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetryWhenElementIsAnimatingFromOutsideTheViewport()
         {
             await Page.SetContentAsync($@"
@@ -925,7 +874,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should retry when element is animating from outside the viewport with force")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetryWhenElementIsAnimatingFromOutsideTheViewportWithForce()
         {
             await Page.SetContentAsync($@"
@@ -958,7 +906,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should dispatch microtasks in order")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDispatchMicrotasksInOrder()
         {
             await Page.SetContentAsync($@"
@@ -984,7 +931,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click the button when window.innerWidth is corrupted")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClickTheButtonWhenWindowInnerWidthIsCorrupted()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");

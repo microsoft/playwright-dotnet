@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class JSHandleToStringTests : PageTestEx
     {
         [PlaywrightTest("jshandle-to-string.spec.ts", "should work for primitives")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForPrimitives()
         {
             var numberHandle = await Page.EvaluateHandleAsync("() => 2");
@@ -42,7 +41,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("jshandle-to-string.spec.ts", "should work for complicated objects")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForComplicatedObjects()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => window");
@@ -50,7 +48,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("jshandle-to-string.spec.ts", "should work for promises")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForPromises()
         {
             // wrap the promise in an object, otherwise we will await.
@@ -60,7 +57,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("jshandle-to-string.spec.ts", "should work with different subtypes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDifferentSubtypes()
         {
             Assert.AreEqual("JSHandle@function", (await Page.EvaluateHandleAsync("() => function(){}")).ToString());

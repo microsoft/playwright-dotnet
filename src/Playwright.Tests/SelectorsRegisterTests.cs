@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class SelectorsRegisterTests : PageTestEx
     {
         [PlaywrightTest("selectors-register.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             const string createTagSelector = @"({
@@ -59,7 +58,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("selectors-register.spec.ts", "should work with path")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithPath()
         {
             await TestUtils.RegisterEngineWithPathAsync(Playwright, "foo", TestUtils.GetWebServerFile("sectionselectorengine.js"));
@@ -68,7 +66,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("selectors-register.spec.ts", "should work in main and isolated world")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkInMainAndIsolatedWorld()
         {
             const string createTagSelector = @"({
@@ -103,7 +100,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("selectors-register.spec.ts", "should handle errors")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHandleErrors()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.QuerySelectorAsync("neverregister=ignored"));

@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class ElementHandleEvalOnSelectorTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-eval-on-selector.spec.ts", "should work for all")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForAll()
         {
             await Page.SetContentAsync("<html><body><div class=\"tweet\"><div class=\"like\">100</div><div class=\"like\">10</div></div></body></html>");
@@ -42,7 +41,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-eval-on-selector.spec.ts", "should retrieve content from subtree for all")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetrieveContentFromSubtreeForAll()
         {
             string htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"><div class=\"a\">a1-child-div</div><div class=\"a\">a2-child-div</div></div>";
@@ -53,7 +51,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-eval-on-selector.spec.ts", "should not throw in case of missing selector for all")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotThrowInCaseOfMissingSelectorForAll()
         {
             string htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"></div>";
@@ -64,7 +61,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-eval-on-selector.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.SetContentAsync("<html><body><div class=\"tweet\"><div class=\"like\">100</div><div class=\"retweets\">10</div></div></body></html>");
@@ -74,7 +70,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-eval-on-selector.spec.ts", "should retrieve content from subtree")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRetrieveContentFromSubtree()
         {
             string htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"><div class=\"a\">a-child-div</div></div>";
@@ -85,7 +80,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-eval-on-selector.spec.ts", "should throw in case of missing selector")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowInCaseOfMissingSelector()
         {
             string htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"></div>";

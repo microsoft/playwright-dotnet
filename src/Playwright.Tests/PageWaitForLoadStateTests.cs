@@ -38,7 +38,6 @@ namespace Microsoft.Playwright.Tests
     public class PageWaitForLoadStateTests : PageTestEx
     {
         [PlaywrightTest("page-wait-for-load-state.ts", "should pick up ongoing navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPickUpOngoingNavigation()
         {
             var responseTask = new TaskCompletionSource<bool>();
@@ -62,7 +61,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-load-state.ts", "should respect timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
             Server.SetRoute("/one-style.css", _ => Task.Delay(Timeout.Infinite));
@@ -72,7 +70,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-load-state.ts", "should resolve immediately if loaded")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldResolveImmediatelyIfLoaded()
         {
             await Page.GotoAsync(Server.Prefix + "/one-style.html");
@@ -80,13 +77,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-load-state.ts", "should throw for bad state")]
-        [Test, Ignore("We don't need this test")]
+        [Ignore("We don't need this test")]
         public void ShouldThrowForBadState()
         {
         }
 
         [PlaywrightTest("page-wait-for-load-state.ts", "should resolve immediately if load state matches")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldResolveImmediatelyIfLoadStateMatches()
         {
             var responseTask = new TaskCompletionSource<bool>();
@@ -109,7 +105,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-load-state.ts", "should work with pages that have loaded before being connected to")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true, skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipFirefox: true, skipWebkit: true)]
         public async Task ShouldWorkWithPagesThatHaveLoadedBeforeBeingConnectedTo()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -134,7 +130,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-load-state.spec.ts", "should work for frame")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForFrame()
         {
             await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");

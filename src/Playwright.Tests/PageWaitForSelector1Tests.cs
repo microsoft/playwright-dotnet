@@ -36,19 +36,18 @@ namespace Microsoft.Playwright.Tests
         private const string AddElement = "tag => document.body.appendChild(document.createElement(tag))";
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should throw on waitFor")]
-        [Test, Ignore("We don't need to test this")]
+        [Ignore("We don't need to test this")]
         public void ShouldThrowOnWaitFor()
         {
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should tolerate waitFor=visible")]
-        [Test, Ignore("We don't need to test this")]
+        [Ignore("We don't need to test this")]
         public void ShouldTolerateWaitForVisible()
         {
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should immediately resolve promise if node exists")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldImmediatelyResolveTaskIfNodeExists()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -59,7 +58,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "elementHandle.waitForSelector should immediately resolve if node exists")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ElementHandleWaitForSelectorShouldImmediatelyResolveIfNodeExists()
         {
             await Page.SetContentAsync("<span>extra</span><div><span>target</span></div>");
@@ -69,7 +67,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "elementHandle.waitForSelector should wait")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ElementHandleWaitForSelectorShouldWait()
         {
             await Page.SetContentAsync("<div></div>");
@@ -81,7 +78,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "elementHandle.waitForSelector should timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ElementHandleWaitForSelectorShouldTimeout()
         {
             await Page.SetContentAsync("<div></div>");
@@ -91,7 +87,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "elementHandle.waitForSelector should throw on navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ElementHandleWaitForSelectorShouldThrowOnNavigation()
         {
             await Page.SetContentAsync("<div></div>");
@@ -109,7 +104,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should work with removed MutationObserver")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithRemovedMutationObserver()
         {
             await Page.EvaluateAsync("delete window.MutationObserver");
@@ -123,7 +117,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should resolve promise when node is added")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldResolveTaskWhenNodeIsAdded()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -138,7 +131,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should report logs while waiting for visible")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportLogsWhileWaitingForVisible()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -178,7 +170,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should report logs while waiting for hidden")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportLogsWhileWaitingForHidden()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -213,7 +204,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should resolve promise when node is added in shadow dom")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldResolvePromiseWhenNodeIsAddedInShadowDom()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -239,7 +229,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should work when node is added through innerHTML")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenNodeIsAddedThroughInnerHTML()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -250,7 +239,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "Page.$ waitFor is shortcut for main frame")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PageWaitForSelectorAsyncIsShortcutForMainFrame()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -264,7 +252,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should run in specified frame")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRunInSpecifiedFrame()
         {
             await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
@@ -279,7 +266,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should throw when frame is detached")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenFrameIsDetached()
         {
             await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);

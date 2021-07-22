@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
     public class CapabilitiesTests : PageTestEx
     {
         [PlaywrightTest("capabilities.spec.ts", "Web Assembly should work")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true, skipWindows: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true, skipWindows: true)]
         public async Task WebAssemblyShouldWork()
         {
             await Page.GotoAsync(Server.Prefix + "/wasm/table2.html");
@@ -43,7 +43,7 @@ namespace Microsoft.Playwright.Tests
 
 #if NETCOREAPP
         [PlaywrightTest("capabilities.spec.ts", "WebSocket should work")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true, skipWindows: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true, skipWindows: true)]
         public async Task WebSocketShouldWork()
         {
             string value = await Page.EvaluateAsync<string>(
@@ -61,7 +61,6 @@ namespace Microsoft.Playwright.Tests
 #endif
 
         [PlaywrightTest("capabilities.spec.ts", "should respect CSP")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectCSP()
         {
             Server.SetRoute("/empty.html", context =>
@@ -83,7 +82,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("capabilities.spec.ts", "should play video")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [SkipBrowserAndPlatform(skipWebkit: true)]
         public async Task ShouldPlayVideo()
         {
             await Page.GotoAsync(Server.Prefix + (TestConstants.IsWebKit ? "/video_mp4.html" : "/video.html"));

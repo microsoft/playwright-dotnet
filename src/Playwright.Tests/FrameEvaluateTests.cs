@@ -34,7 +34,6 @@ namespace Microsoft.Playwright.Tests
     public class FrameEvaluateTests : PageTestEx
     {
         [PlaywrightTest("frame-evaluate.spec.ts", "should have different execution contexts")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveDifferentExecutionContexts()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -47,7 +46,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should have correct execution contexts")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveCorrectExecutionContexts()
         {
             await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
@@ -57,19 +55,18 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should dispose context on navigation")]
-        [Test, Ignore("Ignore USES_HOOKS")]
+        [Ignore("Ignore USES_HOOKS")]
         public void ShouldDisposeContextOnNavigation()
         {
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should dispose context on cross-origin navigation")]
-        [Test, Ignore("Ignore USES_HOOKS")]
+        [Ignore("Ignore USES_HOOKS")]
         public void ShouldDisposeContextOnCrossOriginNavigation()
         {
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should execute after cross-site navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldExecuteAfterCrossSiteNavigation()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -80,7 +77,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should allow cross-frame js handles")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAllowCrossFrameJsHandles()
         {
             await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
@@ -98,7 +94,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should allow cross-frame element handles")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAllowCrossFrameElementHandles()
         {
             await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
@@ -108,7 +103,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should not allow cross-frame element handles when frames do not script each other")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotAllowCrossFrameElementHandlesWhenFramesDoNotScriptEachOther()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -119,7 +113,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should throw for detached frames")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForDetachedFrames()
         {
             var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
@@ -129,7 +122,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should be isolated between frames")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeIsolatedBetweenFrames()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -152,7 +144,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should work in iframes that failed initial navigation")]
-        [Test, SkipBrowserAndPlatform(skipChromium: true, skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipChromium: true, skipFirefox: true)]
         public async Task ShouldWorkIniframesThatFailedInitialNavigation()
         {
             await Page.SetContentAsync(
@@ -172,7 +164,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should work in iframes that failed initial navigation")]
-        [Test, SkipBrowserAndPlatform(skipChromium: true, skipFirefox: true)]
+        [SkipBrowserAndPlatform(skipChromium: true, skipFirefox: true)]
         public async Task ShouldWorkInIframesThatInterruptedInitialJavascriptUrlNavigation()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -191,7 +183,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "evaluateHandle should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task EvaluateHandleShouldWork()
         {
             await Page.GotoAsync(Server.EmptyPage);

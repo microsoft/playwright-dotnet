@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class ElementHandleScrollIntoViewTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.GotoAsync(Server.Prefix + "/offscreenbuttons.html");
@@ -54,7 +53,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should throw for detached element")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForDetachedElement()
         {
             await Page.SetContentAsync("<div>Hello</div>");
@@ -65,7 +63,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should wait for display:none to become visible")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForDisplayNoneToBecomeVisible()
         {
             await Page.SetContentAsync("<div style=\"display: none\">Hello</div>");
@@ -73,7 +70,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should wait for display:contents to become visible")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForDisplayContentsToBecomeVisible()
         {
             await Page.SetContentAsync("<div style=\"display: contents\">Hello</div>");
@@ -81,7 +77,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should wait for visibility:hidden to become visible")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisibilityHiddenToBecomeVisible()
         {
             await Page.SetContentAsync("<div style=\"visibility:hidden\">Hello</div>");
@@ -89,7 +84,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should wait for zero-sized element to become visible")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForZeroSizedElementToBecomeVisible()
         {
             await Page.SetContentAsync("<div style=\"height:0\">Hello</div>");
@@ -97,7 +91,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should wait for nested display:none to become visible")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForNestedDisplayNoneToBecomeVisible()
         {
             await Page.SetContentAsync("<span style=\"display: none\"><div>Hello</div></span>");
@@ -105,7 +98,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should timeout waiting for visible")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForVisible()
         {
             await Page.SetContentAsync("<div style=\"display: none\">Hello</div>");

@@ -23,6 +23,7 @@
  */
 
 using System;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
@@ -30,7 +31,7 @@ namespace Microsoft.Playwright.Tests
     /// Enables decorating test facts with information about the corresponding test in the upstream repository.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class PlaywrightTestAttribute : Attribute
+    public class PlaywrightTestAttribute : TestAttribute
     {
         /// <summary>
         /// Creates a new instance of the attribute.

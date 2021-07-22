@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextClearCookiesTests : PageTestEx
     {
         [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should clear cookies")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearCookies()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -54,7 +53,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should isolate cookies when clearing")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateWhenClearing()
         {
             await using var anotherContext = await Browser.NewContextAsync();

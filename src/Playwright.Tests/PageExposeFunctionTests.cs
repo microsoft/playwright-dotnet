@@ -35,7 +35,6 @@ namespace Microsoft.Playwright.Tests
     public class PageExposeFunctionTests : PageTestEx
     {
         [PlaywrightTest("page-expose-function.spec.ts", "exposeBinding should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ExposeBindingShouldWork()
         {
             BindingSource bindingSource = null;
@@ -55,7 +54,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.ExposeFunctionAsync("compute", (int a, int b) => a * b);
@@ -66,7 +64,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", "should work with handles and complex objects")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithHandlesAndComplexObjects()
         {
             var fooHandle = await Page.EvaluateHandleAsync(@"() => {
@@ -84,7 +81,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", "should throw exception in page context")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowExceptionInPageContext()
         {
             await Page.ExposeFunctionAsync("woof", (System.Action)(() =>
@@ -106,13 +102,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", @"should support throwing ""null""")]
-        [Test, Ignore("Not relevant for C#, js specific")]
+        [Ignore("Not relevant for C#, js specific")]
         public void ShouldSupportThrowingNull()
         {
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", "should be callable from-inside addInitScript")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeCallableFromInsideAddInitScript()
         {
             bool called = false;
@@ -126,7 +121,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", "should survive navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSurviveNavigation()
         {
             await Page.ExposeFunctionAsync("compute", (int a, int b) => a * b);
@@ -138,7 +132,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", "should await returned promise")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAwaitReturnedPromise()
         {
             await Page.ExposeFunctionAsync("compute", (int a, int b) => Task.FromResult(a * b));
@@ -149,7 +142,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", "should work on frames")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkOnFrames()
         {
             await Page.ExposeFunctionAsync("compute", (int a, int b) => Task.FromResult(a * b));
@@ -162,7 +154,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", "should work on frames before navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkOnFramesBeforeNavigation()
         {
             await Page.GotoAsync(Server.Prefix + "/frames/nested-frames.html");
@@ -175,7 +166,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", "should work after cross origin navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkAfterCrossOriginNavigation()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -188,7 +178,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", "should work with complex objects")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithComplexObjects()
         {
             await Page.ExposeFunctionAsync("complexObject", (ComplexObject a, ComplexObject b) =>
@@ -200,7 +189,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", "exposeBindingHandle should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ExposeBindingHandleShouldWork()
         {
             IJSHandle target = null;
@@ -221,7 +209,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", "exposeBindingHandle should not throw during navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ExposeBindingHandleShouldNotThrowDuringNavigation()
         {
             IJSHandle target = null;
@@ -242,7 +229,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-expose-function.spec.ts", "should throw for duplicate registrations")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForDuplicateRegistrations()
         {
             await Page.ExposeFunctionAsync("foo", () => { });
@@ -251,7 +237,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", "exposeBindingHandle should throw for multiple arguments")]
-        [Test, Ignore("Not relevant for C#, js specific")]
+        [Ignore("Not relevant for C#, js specific")]
         public void ExposeBindingHandleShouldThrowForMultipleArguments()
         {
         }

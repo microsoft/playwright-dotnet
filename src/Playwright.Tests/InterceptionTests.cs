@@ -34,7 +34,6 @@ namespace Microsoft.Playwright.Tests
     public class GlobTests : PageTestEx
     {
         [PlaywrightTest("interception.spec.ts", "should work with glob")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public void ShouldWorkWithGlob()
         {
             Assert.That("https://localhost:8080/foo.js", Does.Match(StringExtensions.GlobToRegex("**/*.js")));
@@ -57,8 +56,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("interception.spec.ts", "should work with ignoreHTTPSErrors")]
-        // [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        [Test, Ignore("Fix me #1058")]
+        [Ignore("Fix me #1058")]
         public async Task ShouldWorkWitIgnoreHTTPSErrors()
         {
             await using var browser = await BrowserType.LaunchAsync();
@@ -76,7 +74,6 @@ namespace Microsoft.Playwright.Tests
 
 
         [PlaywrightTest("interception.spec.ts", "should work with navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNavigation()
         {
             var requests = new Dictionary<string, IRequest>();
@@ -95,13 +92,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("interception.spec.ts", "should work with regular expression passed from a different context")]
-        [Test, Ignore("We don't need to test Regex contexts")]
+        [Ignore("We don't need to test Regex contexts")]
         public void ShouldWorkWithRegularExpressionPassedFromADifferentContext()
         {
         }
 
         [PlaywrightTest("interception.spec.ts", "should intercept after a service worker")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldInterceptAfterAServiceWorker()
         {
             await Page.GotoAsync(Server.Prefix + "/serviceworkers/fetchdummy/sw.html");

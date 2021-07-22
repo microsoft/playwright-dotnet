@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class PageSetExtraHTTPHeadersTests : PageTestEx
     {
         [PlaywrightTest("page-set-extra-http-headers.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
@@ -48,7 +47,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-extra-http-headers.spec.ts", "should work with redirects")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithRedirects()
         {
             Server.SetRedirect("/foo.html", "/empty.html");
@@ -64,7 +62,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-extra-http-headers.spec.ts", "should work with extra headers from browser context")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithExtraHeadersFromBrowserContext()
         {
             await using var context = await Browser.NewContextAsync();
@@ -81,7 +78,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-extra-http-headers.spec.ts", "should override extra headers from browser context")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldOverrideExtraHeadersFromBrowserContext()
         {
             await using var context = await Browser.NewContextAsync();
@@ -105,7 +101,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-extra-http-headers.spec.ts", "should throw for non-string header values")]
-        [Test, Ignore("We don't need this test")]
+        [Ignore("We don't need this test")]
         public void ShouldThrowForNonStringHeaderValues() { }
     }
 }

@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class ElementHandleConvenienceTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-convenience.spec.ts", "should have a nice preview")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveANicePreview()
         {
             await Page.GotoAsync(Server.Prefix + "/dom.html");
@@ -49,7 +48,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "getAttribute should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task GetAttributeShouldWork()
         {
             await Page.GotoAsync(Server.Prefix + "/dom.html");
@@ -60,7 +58,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "innerHTML should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task InnerHTMLShouldWork()
         {
             await Page.GotoAsync(Server.Prefix + "/dom.html");
@@ -71,7 +68,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "innerText should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task InnerTextShouldWork()
         {
             await Page.GotoAsync(Server.Prefix + "/dom.html");
@@ -82,7 +78,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "'innerText should throw")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task InnerTextShouldThrow()
         {
             await Page.SetContentAsync("<svg>text</svg>");
@@ -95,7 +90,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "textContent should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task TextContentShouldWork()
         {
             await Page.GotoAsync(Server.Prefix + "/dom.html");
@@ -106,7 +100,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "textContent should be atomic")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task TextContentShouldBeAtomic()
         {
             const string createDummySelector = @"({
@@ -133,7 +126,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "innerText should be atomic")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task InnerTextShouldBeAtomic()
         {
             const string createDummySelector = @"({
@@ -160,7 +152,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "innerHTML should be atomic")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task InnerHtmlShouldBeAtomic()
         {
             const string createDummySelector = @"({
@@ -187,7 +178,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "getAttribute should be atomic")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task GetAttributeShouldBeAtomic()
         {
             const string createDummySelector = @"({
@@ -214,7 +204,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "isVisible and isHidden should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task IsVisibleAndIsHiddenShouldWork()
         {
             await Page.SetContentAsync("<div>Hi</div><span></span>");
@@ -231,7 +220,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "isEnabled and isDisabled should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task IsEnabledAndIsDisabledShouldWork()
         {
             await Page.SetContentAsync(@"
@@ -256,7 +244,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "isEditable should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task IsEditableShouldWork()
         {
             await Page.SetContentAsync(@"<input id=input1 disabled><textarea></textarea><input id=input2>");
@@ -273,7 +260,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "isChecked should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task IsCheckedShouldWork()
         {
             await Page.SetContentAsync(@"<input type='checkbox' checked><div>Not a checkbox</div>");
