@@ -176,7 +176,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("har.spec.ts", "should return server address directly from response")]
-        [Test]
         public async Task ShouldReturnServerAddressFromResponse()
         {
             var response = await Page.GotoAsync(HttpsServer.EmptyPage);

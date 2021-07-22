@@ -34,7 +34,6 @@ namespace Microsoft.Playwright.Tests
     public class WebSocketTests : PageTestEx
     {
         [PlaywrightTest("web-socket.spec.ts", "should work")]
-        [Test]
         public async Task ShouldWork()
         {
             string value = await Page.EvaluateAsync<string>(@"port => {
@@ -48,7 +47,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("web-socket.spec.ts", "should emit close events")]
-        [Test]
         public async Task ShouldEmitCloseEvents()
         {
             var socketClosedTcs = new TaskCompletionSource<bool>();
@@ -77,7 +75,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("web-socket.spec.ts", "should emit frame events")]
-        [Test]
         public async Task ShouldEmitFrameEvents()
         {
             var socketClosedTcs = new TaskCompletionSource<bool>();
@@ -111,7 +108,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("web-socket.spec.ts", "should emit binary frame events")]
-        [Test]
         public async Task ShouldEmitBinaryFrameEvents()
         {
             var socketClosedTcs = new TaskCompletionSource<bool>();
@@ -146,7 +142,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("web-socket.spec.ts", "should emit error")]
-        [Test]
         public async Task ShouldEmitError()
         {
             var socketErrorTcs = new TaskCompletionSource<string>();
@@ -174,7 +169,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("web-socket.spec.ts", "should not have stray error events")]
-        [Test]
         public async Task ShouldNotHaveStrayErrorEvents()
         {
             var frameReceivedTcs = new TaskCompletionSource<bool>();

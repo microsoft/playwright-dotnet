@@ -119,7 +119,6 @@ namespace Microsoft.Playwright.Tests
                 () => Page.GotoAsync(Server.Prefix + "/networkidle-frame.html", new() { WaitUntil = WaitUntilState.NetworkIdle }));
 
         [PlaywrightTest("page-network-idle.spec.ts", "should wait for networkidle from the popup")]
-        [Test]
         public async Task ShouldWaitForNetworkIdleFromThePopup()
         {
             await Page.GotoAsync(Server.EmptyPage);
