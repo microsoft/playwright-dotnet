@@ -47,24 +47,41 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
+            bool ShouldFilterOpCode(out int opcode)
+            {
+                opcode = serverParams?.GetProperty("opcode").ToObject<int>() ?? 0;
+                return opcode != 1 && opcode != 2;
+            }
+
+            int opcode;
             switch (method)
             {
                 case "close":
                     Close?.Invoke(this, EventArgs.Empty);
                     break;
                 case "frameSent":
+                    if (ShouldFilterOpCode(out opcode))
+                    {
+                        break;
+                    }
+
                     FrameSent?.Invoke(
                         this,
                         new WebSocketFrame(
                             serverParams?.GetProperty("data").ToObject<string>(),
-                            serverParams?.GetProperty("opcode").ToObject<int>() == OpcodeBase64));
+                            opcode == OpcodeBase64));
                     break;
                 case "frameReceived":
+                    if (ShouldFilterOpCode(out opcode))
+                    {
+                        break;
+                    }
+
                     FrameReceived?.Invoke(
                         this,
                         new WebSocketFrame(
                             serverParams?.GetProperty("data").ToObject<string>(),
-                            serverParams?.GetProperty("opcode").ToObject<int>() == OpcodeBase64));
+                            opcode == OpcodeBase64));
                     break;
                 case "socketError":
                     SocketError?.Invoke(this, serverParams?.GetProperty("error").ToObject<string>());
