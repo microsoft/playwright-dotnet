@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
-            bool ShouldFilterOpCode(out int opcode)
+            bool IsTextOrBinaryFrame(out int opcode)
             {
                 opcode = serverParams?.GetProperty("opcode").ToObject<int>() ?? 0;
                 return opcode != 1 && opcode != 2;
