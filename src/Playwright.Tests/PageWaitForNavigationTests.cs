@@ -65,7 +65,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work with both domcontentloaded and load")]
-        [Timeout(TestConstants.DefaultTestTimeout), Ignore("Flakes")]
+        [Ignore("Flakes")]
         public async Task NavShouldWorkWithBothDomcontentloadedAndLoad()
         {
             var responseCompleted = new TaskCompletionSource<bool>();

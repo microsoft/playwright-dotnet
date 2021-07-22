@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Tests
     public class SelectorsTextTests : PageTestEx
     {
         [PlaywrightTest("selectors-text.spec.ts", "query")]
-        [Timeout(TestConstants.DefaultTestTimeout), Ignore("We need to update this test")]
+        [Ignore("We need to update this test")]
         public async Task Query()
         {
             await Page.SetContentAsync("<div>yo</div><div>ya</div><div>\nye  </div>");
