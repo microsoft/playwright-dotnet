@@ -79,12 +79,14 @@ namespace Microsoft.Playwright.Transport.Channels
             ScreenSize screenSize = default,
             string baseUrl = default)
         {
-            var args = new Dictionary<string, object>();
-            args.Add("acceptDownloads", acceptDownloads);
-            args.Add("bypassCSP", bypassCSP);
-            args.Add("colorScheme", colorScheme);
-            args.Add("reducedMotion", reducedMotion);
-            args.Add("deviceScaleFactor", deviceScaleFactor);
+            var args = new Dictionary<string, object>
+            {
+                { "acceptDownloads", acceptDownloads },
+                { "bypassCSP", bypassCSP },
+                { "colorScheme", colorScheme },
+                { "reducedMotion", reducedMotion },
+                { "deviceScaleFactor", deviceScaleFactor },
+            };
 
             if (extraHTTPHeaders != null)
             {
@@ -157,11 +159,13 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal Task StartTracingAsync(IPage page, bool screenshots, string path, IEnumerable<string> categories)
         {
-            var args = new Dictionary<string, object>();
-            args["screenshots"] = screenshots;
-            args["path"] = path;
-            args["page"] = page;
-            args["categories"] = categories;
+            var args = new Dictionary<string, object>
+            {
+                ["screenshots"] = screenshots,
+                ["path"] = path,
+                ["page"] = page,
+                ["categories"] = categories,
+            };
 
             return Connection.SendMessageToServerAsync(Guid, "crStartTracing", args);
         }

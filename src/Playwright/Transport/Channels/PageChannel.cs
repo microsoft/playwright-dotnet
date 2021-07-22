@@ -198,25 +198,31 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal Task<ResponseChannel> GoBackAsync(float? timeout, WaitUntilState? waitUntil)
         {
-            var args = new Dictionary<string, object>();
-            args["timeout"] = timeout;
-            args["waitUntil"] = waitUntil;
+            var args = new Dictionary<string, object>
+            {
+                ["timeout"] = timeout,
+                ["waitUntil"] = waitUntil,
+            };
             return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "goBack", args);
         }
 
         internal Task<ResponseChannel> GoForwardAsync(float? timeout, WaitUntilState? waitUntil)
         {
-            var args = new Dictionary<string, object>();
-            args["timeout"] = timeout;
-            args["waitUntil"] = waitUntil;
+            var args = new Dictionary<string, object>
+            {
+                ["timeout"] = timeout,
+                ["waitUntil"] = waitUntil,
+            };
             return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "goForward", args);
         }
 
         internal Task<ResponseChannel> ReloadAsync(float? timeout, WaitUntilState? waitUntil)
         {
-            var args = new Dictionary<string, object>();
-            args["timeout"] = timeout;
-            args["waitUntil"] = waitUntil;
+            var args = new Dictionary<string, object>
+            {
+                ["timeout"] = timeout,
+                ["waitUntil"] = waitUntil,
+            };
             return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "reload", args);
         }
 
@@ -231,9 +237,11 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal async Task<JsonElement?> AccessibilitySnapshotAsync(bool? interestingOnly, IChannel<ElementHandle> root)
         {
-            var args = new Dictionary<string, object>();
-            args["interestingOnly"] = interestingOnly;
-            args["root"] = root;
+            var args = new Dictionary<string, object>
+            {
+                ["interestingOnly"] = interestingOnly,
+                ["root"] = root,
+            };
 
             if ((await Connection.SendMessageToServerAsync(Guid, "accessibilitySnapshot", args).ConfigureAwait(false)).Value.TryGetProperty("rootAXNode", out var jsonElement))
             {
@@ -375,14 +383,16 @@ namespace Microsoft.Playwright.Transport.Channels
             int? quality,
             float? timeout)
         {
-            var args = new Dictionary<string, object>();
-            args["fullPage"] = fullPage;
-            args["omitBackground"] = omitBackground;
-            args["clip"] = clip;
-            args["path"] = path;
-            args["type"] = type;
-            args["timeout"] = timeout;
-            args["quality"] = quality;
+            var args = new Dictionary<string, object>
+            {
+                ["fullPage"] = fullPage,
+                ["omitBackground"] = omitBackground,
+                ["clip"] = clip,
+                ["path"] = path,
+                ["type"] = type,
+                ["timeout"] = timeout,
+                ["quality"] = quality,
+            };
             return (await Connection.SendMessageToServerAsync(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").ToString();
         }
 
@@ -419,19 +429,21 @@ namespace Microsoft.Playwright.Transport.Channels
             Margin margin,
             bool? preferCSSPageSize)
         {
-            var args = new Dictionary<string, object>();
-            args["scale"] = scale;
-            args["displayHeaderFooter"] = displayHeaderFooter;
-            args["printBackground"] = printBackground;
-            args["landscape"] = landscape;
-            args["preferCSSPageSize"] = preferCSSPageSize;
-            args["pageRanges"] = pageRanges;
-            args["headerTemplate"] = headerTemplate;
-            args["footerTemplate"] = footerTemplate;
-            args["margin"] = margin;
-            args["width"] = width;
-            args["format"] = format;
-            args["height"] = height;
+            var args = new Dictionary<string, object>
+            {
+                ["scale"] = scale,
+                ["displayHeaderFooter"] = displayHeaderFooter,
+                ["printBackground"] = printBackground,
+                ["landscape"] = landscape,
+                ["preferCSSPageSize"] = preferCSSPageSize,
+                ["pageRanges"] = pageRanges,
+                ["headerTemplate"] = headerTemplate,
+                ["footerTemplate"] = footerTemplate,
+                ["margin"] = margin,
+                ["width"] = width,
+                ["format"] = format,
+                ["height"] = height,
+            };
             return (await Connection.SendMessageToServerAsync(Guid, "pdf", args).ConfigureAwait(false))?.GetProperty("pdf").ToString();
         }
     }

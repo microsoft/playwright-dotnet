@@ -54,25 +54,27 @@ namespace Microsoft.Playwright.Transport.Channels
             IEnumerable<string> ignoreDefaultArgs = default,
             bool? ignoreAllDefaultArgs = default)
         {
-            var args = new Dictionary<string, object>();
-            args.Add("channel", channel);
-            args.Add("executablePath", executablePath);
-            args.Add("args", passedArguments);
-            args.Add("ignoreAllDefaultArgs", ignoreAllDefaultArgs);
-            args.Add("ignoreDefaultArgs", ignoreDefaultArgs);
-            args.Add("handleSIGHUP", handleSIGHUP);
-            args.Add("handleSIGINT", handleSIGINT);
-            args.Add("handleSIGTERM", handleSIGTERM);
-            args.Add("headless", headless);
-            args.Add("devtools", devtools);
-            args.Add("env", env.Remap());
-            args.Add("proxy", proxy);
-            args.Add("downloadsPath", downloadsPath);
-            args.Add("tracesDir", tracesDir);
-            args.Add("firefoxUserPrefs", firefoxUserPrefs);
-            args.Add("chromiumSandbox", chromiumSandbox);
-            args.Add("slowMo", slowMo);
-            args.Add("timeout", timeout);
+            var args = new Dictionary<string, object>
+            {
+                { "channel", channel },
+                { "executablePath", executablePath },
+                { "args", passedArguments },
+                { "ignoreAllDefaultArgs", ignoreAllDefaultArgs },
+                { "ignoreDefaultArgs", ignoreDefaultArgs },
+                { "handleSIGHUP", handleSIGHUP },
+                { "handleSIGINT", handleSIGINT },
+                { "handleSIGTERM", handleSIGTERM },
+                { "headless", headless },
+                { "devtools", devtools },
+                { "env", env.Remap() },
+                { "proxy", proxy },
+                { "downloadsPath", downloadsPath },
+                { "tracesDir", tracesDir },
+                { "firefoxUserPrefs", firefoxUserPrefs },
+                { "chromiumSandbox", chromiumSandbox },
+                { "slowMo", slowMo },
+                { "timeout", timeout },
+            };
 
             return Connection.SendMessageToServerAsync<BrowserChannel>(
                 Guid,
@@ -123,27 +125,28 @@ namespace Microsoft.Playwright.Transport.Channels
             bool? ignoreAllDefaultArgs = default,
             string baseUrl = default)
         {
-            var channelArgs = new Dictionary<string, object>();
-
-            channelArgs.Add("userDataDir", userDataDir);
-            channelArgs.Add("headless", headless);
-            channelArgs.Add("channel", channel);
-            channelArgs.Add("executablePath", executablePath);
-            channelArgs.Add("args", args);
-            channelArgs.Add("downloadsPath", downloadsPath);
-            channelArgs.Add("tracesDir", tracesDir);
-            channelArgs.Add("proxy", proxy);
-            channelArgs.Add("chromiumSandbox", chromiumSandbox);
-            channelArgs.Add("handleSIGINT", handleSIGINT);
-            channelArgs.Add("handleSIGTERM", handleSIGTERM);
-            channelArgs.Add("handleSIGHUP", handleSIGHUP);
-            channelArgs.Add("timeout", timeout);
-            channelArgs.Add("env", env.Remap());
-            channelArgs.Add("devtools", devtools);
-            channelArgs.Add("slowMo", slowMo);
-            channelArgs.Add("acceptDownloads", acceptDownloads);
-            channelArgs.Add("ignoreHTTPSErrors", ignoreHTTPSErrors);
-            channelArgs.Add("bypassCSP", bypassCSP);
+            var channelArgs = new Dictionary<string, object>
+            {
+                { "userDataDir", userDataDir },
+                { "headless", headless },
+                { "channel", channel },
+                { "executablePath", executablePath },
+                { "args", args },
+                { "downloadsPath", downloadsPath },
+                { "tracesDir", tracesDir },
+                { "proxy", proxy },
+                { "chromiumSandbox", chromiumSandbox },
+                { "handleSIGINT", handleSIGINT },
+                { "handleSIGTERM", handleSIGTERM },
+                { "handleSIGHUP", handleSIGHUP },
+                { "timeout", timeout },
+                { "env", env.Remap() },
+                { "devtools", devtools },
+                { "slowMo", slowMo },
+                { "acceptDownloads", acceptDownloads },
+                { "ignoreHTTPSErrors", ignoreHTTPSErrors },
+                { "bypassCSP", bypassCSP },
+            };
 
             if (viewportSize?.Width == -1)
             {
