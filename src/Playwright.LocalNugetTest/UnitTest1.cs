@@ -34,9 +34,9 @@ namespace Microsoft.Playwright.LocalNugetTest
         [Test]
         public async Task ShouldWork()
         {
-            TestContext.WriteLine("Navigating to Microsoft.com...");
-            await Page.GotoAsync("https://microsoft.com");
-            Assert.IsTrue((await Page.TitleAsync() ?? string.Empty).Contains("Microsoft"));
+            TestContext.WriteLine("Performing local eval...");
+            var evalResult = await Page.EvaluateAsync<int>("() => 1 + 1");
+            Assert.AreEqual(2, evalResult);
         }
     }
 }
