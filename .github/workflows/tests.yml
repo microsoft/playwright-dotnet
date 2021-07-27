@@ -14,6 +14,7 @@ jobs:
   test_net5:
     name: ${{ matrix.product }} on ${{ matrix.os }} using .NET 5
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -63,8 +64,6 @@ jobs:
   test_net31:
     name: Chromium on Windows using .NET 3.1
     runs-on: windows-latest
-    strategy:
-      fail-fast: false
     steps:
       - name: Install Media Pack
         if: ${{ matrix.os == 'windows-latest' }}
