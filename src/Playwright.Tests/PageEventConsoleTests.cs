@@ -97,17 +97,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-event-console.spec.ts", "should not fail for window object")]
         public async Task ShouldNotFailForWindowObject()
         {
-            IConsoleMessage message = null;
-            void EventHandler(object sender, IConsoleMessage e)
-            {
-                message = e;
-                Page.Console -= EventHandler;
-            }
-            Page.Console += EventHandler;
-            await TaskUtils.WhenAll(
-                Page.EvaluateAsync("() => console.error(window)"),
-                Page.WaitForConsoleMessageAsync()
-            );
+            var message = await Page.RunAndWaitForConsoleMessageAsync(() => Page.EvaluateAsync("() => console.error(window)"));
             Assert.AreEqual("JSHandle@object", message.Text);
         }
 
