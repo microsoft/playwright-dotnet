@@ -105,7 +105,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-load-state.ts", "should work with pages that have loaded before being connected to")]
-        [SkipBrowserAndPlatform(skipFirefox: true, skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
         public async Task ShouldWorkWithPagesThatHaveLoadedBeforeBeingConnectedTo()
         {
             await Page.GotoAsync(Server.EmptyPage);

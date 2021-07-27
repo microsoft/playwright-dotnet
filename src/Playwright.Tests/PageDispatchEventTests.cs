@@ -166,7 +166,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-dispatchevent.spec.ts", "Page.dispatchEvent(drag)", "should dispatch drag drop events")]
-        [SkipBrowserAndPlatform(skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Webkit)]
         public async Task ShouldDispatchDragDropEvents()
         {
             await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
@@ -182,7 +182,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-dispatchevent.spec.ts", "Page.dispatchEvent(drag)", "should dispatch drag drop events")]
-        [SkipBrowserAndPlatform(skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Webkit)]
         public async Task ElementHandleShouldDispatchDragDropEvents()
         {
             await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");

@@ -530,7 +530,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should fulfill with redirect status")]
-        [SkipBrowserAndPlatform(skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Webkit)]
         public async Task ShouldFulfillWithRedirectStatus()
         {
             await Page.GotoAsync(Server.Prefix + "/title.html");

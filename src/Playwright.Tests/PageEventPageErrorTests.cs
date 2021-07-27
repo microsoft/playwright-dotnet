@@ -75,7 +75,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-pageerror.spec.ts", "should contain sourceURL")]
-        [SkipBrowserAndPlatform(skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Webkit)]
         public async Task ShouldContainSourceURL()
         {
             var pageError = new TaskCompletionSource<string>();
@@ -111,7 +111,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-pageerror.spec.ts", "should handle object")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldHandleObject()
         {
             var pageError = new TaskCompletionSource<string>();
@@ -124,7 +124,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-pageerror.spec.ts", "should handle window")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldHandleWindow()
         {
             var pageError = new TaskCompletionSource<string>();

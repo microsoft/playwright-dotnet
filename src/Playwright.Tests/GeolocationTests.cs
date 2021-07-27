@@ -102,7 +102,7 @@ namespace Microsoft.Playwright.Tests
         public void ShouldThrowWithMissingLatitude() { }
 
         [PlaywrightTest("geolocation.spec.ts", "should not modify passed default options object")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldNotModifyPassedDefaultOptionsObject()
         {
             var geolocation = new Geolocation { Latitude = 10, Longitude = 10 };

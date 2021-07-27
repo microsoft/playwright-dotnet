@@ -51,7 +51,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should work in persistent context")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldWorkInPersistentContext()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -236,7 +236,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should restore cookies from userDataDir")]
-        [SkipBrowserAndPlatform(skipChromium: true, skipWindows: true, skipOSX: true)]
+        [Skip(SkipAttribute.Targets.Chromium | SkipAttribute.Targets.Windows)]
         public async Task ShouldRestoreCookiesFromUserDataDir()
         {
             var userDataDir = new TempDirectory();
@@ -285,7 +285,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should throw if page argument is passed")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldThrowIfPageArgumentIsPassed()
         {
             var tmp = new TempDirectory();

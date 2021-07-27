@@ -90,7 +90,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should work with page scale")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldWorkWithPageScale()
         {
             var context = await Browser.NewContextAsync(new()

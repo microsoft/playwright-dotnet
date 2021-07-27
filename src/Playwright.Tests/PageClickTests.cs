@@ -391,7 +391,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click the button with fixed position inside an iframe")]
-        [SkipBrowserAndPlatform(skipChromium: true, skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Chromium, SkipAttribute.Targets.Webkit)]
         public async Task ShouldClickTheButtonWithFixedPositionInsideAnIframe()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -489,7 +489,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click the button with offset with page scale")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldClickTheButtonWithOffsetWithPageScale()
         {
             await using var context = await Browser.NewContextAsync(new()

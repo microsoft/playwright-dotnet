@@ -151,7 +151,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with clicking target=_blank")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldWorkWithClickingTargetBlank()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -173,7 +173,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with fake-clicking target=_blank and rel=noopener")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldWorkWithFakeClickingTargetBlankAndRelNoopener()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -194,7 +194,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with clicking target=_blank and rel=noopener")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldWorkWithClickingTargetBlankAndRelNoopener()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -215,7 +215,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should not treat navigations as new popups")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldNotTreatNavigationsAsNewPopups()
         {
             await Page.GotoAsync(Server.EmptyPage);

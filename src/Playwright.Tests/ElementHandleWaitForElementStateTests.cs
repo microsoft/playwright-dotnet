@@ -141,7 +141,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-wait-for-element-state.spec.ts", "should wait for stable position")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldWaitForStablePosition()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");

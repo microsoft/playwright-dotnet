@@ -35,7 +35,7 @@ namespace Microsoft.Playwright.Tests.Firefox
     public class FirefoxLauncherTests : PlaywrightTestEx
     {
         [PlaywrightTest("firefox/launcher.spec.ts", "should pass firefox user preferences")]
-        [SkipBrowserAndPlatform(skipChromium: true, skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Chromium, SkipAttribute.Targets.Webkit)]
         public async Task ShouldPassFirefoxUserPreferences()
         {
             var firefoxUserPrefs = new Dictionary<string, object>

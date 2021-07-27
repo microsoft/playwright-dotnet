@@ -89,7 +89,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-add-script-tag.spec.ts", "should include sourceURL when path is provided")]
-        [SkipBrowserAndPlatform(skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Webkit)]
         public async Task ShouldIncludeSourceURLWhenPathIsProvided()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -108,7 +108,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-add-script-tag.spec.ts", "should throw when added with content to the CSP page")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldThrowWhenAddedWithContentToTheCSPPage()
         {
             await Page.GotoAsync(Server.Prefix + "/csp.html");

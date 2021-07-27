@@ -166,7 +166,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("har.spec.ts", "should return security details directly from response")]
-        [SkipBrowserAndPlatform(skipLinux: true, skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Linux)]
         public async Task ShouldReturnSecurityDetails()
         {
             var response = await Page.GotoAsync(HttpsServer.EmptyPage);

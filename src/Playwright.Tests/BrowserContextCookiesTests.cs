@@ -95,7 +95,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-cookies.spec.ts", @"should properly report ""Strict"" sameSite cookie")]
-        [SkipBrowserAndPlatform(skipWebkit: true, skipWindows: true)]
+        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
         public async Task ShouldProperlyReportStrictSameSiteCookie()
         {
             Server.SetRoute("/empty.html", context =>
@@ -110,7 +110,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-cookies.spec.ts", @"should properly report ""Lax"" sameSite cookie")]
-        [SkipBrowserAndPlatform(skipWebkit: true, skipWindows: true)]
+        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
         public async Task ShouldProperlyReportLaxSameSiteCookie()
         {
             Server.SetRoute("/empty.html", context =>

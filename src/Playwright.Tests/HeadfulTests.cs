@@ -161,7 +161,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("headful.spec.ts", "should not override viewport size when passed null")]
-        [SkipBrowserAndPlatform(skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Webkit)]
         public async Task ShouldNotOverrideViewportSizeWhenPassedNull()
         {
             await using var browser = await LaunchHeaded();
