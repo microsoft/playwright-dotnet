@@ -176,7 +176,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("har.spec.ts", "should return server address directly from response")]
-        [SkipBrowserAndPlatform(skipOSX: true)]
+        [Skip(SkipAttribute.Targets.OSX)]
         public async Task ShouldReturnServerAddressFromResponse()
         {
             var response = await Page.GotoAsync(HttpsServer.EmptyPage);
