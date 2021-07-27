@@ -24,6 +24,9 @@
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Commands;
 
 namespace Microsoft.Playwright.Tests
 {
@@ -31,7 +34,7 @@ namespace Microsoft.Playwright.Tests
     /// Enables decorating test facts with information about the corresponding test in the upstream repository.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class PlaywrightTestAttribute : TestAttribute
+    public class PlaywrightTestAttribute : TestAttribute, global::NUnit.Framework.Interfaces.IRepeatTest
     {
         /// <summary>
         /// Creates a new instance of the attribute.
@@ -74,5 +77,62 @@ namespace Microsoft.Playwright.Tests
         /// The describe of the test, the decorated code is based on, if one exists.
         /// </summary>
         public string Describe { get; }
+
+        /// <summary>
+        /// Sets the maximum amount of times we'll retry the test. Defaults to 3.
+        /// </summary>
+        public int MaxRetryCount { get; } = 3;
+
+        /// <inheritdoc/>
+        public TestCommand Wrap(TestCommand command)
+        {
+            return new RetryFlakyTestCommand(command, MaxRetryCount);
+        }
+
+        /// <summary>
+        /// The test command for the <see cref="RetryFlakyTestCommand"/>
+        /// </summary>
+        private class RetryFlakyTestCommand : DelegatingTestCommand
+        {
+            private readonly int _tryCount;
+
+            public RetryFlakyTestCommand(TestCommand innerCommand, int tryCount)
+                : base(innerCommand)
+            {
+                _tryCount = tryCount;
+            }
+
+            public override TestResult Execute(TestExecutionContext context)
+            {
+                int count = _tryCount;
+
+                while (count-- > 0)
+                {
+                    try
+                    {
+                        context.CurrentResult = innerCommand.Execute(context);
+                        // if the test succeeds, or we ignore/skip it, it's unlikely to be flaky
+                        if (context.CurrentResult.ResultState == ResultState.Skipped
+                            || context.CurrentResult.ResultState == ResultState.Ignored
+                            || context.CurrentResult.ResultState == ResultState.Success)
+                            break;
+                    }
+                    catch (Exception ex)
+                    {
+                        if (context.CurrentResult == null) context.CurrentResult = context.CurrentTest.MakeTestResult();
+                        context.CurrentResult.RecordException(ex);
+                    }
+
+                    // Clear result for retry
+                    if (count > 0)
+                    {
+                        context.CurrentResult = context.CurrentTest.MakeTestResult();
+                        context.CurrentRepeatCount++;
+                    }
+                }
+
+                return context.CurrentResult;
+            }
+        }
     }
 }
