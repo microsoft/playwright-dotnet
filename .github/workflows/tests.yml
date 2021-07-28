@@ -11,139 +11,31 @@ on:
       - release-*
 
 jobs:
-  test_net5:
-    name: ${{ matrix.product }} on ${{ matrix.os }} using .NET 5
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      matrix:
-        product: [CHROMIUM, FIREFOX, WEBKIT]
-        os: [windows-latest, ubuntu-latest, macos-latest]
-    steps:
-      - name: Install Media Pack
-        if: ${{ matrix.os == 'windows-latest' }}
-        shell: powershell
-        run: Install-WindowsFeature Server-Media-Foundation
-      - uses: actions/checkout@v2
-      - uses: microsoft/playwright-github-action@v1
-      - name: Setup .NET Core (On Mac)
-        if: ${{ matrix.os == 'macos-latest' }}
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 5.0.100
-        env:
-          DOTNET_INSTALL_DIR: /users/runner/alternate/dotnet
-      - name: Setup .NET Core (Not on mac)
-        if: ${{ matrix.os != 'macos-latest' }}
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 5.0.100
-      - name: Create Certificate
-        run: |
-          dotnet dev-certs https --clean
-          dotnet dev-certs https -ep src/Playwright.Tests.TestServer/testCert.cer
-      - name: Clean
-        run: dotnet clean ./src/Playwright.sln --configuration Debug && dotnet nuget locals all --clear
-      - name: Download Drivers
-        run: dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
-      - name: Download Browsers
-        run: dotnet run -p ./src/Playwright -f net5.0 install
-      - name: Run tests (!Linux)
-        if: ${{ matrix.os != 'ubuntu-latest' }}
-        env:
-          BROWSER: ${{ matrix.product }}
-        run: |
-          dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --logger "trx;LogFileName=TestResults.xml" -- NUnit.NumberOfTestWorkers=1
-      - name: Run tests (Linux)
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-        env:
-          BROWSER: ${{ matrix.product }}
-        run: |
-          xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- bash -c "ulimit -c unlimited && dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --logger \"trx\" -- NUnit.NumberOfTestWorkers=1"
-  test_net31:
-    name: Chromium on Windows using .NET 3.1
-    runs-on: windows-latest
-    steps:
-      - name: Install Media Pack
-        if: ${{ matrix.os == 'windows-latest' }}
-        shell: powershell
-        run: Install-WindowsFeature Server-Media-Foundation
-      - uses: actions/checkout@v2
-      - uses: microsoft/playwright-github-action@v1
-      - name: Setup .NET Core (On Mac)
-        if: ${{ matrix.os == 'macos-latest' }}
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 3.1.100
-        env:
-          DOTNET_INSTALL_DIR: /users/runner/alternate/dotnet
-      - name: Setup .NET Core (Not on mac)
-        if: ${{ matrix.os != 'macos-latest' }}
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 3.1.100
-      - name: Create Certificate
-        run: |
-          dotnet dev-certs https --clean
-          dotnet dev-certs https -ep src/Playwright.Tests.TestServer/testCert.cer
-      - name: Setup .NET Core 5 (On Mac if needed)
-        if: ${{ matrix.os == 'macos-latest' }}
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 5.0.100
-        env:
-          DOTNET_INSTALL_DIR: /users/runner/alternate/dotnet
-      - name: Setup .NET Core 5 (Not on mac if needed)
-        if: ${{ matrix.os != 'macos-latest' }}
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 5.0.100
-      - name: Clean
-        run: dotnet clean ./src/Playwright.sln --configuration Debug && dotnet nuget locals all --clear
-      - name: Download Drivers
-        run: dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
-      - name: Build
-        run: dotnet build ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f netcoreapp3.1
-      - name: Download Browsers
-        run: ./src/Playwright/bin/Debug/netstandard2.0/playwright.ps1 install
-      - name: Run tests (!Linux)
-        if: ${{ matrix.os != 'ubuntu-latest' }}
-        env:
-          BROWSER: chromium
-        run: |
-          dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f netcoreapp3.1 --logger "trx;LogFileName=TestResults.xml" -- NUnit.NumberOfTestWorkers=1
-      - name: Run tests (Linux)
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-        env:
-          BROWSER: chromium
-        run: |
-          xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- bash -c "ulimit -c unlimited && dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f netcoreapp3.1 --logger \"trx\" -- NUnit.NumberOfTestWorkers=1"
-  test_cli:
-    name: CLI and NUnit
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+  mac_specific_tests:
+    name: Diagnosing Stalling tests on MAC OS using .NET 5
+    runs-on: macos-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
-      - uses: microsoft/playwright-github-action@v1
-      - name: Setup .NET Core (On Mac)
-        if: ${{ matrix.os == 'macos-latest' }}
+        with:
+          submodules: true
+          fetch-depth: 0
+      - uses: sinoru/actions-setup-keychain@v1.0
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100
-        env:
-          DOTNET_INSTALL_DIR: /users/runner/alternate/dotnet
-      - name: Setup .NET Core (Not on mac)
-        if: ${{ matrix.os != 'macos-latest' }}
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 5.0.100
-      - name: Download Drivers
-        run: dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
-      - name: Build CLI
-        run: dotnet build ./src/Playwright.CLI/
-      - name: Build NUnit
-        run: dotnet build ./src/Playwright.NUnit/
+          dotnet-version: 5.0.x
+      - name: Install prerequisites and download drivers
+        shell: pwsh
+        run: .\build.ps1 driver -prereqs
+      - name: Building...
+        shell: pwsh
+        run: dotnet build 
+        working-directory: src
+      - name: Installing Browsers...
+        shell: pwsh
+        run: dotnet run -p .\src\Playwright\Playwright.csproj -f net5.0 -- install
+      - name: Running tests...
+        shell: pwsh
+        run: dotnet test --filter "Name~ShouldReturnSecurityDetails|Name~ShouldReturnServerAddressFromResponse|Name~ShouldWorkForSSL" -c Debug -f net5.0 --logger "trx;LogFileName=TestResults.xml" -- NUnit.NumberOfTestWorkers=1
+        working-directory: src

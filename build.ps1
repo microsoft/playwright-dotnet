@@ -41,9 +41,10 @@ function Invoke-InitializeSubmodule($enableReset = $true) {
 
 function Invoke-InstallRequirements() {
   Write-Host "🔨 Installing requirements..." -NoNewline
-  dotnet tool install --global dotnet-format >$null 2>&1
+  dotnet tool install --global dotnet-format
   Write-Host " ✔ Dotnet tooling" -NoNewline
-  dotnet dev-certs https -ep src/Playwright.Tests.TestServer/testCert.cer >$null 2>&1
+  dotnet dev-certs https -ep src/Playwright.Tests.TestServer/testCert.cer
+  dotnet dev-certs https --trust
   Write-Host "`r✅ Finished initializing tooling requirements."
 }
 
