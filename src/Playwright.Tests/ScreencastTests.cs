@@ -73,7 +73,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("screencast.spec.ts", "should capture static page")]
-        [SkipBrowserAndPlatform(skipWebkit: true, skipWindows: true)]
+        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
         public async Task ShouldCaptureStaticPage()
         {
             using var tempDirectory = new TempDirectory();
@@ -171,7 +171,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("screencast.spec.ts", "should capture static page in persistent context")]
-        [SkipBrowserAndPlatform(skipWebkit: true, skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Webkit, SkipAttribute.Targets.Firefox)]
         public async Task ShouldCaptureStaticPageInPersistentContext()
         {
             using var userDirectory = new TempDirectory();

@@ -218,7 +218,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-screenshot.spec.ts", "should allow transparency")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldAllowTransparency()
         {
             await Page.SetViewportSizeAsync(50, 150);
@@ -259,7 +259,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-screenshot.spec.ts", "should work with a mobile viewport")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldWorkWithAMobileViewport()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -279,7 +279,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-screenshot.spec.ts", "should work with a mobile viewport and clip")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldWorkWithAMobileViewportAndClip()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -308,7 +308,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-screenshot.spec.ts", "should work with a mobile viewport and fullPage")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldWorkWithAMobileViewportAndFullPage()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -338,7 +338,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-screenshot.spec.ts", "should work for webgl")]
-        [SkipBrowserAndPlatform(skipFirefox: true, skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
         public async Task ShouldWorkForWebgl()
         {
             await Page.SetViewportSizeAsync(640, 480);

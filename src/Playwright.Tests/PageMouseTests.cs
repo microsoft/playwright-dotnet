@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
     public class PageMouseTests : PageTestEx
     {
         [PlaywrightTest("page-mouse.spec.ts", "should click the document")]
-        [SkipBrowserAndPlatform(skipFirefox: true, skipWindows: true)]
+        [Skip(SkipAttribute.Targets.Firefox | SkipAttribute.Targets.Windows)]
         public async Task ShouldClickTheDocument()
         {
             await Page.EvaluateAsync(@"() => {
@@ -169,7 +169,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-mouse.spec.ts", "should work with mobile viewports and cross process navigations")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldWorkWithMobileViewportsAndCrossProcessNavigations()
         {
             await using var context = await Browser.NewContextAsync(new()

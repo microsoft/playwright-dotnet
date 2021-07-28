@@ -100,7 +100,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for adopted elements")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldWorkForAdoptedElements()
         {
             await Page.GotoAsync(Server.EmptyPage);

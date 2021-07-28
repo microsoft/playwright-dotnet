@@ -64,7 +64,7 @@ namespace Microsoft.Playwright.Tests
         public void ShouldThrowInCaseOfBadMediaArgument() { }
 
         [PlaywrightTest("page-emulate-media.spec.ts", "should work during navigation")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldWorkDuringNavigation()
         {
             await Page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Light });

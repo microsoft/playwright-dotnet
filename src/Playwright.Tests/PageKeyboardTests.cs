@@ -126,7 +126,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should report shiftKey")]
-        [SkipBrowserAndPlatform(skipFirefox: true, skipOSX: true)]
+        [Skip(SkipAttribute.Targets.Firefox | SkipAttribute.Targets.OSX)]
         public async Task ShouldReportShiftKey()
         {
             await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
@@ -428,7 +428,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should handle selectAll")]
-        [SkipBrowserAndPlatform(skipOSX: true, skipChromium: true)]
+        [Skip(SkipAttribute.Targets.Chromium | SkipAttribute.Targets.OSX)]
         public async Task ShouldHandleSelectAll()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -443,7 +443,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should be able to prevent selectAll")]
-        [SkipBrowserAndPlatform(skipOSX: true, skipChromium: true)]
+        [Skip(SkipAttribute.Targets.Chromium | SkipAttribute.Targets.OSX)]
         public async Task ShouldBeAbleToPreventSelectAll()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -513,7 +513,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should expose keyIdentifier in webkit")]
-        [SkipBrowserAndPlatform(skipChromium: true, skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Chromium, SkipAttribute.Targets.Firefox)]
         public async Task ShouldExposeKeyIdentifierInWebkit()
         {
             var lastEventHandle = await CaptureLastKeydownAsync(Page);

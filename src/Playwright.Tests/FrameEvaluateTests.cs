@@ -144,7 +144,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should work in iframes that failed initial navigation")]
-        [SkipBrowserAndPlatform(skipChromium: true, skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Chromium, SkipAttribute.Targets.Firefox)]
         public async Task ShouldWorkIniframesThatFailedInitialNavigation()
         {
             await Page.SetContentAsync(
@@ -164,7 +164,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should work in iframes that failed initial navigation")]
-        [SkipBrowserAndPlatform(skipChromium: true, skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Chromium, SkipAttribute.Targets.Firefox)]
         public async Task ShouldWorkInIframesThatInterruptedInitialJavascriptUrlNavigation()
         {
             await Page.GotoAsync(Server.EmptyPage);

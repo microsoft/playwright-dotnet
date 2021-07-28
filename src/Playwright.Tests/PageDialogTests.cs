@@ -113,7 +113,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-dialog.spec.ts", "should be able to close context with open alert")]
-        [SkipBrowserAndPlatform(skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Webkit)]
         public async Task ShouldBeAbleToCloseContextWithOpenAlert()
         {
             var context = await Browser.NewContextAsync();

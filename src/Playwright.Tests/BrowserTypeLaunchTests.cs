@@ -64,7 +64,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should throw if page argument is passed")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public Task ShouldThrowIfPageArgumentIsPassed()
         {
             var args = new[] { Server.EmptyPage };
@@ -139,7 +139,7 @@ namespace Microsoft.Playwright.Tests
         /// <summary>
         /// PuppeteerSharp test. It's not in upstream
         /// </summary>
-        [SkipBrowserAndPlatform(skipFirefox: true, skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
         public async Task ShouldWorkWithIgnoreDefaultArgs()
         {
             string[] args = new[]

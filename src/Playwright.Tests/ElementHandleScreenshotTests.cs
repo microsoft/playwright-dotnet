@@ -241,7 +241,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should work with a mobile viewport")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldWorkWithAMobileViewport()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -263,7 +263,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should work with device scale factor")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldWorkWithDeviceScaleFactor()
         {
             await using var context = await Browser.NewContextAsync(new()

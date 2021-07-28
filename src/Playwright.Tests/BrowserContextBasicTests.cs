@@ -297,7 +297,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should emulate navigator.onLine")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldEmulateNavigatorOnLine()
         {
             await using var context = await Browser.NewContextAsync();

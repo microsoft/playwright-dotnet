@@ -106,7 +106,7 @@ namespace Microsoft.Playwright.Tests
 
 
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should respect screensize")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldSupportScreenSize()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -130,7 +130,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should ignore screensize when viewport is null")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldIgnoreScreensizeWhenViewportIsNull()
         {
             await using var context = await Browser.NewContextAsync(new()

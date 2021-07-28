@@ -68,7 +68,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-focus.spec.ts", "should traverse focus")]
-        [SkipBrowserAndPlatform(skipWebkit: true, skipWindows: true, skipOSX: true)]
         public async Task ShouldTraverseFocus()
         {
             await Page.SetContentAsync("<input id=\"i1\"><input id=\"i2\">");

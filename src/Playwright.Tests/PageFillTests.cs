@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should throw on incorrect date")]
-        [SkipBrowserAndPlatform(skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Webkit)]
         public async Task ShouldThrowOnIncorrectDate()
         {
             await Page.SetContentAsync("<input type=date>");
@@ -100,7 +100,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should throw on incorrect time")]
-        [SkipBrowserAndPlatform(skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Webkit)]
         public async Task ShouldThrowOnIncorrectTime()
         {
             await Page.SetContentAsync("<input type=time>");
@@ -119,7 +119,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should throw on incorrect datetime-local")]
-        [SkipBrowserAndPlatform(skipFirefox: true, skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
         public async Task ShouldThrowOnIncorrectDateTimeLocal()
         {
             await Page.SetContentAsync("<input type=datetime-local>");

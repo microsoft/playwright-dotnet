@@ -494,7 +494,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should not throw an error when evaluation does a synchronous navigation and returns an object")]
-        [SkipBrowserAndPlatform(skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Webkit)]
         public async Task ShouldNotThrowAnErrorWhenEvaluationDoesASynchronousNavigationAndReturnsAnObject()
         {
             var result = await Page.EvaluateAsync<JsonElement>(@"() => {
@@ -505,7 +505,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should not throw an error when evaluation does a synchronous navigation and returns an undefined")]
-        [SkipBrowserAndPlatform(skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Webkit)]
         public async Task ShouldNotThrowAnErrorWhenEvaluationDoesASynchronousNavigationAndReturnsUndefined()
         {
             var result = await Page.EvaluateAsync<JsonElement?>(@"() => {
@@ -541,7 +541,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should await promise from popup")]
-        [SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldAwaitPromiseFromPopup()
         {
             await Page.GotoAsync(Server.EmptyPage);
