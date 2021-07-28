@@ -166,7 +166,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("har.spec.ts", "should return security details directly from response")]
-        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Linux)]
+        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Linux, SkipAttribute.Targets.OSX)]
         public async Task ShouldReturnSecurityDetails()
         {
             var response = await Page.GotoAsync(HttpsServer.EmptyPage);
@@ -176,6 +176,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("har.spec.ts", "should return server address directly from response")]
+        [Skip(SkipAttribute.Targets.OSX)]
         public async Task ShouldReturnServerAddressFromResponse()
         {
             var response = await Page.GotoAsync(HttpsServer.EmptyPage);

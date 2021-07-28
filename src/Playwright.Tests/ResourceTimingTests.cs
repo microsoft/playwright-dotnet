@@ -84,6 +84,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("resource-timing.spec.ts", "should work for SSL")]
+        [Skip(SkipAttribute.Targets.OSX)]
         public async Task ShouldWorkForSSL()
         {
             var page = await Browser.NewPageAsync(new() { IgnoreHTTPSErrors = true });
