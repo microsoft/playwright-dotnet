@@ -11,15 +11,10 @@ on:
       - release-*
 
 jobs:
-  test_net5:
-    name: ${{ matrix.product }} on ${{ matrix.os }} using .NET 5
-    runs-on: ${{ matrix.os }}
+  build:
+    name: Build solution
+    runs-on: ubuntu-latest
     timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      matrix:
-        product: [CHROMIUM, FIREFOX, WEBKIT]
-        os: [windows-latest, ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -36,28 +31,82 @@ jobs:
         shell: pwsh
         run: dotnet build 
         working-directory: src
+      - name: Upload artifact...
+        uses: actions/upload-artifact@v2
+        with:
+          name: playwright-test
+          path: src/Playwright.Tests/bin/Debug/
+                  
+  tests_net5:
+    needs: build
+    name: ${{ matrix.product }} on ${{ matrix.os }} using .NET 5 and artifacts
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        product: [CHROMIUM, FIREFOX, WEBKIT]
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/download-artifact@v2
+      - name: Fix Permissions...
+        if: ${{ matrix.os != 'windows-latest' }}
+        run: chmod -R u+rwx playwright-test
       - name: Installing Browsers and dependencies...
         shell: pwsh
         run: |
-          dotnet run -p .\src\Playwright\Playwright.csproj -f net5.0 -- install
-          dotnet run -p .\src\Playwright\Playwright.csproj -f net5.0 -- install-deps
+          dotnet Microsoft.Playwright.dll install
+          dotnet Microsoft.Playwright.dll install-deps
+        working-directory: playwright-test/net5.0
       - name: Running tests...
         if: ${{ matrix.os != 'ubuntu-latest' }}
         shell: pwsh
         env:
           BROWSER: ${{ matrix.product }}
         run: 
-          dotnet test ./Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --logger "trx;LogFileName=TestResults.xml" -- NUnit.NumberOfTestWorkers=1
-        working-directory: src
+          dotnet test Microsoft.Playwright.Tests.dll -c Debug -f net5.0 --logger "trx;LogFileName=TestResults.xml" -- NUnit.NumberOfTestWorkers=1
+        working-directory: playwright-test/net5.0
       - name: Running tests... (Linux)
         if: ${{ matrix.os == 'ubuntu-latest' }}
         shell: bash
         env:
           BROWSER: ${{ matrix.product }}
-        working-directory: src
         run: |
-          xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- bash -c "ulimit -c unlimited && dotnet test ./Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --logger \"trx\" -- NUnit.NumberOfTestWorkers=1"
+          xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- bash -c "ulimit -c unlimited && dotnet test Microsoft.Playwright.Tests.dll -c Debug -f net5.0 --logger \"trx\" -- NUnit.NumberOfTestWorkers=1"
+        working-directory: playwright-test/net5.0
 
+          
+  # test_net5:
+  #   name: ${{ matrix.product }} on ${{ matrix.os }} using .NET 5
+  #   runs-on: ${{ matrix.os }}
+  #   timeout-minutes: 30
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       product: [CHROMIUM, FIREFOX, WEBKIT]
+  #       os: [windows-latest, ubuntu-latest, macos-latest]
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         submodules: true
+  #         fetch-depth: 0
+  #     - name: Setup .NET Core
+  #       uses: actions/setup-dotnet@v1
+  #       with:
+  #         dotnet-version: 5.0.x
+  #     - name: Install prerequisites and download drivers
+  #       shell: pwsh
+  #       run: .\build.ps1 driver
+  #     - name: Building...
+  #       shell: pwsh
+  #       run: dotnet build 
+  #       working-directory: src
+  #     - name: Installing Browsers and dependencies...
+  #       shell: pwsh
+  #       run: |
+  #         dotnet run -p .\src\Playwright\Playwright.csproj -f net5.0 -- install
+  #         dotnet run -p .\src\Playwright\Playwright.csproj -f net5.0 -- install-deps
+  #     
   #   steps:
   #     - name: Install Media Pack
   #       if: ${{ matrix.os == 'windows-latest' }}
