@@ -43,7 +43,6 @@ function Invoke-InstallRequirements() {
   Write-Host "🔨 Installing requirements..." -NoNewline
   dotnet tool install --global dotnet-format >$null 2>&1
   Write-Host " ✔ Dotnet tooling" -NoNewline
-  dotnet dev-certs https -ep src/Playwright.Tests.TestServer/testCert.cer >$null 2>&1
   Write-Host "`r✅ Finished initializing tooling requirements."
 }
 

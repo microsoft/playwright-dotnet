@@ -87,7 +87,6 @@ This will run the following commands:
 ```ps
 git submodule update --init
 dotnet tool install --global dotnet-format
-dotnet dev-certs https -ep src/Playwright.Tests.TestServer/testCert.cer
 dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
 ```
 
@@ -107,13 +106,6 @@ The resulting code will follow our style guides. This is also enforced in our CI
 * Every public api event/method should be accompanied by a test.
 
 ### Running Tests Locally
-
-#### Prerequisites
-To run tests locally, you will most likely need to have a `localhost` development certificate. You can add one, by running:
-
-```powershell
-dotnet dev-certs https -ep src/Playwright.Tests.TestServer/testCert.cer
-```
 
 #### Running tests
 Tests can either be executed in their entirety:
