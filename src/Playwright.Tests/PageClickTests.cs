@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -391,7 +392,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click the button with fixed position inside an iframe")]
-        [Skip(SkipAttribute.Targets.Chromium, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Chromium, TestTargets.Webkit)]
         public async Task ShouldClickTheButtonWithFixedPositionInsideAnIframe()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -489,7 +490,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click the button with offset with page scale")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldClickTheButtonWithOffsetWithPageScale()
         {
             await using var context = await Browser.NewContextAsync(new()

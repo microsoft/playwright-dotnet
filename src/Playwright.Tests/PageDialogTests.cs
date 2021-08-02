@@ -25,6 +25,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -113,7 +114,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-dialog.spec.ts", "should be able to close context with open alert")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldBeAbleToCloseContextWithOpenAlert()
         {
             var context = await Browser.NewContextAsync();

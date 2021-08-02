@@ -25,6 +25,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -100,7 +101,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for adopted elements")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldWorkForAdoptedElements()
         {
             await Page.GotoAsync(Server.EmptyPage);

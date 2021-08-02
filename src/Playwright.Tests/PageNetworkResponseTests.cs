@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -166,7 +167,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("har.spec.ts", "should return security details directly from response")]
-        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Linux)]
+        [Skip(TestTargets.Webkit | TestTargets.Linux)]
         public async Task ShouldReturnSecurityDetails()
         {
             var response = await Page.GotoAsync(HttpsServer.EmptyPage);
@@ -184,6 +185,6 @@ namespace Microsoft.Playwright.Tests
             Assert.Greater(details.Port, 0);
         }
 
-        public override BrowserNewContextOptions ContextOptions() => new() { IgnoreHTTPSErrors = true };
+        public override BrowserNewContextOptions ContextOptions => new() { IgnoreHTTPSErrors = true };
     }
 }

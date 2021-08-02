@@ -26,6 +26,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -90,7 +91,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should work with page scale")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldWorkWithPageScale()
         {
             var context = await Browser.NewContextAsync(new()

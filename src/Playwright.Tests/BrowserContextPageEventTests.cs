@@ -25,6 +25,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -201,7 +202,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should work with Shift-clicking")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldWorkWithShiftClicking()
         {
             // WebKit: Shift+Click does not open a new window.
@@ -219,7 +220,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should report when a new page is created and closed")]
-        [Skip(SkipAttribute.Targets.Webkit, SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Webkit, TestTargets.Firefox)]
         public async Task ShouldWorkWithCtrlClicking()
         {
             // Firefox: reports an opener in this case.

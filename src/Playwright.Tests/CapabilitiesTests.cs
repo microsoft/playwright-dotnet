@@ -25,6 +25,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -34,7 +35,7 @@ namespace Microsoft.Playwright.Tests
     public class CapabilitiesTests : PageTestEx
     {
         [PlaywrightTest("capabilities.spec.ts", "Web Assembly should work")]
-        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
+        [Skip(TestTargets.Webkit | TestTargets.Windows)]
         public async Task WebAssemblyShouldWork()
         {
             await Page.GotoAsync(Server.Prefix + "/wasm/table2.html");
@@ -43,7 +44,7 @@ namespace Microsoft.Playwright.Tests
 
 #if NETCOREAPP
         [PlaywrightTest("capabilities.spec.ts", "WebSocket should work")]
-        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
+        [Skip(TestTargets.Webkit | TestTargets.Windows)]
         public async Task WebSocketShouldWork()
         {
             string value = await Page.EvaluateAsync<string>(
@@ -82,7 +83,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("capabilities.spec.ts", "should play video")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldPlayVideo()
         {
             await Page.GotoAsync(Server.Prefix + (TestConstants.IsWebKit ? "/video_mp4.html" : "/video.html"));

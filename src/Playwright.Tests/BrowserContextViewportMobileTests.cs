@@ -24,6 +24,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -32,7 +33,7 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextViewportMobileTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-viewport-mobile.spec.ts", "should support mobile emulation")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldSupportMobileEmulation()
         {
             await using var context = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
@@ -45,7 +46,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-viewport-mobile.spec.ts", "should support touch emulation")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldSupportTouchEmulation()
         {
             const string dispatchTouch = @"
@@ -70,7 +71,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-viewport-mobile.spec.ts", "should be detectable by Modernizr")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldBeDetectableByModernizr()
         {
             await using var context = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
@@ -80,7 +81,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-viewport-mobile.spec.ts", "should detect touch when applying viewport with touches")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldDetectTouchWhenApplyingViewportWithTouches()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -100,7 +101,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-viewport-mobile.spec.ts", "should support landscape emulation")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldSupportLandscapeEmulation()
         {
             await using var context1 = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
@@ -115,7 +116,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-viewport-mobile.spec.ts", "should support window.orientation emulation")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldSupportWindowOrientationEmulation()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -136,7 +137,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-viewport-mobile.spec.ts", "should fire orientationchange event")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldFireOrientationChangeEvent()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -167,7 +168,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-viewport-mobile.spec.ts", "default mobile viewports to 980 width")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task DefaultMobileViewportsTo980Width()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -186,7 +187,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-viewport-mobile.spec.ts", "respect meta viewport tag")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task RespectMetaViewportTag()
         {
             await using var context = await Browser.NewContextAsync(new()

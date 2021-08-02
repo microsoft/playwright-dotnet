@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -34,7 +35,7 @@ namespace Microsoft.Playwright.Tests
     public class PageMouseTests : PageTestEx
     {
         [PlaywrightTest("page-mouse.spec.ts", "should click the document")]
-        [Skip(SkipAttribute.Targets.Firefox | SkipAttribute.Targets.Windows)]
+        [Skip(TestTargets.Firefox | TestTargets.Windows)]
         public async Task ShouldClickTheDocument()
         {
             await Page.EvaluateAsync(@"() => {
@@ -169,7 +170,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-mouse.spec.ts", "should work with mobile viewports and cross process navigations")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldWorkWithMobileViewportsAndCrossProcessNavigations()
         {
             await using var context = await Browser.NewContextAsync(new()

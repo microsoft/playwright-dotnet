@@ -23,7 +23,7 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using Microsoft.Playwright.Tests.TestServer;
 
 namespace Microsoft.Playwright.Tests
@@ -32,21 +32,6 @@ namespace Microsoft.Playwright.Tests
     {
         public SimpleServer Server { get; internal set; }
         public SimpleServer HttpsServer { get; internal set; }
-
-        public static Task<HttpService> Register(WorkerAwareTest test)
-        {
-            var workerIndex = test.WorkerIndex;
-            return test.RegisterService("Http", async () =>
-            {
-                var http = new HttpService
-                {
-                    Server = SimpleServer.Create(8907 + workerIndex * 2, TestUtils.FindParentDirectory("Playwright.Tests.TestServer")),
-                    HttpsServer = SimpleServer.CreateHttps(8907 + workerIndex * 2 + 1, TestUtils.FindParentDirectory("Playwright.Tests.TestServer"))
-                };
-                await Task.WhenAll(http.Server.StartAsync(), http.HttpsServer.StartAsync());
-                return http;
-            });
-        }
 
         public Task ResetAsync()
         {
@@ -58,6 +43,14 @@ namespace Microsoft.Playwright.Tests
         public Task DisposeAsync()
         {
             return Task.WhenAll(Server.StopAsync(), HttpsServer.StopAsync());
+        }
+
+        public async Task BuildAsync(PlaywrightBaseTest parentTest)
+        {
+            var workerIndex = parentTest.WorkerIndex;
+            Server = SimpleServer.Create(8907 + workerIndex * 2, TestUtils.FindParentDirectory("Playwright.Tests.TestServer"));
+            HttpsServer = SimpleServer.CreateHttps(8907 + workerIndex * 2 + 1, TestUtils.FindParentDirectory("Playwright.Tests.TestServer"));
+            await Task.WhenAll(Server.StartAsync(), HttpsServer.StartAsync());
         }
     }
 }

@@ -13,9 +13,9 @@
     <Import Project="build/Playwright.Tests.targets" />
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.9.0-preview1" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
-        <PackageReference Include="NUnit" Version="3.12.0" />
-        <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+        <PackageReference Include="NUnit" Version="3.13.2" />
+        <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
         <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
         <PackageReference Include="NETStandard.Library" Version="2.0.3" />

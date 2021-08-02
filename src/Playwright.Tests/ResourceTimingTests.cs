@@ -25,6 +25,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -101,7 +102,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("resource-timing.spec.ts", "should work for redirect")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldWorkForRedirect()
         {
             Server.SetRedirect("/foo.html", "/empty.html");

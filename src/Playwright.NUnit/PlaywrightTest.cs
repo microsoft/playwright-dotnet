@@ -22,27 +22,31 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace Microsoft.Playwright.NUnit
 {
-    public class PlaywrightTest : WorkerAwareTest
+    public class PlaywrightTest : PlaywrightBaseTest
     {
-        public static string BrowserName => (Environment.GetEnvironmentVariable("BROWSER") ?? Microsoft.Playwright.BrowserType.Chromium).ToLower();
-
-        private static readonly Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
-
-        public IPlaywright Playwright { get; private set; }
-        public IBrowserType BrowserType { get; private set; }
-
         [SetUp]
         public async Task PlaywrightSetup()
         {
-            Playwright = await _playwrightTask;
-            BrowserType = Playwright[BrowserName];
-            Assert.IsNotNull(BrowserType, $"The requested browser ({BrowserName}) could not be found - make sure your BROWSER env variable is set correctly.");
+            await Setup((o, msg) => Assert.IsNotNull(o, msg));
+        }
+
+        [TearDown]
+        public async Task Teardown()
+        {
+            await Teardown(TestOK);
+        }
+
+        protected bool TestOK
+        {
+            get => TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed ||
+                    TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Skipped;
         }
     }
 }

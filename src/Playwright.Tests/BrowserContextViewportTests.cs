@@ -24,6 +24,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -106,7 +107,7 @@ namespace Microsoft.Playwright.Tests
 
 
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should respect screensize")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldSupportScreenSize()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -130,7 +131,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should ignore screensize when viewport is null")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldIgnoreScreensizeWhenViewportIsNull()
         {
             await using var context = await Browser.NewContextAsync(new()

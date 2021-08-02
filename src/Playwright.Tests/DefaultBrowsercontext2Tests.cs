@@ -27,6 +27,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -51,7 +52,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should work in persistent context")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldWorkInPersistentContext()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -236,7 +237,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should restore cookies from userDataDir")]
-        [Skip(SkipAttribute.Targets.Chromium | SkipAttribute.Targets.Windows)]
+        [Skip(TestTargets.Chromium | TestTargets.Windows)]
         public async Task ShouldRestoreCookiesFromUserDataDir()
         {
             var userDataDir = new TempDirectory();
@@ -285,7 +286,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should throw if page argument is passed")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldThrowIfPageArgumentIsPassed()
         {
             var tmp = new TempDirectory();

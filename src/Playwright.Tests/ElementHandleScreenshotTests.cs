@@ -27,6 +27,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 using SixLabors.ImageSharp;
 
@@ -241,7 +242,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should work with a mobile viewport")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldWorkWithAMobileViewport()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -263,7 +264,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should work with device scale factor")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldWorkWithDeviceScaleFactor()
         {
             await using var context = await Browser.NewContextAsync(new()

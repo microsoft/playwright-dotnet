@@ -26,6 +26,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -144,7 +145,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should work in iframes that failed initial navigation")]
-        [Skip(SkipAttribute.Targets.Chromium, SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Chromium, TestTargets.Firefox)]
         public async Task ShouldWorkIniframesThatFailedInitialNavigation()
         {
             await Page.SetContentAsync(
@@ -164,7 +165,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should work in iframes that failed initial navigation")]
-        [Skip(SkipAttribute.Targets.Chromium, SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Chromium, TestTargets.Firefox)]
         public async Task ShouldWorkInIframesThatInterruptedInitialJavascriptUrlNavigation()
         {
             await Page.GotoAsync(Server.EmptyPage);

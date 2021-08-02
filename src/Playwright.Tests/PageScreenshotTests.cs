@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -218,7 +219,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-screenshot.spec.ts", "should allow transparency")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldAllowTransparency()
         {
             await Page.SetViewportSizeAsync(50, 150);
@@ -259,7 +260,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-screenshot.spec.ts", "should work with a mobile viewport")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldWorkWithAMobileViewport()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -279,7 +280,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-screenshot.spec.ts", "should work with a mobile viewport and clip")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldWorkWithAMobileViewportAndClip()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -308,7 +309,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-screenshot.spec.ts", "should work with a mobile viewport and fullPage")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldWorkWithAMobileViewportAndFullPage()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -338,7 +339,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-screenshot.spec.ts", "should work for webgl")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Firefox, TestTargets.Webkit)]
         public async Task ShouldWorkForWebgl()
         {
             await Page.SetViewportSizeAsync(640, 480);

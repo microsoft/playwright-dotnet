@@ -27,6 +27,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -36,7 +37,7 @@ namespace Microsoft.Playwright.Tests
     public class PdfTests : PageTestEx
     {
         [PlaywrightTest("pdf.spec.ts", "should be able to save file")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Firefox, TestTargets.Webkit)]
         public async Task ShouldBeAbleToSaveFile()
         {
             var baseDirectory = Path.Combine(Directory.GetCurrentDirectory(), "workspace");
@@ -56,7 +57,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("pdf.spec.ts", "should only have pdf in chromium")]
-        [Skip(SkipAttribute.Targets.Chromium)]
+        [Skip(TestTargets.Chromium)]
         public Task ShouldOnlyHavePdfInChromium()
             => PlaywrightAssert.ThrowsAsync<NotSupportedException>(() => Page.PdfAsync());
     }

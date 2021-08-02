@@ -25,6 +25,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -73,7 +74,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("screencast.spec.ts", "should capture static page")]
-        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
+        [Skip(TestTargets.Webkit | TestTargets.Windows)]
         public async Task ShouldCaptureStaticPage()
         {
             using var tempDirectory = new TempDirectory();
@@ -171,7 +172,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("screencast.spec.ts", "should capture static page in persistent context")]
-        [Skip(SkipAttribute.Targets.Webkit, SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Webkit, TestTargets.Firefox)]
         public async Task ShouldCaptureStaticPageInPersistentContext()
         {
             using var userDirectory = new TempDirectory();

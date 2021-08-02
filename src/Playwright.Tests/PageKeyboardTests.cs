@@ -27,6 +27,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -126,7 +127,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should report shiftKey")]
-        [Skip(SkipAttribute.Targets.Firefox | SkipAttribute.Targets.OSX)]
+        [Skip(TestTargets.Firefox | TestTargets.OSX)]
         public async Task ShouldReportShiftKey()
         {
             await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
@@ -428,7 +429,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should handle selectAll")]
-        [Skip(SkipAttribute.Targets.Chromium | SkipAttribute.Targets.OSX)]
+        [Skip(TestTargets.Chromium | TestTargets.OSX)]
         public async Task ShouldHandleSelectAll()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -443,7 +444,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should be able to prevent selectAll")]
-        [Skip(SkipAttribute.Targets.Chromium | SkipAttribute.Targets.OSX)]
+        [Skip(TestTargets.Chromium | TestTargets.OSX)]
         public async Task ShouldBeAbleToPreventSelectAll()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -513,7 +514,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should expose keyIdentifier in webkit")]
-        [Skip(SkipAttribute.Targets.Chromium, SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Chromium, TestTargets.Firefox)]
         public async Task ShouldExposeKeyIdentifierInWebkit()
         {
             var lastEventHandle = await CaptureLastKeydownAsync(Page);

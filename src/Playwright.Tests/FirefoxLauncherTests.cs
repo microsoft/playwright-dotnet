@@ -25,6 +25,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests.Firefox
@@ -35,7 +36,7 @@ namespace Microsoft.Playwright.Tests.Firefox
     public class FirefoxLauncherTests : PlaywrightTestEx
     {
         [PlaywrightTest("firefox/launcher.spec.ts", "should pass firefox user preferences")]
-        [Skip(SkipAttribute.Targets.Chromium, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Chromium, TestTargets.Webkit)]
         public async Task ShouldPassFirefoxUserPreferences()
         {
             var firefoxUserPrefs = new Dictionary<string, object>

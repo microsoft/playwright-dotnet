@@ -26,6 +26,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -161,7 +162,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("headful.spec.ts", "should not override viewport size when passed null")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldNotOverrideViewportSizeWhenPassedNull()
         {
             await using var browser = await LaunchHeaded();

@@ -22,13 +22,19 @@
  * SOFTWARE.
  */
 
-using System.Threading.Tasks;
+using System;
 
-namespace Microsoft.Playwright.NUnit
+namespace Microsoft.Playwright.Testing.Core
 {
-    public interface IWorkerService
+    [Flags]
+    public enum TestTargets : short
     {
-        public Task ResetAsync();
-        public Task DisposeAsync();
+
+        Windows = 1 << 0,
+        Linux = 1 << 1,
+        OSX = 1 << 2,
+        Chromium = 1 << 3,
+        Firefox = 1 << 4,
+        Webkit = 1 << 5
     }
 }

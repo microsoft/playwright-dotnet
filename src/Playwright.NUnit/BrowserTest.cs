@@ -24,16 +24,18 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.Playwright.Testing.Core.Services;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.NUnit
 {
-    public class BrowserTest : PlaywrightTest
+    public class BrowserTest : PlaywrightTest, IBrowserTest
     {
-        public IBrowser Browser { get; internal set; }
+        public IBrowser Browser { get; private set; }
         private readonly List<IBrowserContext> _contexts = new();
 
-        public async Task<IBrowserContext> NewContext(BrowserNewContextOptions options)
+        public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions options)
         {
             var context = await Browser.NewContextAsync(options);
             _contexts.Add(context);
@@ -43,14 +45,13 @@ namespace Microsoft.Playwright.NUnit
         [SetUp]
         public async Task BrowserSetup()
         {
-            var service = await BrowserService.Register(this, BrowserType);
-            Browser = service.Browser;
+            Browser = (await GetService<BrowserService>()).Browser;
         }
 
         [TearDown]
         public async Task BrowserTearDown()
         {
-            if (TestOk())
+            if (TestOK)
             {
                 foreach (var context in _contexts)
                 {

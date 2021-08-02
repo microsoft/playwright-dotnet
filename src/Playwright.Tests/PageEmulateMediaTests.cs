@@ -25,6 +25,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -64,7 +65,7 @@ namespace Microsoft.Playwright.Tests
         public void ShouldThrowInCaseOfBadMediaArgument() { }
 
         [PlaywrightTest("page-emulate-media.spec.ts", "should work during navigation")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldWorkDuringNavigation()
         {
             await Page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Light });

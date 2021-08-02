@@ -24,6 +24,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -33,7 +34,7 @@ namespace Microsoft.Playwright.Tests
     {
         // We skip all browser because crash uses internals.
         [PlaywrightTest("page-event-crash.spec.ts", "should emit crash event when page crashes")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Firefox, TestTargets.Webkit)]
         public async Task ShouldEmitCrashEventWhenPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
@@ -46,7 +47,7 @@ namespace Microsoft.Playwright.Tests
 
         // We skip all browser because crash uses internals.
         [PlaywrightTest("page-event-crash.spec.ts", "should throw on any action after page crashes")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Firefox, TestTargets.Webkit)]
         public async Task ShouldThrowOnAnyActionAfterPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
@@ -61,7 +62,7 @@ namespace Microsoft.Playwright.Tests
 
         // We skip all browser because crash uses internals.
         [PlaywrightTest("page-event-crash.spec.ts", "should cancel waitForEvent when page crashes")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Firefox, TestTargets.Webkit)]
         public async Task ShouldCancelWaitForEventWhenPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
@@ -80,7 +81,7 @@ namespace Microsoft.Playwright.Tests
 
         // We skip all browser because crash uses internals.
         [PlaywrightTest("page-event-crash.spec.ts", "should be able to close context when page crashes")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Firefox, TestTargets.Webkit)]
         public async Task ShouldBeAbleToCloseContextWhenPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");

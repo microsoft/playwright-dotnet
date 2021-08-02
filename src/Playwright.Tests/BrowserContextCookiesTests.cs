@@ -27,6 +27,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -95,7 +96,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-cookies.spec.ts", @"should properly report ""Strict"" sameSite cookie")]
-        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
+        [Skip(TestTargets.Webkit | TestTargets.Windows)]
         public async Task ShouldProperlyReportStrictSameSiteCookie()
         {
             Server.SetRoute("/empty.html", context =>
@@ -110,7 +111,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-cookies.spec.ts", @"should properly report ""Lax"" sameSite cookie")]
-        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
+        [Skip(TestTargets.Webkit | TestTargets.Windows)]
         public async Task ShouldProperlyReportLaxSameSiteCookie()
         {
             Server.SetRoute("/empty.html", context =>

@@ -24,6 +24,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -81,7 +82,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should throw on incorrect date")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldThrowOnIncorrectDate()
         {
             await Page.SetContentAsync("<input type=date>");
@@ -100,7 +101,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should throw on incorrect time")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldThrowOnIncorrectTime()
         {
             await Page.SetContentAsync("<input type=time>");
@@ -119,7 +120,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should throw on incorrect datetime-local")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Firefox, TestTargets.Webkit)]
         public async Task ShouldThrowOnIncorrectDateTimeLocal()
         {
             await Page.SetContentAsync("<input type=datetime-local>");

@@ -23,21 +23,13 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.Testing.Core;
-using NUnit.Framework;
 
-namespace Microsoft.Playwright.NUnit
+namespace Microsoft.Playwright.Testing.Core
 {
-    public class ContextTest : BrowserTest, IContextTest
+    public interface IWorkerService
     {
-        public IBrowserContext Context { get; private set; }
-
-        [SetUp]
-        public async Task ContextSetup()
-        {
-            Context = await NewContextAsync(ContextOptions);
-        }
-
-        public virtual BrowserNewContextOptions ContextOptions => null;
+        public Task BuildAsync(PlaywrightBaseTest parentTest);
+        public Task ResetAsync();
+        public Task DisposeAsync();
     }
 }

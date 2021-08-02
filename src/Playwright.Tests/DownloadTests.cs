@@ -26,6 +26,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -322,7 +323,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should report alt-click downloads")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Firefox, TestTargets.Webkit)]
         public async Task ShouldReportAltClickDownloads()
         {
             Server.SetRoute("/download", context =>

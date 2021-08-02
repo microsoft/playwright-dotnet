@@ -24,6 +24,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -166,7 +167,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-dispatchevent.spec.ts", "Page.dispatchEvent(drag)", "should dispatch drag drop events")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldDispatchDragDropEvents()
         {
             await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
@@ -182,7 +183,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-dispatchevent.spec.ts", "Page.dispatchEvent(drag)", "should dispatch drag drop events")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ElementHandleShouldDispatchDragDropEvents()
         {
             await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");

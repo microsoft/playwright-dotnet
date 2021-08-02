@@ -32,6 +32,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -530,7 +531,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should fulfill with redirect status")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldFulfillWithRedirectStatus()
         {
             await Page.GotoAsync(Server.Prefix + "/title.html");

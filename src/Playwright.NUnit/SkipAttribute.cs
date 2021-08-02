@@ -23,59 +23,29 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Linq;
-using System.Runtime.InteropServices;
-using NUnit.Framework;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
 namespace Microsoft.Playwright.NUnit
 {
-    public class SkipAttribute : NUnitAttribute, IApplyToTest
+    public class SkipAttribute : SkipBaseAttribute, IApplyToTest
     {
-        private readonly Targets[] _combinations;
-
-        [Flags]
-        public enum Targets : short
-        {
-            Windows = 1 << 0,
-            Linux = 1 << 1,
-            OSX = 1 << 2,
-            Chromium = 1 << 3,
-            Firefox = 1 << 4,
-            Webkit = 1 << 5
-        }
 
         /// <summary>
         /// Skips the combinations provided.
         /// </summary>
         /// <param name="pairs"></param>
-        public SkipAttribute(params Targets[] combinations)
+        public SkipAttribute(params TestTargets[] combinations) : base(combinations)
         {
-            _combinations = combinations;
         }
 
         public void ApplyToTest(Test test)
         {
-            if (_combinations.Any(combination =>
-            {
-                var requirements = (Enum.GetValues(typeof(Targets)) as Targets[]).Where(x => combination.HasFlag(x));
-                return requirements.All(flag =>
-                    flag switch
-                    {
-                        Targets.Windows => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows),
-                        Targets.Linux => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux),
-                        Targets.OSX => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX),
-                        Targets.Chromium => NUnit.PlaywrightTest.BrowserName == BrowserType.Chromium,
-                        Targets.Firefox => NUnit.PlaywrightTest.BrowserName == BrowserType.Firefox,
-                        Targets.Webkit => NUnit.PlaywrightTest.BrowserName == BrowserType.Webkit,
-                        _ => false,
-                    });
-            }))
+            if (ShouldSkip())
             {
                 test.RunState = RunState.Ignored;
-                test.Properties.Set(global::NUnit.Framework.Internal.PropertyNames.SkipReason, "Skipped by browser/platform");
+                test.Properties.Set(PropertyNames.SkipReason, "Skipped by browser/platform");
             }
         }
     }

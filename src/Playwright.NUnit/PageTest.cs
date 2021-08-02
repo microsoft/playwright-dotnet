@@ -23,11 +23,12 @@
  */
 
 using System.Threading.Tasks;
+using Microsoft.Playwright.Testing.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.NUnit
 {
-    public class PageTest : ContextTest
+    public class PageTest : ContextTest, IPageTest
     {
         public IPage Page { get; private set; }
 
