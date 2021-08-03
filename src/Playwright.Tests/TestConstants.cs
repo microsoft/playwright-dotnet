@@ -45,6 +45,7 @@ namespace Microsoft.Playwright.Tests
         internal static readonly bool IsChromium = BrowserName == BrowserType.Chromium;
         internal static readonly bool IsMacOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
         internal static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        internal static readonly bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
         public static string FileToUpload => TestUtils.GetWebServerFile("file-to-upload.txt");
 
