@@ -23,12 +23,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class EvalOnSelectorTests : PageTestEx
     {
         [PlaywrightTest("eval-on-selector.spec.ts", "should work with css selector")]
@@ -141,7 +141,7 @@ namespace Microsoft.Playwright.Tests
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(()
                 => Page.EvalOnSelectorAsync("section", "e => e.id"));
-            StringAssert.Contains("failed to find element matching selector \"section\"", exception.Message);
+            StringAssert.Contains(exception.Message, "failed to find element matching selector \"section\"");
         }
 
         [PlaywrightTest("eval-on-selector.spec.ts", "should support >> syntax")]
@@ -183,7 +183,7 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("<div><span>b</span></div>", await Page.EvalOnSelectorAsync<string>("*css=div >> \"b\"", "(e) => e.outerHTML"));
             Assert.AreEqual("<div><span>b</span></div>", await Page.EvalOnSelectorAsync<string>("section >> *css=div >> \"b\"", "(e) => e.outerHTML"));
             Assert.AreEqual("<span>b</span>", await Page.EvalOnSelectorAsync<string>("css=div >> *text=\"b\"", "(e) => e.outerHTML"));
-            Assert.NotNull(await Page.QuerySelectorAsync("*"));
+            Assert.IsNotNull(await Page.QuerySelectorAsync("*"));
         }
 
         [PlaywrightTest("eval-on-selector.spec.ts", "should throw on multiple * captures")]
@@ -204,14 +204,14 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithSpacesInCssAttributes()
         {
             await Page.SetContentAsync("<div><input placeholder=\"Select date\"></div>");
-            Assert.NotNull(await Page.WaitForSelectorAsync("[placeholder = \"Select date\"]"));
-            Assert.NotNull(await Page.WaitForSelectorAsync("[placeholder = 'Select date']"));
-            Assert.NotNull(await Page.WaitForSelectorAsync("input[placeholder = \"Select date\"]"));
-            Assert.NotNull(await Page.WaitForSelectorAsync("input[placeholder = 'Select date']"));
-            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = \"Select date\"]"));
-            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = 'Select date']"));
-            Assert.NotNull(await Page.QuerySelectorAsync("input[placeholder = \"Select date\"]"));
-            Assert.NotNull(await Page.QuerySelectorAsync("input[placeholder = 'Select date']"));
+            Assert.IsNotNull(await Page.WaitForSelectorAsync("[placeholder = \"Select date\"]"));
+            Assert.IsNotNull(await Page.WaitForSelectorAsync("[placeholder = 'Select date']"));
+            Assert.IsNotNull(await Page.WaitForSelectorAsync("input[placeholder = \"Select date\"]"));
+            Assert.IsNotNull(await Page.WaitForSelectorAsync("input[placeholder = 'Select date']"));
+            Assert.IsNotNull(await Page.QuerySelectorAsync("[placeholder = \"Select date\"]"));
+            Assert.IsNotNull(await Page.QuerySelectorAsync("[placeholder = 'Select date']"));
+            Assert.IsNotNull(await Page.QuerySelectorAsync("input[placeholder = \"Select date\"]"));
+            Assert.IsNotNull(await Page.QuerySelectorAsync("input[placeholder = 'Select date']"));
             Assert.AreEqual("<input placeholder=\"Select date\">", await Page.EvalOnSelectorAsync<string>("[placeholder = \"Select date\"]", "e => e.outerHTML"));
             Assert.AreEqual("<input placeholder=\"Select date\">", await Page.EvalOnSelectorAsync<string>("[placeholder = 'Select date']", "e => e.outerHTML"));
             Assert.AreEqual("<input placeholder=\"Select date\">", await Page.EvalOnSelectorAsync<string>("input[placeholder = \"Select date\"]", "e => e.outerHTML"));
@@ -228,27 +228,27 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWihQuotesInCssAttributes()
         {
             await Page.SetContentAsync("<div><input placeholder=\"Select&quot;date\"></div>");
-            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = \"Select\\\"date\"]"));
-            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = 'Select\"date']"));
+            Assert.IsNotNull(await Page.QuerySelectorAsync("[placeholder = \"Select\\\"date\"]"));
+            Assert.IsNotNull(await Page.QuerySelectorAsync("[placeholder = 'Select\"date']"));
 
             await Page.SetContentAsync("<div><input placeholder=\"Select &quot; date\"></div>");
-            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = \"Select \\\" date\"]"));
-            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = 'Select \" date']"));
+            Assert.IsNotNull(await Page.QuerySelectorAsync("[placeholder = \"Select \\\" date\"]"));
+            Assert.IsNotNull(await Page.QuerySelectorAsync("[placeholder = 'Select \" date']"));
 
             await Page.SetContentAsync("<div><input placeholder=\"Select&apos;date\"></div>");
-            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = \"Select'date\"]"));
-            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = 'Select\\'date']"));
+            Assert.IsNotNull(await Page.QuerySelectorAsync("[placeholder = \"Select'date\"]"));
+            Assert.IsNotNull(await Page.QuerySelectorAsync("[placeholder = 'Select\\'date']"));
 
             await Page.SetContentAsync("<div><input placeholder=\"Select &apos; date\"></div>");
-            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = \"Select ' date\"]"));
-            Assert.NotNull(await Page.QuerySelectorAsync("[placeholder = 'Select \\' date']"));
+            Assert.IsNotNull(await Page.QuerySelectorAsync("[placeholder = \"Select ' date\"]"));
+            Assert.IsNotNull(await Page.QuerySelectorAsync("[placeholder = 'Select \\' date']"));
         }
 
         [PlaywrightTest("eval-on-selector.spec.ts", "should work with quotes in css attributes when missing")]
         public async Task ShouldWorkWihQuotesInCssAttributesWhenMissing()
         {
             var inputTask = Page.WaitForSelectorAsync("[placeholder = \"Select\\\"date\"]");
-            Assert.Null(await Page.QuerySelectorAsync("[placeholder = \"Select\\\"date\"]"));
+            Assert.IsNull(await Page.QuerySelectorAsync("[placeholder = \"Select\\\"date\"]"));
             await Page.SetContentAsync("<div><input placeholder=\"Select&quot;date\"></div>");
             await inputTask;
         }

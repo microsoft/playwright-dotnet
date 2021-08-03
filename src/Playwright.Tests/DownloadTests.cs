@@ -25,16 +25,17 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>download.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class DownloadTests : PageTestEx
     {
-        [SetUp]
+        [TestInitialize]
         public void Setup()
         {
             Server.SetRoute("/download", context =>
@@ -77,8 +78,8 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("file.txt", download.SuggestedFilename);
 
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => download.PathAsync());
-            StringAssert.Contains("acceptDownloads", await download.FailureAsync());
-            StringAssert.Contains("acceptDownloads: true", exception.Message);
+            StringAssert.Contains(await download.FailureAsync(), "acceptDownloads");
+            StringAssert.Contains(exception.Message, "acceptDownloads: true");
         }
 
         [PlaywrightTest("download.spec.ts", "should report downloads with acceptDownloads: true")]
@@ -92,7 +93,7 @@ namespace Microsoft.Playwright.Tests
             });
             string path = await download.PathAsync();
 
-            Assert.True(new FileInfo(path).Exists);
+            Assert.IsTrue(new FileInfo(path).Exists);
             Assert.AreEqual("Hello world", File.ReadAllText(path));
         }
 
@@ -110,7 +111,7 @@ namespace Microsoft.Playwright.Tests
             string userPath = Path.Combine(tmpDir.Path, "download.txt");
             await download.SaveAsAsync(userPath);
 
-            Assert.True(new FileInfo(userPath).Exists);
+            Assert.IsTrue(new FileInfo(userPath).Exists);
             Assert.AreEqual("Hello world", File.ReadAllText(userPath));
             await page.CloseAsync();
         }
@@ -130,11 +131,11 @@ namespace Microsoft.Playwright.Tests
             string userPath = Path.Combine(tmpDir.Path, "download.txt");
             await download.SaveAsAsync(userPath);
 
-            Assert.True(new FileInfo(userPath).Exists);
+            Assert.IsTrue(new FileInfo(userPath).Exists);
             Assert.AreEqual("Hello world", File.ReadAllText(userPath));
 
             string originalPath = await download.PathAsync();
-            Assert.True(new FileInfo(originalPath).Exists);
+            Assert.IsTrue(new FileInfo(originalPath).Exists);
             Assert.AreEqual("Hello world", File.ReadAllText(originalPath));
 
             await page.CloseAsync();
@@ -154,12 +155,12 @@ namespace Microsoft.Playwright.Tests
             using var tmpDir = new TempDirectory();
             string userPath = Path.Combine(tmpDir.Path, "download.txt");
             await download.SaveAsAsync(userPath);
-            Assert.True(new FileInfo(userPath).Exists);
+            Assert.IsTrue(new FileInfo(userPath).Exists);
             Assert.AreEqual("Hello world", File.ReadAllText(userPath));
 
             string anotherUserPath = Path.Combine(tmpDir.Path, "download (2).txt");
             await download.SaveAsAsync(anotherUserPath);
-            Assert.True(new FileInfo(anotherUserPath).Exists);
+            Assert.IsTrue(new FileInfo(anotherUserPath).Exists);
             Assert.AreEqual("Hello world", File.ReadAllText(anotherUserPath));
 
             await page.CloseAsync();
@@ -202,7 +203,7 @@ namespace Microsoft.Playwright.Tests
             string userPath = Path.Combine(tmpDir.Path, "these", "are", "directories", "download.txt");
             var download = downloadTask.Result;
             await download.SaveAsAsync(userPath);
-            Assert.True(new FileInfo(userPath).Exists);
+            Assert.IsTrue(new FileInfo(userPath).Exists);
             Assert.AreEqual("Hello world", File.ReadAllText(userPath));
 
             await page.CloseAsync();
@@ -230,7 +231,7 @@ namespace Microsoft.Playwright.Tests
             var download = downloadTask.Result;
 
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => download.SaveAsAsync(userPath));
-            StringAssert.Contains("Pass { acceptDownloads: true } when you are creating your browser context", exception.Message);
+            StringAssert.Contains(exception.Message, "Pass { acceptDownloads: true } when you are creating your browser context");
         }
 
         [PlaywrightTest("download.spec.ts", "should error when saving after deletion")]
@@ -249,7 +250,7 @@ namespace Microsoft.Playwright.Tests
             var download = downloadTask.Result;
             await download.DeleteAsync();
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => download.SaveAsAsync(userPath));
-            StringAssert.Contains("Target page, context or browser has been closed", exception.Message);
+            StringAssert.Contains(exception.Message, "Target page, context or browser has been closed");
         }
 
         [PlaywrightTest("download.spec.ts", "should error when saving after deletion when connected remotely")]
@@ -280,7 +281,7 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("file.txt", download.SuggestedFilename);
             string path = await download.PathAsync();
 
-            Assert.True(new FileInfo(path).Exists);
+            Assert.IsTrue(new FileInfo(path).Exists);
             Assert.AreEqual("Hello world", File.ReadAllText(path));
             await page.CloseAsync();
         }
@@ -322,7 +323,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should report alt-click downloads")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Firefox, TestTargets.Webkit)]
         public async Task ShouldReportAltClickDownloads()
         {
             Server.SetRoute("/download", context =>
@@ -342,7 +343,7 @@ namespace Microsoft.Playwright.Tests
             var download = downloadTask.Result;
             string path = await download.PathAsync();
 
-            Assert.True(new FileInfo(path).Exists);
+            Assert.IsTrue(new FileInfo(path).Exists);
             Assert.AreEqual("Hello world", File.ReadAllText(path));
         }
 
@@ -360,7 +361,7 @@ namespace Microsoft.Playwright.Tests
             var download = downloadTask.Result;
             string path = await download.PathAsync();
 
-            Assert.True(new FileInfo(path).Exists);
+            Assert.IsTrue(new FileInfo(path).Exists);
             Assert.AreEqual("Hello world", File.ReadAllText(path));
         }
 
@@ -378,9 +379,9 @@ namespace Microsoft.Playwright.Tests
             var download = downloadTask.Result;
             string path = await download.PathAsync();
 
-            Assert.True(new FileInfo(path).Exists);
+            Assert.IsTrue(new FileInfo(path).Exists);
             await download.DeleteAsync();
-            Assert.False(new FileInfo(path).Exists);
+            Assert.IsFalse(new FileInfo(path).Exists);
             await page.CloseAsync();
         }
 
@@ -421,11 +422,11 @@ namespace Microsoft.Playwright.Tests
 
             string path1 = await download1Task.Result.PathAsync();
             string path2 = await download2Task.Result.PathAsync();
-            Assert.True(new FileInfo(path1).Exists);
-            Assert.True(new FileInfo(path2).Exists);
+            Assert.IsTrue(new FileInfo(path1).Exists);
+            Assert.IsTrue(new FileInfo(path2).Exists);
             await page.Context.CloseAsync();
-            Assert.False(new FileInfo(path1).Exists);
-            Assert.False(new FileInfo(path2).Exists);
+            Assert.IsFalse(new FileInfo(path1).Exists);
+            Assert.IsFalse(new FileInfo(path2).Exists);
         }
 
         [PlaywrightTest("download.spec.ts", "should delete downloads on browser gone")]
@@ -448,12 +449,12 @@ namespace Microsoft.Playwright.Tests
 
             string path1 = await download1Task.Result.PathAsync();
             string path2 = await download2Task.Result.PathAsync();
-            Assert.True(new FileInfo(path1).Exists);
-            Assert.True(new FileInfo(path2).Exists);
+            Assert.IsTrue(new FileInfo(path1).Exists);
+            Assert.IsTrue(new FileInfo(path2).Exists);
             await browser.CloseAsync();
-            Assert.False(new FileInfo(path1).Exists);
-            Assert.False(new FileInfo(path2).Exists);
-            Assert.False(new FileInfo(Path.Combine(path1, "..")).Exists);
+            Assert.IsFalse(new FileInfo(path1).Exists);
+            Assert.IsFalse(new FileInfo(path2).Exists);
+            Assert.IsFalse(new FileInfo(Path.Combine(path1, "..")).Exists);
         }
 
         [PlaywrightTest("download.spec.ts", "should be able to cancel pending downloads")]

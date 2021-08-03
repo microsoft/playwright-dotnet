@@ -23,17 +23,18 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageEventCrashTests : PageTestEx
     {
         // We skip all browser because crash uses internals.
         [PlaywrightTest("page-event-crash.spec.ts", "should emit crash event when page crashes")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Firefox, TestTargets.Webkit)]
         public async Task ShouldEmitCrashEventWhenPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
@@ -46,7 +47,7 @@ namespace Microsoft.Playwright.Tests
 
         // We skip all browser because crash uses internals.
         [PlaywrightTest("page-event-crash.spec.ts", "should throw on any action after page crashes")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Firefox, TestTargets.Webkit)]
         public async Task ShouldThrowOnAnyActionAfterPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
@@ -56,19 +57,19 @@ namespace Microsoft.Playwright.Tests
             await CrashAsync(Page);
             await crashEvent.Task;
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("() => {}"));
-            StringAssert.Contains("crash", exception.Message);
+            StringAssert.Contains(exception.Message, "crash");
         }
 
         // We skip all browser because crash uses internals.
         [PlaywrightTest("page-event-crash.spec.ts", "should cancel waitForEvent when page crashes")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Firefox, TestTargets.Webkit)]
         public async Task ShouldCancelWaitForEventWhenPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
             var responseTask = Page.WaitForResponseAsync("**/*");
             await CrashAsync(Page);
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => responseTask);
-            StringAssert.Contains("Page crashed", exception.Message);
+            StringAssert.Contains(exception.Message, "Page crashed");
         }
 
         // We skip all browser because crash uses internals.
@@ -80,7 +81,7 @@ namespace Microsoft.Playwright.Tests
 
         // We skip all browser because crash uses internals.
         [PlaywrightTest("page-event-crash.spec.ts", "should be able to close context when page crashes")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Firefox, TestTargets.Webkit)]
         public async Task ShouldBeAbleToCloseContextWhenPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");

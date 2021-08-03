@@ -24,12 +24,13 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class ElementHandleOwnerFrameTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work")]
@@ -100,7 +101,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work for adopted elements")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldWorkForAdoptedElements()
         {
             await Page.GotoAsync(Server.EmptyPage);

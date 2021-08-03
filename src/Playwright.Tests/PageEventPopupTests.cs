@@ -23,12 +23,13 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageEventPopupTests : PageTestEx
     {
         [PlaywrightTest("page-event-popup.spec.ts", "should work")]
@@ -40,8 +41,8 @@ namespace Microsoft.Playwright.Tests
                 Page.EvaluateAsync("() => window.open('about:blank')")
             );
             var popup = popupTask.Result;
-            Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
-            Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsTrue(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with window features")]
@@ -54,8 +55,8 @@ namespace Microsoft.Playwright.Tests
                 Page.EvaluateAsync<string>("() => window.open('about:blank', 'Title', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top=0,left=0')")
             );
             var popup = popupTask.Result;
-            Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
-            Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsTrue(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should emit for immediately closed popups")]
@@ -70,7 +71,7 @@ namespace Microsoft.Playwright.Tests
                     win.close();
                 }")
             );
-            Assert.NotNull(popupTask.Result);
+            Assert.IsNotNull(popupTask.Result);
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should emit for immediately closed popups")]
@@ -84,7 +85,7 @@ namespace Microsoft.Playwright.Tests
                     win.close();
                 }");
             });
-            Assert.NotNull(popup);
+            Assert.IsNotNull(popup);
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should be able to capture alert")]
@@ -103,8 +104,8 @@ namespace Microsoft.Playwright.Tests
                 Page.EvaluateAsync("() => window.open('')")
             );
             var popup = popupTask.Result;
-            Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
-            Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsTrue(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with noopener and no url")]
@@ -118,8 +119,8 @@ namespace Microsoft.Playwright.Tests
             );
             var popup = popupTask.Result;
             Assert.AreEqual("about:blank", popup.Url.Split('#')[0]);
-            Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
-            Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsFalse(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with noopener and about:blank")]
@@ -132,8 +133,8 @@ namespace Microsoft.Playwright.Tests
                 Page.EvaluateAsync("() => window.open('about:blank', null, 'noopener')")
             );
             var popup = popupTask.Result;
-            Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
-            Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsFalse(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with noopener and url")]
@@ -146,12 +147,12 @@ namespace Microsoft.Playwright.Tests
                 Page.EvaluateAsync("url => window.open(url, null, 'noopener')", Server.EmptyPage)
             );
             var popup = popupTask.Result;
-            Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
-            Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsFalse(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with clicking target=_blank")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldWorkWithClickingTargetBlank()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -168,12 +169,12 @@ namespace Microsoft.Playwright.Tests
             );
 
             var popup = await popupTask.Result;
-            Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
-            Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsTrue(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with fake-clicking target=_blank and rel=noopener")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldWorkWithFakeClickingTargetBlankAndRelNoopener()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -189,12 +190,12 @@ namespace Microsoft.Playwright.Tests
                 Page.EvalOnSelectorAsync("a", "a => a.click()")
             );
             var popup = await popupTask.Result;
-            Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
-            Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsFalse(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should work with clicking target=_blank and rel=noopener")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldWorkWithClickingTargetBlankAndRelNoopener()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -210,12 +211,12 @@ namespace Microsoft.Playwright.Tests
                 Page.ClickAsync("a")
             );
             var popup = await popupTask.Result;
-            Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
-            Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("() => !!window.opener"));
+            Assert.IsFalse(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         }
 
         [PlaywrightTest("page-event-popup.spec.ts", "should not treat navigations as new popups")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldNotTreatNavigationsAsNewPopups()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -234,7 +235,7 @@ namespace Microsoft.Playwright.Tests
             bool badSecondPopup = false;
             Page.Popup += (_, _) => badSecondPopup = true;
             await popup.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
-            Assert.False(badSecondPopup);
+            Assert.IsFalse(badSecondPopup);
         }
     }
 }

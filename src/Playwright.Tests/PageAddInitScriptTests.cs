@@ -24,12 +24,12 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageAddInitScriptTests : PageTestEx
     {
         [PlaywrightTest("page-add-init-script.spec.ts", "should evaluate before anything else on the page")]
@@ -129,7 +129,7 @@ namespace Microsoft.Playwright.Tests
                 //Silent exception
             }
 
-            Assert.Null(await Page.EvaluateAsync("() => window.e"));
+            Assert.IsNull(await Page.EvaluateAsync("() => window.e"));
         }
 
         [PlaywrightTest("page-add-init-script.spec.ts", "should work after a cross origin navigation")]

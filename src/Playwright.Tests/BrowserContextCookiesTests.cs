@@ -26,17 +26,18 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserContextCookiesTests : PageTestEx
     {
         [PlaywrightTest("browsercontext-cookies.spec.ts", "should return no cookies in pristine browser context")]
         public async Task ShouldReturnNoCookiesInPristineBrowserContext()
-            => Assert.IsEmpty(await Context.CookiesAsync());
+            => Assert.That.Collection(await Context.CookiesAsync()).IsEmpty();
 
         [PlaywrightTest("browsercontext-cookies.spec.ts", "should get a cookie")]
         public async Task ShouldGetACookie()
@@ -53,8 +54,8 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("localhost", cookie.Domain);
             Assert.AreEqual("/", cookie.Path);
             Assert.AreEqual(-1, cookie.Expires);
-            Assert.False(cookie.HttpOnly);
-            Assert.False(cookie.Secure);
+            Assert.IsFalse(cookie.HttpOnly);
+            Assert.IsFalse(cookie.Secure);
             Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
         }
 
@@ -75,8 +76,8 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("localhost", cookie.Domain);
             Assert.AreEqual("/", cookie.Path);
             Assert.AreEqual(new DateTimeOffset(date).ToUnixTimeSeconds(), cookie.Expires);
-            Assert.False(cookie.HttpOnly);
-            Assert.False(cookie.Secure);
+            Assert.IsFalse(cookie.HttpOnly);
+            Assert.IsFalse(cookie.Secure);
             Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
         }
 
@@ -90,12 +91,12 @@ namespace Microsoft.Playwright.Tests
             });
             await Page.GotoAsync(Server.EmptyPage);
             var cookies = await Context.CookiesAsync();
-            Assert.That(cookies, Has.Count.EqualTo(1));
-            Assert.True(cookies.ElementAt(0).HttpOnly);
+            Assert.That.Collection(cookies).HasExactly(1);
+            Assert.IsTrue(cookies.ElementAt(0).HttpOnly);
         }
 
         [PlaywrightTest("browsercontext-cookies.spec.ts", @"should properly report ""Strict"" sameSite cookie")]
-        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
+        [Skip(TestTargets.Webkit | TestTargets.Windows)]
         public async Task ShouldProperlyReportStrictSameSiteCookie()
         {
             Server.SetRoute("/empty.html", context =>
@@ -105,12 +106,12 @@ namespace Microsoft.Playwright.Tests
             });
             await Page.GotoAsync(Server.EmptyPage);
             var cookies = await Context.CookiesAsync();
-            Assert.That(cookies, Has.Count.EqualTo(1));
+            Assert.That.Collection(cookies).HasExactly(1);
             Assert.AreEqual(SameSiteAttribute.Strict, cookies.ElementAt(0).SameSite);
         }
 
         [PlaywrightTest("browsercontext-cookies.spec.ts", @"should properly report ""Lax"" sameSite cookie")]
-        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
+        [Skip(TestTargets.Webkit | TestTargets.Windows)]
         public async Task ShouldProperlyReportLaxSameSiteCookie()
         {
             Server.SetRoute("/empty.html", context =>
@@ -120,7 +121,7 @@ namespace Microsoft.Playwright.Tests
             });
             await Page.GotoAsync(Server.EmptyPage);
             var cookies = await Context.CookiesAsync();
-            Assert.That(cookies, Has.Count.EqualTo(1));
+            Assert.That.Collection(cookies).HasExactly(1);
             Assert.AreEqual(SameSiteAttribute.Lax, cookies.ElementAt(0).SameSite);
         }
 
@@ -128,7 +129,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldGetMultipleCookies()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            Assert.IsEmpty(await Context.CookiesAsync());
+            Assert.That.Collection(await Context.CookiesAsync()).IsEmpty();
 
             string documentCookie = await Page.EvaluateAsync<string>(@"() => {
                 document.cookie = 'username=John Doe';
@@ -144,8 +145,8 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("localhost", cookie.Domain);
             Assert.AreEqual("/", cookie.Path);
             Assert.AreEqual(cookie.Expires, -1);
-            Assert.False(cookie.HttpOnly);
-            Assert.False(cookie.Secure);
+            Assert.IsFalse(cookie.HttpOnly);
+            Assert.IsFalse(cookie.Secure);
             Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
 
             cookie = cookies[1];
@@ -154,8 +155,8 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("localhost", cookie.Domain);
             Assert.AreEqual("/", cookie.Path);
             Assert.AreEqual(cookie.Expires, -1);
-            Assert.False(cookie.HttpOnly);
-            Assert.False(cookie.Secure);
+            Assert.IsFalse(cookie.HttpOnly);
+            Assert.IsFalse(cookie.Secure);
             Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
         }
 
@@ -193,8 +194,8 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("baz.com", cookie.Domain);
             Assert.AreEqual("/", cookie.Path);
             Assert.AreEqual(cookie.Expires, -1);
-            Assert.False(cookie.HttpOnly);
-            Assert.True(cookie.Secure);
+            Assert.IsFalse(cookie.HttpOnly);
+            Assert.IsTrue(cookie.Secure);
             Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
 
             cookie = cookies[1];
@@ -203,8 +204,8 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("foo.com", cookie.Domain);
             Assert.AreEqual("/", cookie.Path);
             Assert.AreEqual(cookie.Expires, -1);
-            Assert.False(cookie.HttpOnly);
-            Assert.True(cookie.Secure);
+            Assert.IsFalse(cookie.HttpOnly);
+            Assert.IsTrue(cookie.Secure);
             Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
         }
     }

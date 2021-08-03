@@ -25,12 +25,12 @@
 
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageAccessibilityTests : PageTestEx
     {
         [PlaywrightTest("page-accessibility.spec.ts", "should work with regular text")]
@@ -38,7 +38,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<div>Hello World</div>");
             var snapshot = await Page.Accessibility.SnapshotAsync();
-            StringAssert.Contains("Hello World", JsonSerializer.Serialize(snapshot));
+            StringAssert.Contains(JsonSerializer.Serialize(snapshot), "Hello World");
         }
     }
 }

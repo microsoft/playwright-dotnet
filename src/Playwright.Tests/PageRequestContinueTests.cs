@@ -28,12 +28,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageRequestContinueTests : PageTestEx
     {
         [PlaywrightTest("page-request-continue.spec.ts", "should work")]
@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
                 requestTask,
                 Page.EvaluateAsync("() => fetch('/sleep.zzz')")
             );
-            Assert.AreEqual("bar", requestTask.Result);
+            Assert.AreEqual("bar", requestTask.Result[0]);
         }
 
         [PlaywrightTest("page-request-continue.spec.ts", "should amend method on main request")]

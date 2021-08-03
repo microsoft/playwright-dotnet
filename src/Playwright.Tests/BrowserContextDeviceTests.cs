@@ -23,16 +23,17 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserContextDeviceTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-device.spec.ts", "should work")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldWork()
         {
             await using var context = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
@@ -40,11 +41,11 @@ namespace Microsoft.Playwright.Tests
 
             await page.GotoAsync(Server.Prefix + "/mobile.html");
             Assert.AreEqual(375, await page.EvaluateAsync<int>("window.innerWidth"));
-            StringAssert.Contains("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
+            StringAssert.Contains(await page.EvaluateAsync<string>("navigator.userAgent"), "iPhone");
         }
 
         [PlaywrightTest("browsercontext-device.spec.ts", "should support clicking")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldSupportClicking()
         {
             await using var context = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
@@ -58,7 +59,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-device.spec.ts", "should scroll to click")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldScrollToClick()
         {
             await using var context = await Browser.NewContextAsync(new()

@@ -23,12 +23,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageFocusTests : PageTestEx
     {
         [PlaywrightTest("page-focus.spec.ts", "should work")]
@@ -48,7 +48,7 @@ namespace Microsoft.Playwright.Tests
             await Page.ExposeFunctionAsync("focusEvent", () => focused = true);
             await Page.EvaluateAsync("() => d1.addEventListener('focus', focusEvent)");
             await Page.FocusAsync("#d1");
-            Assert.True(focused);
+            Assert.IsTrue(focused);
         }
 
         [PlaywrightTest("page-focus.spec.ts", "should emit blur event")]
@@ -63,8 +63,8 @@ namespace Microsoft.Playwright.Tests
             await Page.EvaluateAsync("() => d1.addEventListener('blur', blurEvent)");
             await Page.EvaluateAsync("() => d2.addEventListener('focus', focusEvent)");
             await Page.FocusAsync("#d2");
-            Assert.True(focused);
-            Assert.True(blurred);
+            Assert.IsTrue(focused);
+            Assert.IsTrue(blurred);
         }
 
         [PlaywrightTest("page-focus.spec.ts", "should traverse focus")]
@@ -80,7 +80,7 @@ namespace Microsoft.Playwright.Tests
             await Page.Keyboard.PressAsync("Tab");
             await Page.Keyboard.TypeAsync("Last");
 
-            Assert.True(focused);
+            Assert.IsTrue(focused);
 
             Assert.AreEqual("First", await Page.EvalOnSelectorAsync<string>("#i1", "e => e.value"));
             Assert.AreEqual("Last", await Page.EvalOnSelectorAsync<string>("#i2", "e => e.value"));

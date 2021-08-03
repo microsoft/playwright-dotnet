@@ -27,12 +27,12 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageWaitForUrlTests : PageTestEx
     {
         [PlaywrightTest("page-wait-for-url.spec.ts", "should work")]
@@ -49,7 +49,7 @@ namespace Microsoft.Playwright.Tests
             var task = Page.WaitForURLAsync("**/frame.html", new() { Timeout = 2500 });
             await Page.GotoAsync(Server.EmptyPage);
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => task);
-            StringAssert.Contains("Timeout 2500ms exceeded.", exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 2500ms exceeded.");
         }
 
         [PlaywrightTest("page-wait-for-url.spec.ts", "should work with both domcontentloaded and load")]
@@ -73,7 +73,7 @@ namespace Microsoft.Playwright.Tests
 
             await waitForRequestTask;
             await domContentLoadedTask;
-            Assert.False(bothFiredTask.IsCompleted);
+            Assert.IsFalse(bothFiredTask.IsCompleted);
             responseTask.TrySetResult(true);
             await bothFiredTask;
             await navigationTask;
@@ -131,17 +131,17 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.EmptyPage);
             var waitPromise = Page.WaitForURLAsync(new Regex("third\\.html"));
-            Assert.False(waitPromise.IsCompleted);
+            Assert.IsFalse(waitPromise.IsCompleted);
 
             await Page.EvaluateAsync(@"() => {
                 history.pushState({}, '', '/first.html');
             }");
-            Assert.False(waitPromise.IsCompleted);
+            Assert.IsFalse(waitPromise.IsCompleted);
 
             await Page.EvaluateAsync(@"() => {
                 history.pushState({}, '', '/second.html');
             }");
-            Assert.False(waitPromise.IsCompleted);
+            Assert.IsFalse(waitPromise.IsCompleted);
 
             await Page.EvaluateAsync(@"() => {
                 history.pushState({}, '', '/third.html');

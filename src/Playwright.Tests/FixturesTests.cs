@@ -22,14 +22,14 @@
  * SOFTWARE.
  */
 
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>fixtures.spec.ts</playwright-file>
     ///<playwright-describe>Fixtures</playwright-describe>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class FixturesTests : PlaywrightTestEx
     {
         [PlaywrightTest("fixtures.spec.ts", "should close the browser when the node process closes")]

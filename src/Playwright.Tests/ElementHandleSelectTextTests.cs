@@ -24,12 +24,12 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class ElementHandleSelectTextTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-select-text.spec.ts", "should select textarea")]
@@ -89,7 +89,7 @@ namespace Microsoft.Playwright.Tests
             await textarea.EvaluateAsync("e => e.style.display = 'none'");
 
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => textarea.SelectTextAsync(new() { Timeout = 3000 }));
-            StringAssert.Contains("element is not visible", exception.Message);
+            StringAssert.Contains(exception.Message, "element is not visible");
         }
 
         [PlaywrightTest("elementhandle-select-text.spec.ts", "should wait for visible")]
@@ -102,7 +102,7 @@ namespace Microsoft.Playwright.Tests
 
             var task = textarea.SelectTextAsync(new() { Timeout = 3000 });
             await Page.EvaluateAsync("() => new Promise(f => setTimeout(f, 1000))");
-            Assert.False(task.IsCompleted);
+            Assert.IsFalse(task.IsCompleted);
             await textarea.EvaluateAsync("e => e.style.display = 'block'");
             await task;
         }

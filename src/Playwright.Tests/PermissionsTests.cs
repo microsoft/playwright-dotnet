@@ -25,16 +25,17 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PermissionsTests : PageTestEx
     {
         [PlaywrightTest("permissions.spec.ts", "should be prompt by default")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldBePromptByDefault()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -42,7 +43,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should deny permission when not listed")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldDenyPermissionWhenNotListed()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -55,7 +56,7 @@ namespace Microsoft.Playwright.Tests
         public void ShouldFailWhenBadPermissionIsGiven() { }
 
         [PlaywrightTest("permissions.spec.ts", "should grant geolocation permission when listed")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldGrantGeolocationPermissionWhenListed()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -64,7 +65,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should grant notifications permission when listed")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldGrantNotificationsPermissionWhenListed()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -73,7 +74,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should accumulate when adding")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldAccumulateWhenAdding()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -84,7 +85,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should clear permissions")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldClearPermissions()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -93,12 +94,12 @@ namespace Microsoft.Playwright.Tests
             await Context.ClearPermissionsAsync();
             await Context.GrantPermissionsAsync(new[] { "notifications" });
             Assert.AreEqual("granted", await GetPermissionAsync(Page, "notifications"));
-            Assert.That("granted", Is.Not.EqualTo(await GetPermissionAsync(Page, "geolocation")));
+            Assert.AreNotEqual("granted", await GetPermissionAsync(Page, "geolocation"));
             Assert.AreEqual("granted", await GetPermissionAsync(Page, "notifications"));
         }
 
         [PlaywrightTest("permissions.spec.ts", "should grant permission when listed for all domains")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldGrantPermissionWhenListedForAllDomains()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -107,7 +108,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should grant permission when creating context")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldGrantPermissionWhenCreatingContext()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -121,7 +122,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should reset permissions")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldResetPermissions()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -132,7 +133,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should trigger permission onchange")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldTriggerPermissionOnchange()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -145,21 +146,21 @@ namespace Microsoft.Playwright.Tests
                     };
                 });
             }");
-            Assert.AreEqual(new[] { "prompt" }, await Page.EvaluateAsync<string[]>("window.events"));
+            CollectionAssert.AreEqual(new[] { "prompt" }, await Page.EvaluateAsync<string[]>("window.events"));
             await Context.GrantPermissionsAsync(Array.Empty<string>(), new() { Origin = Server.EmptyPage });
-            Assert.AreEqual(new[] { "prompt", "denied" }, await Page.EvaluateAsync<string[]>("window.events"));
+            CollectionAssert.AreEqual(new[] { "prompt", "denied" }, await Page.EvaluateAsync<string[]>("window.events"));
             await Context.GrantPermissionsAsync(new[] { "geolocation" }, new() { Origin = Server.EmptyPage });
-            Assert.AreEqual(
+            CollectionAssert.AreEqual(
                 new[] { "prompt", "denied", "granted" },
                 await Page.EvaluateAsync<string[]>("window.events"));
             await Context.ClearPermissionsAsync();
-            Assert.AreEqual(
+            CollectionAssert.AreEqual(
                 new[] { "prompt", "denied", "granted", "prompt" },
                 await Page.EvaluateAsync<string[]>("window.events"));
         }
 
         [PlaywrightTest("permissions.spec.ts", "should trigger permission onchange")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldIsolatePermissionsBetweenBrowserContexts()
         {
             await Page.GotoAsync(Server.EmptyPage);

@@ -29,13 +29,13 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>tracing.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class TracingTests : ContextTestEx
     {
         [PlaywrightTest("tracing.spec.ts", "should collect trace")]
@@ -59,18 +59,18 @@ namespace Microsoft.Playwright.Tests
             await Context.Tracing.StopAsync(new() { Path = tracePath });
 
             var events = ParseTrace(tracePath);
-            CollectionAssert.IsNotEmpty(events);
+            Assert.That.Collection(events).IsNotEmpty();
 
             Assert.AreEqual("context-options", events[0].Type);
 
-            Assert.GreaterOrEqual(events.Where(x => x.ApiName == "frame.goto").Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x.ApiName == "frame.setContent").Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x.ApiName == "frame.click").Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x.ApiName == "page.close").Count(), 1);
+            Assert.That.IsGreaterOrEqual(events.Where(x => x.ApiName == "frame.goto").Count(), 1);
+            Assert.That.IsGreaterOrEqual(events.Where(x => x.ApiName == "frame.setContent").Count(), 1);
+            Assert.That.IsGreaterOrEqual(events.Where(x => x.ApiName == "frame.click").Count(), 1);
+            Assert.That.IsGreaterOrEqual(events.Where(x => x.ApiName == "page.close").Count(), 1);
 
-            Assert.GreaterOrEqual(events.Where(x => x.Type == "frame-snapshot").Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x.Type == "resource-snapshot").Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x.Type == "screencast-frame").Count(), 1);
+            Assert.That.IsGreaterOrEqual(events.Where(x => x.Type == "frame-snapshot").Count(), 1);
+            Assert.That.IsGreaterOrEqual(events.Where(x => x.Type == "resource-snapshot").Count(), 1);
+            Assert.That.IsGreaterOrEqual(events.Where(x => x.Type == "screencast-frame").Count(), 1);
         }
 
         [PlaywrightTest("tracing.spec.ts", "should exclude internal pages")]
@@ -114,9 +114,9 @@ namespace Microsoft.Playwright.Tests
             {
                 var events = ParseTrace(trace1Path);
                 Assert.AreEqual("context-options", events[0].Type);
-                Assert.GreaterOrEqual(events.Where(x => x.ApiName == "frame.goto").Count(), 1);
-                Assert.GreaterOrEqual(events.Where(x => x.ApiName == "frame.setContent").Count(), 1);
-                Assert.GreaterOrEqual(events.Where(x => x.ApiName == "frame.click").Count(), 1);
+                Assert.That.IsGreaterOrEqual(events.Where(x => x.ApiName == "frame.goto").Count(), 1);
+                Assert.That.IsGreaterOrEqual(events.Where(x => x.ApiName == "frame.setContent").Count(), 1);
+                Assert.That.IsGreaterOrEqual(events.Where(x => x.ApiName == "frame.click").Count(), 1);
                 Assert.AreEqual(0, events.Where(x => x.ApiName == "page.close").Count());
                 Assert.AreEqual(0, events.Where(x => x.ApiName?.Contains("dblClick") ?? false).Count());
             }
@@ -127,8 +127,8 @@ namespace Microsoft.Playwright.Tests
                 Assert.AreEqual(0, events.Where(x => x.ApiName == "frame.goto").Count());
                 Assert.AreEqual(0, events.Where(x => x.ApiName == "frame.setContent").Count());
                 Assert.AreEqual(0, events.Where(x => x.ApiName == "frame.click").Count());
-                Assert.GreaterOrEqual(events.Where(x => x.ApiName == "page.close").Count(), 1);
-                Assert.GreaterOrEqual(events.Where(x => x.ApiName?.Contains("dblclick") ?? false).Count(), 1);
+                Assert.That.IsGreaterOrEqual(events.Where(x => x.ApiName == "page.close").Count(), 1);
+                Assert.That.IsGreaterOrEqual(events.Where(x => x.ApiName?.Contains("dblclick") ?? false).Count(), 1);
             }
 
         }

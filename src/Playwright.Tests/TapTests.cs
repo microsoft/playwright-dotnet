@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
@@ -71,7 +71,7 @@ namespace Microsoft.Playwright.Tests
             var handle = await TrackEventsAsync("#b");
             await Page.TapAsync("#b", new() { Trial = true });
 
-            Assert.IsEmpty(await handle.JsonValueAsync<string[]>());
+            Assert.That.Collection(await handle.JsonValueAsync<string[]>()).IsEmpty();
         }
 
         [PlaywrightTest("tap.spec.ts", "should not send mouse events touchstart is canceled")]
@@ -137,16 +137,16 @@ namespace Microsoft.Playwright.Tests
             var awaitTask = Page.TapAsync("a").ContinueWith(_ =>
             {
                 // this shouldn't happen before the request is called
-                Assert.True(requestResponse.Task.IsCompleted);
+                Assert.IsTrue(requestResponse.Task.IsCompleted);
 
                 // and make sure this hasn't been set
-                Assert.False(loaded);
+                Assert.IsFalse(loaded);
                 loaded = true;
             });
 
             await awaitTask;
             await requestResponse.Task;
-            Assert.True(loaded);
+            Assert.IsTrue(loaded);
         }
 
         [PlaywrightTest("tap.spec.ts", "should work with modifiers")]
@@ -163,7 +163,7 @@ namespace Microsoft.Playwright.Tests
 
             await Page.EvaluateAsync("() => void 0");
             await Page.TapAsync("body", new() { Modifiers = new[] { KeyboardModifier.Alt } });
-            Assert.True((await altKeyTask));
+            Assert.IsTrue(await altKeyTask);
         }
 
         [PlaywrightTest("tap.spec.ts", "should send well formed touch points")]
@@ -209,7 +209,7 @@ namespace Microsoft.Playwright.Tests
             var touchStartResult = (await touchStartTask)[0];
             var touchEndResult = await touchEndTask;
 
-            Assert.Null(touchEndResult);
+            Assert.IsNull(touchEndResult);
             Assert.AreEqual(40, touchStartResult.clientX);
             Assert.AreEqual(60, touchStartResult.clientY);
             Assert.AreEqual(1, touchStartResult.force);

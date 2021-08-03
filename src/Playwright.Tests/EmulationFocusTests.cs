@@ -23,26 +23,26 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class EmulationFocusTests : PageTestEx
     {
         [PlaywrightTest("emulation-focus.spec.ts", "should think that it is focused by default")]
         public async Task ShouldThinkThatItIsFocusedByDefault()
         {
-            Assert.True(await Page.EvaluateAsync<bool>("document.hasFocus()"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("document.hasFocus()"));
         }
 
         [PlaywrightTest("emulation-focus.spec.ts", "should think that all pages are focused")]
         public async Task ShouldThinkThatAllPagesAreFocused()
         {
             var page2 = await Page.Context.NewPageAsync();
-            Assert.True(await Page.EvaluateAsync<bool>("document.hasFocus()"));
-            Assert.True(await page2.EvaluateAsync<bool>("document.hasFocus()"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("document.hasFocus()"));
+            Assert.IsTrue(await page2.EvaluateAsync<bool>("document.hasFocus()"));
         }
 
         [PlaywrightTest("emulation-focus.spec.ts", "should focus popups by default")]
@@ -57,8 +57,8 @@ namespace Microsoft.Playwright.Tests
 
             var popup = popupTask.Result;
 
-            Assert.True(await Page.EvaluateAsync<bool>("document.hasFocus()"));
-            Assert.True(await popup.EvaluateAsync<bool>("document.hasFocus()"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("document.hasFocus()"));
+            Assert.IsTrue(await popup.EvaluateAsync<bool>("document.hasFocus()"));
         }
 
         [PlaywrightTest("emulation-focus.spec.ts", "should provide target for keyboard events")]
@@ -165,38 +165,38 @@ namespace Microsoft.Playwright.Tests
                 frame1.EvaluateAsync<bool>("document.hasFocus()"),
                 frame2.EvaluateAsync<bool>("document.hasFocus()"));
 
-            Assert.False(focused.Item1);
-            Assert.False(focused.Item2);
+            Assert.IsFalse(focused.Item1);
+            Assert.IsFalse(focused.Item2);
 
             await frame1.FocusAsync("input");
             var events = await TaskUtils.WhenAll(
                 frame1.EvaluateAsync<string[]>("self._events"),
                 frame2.EvaluateAsync<string[]>("self._events"));
 
-            Assert.AreEqual(new[] { "focus" }, events.Item1);
-            Assert.IsEmpty(events.Item2);
+            CollectionAssert.AreEqual(new[] { "focus" }, events.Item1);
+            Assert.That.Collection(events.Item2).IsEmpty();
 
             focused = await TaskUtils.WhenAll(
                 frame1.EvaluateAsync<bool>("document.hasFocus()"),
                 frame2.EvaluateAsync<bool>("document.hasFocus()"));
 
-            Assert.True(focused.Item1);
-            Assert.False(focused.Item2);
+            Assert.IsTrue(focused.Item1);
+            Assert.IsFalse(focused.Item2);
 
             await frame2.FocusAsync("input");
             events = await TaskUtils.WhenAll(
                 frame1.EvaluateAsync<string[]>("self._events"),
                 frame2.EvaluateAsync<string[]>("self._events"));
 
-            Assert.AreEqual(new[] { "focus", "blur" }, events.Item1);
-            Assert.AreEqual(new[] { "focus" }, events.Item2);
+            CollectionAssert.AreEqual(new[] { "focus", "blur" }, events.Item1);
+            CollectionAssert.AreEqual(new[] { "focus" }, events.Item2);
 
             focused = await TaskUtils.WhenAll(
                 frame1.EvaluateAsync<bool>("document.hasFocus()"),
                 frame2.EvaluateAsync<bool>("document.hasFocus()"));
 
-            Assert.False(focused.Item1);
-            Assert.True(focused.Item2);
+            Assert.IsFalse(focused.Item1);
+            Assert.IsTrue(focused.Item2);
         }
     }
 }

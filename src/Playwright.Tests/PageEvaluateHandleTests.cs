@@ -26,19 +26,19 @@ using System.Dynamic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageEvaluateHandleTests : PageTestEx
     {
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should work")]
         public async Task ShouldWork()
         {
             var windowHandle = await Page.EvaluateHandleAsync("() => window");
-            Assert.NotNull(windowHandle);
+            Assert.IsNotNull(windowHandle);
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept object handle as an argument")]
@@ -46,7 +46,7 @@ namespace Microsoft.Playwright.Tests
         {
             var navigatorHandle = await Page.EvaluateHandleAsync("() => navigator");
             string text = await Page.EvaluateAsync<string>("e => e.userAgent", navigatorHandle);
-            StringAssert.Contains("Mozilla", text);
+            StringAssert.Contains(text, "Mozilla");
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept object handle to primitive types")]
@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.Tests
         {
             var aHandle = await Page.EvaluateHandleAsync("() => 5");
             bool isFive = await Page.EvaluateAsync<bool>("e => Object.is (e, 5)", aHandle);
-            Assert.True(isFive);
+            Assert.IsTrue(isFive);
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept nested handle")]
@@ -71,7 +71,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAcceptNestedWindowHandle()
         {
             var foo = await Page.EvaluateHandleAsync("() => window");
-            Assert.True(await Page.EvaluateAsync<bool>("({ foo }) => foo === window", new { foo }));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("({ foo }) => foo === window", new { foo }));
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept multiple nested handles")]
@@ -136,7 +136,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAcceptObjectHandleToUnserializableValue()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => Infinity");
-            Assert.True(await Page.EvaluateAsync<bool>("e => Object.is(e, Infinity)", aHandle));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("e => Object.is(e, Infinity)", aHandle));
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should pass configurable args")]

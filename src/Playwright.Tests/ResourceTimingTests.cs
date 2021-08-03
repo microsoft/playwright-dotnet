@@ -24,13 +24,14 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>resource-timing.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class ResourceTimingTests : PageTestEx
     {
         private void VerifyConnectionTimingConsistency(RequestTimingResult timing)
@@ -57,10 +58,10 @@ namespace Microsoft.Playwright.Tests
             var timing = request.Timing;
 
             VerifyConnectionTimingConsistency(timing);
-            Assert.GreaterOrEqual(timing.RequestStart, timing.ConnectEnd);
-            Assert.GreaterOrEqual(timing.ResponseStart, timing.RequestStart);
-            Assert.GreaterOrEqual(timing.ResponseEnd, timing.ResponseStart);
-            Assert.Less(timing.ResponseEnd, 10000);
+            Assert.That.IsGreaterOrEqual(timing.RequestStart, timing.ConnectEnd);
+            Assert.That.IsGreaterOrEqual(timing.ResponseStart, timing.RequestStart);
+            Assert.That.IsGreaterOrEqual(timing.ResponseEnd, timing.ResponseStart);
+            Assert.That.IsLess(timing.ResponseEnd, 10000);
         }
 
         [PlaywrightTest("resource-timing.spec.ts", "should work for subresource")]
@@ -77,10 +78,10 @@ namespace Microsoft.Playwright.Tests
 
             VerifyConnectionTimingConsistency(timing);
 
-            Assert.GreaterOrEqual(timing.RequestStart, 0);
-            Assert.GreaterOrEqual(timing.ResponseStart, timing.RequestStart);
-            Assert.GreaterOrEqual(timing.ResponseEnd, timing.ResponseStart);
-            Assert.Less(timing.ResponseEnd, 10000);
+            Assert.That.IsGreaterOrEqual(timing.RequestStart, 0);
+            Assert.That.IsGreaterOrEqual(timing.ResponseStart, timing.RequestStart);
+            Assert.That.IsGreaterOrEqual(timing.ResponseEnd, timing.ResponseStart);
+            Assert.That.IsLess(timing.ResponseEnd, 10000);
         }
 
         [PlaywrightTest("resource-timing.spec.ts", "should work for SSL")]
@@ -93,15 +94,15 @@ namespace Microsoft.Playwright.Tests
 
             var timing = request.Timing;
             VerifyConnectionTimingConsistency(timing);
-            Assert.GreaterOrEqual(timing.RequestStart, timing.ConnectEnd);
-            Assert.GreaterOrEqual(timing.ResponseStart, timing.RequestStart);
-            Assert.GreaterOrEqual(timing.ResponseEnd, timing.ResponseStart);
-            Assert.Less(timing.ResponseEnd, 10000);
+            Assert.That.IsGreaterOrEqual(timing.RequestStart, timing.ConnectEnd);
+            Assert.That.IsGreaterOrEqual(timing.ResponseStart, timing.RequestStart);
+            Assert.That.IsGreaterOrEqual(timing.ResponseEnd, timing.ResponseStart);
+            Assert.That.IsLess(timing.ResponseEnd, 10000);
             await page.CloseAsync();
         }
 
         [PlaywrightTest("resource-timing.spec.ts", "should work for redirect")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldWorkForRedirect()
         {
             Server.SetRedirect("/foo.html", "/empty.html");
@@ -119,18 +120,18 @@ namespace Microsoft.Playwright.Tests
 
             var timing1 = responses[0].Request.Timing;
             VerifyConnectionTimingConsistency(timing1);
-            Assert.GreaterOrEqual(timing1.RequestStart, timing1.ConnectEnd);
-            Assert.GreaterOrEqual(timing1.ResponseStart, timing1.RequestStart);
-            Assert.GreaterOrEqual(timing1.ResponseEnd, timing1.ResponseStart);
-            Assert.Less(timing1.ResponseEnd, 10000);
+            Assert.That.IsGreaterOrEqual(timing1.RequestStart, timing1.ConnectEnd);
+            Assert.That.IsGreaterOrEqual(timing1.ResponseStart, timing1.RequestStart);
+            Assert.That.IsGreaterOrEqual(timing1.ResponseEnd, timing1.ResponseStart);
+            Assert.That.IsLess(timing1.ResponseEnd, 10000);
 
 
             var timing2 = responses[1].Request.Timing;
             VerifyConnectionTimingConsistency(timing2);
-            Assert.GreaterOrEqual(timing2.RequestStart, timing2.ConnectEnd);
-            Assert.GreaterOrEqual(timing2.ResponseStart, timing2.RequestStart);
-            Assert.GreaterOrEqual(timing2.ResponseEnd, timing2.ResponseStart);
-            Assert.Less(timing2.ResponseEnd, 10000);
+            Assert.That.IsGreaterOrEqual(timing2.RequestStart, timing2.ConnectEnd);
+            Assert.That.IsGreaterOrEqual(timing2.ResponseStart, timing2.RequestStart);
+            Assert.That.IsGreaterOrEqual(timing2.ResponseEnd, timing2.ResponseStart);
+            Assert.That.IsLess(timing2.ResponseEnd, 10000);
         }
     }
 }

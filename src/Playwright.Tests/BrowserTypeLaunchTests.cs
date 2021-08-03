@@ -24,13 +24,14 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>browsertype-launch.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserTypeLaunchTests : PlaywrightTestEx
     {
         [PlaywrightTest("browsertype-launch.spec.ts", "should reject all promises when browser is closed")]
@@ -41,7 +42,7 @@ namespace Microsoft.Playwright.Tests
             var neverResolves = page.EvaluateHandleAsync("() => new Promise(r => {})");
             await browser.CloseAsync();
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => neverResolves);
-            StringAssert.Contains("Protocol error", exception.Message);
+            StringAssert.Contains(exception.Message, "Protocol error");
 
         }
 
@@ -64,7 +65,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should throw if page argument is passed")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public Task ShouldThrowIfPageArgumentIsPassed()
         {
             var args = new[] { Server.EmptyPage };
@@ -82,7 +83,7 @@ namespace Microsoft.Playwright.Tests
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new() { ExecutablePath = "random-invalid-path" }));
 
-            StringAssert.Contains("Failed to launch", exception.Message);
+            StringAssert.Contains(exception.Message, "Failed to launch");
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should handle timeout")]
@@ -139,7 +140,7 @@ namespace Microsoft.Playwright.Tests
         /// <summary>
         /// PuppeteerSharp test. It's not in upstream
         /// </summary>
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Firefox, TestTargets.Webkit)]
         public async Task ShouldWorkWithIgnoreDefaultArgs()
         {
             string[] args = new[]

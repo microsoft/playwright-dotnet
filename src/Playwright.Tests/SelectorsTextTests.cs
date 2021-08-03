@@ -23,12 +23,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class SelectorsTextTests : PageTestEx
     {
         [PlaywrightTest("selectors-text.spec.ts", "query")]
@@ -94,7 +94,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<div>a<br>b</div><div>a</div>");
             Assert.AreEqual("<div>a<br>b</div>", await Page.EvalOnSelectorAsync<string>("text=a", "e => e.outerHTML"));
             Assert.AreEqual("<div>a<br>b</div>", await Page.EvalOnSelectorAsync<string>("text=b", "e => e.outerHTML"));
-            Assert.Null(await Page.QuerySelectorAsync("text=ab"));
+            Assert.IsNull(await Page.QuerySelectorAsync("text=ab"));
             Assert.AreEqual(2, await Page.EvalOnSelectorAllAsync<int>("text=a", "els => els.length"));
             Assert.AreEqual(1, await Page.EvalOnSelectorAllAsync<int>("text=b", "els => els.length"));
             Assert.AreEqual(0, await Page.EvalOnSelectorAllAsync<int>("text=ab", "els => els.length"));
@@ -126,7 +126,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<div>yo</div><div>ya</div><div>\nye  </div>");
             Assert.AreEqual("<div>ya</div>", await Page.EvalOnSelectorAsync<string>("text=ya", "e => e.outerHTML"));
-            Assert.Null(await Page.QuerySelectorAsync("text=\"yA\""));
+            Assert.IsNull(await Page.QuerySelectorAsync("text=\"yA\""));
         }
 
         [PlaywrightTest("selectors-text.spec.ts", "should search for a substring without quotes")]
@@ -134,7 +134,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<div>textwithsubstring</div>");
             Assert.AreEqual("<div>textwithsubstring</div>", await Page.EvalOnSelectorAsync<string>("text=with", "e => e.outerHTML"));
-            Assert.Null(await Page.QuerySelectorAsync("text=\"with\""));
+            Assert.IsNull(await Page.QuerySelectorAsync("text=\"with\""));
         }
 
         [PlaywrightTest("selectors-text.spec.ts", "should skip head, script and style")]
@@ -164,7 +164,7 @@ namespace Microsoft.Playwright.Tests
 
                 foreach (var root in new[] { head, title, script, style })
                 {
-                    Assert.Null(await root.QuerySelectorAsync($"text={text}"));
+                    Assert.IsNull(await root.QuerySelectorAsync($"text={text}"));
                     Assert.AreEqual(0, await root.EvalOnSelectorAllAsync<int>($"text={text}", "els => els.length"));
                 }
             }
@@ -188,9 +188,9 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("Hello from root3", await Page.EvalOnSelectorAsync<string>("#root1 >> text=from root3", "e => e.textContent"));
             Assert.AreEqual("Hello from root2", await Page.EvalOnSelectorAsync<string>("#target >> text=from root2", "e => e.textContent"));
 
-            Assert.Null(await Page.QuerySelectorAsync("text:light=root1"));
-            Assert.Null(await Page.QuerySelectorAsync("text:light=root2"));
-            Assert.Null(await Page.QuerySelectorAsync("text:light=root3"));
+            Assert.IsNull(await Page.QuerySelectorAsync("text:light=root1"));
+            Assert.IsNull(await Page.QuerySelectorAsync("text:light=root2"));
+            Assert.IsNull(await Page.QuerySelectorAsync("text:light=root3"));
         }
 
         [PlaywrightTest("selectors-text.spec.ts", "should prioritize light dom over shadow dom in the same parent")]

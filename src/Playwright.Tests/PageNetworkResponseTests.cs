@@ -27,12 +27,13 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageNetworkResponseTests : PageTestEx
     {
         [PlaywrightTest("page-network-response.spec.ts", "should return body")]
@@ -40,7 +41,7 @@ namespace Microsoft.Playwright.Tests
         {
             var response = await Page.GotoAsync(Server.Prefix + "/pptr.png");
             byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
-            Assert.AreEqual(imageBuffer, await response.BodyAsync());
+            CollectionAssert.AreEqual(imageBuffer, await response.BodyAsync());
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should return body with compression")]
@@ -49,7 +50,7 @@ namespace Microsoft.Playwright.Tests
             Server.EnableGzip("/pptr.png");
             var response = await Page.GotoAsync(Server.Prefix + "/pptr.png");
             byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
-            Assert.AreEqual(imageBuffer, await response.BodyAsync());
+            CollectionAssert.AreEqual(imageBuffer, await response.BodyAsync());
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should work")]
@@ -62,7 +63,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var response = await Page.GotoAsync(Server.EmptyPage);
-            StringAssert.Contains("bar", response.Headers["foo"]);
+            StringAssert.Contains(response.Headers["foo"], "bar");
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should return json")]
@@ -118,12 +119,12 @@ namespace Microsoft.Playwright.Tests
             Server.SetRedirect("/foo.html", "/empty.html");
             var response = await Page.GotoAsync(Server.Prefix + "/foo.html");
             var redirectedFrom = response.Request.RedirectedFrom;
-            Assert.NotNull(redirectedFrom);
+            Assert.IsNotNull(redirectedFrom);
             var redirected = await redirectedFrom.ResponseAsync();
             Assert.AreEqual((int)HttpStatusCode.Redirect, redirected.Status);
 
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => redirected.TextAsync());
-            StringAssert.Contains("Response body is unavailable for redirect responses", exception.Message);
+            StringAssert.Contains(exception.Message, "Response body is unavailable for redirect responses");
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should wait until response completes")]
@@ -151,10 +152,10 @@ namespace Microsoft.Playwright.Tests
                 Server.WaitForRequest("/get")
             );
 
-            Assert.NotNull(serverResponse);
-            Assert.NotNull(pageResponse);
+            Assert.IsNotNull(serverResponse);
+            Assert.IsNotNull(pageResponse);
             Assert.AreEqual((int)HttpStatusCode.OK, pageResponse.Status);
-            Assert.False(requestFinished);
+            Assert.IsFalse(requestFinished);
 
             var responseText = pageResponse.TextAsync();
             // Write part of the response and wait for it to be flushed.
@@ -166,13 +167,13 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("har.spec.ts", "should return security details directly from response")]
-        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Linux)]
+        [Skip(TestTargets.Webkit | TestTargets.Linux)]
         public async Task ShouldReturnSecurityDetails()
         {
             var response = await Page.GotoAsync(HttpsServer.EmptyPage);
             var details = await response.SecurityDetailsAsync();
-            Assert.IsNotEmpty(details.Issuer);
-            Assert.IsNotEmpty(details.Protocol);
+            Assert.That.IsNotEmptyOrNull(details.Issuer);
+            Assert.That.IsNotEmptyOrNull(details.Protocol);
         }
 
         [PlaywrightTest("har.spec.ts", "should return server address directly from response")]
@@ -180,10 +181,10 @@ namespace Microsoft.Playwright.Tests
         {
             var response = await Page.GotoAsync(HttpsServer.EmptyPage);
             var details = await response.ServerAddrAsync();
-            Assert.IsNotEmpty(details.IpAddress);
-            Assert.Greater(details.Port, 0);
+            Assert.That.IsNotEmptyOrNull(details.IpAddress);
+            Assert.That.IsGreater(details.Port, 0);
         }
 
-        public override BrowserNewContextOptions ContextOptions() => new() { IgnoreHTTPSErrors = true };
+        public override BrowserNewContextOptions ContextOptions => new() { IgnoreHTTPSErrors = true };
     }
 }

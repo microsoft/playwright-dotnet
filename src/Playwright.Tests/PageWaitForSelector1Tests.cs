@@ -25,12 +25,12 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageWaitForSelector1Tests : PageTestEx
     {
         private const string AddElement = "tag => document.body.appendChild(document.createElement(tag))";
@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<div></div>");
             var div = await Page.QuerySelectorAsync("div");
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => div.WaitForSelectorAsync("span", new() { State = WaitForSelectorState.Attached, Timeout = 100 }));
-            StringAssert.Contains("Timeout 100ms exceeded.", exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 100ms exceeded.");
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "elementHandle.waitForSelector should throw on navigation")]
@@ -100,7 +100,7 @@ namespace Microsoft.Playwright.Tests
 
             await Page.GotoAsync(Server.EmptyPage);
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => task);
-            StringAssert.Contains("Execution context was destroyed, most likely because of a navigation", exception.Message);
+            StringAssert.Contains(exception.Message, "Execution context was destroyed, most likely because of a navigation");
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should work with removed MutationObserver")]
@@ -162,11 +162,11 @@ namespace Microsoft.Playwright.Tests
 
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => watchdog);
 
-            StringAssert.Contains("Timeout 5000ms", exception.Message);
-            StringAssert.Contains("waiting for selector \"div\" to be visible", exception.Message);
-            StringAssert.Contains("selector resolved to hidden <div id=\"mydiv\" class=\"foo bar\" foo=\"1234567890123456…>abcdefghijklmnopqrstuvwyxzabcdefghijklmnopqrstuvw…</div>", exception.Message);
-            StringAssert.Contains("selector did not resolve to any element", exception.Message);
-            StringAssert.Contains("selector resolved to hidden <div class=\"another\"></div>", exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 5000ms");
+            StringAssert.Contains(exception.Message, "waiting for selector \"div\" to be visible");
+            StringAssert.Contains(exception.Message, "selector resolved to hidden <div id=\"mydiv\" class=\"foo bar\" foo=\"1234567890123456…>abcdefghijklmnopqrstuvwyxzabcdefghijklmnopqrstuvw…</div>");
+            StringAssert.Contains(exception.Message, "selector did not resolve to any element");
+            StringAssert.Contains(exception.Message, "selector resolved to hidden <div class=\"another\"></div>");
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should report logs while waiting for hidden")]
@@ -197,10 +197,10 @@ namespace Microsoft.Playwright.Tests
 
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => watchdog);
 
-            StringAssert.Contains("Timeout 5000ms", exception.Message);
-            StringAssert.Contains("waiting for selector \"div\" to be hidden", exception.Message);
-            StringAssert.Contains("selector resolved to visible <div id=\"mydiv\" class=\"foo bar\">hello</div>", exception.Message);
-            StringAssert.Contains("selector resolved to visible <div class=\"another\">hello</div>", exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 5000ms");
+            StringAssert.Contains(exception.Message, "waiting for selector \"div\" to be hidden");
+            StringAssert.Contains(exception.Message, "selector resolved to visible <div id=\"mydiv\" class=\"foo bar\">hello</div>");
+            StringAssert.Contains(exception.Message, "selector resolved to visible <div class=\"another\">hello</div>");
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should resolve promise when node is added in shadow dom")]
@@ -273,8 +273,8 @@ namespace Microsoft.Playwright.Tests
             var waitTask = frame.WaitForSelectorAsync(".box").ContinueWith(task => task.Exception?.InnerException);
             await FrameUtils.DetachFrameAsync(Page, "frame1");
             var waitException = await waitTask;
-            Assert.NotNull(waitException);
-            StringAssert.Contains("waitForFunction failed: frame got detached.", waitException.Message);
+            Assert.IsNotNull(waitException);
+            StringAssert.Contains(waitException.Message, "waitForFunction failed: frame got detached.");
         }
 
         private async Task GiveItTimeToLogAsync(IFrame frame)

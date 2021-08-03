@@ -23,12 +23,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class JSHandleAsElementTests : PageTestEx
     {
         [PlaywrightTest("jshandle-as-element.spec.ts", "should work")]
@@ -36,7 +36,7 @@ namespace Microsoft.Playwright.Tests
         {
             var aHandle = await Page.EvaluateHandleAsync("() => document.body");
             var element = aHandle as IElementHandle;
-            Assert.NotNull(element);
+            Assert.IsNotNull(element);
         }
 
         [PlaywrightTest("jshandle-as-element.spec.ts", "should return null for non-elements")]
@@ -44,7 +44,7 @@ namespace Microsoft.Playwright.Tests
         {
             var aHandle = await Page.EvaluateHandleAsync("() => 2");
             var element = aHandle as IElementHandle;
-            Assert.Null(element);
+            Assert.IsNull(element);
         }
 
         [PlaywrightTest("jshandle-as-element.spec.ts", "should return ElementHandle for TextNodes")]
@@ -53,8 +53,8 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<div>ee!</div>");
             var aHandle = await Page.EvaluateHandleAsync("() => document.querySelector('div').firstChild");
             var element = aHandle as IElementHandle;
-            Assert.NotNull(element);
-            Assert.True(await Page.EvaluateAsync<bool>("e => e.nodeType === HTMLElement.TEXT_NODE", element));
+            Assert.IsNotNull(element);
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("e => e.nodeType === HTMLElement.TEXT_NODE", element));
         }
 
         [PlaywrightTest("jshandle-as-element.spec.ts", "should work with nullified Node")]
@@ -64,7 +64,7 @@ namespace Microsoft.Playwright.Tests
             await Page.EvaluateAsync("() => delete Node");
             var handle = await Page.EvaluateHandleAsync("() => document.querySelector('section')");
             var element = handle as IElementHandle;
-            Assert.NotNull(element);
+            Assert.IsNotNull(element);
         }
     }
 }

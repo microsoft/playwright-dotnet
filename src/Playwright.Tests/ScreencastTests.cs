@@ -24,13 +24,14 @@
 
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>screencast.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class ScreencastTests : BrowserTestEx
     {
         [PlaywrightTest("screencast.spec.ts", "videoSize should require videosPath")]
@@ -41,7 +42,7 @@ namespace Microsoft.Playwright.Tests
                 RecordVideoSize = new() { Height = 100, Width = 100 }
             }));
 
-            StringAssert.Contains("\"RecordVideoSize\" option requires \"RecordVideoDir\" to be specified", exception.Message);
+            StringAssert.Contains(exception.Message, "\"RecordVideoSize\" option requires \"RecordVideoDir\" to be specified");
         }
 
         [PlaywrightTest("screencast.spec.ts", "should work with old options")]
@@ -69,11 +70,11 @@ namespace Microsoft.Playwright.Tests
             await Task.Delay(1000);
             await context.CloseAsync();
 
-            Assert.IsNotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
+            Assert.That.Collection(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm")).IsNotEmpty();
         }
 
         [PlaywrightTest("screencast.spec.ts", "should capture static page")]
-        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
+        [Skip(TestTargets.Webkit | TestTargets.Windows)]
         public async Task ShouldCaptureStaticPage()
         {
             using var tempDirectory = new TempDirectory();
@@ -88,7 +89,7 @@ namespace Microsoft.Playwright.Tests
             await Task.Delay(1000);
             await context.CloseAsync();
 
-            Assert.IsNotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
+            Assert.That.Collection(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm")).IsNotEmpty();
         }
 
         [PlaywrightTest("screencast.spec.ts", "should expose video path")]
@@ -104,10 +105,10 @@ namespace Microsoft.Playwright.Tests
             var page = await context.NewPageAsync();
             await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
             string path = await page.Video.PathAsync();
-            StringAssert.Contains(tempDirectory.Path, path);
+            StringAssert.Contains(path, tempDirectory.Path);
             await context.CloseAsync();
 
-            Assert.True(new FileInfo(path).Exists);
+            Assert.IsTrue(new FileInfo(path).Exists);
         }
 
         [PlaywrightTest("screencast.spec.ts", "should expose video path blank page")]
@@ -122,10 +123,10 @@ namespace Microsoft.Playwright.Tests
 
             var page = await context.NewPageAsync();
             string path = await page.Video.PathAsync();
-            StringAssert.Contains(tempDirectory.Path, path);
+            StringAssert.Contains(path, tempDirectory.Path);
             await context.CloseAsync();
 
-            Assert.True(new FileInfo(path).Exists);
+            Assert.IsTrue(new FileInfo(path).Exists);
         }
 
         [PlaywrightTest("screencast.spec.ts", "should expose video path blank popup")]
@@ -171,7 +172,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("screencast.spec.ts", "should capture static page in persistent context")]
-        [Skip(SkipAttribute.Targets.Webkit, SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Webkit, TestTargets.Firefox)]
         public async Task ShouldCaptureStaticPageInPersistentContext()
         {
             using var userDirectory = new TempDirectory();
@@ -187,7 +188,7 @@ namespace Microsoft.Playwright.Tests
             await Task.Delay(1000);
             await context.CloseAsync();
 
-            Assert.IsNotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
+            Assert.IsTrue(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm")?.Length > 0);
         }
     }
 }

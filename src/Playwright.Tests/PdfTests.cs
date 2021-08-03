@@ -26,17 +26,18 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>pdf.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PdfTests : PageTestEx
     {
         [PlaywrightTest("pdf.spec.ts", "should be able to save file")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Firefox, TestTargets.Webkit)]
         public async Task ShouldBeAbleToSaveFile()
         {
             var baseDirectory = Path.Combine(Directory.GetCurrentDirectory(), "workspace");
@@ -48,7 +49,7 @@ namespace Microsoft.Playwright.Tests
             }
             await Page.PdfAsync(new() { Path = outputFile, Format = PaperFormat.Letter });
             fileInfo = new(outputFile);
-            Assert.True(new FileInfo(outputFile).Length > 0);
+            Assert.IsTrue(new FileInfo(outputFile).Length > 0);
             if (fileInfo.Exists)
             {
                 fileInfo.Delete();
@@ -56,7 +57,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("pdf.spec.ts", "should only have pdf in chromium")]
-        [Skip(SkipAttribute.Targets.Chromium)]
+        [Skip(TestTargets.Chromium)]
         public Task ShouldOnlyHavePdfInChromium()
             => PlaywrightAssert.ThrowsAsync<NotSupportedException>(() => Page.PdfAsync());
     }

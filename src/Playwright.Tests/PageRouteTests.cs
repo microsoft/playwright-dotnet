@@ -31,12 +31,13 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageRouteTests : PageTestEx
     {
         [PlaywrightTest("page-route.spec.ts", "should intercept")]
@@ -45,11 +46,11 @@ namespace Microsoft.Playwright.Tests
             bool intercepted = false;
             await Page.RouteAsync("**/empty.html", (route) =>
             {
-                StringAssert.Contains("empty.html", route.Request.Url);
-                Assert.False(string.IsNullOrEmpty(route.Request.Headers["user-agent"]));
+                StringAssert.Contains(route.Request.Url, "empty.html");
+                Assert.IsFalse(string.IsNullOrEmpty(route.Request.Headers["user-agent"]));
                 Assert.AreEqual(HttpMethod.Get.Method, route.Request.Method);
-                Assert.Null(route.Request.PostData);
-                Assert.True(route.Request.IsNavigationRequest);
+                Assert.IsNull(route.Request.PostData);
+                Assert.IsTrue(route.Request.IsNavigationRequest);
                 Assert.AreEqual("document", route.Request.ResourceType);
                 Assert.AreEqual(route.Request.Frame, Page.MainFrame);
                 Assert.AreEqual("about:blank", route.Request.Frame.Url);
@@ -58,8 +59,8 @@ namespace Microsoft.Playwright.Tests
             });
 
             var response = await Page.GotoAsync(Server.EmptyPage);
-            Assert.True(response.Ok);
-            Assert.True(intercepted);
+            Assert.IsTrue(response.Ok);
+            Assert.IsTrue(intercepted);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should unroute")]
@@ -94,17 +95,17 @@ namespace Microsoft.Playwright.Tests
 
             await Page.RouteAsync("**/empty.html", handler4);
             await Page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new[] { 4 }, intercepted.ToArray());
+            CollectionAssert.AreEqual(new[] { 4 }, intercepted.ToArray());
 
             intercepted.Clear();
             await Page.UnrouteAsync("**/empty.html", handler4);
             await Page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new[] { 3 }, intercepted.ToArray());
+            CollectionAssert.AreEqual(new[] { 3 }, intercepted.ToArray());
 
             intercepted.Clear();
             await Page.UnrouteAsync("**/empty.html");
             await Page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new[] { 1 }, intercepted.ToArray());
+            CollectionAssert.AreEqual(new[] { 1 }, intercepted.ToArray());
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work when POST is redirected with 302")]
@@ -163,8 +164,8 @@ namespace Microsoft.Playwright.Tests
                 route.ContinueAsync();
             });
             await Page.GotoAsync(Server.Prefix + "/one-style.html");
-            StringAssert.Contains("/one-style.css", requests[1].Url);
-            StringAssert.Contains("/one-style.html", requests[1].Headers["referer"]);
+            StringAssert.Contains(requests[1].Url, "/one-style.css");
+            StringAssert.Contains(requests[1].Headers["referer"], "/one-style.html");
         }
 
         [PlaywrightTest("page-route.spec.ts", "should properly return navigation response when URL has cookies")]
@@ -201,7 +202,7 @@ namespace Microsoft.Playwright.Tests
                 route.ContinueAsync();
             });
             var response = await Page.GotoAsync(Server.EmptyPage);
-            Assert.True(response.Ok);
+            Assert.IsTrue(response.Ok);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with redirect inside sync XHR")]
@@ -229,7 +230,7 @@ namespace Microsoft.Playwright.Tests
                 route.ContinueAsync();
             });
             var response = await Page.GotoAsync(Server.EmptyPage);
-            Assert.True(response.Ok);
+            Assert.IsTrue(response.Ok);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should be abortable")]
@@ -240,8 +241,8 @@ namespace Microsoft.Playwright.Tests
             int failedRequests = 0;
             Page.RequestFailed += (_, _) => ++failedRequests;
             var response = await Page.GotoAsync(Server.Prefix + "/one-style.html");
-            Assert.True(response.Ok);
-            Assert.Null(response.Request.Failure);
+            Assert.IsTrue(response.Ok);
+            Assert.IsNull(response.Request.Failure);
             Assert.AreEqual(1, failedRequests);
         }
 
@@ -256,7 +257,7 @@ namespace Microsoft.Playwright.Tests
             IRequest failedRequest = null;
             Page.RequestFailed += (_, e) => failedRequest = e;
             await Page.GotoAsync(Server.EmptyPage).ContinueWith(_ => { });
-            Assert.NotNull(failedRequest);
+            Assert.IsNotNull(failedRequest);
             if (TestConstants.IsWebKit)
             {
                 Assert.AreEqual("Request intercepted", failedRequest.Failure);
@@ -281,7 +282,7 @@ namespace Microsoft.Playwright.Tests
                 requestTask,
                 Page.GotoAsync(Server.Prefix + "/grid.html")
             );
-            Assert.AreEqual("http://google.com/", requestTask.Result);
+            Assert.AreEqual("http://google.com/", requestTask.Result[0]);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should fail navigation when aborting main resource")]
@@ -289,18 +290,18 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.RouteAsync("**/*", (route) => route.AbortAsync());
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync(Server.EmptyPage));
-            Assert.NotNull(exception);
+            Assert.IsNotNull(exception);
             if (TestConstants.IsWebKit)
             {
-                StringAssert.Contains("Request intercepted", exception.Message);
+                StringAssert.Contains(exception.Message, "Request intercepted");
             }
             else if (TestConstants.IsFirefox)
             {
-                StringAssert.Contains("NS_ERROR_FAILURE", exception.Message);
+                StringAssert.Contains(exception.Message, "NS_ERROR_FAILURE");
             }
             else
             {
-                StringAssert.Contains("net::ERR_FAILED", exception.Message);
+                StringAssert.Contains(exception.Message, "net::ERR_FAILED");
             }
         }
 
@@ -319,30 +320,30 @@ namespace Microsoft.Playwright.Tests
             Server.SetRedirect("/non-existing-page-4.html", "/empty.html");
             var response = await Page.GotoAsync(Server.Prefix + "/non-existing-page.html");
 
-            StringAssert.Contains("non-existing-page.html", requests[0].Url);
-            Assert.That(requests, Has.Count.EqualTo(1));
+            StringAssert.Contains(requests[0].Url, "non-existing-page.html");
+            Assert.That.Collection(requests).HasExactly(1);
             Assert.AreEqual("document", requests[0].ResourceType);
-            Assert.True(requests[0].IsNavigationRequest);
+            Assert.IsTrue(requests[0].IsNavigationRequest);
 
             var chain = new List<IRequest>();
 
             for (var request = response.Request; request != null; request = request.RedirectedFrom)
             {
                 chain.Add(request);
-                Assert.True(request.IsNavigationRequest);
+                Assert.IsTrue(request.IsNavigationRequest);
             }
 
             Assert.AreEqual(5, chain.Count);
-            StringAssert.Contains("/empty.html", chain[0].Url);
-            StringAssert.Contains("/non-existing-page-4.html", chain[1].Url);
-            StringAssert.Contains("/non-existing-page-3.html", chain[2].Url);
-            StringAssert.Contains("/non-existing-page-2.html", chain[3].Url);
-            StringAssert.Contains("/non-existing-page.html", chain[4].Url);
+            StringAssert.Contains(chain[0].Url, "/empty.html");
+            StringAssert.Contains(chain[1].Url, "/non-existing-page-4.html");
+            StringAssert.Contains(chain[2].Url, "/non-existing-page-3.html");
+            StringAssert.Contains(chain[3].Url, "/non-existing-page-2.html");
+            StringAssert.Contains(chain[4].Url, "/non-existing-page.html");
 
             for (int i = 0; i < chain.Count; ++i)
             {
                 var request = chain[i];
-                Assert.True(request.IsNavigationRequest);
+                Assert.IsTrue(request.IsNavigationRequest);
                 Assert.AreEqual(i > 0 ? chain[i - 1] : null, chain[i].RedirectedTo);
             }
         }
@@ -363,21 +364,21 @@ namespace Microsoft.Playwright.Tests
 
             var response = await Page.GotoAsync(Server.Prefix + "/one-style.html");
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
-            StringAssert.Contains("one-style.html", response.Url);
+            StringAssert.Contains(response.Url, "one-style.html");
 
             Assert.AreEqual(2, requests.Count);
             Assert.AreEqual("document", requests[0].ResourceType);
-            StringAssert.Contains("one-style.html", requests[0].Url);
+            StringAssert.Contains(requests[0].Url, "one-style.html");
 
             var request = requests[1];
             foreach (string url in new[] { "/one-style.css", "/two-style.css", "/three-style.css", "/four-style.css" })
             {
                 Assert.AreEqual("stylesheet", request.ResourceType);
-                StringAssert.Contains(url, request.Url);
+                StringAssert.Contains(request.Url, url);
                 request = request.RedirectedTo;
             }
 
-            Assert.Null(request);
+            Assert.IsNull(request);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with equal requests")]
@@ -408,7 +409,7 @@ namespace Microsoft.Playwright.Tests
                 results.Add(await Page.EvaluateAsync<string>("fetch('/zzz').then(response => response.text()).catch (e => 'FAILED')"));
             }
 
-            Assert.AreEqual(new[] { "11", "FAILED", "22" }, results);
+            CollectionAssert.AreEqual(new[] { "11", "FAILED", "22" }, results);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should navigate to dataURL and not fire dataURL requests")]
@@ -422,8 +423,8 @@ namespace Microsoft.Playwright.Tests
             });
             string dataURL = "data:text/html,<div>yo</div>";
             var response = await Page.GotoAsync(dataURL);
-            Assert.Null(response);
-            Assert.IsEmpty(requests);
+            Assert.IsNull(response);
+            Assert.That.Collection(requests).IsEmpty();
         }
 
         [PlaywrightTest("page-route.spec.ts", "should be able to fetch dataURL and not fire dataURL requests")]
@@ -440,7 +441,7 @@ namespace Microsoft.Playwright.Tests
             string dataURL = "data:text/html,<div>yo</div>";
             string text = await Page.EvaluateAsync<string>("url => fetch(url).then(r => r.text())", dataURL);
             Assert.AreEqual("<div>yo</div>", text);
-            Assert.IsEmpty(requests);
+            Assert.That.Collection(requests).IsEmpty();
         }
 
         [PlaywrightTest("page-route.spec.ts", "should navigate to URL with hash and and fire requests without hash")]
@@ -456,7 +457,7 @@ namespace Microsoft.Playwright.Tests
             var response = await Page.GotoAsync(Server.EmptyPage + "#hash");
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
             Assert.AreEqual(Server.EmptyPage, response.Url);
-            Assert.That(requests, Has.Count.EqualTo(1));
+            Assert.That.Collection(requests).HasExactly(1);
             Assert.AreEqual(Server.EmptyPage, requests[0].Url);
         }
 
@@ -491,8 +492,8 @@ namespace Microsoft.Playwright.Tests
                 requests.Add(route.Request);
             });
             var response = await Page.GotoAsync($"data:text/html,<link rel=\"stylesheet\" href=\"{Server.EmptyPage}/fonts?helvetica|arial\"/>");
-            Assert.Null(response);
-            Assert.That(requests, Has.Count.EqualTo(1));
+            Assert.IsNull(response);
+            Assert.That.Collection(requests).HasExactly(1);
             Assert.AreEqual((int)HttpStatusCode.NotFound, (await requests[0].ResponseAsync()).Status);
         }
 
@@ -525,12 +526,12 @@ namespace Microsoft.Playwright.Tests
                 route.ContinueAsync();
             });
             var response = await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
-            Assert.True(response.Ok);
-            Assert.True(intercepted);
+            Assert.IsTrue(response.Ok);
+            Assert.IsTrue(intercepted);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should fulfill with redirect status")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldFulfillWithRedirectStatus()
         {
             await Page.GotoAsync(Server.Prefix + "/title.html");
@@ -585,14 +586,14 @@ namespace Microsoft.Playwright.Tests
                 return response.json();
             }");
 
-            Assert.AreEqual(new[] { "electric", "cars" }, resp);
+            CollectionAssert.AreEqual(new[] { "electric", "cars" }, resp);
 
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync<string>(@"async () => {
                 const response = await fetch('https://example.com/cars?reject', { mode: 'cors' });
                 return response.json();
             }"));
 
-            StringAssert.Contains("failed", exception.Message);
+            StringAssert.Contains(exception.Message, "failed");
         }
 
         [PlaywrightTest("page-route.spec.ts", "should support cors with POST")]
@@ -620,7 +621,7 @@ namespace Microsoft.Playwright.Tests
                 return response.json();
             }");
 
-            Assert.AreEqual(new[] { "electric", "cars" }, resp);
+            CollectionAssert.AreEqual(new[] { "electric", "cars" }, resp);
         }
 
         [PlaywrightTest("page-route.spec.ts", "should support cors with different methods")]
@@ -648,7 +649,7 @@ namespace Microsoft.Playwright.Tests
                 return response.json();
             }");
 
-            Assert.AreEqual(new[] { "POST", "electric", "cars" }, resp);
+            CollectionAssert.AreEqual(new[] { "POST", "electric", "cars" }, resp);
 
             resp = await Page.EvaluateAsync<string[]>(@"async () => {
                 const response = await fetch('https://example.com/cars', {
@@ -660,7 +661,7 @@ namespace Microsoft.Playwright.Tests
                 return response.json();
             }");
 
-            Assert.AreEqual(new[] { "DELETE", "electric", "cars" }, resp);
+            CollectionAssert.AreEqual(new[] { "DELETE", "electric", "cars" }, resp);
         }
     }
 }

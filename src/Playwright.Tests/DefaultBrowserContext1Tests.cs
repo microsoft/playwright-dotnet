@@ -25,12 +25,12 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class DefaultBrowserContext1Tests : PlaywrightTestEx
     {
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "context.cookies() should work")]
@@ -52,8 +52,8 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("localhost", cookie.Domain);
             Assert.AreEqual("/", cookie.Path);
             Assert.AreEqual(-1, cookie.Expires);
-            Assert.False(cookie.HttpOnly);
-            Assert.False(cookie.Secure);
+            Assert.IsFalse(cookie.HttpOnly);
+            Assert.IsFalse(cookie.Secure);
             Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
 
             tmp.Dispose();
@@ -84,8 +84,8 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("localhost", cookie.Domain);
             Assert.AreEqual("/", cookie.Path);
             Assert.AreEqual(-1, cookie.Expires);
-            Assert.False(cookie.HttpOnly);
-            Assert.False(cookie.Secure);
+            Assert.IsFalse(cookie.HttpOnly);
+            Assert.IsFalse(cookie.Secure);
             Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
 
             tmp.Dispose();
@@ -118,8 +118,8 @@ namespace Microsoft.Playwright.Tests
 
             await context.ClearCookiesAsync();
             await page.ReloadAsync();
-            Assert.IsEmpty(await page.Context.CookiesAsync());
-            Assert.IsEmpty(await page.EvaluateAsync<string>(@"() => document.cookie"));
+            Assert.That.Collection(await page.Context.CookiesAsync()).IsEmpty();
+            Assert.That.Collection(await page.EvaluateAsync<string>(@"() => document.cookie")).IsEmpty();
 
             tmp.Dispose();
             await context.DisposeAsync();
@@ -148,20 +148,20 @@ namespace Microsoft.Playwright.Tests
 
             if (allowsThirdPart)
             {
-                Assert.That(cookies, Has.Count.EqualTo(1));
+                Assert.That.Collection(cookies).HasExactly(1);
                 var cookie = cookies.First();
                 Assert.AreEqual("127.0.0.1", cookie.Domain);
                 Assert.AreEqual(cookie.Expires, -1);
-                Assert.False(cookie.HttpOnly);
+                Assert.IsFalse(cookie.HttpOnly);
                 Assert.AreEqual("username", cookie.Name);
                 Assert.AreEqual("/", cookie.Path);
                 Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
-                Assert.False(cookie.Secure);
+                Assert.IsFalse(cookie.Secure);
                 Assert.AreEqual("John Doe", cookie.Value);
             }
             else
             {
-                Assert.IsEmpty(cookies);
+                Assert.That.Collection(cookies).IsEmpty();
             }
 
             tmp.Dispose();
@@ -251,11 +251,11 @@ namespace Microsoft.Playwright.Tests
 
             if (TestConstants.IsWebKit)
             {
-                StringAssert.Contains("Can't find variable: something", exception.Message);
+                StringAssert.Contains(exception.Message, "Can't find variable: something");
             }
             else
             {
-                StringAssert.Contains("something is not defined", exception.Message);
+                StringAssert.Contains(exception.Message, "something is not defined");
             }
 
             tmp.Dispose();

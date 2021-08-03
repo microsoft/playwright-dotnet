@@ -28,13 +28,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageWaitForLoadStateTests : PageTestEx
     {
         [PlaywrightTest("page-wait-for-load-state.ts", "should pick up ongoing navigation")]
@@ -66,7 +67,7 @@ namespace Microsoft.Playwright.Tests
             Server.SetRoute("/one-style.css", _ => Task.Delay(Timeout.Infinite));
             await Page.GotoAsync(Server.Prefix + "/one-style.html", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.WaitForLoadStateAsync(LoadState.Load, new() { Timeout = 1 }));
-            StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 1ms exceeded");
         }
 
         [PlaywrightTest("page-wait-for-load-state.ts", "should resolve immediately if loaded")]
@@ -105,7 +106,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-load-state.ts", "should work with pages that have loaded before being connected to")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Firefox, TestTargets.Webkit)]
         public async Task ShouldWorkWithPagesThatHaveLoadedBeforeBeingConnectedTo()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -121,7 +122,7 @@ namespace Microsoft.Playwright.Tests
             var mainPage = pages.FirstOrDefault(p => ReferenceEquals(Page, p));
             var connectedPage = pages.Single(p => !ReferenceEquals(Page, p));
 
-            Assert.NotNull(mainPage);
+            Assert.IsNotNull(mainPage);
             Assert.AreEqual(Server.EmptyPage, mainPage.Url);
 
             Assert.AreEqual(Server.EmptyPage, connectedPage.Url);
@@ -149,7 +150,7 @@ namespace Microsoft.Playwright.Tests
             await routeReachedTask.Task;
             var loadTask = frame.WaitForLoadStateAsync();
             await Page.EvaluateAsync("1");
-            Assert.False(loadTask.IsCompleted);
+            Assert.IsFalse(loadTask.IsCompleted);
             requestTask.TrySetResult(true);
             await loadTask;
         }

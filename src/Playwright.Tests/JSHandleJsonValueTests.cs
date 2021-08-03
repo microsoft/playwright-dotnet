@@ -25,12 +25,12 @@
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class JSHandleJsonValueTests : PageTestEx
     {
         [PlaywrightTest("jshandle-json-value.spec.ts", "should work")]
@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.Tests
         {
             var windowHandle = await Page.EvaluateHandleAsync("window");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => windowHandle.JsonValueAsync<object>());
-            StringAssert.Contains("Argument is a circular structure", exception.Message);
+            StringAssert.Contains(exception.Message, "Argument is a circular structure");
         }
     }
 }

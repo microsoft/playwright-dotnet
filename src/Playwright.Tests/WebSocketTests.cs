@@ -24,13 +24,13 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>web-socket.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class WebSocketTests : PageTestEx
     {
         [PlaywrightTest("web-socket.spec.ts", "should work")]
@@ -71,7 +71,7 @@ namespace Microsoft.Playwright.Tests
 
             await socketClosedTcs.Task;
             Assert.AreEqual($"open<ws://localhost:{Server.Port}/ws>:close", string.Join(":", log));
-            Assert.True(webSocket.IsClosed);
+            Assert.IsTrue(webSocket.IsClosed);
         }
 
         [PlaywrightTest("web-socket.spec.ts", "should emit frame events")]
@@ -164,7 +164,7 @@ namespace Microsoft.Playwright.Tests
             }
             else
             {
-                StringAssert.Contains(": 40", socketErrorTcs.Task.Result);
+                StringAssert.Contains(socketErrorTcs.Task.Result, ": 40");
             }
         }
 
@@ -189,7 +189,7 @@ namespace Microsoft.Playwright.Tests
                 }", Server.Port));
 
             await Page.EvaluateAsync("window.ws.close();");
-            Assert.Null(socketError);
+            Assert.IsNull(socketError);
         }
     }
 }

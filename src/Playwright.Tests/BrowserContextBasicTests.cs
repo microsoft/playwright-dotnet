@@ -27,25 +27,26 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserContextBasicTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-basic.spec.ts", "should create new context")]
         public async Task ShouldCreateNewContext()
         {
             await using var browser = await BrowserType.LaunchAsync();
-            Assert.IsEmpty(browser.Contexts);
+            Assert.That.Collection(browser.Contexts).IsEmpty();
             await using var context = await browser.NewContextAsync();
-            Assert.That(browser.Contexts, Has.Length.EqualTo(1));
-            CollectionAssert.Contains(browser.Contexts, context);
+            Assert.That.Collection(browser.Contexts).HasExactly(1);
+            Assert.That.Collection(browser.Contexts).Contains(context);
             Assert.AreEqual(browser, context.Browser);
             await context.CloseAsync();
-            Assert.IsEmpty(browser.Contexts);
+            Assert.That.Collection(browser.Contexts).IsEmpty();
             Assert.AreEqual(browser, context.Browser);
         }
 
@@ -74,8 +75,8 @@ namespace Microsoft.Playwright.Tests
             await using var browser = await BrowserType.LaunchAsync();
             var context1 = await browser.NewContextAsync();
             var context2 = await browser.NewContextAsync();
-            Assert.IsEmpty(context1.Pages);
-            Assert.IsEmpty(context2.Pages);
+            Assert.That.Collection(context1.Pages).IsEmpty();
+            Assert.That.Collection(context2.Pages).IsEmpty();
 
             // Create a page in first incognito context.
             var page1 = await context1.NewPageAsync();
@@ -85,8 +86,8 @@ namespace Microsoft.Playwright.Tests
                 document.cookie = 'name=page1';
             }");
 
-            Assert.That(context1.Pages, Has.Count.EqualTo(1));
-            Assert.IsEmpty(context2.Pages);
+            Assert.That.Collection(context1.Pages).HasExactly(1);
+            Assert.That.Collection(context2.Pages).IsEmpty();
 
             // Create a page in second incognito context.
             var page2 = await context2.NewPageAsync();
@@ -96,9 +97,9 @@ namespace Microsoft.Playwright.Tests
                 document.cookie = 'name=page2';
             }");
 
-            Assert.That(context1.Pages, Has.Count.EqualTo(1));
+            Assert.That.Collection(context1.Pages).HasExactly(1);
             Assert.AreEqual(page1, context1.Pages.FirstOrDefault());
-            Assert.That(context2.Pages, Has.Count.EqualTo(1));
+            Assert.That.Collection(context2.Pages).HasExactly(1);
             Assert.AreEqual(page2, context2.Pages.FirstOrDefault());
 
             // Make sure pages don't share localstorage or cookies.
@@ -109,7 +110,7 @@ namespace Microsoft.Playwright.Tests
 
             // Cleanup contexts.
             await TaskUtils.WhenAll(context1.CloseAsync(), context2.CloseAsync());
-            Assert.IsEmpty(browser.Contexts);
+            Assert.That.Collection(browser.Contexts).IsEmpty();
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should propagate default viewport to the page")]
@@ -216,8 +217,8 @@ namespace Microsoft.Playwright.Tests
 
             if (popup != null)
             {
-                Assert.True(popup.IsClosed);
-                Assert.NotNull(popup.MainFrame);
+                Assert.IsTrue(popup.IsClosed);
+                Assert.IsNotNull(popup.MainFrame);
             }
         }
 
@@ -237,8 +238,8 @@ namespace Microsoft.Playwright.Tests
             var second = await context.NewPageAsync();
 
             Assert.AreEqual(2, context.Pages.Count);
-            CollectionAssert.Contains(context.Pages, page);
-            CollectionAssert.Contains(context.Pages, second);
+            Assert.That.Collection(context.Pages).Contains(page);
+            Assert.That.Collection(context.Pages).Contains(second);
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "BrowserContext.pages()", "should close all belonging pages once closing context")]
@@ -247,11 +248,11 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             await context.NewPageAsync();
 
-            Assert.That(context.Pages, Has.Count.EqualTo(1));
+            Assert.That.Collection(context.Pages).HasExactly(1);
 
             await context.CloseAsync();
 
-            Assert.IsEmpty(context.Pages);
+            Assert.That.Collection(context.Pages).IsEmpty();
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should disable javascript")]
@@ -265,8 +266,8 @@ namespace Microsoft.Playwright.Tests
                 var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.EvaluateAsync("something"));
 
                 StringAssert.Contains(
-                    TestConstants.IsWebKit ? "Can't find variable: something" : "something is not defined",
-                    exception.Message);
+                    exception.Message,
+                    TestConstants.IsWebKit ? "Can't find variable: something" : "something is not defined");
             }
 
             await using (var context = await Browser.NewContextAsync())
@@ -302,11 +303,11 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            Assert.True(await page.EvaluateAsync<bool>("() => window.navigator.onLine"));
+            Assert.IsTrue(await page.EvaluateAsync<bool>("() => window.navigator.onLine"));
             await context.SetOfflineAsync(true);
-            Assert.False(await page.EvaluateAsync<bool>("() => window.navigator.onLine"));
+            Assert.IsFalse(await page.EvaluateAsync<bool>("() => window.navigator.onLine"));
             await context.SetOfflineAsync(false);
-            Assert.True(await page.EvaluateAsync<bool>("() => window.navigator.onLine"));
+            Assert.IsTrue(await page.EvaluateAsync<bool>("() => window.navigator.onLine"));
         }
     }
 }

@@ -25,14 +25,15 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>headful.spec.ts</playwright-file>
 
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class HeadfulTests : PlaywrightTestEx
     {
         [PlaywrightTest("headful.spec.ts", "should have default url when launching browser")]
@@ -42,7 +43,7 @@ namespace Microsoft.Playwright.Tests
             await using var browserContext = await LaunchPersistentHeaded(tempDir.Path);
 
             string[] pages = browserContext.Pages.Select(page => page.Url).ToArray();
-            Assert.AreEqual(new[] { "about:blank" }, pages);
+            CollectionAssert.AreEqual(new[] { "about:blank" }, pages);
         }
 
         [PlaywrightTest("headful.spec.ts", "headless should be able to read cookies written by headful")]
@@ -143,25 +144,25 @@ namespace Microsoft.Playwright.Tests
 
             if (allowsThirdParty)
             {
-                Assert.That(cookies, Has.Count.EqualTo(1));
+                Assert.That.Collection(cookies).HasExactly(1);
                 var cookie = cookies.First();
                 Assert.AreEqual("127.0.0.1", cookie.Domain);
                 Assert.AreEqual(cookie.Expires, -1);
-                Assert.False(cookie.HttpOnly);
+                Assert.IsFalse(cookie.HttpOnly);
                 Assert.AreEqual("username", cookie.Name);
                 Assert.AreEqual("/", cookie.Path);
                 Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
-                Assert.False(cookie.Secure);
+                Assert.IsFalse(cookie.Secure);
                 Assert.AreEqual("John Doe", cookie.Value);
             }
             else
             {
-                Assert.IsEmpty(cookies);
+                Assert.That.Collection(cookies).IsEmpty();
             }
         }
 
         [PlaywrightTest("headful.spec.ts", "should not override viewport size when passed null")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldNotOverrideViewportSizeWhenPassedNull()
         {
             await using var browser = await LaunchHeaded();
