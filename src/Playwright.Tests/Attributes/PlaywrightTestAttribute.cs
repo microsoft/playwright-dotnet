@@ -23,8 +23,11 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Microsoft.Playwright.Tests
 {
@@ -34,6 +37,9 @@ namespace Microsoft.Playwright.Tests
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class PlaywrightTestAttribute : TestMethodAttribute
     {
+        /// <summary>
+        /// Creates a new instance of the attribute.
+        /// </summary>
         public PlaywrightTestAttribute()
         {
 
@@ -64,7 +70,7 @@ namespace Microsoft.Playwright.Tests
         /// <summary>
         /// The file name origin of the test.
         /// </summary>
-        public string FileName { get; }
+        public string FileName { get; set; }
 
         /// <summary>
         /// Returns the trimmed file name.
@@ -74,12 +80,18 @@ namespace Microsoft.Playwright.Tests
         /// <summary>
         /// The name of the test, the decorated code is based on.
         /// </summary>
-        public string TestName { get; }
+        public string TestName { get; set; }
 
         /// <summary>
         /// The describe of the test, the decorated code is based on, if one exists.
         /// </summary>
-        public string Describe { get; }
+        public string Describe { get; set; }
+
+        /// <summary>
+        /// Determines the default amount of retries - to compensate for flaky tests.
+        /// This can be overriden by setting a <see cref="FlakyAttribute"/>.
+        /// </summary>
+        public int DefaultRetries { get; set; } = 3;
 
         public override TestResult[] Execute(ITestMethod testMethod)
         {
@@ -96,7 +108,56 @@ namespace Microsoft.Playwright.Tests
                 };
             }
 
-            return base.Execute(testMethod);
+            var flakyAttribute = testMethod.GetAttributes<FlakyAttribute>(true).FirstOrDefault();
+
+            int count = flakyAttribute?.MaximumRetries ?? DefaultRetries;
+            int executionCount = 0;
+            List<TestResult> testResults = new();
+            Exception lastThrownException = null;
+
+            while (count-- > 0)
+            {
+                executionCount++;
+                var flakyTestResult = new TestResult()
+                {
+                    Outcome = UnitTestOutcome.Inconclusive
+                };
+
+                try
+                {
+                    var result = base.Execute(testMethod);
+
+                    if (result.All(x =>
+                         x.Outcome == UnitTestOutcome.Inconclusive
+                         || x.Outcome == UnitTestOutcome.Passed))
+                    {
+                        testResults.AddRange(result);
+                        break;
+                    }
+
+                    lastThrownException = result.Where(x => x.TestFailureException != null).LastOrDefault()?.TestFailureException;
+                    flakyTestResult.LogError = string.Join(Environment.NewLine, result.Select(x => x.LogError));
+                    flakyTestResult.TestFailureException = lastThrownException;
+                    flakyTestResult.TestContextMessages = $"Test retries remaining: {count}";
+                }
+                catch (Exception ex)
+                {
+                    flakyTestResult.TestFailureException = ex;
+                }
+
+                testResults.Add(flakyTestResult);
+            }
+
+            if (testResults.All(x => x.Outcome == UnitTestOutcome.Inconclusive))
+            {
+                testResults.Add(new()
+                {
+                    Outcome = UnitTestOutcome.Failed,
+                    TestFailureException = new AggregateException("All retries for this test have failed.", lastThrownException)
+                });
+            }
+
+            return testResults.ToArray();
         }
     }
 }
