@@ -27,14 +27,14 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>ignorehttpserrors.spec.ts</playwright-file>
     ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class IgnoreHttpsErrorsTests : BrowserTestEx
     {
         [PlaywrightTest("ignorehttpserrors.spec.ts", "should work")]

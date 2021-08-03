@@ -23,13 +23,13 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.MSTest;
 using Microsoft.Playwright.Testing.Core;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserContextViewportMobileTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-viewport-mobile.spec.ts", "should support mobile emulation")]
@@ -66,7 +66,7 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.Prefix + "/mobile.html");
-            Assert.True(await page.EvaluateAsync<bool>("'ontouchstart' in window"));
+            Assert.IsTrue(await page.EvaluateAsync<bool>("'ontouchstart' in window"));
             Assert.AreEqual("Received touch", await page.EvaluateAsync<string>(dispatchTouch));
         }
 
@@ -97,7 +97,7 @@ namespace Microsoft.Playwright.Tests
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
             await page.AddScriptTagAsync(new() { Url = Server.Prefix + "/modernizr.js" });
-            Assert.True(await page.EvaluateAsync<bool>("() => Modernizr.touchevents"));
+            Assert.IsTrue(await page.EvaluateAsync<bool>("() => Modernizr.touchevents"));
         }
 
         [PlaywrightTest("browsercontext-viewport-mobile.spec.ts", "should support landscape emulation")]
@@ -107,12 +107,12 @@ namespace Microsoft.Playwright.Tests
             await using var context1 = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
             var page1 = await context1.NewPageAsync();
             await page1.GotoAsync(Server.Prefix + "/mobile.html");
-            Assert.False(await page1.EvaluateAsync<bool>("() => matchMedia('(orientation: landscape)').matches"));
+            Assert.IsFalse(await page1.EvaluateAsync<bool>("() => matchMedia('(orientation: landscape)').matches"));
 
             await using var context2 = await Browser.NewContextAsync(Playwright.Devices["iPhone 6 landscape"]);
             var page2 = await context2.NewPageAsync();
             await page2.GotoAsync(Server.Prefix + "/mobile.html");
-            Assert.True(await page2.EvaluateAsync<bool>("() => matchMedia('(orientation: landscape)').matches"));
+            Assert.IsTrue(await page2.EvaluateAsync<bool>("() => matchMedia('(orientation: landscape)').matches"));
         }
 
         [PlaywrightTest("browsercontext-viewport-mobile.spec.ts", "should support window.orientation emulation")]

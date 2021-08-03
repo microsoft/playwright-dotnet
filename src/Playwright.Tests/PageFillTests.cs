@@ -23,13 +23,13 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.MSTest;
 using Microsoft.Playwright.Testing.Core;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageFillTests : PageTestEx
     {
         [PlaywrightTest("page-fill.spec.ts", "should fill textarea")]
@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Tests
             {
                 await Page.EvalOnSelectorAsync("input", "(input, type) => input.setAttribute('type', type)", type);
                 var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.FillAsync("input", string.Empty));
-                StringAssert.Contains($"input of type \"{type}\" cannot be filled", exception.Message);
+                StringAssert.Contains(exception.Message, $"input of type \"{type}\" cannot be filled");
             }
         }
 
@@ -88,7 +88,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<input type=date>");
             await Page.ClickAsync("input");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.FillAsync("input", "2020-13-02"));
-            StringAssert.Contains("Malformed value", exception.Message);
+            StringAssert.Contains(exception.Message, "Malformed value");
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should fill time input after clicking")]
@@ -107,7 +107,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<input type=time>");
             await Page.ClickAsync("input");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.FillAsync("input", "25:05"));
-            StringAssert.Contains("Malformed value", exception.Message);
+            StringAssert.Contains(exception.Message, "Malformed value");
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should fill datetime-local input")]
@@ -126,7 +126,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<input type=datetime-local>");
             await Page.ClickAsync("input");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.FillAsync("input", "abc"));
-            StringAssert.Contains("Malformed value", exception.Message);
+            StringAssert.Contains(exception.Message, "Malformed value");
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should fill contenteditable")]
@@ -170,7 +170,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.FillAsync("body", string.Empty));
-            StringAssert.Contains("Element is not an <input>", exception.Message);
+            StringAssert.Contains(exception.Message, "Element is not an <input>");
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should throw if passed a non-string value")]
@@ -187,8 +187,8 @@ namespace Microsoft.Playwright.Tests
 
             var task = Page.FillAsync("input", "some value");
             await GiveItAChanceToFillAsync(Page);
-            Assert.False(task.IsCompleted);
-            Assert.IsEmpty(await Page.EvaluateAsync<string>("() => result"));
+            Assert.IsFalse(task.IsCompleted);
+            Assert.That.Collection(await Page.EvaluateAsync<string>("() => result")).IsEmpty();
 
             await Page.EvalOnSelectorAsync("input", "i => i.disabled = false");
             await task;
@@ -202,8 +202,8 @@ namespace Microsoft.Playwright.Tests
             await Page.EvalOnSelectorAsync("textarea", "i => i.readOnly = true");
             var task = Page.FillAsync("textarea", "some value");
             await GiveItAChanceToFillAsync(Page);
-            Assert.False(task.IsCompleted);
-            Assert.IsEmpty(await Page.EvaluateAsync<string>("() => result"));
+            Assert.IsFalse(task.IsCompleted);
+            Assert.That.Collection(await Page.EvaluateAsync<string>("() => result")).IsEmpty();
 
             await Page.EvalOnSelectorAsync("textarea", "i => i.readOnly = false");
             await task;
@@ -218,8 +218,8 @@ namespace Microsoft.Playwright.Tests
 
             var task = Page.FillAsync("input", "some value");
             await GiveItAChanceToFillAsync(Page);
-            Assert.False(task.IsCompleted);
-            Assert.IsEmpty(await Page.EvaluateAsync<string>("() => result"));
+            Assert.IsFalse(task.IsCompleted);
+            Assert.That.Collection(await Page.EvaluateAsync<string>("() => result")).IsEmpty();
 
             await Page.EvalOnSelectorAsync("input", "i => i.style.display = 'inline'");
             await task;
@@ -272,7 +272,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<input id=\"input\" type=\"number\"></input>");
             await Page.FillAsync("input", "");
-            Assert.IsEmpty(await Page.EvaluateAsync<string>("() => input.value"));
+            Assert.That.Collection(await Page.EvaluateAsync<string>("() => input.value")).IsEmpty();
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should not be able to fill text into the input[type=number]")]
@@ -280,7 +280,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<input id=\"input\" type=\"number\"></input>");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.FillAsync("input", "abc"));
-            StringAssert.Contains("Cannot type text into input[type=number]", exception.Message);
+            StringAssert.Contains(exception.Message, "Cannot type text into input[type=number]");
         }
 
         [PlaywrightTest("page-fill.spec.ts", "should be able to clear")]
@@ -290,7 +290,7 @@ namespace Microsoft.Playwright.Tests
             await Page.FillAsync("input", "some value");
             Assert.AreEqual("some value", await Page.EvaluateAsync<string>("() => result"));
             await Page.FillAsync("input", "");
-            Assert.IsEmpty(await Page.EvaluateAsync<string>("() => result"));
+            Assert.That.Collection(await Page.EvaluateAsync<string>("() => result")).IsEmpty();
         }
 
         private async Task GiveItAChanceToFillAsync(IPage page)

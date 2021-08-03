@@ -26,13 +26,13 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.MSTest;
 using Microsoft.Playwright.Testing.Core;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageKeyboardTests : PageTestEx
     {
         [PlaywrightTest("page-keyboard.spec.ts", "should type into a textarea")]
@@ -123,7 +123,7 @@ namespace Microsoft.Playwright.Tests
             }");
 
             await Page.Keyboard.InsertTextAsync("hello world");
-            Assert.AreEqual(new[] { "input" }, await events.JsonValueAsync<string[]>());
+            CollectionAssert.AreEqual(new[] { "input" }, await events.JsonValueAsync<string[]>());
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should report shiftKey")]
@@ -327,18 +327,18 @@ namespace Microsoft.Playwright.Tests
             var lastEvent = await CaptureLastKeydownAsync(Page);
             await Page.EvaluateAsync("() => document.querySelector('textarea').addEventListener('keydown', e => window.lastEvent = e, true)");
             await Page.Keyboard.DownAsync("a");
-            Assert.False(await lastEvent.EvaluateAsync<bool>("e => e.repeat"));
+            Assert.IsFalse(await lastEvent.EvaluateAsync<bool>("e => e.repeat"));
             await Page.Keyboard.PressAsync("a");
-            Assert.True(await lastEvent.EvaluateAsync<bool>("e => e.repeat"));
+            Assert.IsTrue(await lastEvent.EvaluateAsync<bool>("e => e.repeat"));
 
             await Page.Keyboard.DownAsync("b");
-            Assert.False(await lastEvent.EvaluateAsync<bool>("e => e.repeat"));
+            Assert.IsFalse(await lastEvent.EvaluateAsync<bool>("e => e.repeat"));
             await Page.Keyboard.DownAsync("b");
-            Assert.True(await lastEvent.EvaluateAsync<bool>("e => e.repeat"));
+            Assert.IsTrue(await lastEvent.EvaluateAsync<bool>("e => e.repeat"));
 
             await Page.Keyboard.UpAsync("a");
             await Page.Keyboard.DownAsync("a");
-            Assert.False(await lastEvent.EvaluateAsync<bool>("e => e.repeat"));
+            Assert.IsFalse(await lastEvent.EvaluateAsync<bool>("e => e.repeat"));
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should type all kinds of characters")]
@@ -440,7 +440,7 @@ namespace Microsoft.Playwright.Tests
             await Page.Keyboard.PressAsync("a");
             await Page.Keyboard.UpAsync(modifier);
             await Page.Keyboard.PressAsync("Backspace");
-            Assert.IsEmpty(await Page.EvalOnSelectorAsync<string>("textarea", "textarea => textarea.value"));
+            Assert.That.Collection(await Page.EvalOnSelectorAsync<string>("textarea", "textarea => textarea.value")).IsEmpty();
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should be able to prevent selectAll")]
@@ -494,11 +494,11 @@ namespace Microsoft.Playwright.Tests
 
             if (TestConstants.IsFirefox && !TestConstants.IsMacOSX)
             {
-                Assert.False(metaKey);
+                Assert.IsFalse(metaKey);
             }
             else
             {
-                Assert.True(metaKey);
+                Assert.IsTrue(metaKey);
             }
         }
 

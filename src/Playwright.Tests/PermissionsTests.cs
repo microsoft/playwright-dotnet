@@ -25,13 +25,13 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.MSTest;
 using Microsoft.Playwright.Testing.Core;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PermissionsTests : PageTestEx
     {
         [PlaywrightTest("permissions.spec.ts", "should be prompt by default")]
@@ -94,7 +94,7 @@ namespace Microsoft.Playwright.Tests
             await Context.ClearPermissionsAsync();
             await Context.GrantPermissionsAsync(new[] { "notifications" });
             Assert.AreEqual("granted", await GetPermissionAsync(Page, "notifications"));
-            Assert.That("granted", Is.Not.EqualTo(await GetPermissionAsync(Page, "geolocation")));
+            Assert.AreNotEqual("granted", await GetPermissionAsync(Page, "geolocation"));
             Assert.AreEqual("granted", await GetPermissionAsync(Page, "notifications"));
         }
 
@@ -146,15 +146,15 @@ namespace Microsoft.Playwright.Tests
                     };
                 });
             }");
-            Assert.AreEqual(new[] { "prompt" }, await Page.EvaluateAsync<string[]>("window.events"));
+            CollectionAssert.AreEqual(new[] { "prompt" }, await Page.EvaluateAsync<string[]>("window.events"));
             await Context.GrantPermissionsAsync(Array.Empty<string>(), new() { Origin = Server.EmptyPage });
-            Assert.AreEqual(new[] { "prompt", "denied" }, await Page.EvaluateAsync<string[]>("window.events"));
+            CollectionAssert.AreEqual(new[] { "prompt", "denied" }, await Page.EvaluateAsync<string[]>("window.events"));
             await Context.GrantPermissionsAsync(new[] { "geolocation" }, new() { Origin = Server.EmptyPage });
-            Assert.AreEqual(
+            CollectionAssert.AreEqual(
                 new[] { "prompt", "denied", "granted" },
                 await Page.EvaluateAsync<string[]>("window.events"));
             await Context.ClearPermissionsAsync();
-            Assert.AreEqual(
+            CollectionAssert.AreEqual(
                 new[] { "prompt", "denied", "granted", "prompt" },
                 await Page.EvaluateAsync<string[]>("window.events"));
         }

@@ -25,12 +25,12 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class DownloadsPathTests : PlaywrightTestEx
     {
         private IBrowser _browser { get; set; }
@@ -55,7 +55,7 @@ namespace Microsoft.Playwright.Tests
 
             await page.CloseAsync();
             await _browser.CloseAsync();
-            Assert.True(new DirectoryInfo(_tmp.Path).Exists);
+            Assert.IsTrue(new DirectoryInfo(_tmp.Path).Exists);
         }
 
         [PlaywrightTest("downloads-path.spec.ts", "should delete downloads when context closes")]
@@ -71,9 +71,9 @@ namespace Microsoft.Playwright.Tests
 
             var download = downloadTask.Result;
             string path = await download.PathAsync();
-            Assert.True(new FileInfo(path).Exists);
+            Assert.IsTrue(new FileInfo(path).Exists);
             await page.CloseAsync();
-            Assert.False(new FileInfo(path).Exists);
+            Assert.IsFalse(new FileInfo(path).Exists);
         }
 
         [PlaywrightTest("downloads-path.spec.ts", "should report downloads in downloadsPath folder")]
@@ -89,7 +89,7 @@ namespace Microsoft.Playwright.Tests
 
             var download = downloadTask.Result;
             string path = await download.PathAsync();
-            Assert.That(path, Does.StartWith(_tmp.Path));
+            StringAssert.StartsWith(path, _tmp.Path);
             await page.CloseAsync();
         }
 
@@ -111,7 +111,7 @@ namespace Microsoft.Playwright.Tests
             await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
             var download = await page.RunAndWaitForDownloadAsync(() => page.ClickAsync("a"));
             string path = await download.PathAsync();
-            Assert.That(path, Does.StartWith(Directory.GetCurrentDirectory()));
+            StringAssert.StartsWith(path, Directory.GetCurrentDirectory());
             await page.CloseAsync();
         }
 
@@ -132,7 +132,7 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual($"{Server.Prefix}/download", download.Url);
             Assert.AreEqual("file.txt", download.SuggestedFilename);
-            Assert.That(await download.PathAsync(), Does.StartWith(_tmp.Path));
+            StringAssert.StartsWith(await download.PathAsync(), _tmp.Path);
             await page.CloseAsync();
         }
 
@@ -156,7 +156,7 @@ namespace Microsoft.Playwright.Tests
             Assert.IsFalse(File.Exists(path));
         }
 
-        [SetUp]
+        [TestInitialize]
         public async Task InitializeAsync()
         {
             Server.SetRoute("/download", context =>
@@ -170,7 +170,7 @@ namespace Microsoft.Playwright.Tests
             _browser = await Playwright[TestConstants.BrowserName].LaunchAsync(new() { DownloadsPath = _tmp.Path });
         }
 
-        [TearDown]
+        [TestCleanup]
         public Task DisposeAsync()
         {
             _tmp?.Dispose();

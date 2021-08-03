@@ -25,13 +25,13 @@
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>page-expose-function.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageExposeFunctionTests : PageTestEx
     {
         [PlaywrightTest("page-expose-function.spec.ts", "exposeBinding should work")]
@@ -73,7 +73,7 @@ namespace Microsoft.Playwright.Tests
 
             await Page.ExposeFunctionAsync("handle", () => new[] { new { foo = fooHandle } });
 
-            Assert.True(await Page.EvaluateAsync<bool>(@"async function() {
+            Assert.IsTrue(await Page.EvaluateAsync<bool>(@"async function() {
                 const value = await window['handle']();
                 const [{ foo }] = value;
                 return foo === window['fooValue'];
@@ -98,7 +98,7 @@ namespace Microsoft.Playwright.Tests
                 }
             }");
             Assert.AreEqual("WOOF WOOF", result.GetProperty("message").GetString());
-            StringAssert.Contains(nameof(PageExposeFunctionTests), result.GetProperty("stack").GetString());
+            StringAssert.Contains(result.GetProperty("stack").GetString(), nameof(PageExposeFunctionTests));
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", @"should support throwing ""null""")]
@@ -117,7 +117,7 @@ namespace Microsoft.Playwright.Tests
             });
             await Page.AddInitScriptAsync("woof()");
             await Page.ReloadAsync();
-            Assert.True(called);
+            Assert.IsTrue(called);
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", "should survive navigation")]

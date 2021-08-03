@@ -26,14 +26,14 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.MSTest;
 using Microsoft.Playwright.Testing.Core;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>pdf.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PdfTests : PageTestEx
     {
         [PlaywrightTest("pdf.spec.ts", "should be able to save file")]
@@ -49,7 +49,7 @@ namespace Microsoft.Playwright.Tests
             }
             await Page.PdfAsync(new() { Path = outputFile, Format = PaperFormat.Letter });
             fileInfo = new(outputFile);
-            Assert.True(new FileInfo(outputFile).Length > 0);
+            Assert.IsTrue(new FileInfo(outputFile).Length > 0);
             if (fileInfo.Exists)
             {
                 fileInfo.Delete();

@@ -23,13 +23,13 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.MSTest;
 using Microsoft.Playwright.Testing.Core;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageEventCrashTests : PageTestEx
     {
         // We skip all browser because crash uses internals.
@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
             await CrashAsync(Page);
             await crashEvent.Task;
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("() => {}"));
-            StringAssert.Contains("crash", exception.Message);
+            StringAssert.Contains(exception.Message, "crash");
         }
 
         // We skip all browser because crash uses internals.
@@ -69,7 +69,7 @@ namespace Microsoft.Playwright.Tests
             var responseTask = Page.WaitForResponseAsync("**/*");
             await CrashAsync(Page);
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => responseTask);
-            StringAssert.Contains("Page crashed", exception.Message);
+            StringAssert.Contains(exception.Message, "Page crashed");
         }
 
         // We skip all browser because crash uses internals.

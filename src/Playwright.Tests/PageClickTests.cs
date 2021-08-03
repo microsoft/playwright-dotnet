@@ -26,13 +26,13 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.MSTest;
 using Microsoft.Playwright.Testing.Core;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageClickTests : PageTestEx
     {
         [PlaywrightTest("page-click.spec.ts", "should click the button")]
@@ -161,7 +161,7 @@ namespace Microsoft.Playwright.Tests
                 await Page.EvaluateAsync("() => window.scrollTo(0, 0)");
                 await Page.ClickAsync($"#btn{i}");
             }
-            Assert.AreEqual(new List<string>
+            CollectionAssert.AreEqual(new List<string>
             {
                 "button #0 clicked",
                 "button #1 clicked",
@@ -194,7 +194,7 @@ namespace Microsoft.Playwright.Tests
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(()
                 => Page.ClickAsync("button", new() { Force = true }));
 
-            StringAssert.Contains("Element is not visible", exception.Message);
+            StringAssert.Contains(exception.Message, "Element is not visible");
             Assert.AreEqual("Was not clicked", await Page.EvaluateAsync<string>("result"));
         }
 
@@ -207,7 +207,7 @@ namespace Microsoft.Playwright.Tests
 
             await GiveItAChanceToClick(Page);
 
-            Assert.False(clickTask.IsCompleted);
+            Assert.IsFalse(clickTask.IsCompleted);
             Assert.AreEqual("Was not clicked", await Page.EvaluateAsync<string>("result"));
 
             await Page.EvalOnSelectorAsync("button", "b => b.style.display = 'block'");
@@ -225,7 +225,7 @@ namespace Microsoft.Playwright.Tests
 
             await GiveItAChanceToClick(Page);
 
-            Assert.False(clickTask.IsCompleted);
+            Assert.IsFalse(clickTask.IsCompleted);
             Assert.AreEqual("Was not clicked", await Page.EvaluateAsync<string>("result"));
 
             await Page.EvalOnSelectorAsync("button", "b => b.style.visibility = 'visible'");
@@ -243,7 +243,7 @@ namespace Microsoft.Playwright.Tests
 
             await GiveItAChanceToClick(Page);
 
-            Assert.False(clickTask.IsCompleted);
+            Assert.IsFalse(clickTask.IsCompleted);
             Assert.AreEqual("Was not clicked", await Page.EvaluateAsync<string>("result"));
 
             await Page.EvalOnSelectorAsync("button", "b => b.parentElement.style.display = 'block'");
@@ -257,17 +257,17 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.Prefix + "/wrappedlink.html");
             await Page.ClickAsync("a");
-            Assert.True(await Page.EvaluateAsync<bool>("window.__clicked"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("window.__clicked"));
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click on checkbox input and toggle")]
         public async Task ShouldClickOnCheckboxInputAndToggle()
         {
             await Page.GotoAsync(Server.Prefix + "/input/checkbox.html");
-            Assert.Null(await Page.EvaluateAsync<bool?>("result.check"));
+            Assert.IsNull(await Page.EvaluateAsync<bool?>("result.check"));
             await Page.ClickAsync("input#agree");
-            Assert.True(await Page.EvaluateAsync<bool>("result.check"));
-            Assert.AreEqual(new[] {
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("result.check"));
+            CollectionAssert.AreEqual(new[] {
                 "mouseover",
                 "mouseenter",
                 "mousemove",
@@ -278,23 +278,23 @@ namespace Microsoft.Playwright.Tests
                 "change"
             }, await Page.EvaluateAsync<string[]>("result.events"));
             await Page.ClickAsync("input#agree");
-            Assert.False(await Page.EvaluateAsync<bool>("result.check"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("result.check"));
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click on checkbox label and toggle")]
         public async Task ShouldClickOnCheckboxLabelAndToggle()
         {
             await Page.GotoAsync(Server.Prefix + "/input/checkbox.html");
-            Assert.Null(await Page.EvaluateAsync("result.check"));
+            Assert.IsNull(await Page.EvaluateAsync("result.check"));
             await Page.ClickAsync("label[for=\"agree\"]");
-            Assert.True(await Page.EvaluateAsync<bool>("result.check"));
-            Assert.AreEqual(new[] {
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("result.check"));
+            CollectionAssert.AreEqual(new[] {
                 "click",
                 "input",
                 "change"
             }, await Page.EvaluateAsync<string[]>("result.events"));
             await Page.ClickAsync("label[for=\"agree\"]");
-            Assert.False(await Page.EvaluateAsync<bool>("result.check"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("result.check"));
         }
 
         [PlaywrightTest("page-click.spec.ts", "should not hang with touch-enabled viewports")]
@@ -336,7 +336,7 @@ namespace Microsoft.Playwright.Tests
             }");
             var button = await Page.QuerySelectorAsync("button");
             await button.DblClickAsync();
-            Assert.True(await Page.EvaluateAsync<bool>("double"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("double"));
             Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("result"));
         }
 
@@ -569,11 +569,11 @@ namespace Microsoft.Playwright.Tests
             }");
 
             var clickTask = Page.ClickAsync("button");
-            Assert.False(clickTask.IsCompleted);
+            Assert.IsFalse(clickTask.IsCompleted);
 
             await Page.EvalOnSelectorAsync(".flyover", "flyOver => flyOver.style.left = '0'");
             await GiveItAChanceToClick(Page);
-            Assert.False(clickTask.IsCompleted);
+            Assert.IsFalse(clickTask.IsCompleted);
 
             await Page.EvalOnSelectorAsync(".flyover", "flyOver => flyOver.style.left = '200px'");
             await clickTask;
@@ -602,11 +602,11 @@ namespace Microsoft.Playwright.Tests
             }");
 
             var clickTask = Page.ClickAsync("button", new() { Trial = true });
-            Assert.False(clickTask.IsCompleted);
+            Assert.IsFalse(clickTask.IsCompleted);
 
             await Page.EvalOnSelectorAsync(".flyover", "flyOver => flyOver.style.left = '0'");
             await GiveItAChanceToClick(Page);
-            Assert.False(clickTask.IsCompleted);
+            Assert.IsFalse(clickTask.IsCompleted);
 
             await Page.EvalOnSelectorAsync(".flyover", "flyOver => flyOver.style.left = '200px'");
             await clickTask;
@@ -620,7 +620,7 @@ namespace Microsoft.Playwright.Tests
             await Page.QuerySelectorAsync("button");
             await Page.EvalOnSelectorAsync("button", @"button => button.disabled = true");
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.ClickAsync("button", new() { Trial = true, Timeout = 500 }));
-            StringAssert.Contains("click action (trial run)", exception.Message);
+            StringAssert.Contains(exception.Message, "click action (trial run)");
             Assert.AreEqual("Was not clicked", await Page.EvaluateAsync<string>("window.result"));
         }
 
@@ -644,7 +644,7 @@ namespace Microsoft.Playwright.Tests
                 });
             }");
             await Page.DblClickAsync("button", new() { Trial = true });
-            Assert.False(await Page.EvaluateAsync<bool>("double"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("double"));
             Assert.AreEqual("Was not clicked", await Page.EvaluateAsync<string>("window.result"));
         }
 
@@ -674,11 +674,11 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<button onclick=\"javascript: window.__CLICKED = true;\" disabled><span>Click target</span></button>");
             var clickTask = Page.ClickAsync("text=Click target");
             await GiveItAChanceToClick(Page);
-            Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
-            Assert.False(clickTask.IsCompleted);
+            Assert.IsNull(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            Assert.IsFalse(clickTask.IsCompleted);
             await Page.EvaluateAsync("() => document.querySelector('button').removeAttribute('disabled')");
             await clickTask;
-            Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
         [PlaywrightTest("page-click.spec.ts", "should wait for input to be enabled")]
@@ -687,11 +687,11 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<input onclick=\"javascript: window.__CLICKED = true;\" disabled>");
             var clickTask = Page.ClickAsync("input");
             await GiveItAChanceToClick(Page);
-            Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
-            Assert.False(clickTask.IsCompleted);
+            Assert.IsNull(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            Assert.IsFalse(clickTask.IsCompleted);
             await Page.EvaluateAsync("() => document.querySelector('input').removeAttribute('disabled')");
             await clickTask;
-            Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
         [PlaywrightTest("page-click.spec.ts", "should wait for select to be enabled")]
@@ -700,11 +700,11 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<select onclick=\"javascript: window.__CLICKED = true;\" disabled><option selected>Hello</option></select>");
             var clickTask = Page.ClickAsync("select");
             await GiveItAChanceToClick(Page);
-            Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
-            Assert.False(clickTask.IsCompleted);
+            Assert.IsNull(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            Assert.IsFalse(clickTask.IsCompleted);
             await Page.EvaluateAsync("() => document.querySelector('select').removeAttribute('disabled')");
             await clickTask;
-            Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click disabled div")]
@@ -712,7 +712,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<div onclick=\"javascript: window.__CLICKED = true;\" disabled>Click target</div>");
             await Page.ClickAsync("text=Click target");
-            Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
         [PlaywrightTest("page-click.spec.ts", "should climb dom for inner label with pointer-events:none")]
@@ -720,7 +720,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<button onclick=\"javascript: window.__CLICKED = true;\"><label style=\"pointer-events:none\">Click target</label></button>");
             await Page.ClickAsync("text=Click target");
-            Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
         [PlaywrightTest("page-click.spec.ts", "should climb up to [role=button]")]
@@ -728,7 +728,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<div role=button onclick=\"javascript: window.__CLICKED = true;\"><div style=\"pointer-events:none\"><span><div>Click target</div></span></div>");
             await Page.ClickAsync("text=Click target");
-            Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
         [PlaywrightTest("page-click.spec.ts", "should wait for BUTTON to be clickable when it has pointer-events:none")]
@@ -737,11 +737,11 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<button onclick=\"javascript: window.__CLICKED = true;\" style=\"pointer-events:none\"><span>Click target</span></button>");
             var clickTask = Page.ClickAsync("text=Click target");
             await GiveItAChanceToClick(Page);
-            Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
-            Assert.False(clickTask.IsCompleted);
+            Assert.IsNull(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            Assert.IsFalse(clickTask.IsCompleted);
             await Page.EvaluateAsync("() => document.querySelector('button').style.removeProperty('pointer-events')");
             await clickTask;
-            Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
         [PlaywrightTest("page-click.spec.ts", "should wait for LABEL to be clickable when it has pointer-events:none")]
@@ -752,13 +752,13 @@ namespace Microsoft.Playwright.Tests
 
             for (int i = 0; i < 5; ++i)
             {
-                Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+                Assert.IsNull(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
             }
 
-            Assert.False(clickTask.IsCompleted);
+            Assert.IsFalse(clickTask.IsCompleted);
             await Page.EvaluateAsync("() => document.querySelector('label').style.removeProperty('pointer-events')");
             await clickTask;
-            Assert.True(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
         }
 
         [PlaywrightTest("page-click.spec.ts", "should update modifiers correctly")]
@@ -766,22 +766,22 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.ClickAsync("button", new() { Modifiers = new[] { KeyboardModifier.Shift } });
-            Assert.True(await Page.EvaluateAsync<bool>("shiftKey"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("shiftKey"));
             await Page.ClickAsync("button", new() { Modifiers = Array.Empty<KeyboardModifier>() });
-            Assert.False(await Page.EvaluateAsync<bool>("shiftKey"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("shiftKey"));
 
             await Page.Keyboard.DownAsync("Shift");
 
             await Page.ClickAsync("button", new() { Modifiers = Array.Empty<KeyboardModifier>() });
-            Assert.False(await Page.EvaluateAsync<bool>("shiftKey"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("shiftKey"));
 
             await Page.ClickAsync("button");
-            Assert.True(await Page.EvaluateAsync<bool>("shiftKey"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("shiftKey"));
 
             await Page.Keyboard.UpAsync("Shift");
 
             await Page.ClickAsync("button");
-            Assert.False(await Page.EvaluateAsync<bool>("shiftKey"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("shiftKey"));
         }
 
         [PlaywrightTest("page-click.spec.ts", "should click an offscreen element when scroll-behavior is smooth")]
@@ -793,7 +793,7 @@ namespace Microsoft.Playwright.Tests
             </div>");
 
             await Page.ClickAsync("button");
-            Assert.True(await Page.EvaluateAsync<bool>("window.clicked"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("window.clicked"));
         }
 
         [PlaywrightTest("page-click.spec.ts", "should report nice error when element is detached and force-clicked")]
@@ -805,8 +805,8 @@ namespace Microsoft.Playwright.Tests
             await Page.EvaluateAsync("() => stopButton(true)");
             var clickTask = handle.ClickAsync(new() { Force = true });
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => clickTask);
-            Assert.Null(await Page.EvaluateAsync<bool?>("window.clicked"));
-            StringAssert.Contains("Element is not attached to the DOM", exception.Message);
+            Assert.IsNull(await Page.EvaluateAsync<bool?>("window.clicked"));
+            StringAssert.Contains(exception.Message, "Element is not attached to the DOM");
         }
 
         [PlaywrightTest("page-click.spec.ts", "should fail when element detaches after animation")]
@@ -818,8 +818,8 @@ namespace Microsoft.Playwright.Tests
             var clickTask = handle.ClickAsync();
             await Page.EvaluateAsync("() => stopButton(true)");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => clickTask);
-            Assert.Null(await Page.EvaluateAsync<bool?>("window.clicked"));
-            StringAssert.Contains("Element is not attached to the DOM", exception.Message);
+            Assert.IsNull(await Page.EvaluateAsync<bool?>("window.clicked"));
+            StringAssert.Contains(exception.Message, "Element is not attached to the DOM");
         }
 
         [PlaywrightTest("page-click.spec.ts", "should retry when element detaches after animation")]
@@ -828,19 +828,19 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/input/animating-button.html");
             await Page.EvaluateAsync("() => addButton()");
             var clickTask = Page.ClickAsync("button");
-            Assert.False(clickTask.IsCompleted);
-            Assert.Null(await Page.EvaluateAsync<bool?>("window.clicked"));
+            Assert.IsFalse(clickTask.IsCompleted);
+            Assert.IsNull(await Page.EvaluateAsync<bool?>("window.clicked"));
             await Page.EvaluateAsync("() => stopButton(true)");
             await Page.EvaluateAsync("() => addButton()");
-            Assert.False(clickTask.IsCompleted);
-            Assert.Null(await Page.EvaluateAsync<bool?>("window.clicked"));
+            Assert.IsFalse(clickTask.IsCompleted);
+            Assert.IsNull(await Page.EvaluateAsync<bool?>("window.clicked"));
             await Page.EvaluateAsync("() => stopButton(true)");
             await Page.EvaluateAsync("() => addButton()");
-            Assert.False(clickTask.IsCompleted);
-            Assert.Null(await Page.EvaluateAsync<bool?>("window.clicked"));
+            Assert.IsFalse(clickTask.IsCompleted);
+            Assert.IsNull(await Page.EvaluateAsync<bool?>("window.clicked"));
             await Page.EvaluateAsync("() => stopButton(false)");
             await clickTask;
-            Assert.True(await Page.EvaluateAsync<bool?>("window.clicked"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("window.clicked"));
         }
 
         [PlaywrightTest("page-click.spec.ts", "should retry when element is animating from outside the viewport")]
@@ -871,7 +871,7 @@ namespace Microsoft.Playwright.Tests
             var clickTask = handle.ClickAsync();
             await handle.EvaluateAsync("button => button.className = 'animated'");
             await clickTask;
-            Assert.True(await Page.EvaluateAsync<bool?>("window.clicked"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("window.clicked"));
         }
 
         [PlaywrightTest("page-click.spec.ts", "should retry when element is animating from outside the viewport with force")]
@@ -902,8 +902,8 @@ namespace Microsoft.Playwright.Tests
             var clickTask = handle.ClickAsync(new() { Force = true });
             await handle.EvaluateAsync("button => button.className = 'animated'");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => clickTask);
-            Assert.Null(await Page.EvaluateAsync<bool?>("window.clicked"));
-            StringAssert.Contains("Element is outside of the viewport", exception.Message);
+            Assert.IsNull(await Page.EvaluateAsync<bool?>("window.clicked"));
+            StringAssert.Contains(exception.Message, "Element is outside of the viewport");
         }
 
         [PlaywrightTest("page-click.spec.ts", "should dispatch microtasks in order")]

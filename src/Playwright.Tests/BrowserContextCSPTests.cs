@@ -23,12 +23,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserContextCSPTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-csp.spec.ts", "should bypass CSP meta tag")]
@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Tests
                 var page = await context.NewPageAsync();
                 await page.GotoAsync(Server.Prefix + "/csp.html");
                 await page.AddScriptTagAsync(new() { Content = "window.__injected = 42;" }).ContinueWith(_ => Task.CompletedTask);
-                Assert.Null(await page.EvaluateAsync("window.__injected"));
+                Assert.IsNull(await page.EvaluateAsync("window.__injected"));
             }
             // By-pass CSP and try one more time.
             await using (var context = await Browser.NewContextAsync(new() { BypassCSP = true }))
@@ -63,7 +63,7 @@ namespace Microsoft.Playwright.Tests
                 var page = await context.NewPageAsync();
                 await page.GotoAsync(Server.EmptyPage);
                 await page.AddScriptTagAsync(new() { Content = "window.__injected = 42;" }).ContinueWith(_ => Task.CompletedTask);
-                Assert.Null(await page.EvaluateAsync("window.__injected"));
+                Assert.IsNull(await page.EvaluateAsync("window.__injected"));
             }
 
             // By-pass CSP and try one more time.
@@ -101,7 +101,7 @@ namespace Microsoft.Playwright.Tests
                 // Make sure CSP prohibits addScriptTag in an iframe.
                 var frame = await FrameUtils.AttachFrameAsync(page, "frame1", Server.Prefix + "/csp.html");
                 await frame.AddScriptTagAsync(new() { Content = "window.__injected = 42;" }).ContinueWith(_ => Task.CompletedTask);
-                Assert.Null(await frame.EvaluateAsync<int?>("() => window.__injected"));
+                Assert.IsNull(await frame.EvaluateAsync<int?>("() => window.__injected"));
             }
 
             // By-pass CSP and try one more time.

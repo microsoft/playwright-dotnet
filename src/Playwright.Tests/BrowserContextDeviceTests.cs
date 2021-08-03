@@ -23,13 +23,13 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.MSTest;
 using Microsoft.Playwright.Testing.Core;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserContextDeviceTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-device.spec.ts", "should work")]
@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Tests
 
             await page.GotoAsync(Server.Prefix + "/mobile.html");
             Assert.AreEqual(375, await page.EvaluateAsync<int>("window.innerWidth"));
-            StringAssert.Contains("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
+            StringAssert.Contains(await page.EvaluateAsync<string>("navigator.userAgent"), "iPhone");
         }
 
         [PlaywrightTest("browsercontext-device.spec.ts", "should support clicking")]

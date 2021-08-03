@@ -23,14 +23,14 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.MSTest;
 using Microsoft.Playwright.Testing.Core;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>dispatchevent.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageDispatchEventTests : PageTestEx
     {
         [PlaywrightTest("page-dispatchevent.spec.ts", "should dispatch click event")]
@@ -46,9 +46,9 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.DispatchEventAsync("button", "click");
-            Assert.True(await Page.EvaluateAsync<bool>("() => bubbles"));
-            Assert.True(await Page.EvaluateAsync<bool>("() => cancelable"));
-            Assert.True(await Page.EvaluateAsync<bool>("() => composed"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("() => bubbles"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("() => cancelable"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("() => composed"));
         }
 
         [PlaywrightTest("page-dispatchevent.spec.ts", "should dispatch click svg")]
@@ -114,7 +114,7 @@ namespace Microsoft.Playwright.Tests
             </container>");
 
             await Page.DispatchEventAsync("button", "click");
-            Assert.True(await Page.EvaluateAsync<bool>("() => window.clicked"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("() => window.clicked"));
         }
 
         [PlaywrightTest("page-dispatchevent.spec.ts", "should dispatch click when node is added in shadow dom")]
@@ -138,7 +138,7 @@ namespace Microsoft.Playwright.Tests
             }");
 
             await watchdog;
-            Assert.True(await Page.EvaluateAsync<bool>("() => window.clicked"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("() => window.clicked"));
         }
 
         [PlaywrightTest("page-dispatchevent.spec.ts", "should be atomic")]
@@ -163,7 +163,7 @@ namespace Microsoft.Playwright.Tests
             await TestUtils.RegisterEngineAsync(Playwright, "page-dispatchevent", createDummySelector);
             await Page.SetContentAsync("<div onclick=\"window._clicked = true\">Hello</div>");
             await Page.DispatchEventAsync("page-dispatchevent=div", "click");
-            Assert.True(await Page.EvaluateAsync<bool>("() => window['_clicked']"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("() => window['_clicked']"));
         }
 
         [PlaywrightTest("page-dispatchevent.spec.ts", "Page.dispatchEvent(drag)", "should dispatch drag drop events")]
@@ -177,7 +177,7 @@ namespace Microsoft.Playwright.Tests
 
             var source = await Page.QuerySelectorAsync("#source");
             var target = await Page.QuerySelectorAsync("#target");
-            Assert.True(await Page.EvaluateAsync<bool>(@"() => {
+            Assert.IsTrue(await Page.EvaluateAsync<bool>(@"() => {
                 return source.parentElement === target;
             }", new { source, target }));
         }
@@ -193,7 +193,7 @@ namespace Microsoft.Playwright.Tests
             var target = await Page.QuerySelectorAsync("#target");
             await target.DispatchEventAsync("drop", new { dataTransfer });
 
-            Assert.True(await Page.EvaluateAsync<bool>(@"() => {
+            Assert.IsTrue(await Page.EvaluateAsync<bool>(@"() => {
                 return source.parentElement === target;
             }", new { source, target }));
         }

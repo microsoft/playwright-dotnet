@@ -24,12 +24,12 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageClickTimeout2Tests : PageTestEx
     {
         [PlaywrightTest("page-click-timeout-2.spec.ts", "should timeout waiting for display:none to be gone")]
@@ -40,9 +40,9 @@ namespace Microsoft.Playwright.Tests
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
                 => Page.ClickAsync("button", new() { Timeout = 5000 }));
 
-            StringAssert.Contains("Timeout 5000ms exceeded", exception.Message);
-            StringAssert.Contains("waiting for element to be visible, enabled and stable", exception.Message);
-            StringAssert.Contains("element is not visible - waiting", exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 5000ms exceeded");
+            StringAssert.Contains(exception.Message, "waiting for element to be visible, enabled and stable");
+            StringAssert.Contains(exception.Message, "element is not visible - waiting");
         }
 
         [PlaywrightTest("page-click-timeout-2.spec.ts", "should timeout waiting for visibility:hidden to be gone")]
@@ -54,9 +54,9 @@ namespace Microsoft.Playwright.Tests
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
                 => Page.ClickAsync("button", new() { Timeout = 5000 }));
 
-            StringAssert.Contains("Timeout 5000ms exceeded", exception.Message);
-            StringAssert.Contains("waiting for element to be visible, enabled and stable", exception.Message);
-            StringAssert.Contains("element is not visible - waiting", exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 5000ms exceeded");
+            StringAssert.Contains(exception.Message, "waiting for element to be visible, enabled and stable");
+            StringAssert.Contains(exception.Message, "element is not visible - waiting");
         }
 
     }

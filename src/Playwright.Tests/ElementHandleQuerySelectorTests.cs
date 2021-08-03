@@ -24,12 +24,12 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class ElementHandleQuerySelectorTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-query-selector.spec.ts", "should query existing element")]
@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">B</div></div></body></html>");
             var html = await Page.QuerySelectorAsync("html");
             var second = await html.QuerySelectorAsync(".third");
-            Assert.Null(second);
+            Assert.IsNull(second);
         }
 
         [PlaywrightTest("elementhandle-query-selector.spec.ts", "should work for adopted elements")]
@@ -71,7 +71,7 @@ namespace Microsoft.Playwright.Tests
                 return div;
             }") as IElementHandle;
 
-            Assert.NotNull(divHandle);
+            Assert.IsNotNull(divHandle);
             Assert.AreEqual("hello", await divHandle.EvalOnSelectorAsync<string>("span", "e => e.textContent"));
 
             await popup.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
@@ -80,7 +80,7 @@ namespace Microsoft.Playwright.Tests
               window.__popup.document.body.appendChild(div);
             }");
 
-            Assert.NotNull(await divHandle.QuerySelectorAsync("span"));
+            Assert.IsNotNull(await divHandle.QuerySelectorAsync("span"));
             Assert.AreEqual("hello", await divHandle.EvalOnSelectorAsync<string>("span", "e => e.textContent"));
         }
 
@@ -92,7 +92,7 @@ namespace Microsoft.Playwright.Tests
             var elements = await html.QuerySelectorAllAsync("div");
             Assert.AreEqual(2, elements.Count());
             var tasks = elements.Select(element => Page.EvaluateAsync<string>("e => e.textContent", element));
-            Assert.AreEqual(new[] { "A", "B" }, await TaskUtils.WhenAll(tasks));
+            CollectionAssert.AreEqual(new[] { "A", "B" }, await TaskUtils.WhenAll(tasks));
         }
 
         [PlaywrightTest("elementhandle-query-selector.spec.ts", "should return empty array for non-existing elements")]
@@ -101,7 +101,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<html><body><span>A</span><br/><span>B</span></body></html>");
             var html = await Page.QuerySelectorAsync("html");
             var elements = await html.QuerySelectorAllAsync("div");
-            Assert.IsEmpty(elements);
+            Assert.That.Collection(elements).IsEmpty();
         }
 
         [PlaywrightTest("elementhandle-query-selector.spec.ts", "xpath should query existing element")]
@@ -122,7 +122,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">B</div></div></body></html>");
             var html = await Page.QuerySelectorAsync("html");
             var second = await html.QuerySelectorAllAsync("xpath=/div[contains(@class, 'third')]");
-            Assert.IsEmpty(second);
+            Assert.That.Collection(second).IsEmpty();
         }
     }
 }

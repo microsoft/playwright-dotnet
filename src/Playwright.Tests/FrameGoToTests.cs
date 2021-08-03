@@ -28,12 +28,12 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class FrameGoToTests : PageTestEx
     {
         [PlaywrightTest("frame-goto.spec.ts", "should navigate subframes")]
@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.Tests
             await waitForRequestTask;
             await Page.EvalOnSelectorAsync("iframe", "frame => frame.remove()");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => navigationTask);
-            StringAssert.Contains("frame was detached", exception.Message);
+            StringAssert.Contains(exception.Message, "frame was detached");
         }
 
         [PlaywrightTest("frame-goto.spec.ts", "should continue after client redirect")]
@@ -68,8 +68,8 @@ namespace Microsoft.Playwright.Tests
             string url = Server.Prefix + "/frames/child-redirect.html";
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.GotoAsync(url, new() { WaitUntil = WaitUntilState.NetworkIdle, Timeout = 5000 }));
 
-            StringAssert.Contains("Timeout 5000ms", exception.Message);
-            StringAssert.Contains($"navigating to \"{url}\", waiting until \"networkidle\"", exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 5000ms");
+            StringAssert.Contains(exception.Message, $"navigating to \"{url}\", waiting until \"networkidle\"");
         }
 
         [PlaywrightTest("frame-goto.spec.ts", "should return matching responses")]

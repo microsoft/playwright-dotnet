@@ -26,15 +26,15 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.MSTest;
 using Microsoft.Playwright.Testing.Core;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>elementhandle-screenshot.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class ElementHandleScreenshotTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should work")]
@@ -45,7 +45,7 @@ namespace Microsoft.Playwright.Tests
             await Page.EvaluateAsync("window.scrollBy(50, 100)");
             var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(3)");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-bounding-box.png", screenshot));
+            Assert.IsTrue(ScreenshotHelper.PixelMatch("screenshot-element-bounding-box.png", screenshot));
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should take into account padding and border")]
@@ -64,7 +64,7 @@ namespace Microsoft.Playwright.Tests
                 <div id=""d""></div>");
             var elementHandle = await Page.QuerySelectorAsync("div#d");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-padding-border.png", screenshot));
+            Assert.IsTrue(ScreenshotHelper.PixelMatch("screenshot-element-padding-border.png", screenshot));
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should capture full element when larger than viewport in parallel")]
@@ -92,7 +92,7 @@ namespace Microsoft.Playwright.Tests
             var screenshotTasks = elementHandles.Select(e => e.ScreenshotAsync()).ToArray();
             await TaskUtils.WhenAll(screenshotTasks);
 
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-larger-than-viewport.png", screenshotTasks.ElementAt(2).Result));
+            Assert.IsTrue(ScreenshotHelper.PixelMatch("screenshot-element-larger-than-viewport.png", screenshotTasks.ElementAt(2).Result));
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should capture full element when larger than viewport")]
@@ -118,7 +118,7 @@ namespace Microsoft.Playwright.Tests
 
             var elementHandle = await Page.QuerySelectorAsync("div.to-screenshot");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-larger-than-viewport.png", screenshot));
+            Assert.IsTrue(ScreenshotHelper.PixelMatch("screenshot-element-larger-than-viewport.png", screenshot));
             await TestUtils.VerifyViewportAsync(Page, 500, 500);
         }
 
@@ -144,7 +144,7 @@ namespace Microsoft.Playwright.Tests
                 <div class=""to-screenshot""></div>");
             var elementHandle = await Page.QuerySelectorAsync("div.to-screenshot");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-scrolled-into-view.png", screenshot));
+            Assert.IsTrue(ScreenshotHelper.PixelMatch("screenshot-element-scrolled-into-view.png", screenshot));
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should scroll 15000px into view")]
@@ -169,7 +169,7 @@ namespace Microsoft.Playwright.Tests
                 <div class=""to-screenshot""></div>");
             var elementHandle = await Page.QuerySelectorAsync("div.to-screenshot");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-scrolled-into-view.png", screenshot));
+            Assert.IsTrue(ScreenshotHelper.PixelMatch("screenshot-element-scrolled-into-view.png", screenshot));
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should work with a rotated element")]
@@ -187,7 +187,7 @@ namespace Microsoft.Playwright.Tests
             ");
             var elementHandle = await Page.QuerySelectorAsync("div");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-rotate.png", screenshot));
+            Assert.IsTrue(ScreenshotHelper.PixelMatch("screenshot-element-rotate.png", screenshot));
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should fail to screenshot a detached element")]
@@ -198,7 +198,7 @@ namespace Microsoft.Playwright.Tests
             await Page.EvaluateAsync("element => element.remove()", elementHandle);
 
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => elementHandle.ScreenshotAsync());
-            StringAssert.Contains("Element is not attached to the DOM", exception.Message);
+            StringAssert.Contains(exception.Message, "Element is not attached to the DOM");
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should timeout waiting for visible")]
@@ -207,8 +207,8 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync(@"<div style='width: 50px; height: 0'></div>");
             var elementHandle = await Page.QuerySelectorAsync("div");
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => elementHandle.ScreenshotAsync(new() { Timeout = 3000 }));
-            StringAssert.Contains("Timeout 3000ms exceeded", exception.Message);
-            StringAssert.Contains("element is not visible", exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 3000ms exceeded");
+            StringAssert.Contains(exception.Message, "element is not visible");
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should wait for visible")]
@@ -225,11 +225,11 @@ namespace Microsoft.Playwright.Tests
             {
                 await Page.EvaluateAsync("() => new Promise(f => requestAnimationFrame(f))");
             }
-            Assert.False(task.IsCompleted);
+            Assert.IsFalse(task.IsCompleted);
             await elementHandle.EvaluateAsync("e => e.style.visibility = 'visible'");
 
             byte[] screenshot = await task;
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-bounding-box.png", screenshot));
+            Assert.IsTrue(ScreenshotHelper.PixelMatch("screenshot-element-bounding-box.png", screenshot));
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should work for an element with fractional dimensions")]
@@ -238,7 +238,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<div style=\"width:48.51px;height:19.8px;border:1px solid black;\"></div>");
             var elementHandle = await Page.QuerySelectorAsync("div");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-fractional.png", screenshot));
+            Assert.IsTrue(ScreenshotHelper.PixelMatch("screenshot-element-fractional.png", screenshot));
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should work with a mobile viewport")]
@@ -260,7 +260,7 @@ namespace Microsoft.Playwright.Tests
             var elementHandle = await page.QuerySelectorAsync(".box:nth-of-type(3)");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
 
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-mobile.png", screenshot));
+            Assert.IsTrue(ScreenshotHelper.PixelMatch("screenshot-element-mobile.png", screenshot));
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should work with device scale factor")]
@@ -282,7 +282,7 @@ namespace Microsoft.Playwright.Tests
             var elementHandle = await page.QuerySelectorAsync(".box:nth-of-type(3)");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
 
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-mobile-dsf.png", screenshot));
+            Assert.IsTrue(ScreenshotHelper.PixelMatch("screenshot-element-mobile-dsf.png", screenshot));
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should work for an element with an offset")]
@@ -291,7 +291,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<div style=\"position:absolute; top: 10.3px; left: 20.4px;width:50.3px;height:20.2px;border:1px solid black;\"></div>");
             var elementHandle = await Page.QuerySelectorAsync("div");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-fractional-offset.png", screenshot));
+            Assert.IsTrue(ScreenshotHelper.PixelMatch("screenshot-element-fractional-offset.png", screenshot));
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should take screenshots when default viewport is null")]
@@ -307,7 +307,7 @@ namespace Microsoft.Playwright.Tests
             var sizeBefore = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
 
             byte[] screenshot = await page.ScreenshotAsync();
-            Assert.NotNull(screenshot);
+            Assert.IsNotNull(screenshot);
             var decoded = Image.Load(screenshot);
             Assert.AreEqual(windowSize.Width, decoded.Width);
             Assert.AreEqual(windowSize.Height, decoded.Height);
@@ -329,7 +329,7 @@ namespace Microsoft.Playwright.Tests
             var sizeBefore = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
 
             byte[] screenshot = await page.ScreenshotAsync(new() { FullPage = true });
-            Assert.NotNull(screenshot);
+            Assert.IsNotNull(screenshot);
 
             var sizeAfter = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
             Assert.AreEqual(sizeBefore.Width, sizeAfter.Width);
@@ -346,7 +346,7 @@ namespace Microsoft.Playwright.Tests
             var page = await context.NewPageAsync();
             await TestUtils.VerifyViewportAsync(page, 456, 789);
             byte[] screenshot = await page.ScreenshotAsync(new() { FullPage = true });
-            Assert.NotNull(screenshot);
+            Assert.IsNotNull(screenshot);
 
             await TestUtils.VerifyViewportAsync(page, 456, 789);
         }
@@ -393,7 +393,7 @@ namespace Microsoft.Playwright.Tests
             var sizeBefore = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
             var elementHandle = await page.QuerySelectorAsync("div.to-screenshot");
             byte[] screenshot = await elementHandle.ScreenshotAsync();
-            Assert.NotNull(screenshot);
+            Assert.IsNotNull(screenshot);
 
             var sizeAfter = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
             Assert.AreEqual(sizeBefore.Width, sizeAfter.Width);
@@ -413,7 +413,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<button disabled>Click me</button>");
             var button = await Page.QuerySelectorAsync("button");
             byte[] screenshot = await button.ScreenshotAsync();
-            Assert.NotNull(screenshot);
+            Assert.IsNotNull(screenshot);
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "path option should create subdirectories")]
@@ -426,7 +426,7 @@ namespace Microsoft.Playwright.Tests
             using var tmpDir = new TempDirectory();
             string outputPath = Path.Combine(tmpDir.Path, "these", "are", "directories", "screenshot.png");
             await elementHandle.ScreenshotAsync(new() { Path = outputPath });
-            Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-bounding-box.png", outputPath));
+            Assert.IsTrue(ScreenshotHelper.PixelMatch("screenshot-element-bounding-box.png", outputPath));
         }
     }
 }

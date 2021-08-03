@@ -25,11 +25,11 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageSetExtraHTTPHeadersTests : PageTestEx
     {
         [PlaywrightTest("page-set-extra-http-headers.spec.ts", "should work")]
@@ -43,7 +43,7 @@ namespace Microsoft.Playwright.Tests
             var headerTask = Server.WaitForRequest("/empty.html", request => request.Headers["Foo"]);
             await TaskUtils.WhenAll(Page.GotoAsync(Server.EmptyPage), headerTask);
 
-            Assert.AreEqual("Bar", headerTask.Result);
+            Assert.AreEqual("Bar", headerTask.Result[0]);
         }
 
         [PlaywrightTest("page-set-extra-http-headers.spec.ts", "should work with redirects")]
@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.Tests
             var headerTask = Server.WaitForRequest("/empty.html", request => request.Headers["Foo"]);
             await TaskUtils.WhenAll(Page.GotoAsync(Server.Prefix + "/foo.html"), headerTask);
 
-            Assert.AreEqual("Bar", headerTask.Result);
+            Assert.AreEqual("Bar", headerTask.Result[0]);
         }
 
         [PlaywrightTest("page-set-extra-http-headers.spec.ts", "should work with extra headers from browser context")]
@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Tests
             var headerTask = Server.WaitForRequest("/empty.html", request => request.Headers["Foo"]);
             await TaskUtils.WhenAll(page.GotoAsync(Server.EmptyPage), headerTask);
 
-            Assert.AreEqual("Bar", headerTask.Result);
+            Assert.AreEqual("Bar", headerTask.Result[0]);
         }
 
         [PlaywrightTest("page-set-extra-http-headers.spec.ts", "should override extra headers from browser context")]
@@ -96,8 +96,8 @@ namespace Microsoft.Playwright.Tests
             var headerTask = Server.WaitForRequest("/empty.html", request => (request.Headers["Foo"], request.Headers["baR"]));
             await TaskUtils.WhenAll(page.GotoAsync(Server.EmptyPage), headerTask);
 
-            Assert.AreEqual("Bar", headerTask.Result.Item1);
-            Assert.AreEqual("foO", headerTask.Result.Item2);
+            Assert.AreEqual("Bar", headerTask.Result.Item1[0]);
+            Assert.AreEqual("foO", headerTask.Result.Item2[0]);
         }
 
         [PlaywrightTest("page-set-extra-http-headers.spec.ts", "should throw for non-string header values")]

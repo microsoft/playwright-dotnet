@@ -24,14 +24,14 @@
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.MSTest;
 using Microsoft.Playwright.Testing.Core;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>capabilities.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class CapabilitiesTests : PageTestEx
     {
         [PlaywrightTest("capabilities.spec.ts", "Web Assembly should work")]

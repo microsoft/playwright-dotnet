@@ -26,16 +26,17 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.MSTest;
 using Microsoft.Playwright.Testing.Core;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageEvaluateTests : PageTestEx
     {
         [PlaywrightTest("page-evaluate.spec.ts", "should work")]
@@ -101,7 +102,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRoundtripPromiseToValue()
         {
             object result = await Page.EvaluateAsync<object>("value => Promise.resolve(value)", null);
-            Assert.Null(result);
+            Assert.IsNull(result);
 
             double infitinity = await Page.EvaluateAsync<double>("value => Promise.resolve(value)", double.PositiveInfinity);
             Assert.AreEqual(double.PositiveInfinity, infitinity);
@@ -135,21 +136,21 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldTransferArrays()
         {
             int[] result = await Page.EvaluateAsync<int[]>("a => a", new[] { 1, 2, 3 });
-            Assert.AreEqual(new[] { 1, 2, 3 }, result);
+            CollectionAssert.AreEqual(new[] { 1, 2, 3 }, result);
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should transfer arrays as arrays, not objects")]
         public async Task ShouldTransferArraysAsArraysNotObjects()
         {
             bool result = await Page.EvaluateAsync<bool>("a => Array.isArray(a)", new[] { 1, 2, 3 });
-            Assert.True(result);
+            Assert.IsTrue(result);
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should transfer maps as empty objects")]
         public async Task ShouldTransferMapsAsEmptyObjects()
         {
             dynamic result = await Page.EvaluateAsync<ExpandoObject>("a => a.x.constructor.name + ' ' + JSON.stringify(a.x), {x: new Map([[1, 2]])}");
-            Assert.IsEmpty(TypeDescriptor.GetProperties(result));
+            Assert.IsTrue(TypeDescriptor.GetProperties(result).Count == 0);
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should modify global environment")]
@@ -169,7 +170,8 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-evaluate.spec.ts", "should return undefined for objects with symbols")]
         public async Task ShouldReturnUndefinedForObjectsWithSymbols()
         {
-            Assert.AreEqual(new object[] { null }, await Page.EvaluateAsync<object>("() => [Symbol('foo4')]"));
+            var result = await Page.EvaluateAsync<object>("() => [Symbol('foo4')]");
+            CollectionAssert.AreEqual(new object[] { null }, (result as List<object>).ToArray());
             Assert.AreEqual("{}", (await Page.EvaluateAsync<JsonElement>(@"() => {
                 var a = { };
                 a[Symbol('foo4')] = 42;
@@ -179,7 +181,7 @@ namespace Microsoft.Playwright.Tests
                 return { foo: [{ a: Symbol('foo4') }] };
             }");
 
-            Assert.Null(element.foo[0].a);
+            Assert.IsNull(element.foo[0].a);
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should work with function shorthands")]
@@ -202,7 +204,7 @@ namespace Microsoft.Playwright.Tests
                 location.reload();
                 return new Promise(() => { });
             }"));
-            StringAssert.Contains("navigation", exception.Message);
+            StringAssert.Contains(exception.Message, "navigation");
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should await promise")]
@@ -252,21 +254,21 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRejectPromiseWithException()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("() => not_existing_object.property"));
-            StringAssert.Contains("not_existing_object", exception.Message);
+            StringAssert.Contains(exception.Message, "not_existing_object");
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should support thrown strings as error messages")]
         public async Task ShouldSupportThrownStringsAsErrorMessages()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("() => { throw 'qwerty'; }"));
-            StringAssert.Contains("qwerty", exception.Message);
+            StringAssert.Contains(exception.Message, "qwerty");
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should support thrown numbers as error messages")]
         public async Task ShouldSupportThrownNumbersAsErrorMessages()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("() => { throw 100500; }"));
-            StringAssert.Contains("100500", exception.Message);
+            StringAssert.Contains(exception.Message, "100500");
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should return complex objects")]
@@ -287,7 +289,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-evaluate.spec.ts", "should return -0")]
         public async Task ShouldReturnNegative0()
         {
-            Assert.AreEqual(-0, (await Page.EvaluateAsync<double>("() => -0")));
+            Assert.AreEqual(-0, await Page.EvaluateAsync<double>("() => -0"));
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should return Infinity")]
@@ -341,7 +343,7 @@ namespace Microsoft.Playwright.Tests
               window.__Promise2 = Promise2;
             }");
 
-            Assert.True(await Page.EvaluateAsync<bool>(@"() => {
+            Assert.IsTrue(await Page.EvaluateAsync<bool>(@"() => {
               const p = Promise.all([Promise.race([]), new Promise(() => {}).then(() => {})]);
               return p instanceof window.__Promise2;
             }"));
@@ -363,7 +365,7 @@ namespace Microsoft.Playwright.Tests
                 console.log(b);
                 return Object.is (a, null) && Object.is (b, 'foo')
             }", new { a = (object)null, b = "foo" });
-            Assert.True(result);
+            Assert.IsTrue(result);
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should properly serialize undefined arguments")]
@@ -376,23 +378,23 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldProperlySerializeUndefinedFields()
         {
             dynamic result = await Page.EvaluateAsync<ExpandoObject>("() => ({a: undefined})");
-            Assert.Null(result.a);
+            Assert.IsNull(result.a);
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should properly serialize null arguments")]
         public async Task ShouldProperlySerializeNullArguments()
-                => Assert.Null(await Page.EvaluateAsync<JsonDocument>("x => x", null));
+                => Assert.IsNull(await Page.EvaluateAsync<JsonDocument>("x => x", null));
 
         [PlaywrightTest("page-evaluate.spec.ts", "should properly serialize null fields")]
         public async Task ShouldProperlySerializeNullFields()
         {
             dynamic result = await Page.EvaluateAsync<ExpandoObject>("() => ({ a: null})");
-            Assert.Null(result.a);
+            Assert.IsNull(result.a);
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should return undefined for non-serializable objects")]
         public async Task ShouldReturnUndefinedForNonSerializableObjects()
-            => Assert.Null(await Page.EvaluateAsync<object>("() => window"));
+            => Assert.IsNull(await Page.EvaluateAsync<object>("() => window"));
 
         [PlaywrightTest("page-evaluate.spec.ts", "should fail for circular object")]
         public async Task ShouldFailForCircularObject()
@@ -403,7 +405,7 @@ namespace Microsoft.Playwright.Tests
                 a.b = b;
                 return a;
             }");
-            Assert.Null(result);
+            Assert.IsNull(result);
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should be able to throw a tricky error")]
@@ -414,7 +416,7 @@ namespace Microsoft.Playwright.Tests
             var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync<JsonElement>(@"errorText => {
                 throw new Error(errorText);
             }", exceptionText.Message));
-            StringAssert.Contains(exceptionText.Message, error.Message);
+            StringAssert.Contains(error.Message, exceptionText.Message);
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should accept a string")]
@@ -450,11 +452,11 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<section>39</section>");
             var element = await Page.QuerySelectorAsync("section");
-            Assert.NotNull(element);
+            Assert.IsNotNull(element);
             await element.DisposeAsync();
 
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("e => e.textContent", element));
-            StringAssert.Contains("JSHandle is disposed", exception.Message);
+            StringAssert.Contains(exception.Message, "JSHandle is disposed");
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should simulate a user gesture")]
@@ -465,7 +467,7 @@ namespace Microsoft.Playwright.Tests
                 document.execCommand('selectAll');
                 return document.execCommand('copy');
             }");
-            Assert.True(result);
+            Assert.IsTrue(result);
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should throw a nice error after a navigation")]
@@ -480,7 +482,7 @@ namespace Microsoft.Playwright.Tests
                 }")
             );
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => evaluateTask);
-            StringAssert.Contains("navigation", exception.Message);
+            StringAssert.Contains(exception.Message, "navigation");
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should not throw an error when evaluation does a navigation")]
@@ -491,7 +493,7 @@ namespace Microsoft.Playwright.Tests
                 window.location = '/empty.html';
                 return [42];
             }");
-            Assert.AreEqual(new[] { 42 }, result);
+            CollectionAssert.AreEqual(new[] { 42 }, result);
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should not throw an error when evaluation does a synchronous navigation and returns an object")]
@@ -513,7 +515,7 @@ namespace Microsoft.Playwright.Tests
                 window.location.reload();
                 return undefined;
             }");
-            Assert.Null(result);
+            Assert.IsNull(result);
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should transfer 100Mb of data from page to node.js")]
@@ -530,7 +532,7 @@ namespace Microsoft.Playwright.Tests
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync<object>(@"() => new Promise(() => {
                 throw new Error('Error in promise');
             })"));
-            StringAssert.Contains("Error in promise", exception.Message);
+            StringAssert.Contains(exception.Message, "Error in promise");
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should work even when JSON is set to null")]
@@ -577,20 +579,20 @@ namespace Microsoft.Playwright.Tests
                 variableY = 3.14;
                return variableY;
             }"));
-            StringAssert.Contains("variableY", exception.Message);
+            StringAssert.Contains(exception.Message, "variableY");
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should not leak utility script")]
         public async Task ShouldNotLeakUtilityScript()
         {
-            Assert.True(await Page.EvaluateAsync<bool>(@"() => this === window"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>(@"() => this === window"));
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should not leak handles")]
         public async Task ShouldNotLeakHandles()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync<object>(@"() => handles.length"));
-            StringAssert.Contains("handles", exception.Message);
+            StringAssert.Contains(exception.Message, "handles");
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should work with CSP")]
@@ -607,15 +609,15 @@ namespace Microsoft.Playwright.Tests
                     return new Error('error message');
                 })();
             }");
-            StringAssert.Contains("Error: error message", exception);
-            StringAssert.Contains("functionOnStack", exception);
+            StringAssert.Contains(exception, "Error: error message");
+            StringAssert.Contains(exception, "functionOnStack");
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should evaluate exception")]
         public async Task ShouldEvaluateException2()
         {
             string exception = await Page.EvaluateAsync<string>(@"() => new Error('error message')");
-            StringAssert.Contains("Error: error message", exception);
+            StringAssert.Contains(exception, "Error: error message");
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should evaluate date")]

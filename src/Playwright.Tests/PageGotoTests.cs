@@ -28,12 +28,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageGotoTests : PageTestEx
     {
         [PlaywrightTest("page-goto.spec.ts", "should work")]
@@ -156,7 +156,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldNavigateToAboutBlank()
         {
             var response = await Page.GotoAsync(TestConstants.AboutBlank);
-            Assert.Null(response);
+            Assert.IsNull(response);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should return response when page changes its URL after load")]
@@ -190,15 +190,15 @@ namespace Microsoft.Playwright.Tests
 
             if (TestConstants.IsChromium)
             {
-                StringAssert.Contains("net::ERR_ABORTED", exception.Message);
+                StringAssert.Contains(exception.Message, "net::ERR_ABORTED");
             }
             else if (TestConstants.IsFirefox)
             {
-                StringAssert.Contains("NS_BINDING_ABORTED", exception.Message);
+                StringAssert.Contains(exception.Message, "NS_BINDING_ABORTED");
             }
             else
             {
-                StringAssert.Contains("Aborted: 204 No Content", exception.Message);
+                StringAssert.Contains(exception.Message, "Aborted: 204 No Content");
             }
         }
 
@@ -227,11 +227,11 @@ namespace Microsoft.Playwright.Tests
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync("asdfasdf"));
             if (TestConstants.IsChromium || TestConstants.IsWebKit)
             {
-                StringAssert.Contains("Cannot navigate to invalid URL", exception.Message);
+                StringAssert.Contains(exception.Message, "Cannot navigate to invalid URL");
             }
             else
             {
-                StringAssert.Contains("Invalid url", exception.Message);
+                StringAssert.Contains(exception.Message, "Invalid url");
             }
         }
 
@@ -239,9 +239,9 @@ namespace Microsoft.Playwright.Tests
         [Ignore("Fix me #1058")]
         public async Task ShouldFailWhenNavigatingToBadSSL()
         {
-            Page.Request += (_, e) => Assert.NotNull(e);
-            Page.RequestFinished += (_, e) => Assert.NotNull(e);
-            Page.RequestFailed += (_, e) => Assert.NotNull(e);
+            Page.Request += (_, e) => Assert.IsNotNull(e);
+            Page.RequestFinished += (_, e) => Assert.IsNotNull(e);
+            Page.RequestFailed += (_, e) => Assert.IsNotNull(e);
 
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
             TestUtils.AssertSSLError(exception.Message);
@@ -282,19 +282,19 @@ namespace Microsoft.Playwright.Tests
 
             if (TestConstants.IsChromium)
             {
-                StringAssert.Contains("net::ERR_CONNECTION_REFUSED", exception.Message);
+                StringAssert.Contains(exception.Message, "net::ERR_CONNECTION_REFUSED");
             }
             else if (TestConstants.IsWebKit && TestConstants.IsWindows)
             {
-                StringAssert.Contains("Couldn't connect to server", exception.Message);
+                StringAssert.Contains(exception.Message, "Couldn't connect to server");
             }
             else if (TestConstants.IsWebKit)
             {
-                StringAssert.Contains("Could not connect", exception.Message);
+                StringAssert.Contains(exception.Message, "Could not connect");
             }
             else
             {
-                StringAssert.Contains("NS_ERROR_CONNECTION_REFUSED", exception.Message);
+                StringAssert.Contains(exception.Message, "NS_ERROR_CONNECTION_REFUSED");
             }
         }
 
@@ -304,8 +304,8 @@ namespace Microsoft.Playwright.Tests
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
                 => Page.GotoAsync(Server.EmptyPage, new() { Timeout = 1 }));
-            StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
-            StringAssert.Contains(Server.EmptyPage, exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 1ms exceeded");
+            StringAssert.Contains(exception.Message, Server.EmptyPage);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding maximum navigation timeout")]
@@ -315,8 +315,8 @@ namespace Microsoft.Playwright.Tests
             Page.Context.SetDefaultNavigationTimeout(2);
             Page.SetDefaultNavigationTimeout(1);
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.GotoAsync(Server.EmptyPage));
-            StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
-            StringAssert.Contains(Server.EmptyPage, exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 1ms exceeded");
+            StringAssert.Contains(exception.Message, Server.EmptyPage);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding browser context navigation timeout")]
@@ -325,8 +325,8 @@ namespace Microsoft.Playwright.Tests
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             Page.Context.SetDefaultNavigationTimeout(2);
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.GotoAsync(Server.EmptyPage));
-            StringAssert.Contains("Timeout 2ms exceeded", exception.Message);
-            StringAssert.Contains(Server.EmptyPage, exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 2ms exceeded");
+            StringAssert.Contains(exception.Message, Server.EmptyPage);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding default maximum timeout")]
@@ -336,8 +336,8 @@ namespace Microsoft.Playwright.Tests
             Page.Context.SetDefaultTimeout(2);
             Page.SetDefaultTimeout(1);
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.GotoAsync(Server.EmptyPage));
-            StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
-            StringAssert.Contains(Server.EmptyPage, exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 1ms exceeded");
+            StringAssert.Contains(exception.Message, Server.EmptyPage);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding browser context timeout")]
@@ -346,8 +346,8 @@ namespace Microsoft.Playwright.Tests
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
             Page.Context.SetDefaultTimeout(2);
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.GotoAsync(Server.EmptyPage));
-            StringAssert.Contains("Timeout 2ms exceeded", exception.Message);
-            StringAssert.Contains(Server.EmptyPage, exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 2ms exceeded");
+            StringAssert.Contains(exception.Message, Server.EmptyPage);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should prioritize default navigation timeout over default timeout")]
@@ -358,8 +358,8 @@ namespace Microsoft.Playwright.Tests
             Page.SetDefaultTimeout(0);
             Page.SetDefaultNavigationTimeout(1);
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.GotoAsync(Server.EmptyPage));
-            StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
-            StringAssert.Contains(Server.EmptyPage, exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 1ms exceeded");
+            StringAssert.Contains(exception.Message, Server.EmptyPage);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should disable timeout when its set to 0")]
@@ -374,7 +374,7 @@ namespace Microsoft.Playwright.Tests
             Page.Load += OnLoad;
 
             await Page.GotoAsync(Server.Prefix + "/grid.html", new() { WaitUntil = WaitUntilState.Load, Timeout = 0 });
-            Assert.True(loaded);
+            Assert.IsTrue(loaded);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when replaced by another navigation")]
@@ -394,15 +394,15 @@ namespace Microsoft.Playwright.Tests
 
             if (TestConstants.IsChromium)
             {
-                StringAssert.Contains("net::ERR_ABORTED", exception.Message);
+                StringAssert.Contains(exception.Message, "net::ERR_ABORTED");
             }
             else if (TestConstants.IsWebKit)
             {
-                StringAssert.Contains("cancelled", exception.Message);
+                StringAssert.Contains(exception.Message, "cancelled");
             }
             else
             {
-                StringAssert.Contains("NS_BINDING_ABORTED", exception.Message);
+                StringAssert.Contains(exception.Message, "NS_BINDING_ABORTED");
             }
         }
 
@@ -417,7 +417,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWhenNavigatingToDataUrl()
         {
             var response = await Page.GotoAsync("data:text/html,hello");
-            Assert.Null(response);
+            Assert.IsNull(response);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work when navigating to 404")]
@@ -462,8 +462,8 @@ namespace Microsoft.Playwright.Tests
 
             string dataUrl = "data:text/html,<div>yo</div>";
             var response = await Page.GotoAsync(dataUrl);
-            Assert.Null(response);
-            Assert.IsEmpty(requests);
+            Assert.IsNull(response);
+            Assert.That.Collection(requests).IsEmpty();
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should navigate to URL with hash and fire requests without hash")]
@@ -475,7 +475,7 @@ namespace Microsoft.Playwright.Tests
             var response = await Page.GotoAsync(Server.EmptyPage + "#hash");
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
             Assert.AreEqual(Server.EmptyPage, response.Url);
-            Assert.That(requests, Has.Count.EqualTo(1));
+            Assert.That.Collection(requests).HasExactly(1);
             Assert.AreEqual(Server.EmptyPage, requests[0].Url);
         }
 
@@ -484,7 +484,7 @@ namespace Microsoft.Playwright.Tests
         {
             var response = await Page.GotoAsync(Server.Prefix + "/self-request.html");
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
-            StringAssert.Contains("self-request.html", response.Url);
+            StringAssert.Contains(response.Url, "self-request.html");
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when navigating and show the url at the error message")]
@@ -493,7 +493,7 @@ namespace Microsoft.Playwright.Tests
         {
             string url = HttpsServer.Prefix + "/redirect/1.html";
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync(url));
-            StringAssert.Contains(url, exception.Message);
+            StringAssert.Contains(exception.Message, url);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should be able to navigate to a page controlled by service worker")]
@@ -533,8 +533,8 @@ namespace Microsoft.Playwright.Tests
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() =>
                 Page.GotoAsync(Server.Prefix + "/grid.html", new() { Referer = "http://google.com/" }));
 
-            StringAssert.Contains("\"referer\" is already specified as extra HTTP header", exception.Message);
-            StringAssert.Contains(Server.Prefix + "/grid.html", exception.Message);
+            StringAssert.Contains(exception.Message, "\"referer\" is already specified as extra HTTP header");
+            StringAssert.Contains(exception.Message, Server.Prefix + "/grid.html");
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should override referrer-policy")]
@@ -557,7 +557,7 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual("http://microsoft.com/", referer1);
             // Make sure subresources do not inherit referer.
-            Assert.Null(referer2);
+            Assert.IsNull(referer2);
             Assert.AreEqual(Server.Prefix + "/grid.html", Page.Url);
         }
 

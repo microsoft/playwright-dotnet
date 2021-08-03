@@ -24,12 +24,12 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageClickTimeout3Tests : PageTestEx
     {
         [PlaywrightTest("page-click-timeout-3.spec.ts", "should fail when element jumps during hit testing")]
@@ -64,7 +64,7 @@ namespace Microsoft.Playwright.Tests
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
                 => button.ClickAsync(new() { Timeout = 5000 }));
 
-            StringAssert.Contains("Timeout 5000ms exceeded.", exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 5000ms exceeded.");
         }
     }
 }

@@ -24,13 +24,13 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.MSTest;
 using Microsoft.Playwright.Testing.Core;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class ElementHandleOwnerFrameTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work")]

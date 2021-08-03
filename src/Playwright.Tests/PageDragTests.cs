@@ -23,12 +23,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageDragTests : PageTestEx
     {
         [PlaywrightTest("page-drag.spec.ts", "should work")]
@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Tests
             await Page.HoverAsync("#target");
             await Page.Mouse.UpAsync();
 
-            Assert.True(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"));
+            Assert.IsTrue(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"));
         }
     }
 }

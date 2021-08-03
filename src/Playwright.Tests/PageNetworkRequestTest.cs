@@ -26,13 +26,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>network-request.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageNetworkRequestTest : PageTestEx
     {
         [PlaywrightTest("page-network-request.spec.ts", "should work for main frame navigation request")]
@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Tests
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
             await Page.GotoAsync(Server.EmptyPage);
-            Assert.That(requests, Has.Count.EqualTo(1));
+            Assert.That.Collection(requests).HasExactly(1);
             Assert.AreEqual(Page.MainFrame, requests[0].Frame);
         }
 
@@ -82,7 +82,7 @@ namespace Microsoft.Playwright.Tests
                 _ => "None"
             };
 
-            StringAssert.Contains(expected, response.Request.Headers["user-agent"]);
+            StringAssert.Contains(response.Request.Headers["user-agent"], expected);
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "Request.headers", "should get the same headers as the server")]
@@ -99,7 +99,7 @@ namespace Microsoft.Playwright.Tests
             IRequest request = null;
             Page.Request += (_, e) => request = e;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: JSON.stringify({ foo: 'bar'})})");
-            Assert.NotNull(request);
+            Assert.IsNotNull(request);
             Assert.AreEqual("{\"foo\":\"bar\"}", request.PostData);
         }
 
@@ -111,7 +111,7 @@ namespace Microsoft.Playwright.Tests
             IRequest request = null;
             Page.Request += (_, e) => request = e;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: new Uint8Array(Array.from(Array(256).keys())) })");
-            Assert.NotNull(request);
+            Assert.IsNotNull(request);
             byte[] data = request.PostDataBuffer;
             Assert.AreEqual(256, data.Length);
 
@@ -130,7 +130,7 @@ namespace Microsoft.Playwright.Tests
             IRequest request = null;
             Page.Request += (_, e) => request = e;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: new Uint8Array(Array.from(Array(256).keys())) })");
-            Assert.NotNull(request);
+            Assert.IsNotNull(request);
             byte[] data = request.PostDataBuffer;
             Assert.AreEqual(256, data.Length);
 
@@ -144,7 +144,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldBeUndefinedWhenThereIsNoPostData()
         {
             var response = await Page.GotoAsync(Server.EmptyPage);
-            Assert.Null(response.Request.PostData);
+            Assert.IsNull(response.Request.PostData);
         }
 
 
@@ -156,7 +156,7 @@ namespace Microsoft.Playwright.Tests
             IRequest request = null;
             Page.Request += (_, e) => request = e;
             await Page.EvaluateHandleAsync("fetch('./post', { method: 'POST', body: JSON.stringify({ foo: 'bar'})})");
-            Assert.NotNull(request);
+            Assert.IsNotNull(request);
             Assert.AreEqual("bar", request.PostDataJSON()?.GetProperty("foo").ToString());
         }
 
@@ -170,7 +170,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<form method='POST' action='/post'><input type='text' name='foo' value='bar'><input type='number' name='baz' value='123'><input type='submit'></form>");
             await Page.ClickAsync("input[type=submit]");
 
-            Assert.NotNull(request);
+            Assert.IsNotNull(request);
             var element = request.PostDataJSON();
             Assert.AreEqual("bar", element?.GetProperty("foo").ToString());
             Assert.AreEqual("123", element?.GetProperty("baz").ToString());
@@ -180,7 +180,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldBeUndefinedWhenThereIsNoPostData2()
         {
             var response = await Page.GotoAsync(Server.EmptyPage);
-            Assert.Null(response.Request.PostDataJSON());
+            Assert.IsNull(response.Request.PostDataJSON());
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should return event source")]
@@ -220,11 +220,11 @@ namespace Microsoft.Playwright.Tests
             Page.Request += (_, e) => requests[e.Url.Split('/').Last()] = e;
             Server.SetRedirect("/rrredirect", "/frames/one-frame.html");
             await Page.GotoAsync(Server.Prefix + "/rrredirect");
-            Assert.True(requests["rrredirect"].IsNavigationRequest);
-            Assert.True(requests["one-frame.html"].IsNavigationRequest);
-            Assert.True(requests["frame.html"].IsNavigationRequest);
-            Assert.False(requests["script.js"].IsNavigationRequest);
-            Assert.False(requests["style.css"].IsNavigationRequest);
+            Assert.IsTrue(requests["rrredirect"].IsNavigationRequest);
+            Assert.IsTrue(requests["one-frame.html"].IsNavigationRequest);
+            Assert.IsTrue(requests["frame.html"].IsNavigationRequest);
+            Assert.IsFalse(requests["script.js"].IsNavigationRequest);
+            Assert.IsFalse(requests["style.css"].IsNavigationRequest);
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "Request.isNavigationRequest", "should return navigation bit when navigating to image")]
@@ -233,7 +233,7 @@ namespace Microsoft.Playwright.Tests
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
             await Page.GotoAsync(Server.Prefix + "/pptr.png");
-            Assert.True(requests[0].IsNavigationRequest);
+            Assert.IsTrue(requests[0].IsNavigationRequest);
         }
     }
 }

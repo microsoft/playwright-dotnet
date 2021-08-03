@@ -23,7 +23,8 @@
  */
 
 using System;
-using NUnit.Framework;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
@@ -31,8 +32,13 @@ namespace Microsoft.Playwright.Tests
     /// Enables decorating test facts with information about the corresponding test in the upstream repository.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class PlaywrightTestAttribute : TestAttribute
+    public class PlaywrightTestAttribute : TestMethodAttribute
     {
+        public PlaywrightTestAttribute()
+        {
+
+        }
+
         /// <summary>
         /// Creates a new instance of the attribute.
         /// </summary>
@@ -74,5 +80,23 @@ namespace Microsoft.Playwright.Tests
         /// The describe of the test, the decorated code is based on, if one exists.
         /// </summary>
         public string Describe { get; }
+
+        public override TestResult[] Execute(ITestMethod testMethod)
+        {
+            var skipAttribute = testMethod.GetAttributes<SkipAttribute>(true).FirstOrDefault();
+            if (skipAttribute?.ShouldSkipTest() ?? false)
+            {
+                return new[]
+                {
+                    new TestResult()
+                    {
+                        Outcome = UnitTestOutcome.Inconclusive,
+                        TestContextMessages = "Skipped due to browser/platform."
+                    }
+                };
+            }
+
+            return base.Execute(testMethod);
+        }
     }
 }

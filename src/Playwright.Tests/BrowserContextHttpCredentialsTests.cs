@@ -24,11 +24,11 @@
 
 using System.Net;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserContextCredentialsTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should fail without credentials")]
@@ -102,7 +102,7 @@ namespace Microsoft.Playwright.Tests
             var response = await page.GotoAsync(Server.Prefix + "/playground.html");
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
             Assert.AreEqual("Playground", await page.TitleAsync());
-            StringAssert.Contains("Playground", await response.TextAsync());
+            StringAssert.Contains(await response.TextAsync(), "Playground");
         }
     }
 }

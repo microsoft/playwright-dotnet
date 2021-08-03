@@ -25,11 +25,11 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageBasicTests : PageTestEx
     {
         [PlaywrightTest("page-basic.spec.ts", "should reject all promises when page is closed")]
@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Tests
                 newPage.EvaluateAsync<string>("() => new Promise(r => { })"),
                 newPage.CloseAsync()
             ));
-            StringAssert.Contains("Protocol error", exception.Message);
+            StringAssert.Contains(exception.Message, "Protocol error");
         }
 
         [PlaywrightTest("page-basic.spec.ts", "async stacks should work")]
@@ -53,7 +53,7 @@ namespace Microsoft.Playwright.Tests
                 return Task.CompletedTask;
             });
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync(Server.EmptyPage));
-            StringAssert.Contains(nameof(PageBasicTests), exception.StackTrace);
+            StringAssert.Contains(exception.StackTrace, nameof(PageBasicTests));
         }
 
         [PlaywrightTest("page-basic.spec.ts", "Page.press should work")]
@@ -77,7 +77,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReturnTheCorrectBrowserInstance()
         {
             await Page.SetContentAsync("<iframe name=target></iframe>");
-            Assert.Null(Page.Frames.FirstOrDefault(f => f.Name == "bogus"));
+            Assert.IsNull(Page.Frames.FirstOrDefault(f => f.Name == "bogus"));
             var frame = Page.Frames.FirstOrDefault(f => f.Name == "target");
             Assert.AreEqual(Page.MainFrame.ChildFrames.First(), frame);
         }
@@ -86,7 +86,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldRespectUrl()
         {
             await Page.SetContentAsync($"<iframe src=\"{Server.EmptyPage}\"></iframe>");
-            Assert.Null(Page.Frames.FirstOrDefault(f => f.Name == "bogus"));
+            Assert.IsNull(Page.Frames.FirstOrDefault(f => f.Name == "bogus"));
             var frame = Page.Frames.FirstOrDefault(f => f.Url.Contains("empty"));
             Assert.AreEqual(Page.MainFrame.ChildFrames.First(), frame);
         }
@@ -111,7 +111,7 @@ namespace Microsoft.Playwright.Tests
             );
             await Page.CloseAsync();
             var opener = await popupEvent.OpenerAsync();
-            Assert.Null(opener);
+            Assert.IsNull(opener);
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should return the page title")]
@@ -144,7 +144,7 @@ namespace Microsoft.Playwright.Tests
             var task = Page.WaitForDownloadAsync();
             await Page.CloseAsync();
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => task);
-            StringAssert.Contains("Page closed", exception.Message);
+            StringAssert.Contains(exception.Message, "Page closed");
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should have sane user agent")]
@@ -158,23 +158,23 @@ namespace Microsoft.Playwright.Tests
             if (TestConstants.IsFirefox)
             {
                 string[] engineBrowser = parts[2].Split(' ');
-                Assert.That(engineBrowser[0], Does.StartWith("Gecko"));
-                Assert.That(engineBrowser[1], Does.StartWith("Firefox"));
+                StringAssert.StartsWith(engineBrowser[0], "Gecko");
+                StringAssert.StartsWith(engineBrowser[1], "Firefox");
             }
             else
             {
-                Assert.That(parts[2], Does.StartWith("AppleWebKit/"));
+                StringAssert.StartsWith(parts[2], "AppleWebKit/");
                 Assert.AreEqual("KHTML, like Gecko", parts[3]);
                 string[] engineBrowser = parts[4].Split(' ');
-                Assert.That(engineBrowser[1], Does.StartWith("Safari/"));
+                StringAssert.StartsWith(engineBrowser[1], "Safari/");
 
                 if (TestConstants.IsChromium)
                 {
-                    StringAssert.Contains("Chrome/", engineBrowser[0]);
+                    StringAssert.Contains(engineBrowser[0], "Chrome/");
                 }
                 else
                 {
-                    Assert.That(engineBrowser[0], Does.StartWith("Version"));
+                    StringAssert.StartsWith(engineBrowser[0], "Version");
                 }
             }
         }
@@ -225,9 +225,9 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldSetThePageCloseState()
         {
             var newPage = await Context.NewPageAsync();
-            Assert.False(newPage.IsClosed);
+            Assert.IsFalse(newPage.IsClosed);
             await newPage.CloseAsync();
-            Assert.True(newPage.IsClosed);
+            Assert.IsTrue(newPage.IsClosed);
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should terminate network waiters")]
@@ -242,8 +242,8 @@ namespace Microsoft.Playwright.Tests
             for (int i = 0; i < 2; i++)
             {
                 string message = exception.Message;
-                StringAssert.Contains("Page closed", message);
-                Assert.That(message, Does.Not.Contain("Timeout"));
+                StringAssert.Contains(message, "Page closed");
+                Assert.IsFalse(message.Contains("Timeout"));
             }
         }
 
@@ -262,9 +262,9 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldNotBeVisibleInContextPages()
         {
             var newPage = await Context.NewPageAsync();
-            CollectionAssert.Contains(Context.Pages, newPage);
+            Assert.That.Collection(Context.Pages).Contains(newPage);
             await newPage.CloseAsync();
-            CollectionAssert.DoesNotContain(Context.Pages, newPage);
+            Assert.That.Collection(Context.Pages).DoesNotContain(newPage);
         }
 
         [PlaywrightTest("page-basic.spec.ts", "")]

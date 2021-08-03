@@ -23,12 +23,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class FrameFrameElementTests : PageTestEx
     {
         [PlaywrightTest("frame-frame-element.spec.ts", "should work")]
@@ -44,12 +44,12 @@ namespace Microsoft.Playwright.Tests
             var frame3handle1 = await Page.QuerySelectorAsync("#frame3");
             var frame3handle2 = await frame3.FrameElementAsync();
 
-            Assert.True(await frame1handle1.EvaluateAsync<bool>("(a, b) => a === b", frame1handle2));
-            Assert.True(await frame3handle1.EvaluateAsync<bool>("(a, b) => a === b", frame3handle2));
-            Assert.False(await frame1handle1.EvaluateAsync<bool>("(a, b) => a === b", frame3handle2));
+            Assert.IsTrue(await frame1handle1.EvaluateAsync<bool>("(a, b) => a === b", frame1handle2));
+            Assert.IsTrue(await frame3handle1.EvaluateAsync<bool>("(a, b) => a === b", frame3handle2));
+            Assert.IsFalse(await frame1handle1.EvaluateAsync<bool>("(a, b) => a === b", frame3handle2));
 
             var windowHandle = await Page.MainFrame.EvaluateHandleAsync("() => window");
-            Assert.NotNull(windowHandle);
+            Assert.IsNotNull(windowHandle);
         }
 
         [PlaywrightTest("frame-frame-element.spec.ts", "should work with contentFrame")]

@@ -24,12 +24,12 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageClickTimeout1Tests : PageTestEx
     {
         [PlaywrightTest("page-click-timeout-1.spec.ts", "should avoid side effects after timeout")]
@@ -43,12 +43,12 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<button onclick=\"javascript: window.__CLICKED = true;\" disabled><span>Click target</span></button>");
             var clickTask = Page.ClickAsync("text=Click target", new() { Timeout = 3000 });
-            Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
+            Assert.IsNull(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
 
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => clickTask);
 
-            StringAssert.Contains("Timeout 3000ms exceeded", exception.Message);
-            StringAssert.Contains("element is not enabled - waiting", exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 3000ms exceeded");
+            StringAssert.Contains(exception.Message, "element is not enabled - waiting");
         }
     }
 }

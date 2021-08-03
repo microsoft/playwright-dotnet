@@ -23,13 +23,13 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>elementhandle-convenience.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class ElementHandleConvenienceTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-convenience.spec.ts", "should have a nice preview")]
@@ -81,12 +81,12 @@ namespace Microsoft.Playwright.Tests
         public async Task InnerTextShouldThrow()
         {
             await Page.SetContentAsync("<svg>text</svg>");
-            var exception1 = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.InnerTextAsync("svg"));
-            StringAssert.Contains("Not an HTMLElement", exception1.Message);
+            var exception1 = await Assert.ThrowsExceptionAsync<PlaywrightException>(async () => await Page.InnerTextAsync("svg"));
+            StringAssert.Contains(exception1.Message, "Not an HTMLElement");
 
             var handle = await Page.QuerySelectorAsync("svg");
-            var exception2 = Assert.ThrowsAsync<PlaywrightException>(async () => await handle.InnerTextAsync());
-            StringAssert.Contains("Not an HTMLElement", exception2.Message);
+            var exception2 = await Assert.ThrowsExceptionAsync<PlaywrightException>(async () => await handle.InnerTextAsync());
+            StringAssert.Contains(exception2.Message, "Not an HTMLElement");
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "textContent should work")]
@@ -208,15 +208,15 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<div>Hi</div><span></span>");
             var div = await Page.QuerySelectorAsync("div");
-            Assert.True(await div.IsVisibleAsync());
-            Assert.False(await div.IsHiddenAsync());
-            Assert.True(await Page.IsVisibleAsync("div"));
-            Assert.False(await Page.IsHiddenAsync("div"));
+            Assert.IsTrue(await div.IsVisibleAsync());
+            Assert.IsFalse(await div.IsHiddenAsync());
+            Assert.IsTrue(await Page.IsVisibleAsync("div"));
+            Assert.IsFalse(await Page.IsHiddenAsync("div"));
             var span = await Page.QuerySelectorAsync("span");
-            Assert.False(await span.IsVisibleAsync());
-            Assert.True(await span.IsHiddenAsync());
-            Assert.False(await Page.IsVisibleAsync("span"));
-            Assert.True(await Page.IsHiddenAsync("span"));
+            Assert.IsFalse(await span.IsVisibleAsync());
+            Assert.IsTrue(await span.IsHiddenAsync());
+            Assert.IsFalse(await Page.IsVisibleAsync("span"));
+            Assert.IsTrue(await Page.IsHiddenAsync("span"));
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "isEnabled and isDisabled should work")]
@@ -227,20 +227,20 @@ namespace Microsoft.Playwright.Tests
                 <button>button2</button>
                 <div>div</div>");
             var div = await Page.QuerySelectorAsync("div");
-            Assert.True(await div.IsEnabledAsync());
-            Assert.False(await div.IsDisabledAsync());
-            Assert.True(await Page.IsEnabledAsync("div"));
-            Assert.False(await Page.IsDisabledAsync("div"));
+            Assert.IsTrue(await div.IsEnabledAsync());
+            Assert.IsFalse(await div.IsDisabledAsync());
+            Assert.IsTrue(await Page.IsEnabledAsync("div"));
+            Assert.IsFalse(await Page.IsDisabledAsync("div"));
             var button1 = await Page.QuerySelectorAsync(":text('button1')");
-            Assert.False(await button1.IsEnabledAsync());
-            Assert.True(await button1.IsDisabledAsync());
-            Assert.False(await Page.IsEnabledAsync(":text('button1')"));
-            Assert.True(await Page.IsDisabledAsync(":text('button1')"));
+            Assert.IsFalse(await button1.IsEnabledAsync());
+            Assert.IsTrue(await button1.IsDisabledAsync());
+            Assert.IsFalse(await Page.IsEnabledAsync(":text('button1')"));
+            Assert.IsTrue(await Page.IsDisabledAsync(":text('button1')"));
             var button2 = await Page.QuerySelectorAsync(":text('button2')");
-            Assert.True(await button2.IsEnabledAsync());
-            Assert.False(await button2.IsDisabledAsync());
-            Assert.True(await Page.IsEnabledAsync(":text('button2')"));
-            Assert.False(await Page.IsDisabledAsync(":text('button2')"));
+            Assert.IsTrue(await button2.IsEnabledAsync());
+            Assert.IsFalse(await button2.IsDisabledAsync());
+            Assert.IsTrue(await Page.IsEnabledAsync(":text('button2')"));
+            Assert.IsFalse(await Page.IsDisabledAsync(":text('button2')"));
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "isEditable should work")]
@@ -249,14 +249,14 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync(@"<input id=input1 disabled><textarea></textarea><input id=input2>");
             await Page.EvalOnSelectorAsync("textarea", "t => t.readOnly = true");
             var input1 = await Page.QuerySelectorAsync("#input1");
-            Assert.False(await input1.IsEditableAsync());
-            Assert.False(await Page.IsEditableAsync("#input1"));
+            Assert.IsFalse(await input1.IsEditableAsync());
+            Assert.IsFalse(await Page.IsEditableAsync("#input1"));
             var input2 = await Page.QuerySelectorAsync("#input2");
-            Assert.True(await input2.IsEditableAsync());
-            Assert.True(await Page.IsEditableAsync("#input2"));
+            Assert.IsTrue(await input2.IsEditableAsync());
+            Assert.IsTrue(await Page.IsEditableAsync("#input2"));
             var textarea = await Page.QuerySelectorAsync("textarea");
-            Assert.False(await textarea.IsEditableAsync());
-            Assert.False(await Page.IsEditableAsync("textarea"));
+            Assert.IsFalse(await textarea.IsEditableAsync());
+            Assert.IsFalse(await Page.IsEditableAsync("textarea"));
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "isChecked should work")]
@@ -264,13 +264,13 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync(@"<input type='checkbox' checked><div>Not a checkbox</div>");
             var handle = await Page.QuerySelectorAsync("input");
-            Assert.True(await handle.IsCheckedAsync());
-            Assert.True(await Page.IsCheckedAsync("input"));
+            Assert.IsTrue(await handle.IsCheckedAsync());
+            Assert.IsTrue(await Page.IsCheckedAsync("input"));
             await handle.EvaluateAsync("input => input.checked = false");
-            Assert.False(await handle.IsCheckedAsync());
-            Assert.False(await Page.IsCheckedAsync("input"));
+            Assert.IsFalse(await handle.IsCheckedAsync());
+            Assert.IsFalse(await Page.IsCheckedAsync("input"));
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.IsCheckedAsync("div"));
-            StringAssert.Contains("Not a checkbox or radio button", exception.Message);
+            StringAssert.Contains(exception.Message, "Not a checkbox or radio button");
         }
     }
 }

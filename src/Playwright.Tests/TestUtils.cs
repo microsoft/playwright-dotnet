@@ -27,7 +27,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
@@ -49,20 +49,20 @@ namespace Microsoft.Playwright.Tests
         {
             if (TestConstants.IsChromium)
             {
-                StringAssert.Contains("net::ERR_CERT_AUTHORITY_INVALID", errorMessage);
+                StringAssert.Contains(errorMessage, "net::ERR_CERT_AUTHORITY_INVALID");
             }
             else if (TestConstants.IsWebKit)
             {
                 if (TestConstants.IsMacOSX)
-                    StringAssert.Contains("The certificate for this server is invalid", errorMessage);
+                    StringAssert.Contains(errorMessage, "The certificate for this server is invalid");
                 else if (TestConstants.IsWindows)
-                    StringAssert.Contains("SSL peer certificate or SSH remote key was not OK", errorMessage);
+                    StringAssert.Contains(errorMessage, "SSL peer certificate or SSH remote key was not OK");
                 else
-                    StringAssert.Contains("Unacceptable TLS certificate", errorMessage);
+                    StringAssert.Contains(errorMessage, "Unacceptable TLS certificate");
             }
             else
             {
-                StringAssert.Contains("SSL_ERROR_UNKNOWN", errorMessage);
+                StringAssert.Contains(errorMessage, "SSL_ERROR_UNKNOWN");
             }
         }
 

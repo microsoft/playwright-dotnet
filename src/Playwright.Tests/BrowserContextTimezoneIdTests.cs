@@ -23,12 +23,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserContextTimezoneIdTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-timezone-id.spec.ts", "should work")]
@@ -77,13 +77,13 @@ namespace Microsoft.Playwright.Tests
             await using (var context = await Browser.NewContextAsync(new() { TimezoneId = "Foo/Bar" }))
             {
                 var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => context.NewPageAsync());
-                StringAssert.Contains("Invalid timezone ID: Foo/Bar", exception.Message);
+                StringAssert.Contains(exception.Message, "Invalid timezone ID: Foo/Bar");
             }
 
             await using (var context = await Browser.NewContextAsync(new() { TimezoneId = "Baz/Qux" }))
             {
                 var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => context.NewPageAsync());
-                StringAssert.Contains("Invalid timezone ID: Baz/Qux", exception.Message);
+                StringAssert.Contains(exception.Message, "Invalid timezone ID: Baz/Qux");
             }
         }
 

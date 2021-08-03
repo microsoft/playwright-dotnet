@@ -25,13 +25,13 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.MSTest;
 using Microsoft.Playwright.Testing.Core;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class GeolocationTests : PageTestEx
     {
         [PlaywrightTest("geolocation.spec.ts", "should work")]
@@ -60,8 +60,8 @@ namespace Microsoft.Playwright.Tests
                     Longitude = 200,
                     Latitude = 100
                 }));
-            StringAssert.Contains("geolocation.longitude", exception.Message);
-            StringAssert.Contains("failed", exception.Message);
+            StringAssert.Contains(exception.Message, "geolocation.longitude");
+            StringAssert.Contains(exception.Message, "failed");
         }
 
         [PlaywrightTest("geolocation.spec.ts", "should isolate contexts")]
@@ -192,9 +192,9 @@ namespace Microsoft.Playwright.Tests
                 Context.SetGeolocationAsync(new() { Latitude = 40, Longitude = 50 }));
 
             string allMessages = string.Join("|", messages);
-            StringAssert.Contains("lat=0 lng=10", allMessages);
-            StringAssert.Contains("lat=20 lng=30", allMessages);
-            StringAssert.Contains("lat=40 lng=50", allMessages);
+            StringAssert.Contains(allMessages, "lat=0 lng=10");
+            StringAssert.Contains(allMessages, "lat=20 lng=30");
+            StringAssert.Contains(allMessages, "lat=40 lng=50");
         }
 
         [PlaywrightTest("geolocation.spec.ts", "should use context options for popup")]

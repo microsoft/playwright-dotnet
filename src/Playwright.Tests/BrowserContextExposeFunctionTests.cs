@@ -25,12 +25,12 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserContextExposeFunctionTests : ContextTestEx
     {
         [PlaywrightTest("browsercontext-expose-function.spec.ts", "expose binding should work")]
@@ -104,8 +104,8 @@ namespace Microsoft.Playwright.Tests
 
             args.Clear();
             await page.ReloadAsync();
-            CollectionAssert.Contains(args, "context");
-            CollectionAssert.Contains(args, "page");
+            Assert.That.Collection(args).Contains("context");
+            Assert.That.Collection(args).Contains("page");
         }
 
         [PlaywrightTest("browsercontext-expose-function.spec.ts", "exposeBindingHandle should work")]

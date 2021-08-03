@@ -24,12 +24,12 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PopupTests : BrowserTestEx
     {
         [PlaywrightTest("popup.spec.ts", "should inherit user agent from browser context")]
@@ -72,7 +72,7 @@ namespace Microsoft.Playwright.Tests
             var popupTask = context.WaitForPageAsync();
             await TaskUtils.WhenAll(popupTask, page.ClickAsync("a"));
 
-            Assert.True(intercepted);
+            Assert.IsTrue(intercepted);
         }
 
         [PlaywrightTest("popup.spec.ts", "should inherit extra headers from browser context")]
@@ -111,7 +111,7 @@ namespace Microsoft.Playwright.Tests
 
             await page.EvaluateAsync(@"url => window._popup = window.open(url)", Server.Prefix + "/dummy.html");
 
-            Assert.False(online);
+            Assert.IsFalse(online);
         }
 
         [PlaywrightTest("popup.spec.ts", "should inherit http credentials from browser context")]
@@ -150,7 +150,7 @@ namespace Microsoft.Playwright.Tests
                 return 'ontouchstart' in win;
             }");
 
-            Assert.True(hasTouch);
+            Assert.IsTrue(hasTouch);
         }
 
         [PlaywrightTest("popup.spec.ts", "should inherit viewport size from browser context")]
@@ -216,7 +216,7 @@ namespace Microsoft.Playwright.Tests
                 popupTask,
                 page.EvaluateAsync("url => window.__popup = window.open(url)", Server.EmptyPage));
 
-            Assert.True(intercepted);
+            Assert.IsTrue(intercepted);
         }
 
         [PlaywrightTest("popup.spec.ts", "BrowserContext.addInitScript should apply to an in-process popup")]

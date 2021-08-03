@@ -24,8 +24,7 @@
 
 using System;
 using System.Threading.Tasks;
-using NUnit.Framework;
-using NUnit.Framework.Constraints;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
@@ -36,18 +35,17 @@ namespace Microsoft.Playwright.Tests
         /// For a more detailed read on the subject, see <see href="https://github.com/nunit/nunit/issues/464"/>.
         internal static async Task<T> ThrowsAsync<T>(Func<Task> action) where T : Exception
         {
-            try
-            {
-                await action();
-                Assert.Fail();
-                return null;
-            }
-            catch (T t)
-            {
-                return t;
-            }
+            return await Assert.ThrowsExceptionAsync<T>(action);
+            //try
+            //{
+            //    await action();
+            //    Assert.Fail();
+            //    return null;
+            //}
+            //catch (T t)
+            //{
+            //    return t;
+            //}
         }
-
-        internal static void DebugLog(string text) => TestContext.Progress.WriteLine(text);
     }
 }

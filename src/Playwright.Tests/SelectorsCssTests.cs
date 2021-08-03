@@ -24,12 +24,12 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class SelectorsCssTests : PageTestEx
     {
         [PlaywrightTest("selectors-css.spec.ts", "should work for open shadow roots")]
@@ -46,20 +46,20 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("Hello from root2", await Page.EvalOnSelectorAsync<string>("css=#target", "e => e.textContent"));
             Assert.AreEqual("Hello from root2", await Page.EvalOnSelectorAsync<string>("css=div #target", "e => e.textContent"));
             Assert.AreEqual("Hello from root2", await Page.EvalOnSelectorAsync<string>("css=div div #target", "e => e.textContent"));
-            Assert.Null(await Page.QuerySelectorAsync("css=div div div #target"));
+            Assert.IsNull(await Page.QuerySelectorAsync("css=div div div #target"));
             Assert.AreEqual("Hello from root2", await Page.EvalOnSelectorAsync<string>("css=section > div div span", "e => e.textContent"));
             Assert.AreEqual("Hello from root3 #2", await Page.EvalOnSelectorAsync<string>("css=section > div div span:nth-child(2)", "e => e.textContent"));
-            Assert.Null(await Page.QuerySelectorAsync("css=section div div div div"));
+            Assert.IsNull(await Page.QuerySelectorAsync("css=section div div div div"));
 
             var root2 = await Page.QuerySelectorAsync("css=div div");
             Assert.AreEqual("Hello from root2", await root2.EvalOnSelectorAsync<string>("css=#target", "e => e.textContent"));
-            Assert.Null(await root2.QuerySelectorAsync("css:light=#target"));
+            Assert.IsNull(await root2.QuerySelectorAsync("css:light=#target"));
             var root2Shadow = (IElementHandle)await root2.EvaluateHandleAsync("r => r.shadowRoot");
             Assert.AreEqual("Hello from root2", await root2Shadow.EvalOnSelectorAsync<string>("css:light=#target", "e => e.textContent"));
             var root3 = (await Page.QuerySelectorAllAsync("css=div div")).ElementAt(1);
             Assert.AreEqual("Hello from root3", await root3.EvalOnSelectorAsync<string>("text=root3", "e => e.textContent"));
             Assert.AreEqual("Hello from root3 #2", await root3.EvalOnSelectorAsync<string>("css=[attr *=\"value\"]", "e => e.textContent"));
-            Assert.Null(await root3.QuerySelectorAsync("css:light=[attr*=\"value\"]"));
+            Assert.IsNull(await root3.QuerySelectorAsync("css:light=[attr*=\"value\"]"));
         }
 
         [PlaywrightTest("selectors-css.spec.ts", "should work with > combinator and spaces")]
@@ -143,12 +143,12 @@ namespace Microsoft.Playwright.Tests
 
             foreach (string selector in selectors)
             {
-                Assert.True(await Page.EvalOnSelectorAsync<bool>(selector, "e => e === div"));
+                Assert.IsTrue(await Page.EvalOnSelectorAsync<bool>(selector, "e => e === div"));
             }
 
-            Assert.True(await Page.EvalOnSelectorAsync<bool>("[attr*=hello] span", "e => e.parentNode === div"));
-            Assert.True(await Page.EvalOnSelectorAsync<bool>("[attr*=hello] >> span", "e => e.parentNode === div"));
-            Assert.True(await Page.EvalOnSelectorAsync<bool>("[attr3=\"] span\"] >> span", "e => e.parentNode === div"));
+            Assert.IsTrue(await Page.EvalOnSelectorAsync<bool>("[attr*=hello] span", "e => e.parentNode === div"));
+            Assert.IsTrue(await Page.EvalOnSelectorAsync<bool>("[attr*=hello] >> span", "e => e.parentNode === div"));
+            Assert.IsTrue(await Page.EvalOnSelectorAsync<bool>("[attr3=\"] span\"] >> span", "e => e.parentNode === div"));
         }
     }
 }

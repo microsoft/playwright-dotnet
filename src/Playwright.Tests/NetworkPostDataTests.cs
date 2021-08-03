@@ -22,10 +22,11 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
 namespace Microsoft.Playwright.Tests
@@ -103,7 +104,7 @@ namespace Microsoft.Playwright.Tests
             await Task.WhenAll(task, actualTask);
 
             var request = task.Result;
-            Assert.That(() => request.PostDataJSON(), Throws.Exception);
+            Assert.ThrowsException<Exception>(() => request.PostDataJSON());
         }
 
         /// <playwright-file>network-post-data.spec.ts</playwright-file>

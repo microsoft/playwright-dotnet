@@ -25,13 +25,13 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.MSTest;
 using Microsoft.Playwright.Testing.Core;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageMouseTests : PageTestEx
     {
         [PlaywrightTest("page-mouse.spec.ts", "should click the document")]
@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(1, clickEvent.GetProperty("detail").GetInt32());
             Assert.AreEqual(50, clickEvent.GetProperty("clientX").GetInt32());
             Assert.AreEqual(60, clickEvent.GetProperty("clientY").GetInt32());
-            Assert.True(clickEvent.GetProperty("isTrusted").GetBoolean());
+            Assert.IsTrue(clickEvent.GetProperty("isTrusted").GetBoolean());
             Assert.AreEqual(0, clickEvent.GetProperty("button").GetInt32());
         }
 
@@ -131,13 +131,13 @@ namespace Microsoft.Playwright.Tests
                 string value = modifiers[key];
                 await Page.Keyboard.DownAsync(key);
                 await Page.ClickAsync("#button-3");
-                Assert.True(await Page.EvaluateAsync<bool>("mod => window.lastEvent[mod]", value));
+                Assert.IsTrue(await Page.EvaluateAsync<bool>("mod => window.lastEvent[mod]", value));
                 await Page.Keyboard.UpAsync(key);
             }
             await Page.ClickAsync("#button-3");
             foreach (string key in modifiers.Keys)
             {
-                Assert.False(await Page.EvaluateAsync<bool>("mod => window.lastEvent[mod]", modifiers[key]));
+                Assert.IsFalse(await Page.EvaluateAsync<bool>("mod => window.lastEvent[mod]", modifiers[key]));
             }
         }
 
@@ -157,16 +157,15 @@ namespace Microsoft.Playwright.Tests
                 });
             }");
             await Page.Mouse.MoveAsync(200, 300, new() { Steps = 5 });
-            Assert.AreEqual(
-                new[]
+            var result = await Page.EvaluateAsync<int[][]>("result");
+            Assert.That.Collection(result).IsEqual(new[]
                 {
                     new[] { 120, 140 },
                     new[] { 140, 180 },
                     new[] { 160, 220 },
                     new[] { 180, 260 },
                     new[] { 200, 300 }
-                },
-                await Page.EvaluateAsync<int[][]>("result"));
+                });
         }
 
         [PlaywrightTest("page-mouse.spec.ts", "should work with mobile viewports and cross process navigations")]

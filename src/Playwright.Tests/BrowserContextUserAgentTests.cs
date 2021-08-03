@@ -23,12 +23,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserContextUserAgentTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-user-agent.spec.ts", "should work")]
@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
             await using (var context = await Browser.NewContextAsync())
             {
                 var page = await context.NewPageAsync();
-                StringAssert.Contains("Mozilla", await page.EvaluateAsync<string>("() => navigator.userAgent"));
+                StringAssert.Contains(await page.EvaluateAsync<string>("() => navigator.userAgent"), "Mozilla");
             }
 
             await using (var context = await Browser.NewContextAsync(new() { UserAgent = "foobar" }))
@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.Tests
             await using (var context = await Browser.NewContextAsync())
             {
                 var page = await context.NewPageAsync();
-                StringAssert.Contains("Mozilla", await page.EvaluateAsync<string>("navigator.userAgent"));
+                StringAssert.Contains(await page.EvaluateAsync<string>("navigator.userAgent"), "Mozilla");
             }
 
             await using (var context = await Browser.NewContextAsync(new() { UserAgent = "foobar" }))
@@ -80,14 +80,14 @@ namespace Microsoft.Playwright.Tests
             {
                 var page = await context.NewPageAsync();
                 await page.GotoAsync(Server.Prefix + "/mobile.html");
-                CollectionAssert.DoesNotContain("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
+                Assert.IsTrue((await page.EvaluateAsync<string>("navigator.userAgent")).IndexOf("iPhone") < 0);
             }
 
             await using (var context = await Browser.NewContextAsync(new() { UserAgent = "iPhone" }))
             {
                 var page = await context.NewPageAsync();
                 await page.GotoAsync(Server.Prefix + "/mobile.html");
-                StringAssert.Contains("iPhone", await page.EvaluateAsync<string>("navigator.userAgent"));
+                StringAssert.Contains(await page.EvaluateAsync<string>("navigator.userAgent"), "iPhone");
             }
         }
 

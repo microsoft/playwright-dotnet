@@ -27,12 +27,12 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserContextRouteTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-route.spec.ts", "should intercept")]
@@ -47,11 +47,11 @@ namespace Microsoft.Playwright.Tests
             {
                 intercepted = true;
 
-                StringAssert.Contains("empty.html", route.Request.Url);
-                Assert.False(string.IsNullOrEmpty(route.Request.Headers["user-agent"]));
+                StringAssert.Contains(route.Request.Url, "empty.html");
+                Assert.IsFalse(string.IsNullOrEmpty(route.Request.Headers["user-agent"]));
                 Assert.AreEqual(HttpMethod.Get.Method, route.Request.Method);
-                Assert.Null(route.Request.PostData);
-                Assert.True(route.Request.IsNavigationRequest);
+                Assert.IsNull(route.Request.PostData);
+                Assert.IsTrue(route.Request.IsNavigationRequest);
                 Assert.AreEqual("document", route.Request.ResourceType);
                 Assert.AreEqual(page.MainFrame, route.Request.Frame);
                 Assert.AreEqual("about:blank", page.MainFrame.Url);
@@ -61,8 +61,8 @@ namespace Microsoft.Playwright.Tests
 
             page = await context.NewPageAsync();
             var response = await page.GotoAsync(Server.EmptyPage);
-            Assert.True(response.Ok);
-            Assert.True(intercepted);
+            Assert.IsTrue(response.Ok);
+            Assert.IsTrue(intercepted);
         }
 
         [PlaywrightTest("browsercontext-route.spec.ts", "should unroute")]
@@ -71,7 +71,6 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
             var intercepted = new List<int>();
-
 
             await context.RouteAsync("**/*", route =>
             {
@@ -99,17 +98,17 @@ namespace Microsoft.Playwright.Tests
             await context.RouteAsync("**/empty.html", handler4);
 
             await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new List<int>() { 4 }, intercepted);
+            CollectionAssert.AreEqual(new List<int>() { 4 }, intercepted);
 
             intercepted.Clear();
             await context.UnrouteAsync("**/empty.html", handler4);
             await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new List<int>() { 3 }, intercepted);
+            CollectionAssert.AreEqual(new List<int>() { 3 }, intercepted);
 
             intercepted.Clear();
             await context.UnrouteAsync("**/empty.html");
             await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new List<int>() { 1 }, intercepted);
+            CollectionAssert.AreEqual(new List<int>() { 1 }, intercepted);
         }
 
         [PlaywrightTest("browsercontext-route.spec.ts", "should yield to page.route")]

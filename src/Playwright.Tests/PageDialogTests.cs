@@ -24,13 +24,13 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
+using Microsoft.Playwright.MSTest;
 using Microsoft.Playwright.Testing.Core;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageDialogTests : PageTestEx
     {
         [PlaywrightTest("page-dialog.spec.ts", "should fire")]
@@ -73,7 +73,7 @@ namespace Microsoft.Playwright.Tests
             };
 
             string result = await Page.EvaluateAsync<string>("prompt('question?')");
-            Assert.Null(result);
+            Assert.IsNull(result);
         }
 
         [PlaywrightTest("page-dialog.spec.ts", "should accept the confirm prompt")]
@@ -85,7 +85,7 @@ namespace Microsoft.Playwright.Tests
             };
 
             bool result = await Page.EvaluateAsync<bool>("confirm('boolean?')");
-            Assert.True(result);
+            Assert.IsTrue(result);
         }
 
         [PlaywrightTest("page-dialog.spec.ts", "should dismiss the confirm prompt")]
@@ -97,7 +97,7 @@ namespace Microsoft.Playwright.Tests
             };
 
             bool result = await Page.EvaluateAsync<bool>("prompt('boolean?')");
-            Assert.False(result);
+            Assert.IsFalse(result);
         }
 
         [PlaywrightTest("page-dialog.spec.ts", "should log prompt actions")]
@@ -110,7 +110,7 @@ namespace Microsoft.Playwright.Tests
             };
 
             bool result = await Page.EvaluateAsync<bool>("prompt('boolean?')");
-            Assert.False(result);
+            Assert.IsFalse(result);
         }
 
         [PlaywrightTest("page-dialog.spec.ts", "should be able to close context with open alert")]
@@ -132,7 +132,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAutoDismissThePrompt()
         {
             string result = await Page.EvaluateAsync<string>("prompt('question?')");
-            Assert.Null(result);
+            Assert.IsNull(result);
         }
     }
 }

@@ -28,13 +28,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>page-set-input-files.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageSetInputFilesTests : PageTestEx
     {
         [PlaywrightTest("page-set-input-files.spec.ts", "should upload the file")]
@@ -95,7 +95,7 @@ namespace Microsoft.Playwright.Tests
                 chooserTsc.Task,
                 Page.ClickAsync("input")
             );
-            Assert.NotNull(chooser);
+            Assert.IsNotNull(chooser);
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should emit event on/off")]
@@ -118,7 +118,7 @@ namespace Microsoft.Playwright.Tests
                 Page.WaitForFileChooserAsync(),
                 Page.ClickAsync("input")
             );
-            Assert.NotNull(chooser?.Element);
+            Assert.IsNotNull(chooser?.Element);
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should work when file input is not attached to DOM")]
@@ -132,7 +132,7 @@ namespace Microsoft.Playwright.Tests
                     el.click();
                 }")
             );
-            Assert.NotNull(chooser?.Element);
+            Assert.IsNotNull(chooser?.Element);
         }
 
 
@@ -180,7 +180,7 @@ namespace Microsoft.Playwright.Tests
                     el.click();
                 }, 50)")
             );
-            Assert.NotNull(chooser?.Element);
+            Assert.IsNotNull(chooser?.Element);
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should return the same file chooser when there are many watchdogs simultaneously")]
@@ -205,7 +205,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             Assert.AreEqual(Page, fileChooser.Page);
-            Assert.NotNull(fileChooser.Element);
+            Assert.IsNotNull(fileChooser.Element);
             await fileChooser.SetFilesAsync(TestConstants.FileToUpload);
             Assert.AreEqual(1, await Page.EvalOnSelectorAsync<int>("input", "input => input.files.length"));
             Assert.AreEqual("file-to-upload.txt", await Page.EvalOnSelectorAsync<string>("input", "input => input.files[0].name"));
@@ -246,11 +246,11 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual("file-to-upload.txt", files[0].name);
             Assert.AreEqual("text/plain", files[0].mime);
-            Assert.AreEqual(File.ReadAllBytes(TestUtils.GetWebServerFile("file-to-upload.txt")), files[0].content);
+            CollectionAssert.AreEqual(File.ReadAllBytes(TestUtils.GetWebServerFile("file-to-upload.txt")), files[0].content);
 
             Assert.AreEqual("pptr.png", files[1].name);
             Assert.AreEqual("image/png", files[1].mime);
-            Assert.AreEqual(File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png")), files[1].content);
+            CollectionAssert.AreEqual(File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png")), files[1].content);
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should be able to read selected file")]
@@ -335,7 +335,7 @@ namespace Microsoft.Playwright.Tests
                waitTask,
                Page.ClickAsync("input")
             );
-            Assert.False(fileChooser.IsMultiple);
+            Assert.IsFalse(fileChooser.IsMultiple);
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", @"should work for ""multiple""")]
@@ -346,7 +346,7 @@ namespace Microsoft.Playwright.Tests
                Page.WaitForFileChooserAsync(),
                Page.ClickAsync("input")
             );
-            Assert.True(fileChooser.IsMultiple);
+            Assert.IsTrue(fileChooser.IsMultiple);
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", @"should work for ""webkitdirectory""")]
@@ -357,7 +357,7 @@ namespace Microsoft.Playwright.Tests
                Page.WaitForFileChooserAsync(),
                Page.ClickAsync("input")
             );
-            Assert.True(fileChooser.IsMultiple);
+            Assert.IsTrue(fileChooser.IsMultiple);
         }
     }
 }
