@@ -24,12 +24,12 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageClickReactTests : PageTestEx
     {
         [PlaywrightTest("page-click-react.spec.ts", "should retarget when element is recycled during hit testing")]
@@ -65,7 +65,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<div onclick='window.alert(123)'>Click me</div>");
 
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.ClickAsync("div", new() { Timeout = 3000 }));
-            StringAssert.Contains("Timeout 3000ms exceeded", exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 3000ms exceeded");
             var dialog = await dialogEvent.Task;
             await dialog.DismissAsync();
         }
@@ -79,8 +79,8 @@ namespace Microsoft.Playwright.Tests
             }");
 
             await Page.ClickAsync("text=button1");
-            Assert.True(await Page.EvaluateAsync<bool?>("window.button1"));
-            Assert.Null(await Page.EvaluateAsync<bool?>("window.button2"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("window.button1"));
+            Assert.IsNull(await Page.EvaluateAsync<bool?>("window.button2"));
         }
 
         [PlaywrightTest("page-click-react.spec.ts", "should not retarget when element is recycled on hover")]
@@ -95,8 +95,8 @@ namespace Microsoft.Playwright.Tests
             }");
 
             await Page.ClickAsync("text=button1");
-            Assert.Null(await Page.EvaluateAsync<bool?>("window.button1"));
-            Assert.True(await Page.EvaluateAsync<bool?>("window.button2"));
+            Assert.IsNull(await Page.EvaluateAsync<bool?>("window.button1"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("window.button2"));
         }
 
     }

@@ -25,12 +25,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserContextNetworkEventTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-network-event.spec.ts", "BrowserContext.Events.Request")]
@@ -49,9 +49,10 @@ namespace Microsoft.Playwright.Tests
             await page1.WaitForLoadStateAsync();
 
             var urls = requests.Select(x => x.Url).ToArray();
-            Assert.Contains(Server.EmptyPage, urls);
-            Assert.Contains($"{Server.Prefix}/one-style.html", urls);
-            Assert.Contains($"{Server.Prefix}/one-style.css", urls);
+
+            Assert.That.Collection(urls).Contains(Server.EmptyPage);
+            Assert.That.Collection(urls).Contains($"{Server.Prefix}/one-style.html");
+            Assert.That.Collection(urls).Contains($"{Server.Prefix}/one-style.css");
         }
 
         /// <playwright-file>browsercontext-network-event.spec.ts</playwright-file>
@@ -72,9 +73,9 @@ namespace Microsoft.Playwright.Tests
             await page1.WaitForLoadStateAsync();
 
             var urls = responses.Select(x => x.Url).ToArray();
-            Assert.Contains(Server.EmptyPage, urls);
-            Assert.Contains($"{Server.Prefix}/one-style.html", urls);
-            Assert.Contains($"{Server.Prefix}/one-style.css", urls);
+            Assert.That.Collection(urls).Contains(Server.EmptyPage);
+            Assert.That.Collection(urls).Contains($"{Server.Prefix}/one-style.html");
+            Assert.That.Collection(urls).Contains($"{Server.Prefix}/one-style.css");
         }
 
         /// <playwright-file>browsercontext-network-event.spec.ts</playwright-file>
@@ -117,8 +118,8 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(Server.EmptyPage, request.Url);
 
             var response = await request.ResponseAsync();
-            Assert.NotNull(response);
-            Assert.NotNull(request.Frame);
+            Assert.IsNotNull(response);
+            Assert.IsNotNull(request.Frame);
             Assert.AreEqual(Server.EmptyPage, request.Frame.Url);
             Assert.IsNull(request.Failure);
         }

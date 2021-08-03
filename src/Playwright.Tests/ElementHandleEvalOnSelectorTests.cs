@@ -23,12 +23,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class ElementHandleEvalOnSelectorTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-eval-on-selector.spec.ts", "should work for all")]
@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<html><body><div class=\"tweet\"><div class=\"like\">100</div><div class=\"like\">10</div></div></body></html>");
             var tweet = await Page.QuerySelectorAsync(".tweet");
             string[] content = await tweet.EvalOnSelectorAllAsync<string[]>(".like", "nodes => nodes.map(n => n.innerText)");
-            Assert.AreEqual(new[] { "100", "10" }, content);
+            CollectionAssert.AreEqual(new[] { "100", "10" }, content);
         }
 
         [PlaywrightTest("elementhandle-eval-on-selector.spec.ts", "should retrieve content from subtree for all")]
@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync(htmlContent);
             var elementHandle = await Page.QuerySelectorAsync("#myId");
             string[] content = await elementHandle.EvalOnSelectorAllAsync<string[]>(".a", "nodes => nodes.map(n => n.innerText)");
-            Assert.AreEqual(new[] { "a1-child-div", "a2-child-div" }, content);
+            CollectionAssert.AreEqual(new[] { "a1-child-div", "a2-child-div" }, content);
         }
 
         [PlaywrightTest("elementhandle-eval-on-selector.spec.ts", "should not throw in case of missing selector for all")]
@@ -86,7 +86,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync(htmlContent);
             var elementHandle = await Page.QuerySelectorAsync("#myId");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => elementHandle.EvalOnSelectorAsync(".a", "node => node.innerText"));
-            StringAssert.Contains("failed to find element matching selector \".a\"", exception.Message);
+            StringAssert.Contains(exception.Message, "failed to find element matching selector \".a\"");
         }
     }
 }

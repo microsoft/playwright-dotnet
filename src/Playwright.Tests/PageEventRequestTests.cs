@@ -25,12 +25,12 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageEventRequestTests : PageTestEx
     {
         [PlaywrightTest("page-event-request.spec.ts", "should fire for navigation requests")]
@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.Tests
             var requests = new List<IRequest>();
             Page.Request += (_, e) => requests.Add(e);
             await Page.GotoAsync(Server.EmptyPage);
-            Assert.That(requests, Has.Count.EqualTo(1));
+            Assert.That.Collection(requests).HasExactly(1);
         }
 
         [PlaywrightTest("page-event-request.spec.ts", "should fire for iframes")]

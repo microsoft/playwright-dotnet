@@ -23,12 +23,13 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserContextViewportTests : PageTestEx
     {
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should get the proper default viewport size")]
@@ -50,19 +51,19 @@ namespace Microsoft.Playwright.Tests
             await TestUtils.VerifyViewportAsync(Page, 1280, 720);
             await Page.SetViewportSizeAsync(200, 200);
             Assert.AreEqual(200, await Page.EvaluateAsync<int>("window.innerWidth"));
-            Assert.True(await Page.EvaluateAsync<bool?>("() => matchMedia('(min-device-width: 100px)').matches"));
-            Assert.False(await Page.EvaluateAsync<bool?>("() => matchMedia('(min-device-width: 300px)').matches"));
-            Assert.False(await Page.EvaluateAsync<bool?>("() => matchMedia('(max-device-width: 100px)').matches"));
-            Assert.True(await Page.EvaluateAsync<bool?>("() => matchMedia('(max-device-width: 300px)').matches"));
-            Assert.False(await Page.EvaluateAsync<bool?>("() => matchMedia('(device-width: 500px)').matches"));
-            Assert.True(await Page.EvaluateAsync<bool?>("() => matchMedia('(device-width: 200px)').matches"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("() => matchMedia('(min-device-width: 100px)').matches"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool?>("() => matchMedia('(min-device-width: 300px)').matches"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool?>("() => matchMedia('(max-device-width: 100px)').matches"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("() => matchMedia('(max-device-width: 300px)').matches"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool?>("() => matchMedia('(device-width: 500px)').matches"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("() => matchMedia('(device-width: 200px)').matches"));
             await Page.SetViewportSizeAsync(500, 500);
-            Assert.True(await Page.EvaluateAsync<bool?>("() => matchMedia('(min-device-width: 400px)').matches"));
-            Assert.False(await Page.EvaluateAsync<bool?>("() => matchMedia('(min-device-width: 600px)').matches"));
-            Assert.False(await Page.EvaluateAsync<bool?>("() => matchMedia('(max-device-width: 400px)').matches"));
-            Assert.True(await Page.EvaluateAsync<bool?>("() => matchMedia('(max-device-width: 600px)').matches"));
-            Assert.False(await Page.EvaluateAsync<bool?>("() => matchMedia('(device-width: 200px)').matches"));
-            Assert.True(await Page.EvaluateAsync<bool?>("() => matchMedia('(device-width: 500px)').matches"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("() => matchMedia('(min-device-width: 400px)').matches"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool?>("() => matchMedia('(min-device-width: 600px)').matches"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool?>("() => matchMedia('(max-device-width: 400px)').matches"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("() => matchMedia('(max-device-width: 600px)').matches"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool?>("() => matchMedia('(device-width: 200px)').matches"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("() => matchMedia('(device-width: 500px)').matches"));
         }
 
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should emulate device height")]
@@ -71,26 +72,26 @@ namespace Microsoft.Playwright.Tests
             await TestUtils.VerifyViewportAsync(Page, 1280, 720);
             await Page.SetViewportSizeAsync(200, 200);
             Assert.AreEqual(200, await Page.EvaluateAsync<int>("window.innerWidth"));
-            Assert.True(await Page.EvaluateAsync<bool?>("() => matchMedia('(min-device-height: 100px)').matches"));
-            Assert.False(await Page.EvaluateAsync<bool?>("() => matchMedia('(min-device-height: 300px)').matches"));
-            Assert.False(await Page.EvaluateAsync<bool?>("() => matchMedia('(max-device-height: 100px)').matches"));
-            Assert.True(await Page.EvaluateAsync<bool?>("() => matchMedia('(max-device-height: 300px)').matches"));
-            Assert.False(await Page.EvaluateAsync<bool?>("() => matchMedia('(device-height: 500px)').matches"));
-            Assert.True(await Page.EvaluateAsync<bool?>("() => matchMedia('(device-height: 200px)').matches"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("() => matchMedia('(min-device-height: 100px)').matches"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool?>("() => matchMedia('(min-device-height: 300px)').matches"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool?>("() => matchMedia('(max-device-height: 100px)').matches"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("() => matchMedia('(max-device-height: 300px)').matches"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool?>("() => matchMedia('(device-height: 500px)').matches"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("() => matchMedia('(device-height: 200px)').matches"));
             await Page.SetViewportSizeAsync(500, 500);
-            Assert.True(await Page.EvaluateAsync<bool?>("() => matchMedia('(min-device-height: 400px)').matches"));
-            Assert.False(await Page.EvaluateAsync<bool?>("() => matchMedia('(min-device-height: 600px)').matches"));
-            Assert.False(await Page.EvaluateAsync<bool?>("() => matchMedia('(max-device-height: 400px)').matches"));
-            Assert.True(await Page.EvaluateAsync<bool?>("() => matchMedia('(max-device-height: 600px)').matches"));
-            Assert.False(await Page.EvaluateAsync<bool?>("() => matchMedia('(device-height: 200px)').matches"));
-            Assert.True(await Page.EvaluateAsync<bool?>("() => matchMedia('(device-height: 500px)').matches"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("() => matchMedia('(min-device-height: 400px)').matches"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool?>("() => matchMedia('(min-device-height: 600px)').matches"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool?>("() => matchMedia('(max-device-height: 400px)').matches"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("() => matchMedia('(max-device-height: 600px)').matches"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool?>("() => matchMedia('(device-height: 200px)').matches"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool?>("() => matchMedia('(device-height: 500px)').matches"));
         }
 
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should not have touch by default")]
         public async Task ShouldNotHaveTouchByDefault()
         {
             await Page.GotoAsync(Server.Prefix + "/mobile.html");
-            Assert.False(await Page.EvaluateAsync<bool>("'ontouchstart' in window"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("'ontouchstart' in window"));
             await Page.GotoAsync(Server.Prefix + "/detect-touch.html");
             Assert.AreEqual("NO", await Page.EvaluateAsync<string>("document.body.textContent.trim()"));
         }
@@ -101,12 +102,12 @@ namespace Microsoft.Playwright.Tests
             await using var context = await Browser.NewContextAsync(new() { ViewportSize = null, HasTouch = true });
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.Prefix + "/mobile.html");
-            Assert.True(await page.EvaluateAsync<bool>("'ontouchstart' in window"));
+            Assert.IsTrue(await page.EvaluateAsync<bool>("'ontouchstart' in window"));
         }
 
 
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should respect screensize")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldSupportScreenSize()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -124,13 +125,13 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await context.NewPageAsync();
-            Assert.True(await page.EvaluateAsync<bool?>("() => matchMedia('(device-height: 1334px)').matches"));
-            Assert.True(await page.EvaluateAsync<bool?>("() => matchMedia('(device-width: 750px)').matches"));
+            Assert.IsTrue(await page.EvaluateAsync<bool?>("() => matchMedia('(device-height: 1334px)').matches"));
+            Assert.IsTrue(await page.EvaluateAsync<bool?>("() => matchMedia('(device-width: 750px)').matches"));
             await TestUtils.VerifyViewportAsync(page, 375, 667);
         }
 
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should ignore screensize when viewport is null")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldIgnoreScreensizeWhenViewportIsNull()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -144,8 +145,8 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await context.NewPageAsync();
-            Assert.False(await page.EvaluateAsync<bool?>("() => matchMedia('(device-height: 1334px)').matches"));
-            Assert.False(await page.EvaluateAsync<bool?>("() => matchMedia('(device-width: 750px)').matches"));
+            Assert.IsFalse(await page.EvaluateAsync<bool?>("() => matchMedia('(device-height: 1334px)').matches"));
+            Assert.IsFalse(await page.EvaluateAsync<bool?>("() => matchMedia('(device-width: 750px)').matches"));
             Assert.IsNull(page.ViewportSize);
         }
     }

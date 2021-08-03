@@ -23,12 +23,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class JSHandlePropertiesTests : PageTestEx
     {
         [PlaywrightTest("jshandle-properties.spec.ts", "getProperties should work")]
@@ -38,7 +38,7 @@ namespace Microsoft.Playwright.Tests
                 foo: 'bar'
             })");
             var properties = await aHandle.GetPropertiesAsync();
-            Assert.True(properties.TryGetValue("foo", out var foo));
+            Assert.IsTrue(properties.TryGetValue("foo", out var foo));
             Assert.AreEqual("bar", await foo.JsonValueAsync<string>());
         }
 
@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
         {
             var aHandle = await Page.EvaluateHandleAsync("() => 123");
             var properties = await aHandle.GetPropertiesAsync();
-            Assert.IsEmpty(properties);
+            Assert.That.Collection(properties).IsEmpty();
         }
 
         [PlaywrightTest("jshandle-properties.spec.ts", "should return even non-own properties")]
@@ -95,11 +95,11 @@ namespace Microsoft.Playwright.Tests
                 null: null,
             })");
             var undefinedHandle = await aHandle.GetPropertyAsync("undefined");
-            Assert.Null(await undefinedHandle.JsonValueAsync<string>());
+            Assert.IsNull(await undefinedHandle.JsonValueAsync<string>());
             var nullHandle = await aHandle.GetPropertyAsync("null");
-            Assert.Null(await nullHandle.JsonValueAsync<string>());
+            Assert.IsNull(await nullHandle.JsonValueAsync<string>());
             var emptyHandle = await aHandle.GetPropertyAsync("emptyHandle");
-            Assert.Null(await emptyHandle.JsonValueAsync<string>());
+            Assert.IsNull(await emptyHandle.JsonValueAsync<string>());
         }
 
         [PlaywrightTest("jshandle-properties.spec.ts", "should work with unserializable values")]
@@ -119,7 +119,7 @@ namespace Microsoft.Playwright.Tests
             var nanHandle = await aHandle.GetPropertyAsync("nan");
             Assert.AreEqual(double.NaN, await nanHandle.JsonValueAsync<double>());
             var nzeroHandle = await aHandle.GetPropertyAsync("nzero");
-            Assert.True((await nzeroHandle.JsonValueAsync<double>()).IsNegativeZero());
+            Assert.IsTrue((await nzeroHandle.JsonValueAsync<double>()).IsNegativeZero());
         }
     }
 }

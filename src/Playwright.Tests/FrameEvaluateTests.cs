@@ -25,12 +25,13 @@
 using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class FrameEvaluateTests : PageTestEx
     {
         [PlaywrightTest("frame-evaluate.spec.ts", "should have different execution contexts")]
@@ -50,7 +51,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
             Assert.AreEqual(2, Page.Frames.Count);
-            Assert.IsEmpty(await Page.Frames.First().EvaluateAsync<string>("() => document.body.textContent.trim()"));
+            Assert.That.Collection(await Page.Frames.First().EvaluateAsync<string>("() => document.body.textContent.trim()")).IsEmpty();
             Assert.AreEqual("Hi, I'm frame", await Page.Frames.ElementAt(1).EvaluateAsync<string>("() => document.body.textContent.trim()"));
         }
 
@@ -71,9 +72,9 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.EmptyPage);
             var mainFrame = Page.MainFrame;
-            StringAssert.Contains("localhost", await mainFrame.EvaluateAsync<string>("() => window.location.href"));
+            StringAssert.Contains(await mainFrame.EvaluateAsync<string>("() => window.location.href"), "localhost");
             await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
-            StringAssert.Contains("127", await mainFrame.EvaluateAsync<string>("() => window.location.href"));
+            StringAssert.Contains(await mainFrame.EvaluateAsync<string>("() => window.location.href"), "127");
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should allow cross-frame js handles")]
@@ -109,7 +110,7 @@ namespace Microsoft.Playwright.Tests
             var frame = await FrameUtils.AttachFrameAsync(Page, "frame1", Server.CrossProcessPrefix + "/empty.html");
             var bodyHandle = await frame.QuerySelectorAsync("body");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("body => body.innerHTML", bodyHandle));
-            StringAssert.Contains("Unable to adopt element handle from a different document", exception.Message);
+            StringAssert.Contains(exception.Message, "Unable to adopt element handle from a different document");
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should throw for detached frames")]
@@ -118,7 +119,7 @@ namespace Microsoft.Playwright.Tests
             var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             await FrameUtils.DetachFrameAsync(Page, "frame1");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => frame1.EvaluateAsync("() => 7 * 8"));
-            StringAssert.Contains("Execution Context is not available in detached frame", exception.Message);
+            StringAssert.Contains(exception.Message, "Execution Context is not available in detached frame");
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should be isolated between frames")]
@@ -128,7 +129,7 @@ namespace Microsoft.Playwright.Tests
             await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             Assert.AreEqual(2, Page.Frames.Count);
             var frames = Page.Frames;
-            Assert.That(frames.First(), Is.Not.EqualTo(frames.ElementAt(1)));
+            Assert.AreNotEqual(frames.First(), frames.ElementAt(1));
 
             await TaskUtils.WhenAll(
                 frames.First().EvaluateAsync("() => window.a = 1"),
@@ -144,7 +145,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should work in iframes that failed initial navigation")]
-        [Skip(SkipAttribute.Targets.Chromium, SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Chromium, TestTargets.Firefox)]
         public async Task ShouldWorkIniframesThatFailedInitialNavigation()
         {
             await Page.SetContentAsync(
@@ -160,11 +161,11 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual("about:blank", Page.Frames.ElementAt(1).Url);
             Assert.AreEqual("about:blank", await Page.Frames.ElementAt(1).EvaluateAsync<string>("() => window.location.href"));
-            Assert.NotNull(await Page.Frames.ElementAt(1).QuerySelectorAsync("DIV"));
+            Assert.IsNotNull(await Page.Frames.ElementAt(1).QuerySelectorAsync("DIV"));
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should work in iframes that failed initial navigation")]
-        [Skip(SkipAttribute.Targets.Chromium, SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Chromium, TestTargets.Firefox)]
         public async Task ShouldWorkInIframesThatInterruptedInitialJavascriptUrlNavigation()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -179,7 +180,7 @@ namespace Microsoft.Playwright.Tests
             }");
 
             Assert.AreEqual(Server.EmptyPage, await Page.Frames.ElementAt(1).EvaluateAsync<string>("() => window.location.href"));
-            Assert.NotNull(await Page.Frames.ElementAt(1).QuerySelectorAsync("DIV"));
+            Assert.IsNotNull(await Page.Frames.ElementAt(1).QuerySelectorAsync("DIV"));
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "evaluateHandle should work")]
@@ -187,7 +188,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.EmptyPage);
             var windowHandle = await Page.MainFrame.EvaluateHandleAsync("() => window");
-            Assert.NotNull(windowHandle);
+            Assert.IsNotNull(windowHandle);
         }
     }
 }

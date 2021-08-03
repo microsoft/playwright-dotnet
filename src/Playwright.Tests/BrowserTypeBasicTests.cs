@@ -24,16 +24,16 @@
  */
 
 using System.IO;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserTypeBasicTests : PlaywrightTestEx
     {
         [PlaywrightTest("browsertype-basic.spec.ts", "browserType.executablePath should work")]
-        public void BrowserTypeExecutablePathShouldWork() => Assert.True(File.Exists(BrowserType.ExecutablePath));
+        public void BrowserTypeExecutablePathShouldWork() => Assert.IsTrue(File.Exists(BrowserType.ExecutablePath));
 
         [PlaywrightTest("browsertype-basic.spec.ts", "browserType.name should work")]
         public void BrowserTypeNameShouldWork()

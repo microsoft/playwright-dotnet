@@ -24,12 +24,12 @@
 
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserContextBaseUrlTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-base-url.spec.ts", "should construct a new URL when a baseURL in browser.newContext is passed to page.goto")]

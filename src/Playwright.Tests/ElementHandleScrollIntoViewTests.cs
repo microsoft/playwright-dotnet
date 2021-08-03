@@ -24,12 +24,12 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class ElementHandleScrollIntoViewTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should work")]
@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
                 double after = await button.EvaluateAsync<double>(@"button => {
                     return button.getBoundingClientRect().right - window.innerWidth;
                 }");
-                Assert.True(after <= 0);
+                Assert.IsTrue(after <= 0);
                 await Page.EvaluateAsync("() => window.scrollTo(0, 0)");
             }
         }
@@ -59,7 +59,7 @@ namespace Microsoft.Playwright.Tests
             var div = await Page.QuerySelectorAsync("div");
             await div.EvaluateAsync("div => div.remove()");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => div.ScrollIntoViewIfNeededAsync());
-            StringAssert.Contains("Element is not attached to the DOM", exception.Message);
+            StringAssert.Contains(exception.Message, "Element is not attached to the DOM");
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should wait for display:none to become visible")]
@@ -103,7 +103,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<div style=\"display: none\">Hello</div>");
             var div = await Page.QuerySelectorAsync("div");
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => div.ScrollIntoViewIfNeededAsync(new() { Timeout = 3000 }));
-            StringAssert.Contains("element is not visible", exception.Message);
+            StringAssert.Contains(exception.Message, "element is not visible");
         }
 
         private async Task TestWaitingAsync(IPage page, string after)
@@ -111,7 +111,7 @@ namespace Microsoft.Playwright.Tests
             var div = await page.QuerySelectorAsync("div");
             var task = div.ScrollIntoViewIfNeededAsync();
             await page.EvaluateAsync("() => new Promise(f => setTimeout(f, 1000))");
-            Assert.False(task.IsCompleted);
+            Assert.IsFalse(task.IsCompleted);
             await div.EvaluateAsync(after);
             await task;
         }

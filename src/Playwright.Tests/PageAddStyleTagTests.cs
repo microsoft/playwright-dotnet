@@ -23,12 +23,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageAddStyleTagTests : PageTestEx
     {
         [PlaywrightTest("page-add-style-tag.spec.ts", "should throw an error if no options are provided")]
@@ -42,7 +42,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.EmptyPage);
             var styleHandle = await Page.AddStyleTagAsync(new() { Url = "/injectedstyle.css" });
-            Assert.NotNull(styleHandle);
+            Assert.IsNotNull(styleHandle);
             Assert.AreEqual("rgb(255, 0, 0)", await Page.EvaluateAsync<string>("window.getComputedStyle(document.querySelector('body')).getPropertyValue('background-color')"));
         }
 
@@ -59,7 +59,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.EmptyPage);
             var styleHandle = await Page.AddStyleTagAsync(new() { Path = TestUtils.GetWebServerFile("injectedstyle.css") });
-            Assert.NotNull(styleHandle);
+            Assert.IsNotNull(styleHandle);
             Assert.AreEqual("rgb(255, 0, 0)", await Page.EvaluateAsync<string>("window.getComputedStyle(document.querySelector('body')).getPropertyValue('background-color')"));
         }
 
@@ -70,7 +70,7 @@ namespace Microsoft.Playwright.Tests
             await Page.AddStyleTagAsync(new() { Path = TestUtils.GetWebServerFile("injectedstyle.css") });
             var styleHandle = await Page.QuerySelectorAsync("style");
             string styleContent = await Page.EvaluateAsync<string>("style => style.innerHTML", styleHandle);
-            StringAssert.Contains(TestUtils.GetWebServerFile("injectedstyle.css"), styleContent);
+            StringAssert.Contains(styleContent, TestUtils.GetWebServerFile("injectedstyle.css"));
         }
 
         [PlaywrightTest("page-add-style-tag.spec.ts", "should work with content")]
@@ -78,7 +78,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.EmptyPage);
             var styleHandle = await Page.AddStyleTagAsync(new() { Content = "body { background-color: green; }" });
-            Assert.NotNull(styleHandle);
+            Assert.IsNotNull(styleHandle);
             Assert.AreEqual("rgb(0, 128, 0)", await Page.EvaluateAsync<string>("window.getComputedStyle(document.querySelector('body')).getPropertyValue('background-color')"));
         }
 

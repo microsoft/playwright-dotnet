@@ -23,12 +23,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserContextLocaleTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-locale.spec.ts", "should affect accept-language header")]
@@ -43,7 +43,7 @@ namespace Microsoft.Playwright.Tests
                 requestTask,
                 page.GotoAsync(Server.EmptyPage));
 
-            Assert.That(acceptLanguage, Does.StartWith("fr-CH"));
+            StringAssert.StartsWith(acceptLanguage, "fr-CH");
         }
 
         [PlaywrightTest("browsercontext-locale.spec.ts", "should affect navigator.language")]

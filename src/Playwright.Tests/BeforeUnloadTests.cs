@@ -23,12 +23,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BeforeUnloadTests : PageTestEx
     {
 
@@ -47,10 +47,11 @@ namespace Microsoft.Playwright.Tests
             var pageClosingTask = newPage.CloseAsync(new() { RunBeforeUnload = true });
             var dialog = await dialogEvent.Task;
             Assert.AreEqual(DialogType.BeforeUnload, dialog.Type);
-            Assert.IsEmpty(dialog.DefaultValue);
+
+            Assert.That.IsEmptyOrNull(dialog.DefaultValue);
             if (TestConstants.IsChromium)
             {
-                Assert.IsEmpty(dialog.Message);
+                Assert.That.IsEmptyOrNull(dialog.Message);
             }
             else if (TestConstants.IsWebKit)
             {
@@ -58,7 +59,7 @@ namespace Microsoft.Playwright.Tests
             }
             else
             {
-                StringAssert.Contains("This page is asking you to confirm that you want to leave", dialog.Message);
+                StringAssert.Contains(dialog.Message, "This page is asking you to confirm that you want to leave");
             }
 
             await dialog.AcceptAsync();

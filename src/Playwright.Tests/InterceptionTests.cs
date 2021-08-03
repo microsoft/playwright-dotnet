@@ -26,33 +26,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class GlobTests : PageTestEx
     {
         [PlaywrightTest("interception.spec.ts", "should work with glob")]
         public void ShouldWorkWithGlob()
         {
-            Assert.That("https://localhost:8080/foo.js", Does.Match(StringExtensions.GlobToRegex("**/*.js")));
-            Assert.That("https://localhost:8080/foo.js", Does.Match(StringExtensions.GlobToRegex("https://**/*.js")));
-            Assert.That("http://localhost:8080/simple/path.js", Does.Match(StringExtensions.GlobToRegex("http://localhost:8080/simple/path.js")));
-            Assert.That("http://localhost:8080/Simple/path.js", Does.Match(StringExtensions.GlobToRegex("http://localhost:8080/?imple/path.js")));
-            Assert.That("https://localhost:8080/a.js", Does.Match(StringExtensions.GlobToRegex("**/{a,b}.js")));
-            Assert.That("https://localhost:8080/b.js", Does.Match(StringExtensions.GlobToRegex("**/{a,b}.js")));
-            Assert.That("https://localhost:8080/c.jpg", Does.Match(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}")));
-            Assert.That("https://localhost:8080/c.jpeg", Does.Match(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}")));
-            Assert.That("https://localhost:8080/c.png", Does.Match(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}")));
-            Assert.That("https://localhost:8080/c.css", Does.Not.Match(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}")));
-            Assert.That("https://localhost:8080/foo.js", Does.Not.Match(StringExtensions.GlobToRegex("**/*.css")));
-            Assert.That("https://localhost:8080/foo.js", Does.Not.Match(StringExtensions.GlobToRegex("*.js")));
-            Assert.That("https://localhost:8080/c.js", Does.Not.Match(StringExtensions.GlobToRegex("**/{a,b}.js")));
-            Assert.That("foo.js", Does.Match(StringExtensions.GlobToRegex("foo*")));
-            Assert.That("foo/bar.js", Does.Not.Match(StringExtensions.GlobToRegex("foo*")));
-            Assert.That("http://localhost:3000/signin-oidc/foo", Does.Not.Match(StringExtensions.GlobToRegex("http://localhost:3000/signin-oidc*")));
-            Assert.That("http://localhost:3000/signin-oidcnice", Does.Match(StringExtensions.GlobToRegex("http://localhost:3000/signin-oidc*")));
+
+            StringAssert.Matches("https://localhost:8080/foo.js", StringExtensions.GlobToRegex("**/*.js"));
+            StringAssert.Matches("https://localhost:8080/foo.js", StringExtensions.GlobToRegex("https://**/*.js"));
+            StringAssert.Matches("http://localhost:8080/simple/path.js", StringExtensions.GlobToRegex("http://localhost:8080/simple/path.js"));
+            StringAssert.Matches("http://localhost:8080/Simple/path.js", StringExtensions.GlobToRegex("http://localhost:8080/?imple/path.js"));
+            StringAssert.Matches("https://localhost:8080/a.js", StringExtensions.GlobToRegex("**/{a,b}.js"));
+            StringAssert.Matches("https://localhost:8080/b.js", StringExtensions.GlobToRegex("**/{a,b}.js"));
+            StringAssert.Matches("https://localhost:8080/c.jpg", StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}"));
+            StringAssert.Matches("https://localhost:8080/c.jpeg", StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}"));
+            StringAssert.Matches("https://localhost:8080/c.png", StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}"));
+            StringAssert.DoesNotMatch("https://localhost:8080/c.css", StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}"));
+            StringAssert.DoesNotMatch("https://localhost:8080/foo.js", StringExtensions.GlobToRegex("**/*.css"));
+            StringAssert.DoesNotMatch("https://localhost:8080/foo.js", StringExtensions.GlobToRegex("*.js"));
+            StringAssert.DoesNotMatch("https://localhost:8080/c.js", StringExtensions.GlobToRegex("**/{a,b}.js"));
+            StringAssert.Matches("foo.js", StringExtensions.GlobToRegex("foo*"));
+            StringAssert.DoesNotMatch("foo/bar.js", StringExtensions.GlobToRegex("foo*"));
+            StringAssert.DoesNotMatch("http://localhost:3000/signin-oidc/foo", StringExtensions.GlobToRegex("http://localhost:3000/signin-oidc*"));
+            StringAssert.Matches("http://localhost:3000/signin-oidcnice", StringExtensions.GlobToRegex("http://localhost:3000/signin-oidc*"));
         }
 
         [PlaywrightTest("interception.spec.ts", "should work with ignoreHTTPSErrors")]
@@ -85,10 +86,10 @@ namespace Microsoft.Playwright.Tests
 
             Server.SetRedirect("/rrredirect", "/frames/one-frame.html");
             await Page.GotoAsync(Server.Prefix + "/rrredirect");
-            Assert.True(requests["rrredirect"].IsNavigationRequest);
-            Assert.True(requests["frame.html"].IsNavigationRequest);
-            Assert.False(requests["script.js"].IsNavigationRequest);
-            Assert.False(requests["style.css"].IsNavigationRequest);
+            Assert.IsTrue(requests["rrredirect"].IsNavigationRequest);
+            Assert.IsTrue(requests["frame.html"].IsNavigationRequest);
+            Assert.IsFalse(requests["script.js"].IsNavigationRequest);
+            Assert.IsFalse(requests["style.css"].IsNavigationRequest);
         }
 
         [PlaywrightTest("interception.spec.ts", "should work with regular expression passed from a different context")]

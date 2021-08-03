@@ -23,12 +23,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class ElementHandleClickTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-click.spec.ts", "should work")]
@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/shadow.html");
             var buttonHandle = (IElementHandle)await Page.EvaluateHandleAsync("() => button");
             await buttonHandle.ClickAsync();
-            Assert.True(await Page.EvaluateAsync<bool>("() => clicked"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("() => clicked"));
         }
 
         [PlaywrightTest("elementhandle-click.spec.ts", "should work for TextNodes")]
@@ -75,7 +75,7 @@ namespace Microsoft.Playwright.Tests
             var button = await Page.QuerySelectorAsync("button");
             await Page.EvaluateAsync("button => button.remove()", button);
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => button.ClickAsync());
-            StringAssert.Contains("Element is not attached to the DOM", exception.Message);
+            StringAssert.Contains(exception.Message, "Element is not attached to the DOM");
         }
 
         [PlaywrightTest("elementhandle-click.spec.ts", "should throw for hidden nodes with force")]
@@ -85,7 +85,7 @@ namespace Microsoft.Playwright.Tests
             var button = await Page.QuerySelectorAsync("button");
             await Page.EvaluateAsync("button => button.style.display = 'none'", button);
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => button.ClickAsync(new() { Force = true }));
-            StringAssert.Contains("Element is not visible", exception.Message);
+            StringAssert.Contains(exception.Message, "Element is not visible");
         }
 
         [PlaywrightTest("elementhandle-click.spec.ts", "should throw for recursively hidden nodes with force")]
@@ -95,7 +95,7 @@ namespace Microsoft.Playwright.Tests
             var button = await Page.QuerySelectorAsync("button");
             await Page.EvaluateAsync("button => button.parentElement.style.display = 'none'", button);
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => button.ClickAsync(new() { Force = true }));
-            StringAssert.Contains("Element is not visible", exception.Message);
+            StringAssert.Contains(exception.Message, "Element is not visible");
         }
 
         [PlaywrightTest("elementhandle-click.spec.ts", "should throw for &lt;br&gt; elements with force")]
@@ -104,7 +104,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("hello<br>goodbye");
             var br = await Page.QuerySelectorAsync("br");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => br.ClickAsync(new() { Force = true }));
-            StringAssert.Contains("Element is outside of the viewport", exception.Message);
+            StringAssert.Contains(exception.Message, "Element is outside of the viewport");
         }
 
         [PlaywrightTest("elementhandle-click.spec.ts", "should double click the button")]
@@ -122,7 +122,7 @@ namespace Microsoft.Playwright.Tests
             var button = await Page.QuerySelectorAsync("button");
             await button.DblClickAsync();
 
-            Assert.True(await Page.EvaluateAsync<bool>("double"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("double"));
             Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("() => result"));
         }
     }

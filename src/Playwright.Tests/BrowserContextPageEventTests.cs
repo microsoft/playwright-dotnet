@@ -24,12 +24,13 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserContextPageEventTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should have url")]
@@ -98,14 +99,14 @@ namespace Microsoft.Playwright.Tests
                 await page.EvaluateAsync("url => window.open(url)", Server.CrossProcessPrefix + "/empty.html");
             });
 
-            StringAssert.Contains(Server.CrossProcessPrefix, otherPage.Url);
+            StringAssert.Contains(otherPage.Url, Server.CrossProcessPrefix);
             Assert.AreEqual("Hello world", await otherPage.EvaluateAsync<string>("() => ['Hello', 'world'].join(' ')"));
-            Assert.NotNull(await otherPage.QuerySelectorAsync("body"));
+            Assert.IsNotNull(await otherPage.QuerySelectorAsync("body"));
 
 
             var allPages = context.Pages;
-            CollectionAssert.Contains(allPages, page);
-            CollectionAssert.Contains(allPages, otherPage);
+            Assert.That.Collection(allPages).Contains(page);
+            Assert.That.Collection(allPages).Contains(otherPage);
 
             var closeEventReceived = new TaskCompletionSource<bool>();
             otherPage.Close += (_, _) => closeEventReceived.TrySetResult(true);
@@ -114,8 +115,8 @@ namespace Microsoft.Playwright.Tests
             await closeEventReceived.Task;
 
             allPages = context.Pages;
-            CollectionAssert.Contains(allPages, page);
-            CollectionAssert.DoesNotContain(allPages, otherPage);
+            Assert.That.Collection(allPages).Contains(page);
+            Assert.That.Collection(allPages).DoesNotContain(otherPage);
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should report initialized pages")]
@@ -173,7 +174,7 @@ namespace Microsoft.Playwright.Tests
             var popup = popupEvent;
             Assert.AreEqual(Server.Prefix + "/popup/popup.html", popup.Url);
             Assert.AreEqual(page, await popup.OpenerAsync());
-            Assert.Null(await page.OpenerAsync());
+            Assert.IsNull(await page.OpenerAsync());
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should fire page lifecycle events")]
@@ -191,7 +192,7 @@ namespace Microsoft.Playwright.Tests
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
             await page.CloseAsync();
-            Assert.AreEqual(
+            CollectionAssert.AreEqual(
                 new List<string>()
                 {
                     "CREATED: about:blank",
@@ -201,7 +202,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should work with Shift-clicking")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldWorkWithShiftClicking()
         {
             // WebKit: Shift+Click does not open a new window.
@@ -215,11 +216,11 @@ namespace Microsoft.Playwright.Tests
               popupEventTask,
               page.ClickAsync("a", new() { Modifiers = new[] { KeyboardModifier.Shift } }));
 
-            Assert.Null(await popupEventTask.Result.OpenerAsync());
+            Assert.IsNull(await popupEventTask.Result.OpenerAsync());
         }
 
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should report when a new page is created and closed")]
-        [Skip(SkipAttribute.Targets.Webkit, SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Webkit, TestTargets.Firefox)]
         public async Task ShouldWorkWithCtrlClicking()
         {
             // Firefox: reports an opener in this case.
@@ -234,7 +235,7 @@ namespace Microsoft.Playwright.Tests
               popupEventTask,
               page.ClickAsync("a", new() { Modifiers = new[] { TestConstants.IsMacOSX ? KeyboardModifier.Meta : KeyboardModifier.Control } }));
 
-            Assert.Null(await popupEventTask.Result.OpenerAsync());
+            Assert.IsNull(await popupEventTask.Result.OpenerAsync());
         }
     }
 }

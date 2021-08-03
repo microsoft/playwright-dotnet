@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>browsertype-connect.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserTypeConnectTests : PlaywrightTestEx
     {
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to reconnect to a browser")]

@@ -23,14 +23,14 @@
  */
 
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PauseTests : PageTestEx
     {
-        [Test]
+        [PlaywrightTest]
         public async Task ShouldNotFail()
         {
             await Page.GotoAsync(Server.EmptyPage);

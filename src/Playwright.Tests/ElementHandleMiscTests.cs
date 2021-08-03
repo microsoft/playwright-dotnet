@@ -23,12 +23,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class ElementHandleMiscTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-misc.spec.ts", "should hover")]
@@ -75,7 +75,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
             var input = await Page.QuerySelectorAsync("input");
             await input.CheckAsync();
-            Assert.True(await Page.EvaluateAsync<bool>("() => checkbox.checked"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("() => checkbox.checked"));
         }
 
         [PlaywrightTest("elementhandle-misc.spec.ts", "should uncheck the box")]
@@ -84,7 +84,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
             var input = await Page.QuerySelectorAsync("input");
             await input.UncheckAsync();
-            Assert.False(await Page.EvaluateAsync<bool>("() => checkbox.checked"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("() => checkbox.checked"));
         }
 
         [PlaywrightTest("elementhandle-misc.spec.ts", "should focus a button")]
@@ -93,9 +93,9 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
             var button = await Page.QuerySelectorAsync("button");
 
-            Assert.False(await button.EvaluateAsync<bool?>("button => document.activeElement === button"));
+            Assert.IsFalse(await button.EvaluateAsync<bool?>("button => document.activeElement === button"));
             await button.FocusAsync();
-            Assert.True(await button.EvaluateAsync<bool?>("button => document.activeElement === button"));
+            Assert.IsTrue(await button.EvaluateAsync<bool?>("button => document.activeElement === button"));
         }
 
         [PlaywrightTest("elementhandle-misc.spec.ts", "should select single option")]
@@ -105,8 +105,8 @@ namespace Microsoft.Playwright.Tests
             var select = await Page.QuerySelectorAsync("select");
             await select.SelectOptionAsync("blue");
 
-            Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
-            Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
+            CollectionAssert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
+            CollectionAssert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
         }
     }
 }

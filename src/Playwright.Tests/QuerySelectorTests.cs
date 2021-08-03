@@ -24,12 +24,12 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class QuerySelectorTests : PageTestEx
     {
         [PlaywrightTest("queryselector.spec.ts", "should query existing elements")]
@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.Tests
             var elements = await Page.QuerySelectorAllAsync("div");
             Assert.AreEqual(2, elements.Count());
             var tasks = elements.Select(element => Page.EvaluateAsync<string>("e => e.textContent", element));
-            Assert.AreEqual(new[] { "A", "B" }, await TaskUtils.WhenAll(tasks));
+            CollectionAssert.AreEqual(new[] { "A", "B" }, await TaskUtils.WhenAll(tasks));
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should return empty array if nothing is found")]
@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.EmptyPage);
             var elements = await Page.QuerySelectorAllAsync("div");
-            Assert.IsEmpty(elements);
+            Assert.That.Collection(elements).IsEmpty();
         }
 
         [PlaywrightTest("queryselector.spec.ts", "xpath should query existing element")]
@@ -55,15 +55,15 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<section>test</section>");
             var elements = await Page.QuerySelectorAllAsync("xpath=/html/body/section");
-            Assert.NotNull(elements.FirstOrDefault());
-            Assert.That(elements, Has.Count.EqualTo(1));
+            Assert.IsNotNull(elements.FirstOrDefault());
+            Assert.That.Collection(elements).HasExactly(1);
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should return empty array for non-existing element")]
         public async Task ShouldReturnEmptyArrayForNonExistingElement()
         {
             var elements = await Page.QuerySelectorAllAsync("//html/body/non-existing-element");
-            Assert.IsEmpty(elements);
+            Assert.That.Collection(elements).IsEmpty();
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should return multiple elements")]
@@ -79,7 +79,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<section>test</section>");
             var element = await Page.QuerySelectorAsync("css=section");
-            Assert.NotNull(element);
+            Assert.IsNotNull(element);
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should query existing element with text selector")]
@@ -87,7 +87,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<section>test</section>");
             var element = await Page.QuerySelectorAsync("text=\"test\"");
-            Assert.NotNull(element);
+            Assert.IsNotNull(element);
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should query existing element with xpath selector")]
@@ -95,14 +95,14 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<section>test</section>");
             var element = await Page.QuerySelectorAsync("xpath=/html/body/section");
-            Assert.NotNull(element);
+            Assert.IsNotNull(element);
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should return null for non-existing element")]
         public async Task ShouldReturnNullForNonExistingElement()
         {
             var element = await Page.QuerySelectorAsync("non-existing-element");
-            Assert.Null(element);
+            Assert.IsNull(element);
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should auto-detect xpath selector")]
@@ -110,7 +110,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<section>test</section>");
             var element = await Page.QuerySelectorAsync("//html/body/section");
-            Assert.NotNull(element);
+            Assert.IsNotNull(element);
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should auto-detect xpath selector with starting parenthesis")]
@@ -118,7 +118,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<section>test</section>");
             var element = await Page.QuerySelectorAsync("(//section)[1]");
-            Assert.NotNull(element);
+            Assert.IsNotNull(element);
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should auto-detect text selector")]
@@ -126,7 +126,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<section>test</section>");
             var element = await Page.QuerySelectorAsync("\"test\"");
-            Assert.NotNull(element);
+            Assert.IsNotNull(element);
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should auto-detect css selector")]
@@ -134,7 +134,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<section>test</section>");
             var element = await Page.QuerySelectorAsync("section");
-            Assert.NotNull(element);
+            Assert.IsNotNull(element);
         }
 
         [PlaywrightTest("queryselector.spec.ts", "should support >> syntax")]
@@ -142,7 +142,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<section><div>test</div></section>");
             var element = await Page.QuerySelectorAsync("css=section >> css=div");
-            Assert.NotNull(element);
+            Assert.IsNotNull(element);
         }
     }
 }

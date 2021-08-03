@@ -24,18 +24,19 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests.Firefox
 {
     ///<playwright-file>firefox/launcher.spec.ts</playwright-file>
     ///<playwright-describe>launcher</playwright-describe>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class FirefoxLauncherTests : PlaywrightTestEx
     {
         [PlaywrightTest("firefox/launcher.spec.ts", "should pass firefox user preferences")]
-        [Skip(SkipAttribute.Targets.Chromium, SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Chromium, TestTargets.Webkit)]
         public async Task ShouldPassFirefoxUserPreferences()
         {
             var firefoxUserPrefs = new Dictionary<string, object>
@@ -49,7 +50,7 @@ namespace Microsoft.Playwright.Tests.Firefox
             var page = await browser.NewPageAsync();
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync("http://example.com"));
 
-            StringAssert.Contains("NS_ERROR_PROXY_CONNECTION_REFUSED", exception.Message);
+            StringAssert.Contains(exception.Message, "NS_ERROR_PROXY_CONNECTION_REFUSED");
         }
     }
 }

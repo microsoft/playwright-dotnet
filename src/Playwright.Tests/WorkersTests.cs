@@ -26,12 +26,12 @@
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class WorkersTests : PageTestEx
     {
         [PlaywrightTest("workers.spec.ts", "Page.workers")]
@@ -41,12 +41,12 @@ namespace Microsoft.Playwright.Tests
                 Page.WaitForWorkerAsync(),
                 Page.GotoAsync(Server.Prefix + "/worker/worker.html"));
             var worker = Page.Workers.First();
-            StringAssert.Contains("worker.js", worker.Url);
+            StringAssert.Contains(worker.Url, "worker.js");
 
             Assert.AreEqual("worker function result", await worker.EvaluateAsync<string>("() => self['workerFunction']()"));
 
             await Page.GotoAsync(Server.EmptyPage);
-            Assert.IsEmpty(Page.Workers);
+            Assert.That.Collection(Page.Workers).IsEmpty();
         }
 
         [PlaywrightTest("workers.spec.ts", "should emit created and destroyed events")]
@@ -63,7 +63,7 @@ namespace Microsoft.Playwright.Tests
             await Page.EvaluateAsync("workerObj => workerObj.terminate()", workerObj);
             Assert.AreEqual(worker, await workerDestroyedTcs.Task);
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => workerThisObj.GetPropertyAsync("self"));
-            StringAssert.Contains("Most likely the worker has been closed.", exception.Message);
+            StringAssert.Contains(exception.Message, "Most likely the worker has been closed.");
         }
 
         [PlaywrightTest("workers.spec.ts", "should report console logs")]
@@ -115,7 +115,7 @@ namespace Microsoft.Playwright.Tests
               })
             `], {type: 'application/javascript'})))");
             string errorLog = await errorTcs.Task;
-            StringAssert.Contains("this is my error", errorLog);
+            StringAssert.Contains(errorLog, "this is my error");
         }
 
         [PlaywrightTest("workers.spec.ts", "should clear upon navigation")]
@@ -126,13 +126,13 @@ namespace Microsoft.Playwright.Tests
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
             var worker = await workerCreatedTask;
 
-            Assert.That(Page.Workers, Has.Count.EqualTo(1));
+            Assert.That.Collection(Page.Workers).HasExactly(1);
             bool destroyed = false;
             worker.Close += (_, _) => destroyed = true;
 
             await Page.GotoAsync(Server.Prefix + "/one-style.html");
-            Assert.True(destroyed);
-            Assert.IsEmpty(Page.Workers);
+            Assert.IsTrue(destroyed);
+            Assert.That.Collection(Page.Workers).IsEmpty();
         }
 
         [PlaywrightTest("workers.spec.ts", "should clear upon cross-process navigation")]
@@ -143,13 +143,13 @@ namespace Microsoft.Playwright.Tests
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
             var worker = await workerCreatedTask;
 
-            Assert.That(Page.Workers, Has.Count.EqualTo(1));
+            Assert.That.Collection(Page.Workers).HasExactly(1);
             bool destroyed = false;
             worker.Close += (_, _) => destroyed = true;
 
             await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
-            Assert.True(destroyed);
-            Assert.IsEmpty(Page.Workers);
+            Assert.IsTrue(destroyed);
+            Assert.That.Collection(Page.Workers).IsEmpty();
         }
 
         [PlaywrightTest("workers.spec.ts", "should report network activity")]
@@ -170,7 +170,7 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual(url, requestTask.Result.Url);
             Assert.AreEqual(requestTask.Result, responseTask.Result.Request);
-            Assert.True(responseTask.Result.Ok);
+            Assert.IsTrue(responseTask.Result.Ok);
         }
 
         [PlaywrightTest("workers.spec.ts", "should report network activity on worker creation")]
@@ -190,7 +190,7 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual(url, requestTask.Result.Url);
             Assert.AreEqual(requestTask.Result, responseTask.Result.Request);
-            Assert.True(responseTask.Result.Ok);
+            Assert.IsTrue(responseTask.Result.Ok);
         }
 
         [PlaywrightTest("workers.spec.ts", "should format number using context locale")]

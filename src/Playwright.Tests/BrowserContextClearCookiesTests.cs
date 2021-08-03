@@ -24,12 +24,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserContextClearCookiesTests : PageTestEx
     {
         [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should clear cookies")]
@@ -47,9 +47,9 @@ namespace Microsoft.Playwright.Tests
             });
             Assert.AreEqual("cookie1=1", await Page.EvaluateAsync<string>("document.cookie"));
             await Context.ClearCookiesAsync();
-            Assert.IsEmpty(await Context.CookiesAsync());
+            Assert.That.Collection(await Context.CookiesAsync()).IsEmpty();
             await Page.ReloadAsync();
-            Assert.IsEmpty(await Page.EvaluateAsync<string>("document.cookie"));
+            Assert.That.Collection(await Page.EvaluateAsync<string>("document.cookie")).IsEmpty();
         }
 
         [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should isolate cookies when clearing")]
@@ -76,16 +76,16 @@ namespace Microsoft.Playwright.Tests
                 }
             });
 
-            Assert.That(await Context.CookiesAsync(), Has.Count.EqualTo(1));
-            Assert.That(await anotherContext.CookiesAsync(), Has.Count.EqualTo(1));
+            Assert.That.Collection(await Context.CookiesAsync()).HasExactly(1);
+            Assert.That.Collection(await anotherContext.CookiesAsync()).HasExactly(1);
 
             await Context.ClearCookiesAsync();
-            Assert.IsEmpty((await Context.CookiesAsync()));
-            Assert.That((await anotherContext.CookiesAsync()), Has.Count.EqualTo(1));
+            Assert.That.Collection(await Context.CookiesAsync()).IsEmpty();
+            Assert.That.Collection(await anotherContext.CookiesAsync()).HasExactly(1);
 
             await anotherContext.ClearCookiesAsync();
-            Assert.IsEmpty(await Context.CookiesAsync());
-            Assert.IsEmpty(await anotherContext.CookiesAsync());
+            Assert.That.Collection(await Context.CookiesAsync()).IsEmpty();
+            Assert.That.Collection(await anotherContext.CookiesAsync()).IsEmpty();
         }
     }
 }

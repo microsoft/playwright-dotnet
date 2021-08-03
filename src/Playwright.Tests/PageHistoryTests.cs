@@ -24,12 +24,12 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageHistoryTests : PageTestEx
     {
         [PlaywrightTest("page-history.spec.ts", "page.goBack should work")]
@@ -39,15 +39,15 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/grid.html");
 
             var response = await Page.GoBackAsync();
-            Assert.True(response.Ok);
-            StringAssert.Contains(Server.EmptyPage, response.Url);
+            Assert.IsTrue(response.Ok);
+            StringAssert.Contains(response.Url, Server.EmptyPage);
 
             response = await Page.GoForwardAsync();
-            Assert.True(response.Ok);
-            StringAssert.Contains("/grid.html", response.Url);
+            Assert.IsTrue(response.Ok);
+            StringAssert.Contains(response.Url, "/grid.html");
 
             response = await Page.GoForwardAsync();
-            Assert.Null(response);
+            Assert.IsNull(response);
         }
 
         [PlaywrightTest("page-history.spec.ts", "page.goBack should work with HistoryAPI")]
@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.EmptyPage);
             await Page.EvaluateAsync("() => window._foo = 10");
             await Page.ReloadAsync();
-            Assert.Null(await Page.EvaluateAsync("() => window._foo"));
+            Assert.IsNull(await Page.EvaluateAsync("() => window._foo"));
         }
     }
 }

@@ -24,12 +24,13 @@
 
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageEventPageErrorTests : PageTestEx
     {
         [PlaywrightTest("page-event-pageerror.spec.ts", "should fire")]
@@ -71,11 +72,11 @@ namespace Microsoft.Playwright.Tests
 
             expectedError = expectedError.Replace("\r", "");
 
-            StringAssert.AreEqualIgnoringCase(expectedError, error);
+            Assert.IsTrue(string.Compare(expectedError, error, true) == 0);
         }
 
         [PlaywrightTest("page-event-pageerror.spec.ts", "should contain sourceURL")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(TestTargets.Webkit)]
         public async Task ShouldContainSourceURL()
         {
             var pageError = new TaskCompletionSource<string>();
@@ -84,7 +85,7 @@ namespace Microsoft.Playwright.Tests
                 pageError.Task,
                 Page.GotoAsync(Server.Prefix + "/error.html"));
 
-            StringAssert.Contains("myscript.js", error);
+            StringAssert.Contains(error, "myscript.js");
         }
 
         [PlaywrightTest("page-event-pageerror.spec.ts", "should handle odd values")]
@@ -106,12 +107,12 @@ namespace Microsoft.Playwright.Tests
                     pageError.Task,
                     Page.EvaluateAsync<JsonElement>("value => setTimeout(() => { throw value; }, 0)", kv[0]));
 
-                StringAssert.Contains(TestConstants.IsFirefox ? "uncaught exception: " + kv[1].ToString() : kv[1].ToString(), error);
+                StringAssert.Contains(error, TestConstants.IsFirefox ? "uncaught exception: " + kv[1].ToString() : kv[1].ToString());
             }
         }
 
         [PlaywrightTest("page-event-pageerror.spec.ts", "should handle object")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldHandleObject()
         {
             var pageError = new TaskCompletionSource<string>();
@@ -120,11 +121,11 @@ namespace Microsoft.Playwright.Tests
                 pageError.Task,
                 Page.EvaluateAsync<JsonElement>("value => setTimeout(() => { throw {}; }, 0)", 0));
 
-            StringAssert.Contains(TestConstants.IsChromium ? "Object" : "[object Object]", error);
+            StringAssert.Contains(error, TestConstants.IsChromium ? "Object" : "[object Object]");
         }
 
         [PlaywrightTest("page-event-pageerror.spec.ts", "should handle window")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldHandleWindow()
         {
             var pageError = new TaskCompletionSource<string>();
@@ -133,7 +134,7 @@ namespace Microsoft.Playwright.Tests
                 pageError.Task,
                 Page.EvaluateAsync<JsonElement>("value => setTimeout(() => { throw window ; }, 0)", 0));
 
-            StringAssert.Contains(TestConstants.IsChromium ? "Window" : "[object Window]", error);
+            StringAssert.Contains(error, TestConstants.IsChromium ? "Window" : "[object Window]");
         }
     }
 }

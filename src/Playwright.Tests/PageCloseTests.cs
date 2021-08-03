@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageCloseTests : PageTestEx
     {
     }

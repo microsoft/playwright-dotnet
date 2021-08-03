@@ -25,12 +25,12 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageSetContentTests : PageTestEx
     {
         const string _expectedOutput = "<html><head></head><body><div>hello</div></body></html>";
@@ -92,7 +92,7 @@ namespace Microsoft.Playwright.Tests
                 Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>", new() { Timeout = 1 })
             );
 
-            StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
+            StringAssert.Contains(exception.Message, "Timeout 1ms exceeded");
         }
 
         [PlaywrightTest("page-set-content.spec.ts", "should await resources to load")]
@@ -104,7 +104,7 @@ namespace Microsoft.Playwright.Tests
             bool loaded = false;
             var contentTask = Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>").ContinueWith(_ => loaded = true);
             await Server.WaitForRequest(imgPath);
-            Assert.False(loaded);
+            Assert.IsFalse(loaded);
             imgResponse.SetResult(true);
             await contentTask;
         }

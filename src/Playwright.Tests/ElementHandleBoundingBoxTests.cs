@@ -25,12 +25,13 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.Playwright.Testing.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class ElementHandleBoundingBoxTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should work")]
@@ -59,7 +60,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<div style=\"display:none\">hi</div>");
             var element = await Page.QuerySelectorAsync("div");
-            Assert.Null(await element.BoundingBoxAsync());
+            Assert.IsNull(await element.BoundingBoxAsync());
         }
 
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should force a layout")]
@@ -90,7 +91,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should work with page scale")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldWorkWithPageScale()
         {
             var context = await Browser.NewContextAsync(new()

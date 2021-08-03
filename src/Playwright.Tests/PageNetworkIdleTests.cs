@@ -30,13 +30,13 @@ using System.Diagnostics;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>page-network-idle.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class PageNetworkIdleTests : PageTestEx
     {
         [PlaywrightTest("page-network-idle.spec.ts", "should navigate to empty page with networkidle")]
@@ -172,10 +172,10 @@ namespace Microsoft.Playwright.Tests
             var actionTask = action();
 
             await waitForLoadTask;
-            Assert.False(actionTask.IsCompleted);
+            Assert.IsFalse(actionTask.IsCompleted);
 
             await firstFetchResourceRequested;
-            Assert.False(actionTask.IsCompleted);
+            Assert.IsFalse(actionTask.IsCompleted);
 
             await fetches["/fetch-request-a.js"].Task;
             await frame.Page.EvaluateAsync("() => window['fetchSecond']()");
@@ -185,7 +185,7 @@ namespace Microsoft.Playwright.Tests
 
             // Wait for the second round to be requested.
             await secondFetchResourceRequested;
-            Assert.False(actionTask.IsCompleted);
+            Assert.IsFalse(actionTask.IsCompleted);
 
             await fetches["/fetch-request-b.js"].Task;
             responses["/fetch-request-b.js"].TrySetResult(true);

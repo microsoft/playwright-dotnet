@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class LoggerTests : PlaywrightTestEx
     {
         [PlaywrightTest("logger.spec.ts", "should log")]

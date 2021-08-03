@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class LauncherTests : PlaywrightTestEx
     {
         [PlaywrightTest("launcher.spec.ts", "should require top-level Errors")]

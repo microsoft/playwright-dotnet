@@ -23,13 +23,13 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>browser.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class BrowserTests : BrowserTestEx
     {
         [PlaywrightTest("browser.spec.ts", "should create new page")]
@@ -37,13 +37,13 @@ namespace Microsoft.Playwright.Tests
         {
             var browser = await Playwright[TestConstants.BrowserName].LaunchAsync();
             var page1 = await browser.NewPageAsync();
-            Assert.That(browser.Contexts, Has.Length.EqualTo(1));
+            Assert.IsTrue(browser.Contexts?.Count == 1);
 
             var page2 = await browser.NewPageAsync();
             Assert.AreEqual(2, browser.Contexts.Count);
 
             await page1.CloseAsync();
-            Assert.That(browser.Contexts, Has.Length.EqualTo(1));
+            Assert.IsTrue(browser.Contexts?.Count == 1);
 
             await page2.CloseAsync();
         }
@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.Tests
             var page = await Browser.NewPageAsync();
             var ex = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.Context.NewPageAsync());
             await page.CloseAsync();
-            StringAssert.Contains("Please use Browser.NewContextAsync()", ex.Message);
+            StringAssert.Contains(ex.Message, "Please use Browser.NewContextAsync()");
         }
 
         [PlaywrightTest("browser.spec.ts", "version should work")]
@@ -64,11 +64,11 @@ namespace Microsoft.Playwright.Tests
 
             if (TestConstants.IsChromium)
             {
-                Assert.That(version, Does.Match("\\d+\\.\\d+\\.\\d+\\.\\d+"));
+                StringAssert.Matches(version, new("\\d+\\.\\d+\\.\\d+\\.\\d+"));
             }
             else
             {
-                Assert.That(version, Does.Match("\\d+\\.\\d+"));
+                StringAssert.Matches(version, new("\\d+\\.\\d+"));
             }
         }
     }

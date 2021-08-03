@@ -24,12 +24,12 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
+using Microsoft.Playwright.MSTest;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [TestClass]
     public class ElementHandleContentFrameTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-content-frame.spec.ts", "should work")]
@@ -69,7 +69,7 @@ namespace Microsoft.Playwright.Tests
             await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             var frame = Page.Frames.ElementAt(1);
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document.body");
-            Assert.Null(await elementHandle.ContentFrameAsync());
+            Assert.IsNull(await elementHandle.ContentFrameAsync());
         }
 
         [PlaywrightTest("elementhandle-content-frame.spec.ts", "should return null for document.documentElement")]
@@ -79,7 +79,7 @@ namespace Microsoft.Playwright.Tests
             await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             var frame = Page.Frames.ElementAt(1);
             var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document.documentElement");
-            Assert.Null(await elementHandle.ContentFrameAsync());
+            Assert.IsNull(await elementHandle.ContentFrameAsync());
         }
     }
 }
