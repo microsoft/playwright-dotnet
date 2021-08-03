@@ -24,6 +24,7 @@
 
 using System.IO;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -172,8 +173,18 @@ namespace Microsoft.Playwright.Tests
         {
             var response = await Page.GotoAsync(HttpsServer.EmptyPage);
             var details = await response.SecurityDetailsAsync();
-            Assert.That.IsNotEmptyOrNull(details.Issuer);
-            Assert.That.IsNotEmptyOrNull(details.Protocol);
+
+            var name = "puppeteer-tests";
+            Assert.AreEqual(name, details.SubjectName);
+            if (TestConstants.IsWebKit)
+            {
+                Assert.AreEqual(1550084863f, details.ValidFrom);
+            }
+            else
+            {
+                Assert.AreEqual(name, details.Issuer);
+                Assert.AreEqual("TLS 1.2", details.Protocol);
+            }
         }
 
         [PlaywrightTest("har.spec.ts", "should return server address directly from response")]
