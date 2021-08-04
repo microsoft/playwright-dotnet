@@ -39,6 +39,24 @@ namespace Microsoft.Playwright
 
         public int Run(string[] args)
         {
+            args ??= Array.Empty<string>();
+            for (int i = 0; i < args.Length; i++)
+            {
+                var a = args[i];
+                if (a.Contains(" "))
+                {
+                    var left = a.IndexOf('=');
+                    if (left >= 0)
+                    {
+                        args[i] = a.Substring(0, left + 1) + "\"" + a.Substring(left + 1, a.Length - left - 1) + "\"";
+                    }
+                    else
+                    {
+                        args[i] = $"\"{a}\"";
+                    }
+                }
+            }
+
             string pwPath = null;
             try
             {
