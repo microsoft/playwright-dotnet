@@ -25,7 +25,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Microsoft.Playwright.Testing.Core;
+using Microsoft.Playwright.MSTest;
 
 //[assembly: NUnit.Framework.Timeout(Microsoft.Playwright.Tests.TestConstants.DefaultTestTimeout)]
 
@@ -33,7 +33,7 @@ namespace Microsoft.Playwright.Tests
 {
     internal static class TestConstants
     {
-        public static string BrowserName => PlaywrightBaseTest.BrowserName;
+        public static string BrowserName => PlaywrightTest.BrowserName;
 
         public const int DefaultTestTimeout = 30_000;
         public const int DefaultTimeout = 10_000;

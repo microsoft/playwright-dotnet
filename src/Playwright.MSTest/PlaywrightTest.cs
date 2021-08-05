@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
-using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 
 namespace Microsoft.Playwright.MSTest
 {
@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.MSTest
 
         [TestInitialize]
 
-        protected async Task Setup()
+        public async Task Setup()
         {
             Playwright = await _playwrightTask;
             Assert.IsNotNull(Playwright, "Playwright could not be instantiated.");
@@ -66,7 +66,7 @@ namespace Microsoft.Playwright.MSTest
 
         [TestCleanup]
 
-        protected async Task Teardown()
+        public async Task Teardown()
         {
             if (TestOK)
             {

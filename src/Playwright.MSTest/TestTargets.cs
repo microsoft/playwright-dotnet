@@ -22,44 +22,19 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Playwright.MSTest.Services;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace Microsoft.Playwright.MSTest
 {
-    [TestClass]
-    public class BrowserTest : PlaywrightTest
+    [Flags]
+    public enum TestTargets : short
     {
-        public IBrowser? Browser { get; private set; }
-        private readonly List<IBrowserContext> _contexts = new();
 
-        public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions options)
-        {
-            var context = await Browser!.NewContextAsync(options);
-            _contexts.Add(context);
-            return context;
-        }
-
-        [TestInitialize]
-        public async Task BrowserSetup()
-        {
-            Browser = (await GetService<BrowserService>()).Browser;
-        }
-
-        [TestCleanup]
-        public async Task BrowserTearDown()
-        {
-            if (TestOK)
-            {
-                foreach (var context in _contexts)
-                {
-                    await context.CloseAsync();
-                }
-            }
-            _contexts.Clear();
-            Browser = null;
-        }
+        Windows = 1 << 0,
+        Linux = 1 << 1,
+        OSX = 1 << 2,
+        Chromium = 1 << 3,
+        Firefox = 1 << 4,
+        Webkit = 1 << 5
     }
 }
