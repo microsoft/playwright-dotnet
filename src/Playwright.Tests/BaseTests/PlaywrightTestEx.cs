@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
         [TestInitialize]
         public async Task HttpSetup()
         {
-            var http = await HttpService.Register(this);
+            var http = await GetService<HttpService>();
             Server = http.Server;
             HttpsServer = http.HttpsServer;
         }

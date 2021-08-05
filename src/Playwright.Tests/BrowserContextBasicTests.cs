@@ -28,7 +28,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Playwright.MSTest;
-using Microsoft.Playwright.Testing.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
@@ -298,7 +297,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-basic.spec.ts", "should emulate navigator.onLine")]
-        [Skip(SkipAttribute.Targets.Firefox)]
+        [Skip(TestTargets.Firefox)]
         public async Task ShouldEmulateNavigatorOnLine()
         {
             await using var context = await Browser.NewContextAsync();

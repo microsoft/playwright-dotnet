@@ -27,7 +27,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.MSTest;
-using Microsoft.Playwright.Testing.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests

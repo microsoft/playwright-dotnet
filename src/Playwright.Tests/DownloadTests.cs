@@ -26,7 +26,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Playwright.MSTest;
-using Microsoft.Playwright.Testing.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.Tests
@@ -36,7 +35,7 @@ namespace Microsoft.Playwright.Tests
     public class DownloadTests : PageTestEx
     {
         [TestInitialize]
-        public void Setup()
+        public void SetupDownload()
         {
             Server.SetRoute("/download", context =>
             {

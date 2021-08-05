@@ -30,10 +30,7 @@ namespace Microsoft.Playwright.Tests
     /// <playwright-file>tap.spec.ts</playwright-file>
     public sealed class TapTests : PageTestEx
     {
-        public override BrowserNewContextOptions ContextOptions()
-        {
-            return new() { HasTouch = true };
-        }
+        public override BrowserNewContextOptions ContextOptions => new() { HasTouch = true };
 
         [PlaywrightTest("tap.spec.ts", "should send all of the correct events")]
         public async Task ShouldSendAllOfTheCorrectEvents()
