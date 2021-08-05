@@ -48,7 +48,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("resource-timing.spec.ts", "should work")]
-        [Test]
         public async Task ShouldWork()
         {
             var (request, _) = await TaskUtils.WhenAll(
@@ -65,7 +64,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("resource-timing.spec.ts", "should work for subresource")]
-        [Test]
         public async Task ShouldWorkForSubresource()
         {
             var requests = new List<IRequest>();
@@ -86,7 +84,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("resource-timing.spec.ts", "should work for SSL")]
-        [Test]
         public async Task ShouldWorkForSSL()
         {
             var page = await Browser.NewPageAsync(new() { IgnoreHTTPSErrors = true });
@@ -104,7 +101,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("resource-timing.spec.ts", "should work for redirect")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Webkit)]
         public async Task ShouldWorkForRedirect()
         {
             Server.SetRedirect("/foo.html", "/empty.html");

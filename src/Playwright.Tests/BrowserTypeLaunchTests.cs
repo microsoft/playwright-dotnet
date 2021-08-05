@@ -34,7 +34,6 @@ namespace Microsoft.Playwright.Tests
     public class BrowserTypeLaunchTests : PlaywrightTestEx
     {
         [PlaywrightTest("browsertype-launch.spec.ts", "should reject all promises when browser is closed")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectAllPromisesWhenBrowserIsClosed()
         {
             await using var browser = await BrowserType.LaunchAsync();
@@ -47,25 +46,25 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should throw if port option is passed")]
-        [Test, Ignore("We don't need this test")]
+        [Ignore("We don't need this test")]
         public void ShouldThrowIfPortOptionIsPassed()
         {
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should throw if userDataDir option is passed")]
-        [Test, Ignore("This isn't supported in our language port.")]
+        [Ignore("This isn't supported in our language port.")]
         public void ShouldThrowIfUserDataDirOptionIsPassed()
         {
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should throw if port option is passed for persistent context")]
-        [Test, Ignore("We don't need this test")]
+        [Ignore("We don't need this test")]
         public void ShouldThrowIfPortOptionIsPassedForPersistentContext()
         {
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should throw if page argument is passed")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public Task ShouldThrowIfPageArgumentIsPassed()
         {
             var args = new[] { Server.EmptyPage };
@@ -73,13 +72,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should reject if launched browser fails immediately")]
-        [Test, Ignore("Skipped in playwright")]
+        [Ignore("Skipped in playwright")]
         public void ShouldRejectIfLaunchedBrowserFailsImmediately()
         {
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should reject if executable path is invalid")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectIfExecutablePathIsInvalid()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new() { ExecutablePath = "random-invalid-path" }));
@@ -88,25 +86,24 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should handle timeout")]
-        [Test, Ignore("We ignore hook tests")]
+        [Ignore("We ignore hook tests")]
         public void ShouldHandleTimeout()
         {
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should report launch log")]
-        [Test, Ignore("We ignore hook tests")]
+        [Ignore("We ignore hook tests")]
         public void ShouldReportLaunchLog()
         {
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should accept objects as options")]
-        [Test, Ignore("We don't need to test this")]
+        [Ignore("We don't need to test this")]
         public void ShouldAcceptObjectsAsOptions()
         {
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should fire close event for all contexts")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireCloseEventForAllContexts()
         {
             await using var browser = await BrowserType.LaunchAsync();
@@ -119,7 +116,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should be callable twice")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeCallableTwice()
         {
             await using var browser = await BrowserType.LaunchAsync();
@@ -130,7 +126,6 @@ namespace Microsoft.Playwright.Tests
         /// <summary>
         /// PuppeteerSharp test. It's not in upstream
         /// </summary>
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithEnvironmentVariables()
         {
             var env = new Dictionary<string, string>
@@ -144,7 +139,7 @@ namespace Microsoft.Playwright.Tests
         /// <summary>
         /// PuppeteerSharp test. It's not in upstream
         /// </summary>
-        [Test, SkipBrowserAndPlatform(skipFirefox: true, skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
         public async Task ShouldWorkWithIgnoreDefaultArgs()
         {
             string[] args = new[]

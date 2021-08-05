@@ -488,6 +488,9 @@ namespace Microsoft.Playwright.Core
         public Task WaitForURLAsync(Func<string, bool> url, FrameWaitForURLOptions options = default)
             => WaitForURLAsync(null, null, url, options);
 
+        public Task DragAndDropAsync(string source, string target, FrameDragAndDropOptions options = null)
+            => _channel.DragAndDropAsync(source, target, options?.Force, options?.NoWaitAfter, options?.Timeout, options?.Trial);
+
         private Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, FrameWaitForURLOptions options = default)
         {
             if (UrlMatches(Url, urlString, urlRegex, urlFunc))

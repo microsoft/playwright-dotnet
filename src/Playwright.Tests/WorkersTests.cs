@@ -35,7 +35,6 @@ namespace Microsoft.Playwright.Tests
     public class WorkersTests : PageTestEx
     {
         [PlaywrightTest("workers.spec.ts", "Page.workers")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PageWorkers()
         {
             await TaskUtils.WhenAll(
@@ -51,7 +50,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("workers.spec.ts", "should emit created and destroyed events")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitCreatedAndDestroyedEvents()
         {
             var workerCreatedTcs = new TaskCompletionSource<IWorker>();
@@ -69,7 +67,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("workers.spec.ts", "should report console logs")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportConsoleLogs()
         {
             var (message, _) = await TaskUtils.WhenAll(
@@ -81,7 +78,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("workers.spec.ts", "should have JSHandles for console logs")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveJSHandlesForConsoleLogs()
         {
             var consoleTcs = new TaskCompletionSource<IConsoleMessage>();
@@ -96,7 +92,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("workers.spec.ts", "should evaluate")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEvaluate()
         {
             var workerCreatedTask = Page.WaitForWorkerAsync();
@@ -107,7 +102,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("workers.spec.ts", "should report errors")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportErrors()
         {
             var errorTcs = new TaskCompletionSource<string>();
@@ -125,7 +119,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("workers.spec.ts", "should clear upon navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearUponNavigation()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -143,7 +136,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("workers.spec.ts", "should clear upon cross-process navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldClearUponCrossProcessNavigation()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -161,7 +153,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("workers.spec.ts", "should report network activity")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNetworkActivity()
         {
             var (worker, _) = await TaskUtils.WhenAll(
@@ -183,7 +174,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("workers.spec.ts", "should report network activity on worker creation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNetworkActivityOnWorkerCreation()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -204,7 +194,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("workers.spec.ts", "should format number using context locale")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFormatNumberUsingContextLocale()
         {
             await using var context = await Browser.NewContextAsync(new() { Locale = "ru-RU" });

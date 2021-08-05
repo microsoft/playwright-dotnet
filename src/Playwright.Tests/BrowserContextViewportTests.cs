@@ -32,13 +32,11 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextViewportTests : PageTestEx
     {
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should get the proper default viewport size")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public Task ShouldGetTheProperDefaultViewPortSize()
             => TestUtils.VerifyViewportAsync(Page, 1280, 720);
 
 
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should set the proper viewport size")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetTheProperViewportSize()
         {
             await TestUtils.VerifyViewportAsync(Page, 1280, 720);
@@ -47,7 +45,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should emulate device width")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmulateDeviceWidth()
         {
             await TestUtils.VerifyViewportAsync(Page, 1280, 720);
@@ -69,7 +66,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should emulate device height")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmulateDeviceHeight()
         {
             await TestUtils.VerifyViewportAsync(Page, 1280, 720);
@@ -91,7 +87,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should not have touch by default")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotHaveTouchByDefault()
         {
             await Page.GotoAsync(Server.Prefix + "/mobile.html");
@@ -101,7 +96,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should support touch with null viewport")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportTouchWithNullViewport()
         {
             await using var context = await Browser.NewContextAsync(new() { ViewportSize = null, HasTouch = true });
@@ -112,7 +106,7 @@ namespace Microsoft.Playwright.Tests
 
 
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should respect screensize")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout), SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldSupportScreenSize()
         {
             await using var context = await Browser.NewContextAsync(new()
@@ -136,7 +130,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should ignore screensize when viewport is null")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout), SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldIgnoreScreensizeWhenViewportIsNull()
         {
             await using var context = await Browser.NewContextAsync(new()

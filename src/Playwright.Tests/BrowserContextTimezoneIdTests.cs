@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextTimezoneIdTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-timezone-id.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await using var browser = await Playwright[TestConstants.BrowserName].LaunchAsync();
@@ -73,7 +72,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-timezone-id.spec.ts", "should throw for invalid timezone IDs")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowForInvalidTimezoneId()
         {
             await using (var context = await Browser.NewContextAsync(new() { TimezoneId = "Foo/Bar" }))
@@ -90,7 +88,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-timezone-id.spec.ts", "should work for multiple pages sharing same process")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForMultiplePagesSharingSameProcess()
         {
             await using var context = await Browser.NewContextAsync(new() { TimezoneId = "Europe/Moscow" });

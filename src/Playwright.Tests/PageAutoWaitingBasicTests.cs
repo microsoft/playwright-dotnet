@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
     public class PageAutoWaitingBasicTests : PageTestEx
     {
         [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigation when clicking anchor")]
-        [Test, Ignore("Flacky")]
+        [Ignore("Flacky")]
         public async Task ShouldAwaitNavigationWhenClickingAnchor()
         {
             var messages = new List<string>();
@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await cross-process navigation when clicking anchor")]
-        [Test, Ignore("Flacky")]
+        [Ignore("Flacky")]
         public async Task ShouldAwaitCrossProcessNavigationWhenClickingAnchor()
         {
             var messages = new List<string>();
@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await form-get on click")]
-        [Test, Ignore("Flacky")]
+        [Ignore("Flacky")]
         public async Task ShouldAwaitFormGetOnClick()
         {
             var messages = new List<string>();
@@ -99,7 +99,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await form-post on click")]
-        [Test, Ignore("Flacky")]
+        [Ignore("Flacky")]
         public async Task ShouldAwaitFormPostOnClick()
         {
             var messages = new List<string>();
@@ -124,7 +124,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigation when assigning location")]
-        [Test, Ignore("Flacky")]
+        [Ignore("Flacky")]
         public async Task ShouldAwaitNavigationWhenAssigningLocation()
         {
             var messages = new List<string>();
@@ -143,7 +143,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigation when assigning location twice")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAwaitNavigationWhenAssigningLocationTwice()
         {
             var messages = new List<string>();
@@ -167,7 +166,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigation when evaluating reload")]
-        [Test, Ignore("Flacky")]
+        [Ignore("Flacky")]
         public async Task ShouldAwaitNavigationWhenEvaluatingReload()
         {
             var messages = new List<string>();
@@ -187,7 +186,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigating specified target")]
-        [Test, Ignore("Flacky")]
+        [Ignore("Flacky")]
         public async Task ShouldAwaitNavigatingSpecifiedTarget()
         {
             var messages = new List<string>();
@@ -213,7 +212,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-basic.spec.ts", "should work with noWaitAfter: true")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithNoWaitAfterTrue()
         {
             Server.SetRoute("/empty.html", _ => Task.CompletedTask);
@@ -222,7 +220,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-basic.spec.ts", "should work with waitForLoadState(load)")]
-        [Test, Ignore("Flacky")]
+        [Ignore("Flacky")]
         public async Task ShouldWorkWithWaitForLoadStateLoad()
         {
             var messages = new List<string>();
@@ -249,7 +247,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-basic.spec.ts", "should work with goto following click")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithGotoFollowingClick()
         {
             var messages = new List<string>();
@@ -272,7 +269,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-autowaiting-basic.spec.ts", "should report navigation in the log when clicking anchor")]
-        [Test, Ignore("We ignore USES_HOOKS")]
+        [Ignore("We ignore USES_HOOKS")]
         public void ShouldReportNavigationInTheLogWhenClickingAnchor() { }
     }
 }

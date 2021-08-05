@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class JSHandlePropertiesTests : PageTestEx
     {
         [PlaywrightTest("jshandle-properties.spec.ts", "getProperties should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task GetPropertiesShouldWork()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => ({
@@ -44,7 +43,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("jshandle-properties.spec.ts", "should return empty map for non-objects")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEmptyMapForNonObjects()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => 123");
@@ -53,7 +51,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("jshandle-properties.spec.ts", "should return even non-own properties")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEvenNonOwnProperties()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => {
@@ -79,7 +76,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("jshandle-properties.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => ({
@@ -92,7 +88,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("jshandle-properties.spec.ts", "should work with undefined, null, and empty")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithUndefinedNullAndEmpty()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => ({
@@ -108,7 +103,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("jshandle-properties.spec.ts", "should work with unserializable values")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithUnserializableValues()
         {
             var aHandle = await Page.EvaluateHandleAsync(@"() => ({

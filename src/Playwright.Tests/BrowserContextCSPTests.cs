@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextCSPTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-csp.spec.ts", "should bypass CSP meta tag")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBypassCSPMetatag()
         {
             // Make sure CSP prohibits addScriptTag.
@@ -54,7 +53,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-csp.spec.ts", "should bypass CSP header")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBypassCSPHeader()
         {
             // Make sure CSP prohibits addScriptTag.
@@ -79,7 +77,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-csp.spec.ts", "should bypass after cross-process navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBypassAfterCrossProcessNavigation()
         {
             await using var context = await Browser.NewContextAsync(new() { BypassCSP = true });
@@ -94,7 +91,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-csp.spec.ts", "should bypass CSP in iframes as well")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBypassCSPInIframesAsWell()
         {
             await using (var context = await Browser.NewContextAsync())

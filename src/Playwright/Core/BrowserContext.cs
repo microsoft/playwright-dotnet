@@ -370,7 +370,7 @@ namespace Microsoft.Playwright.Core
 
         private Task RouteAsync(RouteSetting setting)
         {
-            _routes.Add(setting);
+            _routes.Insert(0, setting);
 
             if (_routes.Count == 1)
             {

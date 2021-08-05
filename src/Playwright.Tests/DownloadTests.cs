@@ -63,7 +63,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should report downloads with acceptDownloads: false")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDownloadsWithAcceptDownloadsFalse()
         {
             await Page.SetContentAsync($"<a href=\"{Server.Prefix}/downloadWithFilename\">download</a>");
@@ -83,7 +82,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should report downloads with acceptDownloads: true")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDownloadsWithAcceptDownloadsTrue()
         {
             var page = await Browser.NewPageAsync(new() { AcceptDownloads = true });
@@ -99,7 +97,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should save to user-specified path")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSaveToUserSpecifiedPath()
         {
             var page = await Browser.NewPageAsync(new() { AcceptDownloads = true });
@@ -119,7 +116,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should save to user-specified path without updating original path")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSaveToUserSpecifiedPathWithoutUpdatingOriginalPath()
         {
             var page = await Browser.NewPageAsync(new() { AcceptDownloads = true });
@@ -145,7 +141,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should save to two different paths with multiple saveAs calls")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSaveToTwoDifferentPathsWithMultipleSaveAsCalls()
         {
             var page = await Browser.NewPageAsync(new() { AcceptDownloads = true });
@@ -171,7 +166,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should save to overwritten filepath")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSaveToOverwrittenFilepath()
         {
             var page = await Browser.NewPageAsync(new() { AcceptDownloads = true });
@@ -194,7 +188,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should create subdirectories when saving to non-existent user-specified path")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCreateSubdirectoriesWhenSavingToNonExistentUserSpecifiedPath()
         {
             var page = await Browser.NewPageAsync(new() { AcceptDownloads = true });
@@ -216,13 +209,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should save when connected remotely")]
-        [Test, Ignore("SKIP WIRE")]
+        [Ignore("SKIP WIRE")]
         public void ShouldSaveWhenConnectedRemotely()
         {
         }
 
         [PlaywrightTest("download.spec.ts", "should error when saving with downloads disabled")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldErrorWhenSavingWithDownloadsDisabled()
         {
             var page = await Browser.NewPageAsync(new() { AcceptDownloads = false });
@@ -242,7 +234,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should error when saving after deletion")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldErrorWhenSavingAfterDeletion()
         {
             var page = await Browser.NewPageAsync(new() { AcceptDownloads = true });
@@ -262,13 +253,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should error when saving after deletion when connected remotely")]
-        [Test, Ignore("SKIP WIRE")]
+        [Ignore("SKIP WIRE")]
         public void ShouldErrorWhenSavingAfterDeletionWhenConnectedRemotely()
         {
         }
 
         [PlaywrightTest("download.spec.ts", "should report non-navigation downloads")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNonNavigationDownloads()
         {
             Server.SetRoute("/download", context =>
@@ -296,7 +286,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should report download path within page.on('download', …) handler for Files")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDownloadPathWithinPageOnDownloadHandlerForFiles()
         {
             var downloadPathTcs = new TaskCompletionSource<string>();
@@ -315,7 +304,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should report download path within page.on('download', …) handler for Blobs")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDownloadPathWithinPageOnDownloadHandlerForBlobs()
         {
             var downloadPathTcs = new TaskCompletionSource<string>();
@@ -334,7 +322,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should report alt-click downloads")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true, skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
         public async Task ShouldReportAltClickDownloads()
         {
             Server.SetRoute("/download", context =>
@@ -359,7 +347,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should report new window downloads")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportNewWindowDownloads()
         {
             var page = await Browser.NewPageAsync(new() { AcceptDownloads = true });
@@ -378,7 +365,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should delete file")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeleteFile()
         {
             var page = await Browser.NewPageAsync(new() { AcceptDownloads = true });
@@ -399,7 +385,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should expose stream")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldExposeStream()
         {
             var page = await Browser.NewPageAsync(new() { AcceptDownloads = true });
@@ -418,7 +403,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should delete downloads on context destruction")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeleteDownloadsOnContextDestruction()
         {
             var page = await Browser.NewPageAsync(new() { AcceptDownloads = true });
@@ -445,7 +429,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should delete downloads on browser gone")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDeleteDownloadsOnBrowserGone()
         {
             var browser = await BrowserType.LaunchAsync();
@@ -474,7 +457,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should be able to cancel pending downloads")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToCancelPendingDownload()
         {
             var browser = await BrowserType.LaunchAsync();
@@ -491,7 +473,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("download.spec.ts", "should not fail explicitly to cancel a download even if that is already finished")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotFailWhenCancellingACompletedDownload()
         {
             var browser = await BrowserType.LaunchAsync();
@@ -515,7 +496,6 @@ namespace Microsoft.Playwright.Tests
 
 
         [PlaywrightTest("download.spec.ts", "should report downloads with interception")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportDownloadsWithInterception()
         {
             var browser = await BrowserType.LaunchAsync();

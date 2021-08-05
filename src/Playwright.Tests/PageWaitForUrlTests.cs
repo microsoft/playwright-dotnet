@@ -36,7 +36,6 @@ namespace Microsoft.Playwright.Tests
     public class PageWaitForUrlTests : PageTestEx
     {
         [PlaywrightTest("page-wait-for-url.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -45,7 +44,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-url.spec.ts", "should respect timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
             var task = Page.WaitForURLAsync("**/frame.html", new() { Timeout = 2500 });
@@ -55,7 +53,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-url.spec.ts", "should work with both domcontentloaded and load")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task UrlShouldWorkWithBothDomcontentloadedAndLoad()
         {
             var responseTask = new TaskCompletionSource<bool>();
@@ -83,7 +80,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-url.spec.ts", "should work with clicking on anchor links")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithClickingOnAnchorLinks()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -93,7 +89,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-url.spec.ts", "should work with history.pushState()")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithHistoryPushState()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -109,7 +104,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-url.spec.ts", "should work with DOM history.back()/history.forward()")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithDOMHistoryBackHistoryForward()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -133,7 +127,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-url.spec.ts", "should work with url match for same document navigations")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithUrlMatchForSameDocumentNavigations()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -157,7 +150,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-url.spec.ts", "should work on frame")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkOnFrame()
         {
             await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");

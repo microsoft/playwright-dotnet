@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class FrameFrameElementTests : PageTestEx
     {
         [PlaywrightTest("frame-frame-element.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -54,7 +53,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-frame-element.spec.ts", "should work with contentFrame")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithContentFrame()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -66,7 +64,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-frame-element.spec.ts", "should throw when detached")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenDetached()
         {
             await Page.GotoAsync(Server.EmptyPage);

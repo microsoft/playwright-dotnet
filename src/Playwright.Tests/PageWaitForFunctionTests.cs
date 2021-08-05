@@ -34,7 +34,6 @@ namespace Microsoft.Playwright.Tests
     public class PageWaitForFunctionTests : PageTestEx
     {
         [PlaywrightTest("page-wait-for-function.spec.ts", "should timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeout()
         {
             var startTime = DateTime.Now;
@@ -44,13 +43,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should accept a string")]
-        [Test, Ignore("We don't this test")]
+        [Ignore("We don't this test")]
         public void ShouldAcceptAString()
         {
         }
 
         [PlaywrightTest("page-wait-for-function.spec.tsPageWaitForFunctionTests", "should work when resolved right before execution context disposal")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenResolvedRightBeforeExecutionContextDisposal()
         {
             await Page.AddInitScriptAsync("window.__RELOADED = true");
@@ -63,7 +61,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should poll on interval")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPollOnInterval()
         {
             int polling = 100;
@@ -80,7 +77,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should avoid side effects after timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAvoidSideEffectsAfterTimeout()
         {
             int counter = 0;
@@ -101,13 +97,13 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should throw on polling:mutation")]
-        [Test, Ignore("We don't need to test this")]
+        [Ignore("We don't need to test this")]
         public void ShouldThrowOnPollingMutation()
         {
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should poll on raf")]
-        [Test, Ignore("We don't support raf")]
+        [Ignore("We don't support raf")]
         public void ShouldPollOnRaf()
         {
             /*
@@ -120,7 +116,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should fail with predicate throwing on first call")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWithPredicateThrowingOnFirstCall()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.WaitForFunctionAsync("() => { throw new Error('oh my'); }"));
@@ -128,7 +123,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should fail with predicate throwing sometimes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWithPredicateThrowingSometimes()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.WaitForFunctionAsync(@"() => {
@@ -141,7 +135,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should fail with ReferenceError on wrong page")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWithReferenceErrorOnWrongPage()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.WaitForFunctionAsync("() => globalVar === 123"));
@@ -149,7 +142,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should work with strict CSP policy")]
-        [Test, Ignore("We don't support raf")]
+        [Ignore("We don't support raf")]
         public void ShouldWorkWithStrictCSPPolicy()
         {
             /*
@@ -164,13 +157,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should throw on bad polling value")]
-        [Test, Ignore("We don't this test")]
+        [Ignore("We don't this test")]
         public void ShouldThrowOnBadPollingValue()
         {
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should throw negative polling interval")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowNegativePollingInterval()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(()
@@ -180,17 +172,14 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should return the success value as a JSHandle")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnTheSuccessValueAsAJSHandle()
             => Assert.AreEqual(5, await (await Page.WaitForFunctionAsync("() => 5")).JsonValueAsync<int>());
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should return the window as a success value")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnTheWindowAsASuccessValue()
             => Assert.NotNull(await Page.WaitForFunctionAsync("() => window"));
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should accept ElementHandle arguments")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptElementHandleArguments()
         {
             await Page.SetContentAsync("<div></div>");
@@ -204,7 +193,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should respect timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectTimeout()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
@@ -214,7 +202,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should respect default timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectDefaultTimeout()
         {
             Page.SetDefaultTimeout(1);
@@ -225,7 +212,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should disable timeout when its set to 0")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDisableTimeoutWhenItsSetTo0()
         {
             var watchdog = Page.WaitForFunctionAsync(
@@ -245,7 +231,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should survive cross-process navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSurviveCrossProcessNavigation()
         {
             bool fooFound = false;
@@ -263,7 +248,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should survive navigations")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSurviveNavigations()
         {
             var watchdog = Page.WaitForFunctionAsync("() => window.__done");
@@ -274,7 +258,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should work with multiline body")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithMultilineBody()
         {
             var result = await Page.WaitForFunctionAsync(@"
@@ -285,7 +268,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-function.spec.ts", "should wait for predicate with arguments")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public Task ShouldWaitForPredicateWithArguments()
             => Page.WaitForFunctionAsync(@"({arg1, arg2}) => arg1 + arg2 === 3", new { arg1 = 1, arg2 = 2 });
     }

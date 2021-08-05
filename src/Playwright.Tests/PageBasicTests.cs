@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class PageBasicTests : PageTestEx
     {
         [PlaywrightTest("page-basic.spec.ts", "should reject all promises when page is closed")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectAllPromisesWhenPageIsClosed()
         {
             var newPage = await Context.NewPageAsync();
@@ -45,7 +44,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "async stacks should work")]
-        [Test, Ignore("We don't need to test this in .NET")]
+        [Ignore("We don't need to test this in .NET")]
         public async Task AsyncStacksShouldWork()
         {
             Server.SetRoute("/empty.html", context =>
@@ -58,7 +57,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "Page.press should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PagePressShouldWork()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -67,7 +65,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "Frame.press should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task FramePressShouldWork()
         {
             await Page.SetContentAsync($"<iframe name =inner src=\"{Server.Prefix}/input/textarea.html\"></iframe>");
@@ -77,7 +74,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "page.frame should respect name")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnTheCorrectBrowserInstance()
         {
             await Page.SetContentAsync("<iframe name=target></iframe>");
@@ -87,7 +83,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "page.frame should respect url")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectUrl()
         {
             await Page.SetContentAsync($"<iframe src=\"{Server.EmptyPage}\"></iframe>");
@@ -97,7 +92,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should provide access to the opener page")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldProvideAccessToTheOpenerPage()
         {
             var (popupEvent, _) = await TaskUtils.WhenAll(
@@ -109,7 +103,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should return null if parent page has been closed")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullIfParentPageHasBeenClosed()
         {
             var (popupEvent, _) = await TaskUtils.WhenAll(
@@ -122,7 +115,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should return the page title")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnThePageTitle()
         {
             await Page.GotoAsync(Server.Prefix + "/title.html");
@@ -130,7 +122,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "page.url should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PageUrlShouldWork()
         {
             Assert.AreEqual("about:blank", Page.Url);
@@ -139,7 +130,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should include hashes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeHashes()
         {
             await Page.GotoAsync(Server.EmptyPage + "#hash");
@@ -149,7 +139,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should fail with error upon disconnect")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWithErrorUponDisconnect()
         {
             var task = Page.WaitForDownloadAsync();
@@ -159,7 +148,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should have sane user agent")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveASaneUserAgent()
         {
             string userAgent = await Page.EvaluateAsync<string>("() => navigator.userAgent");
@@ -192,7 +180,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should work with window.close")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithWindowClose()
         {
             var newPageTask = Page.WaitForPopupAsync();
@@ -205,7 +192,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should work with page.close")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithPageClose()
         {
             var newPage = await Context.NewPageAsync();
@@ -216,7 +202,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should fire load when expected")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public Task ShouldFireLoadWhenExpected()
         {
             var loadEvent = new TaskCompletionSource<bool>();
@@ -229,7 +214,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should fire domcontentloaded when expected")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireDOMcontentloadedWhenExpected()
         {
             var task = Page.GotoAsync("about:blank");
@@ -238,7 +222,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should set the page close state")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSetThePageCloseState()
         {
             var newPage = await Context.NewPageAsync();
@@ -248,7 +231,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should terminate network waiters")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTerminateNetworkWaiters()
         {
             var newPage = await Context.NewPageAsync();
@@ -266,7 +248,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should be callable twice")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeCallableTwice()
         {
             var newPage = await Context.NewPageAsync();
@@ -278,13 +259,21 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should not be visible in context.pages")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotBeVisibleInContextPages()
         {
             var newPage = await Context.NewPageAsync();
             CollectionAssert.Contains(Context.Pages, newPage);
             await newPage.CloseAsync();
             CollectionAssert.DoesNotContain(Context.Pages, newPage);
+        }
+
+        [PlaywrightTest("page-basic.spec.ts", "")]
+        public async Task DragAndDropShouldWork()
+        {
+            var page = await Context.NewPageAsync();
+            await page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
+            await page.DragAndDropAsync("#source", "#target");
+            Assert.IsTrue(await page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"));
         }
     }
 }

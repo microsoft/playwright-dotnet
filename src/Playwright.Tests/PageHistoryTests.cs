@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class PageHistoryTests : PageTestEx
     {
         [PlaywrightTest("page-history.spec.ts", "page.goBack should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PageGobackShouldWork()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -52,7 +51,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-history.spec.ts", "page.goBack should work with HistoryAPI")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PageGoBackShouldWorkWithHistoryAPI()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -71,14 +69,13 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-history.spec.ts", "should work for file urls")]
-        [Test, Ignore("We need screenshots for this")]
+        [Ignore("We need screenshots for this")]
         public void ShouldWorkForFileUrls()
         {
         }
 
 
         [PlaywrightTest("page-history.spec.ts", "page.reload should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task PageReloadShouldWork()
         {
             await Page.GotoAsync(Server.EmptyPage);

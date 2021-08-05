@@ -32,13 +32,12 @@ namespace Microsoft.Playwright.Tests
     public class PageAddStyleTagTests : PageTestEx
     {
         [PlaywrightTest("page-add-style-tag.spec.ts", "should throw an error if no options are provided")]
-        [Test, Ignore("Not relevant for C#, js specific")]
+        [Ignore("Not relevant for C#, js specific")]
         public void ShouldThrowAnErrorIfNoOptionsAreProvided()
         {
         }
 
         [PlaywrightTest("page-add-style-tag.spec.ts", "should work with a url")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAUrl()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -48,7 +47,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-add-style-tag.spec.ts", "should throw an error if loading from url fail")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowAnErrorIfLoadingFromUrlFail()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -57,7 +55,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-add-style-tag.spec.ts", "should work with a path")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAPath()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -67,7 +64,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-add-style-tag.spec.ts", "should include sourceURL when path is provided")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIncludeSourceURLWhenPathIsProvided()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -78,7 +74,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-add-style-tag.spec.ts", "should work with content")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithContent()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -88,7 +83,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-add-style-tag.spec.ts", "should throw when added with content to the CSP page")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenAddedWithContentToTheCSPPage()
         {
             await Page.GotoAsync(Server.Prefix + "/csp.html");
@@ -97,7 +91,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-add-style-tag.spec.ts", "should throw when added with URL to the CSP page")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenAddedWithURLToTheCSPPage()
         {
             await Page.GotoAsync(Server.Prefix + "/csp.html");

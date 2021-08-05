@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class ElementHandleSelectTextTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-select-text.spec.ts", "should select textarea")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectTextarea()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -53,7 +52,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-select-text.spec.ts", "should select input")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectInput()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -73,7 +71,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-select-text.spec.ts", "should select plain div")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectPlainDiv()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -85,7 +82,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-select-text.spec.ts", "should timeout waiting for invisible element")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTimeoutWaitingForInvisibleElement()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -97,7 +93,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-select-text.spec.ts", "should wait for visible")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWaitForVisible()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");

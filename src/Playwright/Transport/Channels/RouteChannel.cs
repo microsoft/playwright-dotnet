@@ -54,9 +54,11 @@ namespace Microsoft.Playwright.Transport.Channels
 
         public Task ContinueAsync(string url, string method, byte[] postData, IEnumerable<KeyValuePair<string, string>> headers)
         {
-            var args = new Dictionary<string, object>();
-            args["url"] = url;
-            args["method"] = method;
+            var args = new Dictionary<string, object>
+            {
+                ["url"] = url,
+                ["method"] = method,
+            };
             if (postData != null)
             {
                 args["postData"] = Convert.ToBase64String(postData);

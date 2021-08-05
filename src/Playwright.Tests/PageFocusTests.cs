@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class PageFocusTests : PageTestEx
     {
         [PlaywrightTest("page-focus.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.SetContentAsync("<div id=d1 tabIndex=0></div>");
@@ -42,7 +41,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-focus.spec.ts", "should emit focus event")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitFocusEvent()
         {
             await Page.SetContentAsync("<div id=d1 tabIndex=0></div>");
@@ -54,7 +52,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-focus.spec.ts", "should emit blur event")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldEmitBlurEvent()
         {
             await Page.SetContentAsync("<div id=d1 tabIndex=0>DIV1</div><div id=d2 tabIndex=0>DIV2</div>");
@@ -71,7 +68,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-focus.spec.ts", "should traverse focus")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true, skipWindows: true, skipOSX: true)]
         public async Task ShouldTraverseFocus()
         {
             await Page.SetContentAsync("<input id=\"i1\"><input id=\"i2\">");

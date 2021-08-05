@@ -36,7 +36,6 @@ namespace Microsoft.Playwright.Tests
     public class DefaultBrowsercontext2Tests : PlaywrightTestEx
     {
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support hasTouch option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportHasTouchOption()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -52,7 +51,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should work in persistent context")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldWorkInPersistentContext()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -73,7 +72,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support colorScheme option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportColorSchemeOption()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -89,7 +87,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support reducedMotion option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportReducedMotionOption()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -105,7 +102,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support timezoneId option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportTimezoneIdOption()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -120,7 +116,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support locale option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportLocaleOption()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -135,7 +130,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support geolocation and permissions options")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportGeolocationAndPermissionsOptions()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -160,8 +154,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support ignoreHTTPSErrors option")]
-        // [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        [Test, Ignore("Fix me #1058")]
+        [Ignore("Fix me #1058")]
         public async Task ShouldSupportIgnoreHTTPSErrorsOption()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -177,7 +170,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support extraHTTPHeaders option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportExtraHTTPHeadersOption()
         {
             var (tmp, context, page) = await LaunchAsync(new()
@@ -201,7 +193,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should accept userDataDir")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptUserDataDir()
         {
             var (tmp, context, _) = await LaunchAsync();
@@ -213,7 +204,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should restore state from userDataDir")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRestoreStateFromUserDataDir()
         {
             using var userDataDir = new TempDirectory();
@@ -246,7 +236,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should restore cookies from userDataDir")]
-        [Test, SkipBrowserAndPlatform(skipChromium: true, skipWindows: true, skipOSX: true)]
+        [Skip(SkipAttribute.Targets.Chromium | SkipAttribute.Targets.Windows)]
         public async Task ShouldRestoreCookiesFromUserDataDir()
         {
             var userDataDir = new TempDirectory();
@@ -283,7 +273,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should have default URL when launching browser")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHaveDefaultURLWhenLaunchingBrowser()
         {
             var (tmp, context, page) = await LaunchAsync();
@@ -296,7 +285,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should throw if page argument is passed")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldThrowIfPageArgumentIsPassed()
         {
             var tmp = new TempDirectory();
@@ -307,25 +296,24 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should have passed URL when launching with ignoreDefaultArgs: true")]
-        [Test, Ignore("Skip USES_HOOKS")]
+        [Ignore("Skip USES_HOOKS")]
         public void ShouldHavePassedURLWhenLaunchingWithIgnoreDefaultArgsTrue()
         {
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should handle timeout")]
-        [Test, Ignore("Skip USES_HOOKS")]
+        [Ignore("Skip USES_HOOKS")]
         public void ShouldHandleTimeout()
         {
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should handle exception")]
-        [Test, Ignore("Skip USES_HOOKS")]
+        [Ignore("Skip USES_HOOKS")]
         public void ShouldHandleException()
         {
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should fire close event for a persistent context")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFireCloseEventForAPersistentContext()
         {
             var (tmp, context, _) = await LaunchAsync();
@@ -340,7 +328,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "coverage should work")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void CoverageShouldWork()
         {
             /*
@@ -359,7 +347,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "coverage should be missing")]
-        [Test, Ignore("We won't support coverage")]
+        [Ignore("We won't support coverage")]
         public void CoverageShouldBeMissing()
         {
             /*
@@ -371,7 +359,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should respect selectors")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRespectSelectors()
         {
             var (tmp, context, page) = await LaunchAsync();

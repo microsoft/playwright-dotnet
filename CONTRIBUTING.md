@@ -1,68 +1,104 @@
 # How to Contribute
 
-If you are interested in contributing to Playwright Sharp, Thank you!
+You can contribute to Playwright for .NET with issues and PRs. 
 
-Coding is not for lonely wolves. Welcome to the pack!
+## Contribution Bar
 
-The project has a clear roadmap we want to follow. If you want to contribute, ask before submitting a PR. We will analyze if it’s the right moment to implement that feature or not.
-If you don’t know what to do, ASK! We have many many things to implement :)
+Contributions must meet a certain standard of coding. To ensure this, the Project Maintainers perform regular Code Reviews. 
+Additionally, a suite of tests runs for each PR. 
 
-## Code reviews
+## DOs and DONT'Ts
+Please do:
 
-All submissions, including submissions by project members, require review. We
-use GitHub pull requests for this purpose. Consult
-[GitHub Help](https://help.github.com/articles/about-pull-requests/) for more
-information on pull requests.
+* **DO** follow our coding style (C# code-specific)
+* **DO** include tests when adding new features. When fixing bugs, start with
+  adding a test that highlights how the current behavior is broken.
+* **DO** keep the discussions focused. When a new or related topic comes up
+  it's often better to create new issue than to side track the discussion.
+* **DO** blog and tweet (or whatever) about your contributions, frequently!
 
-## Core Guidelines
+Please do not:
 
-The primary goal is to create an API as close as possible to Playwright. A developer should be able to switch easily to Playwright Sharp and vice-versa.
+* **DON'T** make PRs for style changes.
+* **DON'T** surprise us with big pull requests. Instead, file an issue and start
+  a discussion so we can agree on a direction before you invest a large amount
+  of time.
+* **DON'T** commit code that you didn't write. If you find code that you think is a good fit to add, file an issue and start a discussion before proceeding.
+* **DON'T** submit PRs that alter licensing related files or headers. If you believe there's a problem with them, file an issue and we'll be happy to discuss it.
+* **DON'T** add API additions without filing an issue and discussing with us first.
 
-Playwright Sharp should have a .NET/C# flavor.
+## Breaking Changes
+Playwright is evergreen. Breaking Changes _should not_ happen. If they do, they follow a strict process and should come from [upstream](https://github.com/microsoft/playwright).
 
- * A developer should be able to inject its objects using dependency injection.
- * Getter functions should be expressed as properties.
- * Async suffix should be honored.
+### Commit Messages
+Commit messages should follow the Semantic Commit Messages format:
 
-Our guide for architecture and code style will by [Microsoft.Extensions.Configuration](https://github.com/dotnet/extensions/tree/master/src/Configuration).
+```
+label(namespace): title
 
-## Code Style
+description
 
-Though this list will change over time, these are the things to consider now:
- * [We are team spaces](https://www.youtube.com/watch?v=SsoOG6ZeyUI).
- * Every public API should have an XML documentation.
- * Try to follow the current style.
- * Don’t reinvent the wheel.
-
-### Dotnet Format
-
-To help with formatting, you can make use of `dotnet format`. All you have to do is run
-
-```powershell
-dotnet tool update dotnet-format --add-source https://dotnet.myget.org/F/format/api/v3/index.json -g
+footer
 ```
 
-and then
+1. *label* is one of the following:
+    - `fix` - playwright bug fixes.
+    - `feat` - playwright features.
+    - `docs` - changes to docs, e.g. `docs(api.md): ..` to change documentation.
+    - `test` - changes to playwright tests infrastructure.
+    - `devops` - build-related work, e.g. CI related patches and general changes to the browser build infrastructure
+    - `chore` - everything that doesn't fall under previous categories
+2. *namespace* is put in parenthesis after label and is optional. Must be lowercase.
+3. *title* is a brief summary of changes.
+4. *description* is **optional**, new-line separated from title and is in present tense.
+5. *footer* is **optional**, new-line separated from *description* and contains "fixes" / "references" attribution to github issues.
+
+Example:
+
+```
+fix(firefox): make sure session cookies work
+
+This patch fixes session cookies in firefox browser.
+
+Fixes #123, fixes #234
+```
+
+## PR Feedback
+Microsoft team and community members will provide feedback on your change. Community feedback is highly valued. You will often see the absence of team feedback if the community has already provided good review feedback.
+
+One or more Microsoft team members will review every PR prior to merge. They will often reply with "LGTM, modulo comments". That means that the PR will be merged once the feedback is resolved. "LGTM" == "looks good to me".
+
+There are lots of thoughts and [approaches](https://github.com/antlr/antlr4-cpp/blob/master/CONTRIBUTING.md#emoji) for how to efficiently discuss changes. It is best to be clear and explicit with your feedback. Please be patient with people who might not understand the finer details about your approach to feedback.
+
+## Development Workflow
+
+### Prerequisites
+Before building the solution for the first time, you will need to download the drivers. You can do this by either running commands manually, or by using the provided script,
+if you have PowerShell installed on your system.
+
+#### Initialize
+When you get the repo, you need to initialize the submodules and download the driver to start work. To do this, you can call:
+
+```ps
+.\build.ps1 driver -prereqs
+```
+
+This will run the following commands:
+```ps
+git submodule update --init
+dotnet tool install --global dotnet-format
+dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
+```
+
+#### Dotnet Format
+
+To help with formatting, you can make use of `dotnet format`. All you have to do is run
 
 ```powershell
 dotnet format
 ```
 
-and the result should be formatted code according to our style guide.
-
-
-## Commit Messages
-
-Don’t worry about commit messages or about how many commits your PR has. [Your PR will be squashed](https://help.github.com/articles/about-pull-request-merges/#squash-and-merge-your-pull-request-commits), so the commit message will be set at that time.
-
-
-## Prerequisites
-
-Before building the solution for the first time, you will need to download the drivers by running the following command in your terminal:
-
-```
-dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
-```
+The resulting code will follow our style guides. This is also enforced in our CI.
 
 ## Writing Tests
 
@@ -71,38 +107,39 @@ dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- downlo
 
 ### Running Tests Locally
 
-When you run the tests locally for the first time, you might be greeted with the following error message.
-
-This happens because you're missing a certificate. To generate one, you can use the `dotnet dev-certs` tooling.
-
-In your repository root, run the following:
+#### Running tests
+Tests can either be executed in their entirety:
 
 ```powershell
-dotnet dev-certs https -ep src/PlaywrightSharp.TestServer/testCert.cer
+dotnet test .\src\Playwright.sln
 ```
 
-You should be all set for running the tests now. You can run them by either executing all of them:
+You can also specify a single test to run:
 
 ```powershell
-dotnet test .\src\PlaywrightSharp.sln
+dotnet test .\src\Playwright.sln --filter Playwright.Tests.TapTests
 ```
-
-or specifying a filter, such as:
-
-```powershell
-dotnet test .\src\PlaywrightSharp.sln --filter PlaywrightSharp.Tests.TapTests
-```
-
-to narrow down the tests.
 
 Additionally, you can use the Test Explorer if you're using Visual Studio.
 
-### Generating the interfaces
+### Generating the API & rolling the driver (upstream)
 
-We use the [generator](https://github.com/microsoft/playwright/blob/master/utils/doclint/generateDotnetApi.js), located upstream, to generate the interfaces from the "single source of truth". To run the generator locally, you can run the following command from the **solution root**:
+We use the [generator](https://github.com/microsoft/playwright/blob/master/utils/doclint/generateDotnetApi.js), located upstream, to generate the interfaces from the "single source of truth". To help us keep track of versions, this repository has a [submodule dependency](https://github.blog/2016-02-01-working-with-submodules/) to upstream. 
+
+> Note: to simplify, this assumes you have PowerShell on your system. You can perform each of these steps manually, however.
+
+To generate the API, identify the commit sha of the point in time you wish to roll to, and run
 
 ```powershell
-dotnet msbuild -target:GenerateInterfaces .\src\Playwright\Playwright.csproj
+.\build.ps1 roll commitsha
 ```
 
-Note that for this to work, the script expects the `playwright` repository, to be checked out next to `playwright-sharp`. 
+This will essentially run the following:
+
+```powershell
+cd playwright
+git checkout commitsha
+cd ..
+node "playwright/utils/doclint/generateDotnetApi.js" "src/Playwright"
+dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
+```

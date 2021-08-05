@@ -35,7 +35,6 @@ namespace Microsoft.Playwright.Tests
     public class PageKeyboardTests : PageTestEx
     {
         [PlaywrightTest("page-keyboard.spec.ts", "should type into a textarea")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTypeIntoATextarea()
         {
             await Page.EvaluateAsync<string>(@"() => {
@@ -49,7 +48,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should press the metaKey")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPressTheMetaKey1()
         {
             await Page.GotoAsync(Server.Prefix + "/empty.html");
@@ -61,7 +59,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should move with the arrow keys")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldMoveWithTheArrowKeys()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -84,7 +81,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should send a character with ElementHandle.press")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendACharacterWithElementHandlePress()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -99,7 +95,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should send a character with sendCharacter")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendACharacterWithSendCharacter()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -112,7 +107,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "insertText should only emit input event")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task InsertTextShouldOnlyEmitInputEvent()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -132,7 +126,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should report shiftKey")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true, skipOSX: true)]
+        [Skip(SkipAttribute.Targets.Firefox | SkipAttribute.Targets.OSX)]
         public async Task ShouldReportShiftKey()
         {
             await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
@@ -162,7 +156,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should report multiple modifiers")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReportMultipleModifiers()
         {
             await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
@@ -182,7 +175,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should send proper codes while typing")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendProperCodesWhileTyping()
         {
             await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
@@ -199,7 +191,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should send proper codes while typing with shift")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendProperCodesWhileTypingWithShift()
         {
             await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
@@ -215,7 +206,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should not type canceled events")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotTypeCanceledEvents()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -235,7 +225,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should press plus")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPressPlus()
         {
             await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
@@ -253,7 +242,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should press shift plus")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPressShiftPlus()
         {
             await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
@@ -273,7 +261,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should support plus-separated modifiers")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportPlusSeparatedModifiers()
         {
             await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
@@ -293,7 +280,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should support multiple plus-separated modifiers")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportMultiplePlusSeparatedModifiers()
         {
             await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
@@ -314,7 +300,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should shift raw codes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldShiftRawCodes()
         {
             await Page.GotoAsync(Server.Prefix + "/input/keyboard.html");
@@ -334,7 +319,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should specify repeat property")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSpecifyRepeatProperty()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -357,7 +341,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should type all kinds of characters")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTypeAllKindsOfCharacters()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -368,7 +351,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should specify location")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSpecifyLocation()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -389,7 +371,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should press Enter")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPressEnter()
         {
             await Page.SetContentAsync("<textarea></textarea>");
@@ -415,7 +396,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should throw on unknown keys")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowOnUnknownKeys()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.Keyboard.PressAsync("NotARealKey"));
@@ -429,7 +409,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should type emoji")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTypeEmoji()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -438,7 +417,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should type emoji into an iframe")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldTypeEmojiIntoAnIframe()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -450,7 +428,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should handle selectAll")]
-        [Test, SkipBrowserAndPlatform(skipOSX: true, skipChromium: true)]
+        [Skip(SkipAttribute.Targets.Chromium | SkipAttribute.Targets.OSX)]
         public async Task ShouldHandleSelectAll()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -465,7 +443,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should be able to prevent selectAll")]
-        [Test, SkipBrowserAndPlatform(skipOSX: true, skipChromium: true)]
+        [Skip(SkipAttribute.Targets.Chromium | SkipAttribute.Targets.OSX)]
         public async Task ShouldBeAbleToPreventSelectAll()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -486,7 +464,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should press the meta key")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPressTheMetaKey2()
         {
             var lastEventHandle = await CaptureLastKeydownAsync(Page);
@@ -525,7 +502,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should work after a cross origin navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkAfterACrossOriginNavigation()
         {
             await Page.GotoAsync(Server.Prefix + "/empty.html");
@@ -537,7 +513,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should expose keyIdentifier in webkit")]
-        [Test, SkipBrowserAndPlatform(skipChromium: true, skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Chromium, SkipAttribute.Targets.Firefox)]
         public async Task ShouldExposeKeyIdentifierInWebkit()
         {
             var lastEventHandle = await CaptureLastKeydownAsync(Page);
@@ -563,7 +539,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should scroll with PageDown")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldScrollWithPageDown()
         {
             await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");

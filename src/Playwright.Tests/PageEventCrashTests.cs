@@ -33,7 +33,7 @@ namespace Microsoft.Playwright.Tests
     {
         // We skip all browser because crash uses internals.
         [PlaywrightTest("page-event-crash.spec.ts", "should emit crash event when page crashes")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true, skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
         public async Task ShouldEmitCrashEventWhenPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
@@ -46,7 +46,7 @@ namespace Microsoft.Playwright.Tests
 
         // We skip all browser because crash uses internals.
         [PlaywrightTest("page-event-crash.spec.ts", "should throw on any action after page crashes")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true, skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
         public async Task ShouldThrowOnAnyActionAfterPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
@@ -61,7 +61,7 @@ namespace Microsoft.Playwright.Tests
 
         // We skip all browser because crash uses internals.
         [PlaywrightTest("page-event-crash.spec.ts", "should cancel waitForEvent when page crashes")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true, skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
         public async Task ShouldCancelWaitForEventWhenPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");
@@ -80,7 +80,7 @@ namespace Microsoft.Playwright.Tests
 
         // We skip all browser because crash uses internals.
         [PlaywrightTest("page-event-crash.spec.ts", "should be able to close context when page crashes")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true, skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
         public async Task ShouldBeAbleToCloseContextWhenPageCrashes()
         {
             await Page.SetContentAsync("<div>This page should crash</div>");

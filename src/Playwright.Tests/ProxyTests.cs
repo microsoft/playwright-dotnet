@@ -35,7 +35,6 @@ namespace Microsoft.Playwright.Tests
     public class ProxyTests : PlaywrightTestEx
     {
         [PlaywrightTest("proxy.spec.ts", "should use proxy")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUseProxy()
         {
             Server.SetRoute("/target.html", ctx => ctx.Response.WriteAsync("<html><title>Served by the proxy</title></html>"));
@@ -51,7 +50,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("proxy.spec.ts", "should authenticate")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAuthenticate()
         {
             Server.SetRoute("/target.html", ctx =>
@@ -83,7 +81,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("proxy.spec.ts", "should exclude patterns")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldExcludePatterns()
         {
             Server.SetRoute("/target.html", ctx => ctx.Response.WriteAsync("<html><title>Served by the proxy</title></html>"));

@@ -36,7 +36,6 @@ namespace Microsoft.Playwright.Tests
     public class BrowserContextRouteTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-route.spec.ts", "should intercept")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIntercept()
         {
             bool intercepted = false;
@@ -67,20 +66,19 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-route.spec.ts", "should unroute")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUnroute()
         {
             await using var context = await Browser.NewContextAsync();
             var page = await context.NewPageAsync();
             var intercepted = new List<int>();
 
-            Action<IRoute> handler1 = (route) =>
+
+            await context.RouteAsync("**/*", route =>
             {
                 intercepted.Add(1);
                 route.ContinueAsync();
-            };
+            });
 
-            await context.RouteAsync("**/empty.html", handler1);
             await context.RouteAsync("**/empty.html", (route) =>
             {
                 intercepted.Add(2);
@@ -93,28 +91,28 @@ namespace Microsoft.Playwright.Tests
                 route.ContinueAsync();
             });
 
-            await context.RouteAsync("**/*", (route) =>
+            Action<IRoute> handler4 = (route) =>
             {
                 intercepted.Add(4);
                 route.ContinueAsync();
-            });
+            };
+            await context.RouteAsync("**/empty.html", handler4);
 
             await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new List<int>() { 1 }, intercepted);
+            Assert.AreEqual(new List<int>() { 4 }, intercepted);
 
             intercepted.Clear();
-            await context.UnrouteAsync("**/empty.html", handler1);
+            await context.UnrouteAsync("**/empty.html", handler4);
             await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new List<int>() { 2 }, intercepted);
+            Assert.AreEqual(new List<int>() { 3 }, intercepted);
 
             intercepted.Clear();
             await context.UnrouteAsync("**/empty.html");
             await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new List<int>() { 4 }, intercepted);
+            Assert.AreEqual(new List<int>() { 1 }, intercepted);
         }
 
         [PlaywrightTest("browsercontext-route.spec.ts", "should yield to page.route")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldYieldToPageRoute()
         {
             await using var context = await Browser.NewContextAsync();
@@ -134,7 +132,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-route.spec.ts", "should fall back to context.route")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFallBackToContextRoute()
         {
             await using var context = await Browser.NewContextAsync();

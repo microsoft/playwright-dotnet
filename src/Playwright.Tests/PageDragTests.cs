@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Tests
     public class PageDragTests : PageTestEx
     {
         [PlaywrightTest("page-drag.spec.ts", "should work")]
-        [Test, Ignore("Skipped in Playwright")]
+        [Ignore("Skipped in Playwright")]
         public async Task ShouldWork()
         {
             await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");

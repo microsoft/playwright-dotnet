@@ -37,7 +37,6 @@ namespace Microsoft.Playwright.Tests
     public class FrameGoToTests : PageTestEx
     {
         [PlaywrightTest("frame-goto.spec.ts", "should navigate subframes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateSubFrames()
         {
             await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
@@ -50,7 +49,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-goto.spec.ts", "should reject when frame detaches")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectWhenFrameDetaches()
         {
             await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
@@ -64,7 +62,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-goto.spec.ts", "should continue after client redirect")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldContinueAfterClientRedirect()
         {
             Server.SetRoute("/frames/script.js", _ => Task.Delay(10000));
@@ -76,7 +73,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("frame-goto.spec.ts", "should return matching responses")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnMatchingResponses()
         {
             await Page.GotoAsync(Server.EmptyPage);

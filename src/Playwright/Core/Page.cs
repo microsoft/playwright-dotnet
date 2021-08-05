@@ -833,6 +833,15 @@ namespace Microsoft.Playwright.Core
         public Task<string> InputValueAsync(string selector, PageInputValueOptions options = null)
             => MainFrame.InputValueAsync(selector, new() { Timeout = options?.Timeout });
 
+        public Task DragAndDropAsync(string source, string target, PageDragAndDropOptions options = null)
+            => MainFrame.DragAndDropAsync(source, target, new()
+            {
+                Force = options?.Force,
+                NoWaitAfter = options?.NoWaitAfter,
+                Timeout = options?.Timeout,
+                Trial = options?.Trial,
+            });
+
         internal void NotifyPopup(Page page) => Popup?.Invoke(this, page);
 
         internal void OnFrameNavigated(Frame frame)
@@ -849,7 +858,7 @@ namespace Microsoft.Playwright.Core
         private Task RouteAsync(RouteSetting setting)
         {
             setting.Url = Context.CombineUrlWithBase(setting.Url);
-            _routes.Add(setting);
+            _routes.Insert(0, setting);
 
             if (_routes.Count == 1)
             {

@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class ElementHandleContentFrameTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-content-frame.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -44,7 +43,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-content-frame.spec.ts", "should work for cross-process iframes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForCrossProcessIframes()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -55,7 +53,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-content-frame.spec.ts", "should work for cross-frame evaluations")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForCrossFrameEvaluations()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -66,7 +63,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-content-frame.spec.ts", "should return null for non-iframes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullForNonIframes()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -77,7 +73,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-content-frame.spec.ts", "should return null for document.documentElement")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNullForDocumentDocumentElement()
         {
             await Page.GotoAsync(Server.EmptyPage);

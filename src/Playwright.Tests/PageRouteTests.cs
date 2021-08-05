@@ -40,7 +40,6 @@ namespace Microsoft.Playwright.Tests
     public class PageRouteTests : PageTestEx
     {
         [PlaywrightTest("page-route.spec.ts", "should intercept")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIntercept()
         {
             bool intercepted = false;
@@ -64,17 +63,16 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should unroute")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUnroute()
         {
             var intercepted = new List<int>();
-            Action<IRoute> handler1 = (route) =>
+
+            await Page.RouteAsync("**/*", (route) =>
             {
                 intercepted.Add(1);
                 route.ContinueAsync();
-            };
+            });
 
-            await Page.RouteAsync("**/empty.html", handler1);
             await Page.RouteAsync("**/empty.html", (route) =>
             {
                 intercepted.Add(2);
@@ -87,28 +85,29 @@ namespace Microsoft.Playwright.Tests
                 route.ContinueAsync();
             });
 
-            await Page.RouteAsync("**/*", (route) =>
+
+            Action<IRoute> handler4 = (route) =>
             {
                 intercepted.Add(4);
                 route.ContinueAsync();
-            });
+            };
 
+            await Page.RouteAsync("**/empty.html", handler4);
             await Page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new[] { 1 }, intercepted.ToArray());
+            Assert.AreEqual(new[] { 4 }, intercepted.ToArray());
 
             intercepted.Clear();
-            await Page.UnrouteAsync("**/empty.html", handler1);
+            await Page.UnrouteAsync("**/empty.html", handler4);
             await Page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new[] { 2 }, intercepted.ToArray());
+            Assert.AreEqual(new[] { 3 }, intercepted.ToArray());
 
             intercepted.Clear();
             await Page.UnrouteAsync("**/empty.html");
             await Page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new[] { 4 }, intercepted.ToArray());
+            Assert.AreEqual(new[] { 1 }, intercepted.ToArray());
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work when POST is redirected with 302")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenPostIsRedirectedWith302()
         {
             Server.SetRedirect("/rredirect", "/empty.html");
@@ -125,7 +124,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work when header manipulation headers with redirect")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenHeaderManipulationHeadersWithRedirect()
         {
             Server.SetRedirect("/rrredirect", "/empty.html");
@@ -138,7 +136,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should be able to remove headers")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToRemoveHeaders()
         {
             await Page.RouteAsync("**/*", (route) =>
@@ -157,7 +154,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should contain referer header")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldContainRefererHeader()
         {
             var requests = new List<IRequest>();
@@ -172,7 +168,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should properly return navigation response when URL has cookies")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldProperlyReturnNavigationResponseWhenURLHasCookies()
         {
             // Setup cookie.
@@ -194,7 +189,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should show custom HTTP headers")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldShowCustomHTTPHeaders()
         {
             await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
@@ -211,7 +205,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with redirect inside sync XHR")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithRedirectInsideSyncXHR()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -227,7 +220,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with custom referer headers")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCustomRefererHeaders()
         {
             await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = Server.EmptyPage });
@@ -241,7 +233,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should be abortable")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbortable()
         {
             await Page.RouteAsync(new Regex("\\.css"), (route) => route.AbortAsync());
@@ -255,7 +246,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should be abortable with custom error codes")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbortableWithCustomErrorCodes()
         {
             await Page.RouteAsync("**/*", (route) =>
@@ -282,7 +272,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should send referer")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendReferer()
         {
             await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = "http://google.com/" });
@@ -296,7 +285,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should fail navigation when aborting main resource")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailNavigationWhenAbortingMainResource()
         {
             await Page.RouteAsync("**/*", (route) => route.AbortAsync());
@@ -317,7 +305,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should not work with redirects")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotWorkWithRedirects()
         {
             var requests = new List<IRequest>();
@@ -361,7 +348,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with redirects for subresources")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithRedirectsForSubresources()
         {
             var requests = new List<IRequest>();
@@ -395,7 +381,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with equal requests")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithEqualRequests()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -427,7 +412,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should navigate to dataURL and not fire dataURL requests")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateToDataURLAndNotFireDataURLRequests()
         {
             var requests = new List<IRequest>();
@@ -443,7 +427,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should be able to fetch dataURL and not fire dataURL requests")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToFetchDataURLAndNotFireDataURLRequests()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -461,7 +444,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should navigate to URL with hash and and fire requests without hash")]
-        [Test, Ignore("Not implemented")]
+        [Ignore("Not implemented")]
         public async Task ShouldNavigateToURLWithHashAndAndFireRequestsWithoutHash()
         {
             var requests = new List<IRequest>();
@@ -478,7 +461,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with encoded server")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithEncodedServer()
         {
             // The requestWillBeSent will report encoded URL, whereas interception will
@@ -489,7 +471,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with badly encoded server")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBadlyEncodedServer()
         {
             Server.SetRoute("/malformed?rnd=%911", _ => Task.CompletedTask);
@@ -499,7 +480,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should work with encoded server - 2")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithEncodedServer2()
         {
             // The requestWillBeSent will report URL as-is, whereas interception will
@@ -517,7 +497,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", @"should not throw ""Invalid Interception Id"" if the request was cancelled")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotThrowInvalidInterceptionIdIfTheRequestWasCancelled()
         {
             await Page.SetContentAsync("<iframe></iframe>");
@@ -532,7 +511,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should intercept main resource during cross-process navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldInterceptMainResourceDuringCrossProcessNavigation()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -552,7 +530,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should fulfill with redirect status")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Webkit)]
         public async Task ShouldFulfillWithRedirectStatus()
         {
             await Page.GotoAsync(Server.Prefix + "/title.html");
@@ -584,7 +562,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should support cors with GET")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportCorsWithGET()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -619,7 +596,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should support cors with POST")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportCorsWithPOST()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -648,7 +624,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should support cors with different methods")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSupportCorsWithDifferentMethods()
         {
             await Page.GotoAsync(Server.EmptyPage);

@@ -36,7 +36,6 @@ namespace Microsoft.Playwright.Tests
     public class PageNetworkRequestTest : PageTestEx
     {
         [PlaywrightTest("page-network-request.spec.ts", "should work for main frame navigation request")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForMainFrameNavigationRequests()
         {
             var requests = new List<IRequest>();
@@ -47,7 +46,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should work for subframe navigation request")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForSubframeNavigationRequest()
         {
             var requests = new List<IRequest>();
@@ -61,7 +59,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should work for fetch requests")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForFetchRequests()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -73,7 +70,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should return headers")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnHeaders()
         {
             var response = await Page.GotoAsync(Server.EmptyPage);
@@ -90,13 +86,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "Request.headers", "should get the same headers as the server")]
-        [Test, Ignore("We don't need to test this")]
+        [Ignore("We don't need to test this")]
         public void ShouldGetTheSameHeadersAsTheServer()
         {
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should return postData")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnPostData()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -109,7 +104,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should work with binary post data")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBinaryPostData()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -128,7 +122,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should work with binary post data and interception")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithBinaryPostDataAndInterception()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -148,7 +141,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should be |undefined| when there is no post data")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeUndefinedWhenThereIsNoPostData()
         {
             var response = await Page.GotoAsync(Server.EmptyPage);
@@ -157,7 +149,6 @@ namespace Microsoft.Playwright.Tests
 
 
         [PlaywrightTest("page-network-request.spec.ts", "should parse the json post data")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldParseTheJsonPostData()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -170,7 +161,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should parse the data if content-type is application/x-www-form-urlencoded")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldParseTheDataIfContentTypeIsApplicationXWwwFormUrlencoded()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -187,7 +177,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should be |undefined| when there is no post data")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeUndefinedWhenThereIsNoPostData2()
         {
             var response = await Page.GotoAsync(Server.EmptyPage);
@@ -195,7 +184,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should return event source")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnEventSource()
         {
             const string sseMessage = "{\"foo\": \"bar\"}";
@@ -226,7 +214,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should return navigation bit")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNavigationBit()
         {
             var requests = new Dictionary<string, IRequest>();
@@ -241,7 +228,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "Request.isNavigationRequest", "should return navigation bit when navigating to image")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnNavigationBitWhenNavigatingToImage()
         {
             var requests = new List<IRequest>();

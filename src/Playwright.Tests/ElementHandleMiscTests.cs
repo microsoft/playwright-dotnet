@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class ElementHandleMiscTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-misc.spec.ts", "should hover")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHover()
         {
             await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
@@ -42,7 +41,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-misc.spec.ts", "should hover when Node is removed")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldHoverWhenNodeIsRemoved()
         {
             await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
@@ -53,7 +51,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-misc.spec.ts", "should fill input")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillInput()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -63,7 +60,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-misc.spec.ts", "should fill input when Node is removed")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFillInputWhenNodeIsRemoved()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
@@ -74,7 +70,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-misc.spec.ts", "should check the box")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCheckTheBox()
         {
             await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
@@ -84,7 +79,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-misc.spec.ts", "should uncheck the box")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUncheckTheBox()
         {
             await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
@@ -94,7 +88,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-misc.spec.ts", "should focus a button")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFocusAButton()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -106,7 +99,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-misc.spec.ts", "should select single option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSelectSingleOption()
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");

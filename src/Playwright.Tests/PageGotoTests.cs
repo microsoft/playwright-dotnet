@@ -37,7 +37,6 @@ namespace Microsoft.Playwright.Tests
     public class PageGotoTests : PageTestEx
     {
         [PlaywrightTest("page-goto.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -45,7 +44,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work with file URL")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithFileURL()
         {
             string fileurl = new Uri(TestUtils.GetWebServerFile(Path.Combine("frames", "two-frames.html"))).AbsoluteUri;
@@ -55,7 +53,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should use http for no protocol")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUseHttpForNoProtocol()
         {
             await Page.GotoAsync(Server.EmptyPage.Replace("http://", string.Empty));
@@ -63,7 +60,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work cross-process")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkCrossProcess()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -87,7 +83,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should capture iframe navigation request")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCaptureIframeNavigationRequest()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -112,7 +107,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should capture cross-process iframe navigation request")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCaptureCrossProcessIframeNavigationRequest()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -137,7 +131,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work with anchor navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAnchorNavigation()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -149,7 +142,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work with redirects")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithRedirects()
         {
             Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
@@ -161,7 +153,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should navigate to about:blank")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateToAboutBlank()
         {
             var response = await Page.GotoAsync(TestConstants.AboutBlank);
@@ -169,7 +160,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should return response when page changes its URL after load")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnResponseWhenPageChangesItsURLAfterLoad()
         {
             var response = await Page.GotoAsync(Server.Prefix + "/historyapi.html");
@@ -177,7 +167,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work with subframes return 204")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public Task ShouldWorkWithSubframesReturn204()
         {
             Server.SetRoute("/frames/frame.html", context =>
@@ -189,7 +178,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work with subframes return 204")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenServerReturns204()
         {
             Server.SetRoute("/empty.html", context =>
@@ -215,7 +203,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should navigate to empty page with domcontentloaded")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateToEmptyPageWithDOMContentLoaded()
         {
             var response = await Page.GotoAsync(Server.EmptyPage, new() { WaitUntil = WaitUntilState.DOMContentLoaded });
@@ -223,7 +210,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work when page calls history API in beforeunload")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenPageCallsHistoryAPIInBeforeunload()
         {
             await Page.GotoAsync(Server.EmptyPage);
@@ -236,7 +222,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when navigating to bad url")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenNavigatingToBadUrl()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync("asdfasdf"));
@@ -251,8 +236,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when navigating to bad SSL")]
-        // [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        [Test, Ignore("Fix me #1058")]
+        [Ignore("Fix me #1058")]
         public async Task ShouldFailWhenNavigatingToBadSSL()
         {
             Page.Request += (_, e) => Assert.NotNull(e);
@@ -264,8 +248,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when navigating to bad SSL after redirects")]
-        // [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        [Test, Ignore("Fix me #1058")]
+        [Ignore("Fix me #1058")]
         public async Task ShouldFailWhenNavigatingToBadSSLAfterRedirects()
         {
             Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
@@ -275,8 +258,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should not crash when navigating to bad SSL after a cross origin navigation")]
-        // [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        [Test, Ignore("Fix me #1058")]
+        [Ignore("Fix me #1058")]
         public async Task ShouldNotCrashWhenNavigatingToBadSSLAfterACrossOriginNavigation()
         {
             await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
@@ -284,17 +266,16 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should throw if networkidle0 is passed as an option")]
-        [Test, Ignore("We don't need this test")]
+        [Ignore("We don't need this test")]
         public void ShouldThrowIfNetworkIdle0IsPassedAsAnOption()
         { }
 
         [PlaywrightTest("page-goto.spec.ts", "should throw if networkidle2 is passed as an option")]
-        [Test, Ignore("We don't need this test")]
+        [Ignore("We don't need this test")]
         public void ShouldThrowIfNetworkIdle2IsPassedAsAnOption()
         { }
 
         [PlaywrightTest("page-goto.spec.ts", "should throw if networkidle is passed as an option")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenMainResourcesFailedToLoad()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync("http://localhost:44123/non-existing-url"));
@@ -318,7 +299,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding maximum navigation timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingMaximumNavigationTimeout()
         {
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
@@ -329,7 +309,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding maximum navigation timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingDefaultMaximumNavigationTimeout()
         {
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
@@ -341,7 +320,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding browser context navigation timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingBrowserContextNavigationTimeout()
         {
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
@@ -352,7 +330,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding default maximum timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingDefaultMaximumTimeout()
         {
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
@@ -364,7 +341,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when exceeding browser context timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenExceedingBrowserContextTimeout()
         {
             Server.SetRoute("/empty.html", _ => Task.Delay(-1));
@@ -375,7 +351,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should prioritize default navigation timeout over default timeout")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldPrioritizeDefaultNavigationTimeoutOverDefaultTimeout()
         {
             // Hang for request to the empty.html
@@ -388,7 +363,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should disable timeout when its set to 0")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDisableTimeoutWhenItsSetTo0()
         {
             bool loaded = false;
@@ -404,7 +378,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when replaced by another navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenReplacedByAnotherNavigation()
         {
             Task anotherTask = null;
@@ -434,7 +407,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work when navigating to valid url")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenNavigatingToValidUrl()
         {
             var response = await Page.GotoAsync(Server.EmptyPage);
@@ -442,7 +414,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work when navigating to data url")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenNavigatingToDataUrl()
         {
             var response = await Page.GotoAsync("data:text/html,hello");
@@ -450,7 +421,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work when navigating to 404")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWhenNavigatingTo404()
         {
             var response = await Page.GotoAsync(Server.Prefix + "/not-found");
@@ -458,7 +428,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should return last response in redirect chain")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldReturnLastResponseInRedirectChain()
         {
             Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
@@ -471,22 +440,21 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should not leak listeners during navigation")]
-        [Test, Ignore("We don't need this test")]
+        [Ignore("We don't need this test")]
         public void ShouldNotLeakListenersDuringNavigation()
         { }
 
         [PlaywrightTest("page-goto.spec.ts", "should not leak listeners during bad navigation")]
-        [Test, Ignore("We don't need this test")]
+        [Ignore("We don't need this test")]
         public void ShouldNotLeakListenersDuringBadNavigation()
         { }
 
         [PlaywrightTest("page-goto.spec.ts", "should not leak listeners during navigation of 11 pages")]
-        [Test, Ignore("We don't need this test")]
+        [Ignore("We don't need this test")]
         public void ShouldNotLeakListenersDuringNavigationOf11Pages()
         { }
 
         [PlaywrightTest("page-goto.spec.ts", "should navigate to dataURL and not fire dataURL requests")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateToDataURLAndNotFireDataURLRequests()
         {
             var requests = new List<IRequest>();
@@ -499,7 +467,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should navigate to URL with hash and fire requests without hash")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNavigateToURLWithHashAndFireRequestsWithoutHash()
         {
             var requests = new List<IRequest>();
@@ -513,7 +480,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should work with self requesting page")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithSelfRequestingPage()
         {
             var response = await Page.GotoAsync(Server.Prefix + "/self-request.html");
@@ -522,8 +488,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when navigating and show the url at the error message")]
-        // [Test, Timeout(TestConstants.DefaultTestTimeout)]
-        [Test, Ignore("Fix me #1058")]
+        [Ignore("Fix me #1058")]
         public async Task ShouldFailWhenNavigatingAndShowTheUrlAtTheErrorMessage()
         {
             string url = HttpsServer.Prefix + "/redirect/1.html";
@@ -532,7 +497,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should be able to navigate to a page controlled by service worker")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToNavigateToAPageControlledByServiceWorker()
         {
             await Page.GotoAsync(Server.Prefix + "/serviceworkers/fetch/sw.html");
@@ -541,7 +505,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should send referer")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldSendReferer()
         {
             string referer1 = null;
@@ -560,7 +523,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should reject referer option when setExtraHTTPHeaders provides referer")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldRejectRefererOptionWhenSetExtraHTTPHeadersProvidesReferer()
         {
             await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
@@ -576,7 +538,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should override referrer-policy")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldOverrideReferrerPolicy()
         {
             Server.Subscribe("/grid.html", context =>
@@ -601,7 +562,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when canceled by another navigation")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldFailWhenCanceledByAnotherNavigation()
         {
             Server.SetRoute("/one-style.html", _ => Task.Delay(10_000));
@@ -614,7 +574,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "extraHTTPHeaders should be pushed to provisional page")]
-        [Test, Ignore("Skipped in Playwright")]
+        [Ignore("Skipped in Playwright")]
         public void ExtraHTTPHeadersShouldBePushedToProvisionalPage()
         {
         }

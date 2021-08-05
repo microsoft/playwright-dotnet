@@ -47,6 +47,7 @@ namespace Microsoft.Playwright
         {
             if (clone == null) return;
             AcceptDownloads = clone.AcceptDownloads;
+            BaseURL = clone.BaseURL;
             BypassCSP = clone.BypassCSP;
             ColorScheme = clone.ColorScheme;
             DeviceScaleFactor = clone.DeviceScaleFactor;

@@ -28,6 +28,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.WebSockets;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -179,7 +180,8 @@ namespace Microsoft.Playwright.Tests.TestServer
                 {
                     if (isHttps)
                     {
-                        options.Listen(IPAddress.Loopback, port, listenOptions => listenOptions.UseHttps("testCert.cer"));
+                        var cert = new X509Certificate2("key.pfx", "aaaa");
+                        options.Listen(IPAddress.Loopback, port, listenOptions => listenOptions.UseHttps(cert));
                     }
                     else
                     {

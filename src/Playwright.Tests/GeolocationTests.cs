@@ -34,7 +34,6 @@ namespace Microsoft.Playwright.Tests
     public class GeolocationTests : PageTestEx
     {
         [PlaywrightTest("geolocation.spec.ts", "should work")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWork()
         {
             await Context.GrantPermissionsAsync(new[] { "geolocation" });
@@ -52,7 +51,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("geolocation.spec.ts", "should throw when invalid longitude")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldThrowWhenInvalidLongitude()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() =>
@@ -66,7 +64,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("geolocation.spec.ts", "should isolate contexts")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldIsolateContexts()
         {
             await Context.GrantPermissionsAsync(new[] { "geolocation" });
@@ -101,11 +98,11 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("geolocation.spec.ts", "should throw with missing latitude")]
-        [Test, Ignore("We don't this test")]
+        [Ignore("We don't this test")]
         public void ShouldThrowWithMissingLatitude() { }
 
         [PlaywrightTest("geolocation.spec.ts", "should not modify passed default options object")]
-        [Test, SkipBrowserAndPlatform(skipFirefox: true)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldNotModifyPassedDefaultOptionsObject()
         {
             var geolocation = new Geolocation { Latitude = 10, Longitude = 10 };
@@ -122,11 +119,10 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("geolocation.spec.ts", "should throw with missing longitude in default options")]
-        [Test, Ignore("We don't this test")]
+        [Ignore("We don't this test")]
         public void ShouldThrowWithMissingLongitudeInDefaultOptions() { }
 
         [PlaywrightTest("geolocation.spec.ts", "should use context options")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUseContextOptions()
         {
             var options = new BrowserNewContextOptions()
@@ -151,7 +147,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("geolocation.spec.ts", "watchPosition should be notified")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task WatchPositionShouldBeNotified()
         {
             await Context.GrantPermissionsAsync(new[] { "geolocation" });
@@ -202,7 +197,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("geolocation.spec.ts", "should use context options for popup")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUseContextOptionsForPopup()
         {
             await Context.GrantPermissionsAsync(new[] { "geolocation" });

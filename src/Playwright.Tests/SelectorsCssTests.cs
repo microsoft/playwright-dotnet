@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class SelectorsCssTests : PageTestEx
     {
         [PlaywrightTest("selectors-css.spec.ts", "should work for open shadow roots")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkForOpenShadowRoots()
         {
             await Page.GotoAsync(Server.Prefix + "/deep-shadow.html");
@@ -64,7 +63,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("selectors-css.spec.ts", "should work with > combinator and spaces")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCombinatorAndSpaces()
         {
             await Page.SetContentAsync("<div foo=\"bar\" bar=\"baz\"><span></span></div>");
@@ -85,7 +83,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("selectors-css.spec.ts", "should work with comma separated list")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCommaSeparatedList()
         {
             await Page.GotoAsync(Server.Prefix + "/deep-shadow.html");
@@ -101,7 +98,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("selectors-css.spec.ts", "should keep dom order with comma separated list")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldKeepDomOrderWithCommaSeparatedList()
         {
             await Page.SetContentAsync("<section><span><div><x></x><y></y></div></span></section>");
@@ -115,7 +111,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("selectors-css.spec.ts", "should work with comma inside text")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithCommaInsideText()
         {
             await Page.SetContentAsync("<span></span><div attr=\"hello,world!\"></div>");
@@ -127,7 +122,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("selectors-css.spec.ts", "should work with attribute selectors")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldWorkWithAttributeSelectors()
         {
             await Page.SetContentAsync("<div attr=\"hello world\" attr2=\"hello-''>>foo=bar[]\" attr3=\"] span\"><span></span></div>");

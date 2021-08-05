@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
     public class PageCheckTests : PageTestEx
     {
         [PlaywrightTest("page-check.spec.ts", "should check the box")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCheckTheBox()
         {
             await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
@@ -41,7 +40,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-check.spec.ts", "should not check the checked box")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldNotCheckTheCheckedBox()
         {
             await Page.SetContentAsync("<input id='checkbox' type='checkbox' checked></input>");
@@ -50,7 +48,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-check.spec.ts", "should uncheck the box")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldUncheckTheBox()
         {
             await Page.SetContentAsync("<input id='checkbox' type='checkbox' checked></input>");
@@ -59,7 +56,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-check.spec.ts", "should check the box by label")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCheckTheBoxByLabel()
         {
             await Page.SetContentAsync("<label for='checkbox'><input id='checkbox' type='checkbox'></input></label>");
@@ -68,7 +64,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-check.spec.ts", "should check the box outside label")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCheckTheBoxOutsideLabel()
         {
             await Page.SetContentAsync("<label for='checkbox'>Text</label><div><input id='checkbox' type='checkbox'></input></div>");
@@ -77,7 +72,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-check.spec.ts", "should check the box inside label w/o id")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCheckTheBoxInsideLabelWoId()
         {
             await Page.SetContentAsync("<label>Text<span><input id='checkbox' type='checkbox'></input></span></label>");
@@ -86,7 +80,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-check.spec.ts", "should check radio")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCheckRadio()
         {
             await Page.SetContentAsync(@"
@@ -98,7 +91,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-check.spec.ts", "should check the box by aria role")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldCheckTheBoxByAriaRole()
         {
             await Page.SetContentAsync(@"
@@ -111,7 +103,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-check.spec.ts", "trial run should not check")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task TrialRunShouldNotCheck()
         {
             await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
@@ -120,7 +111,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-check.spec.ts", "trial run should not uncheck")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task TrialRunShouldNotUncheck()
         {
             await Page.SetContentAsync("<input id='checkbox' type='checkbox' checked></input>");

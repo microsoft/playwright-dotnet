@@ -1,0 +1,33 @@
+name: Integrity Checks
+
+on:
+  push:
+    branches:
+      - main
+      - release-*
+  pull_request:
+    branches:
+      - main
+      - release-*
+
+jobs:
+ verify_generated_files:
+    name: Perform API Integrity Check
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+      - name: Install prerequisites and download drivers
+        shell: pwsh
+        run: .\build.ps1 driver -prereqs
+      - name: Generate API
+        run: .\build.ps1 roll
+        shell: pwsh
+      - name: Verify generated API is up to date
+        run: git diff --exit-code

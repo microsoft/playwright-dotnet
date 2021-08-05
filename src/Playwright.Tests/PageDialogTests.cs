@@ -33,7 +33,6 @@ namespace Microsoft.Playwright.Tests
     public class PageDialogTests : PageTestEx
     {
         [PlaywrightTest("page-dialog.spec.ts", "should fire")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public Task ShouldFire()
         {
             Page.Dialog += async (_, e) =>
@@ -49,7 +48,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-dialog.spec.ts", "should allow accepting prompts")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAllowAcceptingPrompts()
         {
             Page.Dialog += async (_, e) =>
@@ -66,7 +64,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-dialog.spec.ts", "should dismiss the prompt")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDismissThePrompt()
         {
             Page.Dialog += async (_, e) =>
@@ -79,7 +76,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-dialog.spec.ts", "should accept the confirm prompt")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAcceptTheConfirmPrompts()
         {
             Page.Dialog += async (_, e) =>
@@ -92,7 +88,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-dialog.spec.ts", "should dismiss the confirm prompt")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldDismissTheConfirmPrompt()
         {
             Page.Dialog += async (_, e) =>
@@ -105,7 +100,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-dialog.spec.ts", "should log prompt actions")]
-        [Test, Ignore("FAIL CHANNEL")]
+        [Ignore("FAIL CHANNEL")]
         public async Task ShouldLogPromptActions()
         {
             Page.Dialog += async (_, e) =>
@@ -118,7 +113,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-dialog.spec.ts", "should be able to close context with open alert")]
-        [Test, SkipBrowserAndPlatform(skipWebkit: true)]
+        [Skip(SkipAttribute.Targets.Webkit)]
         public async Task ShouldBeAbleToCloseContextWithOpenAlert()
         {
             var context = await Browser.NewContextAsync();
@@ -133,7 +128,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-dialog.spec.ts", "should auto-dismiss the prompt without listeners")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldAutoDismissThePrompt()
         {
             string result = await Page.EvaluateAsync<string>("prompt('question?')");
