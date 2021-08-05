@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>Microsoft.Playwright.MSTest</Title>
+    <PackageId>Microsoft.Playwright.MSTest</PackageId>
+    <Summary>A set of helpers and fixtures to enable using Playwright in MSTest tests.</Summary>
+    <Description>
+      Playwright enables reliable end-to-end testing for modern web apps. This package brings in additional helpers
+      and fixtures to enable using it within NUnit.
+    </Description>
+    <TargetFrameworks>netcoreapp3.1;net5.0;net48</TargetFrameworks>
+    <DebugSymbols>true</DebugSymbols>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RunWithWarnings>true</RunWithWarnings>
+    <RootNamespace>Microsoft.Playwright.MSTest</RootNamespace>
+    <ReleaseVersion>0.0.0</ReleaseVersion>
+    <BuildFromSource>True</BuildFromSource>
+    <AssemblyName>Microsoft.Playwright.MSTest</AssemblyName>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+    <IsPackable>true</IsPackable>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <Import Project="../Common/Version.props" />
+  <Import Project="../Common/SignAssembly.props" />
+  <ItemGroup>
+    <ProjectReference Include="..\Playwright\Playwright.csproj" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudioEng.MicroBuild.Core" Version="0.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.5" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.5" />
+  </ItemGroup>
+
+</Project>
