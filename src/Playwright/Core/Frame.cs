@@ -434,13 +434,22 @@ namespace Microsoft.Playwright.Core
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script,
-                arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
+                arg: ScriptsHelper.SerializedArgument(arg),
+                strict: null).ConfigureAwait(false));
 
         public async Task<T> EvalOnSelectorAsync<T>(string selector, string script, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script,
-                arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
+                arg: ScriptsHelper.SerializedArgument(arg),
+                strict: null).ConfigureAwait(false));
+
+        public async Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg = null, FrameEvalOnSelectorOptions options = null)
+            => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
+                selector: selector,
+                expression,
+                arg: ScriptsHelper.SerializedArgument(arg),
+                strict: options?.Strict).ConfigureAwait(false));
 
         public async Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAllAsync(
@@ -453,6 +462,11 @@ namespace Microsoft.Playwright.Core
                 selector: selector,
                 script,
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
+
+        public ILocator Locator(string selector) => new Locator(this, selector);
+
+        public async Task<IElementHandle> QuerySelectorAsync(string selector, FrameQuerySelectorOptions options = null)
+            => (await _channel.QuerySelectorAsync(selector, options?.Strict).ConfigureAwait(false))?.Object;
 
         public async Task<IResponse> GotoAsync(string url, FrameGotoOptions options = default)
             => (await _channel.GotoAsync(

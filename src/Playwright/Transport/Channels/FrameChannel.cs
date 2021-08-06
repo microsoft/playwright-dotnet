@@ -64,6 +64,17 @@ namespace Microsoft.Playwright.Transport.Channels
             }
         }
 
+        internal Task<ElementHandleChannel> QuerySelectorAsync(string selector, bool? strict)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["selector"] = selector,
+                ["strict"] = strict,
+            };
+
+            return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "querySelector", args);
+        }
+
         internal Task<ResponseChannel> GotoAsync(string url, float? timeout, WaitUntilState? waitUntil, string referer)
         {
             var args = new Dictionary<string, object>
@@ -123,7 +134,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 });
         }
 
-        internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, object arg)
+        internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, object arg, bool? strict)
             => Connection.SendMessageToServerAsync<JsonElement?>(
                 Guid,
                 "evalOnSelector",
@@ -132,6 +143,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["selector"] = selector,
                     ["expression"] = script,
                     ["arg"] = arg,
+                    ["strict"] = strict,
                 });
 
         internal Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, object arg)
@@ -428,7 +440,12 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["timeout"] = timeout,
             };
 
-            return (await Connection.SendMessageToServerAsync(Guid, "getAttribute", args).ConfigureAwait(false))?.GetProperty("value").ToString();
+            if ((await Connection.SendMessageToServerAsync(Guid, "getAttribute", args).ConfigureAwait(false))?.TryGetProperty("value", out JsonElement retValue) ?? false)
+            {
+                return retValue.ToString();
+            }
+
+            return null;
         }
 
         internal async Task<string> InnerHTMLAsync(string selector, float? timeout)
