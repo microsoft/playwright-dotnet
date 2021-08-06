@@ -326,7 +326,8 @@ namespace Microsoft.Playwright
         /// expression.
         /// </param>
         /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-        Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default);
+        /// <param name="options">Call options</param>
+        Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default, FrameEvalOnSelectorOptions? options = default);
 
         /// <summary>
         /// <para>Returns the return value of <paramref name="expression"/>.</para>
@@ -591,7 +592,7 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// Returns <c>input.value</c> for the selected <c>&lt;input&gt;</c> or <c>&lt;textarea&gt;</c>
-        /// element. Throws for non-input elements.
+        /// or <c>&lt;select&gt;</c> element. Throws for non-input elements.
         /// </para>
         /// </summary>
         /// <param name="selector">
@@ -675,6 +676,24 @@ namespace Microsoft.Playwright
         Task<bool> IsVisibleAsync(string selector, FrameIsVisibleOptions? options = default);
 
         /// <summary>
+        /// <para>
+        /// The method returns an element locator that can be used to perform actions in the
+        /// frame. Locator is resolved to the element immediately before performing an action,
+        /// so a series of actions on the same locator can in fact be performed on different
+        /// DOM elements. That would happen if the DOM structure between those actions has changed.
+        /// </para>
+        /// <para>
+        /// Note that locator always implies visibility, so it will always be locating visible
+        /// elements.
+        /// </para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to use when resolving DOM element. See <a href="./selectors.md">working
+        /// with selectors</a> for more details.
+        /// </param>
+        ILocator Locator(string selector);
+
+        /// <summary>
         /// <para>Returns frame's name attribute as specified in the tag.</para>
         /// <para>If the name is empty, returns the id attribute instead.</para>
         /// </summary>
@@ -748,7 +767,8 @@ namespace Microsoft.Playwright
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        Task<IElementHandle?> QuerySelectorAsync(string selector);
+        /// <param name="options">Call options</param>
+        Task<IElementHandle?> QuerySelectorAsync(string selector, FrameQuerySelectorOptions? options = default);
 
         /// <summary>
         /// <para>Returns the ElementHandles pointing to the frame elements.</para>

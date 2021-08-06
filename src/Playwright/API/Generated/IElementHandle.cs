@@ -45,21 +45,8 @@ namespace Microsoft.Playwright
     /// the <see cref="IPage.QuerySelectorAsync"/> method.
     /// </para>
     /// <code>
-    /// using Microsoft.Playwright;<br/>
-    /// using System.Threading.Tasks;<br/>
-    /// <br/>
-    /// class HandleExamples<br/>
-    /// {<br/>
-    ///     public static async Task Run()<br/>
-    ///     {<br/>
-    ///         using var playwright = await Playwright.CreateAsync();<br/>
-    ///         var browser = await playwright.Chromium.LaunchAsync();<br/>
-    ///         var page = await browser.NewPageAsync();<br/>
-    ///         await page.GotoAsync("https://www.bing.com");<br/>
-    ///         var handle = await page.QuerySelectorAsync("a");<br/>
-    ///         await handle.ClickAsync();<br/>
-    ///     }<br/>
-    /// }
+    /// var handle = await page.QuerySelectorAsync("a");<br/>
+    /// await handle.ClickAsync();
     /// </code>
     /// <para>
     /// ElementHandle prevents DOM element from garbage collection unless the handle is
@@ -70,8 +57,41 @@ namespace Microsoft.Playwright
     /// ElementHandle instances can be used as an argument in <see cref="IPage.EvalOnSelectorAsync"/>
     /// and <see cref="IPage.EvaluateAsync"/> methods.
     /// </para>
+    /// <para>
+    /// The difference between the <see cref="ILocator"/> and ElementHandle is that the
+    /// ElementHandle points to a particular element, while <see cref="ILocator"/> captures
+    /// the logic of how to retrieve an element.
+    /// </para>
+    /// <para>
+    /// In the example below, handle points to a particular DOM element on page. If that
+    /// element changes text or is used by React to render an entirely different component,
+    /// handle is still pointing to that very DOM element. This can lead to unexpected behaviors.
+    /// </para>
+    /// <code>
+    /// var handle = await page.QuerySelectorAsync("text=Submit");<br/>
+    /// await handle.HoverAsync();<br/>
+    /// await handle.ClickAsync();
+    /// </code>
+    /// <para>
+    /// With the locator, every time the <c>element</c> is used, up-to-date DOM element
+    /// is located in the page using the selector. So in the snippet below, underlying DOM
+    /// element is going to be located twice.
+    /// </para>
+    /// <code>
+    /// var locator = page.Locator("text=Submit");<br/>
+    /// await locator.HoverAsync();<br/>
+    /// await locator.ClickAsync();
+    /// </code>
     /// </summary>
-    /// <remarks>Inherits from <see cref="IJSHandle"/></remarks>
+    /// <remarks>
+    /// Inherits from <see cref="IJSHandle"/>
+    /// <para>
+    /// In most cases, you would want to use the <see cref="ILocator"/> object instead.
+    /// You should only use <see cref="IElementHandle"/> if you want to retain a handle
+    /// to a particular DOM Node that you intend to pass into <see cref="IPage.EvaluateAsync"/>
+    /// as an argument.
+    /// </para>
+    /// </remarks>
     public partial interface IElementHandle : IJSHandle
     {
         /// <summary>
@@ -236,8 +256,8 @@ namespace Microsoft.Playwright
         /// to be passed into the event:
         /// </para>
         /// <code>
-        /// var handle = await page.EvaluateHandleAsync("() =&gt; new DataTransfer()");<br/>
-        /// await handle.AsElement().DispatchEventAsync("dragstart", new Dictionary&lt;string, object&gt;<br/>
+        /// var dataTransfer = await page.EvaluateHandleAsync("() =&gt; new DataTransfer()");<br/>
+        /// await elementHandle.DispatchEventAsync("dragstart", new Dictionary&lt;string, object&gt;<br/>
         /// {<br/>
         ///     { "dataTransfer", dataTransfer }<br/>
         /// });
@@ -379,8 +399,8 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Returns <c>input.value</c> for <c>&lt;input&gt;</c> or <c>&lt;textarea&gt;</c> element.
-        /// Throws for non-input elements.
+        /// Returns <c>input.value</c> for <c>&lt;input&gt;</c> or <c>&lt;textarea&gt;</c> or
+        /// <c>&lt;select&gt;</c> element. Throws for non-input elements.
         /// </para>
         /// </summary>
         /// <param name="options">Call options</param>
