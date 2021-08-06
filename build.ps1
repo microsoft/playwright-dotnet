@@ -74,13 +74,23 @@ function Invoke-Roll() {
     Write-Host "🚀 Moving submodule to" $verbs[1]
     git fetch
     git checkout $verbs[1]
+    $rev = (git show -s --format=%ct HEAD) + '000'
     Pop-Location
+
+    $package = Get-Content "playwright/package.json" | ConvertFrom-Json
+
+    # Let's update the project file
+    [xml]$version = Get-Content ".\src\Common\Version.props"
+    $version.Project.PropertyGroup.DriverVersion = $package.version + "-" + $rev
+    "Updating to " + $package.version + "-" + $rev
+    $version.Save("$pwd\src\Common\Version.props")
   } else {
     Invoke-InitializeSubmodule
   }
 
   Write-Host "🚀 Generating API..."
   node "playwright/utils/doclint/generateDotnetApi.js" "src/Playwright"
+  Invoke-DownloadDriver
 }
 
 if ($verbs.Length -eq 0) {
