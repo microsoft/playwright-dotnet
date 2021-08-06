@@ -48,6 +48,9 @@ namespace Microsoft.Playwright
             if (clone == null) return;
             Force = clone.Force;
             NoWaitAfter = clone.NoWaitAfter;
+            SourcePosition = clone.SourcePosition;
+            Strict = clone.Strict;
+            TargetPosition = clone.TargetPosition;
             Timeout = clone.Timeout;
             Trial = clone.Trial;
         }
@@ -71,6 +74,33 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("noWaitAfter")]
         public bool? NoWaitAfter { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Clicks on the source element at this point relative to the top-left corner of the
+        /// element's padding box. If not specified, some visible point of the element is used.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("sourcePosition")]
+        public SourcePosition? SourcePosition { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// When true, the call requires selector to resolve to a single element. If given selector
+        /// resolves to more then one element, the call throws an exception.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("strict")]
+        public bool? Strict { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Drops on the target element at this point relative to the top-left corner of the
+        /// element's padding box. If not specified, some visible point of the element is used.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("targetPosition")]
+        public TargetPosition? TargetPosition { get; set; }
 
         /// <summary>
         /// <para>
