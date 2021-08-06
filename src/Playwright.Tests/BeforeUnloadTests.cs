@@ -31,7 +31,6 @@ namespace Microsoft.Playwright.Tests
     [TestClass]
     public class BeforeUnloadTests : PageTestEx
     {
-
         [PlaywrightTest("beforeunload.spec.ts", "should run beforeunload if asked for")]
         public async Task ShouldRunBeforeunloadIfAskedFor()
         {

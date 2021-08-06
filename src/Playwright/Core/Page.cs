@@ -452,6 +452,15 @@ namespace Microsoft.Playwright.Core
 
         public Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAsync(selector, expression, arg);
 
+        public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg = null, PageEvalOnSelectorOptions options = null)
+            => MainFrame.EvalOnSelectorAsync<T>(selector, expression, arg, new() { Strict = options?.Strict });
+
+        public ILocator Locator(string selector)
+            => MainFrame.Locator(selector);
+
+        public Task<IElementHandle> QuerySelectorAsync(string selector, PageQuerySelectorOptions options = null)
+            => MainFrame.QuerySelectorAsync(selector, new() { Strict = options?.Strict });
+
         public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAsync<T>(selector, expression, arg);
 
         public Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAllAsync(selector, expression, arg);
