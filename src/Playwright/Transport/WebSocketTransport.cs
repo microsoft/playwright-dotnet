@@ -17,9 +17,10 @@ namespace Microsoft.Playwright.Transport
         private readonly ClientWebSocket _webSocket;
         private readonly string _wsEndpoint;
         private readonly CancellationTokenSource _readerCancellationSource;
+        private readonly CancellationTokenSource _connectCancellationSource;
         private readonly BrowserTypeConnectOptions _options;
-        private readonly int _slowMo;
-        private readonly int _timeout;
+        private readonly float _slowMo;
+        private readonly float _timeout;
 
         internal WebSocketTransport(
             string wsEndpoint = default,
@@ -28,9 +29,10 @@ namespace Microsoft.Playwright.Transport
             _webSocket = new ClientWebSocket();
             _wsEndpoint = wsEndpoint;
             _options = options;
-            _slowMo = _options?.SlowMo != null ? (int)_options?.SlowMo : 0;
-            _timeout = _options?.Timeout != null ? (int)_options?.Timeout : 30000;
-            _readerCancellationSource = new CancellationTokenSource(_timeout);
+            _slowMo = _options?.SlowMo ?? 0;
+            _timeout = _options?.Timeout ?? 30000;
+            _readerCancellationSource = new CancellationTokenSource();
+            _connectCancellationSource = new CancellationTokenSource((int)_timeout);
             SetRequestHeaders();
             _ = ConnectAsync();
         }
@@ -48,7 +50,7 @@ namespace Microsoft.Playwright.Transport
 
         public async Task SendAsync(string message)
         {
-            await Task.Delay(_slowMo).ConfigureAwait(false);
+            await Task.Delay((int)_slowMo).ConfigureAwait(false);
 
             try
             {
@@ -70,7 +72,8 @@ namespace Microsoft.Playwright.Transport
             if (!IsClosed)
             {
                 IsClosed = true;
-                HandleSocketClose(closeReason);
+                HandleSocketClosed(closeReason);
+                _readerCancellationSource?.Cancel();
             }
         }
 
@@ -87,7 +90,7 @@ namespace Microsoft.Playwright.Transport
             Close(ex.ToString());
         }
 
-        private void HandleSocketClose(string closeReason)
+        private void HandleSocketClosed(string closeReason)
         {
             TransportClosed?.Invoke(this, new TransportClosedEventArgs { CloseReason = closeReason });
             _readerCancellationSource?.Cancel();
@@ -95,7 +98,7 @@ namespace Microsoft.Playwright.Transport
 
         private async Task ConnectAsync()
         {
-            await _webSocket.ConnectAsync(new Uri(_wsEndpoint), _readerCancellationSource.Token).ConfigureAwait(false);
+            await _webSocket.ConnectAsync(new Uri(_wsEndpoint), _connectCancellationSource.Token).ConfigureAwait(false);
             ScheduleTransportTask(DispatchIncomingMessagesAsync, _readerCancellationSource.Token);
         }
 
@@ -108,7 +111,7 @@ namespace Microsoft.Playwright.Transport
             {
                 if (_webSocket.State == WebSocketState.Closed)
                 {
-                    Close("Closed");
+                    HandleSocketClosed("Closed");
                 }
                 else
                 {
@@ -125,7 +128,7 @@ namespace Microsoft.Playwright.Transport
 
                                 if (result.MessageType == WebSocketMessageType.Close)
                                 {
-                                    Close("Closed");
+                                    HandleSocketClosed("Closed");
                                 }
                                 else
                                 {

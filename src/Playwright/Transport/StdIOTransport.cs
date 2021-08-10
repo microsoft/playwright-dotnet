@@ -74,11 +74,11 @@ namespace Microsoft.Playwright.Transport
         {
             if (!IsClosed)
             {
+                IsClosed = true;
+                TransportClosed?.Invoke(this, new() { CloseReason = closeReason });
+                _readerCancellationSource?.Cancel();
                 try
                 {
-                    IsClosed = true;
-                    TransportClosed?.Invoke(this, new() { CloseReason = closeReason });
-                    _readerCancellationSource?.Cancel();
                     _process?.Kill();
                 }
                 catch
