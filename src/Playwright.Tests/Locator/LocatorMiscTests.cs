@@ -166,11 +166,12 @@ namespace Microsoft.Playwright.Tests.Locator
             await textarea.EvaluateAsync<string>("textarea => textarea.value = 'some value'");
 
             await textarea.SelectTextAsync();
-            if(TestConstants.IsFirefox)
+            if (TestConstants.IsFirefox)
             {
                 Assert.AreEqual(0, await textarea.EvaluateAsync<int>("el => el.selectionStart"));
                 Assert.AreEqual(10, await textarea.EvaluateAsync<int>("el => el.selectionEnd"));
-            } else
+            }
+            else
             {
                 Assert.AreEqual("some value", await textarea.EvaluateAsync<string>("() => window.getSelection().toString()"));
             }
@@ -190,7 +191,7 @@ namespace Microsoft.Playwright.Tests.Locator
         {
             await Page.SetViewportSizeAsync(500, 500);
             await Page.GotoAsync(Server.Prefix + "/grid.html");
-         
+
             await Page.EvaluateAsync("() => window.scrollBy(50, 100)");
             var element = Page.Locator(".box:nth-of-type(3)");
             var screenshot = await element.ScreenshotAsync();
@@ -202,7 +203,7 @@ namespace Microsoft.Playwright.Tests.Locator
         {
             await Page.SetViewportSizeAsync(500, 500);
             await Page.GotoAsync(Server.Prefix + "/grid.html");
-         
+
             var element = Page.Locator(".box:nth-of-type(13)");
             var box = await element.BoundingBoxAsync();
 
