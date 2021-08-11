@@ -51,7 +51,7 @@ function Invoke-DownloadDriver() {
   Invoke-InitializeSubmodule $false
   if ($prereqs) { Invoke-InstallRequirements }
   Write-Host "🚀 Downloading drivers..." -NoNewline
-  dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
+  dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
 }
 
 function Invoke-Roll() {

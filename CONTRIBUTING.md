@@ -87,7 +87,7 @@ This will run the following commands:
 ```ps
 git submodule update --init
 dotnet tool install --global dotnet-format
-dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
+dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
 ```
 
 #### Dotnet Format
@@ -141,5 +141,5 @@ cd playwright
 git checkout commitsha
 cd ..
 node "playwright/utils/doclint/generateDotnetApi.js" "src/Playwright"
-dotnet run -p ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
+dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
 ```

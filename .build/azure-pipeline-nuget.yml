@@ -44,7 +44,7 @@ stages:
       displayName: Download the browsers
       inputs:
         command: 'run'
-        arguments: '-p $(Build.SourcesDirectory)/src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath $(Build.SourcesDirectory)'
+        arguments: '--project $(Build.SourcesDirectory)/src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath $(Build.SourcesDirectory)'
 
     - task: DotNetCoreCLI@2
       displayName: Build Playwright CLI
