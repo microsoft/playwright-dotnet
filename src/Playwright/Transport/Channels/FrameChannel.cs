@@ -455,7 +455,8 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["strict"] = strict,
             };
 
-            if ((await Connection.SendMessageToServerAsync(Guid, "getAttribute", args).ConfigureAwait(false))?.TryGetProperty("value", out JsonElement retValue) ?? false)
+            JsonElement retValue = default;
+            if ((await Connection.SendMessageToServerAsync(Guid, "getAttribute", args).ConfigureAwait(false))?.TryGetProperty("value", out retValue) ?? false)
             {
                 return retValue.ToString();
             }
