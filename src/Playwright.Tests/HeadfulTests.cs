@@ -137,7 +137,7 @@ namespace Microsoft.Playwright.Tests
             }");
 
             await page.WaitForTimeoutAsync(2000);
-            bool allowsThirdParty = TestConstants.IsChromium || TestConstants.IsFirefox;
+            bool allowsThirdParty = TestConstants.IsFirefox;
             Assert.AreEqual(allowsThirdParty ? "username=John Doe" : string.Empty, documentCookie);
             var cookies = await page.Context.CookiesAsync(new[] { Server.CrossProcessPrefix + "/grid.html" });
 

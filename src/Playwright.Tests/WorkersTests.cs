@@ -85,7 +85,14 @@ namespace Microsoft.Playwright.Tests
 
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1,2,3,this)'], {type: 'application/javascript'})))");
             var log = await consoleTcs.Task;
-            Assert.AreEqual("1 2 3 JSHandle@object", log.Text);
+            if (TestConstants.IsFirefox)
+            {
+                Assert.AreEqual("1 2 3 JSHandle@object", log.Text);
+            }
+            else
+            {
+                Assert.AreEqual("1 2 3 DedicatedWorkerGlobalScope", log.Text);
+            }
             Assert.AreEqual(4, log.Args.Count());
             string json = await (await log.Args.ElementAt(3).GetPropertyAsync("origin")).JsonValueAsync<string>();
             Assert.AreEqual("null", json);
