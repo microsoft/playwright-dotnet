@@ -48,7 +48,14 @@ namespace Microsoft.Playwright.Tests
                 Page.WaitForConsoleMessageAsync(),
                 Page.EvaluateAsync("() => console.log('hello', 5, { foo: 'bar'})"));
 
-            Assert.AreEqual("hello 5 JSHandle@object", message.Text);
+            if (TestConstants.IsFirefox)
+            {
+                Assert.AreEqual("hello 5 JSHandle@object", message.Text);
+            }
+            else
+            {
+                Assert.AreEqual("hello 5 {foo: bar}", message.Text);
+            }
             Assert.AreEqual("log", message.Type);
             Assert.AreEqual("hello", await message.Args.ElementAt(0).JsonValueAsync<string>());
             Assert.AreEqual(5, await message.Args.ElementAt(1).JsonValueAsync<int>());
@@ -90,7 +97,7 @@ namespace Microsoft.Playwright.Tests
                 "calling console.dir",
                 "calling console.warn",
                 "calling console.error",
-                "JSHandle@promise"
+                "Promise"
             }, messages.Skip(1).Select(msg => msg.Text).ToArray());
         }
 
@@ -98,7 +105,14 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldNotFailForWindowObject()
         {
             var message = await Page.RunAndWaitForConsoleMessageAsync(() => Page.EvaluateAsync("() => console.error(window)"));
-            Assert.AreEqual("JSHandle@object", message.Text);
+            if (TestConstants.IsFirefox)
+            {
+                Assert.AreEqual("JSHandle@object", message.Text);
+            }
+            else
+            {
+                Assert.AreEqual("Window", message.Text);
+            }
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should trigger correct Log")]

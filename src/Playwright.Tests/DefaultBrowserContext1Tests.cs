@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(-1, cookie.Expires);
             Assert.IsFalse(cookie.HttpOnly);
             Assert.IsFalse(cookie.Secure);
-            Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
+            Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
 
             tmp.Dispose();
             await context.DisposeAsync();
@@ -86,7 +86,7 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(-1, cookie.Expires);
             Assert.IsFalse(cookie.HttpOnly);
             Assert.IsFalse(cookie.Secure);
-            Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
+            Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
 
             tmp.Dispose();
             await context.DisposeAsync();
@@ -143,10 +143,10 @@ namespace Microsoft.Playwright.Tests
 
             await page.FirstChildFrame().EvaluateAsync<string>("document.cookie = 'username=John Doe'");
             await page.WaitForTimeoutAsync(2000);
-            bool allowsThirdPart = !TestConstants.IsWebKit;
+            bool allowsThirdParty = TestConstants.IsFirefox;
             var cookies = await context.CookiesAsync(new[] { Server.CrossProcessPrefix + "/grid.html" });
 
-            if (allowsThirdPart)
+            if (allowsThirdParty)
             {
                 Assert.That.Collection(cookies).HasExactly(1);
                 var cookie = cookies.First();
@@ -155,7 +155,7 @@ namespace Microsoft.Playwright.Tests
                 Assert.IsFalse(cookie.HttpOnly);
                 Assert.AreEqual("username", cookie.Name);
                 Assert.AreEqual("/", cookie.Path);
-                Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
+                Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
                 Assert.IsFalse(cookie.Secure);
                 Assert.AreEqual("John Doe", cookie.Value);
             }
