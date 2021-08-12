@@ -39,8 +39,8 @@ jobs:
       - name: Installing Browsers and dependencies...
         shell: pwsh
         run: |
-          dotnet run -p .\src\Playwright\Playwright.csproj -f net5.0 -- install
-          dotnet run -p .\src\Playwright\Playwright.csproj -f net5.0 -- install-deps
+          dotnet run --project .\src\Playwright\Playwright.csproj -f net5.0 -- install
+          dotnet run --project .\src\Playwright\Playwright.csproj -f net5.0 -- install-deps
       - name: Running tests...
         if: ${{ matrix.os != 'ubuntu-latest' }}
         shell: pwsh
@@ -86,8 +86,8 @@ jobs:
       - name: Installing Browsers and dependencies...
         shell: pwsh
         run: |
-          dotnet run -p .\src\Playwright\Playwright.csproj -f net5.0 -- install
-          dotnet run -p .\src\Playwright\Playwright.csproj -f net5.0 -- install-deps
+          dotnet run --project .\src\Playwright\Playwright.csproj -f net5.0 -- install
+          dotnet run --project .\src\Playwright\Playwright.csproj -f net5.0 -- install-deps
       - name: Running tests... 
         shell: bash
         env:
