@@ -21,18 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-using System;
-using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests.Locator
 {
-    [TestClass]
+    [Parallelizable(ParallelScope.Self)]
     public class LocatorMiscTests : PageTestEx
     {
         [PlaywrightTest("locator-misc-1.spec.ts", "should hover")]
@@ -198,7 +193,7 @@ namespace Microsoft.Playwright.Tests.Locator
         }
 
         [PlaywrightTest("locator-misc-2.spec.ts", "should return bounding box")]
-        [Skip(MSTest.TestTargets.Firefox)]
+        [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldReturnBoundingBox()
         {
             await Page.SetViewportSizeAsync(500, 500);

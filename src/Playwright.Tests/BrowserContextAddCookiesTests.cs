@@ -27,12 +27,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.MSTest;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [TestClass]
+    [Parallelizable(ParallelScope.Self)]
     public class BrowserContextAddCookiesTests : PageTestEx
     {
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should work")]
@@ -128,8 +127,8 @@ namespace Microsoft.Playwright.Tests
             var cookies1 = await Context.CookiesAsync();
             var cookies2 = await anotherContext.CookiesAsync();
 
-            Assert.That.Collection(cookies1).HasExactly(1);
-            Assert.That.Collection(cookies2).HasExactly(1);
+            Assert.That(cookies1, Has.Count.EqualTo(1));
+            Assert.That(cookies2, Has.Count.EqualTo(1));
             Assert.AreEqual("isolatecookie", cookies1.ElementAt(0).Name);
             Assert.AreEqual("page1value", cookies1.ElementAt(0).Value);
             Assert.AreEqual("isolatecookie", cookies2.ElementAt(0).Name);
@@ -155,7 +154,7 @@ namespace Microsoft.Playwright.Tests
             page = await context2.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
             var cookies = await context2.CookiesAsync();
-            Assert.That.Collection(cookies).IsEmpty();
+            Assert.That(cookies, Is.Empty);
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should isolate persistent cookies")]
@@ -177,10 +176,10 @@ namespace Microsoft.Playwright.Tests
                 page2.GotoAsync(Server.EmptyPage));
 
             var (cookies1, cookies2) = await TaskUtils.WhenAll(Context.CookiesAsync(), context2.CookiesAsync());
-            Assert.That.Collection(cookies1).HasExactly(1);
+            Assert.That(cookies1, Has.Count.EqualTo(1));
             Assert.AreEqual("persistent", cookies1[0].Name);
             Assert.AreEqual("persistent-value", cookies1[0].Value);
-            Assert.That.Collection(cookies2).IsEmpty();
+            Assert.That(cookies2, Is.Empty);
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should isolate send cookie header")]
@@ -210,7 +209,7 @@ namespace Microsoft.Playwright.Tests
             var context = await Browser.NewContextAsync();
             page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
-            Assert.That.IsEmptyOrNull(cookie);
+            Assert.That(cookie, Is.Null.Or.Empty);
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should isolate cookies between launches")]
@@ -236,7 +235,7 @@ namespace Microsoft.Playwright.Tests
             {
                 var context1 = await Browser.NewContextAsync();
                 var cookies = await context1.CookiesAsync();
-                Assert.That.Collection(cookies).IsEmpty();
+                Assert.That(cookies, Is.Empty);
             }
         }
 
@@ -306,7 +305,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var cookies = await Context.CookiesAsync();
-            Assert.That.Collection(cookies).HasExactly(1);
+            Assert.That(cookies, Has.Count.EqualTo(1));
             var cookie = cookies[0];
             Assert.AreEqual("defaults", cookie.Name);
             Assert.AreEqual("123456", cookie.Value);
@@ -335,7 +334,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var cookies = await Context.CookiesAsync();
-            Assert.That.Collection(cookies).HasExactly(1);
+            Assert.That(cookies, Has.Count.EqualTo(1));
             var cookie = cookies[0];
             Assert.AreEqual("gridcookie", cookie.Name);
             Assert.AreEqual("GRID", cookie.Value);
@@ -348,7 +347,7 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual("gridcookie=GRID", await Page.EvaluateAsync<string>("document.cookie"));
             await Page.GotoAsync(Server.EmptyPage);
-            Assert.That.Collection(await Page.EvaluateAsync<string>("document.cookie")).IsEmpty();
+            Assert.That(await Page.EvaluateAsync<string>("document.cookie"), Is.Empty);
             await Page.GotoAsync(Server.Prefix + "/grid.html");
             Assert.AreEqual("gridcookie=GRID", await Page.EvaluateAsync<string>("document.cookie"));
         }
@@ -412,7 +411,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var cookies = await Context.CookiesAsync(new[] { secureUrl });
-            Assert.That.Collection(cookies).HasExactly(1);
+            Assert.That(cookies, Has.Count.EqualTo(1));
             var cookie = cookies[0];
             Assert.IsTrue(cookie.Secure);
         }
@@ -434,7 +433,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var cookies = await Context.CookiesAsync(new[] { SecureUrl });
-            Assert.That.Collection(cookies).HasExactly(1);
+            Assert.That(cookies, Has.Count.EqualTo(1));
             var cookie = cookies[0];
 
             Assert.IsFalse(cookie.Secure);
@@ -457,7 +456,7 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(string.Empty, await Page.EvaluateAsync<string>("document.cookie"));
 
             var cookies = await Context.CookiesAsync(new[] { "https://www.example.com" });
-            Assert.That.Collection(cookies).HasExactly(1);
+            Assert.That(cookies, Has.Count.EqualTo(1));
             var cookie = cookies[0];
 
             Assert.AreEqual("example-cookie", cookie.Name);
@@ -519,7 +518,7 @@ namespace Microsoft.Playwright.Tests
 
             if (allowsThirdParty)
             {
-                Assert.That.Collection(cookies).HasExactly(1);
+                Assert.That(cookies, Has.Count.EqualTo(1));
                 var cookie = cookies[0];
                 Assert.AreEqual("127.0.0.1", cookie.Domain);
                 Assert.AreEqual(cookie.Expires, -1);
@@ -532,7 +531,7 @@ namespace Microsoft.Playwright.Tests
             }
             else
             {
-                Assert.That.Collection(cookies).IsEmpty();
+                Assert.That(cookies, Is.Empty);
             }
         }
 

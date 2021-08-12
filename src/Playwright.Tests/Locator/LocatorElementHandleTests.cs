@@ -24,11 +24,12 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests.Locator
 {
-    [TestClass]
+    [Parallelizable(ParallelScope.Self)]
     public class LocatorElementHandleTests : PageTestEx
     {
         [PlaywrightTest("locator-element-handle.spec.ts", "should query existing element")]
@@ -49,7 +50,7 @@ namespace Microsoft.Playwright.Tests.Locator
             await Page.SetContentAsync("<html><body><div>A</div><br/><div>B</div></body></html>");
             var html = Page.Locator("html");
             var elements = await html.Locator("div").ElementHandlesAsync();
-            Assert.That.Collection(elements).HasExactly(2);
+            Assert.That(elements, Has.Count.EqualTo(2));
             var promises = elements.Select(x => Page.EvaluateAsync<string>("e => e.textContent", x));
             CollectionAssert.AreEqual(new string[] { "A", "B" }, await Task.WhenAll(promises));
         }
@@ -60,7 +61,7 @@ namespace Microsoft.Playwright.Tests.Locator
             await Page.SetContentAsync("<html><body><span>A</span><br/><span>B</span></body></html>");
             var html = Page.Locator("html");
             var elements = await html.Locator("div").ElementHandlesAsync();
-            Assert.That.Collection(elements).IsEmpty();
+            Assert.That(elements, Is.Empty);
         }
 
         [PlaywrightTest("locator-element-handle.spec.ts", "xpath should query existing element")]
@@ -81,7 +82,7 @@ namespace Microsoft.Playwright.Tests.Locator
             await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">A</div></div></body></html>");
             var html = Page.Locator("html");
             var second = await html.Locator("xpath=/div[contains(@class, 'third')]").ElementHandlesAsync();
-            Assert.That.Collection(second).IsEmpty();
+            Assert.That(second, Is.Empty);
         }
     }
 }

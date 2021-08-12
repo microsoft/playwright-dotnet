@@ -23,13 +23,11 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Playwright.MSTest;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [TestClass]
+    [Parallelizable(ParallelScope.Self)]
     public class JSHandleToStringTests : PageTestEx
     {
         [PlaywrightTest("jshandle-to-string.spec.ts", "should work for primitives")]
@@ -67,20 +65,20 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("jshandle-to-string.spec.ts", "should work with different subtypes")]
         public async Task ShouldWorkWithDifferentSubtypes()
         {
-            StringAssert.Contains((await Page.EvaluateHandleAsync("() => function(){}")).ToString(), "function");
+            StringAssert.Contains("function", (await Page.EvaluateHandleAsync("() => function(){}")).ToString());
             Assert.AreEqual("12", (await Page.EvaluateHandleAsync("12")).ToString());
             Assert.AreEqual("true", (await Page.EvaluateHandleAsync("true")).ToString());
             Assert.AreEqual("undefined", (await Page.EvaluateHandleAsync("undefined")).ToString());
             Assert.AreEqual("foo", (await Page.EvaluateHandleAsync("\"foo\"")).ToString());
             Assert.AreEqual("Symbol()", (await Page.EvaluateHandleAsync("Symbol()")).ToString());
-            StringAssert.Contains((await Page.EvaluateHandleAsync("new Map()")).ToString(), "Map");
-            StringAssert.Contains((await Page.EvaluateHandleAsync("new Set()")).ToString(), "Set");
-            StringAssert.Contains((await Page.EvaluateHandleAsync("[]")).ToString(), "Array");
+            StringAssert.Contains("Map", (await Page.EvaluateHandleAsync("new Map()")).ToString());
+            StringAssert.Contains("Set", (await Page.EvaluateHandleAsync("new Set()")).ToString());
+            StringAssert.Contains("Array", (await Page.EvaluateHandleAsync("[]")).ToString());
             Assert.AreEqual("null", (await Page.EvaluateHandleAsync("null")).ToString());
             Assert.AreEqual("JSHandle@node", (await Page.EvaluateHandleAsync("document.body")).ToString());
             Assert.AreEqual("WeakMap", (await Page.EvaluateHandleAsync("new WeakMap()")).ToString());
             Assert.AreEqual("WeakSet", (await Page.EvaluateHandleAsync("new WeakSet()")).ToString());
-            StringAssert.Contains((await Page.EvaluateHandleAsync("new Error()")).ToString(), "Error");
+            StringAssert.Contains("Error", (await Page.EvaluateHandleAsync("new Error()")).ToString());
             Assert.AreEqual("Proxy", (await Page.EvaluateHandleAsync("new Proxy({}, {})")).ToString());
         }
     }

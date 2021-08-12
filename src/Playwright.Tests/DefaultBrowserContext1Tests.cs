@@ -25,12 +25,11 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Playwright.MSTest;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [TestClass]
+    [Parallelizable(ParallelScope.Self)]
     public class DefaultBrowserContext1Tests : PlaywrightTestEx
     {
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "context.cookies() should work")]
@@ -118,8 +117,8 @@ namespace Microsoft.Playwright.Tests
 
             await context.ClearCookiesAsync();
             await page.ReloadAsync();
-            Assert.That.Collection(await page.Context.CookiesAsync()).IsEmpty();
-            Assert.That.Collection(await page.EvaluateAsync<string>(@"() => document.cookie")).IsEmpty();
+            Assert.That(await page.Context.CookiesAsync(), Is.Empty);
+            Assert.That(await page.EvaluateAsync<string>(@"() => document.cookie"), Is.Empty);
 
             tmp.Dispose();
             await context.DisposeAsync();
@@ -148,7 +147,7 @@ namespace Microsoft.Playwright.Tests
 
             if (allowsThirdParty)
             {
-                Assert.That.Collection(cookies).HasExactly(1);
+                Assert.That(cookies, Has.Count.EqualTo(1));
                 var cookie = cookies.First();
                 Assert.AreEqual("127.0.0.1", cookie.Domain);
                 Assert.AreEqual(cookie.Expires, -1);
@@ -161,7 +160,7 @@ namespace Microsoft.Playwright.Tests
             }
             else
             {
-                Assert.That.Collection(cookies).IsEmpty();
+                Assert.That(cookies, Is.Empty);
             }
 
             tmp.Dispose();
@@ -251,11 +250,11 @@ namespace Microsoft.Playwright.Tests
 
             if (TestConstants.IsWebKit)
             {
-                StringAssert.Contains(exception.Message, "Can't find variable: something");
+                StringAssert.Contains("Can't find variable: something", exception.Message);
             }
             else
             {
-                StringAssert.Contains(exception.Message, "something is not defined");
+                StringAssert.Contains("something is not defined", exception.Message);
             }
 
             tmp.Dispose();

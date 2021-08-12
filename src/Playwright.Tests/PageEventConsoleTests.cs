@@ -26,12 +26,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.MSTest;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [TestClass]
+    [Parallelizable(ParallelScope.Self)]
+
     public class PageEventConsoleTests2 : PageTestEx
     {
         [PlaywrightTest("page-event-console.spec.ts", "should work")]
@@ -90,7 +90,7 @@ namespace Microsoft.Playwright.Tests
                 console.log(Promise.resolve('should not wait until resolved!'));
             }");
             CollectionAssert.AreEqual(new[] { "timeEnd", "trace", "dir", "warning", "error", "log" }, messages.Select(msg => msg.Type).ToArray());
-            StringAssert.Contains(messages[0].Text, "calling console.time");
+            StringAssert.Contains("calling console.time", messages[0].Text);
             CollectionAssert.AreEqual(new[]
             {
                 "calling console.trace",
@@ -123,7 +123,7 @@ namespace Microsoft.Playwright.Tests
                 Page.WaitForConsoleMessageAsync(),
                 Page.EvaluateAsync("async url => fetch(url).catch (e => { })", Server.EmptyPage)
             );
-            StringAssert.Contains(messageEvent.Text, "Access-Control-Allow-Origin");
+            StringAssert.Contains("Access-Control-Allow-Origin", messageEvent.Text);
             Assert.AreEqual("error", messageEvent.Type);
         }
 

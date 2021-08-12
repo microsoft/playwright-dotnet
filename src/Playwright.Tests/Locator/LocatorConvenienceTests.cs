@@ -24,11 +24,11 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests.Locator
 {
-    [TestClass]
+    [Parallelizable(ParallelScope.Self)]
     public class LocatorConvenienceTests : PageTestEx
     {
         [PlaywrightTest("locator-convenience.spec.ts", "should have a nice preview")]
@@ -76,12 +76,13 @@ namespace Microsoft.Playwright.Tests.Locator
             var locator = Page.Locator("#input");
             Assert.AreEqual("input value", await locator.InputValueAsync());
 
-            var e = await Assert.ThrowsExceptionAsync<PlaywrightException>(async () => await Page.InputValueAsync("#inner"));
-            StringAssert.Contains(e.Message, "Node is not an HTMLInputElement or HTMLTextAreaElement or HTMLSelectElement");
+            var e = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.InputValueAsync("#inner"));
+            StringAssert.Contains("Node is not an HTMLInputElement or HTMLTextAreaElement or HTMLSelectElement", e.Message);
 
             var locator2 = Page.Locator("#inner");
-            e = await Assert.ThrowsExceptionAsync<PlaywrightException>(async () => await locator2.InputValueAsync());
-            StringAssert.Contains(e.Message, "Node is not an HTMLInputElement or HTMLTextAreaElement or HTMLSelectElement");
+            e = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await locator2.InputValueAsync());
+
+            StringAssert.Contains("Node is not an HTMLInputElement or HTMLTextAreaElement or HTMLSelectElement", e.Message);
         }
 
         [PlaywrightTest("locator-convenience.spec.ts", "innerHTML should work")]
@@ -107,12 +108,12 @@ namespace Microsoft.Playwright.Tests.Locator
         public async Task InnerTextShouldThrow()
         {
             await Page.SetContentAsync("<svg>text</svg>");
-            var e = await Assert.ThrowsExceptionAsync<PlaywrightException>(async () => await Page.InnerTextAsync("svg"));
-            StringAssert.Contains(e.Message, "Not an HTMLElement");
+            var e = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.InnerTextAsync("svg"));
+            StringAssert.Contains("Not an HTMLElement", e.Message);
 
             var locator = Page.Locator("svg");
-            e = await Assert.ThrowsExceptionAsync<PlaywrightException>(async () => await locator.InnerTextAsync());
-            StringAssert.Contains(e.Message, "Not an HTMLElement");
+            e = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await locator.InnerTextAsync());
+            StringAssert.Contains("Not an HTMLElement", e.Message);
         }
 
 
@@ -230,8 +231,8 @@ namespace Microsoft.Playwright.Tests.Locator
             Assert.IsFalse(await element.IsCheckedAsync());
             Assert.IsFalse(await Page.IsCheckedAsync("input"));
 
-            var e = await Assert.ThrowsExceptionAsync<PlaywrightException>(async () => await Page.IsCheckedAsync("div"));
-            StringAssert.Contains(e.Message, "Not a checkbox or radio button");
+            var e = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.IsCheckedAsync("div"));
+            StringAssert.Contains("Not a checkbox or radio button", e.Message);
         }
 
         [PlaywrightTest("locator-convenience.spec.ts", "allTextContents should work")]

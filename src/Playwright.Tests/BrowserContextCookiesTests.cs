@@ -26,17 +26,17 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.MSTest;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [TestClass]
+    [Parallelizable(ParallelScope.Self)]
     public class BrowserContextCookiesTests : PageTestEx
     {
         [PlaywrightTest("browsercontext-cookies.spec.ts", "should return no cookies in pristine browser context")]
         public async Task ShouldReturnNoCookiesInPristineBrowserContext()
-            => Assert.That.Collection(await Context.CookiesAsync()).IsEmpty();
+            => Assert.IsEmpty(await Context.CookiesAsync());
 
         [PlaywrightTest("browsercontext-cookies.spec.ts", "should get a cookie")]
         public async Task ShouldGetACookie()
@@ -90,12 +90,12 @@ namespace Microsoft.Playwright.Tests
             });
             await Page.GotoAsync(Server.EmptyPage);
             var cookies = await Context.CookiesAsync();
-            Assert.That.Collection(cookies).HasExactly(1);
+            Assert.IsTrue(cookies.Count == 1);
             Assert.IsTrue(cookies.ElementAt(0).HttpOnly);
         }
 
         [PlaywrightTest("browsercontext-cookies.spec.ts", @"should properly report ""Strict"" sameSite cookie")]
-        [Skip(TestTargets.Webkit | TestTargets.Windows)]
+        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
         public async Task ShouldProperlyReportStrictSameSiteCookie()
         {
             Server.SetRoute("/empty.html", context =>
@@ -105,12 +105,12 @@ namespace Microsoft.Playwright.Tests
             });
             await Page.GotoAsync(Server.EmptyPage);
             var cookies = await Context.CookiesAsync();
-            Assert.That.Collection(cookies).HasExactly(1);
+            Assert.That(cookies, Has.Count.EqualTo(1));
             Assert.AreEqual(SameSiteAttribute.Strict, cookies.ElementAt(0).SameSite);
         }
 
         [PlaywrightTest("browsercontext-cookies.spec.ts", @"should properly report ""Lax"" sameSite cookie")]
-        [Skip(TestTargets.Webkit | TestTargets.Windows)]
+        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
         public async Task ShouldProperlyReportLaxSameSiteCookie()
         {
             Server.SetRoute("/empty.html", context =>
@@ -120,7 +120,7 @@ namespace Microsoft.Playwright.Tests
             });
             await Page.GotoAsync(Server.EmptyPage);
             var cookies = await Context.CookiesAsync();
-            Assert.That.Collection(cookies).HasExactly(1);
+            Assert.That(cookies, Has.Count.EqualTo(1));
             Assert.AreEqual(SameSiteAttribute.Lax, cookies.ElementAt(0).SameSite);
         }
 
@@ -128,8 +128,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldGetMultipleCookies()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            Assert.That.Collection(await Context.CookiesAsync()).IsEmpty();
-
+            Assert.That(await Context.CookiesAsync(), Is.Empty);
             string documentCookie = await Page.EvaluateAsync<string>(@"() => {
                 document.cookie = 'username=John Doe';
                 document.cookie = 'password=1234';

@@ -23,14 +23,15 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests.Locator
 {
-    [TestClass]
+    [Parallelizable(ParallelScope.Self)]
+
     public class LocatorClickTests : PageTestEx
     {
-        [PlaywrightTest]
+        [PlaywrightTest("locator-click.spec.ts", "should work")]
         public async Task ShouldWork()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -39,7 +40,7 @@ namespace Microsoft.Playwright.Tests.Locator
             Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("() => window['result']"));
         }
 
-        [PlaywrightTest]
+        [PlaywrightTest("locator-click.spec.ts", "should work with Node removed")]
         public async Task ShouldWorkWithNodeRemoved()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -49,7 +50,7 @@ namespace Microsoft.Playwright.Tests.Locator
             Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("() => window['result']"));
         }
 
-        [PlaywrightTest]
+        [PlaywrightTest("locator-click.spec.ts", "should work for TextNodes")]
         public async Task ShouldWorkForTextNodes()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -58,7 +59,7 @@ namespace Microsoft.Playwright.Tests.Locator
             Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("() => window['result']"));
         }
 
-        [PlaywrightTest]
+        [PlaywrightTest("locator-click.spec.ts", "should double click the button")]
         public async Task ShouldDoubleClickTheButton()
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");

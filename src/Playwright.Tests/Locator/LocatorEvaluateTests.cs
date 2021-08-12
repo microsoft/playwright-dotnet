@@ -23,11 +23,11 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests.Locator
 {
-    [TestClass]
+    [Parallelizable(ParallelScope.Self)]
     public class LocatorEvaluateTests : PageTestEx
     {
         [PlaywrightTest("locator-element-handle.spec.ts", "should work")]
