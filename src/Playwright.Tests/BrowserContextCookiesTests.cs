@@ -90,7 +90,7 @@ namespace Microsoft.Playwright.Tests
             });
             await Page.GotoAsync(Server.EmptyPage);
             var cookies = await Context.CookiesAsync();
-            Assert.IsTrue(cookies.Count == 1);
+            Assert.That(cookies, Has.Count.EqualTo(1));
             Assert.IsTrue(cookies.ElementAt(0).HttpOnly);
         }
 

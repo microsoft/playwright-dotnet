@@ -58,8 +58,7 @@ namespace Microsoft.Playwright.Tests
             }", new DateTime(2038, 1, 1)));
             var cookies = await Context.CookiesAsync();
             await Context.ClearCookiesAsync();
-
-            //Assert.That.IsEmpty(await Context.CookiesAsync());
+            Assert.That(await Context.CookiesAsync(), Is.Empty);
             await Context.AddCookiesAsync(cookies.Select(c => new Cookie()
             {
                 Domain = c.Domain,
