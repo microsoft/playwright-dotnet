@@ -49,6 +49,7 @@ namespace Microsoft.Playwright
             Force = clone.Force;
             NoWaitAfter = clone.NoWaitAfter;
             Position = clone.Position;
+            Strict = clone.Strict;
             Timeout = clone.Timeout;
             Trial = clone.Trial;
         }
@@ -81,6 +82,15 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("position")]
         public Position? Position { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// When true, the call requires selector to resolve to a single element. If given selector
+        /// resolves to more then one element, the call throws an exception.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("strict")]
+        public bool? Strict { get; set; }
 
         /// <summary>
         /// <para>

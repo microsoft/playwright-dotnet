@@ -27,7 +27,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -59,7 +58,7 @@ namespace Microsoft.Playwright.Tests
             }", new DateTime(2038, 1, 1)));
             var cookies = await Context.CookiesAsync();
             await Context.ClearCookiesAsync();
-            Assert.IsEmpty(await Context.CookiesAsync());
+            Assert.That(await Context.CookiesAsync(), Is.Empty);
             await Context.AddCookiesAsync(cookies.Select(c => new Cookie()
             {
                 Domain = c.Domain,
@@ -154,7 +153,7 @@ namespace Microsoft.Playwright.Tests
             page = await context2.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
             var cookies = await context2.CookiesAsync();
-            Assert.IsEmpty(cookies);
+            Assert.That(cookies, Is.Empty);
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should isolate persistent cookies")]
@@ -179,7 +178,7 @@ namespace Microsoft.Playwright.Tests
             Assert.That(cookies1, Has.Count.EqualTo(1));
             Assert.AreEqual("persistent", cookies1[0].Name);
             Assert.AreEqual("persistent-value", cookies1[0].Value);
-            Assert.IsEmpty(cookies2);
+            Assert.That(cookies2, Is.Empty);
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should isolate send cookie header")]
@@ -209,7 +208,7 @@ namespace Microsoft.Playwright.Tests
             var context = await Browser.NewContextAsync();
             page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
-            Assert.IsEmpty(cookie);
+            Assert.That(cookie, Is.Null.Or.Empty);
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should isolate cookies between launches")]
@@ -235,7 +234,7 @@ namespace Microsoft.Playwright.Tests
             {
                 var context1 = await Browser.NewContextAsync();
                 var cookies = await context1.CookiesAsync();
-                Assert.IsEmpty(cookies);
+                Assert.That(cookies, Is.Empty);
             }
         }
 
@@ -260,7 +259,7 @@ namespace Microsoft.Playwright.Tests
                 },
             });
 
-            Assert.AreEqual(
+            CollectionAssert.AreEqual(
                 new[]
                 {
                     "multiple-1=123456",
@@ -312,9 +311,9 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("localhost", cookie.Domain);
             Assert.AreEqual("/", cookie.Path);
             Assert.AreEqual(-1, cookie.Expires);
-            Assert.False(cookie.HttpOnly);
-            Assert.False(cookie.Secure);
-            Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
+            Assert.IsFalse(cookie.HttpOnly);
+            Assert.IsFalse(cookie.Secure);
+            Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should set a cookie with a path")]
@@ -328,7 +327,8 @@ namespace Microsoft.Playwright.Tests
                     Domain = "localhost",
                     Path = "/grid.html",
                     Name = "gridcookie",
-                    Value = "GRID"
+                    Value = "GRID",
+                    SameSite = SameSiteAttribute.Lax,
                 }
             });
 
@@ -340,13 +340,13 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("localhost", cookie.Domain);
             Assert.AreEqual("/grid.html", cookie.Path);
             Assert.AreEqual(cookie.Expires, -1);
-            Assert.False(cookie.HttpOnly);
-            Assert.False(cookie.Secure);
-            Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
+            Assert.IsFalse(cookie.HttpOnly);
+            Assert.IsFalse(cookie.Secure);
+            Assert.AreEqual(TestConstants.IsWebKit && TestConstants.IsWindows ? SameSiteAttribute.None : SameSiteAttribute.Lax, cookie.SameSite);
 
             Assert.AreEqual("gridcookie=GRID", await Page.EvaluateAsync<string>("document.cookie"));
             await Page.GotoAsync(Server.EmptyPage);
-            Assert.IsEmpty(await Page.EvaluateAsync<string>("document.cookie"));
+            Assert.That(await Page.EvaluateAsync<string>("document.cookie"), Is.Empty);
             await Page.GotoAsync(Server.Prefix + "/grid.html");
             Assert.AreEqual("gridcookie=GRID", await Page.EvaluateAsync<string>("document.cookie"));
         }
@@ -412,7 +412,7 @@ namespace Microsoft.Playwright.Tests
             var cookies = await Context.CookiesAsync(new[] { secureUrl });
             Assert.That(cookies, Has.Count.EqualTo(1));
             var cookie = cookies[0];
-            Assert.True(cookie.Secure);
+            Assert.IsTrue(cookie.Secure);
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should be able to set unsecure cookie for HTTP website")]
@@ -435,7 +435,7 @@ namespace Microsoft.Playwright.Tests
             Assert.That(cookies, Has.Count.EqualTo(1));
             var cookie = cookies[0];
 
-            Assert.False(cookie.Secure);
+            Assert.IsFalse(cookie.Secure);
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should set a cookie on a different domain")]
@@ -448,7 +448,8 @@ namespace Microsoft.Playwright.Tests
                 {
                     Name = "example-cookie",
                     Value = "best",
-                    Url = "https://www.example.com"
+                    Url = "https://www.example.com",
+                    SameSite = SameSiteAttribute.Lax,
                 }
             });
             Assert.AreEqual(string.Empty, await Page.EvaluateAsync<string>("document.cookie"));
@@ -462,9 +463,9 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("www.example.com", cookie.Domain);
             Assert.AreEqual("/", cookie.Path);
             Assert.AreEqual(cookie.Expires, -1);
-            Assert.False(cookie.HttpOnly);
-            Assert.True(cookie.Secure);
-            Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
+            Assert.IsFalse(cookie.HttpOnly);
+            Assert.IsTrue(cookie.Secure);
+            Assert.AreEqual(TestConstants.IsWebKit && TestConstants.IsWindows ? SameSiteAttribute.None : SameSiteAttribute.Lax, cookie.SameSite);
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should set cookies for a frame")]
@@ -511,25 +512,25 @@ namespace Microsoft.Playwright.Tests
 
             await Page.FirstChildFrame().EvaluateAsync<string>("document.cookie = 'username=John Doe'");
             await Page.WaitForTimeoutAsync(2000);
-            bool allowsThirdPart = !TestConstants.IsWebKit;
+            bool allowsThirdParty = TestConstants.IsFirefox;
             var cookies = await Context.CookiesAsync(new[] { Server.CrossProcessPrefix + "/grid.html" });
 
-            if (allowsThirdPart)
+            if (allowsThirdParty)
             {
                 Assert.That(cookies, Has.Count.EqualTo(1));
                 var cookie = cookies[0];
                 Assert.AreEqual("127.0.0.1", cookie.Domain);
                 Assert.AreEqual(cookie.Expires, -1);
-                Assert.False(cookie.HttpOnly);
+                Assert.IsFalse(cookie.HttpOnly);
                 Assert.AreEqual("username", cookie.Name);
                 Assert.AreEqual("/", cookie.Path);
                 Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
-                Assert.False(cookie.Secure);
+                Assert.IsFalse(cookie.Secure);
                 Assert.AreEqual("John Doe", cookie.Value);
             }
             else
             {
-                Assert.IsEmpty(cookies);
+                Assert.That(cookies, Is.Empty);
             }
         }
 

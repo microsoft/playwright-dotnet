@@ -600,7 +600,8 @@ namespace Microsoft.Playwright
         /// expression.
         /// </param>
         /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
-        Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default);
+        /// <param name="options">Call options</param>
+        Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default, PageEvalOnSelectorOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -1030,7 +1031,7 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// Returns <c>input.value</c> for the selected <c>&lt;input&gt;</c> or <c>&lt;textarea&gt;</c>
-        /// element. Throws for non-input elements.
+        /// or <c>&lt;select&gt;</c> element. Throws for non-input elements.
         /// </para>
         /// </summary>
         /// <param name="selector">
@@ -1114,6 +1115,25 @@ namespace Microsoft.Playwright
         Task<bool> IsVisibleAsync(string selector, PageIsVisibleOptions? options = default);
 
         public IKeyboard Keyboard { get; }
+
+        /// <summary>
+        /// <para>
+        /// The method returns an element locator that can be used to perform actions on the
+        /// page. Locator is resolved to the element immediately before performing an action,
+        /// so a series of actions on the same locator can in fact be performed on different
+        /// DOM elements. That would happen if the DOM structure between those actions has changed.
+        /// </para>
+        /// <para>
+        /// Note that locator always implies visibility, so it will always be locating visible
+        /// elements.
+        /// </para>
+        /// <para>Shortcut for main frame's <see cref="IFrame.Locator"/>.</para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to use when resolving DOM element. See <a href="./selectors.md">working
+        /// with selectors</a> for more details.
+        /// </param>
+        ILocator Locator(string selector);
 
         /// <summary>
         /// <para>
@@ -1279,7 +1299,8 @@ namespace Microsoft.Playwright
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
         /// </param>
-        Task<IElementHandle?> QuerySelectorAsync(string selector);
+        /// <param name="options">Call options</param>
+        Task<IElementHandle?> QuerySelectorAsync(string selector, PageQuerySelectorOptions? options = default);
 
         /// <summary>
         /// <para>

@@ -208,7 +208,6 @@ namespace Microsoft.Playwright.Tests
         {
             using var userDataDir = new TempDirectory();
 
-
             await using (var browserContext = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path))
             {
                 var page = await browserContext.NewPageAsync();

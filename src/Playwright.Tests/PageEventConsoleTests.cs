@@ -26,12 +26,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
     [Parallelizable(ParallelScope.Self)]
+
     public class PageEventConsoleTests2 : PageTestEx
     {
         [PlaywrightTest("page-event-console.spec.ts", "should work")]
@@ -48,7 +48,14 @@ namespace Microsoft.Playwright.Tests
                 Page.WaitForConsoleMessageAsync(),
                 Page.EvaluateAsync("() => console.log('hello', 5, { foo: 'bar'})"));
 
-            Assert.AreEqual("hello 5 JSHandle@object", message.Text);
+            if (TestConstants.IsFirefox)
+            {
+                Assert.AreEqual("hello 5 JSHandle@object", message.Text);
+            }
+            else
+            {
+                Assert.AreEqual("hello 5 {foo: bar}", message.Text);
+            }
             Assert.AreEqual("log", message.Type);
             Assert.AreEqual("hello", await message.Args.ElementAt(0).JsonValueAsync<string>());
             Assert.AreEqual(5, await message.Args.ElementAt(1).JsonValueAsync<int>());
@@ -63,7 +70,7 @@ namespace Microsoft.Playwright.Tests
             Page.Console += (_, e) => messages.Add(e.Text);
             await Page.EvaluateAsync("() => { for (let i = 0; i < 2; ++i ) console.log('hello'); } ");
 
-            Assert.AreEqual(new[] { "hello", "hello" }, messages.ToArray());
+            CollectionAssert.AreEqual(new[] { "hello", "hello" }, messages.ToArray());
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should work for different console API calls")]
@@ -82,23 +89,30 @@ namespace Microsoft.Playwright.Tests
                 console.error('calling console.error');
                 console.log(Promise.resolve('should not wait until resolved!'));
             }");
-            Assert.AreEqual(new[] { "timeEnd", "trace", "dir", "warning", "error", "log" }, messages.Select(msg => msg.Type));
+            CollectionAssert.AreEqual(new[] { "timeEnd", "trace", "dir", "warning", "error", "log" }, messages.Select(msg => msg.Type).ToArray());
             StringAssert.Contains("calling console.time", messages[0].Text);
-            Assert.AreEqual(new[]
+            CollectionAssert.AreEqual(new[]
             {
                 "calling console.trace",
                 "calling console.dir",
                 "calling console.warn",
                 "calling console.error",
-                "JSHandle@promise"
-            }, messages.Skip(1).Select(msg => msg.Text));
+                "Promise"
+            }, messages.Skip(1).Select(msg => msg.Text).ToArray());
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should not fail for window object")]
         public async Task ShouldNotFailForWindowObject()
         {
             var message = await Page.RunAndWaitForConsoleMessageAsync(() => Page.EvaluateAsync("() => console.error(window)"));
-            Assert.AreEqual("JSHandle@object", message.Text);
+            if (TestConstants.IsFirefox)
+            {
+                Assert.AreEqual("JSHandle@object", message.Text);
+            }
+            else
+            {
+                Assert.AreEqual("Window", message.Text);
+            }
         }
 
         [PlaywrightTest("page-event-console.spec.ts", "should trigger correct Log")]

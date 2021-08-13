@@ -25,7 +25,6 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -52,9 +51,9 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("localhost", cookie.Domain);
             Assert.AreEqual("/", cookie.Path);
             Assert.AreEqual(-1, cookie.Expires);
-            Assert.False(cookie.HttpOnly);
-            Assert.False(cookie.Secure);
-            Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
+            Assert.IsFalse(cookie.HttpOnly);
+            Assert.IsFalse(cookie.Secure);
+            Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
 
             tmp.Dispose();
             await context.DisposeAsync();
@@ -84,9 +83,9 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("localhost", cookie.Domain);
             Assert.AreEqual("/", cookie.Path);
             Assert.AreEqual(-1, cookie.Expires);
-            Assert.False(cookie.HttpOnly);
-            Assert.False(cookie.Secure);
-            Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
+            Assert.IsFalse(cookie.HttpOnly);
+            Assert.IsFalse(cookie.Secure);
+            Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
 
             tmp.Dispose();
             await context.DisposeAsync();
@@ -118,8 +117,8 @@ namespace Microsoft.Playwright.Tests
 
             await context.ClearCookiesAsync();
             await page.ReloadAsync();
-            Assert.IsEmpty(await page.Context.CookiesAsync());
-            Assert.IsEmpty(await page.EvaluateAsync<string>(@"() => document.cookie"));
+            Assert.That(await page.Context.CookiesAsync(), Is.Empty);
+            Assert.That(await page.EvaluateAsync<string>(@"() => document.cookie"), Is.Empty);
 
             tmp.Dispose();
             await context.DisposeAsync();
@@ -143,25 +142,25 @@ namespace Microsoft.Playwright.Tests
 
             await page.FirstChildFrame().EvaluateAsync<string>("document.cookie = 'username=John Doe'");
             await page.WaitForTimeoutAsync(2000);
-            bool allowsThirdPart = !TestConstants.IsWebKit;
+            bool allowsThirdParty = TestConstants.IsFirefox;
             var cookies = await context.CookiesAsync(new[] { Server.CrossProcessPrefix + "/grid.html" });
 
-            if (allowsThirdPart)
+            if (allowsThirdParty)
             {
                 Assert.That(cookies, Has.Count.EqualTo(1));
                 var cookie = cookies.First();
                 Assert.AreEqual("127.0.0.1", cookie.Domain);
                 Assert.AreEqual(cookie.Expires, -1);
-                Assert.False(cookie.HttpOnly);
+                Assert.IsFalse(cookie.HttpOnly);
                 Assert.AreEqual("username", cookie.Name);
                 Assert.AreEqual("/", cookie.Path);
-                Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
-                Assert.False(cookie.Secure);
+                Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
+                Assert.IsFalse(cookie.Secure);
                 Assert.AreEqual("John Doe", cookie.Value);
             }
             else
             {
-                Assert.IsEmpty(cookies);
+                Assert.That(cookies, Is.Empty);
             }
 
             tmp.Dispose();

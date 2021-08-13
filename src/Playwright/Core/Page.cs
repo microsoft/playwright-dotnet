@@ -452,6 +452,15 @@ namespace Microsoft.Playwright.Core
 
         public Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAsync(selector, expression, arg);
 
+        public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg = null, PageEvalOnSelectorOptions options = null)
+            => MainFrame.EvalOnSelectorAsync<T>(selector, expression, arg, new() { Strict = options?.Strict });
+
+        public ILocator Locator(string selector)
+            => MainFrame.Locator(selector);
+
+        public Task<IElementHandle> QuerySelectorAsync(string selector, PageQuerySelectorOptions options = null)
+            => MainFrame.QuerySelectorAsync(selector, new() { Strict = options?.Strict });
+
         public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAsync<T>(selector, expression, arg);
 
         public Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAllAsync(selector, expression, arg);
@@ -459,7 +468,7 @@ namespace Microsoft.Playwright.Core
         public Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAllAsync<T>(selector, expression, arg);
 
         public Task FillAsync(string selector, string value, PageFillOptions options = default)
-            => MainFrame.FillAsync(selector, value, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force });
+            => MainFrame.FillAsync(selector, value, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force, Strict = options?.Strict });
 
         public Task SetInputFilesAsync(string selector, string files, PageSetInputFilesOptions options = default)
             => MainFrame.SetInputFilesAsync(selector, files, Map(options));
@@ -479,10 +488,15 @@ namespace Microsoft.Playwright.Core
                 Delay = options?.Delay,
                 NoWaitAfter = options?.NoWaitAfter,
                 Timeout = options?.Timeout,
+                Strict = options?.Strict,
             });
 
         public Task FocusAsync(string selector, PageFocusOptions options = default)
-            => MainFrame.FocusAsync(selector, new() { Timeout = options?.Timeout });
+            => MainFrame.FocusAsync(selector, new()
+            {
+                Timeout = options?.Timeout,
+                Strict = options?.Strict,
+            });
 
         public Task HoverAsync(string selector, PageHoverOptions options = default)
             => MainFrame.HoverAsync(
@@ -494,10 +508,17 @@ namespace Microsoft.Playwright.Core
                     Force = options?.Force,
                     Timeout = options?.Timeout,
                     Trial = options?.Trial,
+                    Strict = options?.Strict,
                 });
 
         public Task PressAsync(string selector, string key, PagePressOptions options = default)
-            => MainFrame.PressAsync(selector, key, new() { Delay = options?.Delay, NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout });
+            => MainFrame.PressAsync(selector, key, new()
+            {
+                Delay = options?.Delay,
+                NoWaitAfter = options?.NoWaitAfter,
+                Timeout = options?.Timeout,
+                Strict = options?.Strict,
+            });
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, string values, PageSelectOptionOptions options = default)
             => SelectOptionAsync(selector, new[] { values }, options);
@@ -509,18 +530,35 @@ namespace Microsoft.Playwright.Core
             => SelectOptionAsync(selector, new[] { values }, options);
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, PageSelectOptionOptions options = default)
-            => MainFrame.SelectOptionAsync(selector, values, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force });
+            => MainFrame.SelectOptionAsync(selector, values, new()
+            {
+                NoWaitAfter = options?.NoWaitAfter,
+                Timeout = options?.Timeout,
+                Force = options?.Force,
+                Strict = options?.Strict,
+            });
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, PageSelectOptionOptions options = default)
             => SelectOptionAsync(selector, new[] { values }, options);
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, PageSelectOptionOptions options = default)
-            => MainFrame.SelectOptionAsync(selector, values, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force });
+            => MainFrame.SelectOptionAsync(selector, values, new()
+            {
+                NoWaitAfter = options?.NoWaitAfter,
+                Timeout = options?.Timeout,
+                Force = options?.Force,
+                Strict = options?.Strict,
+            });
 
         public Task WaitForTimeoutAsync(float timeout) => Task.Delay(Convert.ToInt32(timeout));
 
         public Task<IElementHandle> WaitForSelectorAsync(string selector, PageWaitForSelectorOptions options = default)
-            => MainFrame.WaitForSelectorAsync(selector, new() { State = options?.State, Timeout = options?.Timeout });
+            => MainFrame.WaitForSelectorAsync(selector, new()
+            {
+                State = options?.State,
+                Timeout = options?.Timeout,
+                Strict = options?.Strict,
+            });
 
         public Task<JsonElement?> EvaluateAsync(string expression, object arg) => MainFrame.EvaluateAsync(expression, arg);
 
@@ -596,6 +634,7 @@ namespace Microsoft.Playwright.Core
                     NoWaitAfter = options?.NoWaitAfter,
                     Timeout = options?.Timeout,
                     Trial = options?.Trial,
+                    Strict = options?.Strict,
                 });
 
         public Task DblClickAsync(string selector, PageDblClickOptions options = default)
@@ -609,6 +648,7 @@ namespace Microsoft.Playwright.Core
                 Force = options?.Force,
                 NoWaitAfter = options?.NoWaitAfter,
                 Trial = options?.Trial,
+                Strict = options?.Strict,
             });
 
         public async Task<IResponse> GoBackAsync(PageGoBackOptions options = default)
@@ -764,6 +804,7 @@ namespace Microsoft.Playwright.Core
                 Position = options?.Position,
                 Force = options?.Force,
                 NoWaitAfter = options?.NoWaitAfter,
+                Strict = options?.Strict,
                 Timeout = options?.Timeout,
                 Trial = options?.Trial,
             });
@@ -776,22 +817,39 @@ namespace Microsoft.Playwright.Core
                 NoWaitAfter = options?.NoWaitAfter,
                 Timeout = options?.Timeout,
                 Trial = options?.Trial,
+                Strict = options?.Strict,
             });
 
         public Task DispatchEventAsync(string selector, string type, object eventInit = default, PageDispatchEventOptions options = default)
-             => MainFrame.DispatchEventAsync(selector, type, eventInit, new() { Timeout = options?.Timeout });
+             => MainFrame.DispatchEventAsync(selector, type, eventInit, new() { Timeout = options?.Timeout, Strict = options?.Strict });
 
         public Task<string> GetAttributeAsync(string selector, string name, PageGetAttributeOptions options = default)
-             => MainFrame.GetAttributeAsync(selector, name, new() { Timeout = options?.Timeout });
+             => MainFrame.GetAttributeAsync(selector, name, new()
+             {
+                 Timeout = options?.Timeout,
+                 Strict = options?.Strict,
+             });
 
         public Task<string> InnerHTMLAsync(string selector, PageInnerHTMLOptions options = default)
-             => MainFrame.InnerHTMLAsync(selector, new() { Timeout = options?.Timeout });
+             => MainFrame.InnerHTMLAsync(selector, new()
+             {
+                 Timeout = options?.Timeout,
+                 Strict = options?.Strict,
+             });
 
         public Task<string> InnerTextAsync(string selector, PageInnerTextOptions options = default)
-             => MainFrame.InnerTextAsync(selector, new() { Timeout = options?.Timeout });
+             => MainFrame.InnerTextAsync(selector, new()
+             {
+                 Timeout = options?.Timeout,
+                 Strict = options?.Strict,
+             });
 
         public Task<string> TextContentAsync(string selector, PageTextContentOptions options = default)
-             => MainFrame.TextContentAsync(selector, new() { Timeout = options?.Timeout });
+             => MainFrame.TextContentAsync(selector, new()
+             {
+                 Timeout = options?.Timeout,
+                 Strict = options?.Strict,
+             });
 
         public Task TapAsync(string selector, PageTapOptions options = default)
             => MainFrame.TapAsync(
@@ -804,25 +862,50 @@ namespace Microsoft.Playwright.Core
                     NoWaitAfter = options?.NoWaitAfter,
                     Timeout = options?.Timeout,
                     Trial = options?.Trial,
+                    Strict = options?.Strict,
                 });
 
         public Task<bool> IsCheckedAsync(string selector, PageIsCheckedOptions options = default)
-            => MainFrame.IsCheckedAsync(selector, new() { Timeout = options?.Timeout });
+            => MainFrame.IsCheckedAsync(selector, new()
+            {
+                Timeout = options?.Timeout,
+                Strict = options?.Strict,
+            });
 
         public Task<bool> IsDisabledAsync(string selector, PageIsDisabledOptions options = default)
-            => MainFrame.IsDisabledAsync(selector, new() { Timeout = options?.Timeout });
+            => MainFrame.IsDisabledAsync(selector, new()
+            {
+                Timeout = options?.Timeout,
+                Strict = options?.Strict,
+            });
 
         public Task<bool> IsEditableAsync(string selector, PageIsEditableOptions options = default)
-            => MainFrame.IsEditableAsync(selector, new() { Timeout = options?.Timeout });
+            => MainFrame.IsEditableAsync(selector, new()
+            {
+                Timeout = options?.Timeout,
+                Strict = options?.Strict,
+            });
 
         public Task<bool> IsEnabledAsync(string selector, PageIsEnabledOptions options = default)
-            => MainFrame.IsEnabledAsync(selector, new() { Timeout = options?.Timeout });
+            => MainFrame.IsEnabledAsync(selector, new()
+            {
+                Timeout = options?.Timeout,
+                Strict = options?.Strict,
+            });
 
         public Task<bool> IsHiddenAsync(string selector, PageIsHiddenOptions options = default)
-            => MainFrame.IsHiddenAsync(selector, new() { Timeout = options?.Timeout });
+            => MainFrame.IsHiddenAsync(selector, new()
+            {
+                Timeout = options?.Timeout,
+                Strict = options?.Strict,
+            });
 
         public Task<bool> IsVisibleAsync(string selector, PageIsVisibleOptions options = default)
-            => MainFrame.IsVisibleAsync(selector, new() { Timeout = options?.Timeout });
+            => MainFrame.IsVisibleAsync(selector, new()
+            {
+                Timeout = options?.Timeout,
+                Strict = options?.Strict,
+            });
 
         public Task PauseAsync() => Context.Channel.PauseAsync();
 
@@ -831,7 +914,11 @@ namespace Microsoft.Playwright.Core
         public void SetDefaultTimeout(float timeout) => DefaultTimeout = timeout;
 
         public Task<string> InputValueAsync(string selector, PageInputValueOptions options = null)
-            => MainFrame.InputValueAsync(selector, new() { Timeout = options?.Timeout });
+            => MainFrame.InputValueAsync(selector, new()
+            {
+                Timeout = options?.Timeout,
+                Strict = options?.Strict,
+            });
 
         public Task DragAndDropAsync(string source, string target, PageDragAndDropOptions options = null)
             => MainFrame.DragAndDropAsync(source, target, new()
@@ -840,6 +927,7 @@ namespace Microsoft.Playwright.Core
                 NoWaitAfter = options?.NoWaitAfter,
                 Timeout = options?.Timeout,
                 Trial = options?.Trial,
+                Strict = options?.Strict,
             });
 
         internal void NotifyPopup(Page page) => Popup?.Invoke(this, page);
@@ -982,6 +1070,7 @@ namespace Microsoft.Playwright.Core
             {
                 NoWaitAfter = options.NoWaitAfter,
                 Timeout = options.Timeout,
+                Strict = options.Strict,
             };
         }
     }

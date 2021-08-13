@@ -131,6 +131,7 @@ namespace Microsoft.Playwright.Core
                 selector,
                 values.Select(x => x as ElementHandle),
                 noWaitAfter: options?.NoWaitAfter,
+                strict: options?.Strict,
                 force: options?.Force,
                 timeout: options?.Timeout).ConfigureAwait(false)).ToList().AsReadOnly();
 
@@ -142,6 +143,7 @@ namespace Microsoft.Playwright.Core
                 selector,
                 values,
                 noWaitAfter: options?.NoWaitAfter,
+                strict: options?.Strict,
                 force: options?.Force,
                 timeout: options?.Timeout).ConfigureAwait(false)).ToList().AsReadOnly();
 
@@ -257,12 +259,13 @@ namespace Microsoft.Playwright.Core
                 timeout: options?.Timeout,
                 force: options?.Force,
                 noWaitAfter: options?.NoWaitAfter,
-                trial: options?.Trial);
+                trial: options?.Trial,
+                strict: options?.Strict);
 
         public Task<string> ContentAsync() => _channel.ContentAsync();
 
         public Task FocusAsync(string selector, FrameFocusOptions options = default)
-            => _channel.FocusAsync(selector, options?.Timeout);
+            => _channel.FocusAsync(selector, options?.Timeout, options?.Strict);
 
         public Task TypeAsync(string selector, string text, FrameTypeOptions options = default)
             => _channel.TypeAsync(
@@ -270,19 +273,20 @@ namespace Microsoft.Playwright.Core
                 text,
                 delay: options?.Delay,
                 timeout: options?.Timeout,
-                noWaitAfter: options?.NoWaitAfter);
+                noWaitAfter: options?.NoWaitAfter,
+                strict: options?.Strict);
 
         public Task<string> GetAttributeAsync(string selector, string name, FrameGetAttributeOptions options = default)
-            => _channel.GetAttributeAsync(selector, name, options?.Timeout);
+            => _channel.GetAttributeAsync(selector, name, options?.Timeout, options?.Strict);
 
         public Task<string> InnerHTMLAsync(string selector, FrameInnerHTMLOptions options = default)
-            => _channel.InnerHTMLAsync(selector, options?.Timeout);
+            => _channel.InnerHTMLAsync(selector, options?.Timeout, options?.Strict);
 
         public Task<string> InnerTextAsync(string selector, FrameInnerTextOptions options = default)
-            => _channel.InnerTextAsync(selector, options?.Timeout);
+            => _channel.InnerTextAsync(selector, options?.Timeout, options?.Strict);
 
         public Task<string> TextContentAsync(string selector, FrameTextContentOptions options = default)
-            => _channel.TextContentAsync(selector, options?.Timeout);
+            => _channel.TextContentAsync(selector, options?.Timeout, options?.Strict);
 
         public Task HoverAsync(string selector, FrameHoverOptions options = default)
             => _channel.HoverAsync(
@@ -291,7 +295,8 @@ namespace Microsoft.Playwright.Core
                 modifiers: options?.Modifiers,
                 force: options?.Force,
                 timeout: options?.Timeout,
-                trial: options?.Trial);
+                trial: options?.Trial,
+                strict: options?.Strict);
 
         public Task PressAsync(string selector, string key, FramePressOptions options = default)
             => _channel.PressAsync(
@@ -299,17 +304,19 @@ namespace Microsoft.Playwright.Core
                 key,
                 delay: options?.Delay,
                 timeout: options?.Timeout,
-                noWaitAfter: options?.NoWaitAfter);
+                noWaitAfter: options?.NoWaitAfter,
+                strict: options?.Strict);
 
         public Task DispatchEventAsync(string selector, string type, object eventInit = default, FrameDispatchEventOptions options = default)
             => _channel.DispatchEventAsync(
                     selector,
                     type,
                     ScriptsHelper.SerializedArgument(eventInit),
-                    options?.Timeout);
+                    options?.Timeout,
+                    options?.Strict);
 
         public Task FillAsync(string selector, string value, FrameFillOptions options = default)
-            => _channel.FillAsync(selector, value, force: options?.Force, timeout: options?.Timeout, noWaitAfter: options?.NoWaitAfter);
+            => _channel.FillAsync(selector, value, force: options?.Force, timeout: options?.Timeout, noWaitAfter: options?.NoWaitAfter, options?.Strict);
 
         public async Task<IElementHandle> AddScriptTagAsync(FrameAddScriptTagOptions options = default)
         {
@@ -345,7 +352,7 @@ namespace Microsoft.Playwright.Core
             => SetInputFilesAsync(selector, new[] { files }, options);
 
         public Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, FrameSetInputFilesOptions options = default)
-            => _channel.SetInputFilesAsync(selector, files, noWaitAfter: options?.NoWaitAfter, timeout: options?.Timeout);
+            => _channel.SetInputFilesAsync(selector, files, noWaitAfter: options?.NoWaitAfter, timeout: options?.Timeout, options?.Strict);
 
         public Task ClickAsync(string selector, FrameClickOptions options = default)
             => _channel.ClickAsync(
@@ -358,7 +365,8 @@ namespace Microsoft.Playwright.Core
                 timeout: options?.Timeout,
                 force: options?.Force,
                 noWaitAfter: options?.NoWaitAfter,
-                trial: options?.Trial);
+                trial: options?.Trial,
+                strict: options?.Strict);
 
         public Task DblClickAsync(string selector, FrameDblClickOptions options = default)
             => _channel.DblClickAsync(
@@ -370,7 +378,8 @@ namespace Microsoft.Playwright.Core
                 timeout: options?.Timeout,
                 force: options?.Force,
                 noWaitAfter: options?.NoWaitAfter,
-                trial: options?.Trial);
+                trial: options?.Trial,
+                strict: options?.Strict);
 
         public Task CheckAsync(string selector, FrameCheckOptions options = default)
             => _channel.CheckAsync(
@@ -379,7 +388,8 @@ namespace Microsoft.Playwright.Core
                 timeout: options?.Timeout,
                 force: options?.Force,
                 noWaitAfter: options?.NoWaitAfter,
-                trial: options?.Trial);
+                trial: options?.Trial,
+                strict: options?.Strict);
 
         public Task UncheckAsync(string selector, FrameUncheckOptions options = default)
             => _channel.UncheckAsync(
@@ -388,13 +398,14 @@ namespace Microsoft.Playwright.Core
                 timeout: options?.Timeout,
                 force: options?.Force,
                 noWaitAfter: options?.NoWaitAfter,
-                trial: options?.Trial);
+                trial: options?.Trial,
+                strict: options?.Strict);
 
         public Task SetContentAsync(string html, FrameSetContentOptions options = default)
             => _channel.SetContentAsync(html, timeout: options?.Timeout, waitUntil: options?.WaitUntil);
 
         public Task<string> InputValueAsync(string selector, FrameInputValueOptions options = null)
-            => _channel.InputValueAsync(selector);
+            => _channel.InputValueAsync(selector, options?.Timeout, options?.Strict);
 
         public async Task<IElementHandle> QuerySelectorAsync(string selector)
             => (await _channel.QuerySelectorAsync(selector).ConfigureAwait(false))?.Object;
@@ -413,7 +424,8 @@ namespace Microsoft.Playwright.Core
             => (await _channel.WaitForSelectorAsync(
                 selector: selector,
                 state: options?.State,
-                timeout: options?.Timeout).ConfigureAwait(false))?.Object;
+                timeout: options?.Timeout,
+                strict: options?.Strict).ConfigureAwait(false))?.Object;
 
         public async Task<IJSHandle> EvaluateHandleAsync(string script, object args = null)
             => (await _channel.EvaluateExpressionHandleAsync(
@@ -434,13 +446,22 @@ namespace Microsoft.Playwright.Core
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script,
-                arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
+                arg: ScriptsHelper.SerializedArgument(arg),
+                strict: null).ConfigureAwait(false));
 
         public async Task<T> EvalOnSelectorAsync<T>(string selector, string script, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
                 selector: selector,
                 script,
-                arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
+                arg: ScriptsHelper.SerializedArgument(arg),
+                strict: null).ConfigureAwait(false));
+
+        public async Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg = null, FrameEvalOnSelectorOptions options = null)
+            => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
+                selector: selector,
+                expression,
+                arg: ScriptsHelper.SerializedArgument(arg),
+                strict: options?.Strict).ConfigureAwait(false));
 
         public async Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAllAsync(
@@ -454,6 +475,11 @@ namespace Microsoft.Playwright.Core
                 script,
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
+        public ILocator Locator(string selector) => new Locator(this, selector);
+
+        public async Task<IElementHandle> QuerySelectorAsync(string selector, FrameQuerySelectorOptions options = null)
+            => (await _channel.QuerySelectorAsync(selector, options?.Strict).ConfigureAwait(false))?.Object;
+
         public async Task<IResponse> GotoAsync(string url, FrameGotoOptions options = default)
             => (await _channel.GotoAsync(
                 url,
@@ -462,22 +488,22 @@ namespace Microsoft.Playwright.Core
                 referer: options?.Referer).ConfigureAwait(false))?.Object;
 
         public Task<bool> IsCheckedAsync(string selector, FrameIsCheckedOptions options = default)
-            => _channel.IsCheckedAsync(selector, timeout: options?.Timeout);
+            => _channel.IsCheckedAsync(selector, timeout: options?.Timeout, options?.Strict);
 
         public Task<bool> IsDisabledAsync(string selector, FrameIsDisabledOptions options = default)
-            => _channel.IsDisabledAsync(selector, timeout: options?.Timeout);
+            => _channel.IsDisabledAsync(selector, timeout: options?.Timeout, options?.Strict);
 
         public Task<bool> IsEditableAsync(string selector, FrameIsEditableOptions options = default)
-            => _channel.IsEditableAsync(selector, timeout: options?.Timeout);
+            => _channel.IsEditableAsync(selector, timeout: options?.Timeout, options?.Strict);
 
         public Task<bool> IsEnabledAsync(string selector, FrameIsEnabledOptions options = default)
-            => _channel.IsEnabledAsync(selector, timeout: options?.Timeout);
+            => _channel.IsEnabledAsync(selector, timeout: options?.Timeout, options?.Strict);
 
         public Task<bool> IsHiddenAsync(string selector, FrameIsHiddenOptions options = default)
-            => _channel.IsHiddenAsync(selector, timeout: options?.Timeout);
+            => _channel.IsHiddenAsync(selector, timeout: options?.Timeout, options?.Strict);
 
         public Task<bool> IsVisibleAsync(string selector, FrameIsVisibleOptions options = default)
-            => _channel.IsVisibleAsync(selector, timeout: options?.Timeout);
+            => _channel.IsVisibleAsync(selector, timeout: options?.Timeout, options?.Strict);
 
         public Task WaitForURLAsync(string url, FrameWaitForURLOptions options = default)
             => WaitForURLAsync(url, null, null, options);
@@ -489,7 +515,7 @@ namespace Microsoft.Playwright.Core
             => WaitForURLAsync(null, null, url, options);
 
         public Task DragAndDropAsync(string source, string target, FrameDragAndDropOptions options = null)
-            => _channel.DragAndDropAsync(source, target, options?.Force, options?.NoWaitAfter, options?.Timeout, options?.Trial);
+            => _channel.DragAndDropAsync(source, target, options?.Force, options?.NoWaitAfter, options?.Timeout, options?.Trial, options?.Strict);
 
         private Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, FrameWaitForURLOptions options = default)
         {

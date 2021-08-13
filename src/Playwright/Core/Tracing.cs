@@ -44,7 +44,6 @@ namespace Microsoft.Playwright.Core
 
         public async Task StopAsync(TracingStopOptions options = default)
         {
-            await _channel.TracingStopAsync().ConfigureAwait(false);
             if (!string.IsNullOrEmpty(options?.Path))
             {
                 var result = await _channel.TracingExportAsync().ConfigureAwait(false);
@@ -52,6 +51,8 @@ namespace Microsoft.Playwright.Core
                 await artifact.SaveAsAsync(options?.Path).ConfigureAwait(false);
                 await artifact.DeleteAsync().ConfigureAwait(false);
             }
+
+            await _channel.TracingStopAsync().ConfigureAwait(false);
         }
     }
 }

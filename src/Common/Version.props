@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyVersion>1.14.0</AssemblyVersion>
     <PackageVersion>$(AssemblyVersion)-next-1</PackageVersion>
-    <DriverVersion>1.13.0-1626733671000</DriverVersion>
+    <DriverVersion>1.14.0-1628761546000</DriverVersion>
     <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <NoDefaultExcludes>true</NoDefaultExcludes>
@@ -11,10 +11,8 @@
     <PackageProjectUrl>https://github.com/microsoft/playwright-dotnet</PackageProjectUrl>
     <PackageTags>headless,chrome,firefox,webkit,playwright</PackageTags>
     <RepositoryUrl>https://github.com/microsoft/playwright-dotnet.git</RepositoryUrl>
-    <PackageReleaseNotes>
-      <![CDATA[
-]]>
-    </PackageReleaseNotes>
+    <PackageReleaseNotes><![CDATA[
+]]></PackageReleaseNotes>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
