@@ -44,10 +44,10 @@ namespace Microsoft.Playwright.Core
         private bool _disposed;
         private string _error;
 
-        internal Waiter(ChannelBase channel, string apiName)
+        internal Waiter(ChannelBase channel, string @event)
         {
             _channel = channel;
-            var beforeArgs = new { info = new { apiName = apiName, waitId = _waitId, phase = "before" } };
+            var beforeArgs = new { info = new { @event = @event, waitId = _waitId, phase = "before" } };
             var connection = _channel.Connection;
 
             _ = connection.SendMessageToServerAsync(channel.Guid, "waitForEventInfo", beforeArgs);
