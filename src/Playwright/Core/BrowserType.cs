@@ -124,7 +124,8 @@ namespace Microsoft.Playwright.Core
         {
             options ??= new BrowserTypeConnectOptions();
 #pragma warning disable CA2000 // Dispose objects before losing scope
-            var transport = new WebSocketTransport(wsEndpoint, options);
+            WebSocketTransport transport = new WebSocketTransport(wsEndpoint, options);
+            await transport.ConnectAsync().ConfigureAwait(false);
 #pragma warning restore CA2000
             var connection = new Connection(transport);
             var playwright = await connection.WaitForObjectWithKnownNameAsync<PlaywrightImpl>("Playwright").ConfigureAwait(false);
