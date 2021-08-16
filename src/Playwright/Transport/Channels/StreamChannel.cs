@@ -28,9 +28,9 @@ using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
-    internal class StreamChannel : Channel<PlaywrightStream>
+    internal class StreamChannel : Channel<Stream>
     {
-        public StreamChannel(string guid, Connection connection, PlaywrightStream owner) : base(guid, connection, owner)
+        public StreamChannel(string guid, Connection connection, Stream owner) : base(guid, connection, owner)
         {
         }
 
