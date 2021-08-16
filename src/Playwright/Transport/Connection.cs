@@ -364,7 +364,7 @@ namespace Microsoft.Playwright.Transport
                     result = new Selectors(parent, guid);
                     break;
                 case ChannelOwnerType.Stream:
-                    result = new PlaywrightStream(parent, guid);
+                    result = new Stream(parent, guid);
                     break;
                 default:
                     TraceMessage("Missing type " + type);

@@ -55,7 +55,7 @@ namespace Microsoft.Playwright.Core
 
         public Task SaveAsAsync(string path) => _channel.SaveAsAsync(path);
 
-        public async Task<Stream> CreateReadStreamAsync()
+        public async Task<System.IO.Stream> CreateReadStreamAsync()
         {
             var stream = (await _channel.GetStreamAsync().ConfigureAwait(false)).Stream;
             string base64 = await stream.ReadAsync().ConfigureAwait(false);
