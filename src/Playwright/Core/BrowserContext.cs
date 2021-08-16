@@ -45,8 +45,8 @@ namespace Microsoft.Playwright.Core
         private List<RouteSetting> _routes = new();
         private bool _isClosedOrClosing;
 
-        private float _defaultNavigationTimeout;
-        private float _defaultTimeout;
+        private float? _defaultNavigationTimeout;
+        private float? _defaultTimeout;
 
         internal BrowserContext(IChannelOwner parent, string guid, BrowserContextInitializer initializer) : base(parent, guid)
         {
@@ -112,7 +112,7 @@ namespace Microsoft.Playwright.Core
 
         internal float DefaultNavigationTimeout
         {
-            get => _defaultNavigationTimeout;
+            get => _defaultNavigationTimeout ?? PlaywrightImpl.DefaultTimeout;
             set
             {
                 _defaultNavigationTimeout = value;
@@ -122,7 +122,7 @@ namespace Microsoft.Playwright.Core
 
         internal float DefaultTimeout
         {
-            get => _defaultTimeout;
+            get => _defaultTimeout ?? PlaywrightImpl.DefaultTimeout;
             set
             {
                 _defaultTimeout = value;
