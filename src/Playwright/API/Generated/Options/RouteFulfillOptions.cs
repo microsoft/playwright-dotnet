@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class RouteFulfillOptions
+    public class RouteFulfillOptions : IOptions
     {
         public RouteFulfillOptions() { }
 

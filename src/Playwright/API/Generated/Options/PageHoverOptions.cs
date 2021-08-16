@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageHoverOptions
+    public class PageHoverOptions : IOptions
     {
         public PageHoverOptions() { }
 

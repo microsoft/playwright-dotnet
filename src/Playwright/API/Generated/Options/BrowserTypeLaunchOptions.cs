@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class BrowserTypeLaunchOptions
+    public class BrowserTypeLaunchOptions : IOptions
     {
         public BrowserTypeLaunchOptions() { }
 

@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class ElementHandleWaitForSelectorOptions
+    public class ElementHandleWaitForSelectorOptions : IOptions
     {
         public ElementHandleWaitForSelectorOptions() { }
 

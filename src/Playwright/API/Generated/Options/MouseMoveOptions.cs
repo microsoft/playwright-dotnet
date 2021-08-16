@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class MouseMoveOptions
+    public class MouseMoveOptions : IOptions
     {
         public MouseMoveOptions() { }
 

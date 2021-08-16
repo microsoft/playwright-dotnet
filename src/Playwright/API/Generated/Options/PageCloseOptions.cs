@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageCloseOptions
+    public class PageCloseOptions : IOptions
     {
         public PageCloseOptions() { }
 

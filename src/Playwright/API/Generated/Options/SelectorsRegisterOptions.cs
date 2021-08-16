@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class SelectorsRegisterOptions
+    public class SelectorsRegisterOptions : IOptions
     {
         public SelectorsRegisterOptions() { }
 

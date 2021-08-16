@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageWaitForConsoleMessageOptions
+    public class PageWaitForConsoleMessageOptions : IOptions
     {
         public PageWaitForConsoleMessageOptions() { }
 

@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class FileChooserSetFilesOptions
+    public class FileChooserSetFilesOptions : IOptions
     {
         public FileChooserSetFilesOptions() { }
 

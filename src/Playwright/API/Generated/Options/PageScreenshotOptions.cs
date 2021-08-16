@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageScreenshotOptions
+    public class PageScreenshotOptions : IOptions
     {
         public PageScreenshotOptions() { }
 

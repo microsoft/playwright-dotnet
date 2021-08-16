@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageUncheckOptions
+    public class PageUncheckOptions : IOptions
     {
         public PageUncheckOptions() { }
 

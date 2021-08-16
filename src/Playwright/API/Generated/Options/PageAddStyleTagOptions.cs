@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageAddStyleTagOptions
+    public class PageAddStyleTagOptions : IOptions
     {
         public PageAddStyleTagOptions() { }
 

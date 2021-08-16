@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageGoForwardOptions
+    public class PageGoForwardOptions : IOptions
     {
         public PageGoForwardOptions() { }
 

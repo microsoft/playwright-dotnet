@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageRunAndWaitForWebSocketOptions
+    public class PageRunAndWaitForWebSocketOptions : IOptions
     {
         public PageRunAndWaitForWebSocketOptions() { }
 

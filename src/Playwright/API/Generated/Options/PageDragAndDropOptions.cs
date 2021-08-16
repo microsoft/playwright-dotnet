@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageDragAndDropOptions
+    public class PageDragAndDropOptions : IOptions
     {
         public PageDragAndDropOptions() { }
 

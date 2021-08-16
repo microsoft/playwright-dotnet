@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageIsEnabledOptions
+    public class PageIsEnabledOptions : IOptions
     {
         public PageIsEnabledOptions() { }
 

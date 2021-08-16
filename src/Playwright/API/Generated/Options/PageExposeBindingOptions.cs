@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageExposeBindingOptions
+    public class PageExposeBindingOptions : IOptions
     {
         public PageExposeBindingOptions() { }
 

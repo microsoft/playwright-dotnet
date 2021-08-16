@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageReloadOptions
+    public class PageReloadOptions : IOptions
     {
         public PageReloadOptions() { }
 

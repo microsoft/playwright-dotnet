@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class ElementHandleDblClickOptions
+    public class ElementHandleDblClickOptions : IOptions
     {
         public ElementHandleDblClickOptions() { }
 

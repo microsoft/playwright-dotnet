@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageDispatchEventOptions
+    public class PageDispatchEventOptions : IOptions
     {
         public PageDispatchEventOptions() { }
 

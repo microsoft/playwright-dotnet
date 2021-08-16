@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class BrowserContextGrantPermissionsOptions
+    public class BrowserContextGrantPermissionsOptions : IOptions
     {
         public BrowserContextGrantPermissionsOptions() { }
 

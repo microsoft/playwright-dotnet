@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class KeyboardPressOptions
+    public class KeyboardPressOptions : IOptions
     {
         public KeyboardPressOptions() { }
 

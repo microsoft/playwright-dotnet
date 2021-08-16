@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class FrameCheckOptions
+    public class FrameCheckOptions : IOptions
     {
         public FrameCheckOptions() { }
 

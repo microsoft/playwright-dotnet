@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class FrameWaitForLoadStateOptions
+    public class FrameWaitForLoadStateOptions : IOptions
     {
         public FrameWaitForLoadStateOptions() { }
 

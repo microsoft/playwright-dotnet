@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageSetContentOptions
+    public class PageSetContentOptions : IOptions
     {
         public PageSetContentOptions() { }
 

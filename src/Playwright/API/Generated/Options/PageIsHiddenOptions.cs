@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageIsHiddenOptions
+    public class PageIsHiddenOptions : IOptions
     {
         public PageIsHiddenOptions() { }
 

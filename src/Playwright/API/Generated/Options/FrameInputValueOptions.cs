@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class FrameInputValueOptions
+    public class FrameInputValueOptions : IOptions
     {
         public FrameInputValueOptions() { }
 

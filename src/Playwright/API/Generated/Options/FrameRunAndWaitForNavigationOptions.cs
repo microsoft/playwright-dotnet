@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class FrameRunAndWaitForNavigationOptions
+    public class FrameRunAndWaitForNavigationOptions : IOptions
     {
         public FrameRunAndWaitForNavigationOptions() { }
 

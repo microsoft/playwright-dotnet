@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageIsVisibleOptions
+    public class PageIsVisibleOptions : IOptions
     {
         public PageIsVisibleOptions() { }
 

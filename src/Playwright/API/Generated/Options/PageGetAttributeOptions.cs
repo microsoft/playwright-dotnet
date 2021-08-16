@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageGetAttributeOptions
+    public class PageGetAttributeOptions : IOptions
     {
         public PageGetAttributeOptions() { }
 

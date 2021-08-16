@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class FrameWaitForSelectorOptions
+    public class FrameWaitForSelectorOptions : IOptions
     {
         public FrameWaitForSelectorOptions() { }
 

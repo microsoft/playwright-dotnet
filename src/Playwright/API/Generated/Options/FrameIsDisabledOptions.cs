@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class FrameIsDisabledOptions
+    public class FrameIsDisabledOptions : IOptions
     {
         public FrameIsDisabledOptions() { }
 

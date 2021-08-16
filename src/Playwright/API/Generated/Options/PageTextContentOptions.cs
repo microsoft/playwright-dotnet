@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageTextContentOptions
+    public class PageTextContentOptions : IOptions
     {
         public PageTextContentOptions() { }
 

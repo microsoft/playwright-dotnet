@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class RouteContinueOptions
+    public class RouteContinueOptions : IOptions
     {
         public RouteContinueOptions() { }
 

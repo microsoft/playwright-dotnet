@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class BrowserNewPageOptions
+    public class BrowserNewPageOptions : IOptions
     {
         public BrowserNewPageOptions() { }
 

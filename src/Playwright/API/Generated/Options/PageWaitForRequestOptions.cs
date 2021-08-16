@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageWaitForRequestOptions
+    public class PageWaitForRequestOptions : IOptions
     {
         public PageWaitForRequestOptions() { }
 

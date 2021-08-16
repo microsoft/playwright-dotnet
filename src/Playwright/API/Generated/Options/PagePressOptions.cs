@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PagePressOptions
+    public class PagePressOptions : IOptions
     {
         public PagePressOptions() { }
 
