@@ -324,5 +324,22 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(frame, response.Frame);
             StringAssert.Contains("/frames/one-frame.html", Page.Url);
         }
+
+        [PlaywrightTest]
+        [Timeout(45_000)]
+        public async Task ShouldHaveADefaultTimeout()
+        {
+            await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+            await PlaywrightAssert.ThrowsAsync<TimeoutException>(async () => await Page.RunAndWaitForNavigationAsync(() => Task.CompletedTask));
+        }
+
+        [PlaywrightTest]
+        [Timeout(5_000)]
+        public async Task ShouldTakeTimeoutIntoAccount()
+        {
+            await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+            Page.SetDefaultNavigationTimeout(1_000);
+            await PlaywrightAssert.ThrowsAsync<TimeoutException>(async () => await Page.RunAndWaitForNavigationAsync(() => Task.CompletedTask));
+        }
     }
 }

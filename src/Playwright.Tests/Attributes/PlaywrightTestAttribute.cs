@@ -33,6 +33,10 @@ namespace Microsoft.Playwright.Tests
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class PlaywrightTestAttribute : TestAttribute
     {
+        public PlaywrightTestAttribute()
+        {
+        }
+
         /// <summary>
         /// Creates a new instance of the attribute.
         /// </summary>
