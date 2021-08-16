@@ -46,21 +46,16 @@ namespace Microsoft.Playwright.Transport
         private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new();
         private readonly ConcurrentDictionary<int, ConnectionCallback> _callbacks = new();
         private readonly ChannelOwnerBase _rootObject;
-        private readonly Process _playwrightServerProcess;
         private readonly IConnectionTransport _transport;
         private readonly TaskQueue _queue = new();
         private int _lastId;
         private string _reason = string.Empty;
 
-        public Connection()
+        public Connection(IConnectionTransport connectionTransport)
         {
             _rootObject = new(null, this, string.Empty);
 
-            _playwrightServerProcess = GetProcess();
-            _playwrightServerProcess.StartInfo.Arguments = "run-driver";
-            _playwrightServerProcess.Start();
-            _playwrightServerProcess.Exited += (_, _) => Close("Process exited");
-            _transport = new StdIOTransport(_playwrightServerProcess);
+            _transport = connectionTransport;
             _transport.MessageReceived += Transport_MessageReceived;
             _transport.LogReceived += (_, e) => Console.Error.WriteLine(e.Message);
             _transport.TransportClosed += (_, e) => Close(e.CloseReason);
@@ -233,20 +228,6 @@ namespace Microsoft.Playwright.Transport
                 callback.TrySetResult(result);
             }
         }
-
-        private static Process GetProcess()
-            => new()
-            {
-                StartInfo =
-                {
-                    FileName = Paths.GetExecutablePath(),
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardInput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true,
-                },
-            };
 
         private void Transport_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
@@ -443,15 +424,6 @@ namespace Microsoft.Playwright.Transport
 
             _queue.Dispose();
             _transport.Close("Connection disposed");
-
-            try
-            {
-                _playwrightServerProcess?.Kill();
-                _playwrightServerProcess?.Dispose();
-            }
-            catch
-            {
-            }
         }
 
         [Conditional("DEBUG")]
