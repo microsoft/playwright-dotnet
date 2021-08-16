@@ -65,22 +65,7 @@ namespace Playwright.Tooling
             }.ExecuteAsync();
         }
 
-        private static Process GetProcess(string driverExecutablePath)
-            => new()
-            {
-                StartInfo =
-                {
-                    FileName = driverExecutablePath,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardInput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true,
-                    Arguments = "print-api-json",
-                },
-            };
-
-        private static async Task UpdateBrowserVersionsAsync(string basePath, string driverVersion)
+        private async Task UpdateBrowserVersionsAsync(string basePath, string driverVersion)
         {
             try
             {
@@ -88,21 +73,34 @@ namespace Playwright.Tooling
                 string playwrightVersion = driverVersion.Contains("-") ? driverVersion.Substring(0, driverVersion.IndexOf("-")) : driverVersion;
 
                 var regex = new Regex("<!-- GEN:(.*?) -->(.*?)<!-- GEN:stop -->", RegexOptions.Compiled);
-                string readme;
-                try
+
+                // get commit hash
+                var gitInfo = new ProcessStartInfo
                 {
-                    readme = await GetUpstreamReadmeAsync(playwrightVersion).ConfigureAwait(false);
-                }
-                catch
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    FileName = "git",
+                    CreateNoWindow = true,
+                    WorkingDirectory = Path.Combine(BasePath, "playwright"),
+                    Arguments = "rev-parse HEAD",
+                };
+
+                var gitProcess = Process.Start(gitInfo);
+                gitProcess.WaitForExit();
+                var hash = (await gitProcess.StandardOutput.ReadToEndAsync().ConfigureAwait(false))?.Trim();
+                var client = new HttpClient();
+                string readmeUrl = $"https://github.com/microsoft/playwright/blob/{hash}/README.md";
+                var readme = await client.GetStringAsync(readmeUrl).ConfigureAwait(false);
+
+                static string ReplaceBrowserVersion(string content, MatchCollection browserMatches)
                 {
-                    if (playwrightVersion.EndsWith(".0"))
+                    foreach (Match match in browserMatches)
                     {
-                        throw new FileNotFoundException("Could not find a suitable README file with browser version, nor fallback.");
+                        content = new Regex($"<!-- GEN:{match.Groups[1].Value} -->.*?<!-- GEN:stop -->")
+                            .Replace(content, $"<!-- GEN:{match.Groups[1].Value} -->{match.Groups[2].Value}<!-- GEN:stop -->");
                     }
 
-                    // fallback to a x.y.0 revision
-                    playwrightVersion = $"{playwrightVersion.Substring(0, playwrightVersion.LastIndexOf('.') + 1)}.0";
-                    readme = await GetUpstreamReadmeAsync(playwrightVersion).ConfigureAwait(false);
+                    return content;
                 }
 
                 var browserMatches = regex.Matches(readme);
@@ -116,24 +114,6 @@ namespace Playwright.Tooling
                 Console.WriteLine($"This is usually due to the readme file not yet existing for {driverVersion}.");
                 Console.WriteLine(e.Message);
             }
-        }
-
-        private static string ReplaceBrowserVersion(string content, MatchCollection browserMatches)
-        {
-            foreach (Match match in browserMatches)
-            {
-                content = new Regex($"<!-- GEN:{match.Groups[1].Value} -->.*?<!-- GEN:stop -->")
-                    .Replace(content, $"<!-- GEN:{match.Groups[1].Value} -->{match.Groups[2].Value}<!-- GEN:stop -->");
-            }
-
-            return content;
-        }
-
-        private static Task<string> GetUpstreamReadmeAsync(string playwrightVersion)
-        {
-            var client = new HttpClient();
-            string readmeUrl = $"https://raw.githubusercontent.com/microsoft/playwright/v{playwrightVersion}/README.md";
-            return client.GetStringAsync(readmeUrl);
         }
 
         private async Task DownloadDriverAsync(DirectoryInfo destinationDirectory, string driverVersion, string platform)
@@ -204,11 +184,6 @@ namespace Playwright.Tooling
 
                 var tasks = new List<Task>();
 
-                if (!driverVersion.Contains("next"))
-                {
-                    tasks.Add(UpdateBrowserVersionsAsync(BasePath, driverVersion));
-                }
-
                 foreach (var platform in _platforms)
                 {
                     tasks.Add(DownloadDriverAsync(destinationDirectory, driverVersion, platform));
@@ -221,6 +196,9 @@ namespace Playwright.Tooling
             {
                 Console.WriteLine("Drivers are up-to-date");
             }
+
+            // update readme
+            await UpdateBrowserVersionsAsync(BasePath, driverVersion).ConfigureAwait(false);
 
             return true;
         }
