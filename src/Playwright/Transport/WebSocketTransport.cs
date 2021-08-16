@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) Microsoft Corporation.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,21 +42,19 @@ namespace Microsoft.Playwright.Transport
         private readonly string _wsEndpoint;
         private readonly BrowserTypeConnectOptions _options;
         private readonly float _slowMo;
-        private CancellationTokenSource _connectCancellationSource;
+        private CancellationTokenSource _webSocketToken;
 
         internal WebSocketTransport(
             string wsEndpoint = default,
             BrowserTypeConnectOptions options = default)
         {
             _webSocket = new ClientWebSocket();
+            _webSocketToken = new CancellationTokenSource();
             _wsEndpoint = wsEndpoint;
             _options = options;
             _slowMo = _options?.SlowMo ?? 0;
             SetRequestHeaders();
         }
-
-        /// <inheritdoc cref="IDisposable.Dispose"/>
-        ~WebSocketTransport() => Dispose(false);
 
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
@@ -40,131 +62,109 @@ namespace Microsoft.Playwright.Transport
 
         public event EventHandler<TransportClosedEventArgs> TransportClosed;
 
-        public bool IsClosed { get; private set; }
+        private bool IsClosed { get; set; }
 
         public async Task SendAsync(string message)
         {
-            await Task.Delay((int)_slowMo).ConfigureAwait(false);
+            if (_slowMo > 0)
+                await Task.Delay((int)_slowMo).ConfigureAwait(false);
 
+            var messageBuffer = Encoding.UTF8.GetBytes(message);
             try
             {
-                var messageBuffer = Encoding.UTF8.GetBytes(message);
-                await _webSocket.SendAsync(new ArraySegment<byte>(messageBuffer, 0, messageBuffer.Length), WebSocketMessageType.Text, true, CancellationToken.None).ConfigureAwait(false);
+                await _webSocket.SendAsync(new ArraySegment<byte>(messageBuffer, 0, messageBuffer.Length), WebSocketMessageType.Text, true, _webSocketToken.Token).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                // ReceiveAsync won't throw, so we need to handle it here.
+                HandleSocketClosed(e.ToString());
+            }
+        }
+
+        public async Task ConnectAsync()
+        {
+            var timeout = _options?.Timeout ?? 30000;
+            using var connectCancellationSource = new CancellationTokenSource((int)timeout);
+            await _webSocket.ConnectAsync(new Uri(_wsEndpoint), connectCancellationSource.Token).ConfigureAwait(false);
+            _ = Task.Factory.StartNew(() => DispatchIncomingMessagesAsync(), _webSocketToken.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+        }
+
+        private async Task DispatchIncomingMessagesAsync()
+        {
+#pragma warning disable VSTHRD103
+            var buffer = WebSocket.CreateClientBuffer(DefaultBufferSize, DefaultBufferSize);
+            var memoryStream = new MemoryStream();
+            string closeReason = string.Empty;
+            try
+            {
+                while (true)
+                {
+                    WebSocketReceiveResult result = await _webSocket.ReceiveAsync(buffer, _webSocketToken.Token).ConfigureAwait(false);
+
+                    if (_webSocket.State != WebSocketState.Open)
+                        break;
+
+                    memoryStream.Write(buffer.Array, 0, result.Count);
+
+                    if (result.EndOfMessage)
+                    {
+                        string output = Encoding.UTF8.GetString(memoryStream.ToArray());
+                        MessageReceived?.Invoke(this, new MessageReceivedEventArgs(output));
+                        memoryStream.Dispose();
+                        memoryStream = new MemoryStream();
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Close(ex);
+                closeReason = ex.ToString();
             }
+
+            // Does not matter whether this is error or not, report
+            // transport as closed, close web socket if open.
+            HandleSocketClosed(closeReason);
+            memoryStream.Dispose();
+#pragma warning restore VSTHRD103
         }
 
-        /// <inheritdoc/>
         public void Close(string closeReason)
         {
-            if (!IsClosed)
-            {
-                IsClosed = true;
-                HandleSocketClosed(closeReason);
-            }
+            _webSocketToken.Cancel();
         }
 
-        /// <inheritdoc/>
+        private void HandleSocketClosed(string closeReason)
+        {
+            if (IsClosed)
+                return;
+            IsClosed = true;
+            TransportClosed?.Invoke(this, new TransportClosedEventArgs { CloseReason = closeReason });
+            if (_webSocket.State == WebSocketState.Open)
+                _ = _webSocket.CloseOutputAsync(WebSocketCloseStatus.Empty, null, CancellationToken.None).ConfigureAwait(false);
+        }
+
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        public async Task ConnectAsync()
-        {
-            var timeout = _options?.Timeout ?? 30000;
-            _connectCancellationSource = new CancellationTokenSource((int)timeout);
-            await _webSocket.ConnectAsync(new Uri(_wsEndpoint), _connectCancellationSource.Token).ConfigureAwait(false);
-            ScheduleTransportTask(DispatchIncomingMessagesAsync, CancellationToken.None);
-        }
-
-        private void Close(Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine(ex);
-            Close(ex.ToString());
-        }
-
-        private void HandleSocketClosed(string closeReason)
-        {
-            TransportClosed?.Invoke(this, new TransportClosedEventArgs { CloseReason = closeReason });
-        }
-
-        private void ScheduleTransportTask(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
-            => Task.Factory.StartNew(() => func(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
-
-        private async Task DispatchIncomingMessagesAsync(CancellationToken token)
-        {
-            try
-            {
-                if (_webSocket.State == WebSocketState.Closed)
-                {
-                    HandleSocketClosed("Closed");
-                }
-                else
-                {
-                    var buffer = WebSocket.CreateClientBuffer(DefaultBufferSize, DefaultBufferSize);
-
-                    while (!token.IsCancellationRequested && _webSocket.State == WebSocketState.Open)
-                    {
-                        WebSocketReceiveResult result;
-                        using (MemoryStream memoryStream = new())
-                        {
-                            do
-                            {
-                                result = await _webSocket.ReceiveAsync(buffer, token).ConfigureAwait(false);
-
-                                if (result.MessageType == WebSocketMessageType.Close)
-                                {
-                                    HandleSocketClosed("Closed");
-                                }
-                                else
-                                {
-#pragma warning disable VSTHRD103 // Call async methods when in an async method
-                                    memoryStream.Write(buffer.Array, 0, result.Count);
-#pragma warning restore VSTHRD103
-                                }
-                            }
-                            while (!result.EndOfMessage);
-
-                            string output = Encoding.UTF8.GetString(memoryStream.ToArray());
-                            MessageReceived?.Invoke(this, new MessageReceivedEventArgs(output));
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Close(ex);
-            }
-        }
-
         private void Dispose(bool disposing)
         {
-            if (!disposing)
+            if (disposing)
             {
-                return;
+                this._webSocketToken.Dispose();
+                this._webSocket.Dispose();
             }
-
-            _connectCancellationSource?.Dispose();
-            _webSocket?.Dispose();
         }
 
-        private string GenerateUserAgent()
+        private void SetRequestHeaders()
         {
             var architecture = RuntimeInformation.OSArchitecture;
             var osAndVersion = RuntimeInformation.OSDescription;
             var frameworkDescription = RuntimeInformation.FrameworkDescription;
             var assemblyVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
-            return $"Playwright/{assemblyVersion} {frameworkDescription} ({architecture}/{osAndVersion})";
-        }
-
-        private void SetRequestHeaders()
-        {
-            _webSocket.Options.SetRequestHeader("User-Agent", GenerateUserAgent());
+            var userAgent = $"Playwright/{assemblyVersion} {frameworkDescription} ({architecture}/{osAndVersion})";
+            _webSocket.Options.SetRequestHeader("User-Agent", userAgent);
             foreach (var item in _options?.Headers ?? Array.Empty<KeyValuePair<string, string>>())
             {
                 _webSocket.Options.SetRequestHeader(item.Key, item.Value);

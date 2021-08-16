@@ -59,7 +59,6 @@ namespace Microsoft.Playwright.Tests
                     },
                 };
                 browserServer.Process.Start();
-                browserServer.Process.Exited += (_, _) => browserServer.Process.Kill();
                 browserServer.WSEndpoint = browserServer.Process.StandardOutput.ReadLine();
 
                 if (browserServer.WSEndpoint != null && !browserServer.WSEndpoint.StartsWith("ws://"))
@@ -77,7 +76,7 @@ namespace Microsoft.Playwright.Tests
         [TearDown]
         public void TearDown()
         {
-            _browserServer?.Process?.Kill();
+            _browserServer.Process.Kill();
             _browserServer = null;
         }
 
