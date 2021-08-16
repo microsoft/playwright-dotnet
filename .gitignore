@@ -359,3 +359,4 @@ src/Playwright/Microsoft.Playwright.xml
 
 dotnet-format/
 .runsettings
+testCert.cer

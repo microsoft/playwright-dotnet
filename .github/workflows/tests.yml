@@ -31,32 +31,25 @@ jobs:
           dotnet-version: 5.0.x
       - name: Install prerequisites and download drivers
         shell: pwsh
-        run: .\build.ps1 driver
+        run: ./build.ps1 driver
       - name: Building...
-        shell: pwsh
-        run: dotnet build 
-        working-directory: src
+        run: dotnet build ./src
       - name: Installing Browsers and dependencies...
-        shell: pwsh
         run: |
-          dotnet run --project .\src\Playwright\Playwright.csproj -f net5.0 -- install
-          dotnet run --project .\src\Playwright\Playwright.csproj -f net5.0 -- install-deps
+          dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install
+          dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install-deps
       - name: Running tests...
         if: ${{ matrix.os != 'ubuntu-latest' }}
-        shell: pwsh
         env:
           BROWSER: ${{ matrix.product }}
         run: 
-          dotnet test ./Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --logger "trx;LogFileName=TestResults.xml" -- NUnit.NumberOfTestWorkers=1
-        working-directory: src
+          dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --logger "trx;LogFileName=TestResults.xml" -- NUnit.NumberOfTestWorkers=1
       - name: Running tests... (Linux)
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        shell: bash
         env:
           BROWSER: ${{ matrix.product }}
-        working-directory: src
         run: |
-          xvfb-run dotnet test ./Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --logger "trx" -- NUnit.NumberOfTestWorkers=1
+          xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --logger "trx" -- NUnit.NumberOfTestWorkers=1
 
   test_net31:
     name: Chromium on Ubuntu using .NET 3.1
@@ -76,22 +69,17 @@ jobs:
           dotnet-version: 5.0.x
       - name: Install prerequisites and download drivers
         shell: pwsh
-        run: .\build.ps1 driver
+        run: ./build.ps1 driver
       - name: Building...
-        shell: pwsh
         run: |
-          dotnet build -f netcoreapp3.1 .\Playwright\Playwright.csproj
-          dotnet build -f netcoreapp3.1 .\Playwright.Tests\Playwright.Tests.csproj
-        working-directory: src
+          dotnet build -f netcoreapp3.1 ./src/Playwright/Playwright.csproj
+          dotnet build -f netcoreapp3.1 ./src/Playwright.Tests/Playwright.Tests.csproj
       - name: Installing Browsers and dependencies...
-        shell: pwsh
         run: |
-          dotnet run --project .\src\Playwright\Playwright.csproj -f net5.0 -- install
-          dotnet run --project .\src\Playwright\Playwright.csproj -f net5.0 -- install-deps
+          dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install
+          dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install-deps
       - name: Running tests... 
-        shell: bash
         env:
           BROWSER: CHROMIUM
-        working-directory: src
         run: |
-          xvfb-run dotnet test ./Playwright.Tests/Playwright.Tests.csproj -c Debug -f netcoreapp3.1 --logger "trx" -- NUnit.NumberOfTestWorkers=1
+          xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f netcoreapp3.1 --logger "trx" -- NUnit.NumberOfTestWorkers=1
