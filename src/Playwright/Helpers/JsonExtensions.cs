@@ -97,5 +97,25 @@ namespace Microsoft.Playwright.Helpers
                     new JsonStringEnumMemberConverter(JsonNamingPolicy.CamelCase),
                 },
             };
+
+#nullable enable
+        internal static string? ToOptionalString(this JsonElement? element, string name)
+        {
+            if (!element.HasValue)
+            {
+                return null;
+            }
+
+#pragma warning disable IDE0018 // Inline variable declaration will cause issues due to Roslyn design: https://github.com/dotnet/roslyn/issues/54711
+            System.Text.Json.JsonElement retElement;
+#pragma warning restore IDE0018 // Inline variable declaration
+            if (element.Value.TryGetProperty(name, out retElement))
+            {
+                return retElement.ToString();
+            }
+
+            return null;
+        }
+#nullable disable
     }
 }
