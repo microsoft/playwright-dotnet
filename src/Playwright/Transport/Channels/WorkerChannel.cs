@@ -23,14 +23,12 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
-    internal class WorkerChannel : Channel<Worker>
+    internal class WorkerChannel : WorkerChannelImpl
     {
         public WorkerChannel(string guid, Connection connection, Worker owner) : base(guid, connection, owner)
         {
@@ -46,30 +44,6 @@ namespace Microsoft.Playwright.Transport.Channels
                     Closed?.Invoke(this, EventArgs.Empty);
                     break;
             }
-        }
-
-        internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, object arg)
-            => Connection.SendMessageToServerAsync<JSHandleChannel>(
-                Guid,
-                "evaluateExpressionHandle",
-                new Dictionary<string, object>
-                {
-                    ["expression"] = script,
-                    ["arg"] = arg,
-                });
-
-        internal Task<JsonElement?> EvaluateExpressionAsync(
-            string script,
-            object arg)
-        {
-            return Connection.SendMessageToServerAsync<JsonElement?>(
-                Guid,
-                "evaluateExpression",
-                new Dictionary<string, object>
-                {
-                    ["expression"] = script,
-                    ["arg"] = arg,
-                });
         }
     }
 }

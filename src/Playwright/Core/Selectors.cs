@@ -46,14 +46,7 @@ namespace Microsoft.Playwright.Core
             options ??= new SelectorsRegisterOptions();
 
             var script = ScriptsHelper.EvaluationScript(options?.Script, options?.Path);
-            var registerParam = new SelectorsRegisterParams
-            {
-                Name = name,
-                Source = script,
-                ContentScript = options?.ContentScript,
-            };
-
-            await _channel.RegisterAsync(registerParam).ConfigureAwait(false);
+            await _channel.RegisterAsync(name, script, options?.ContentScript).ConfigureAwait(false);
         }
     }
 }

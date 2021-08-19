@@ -22,14 +22,31 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright.Transport.Channels
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace Microsoft.Playwright.Transport.Converters
 {
-    internal class SelectorsRegisterParams
+    internal class ExceptionConverter
+        : JsonConverter<Exception>
     {
-        public string Name { get; set; }
+        public override Exception Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
 
-        public string Source { get; set; }
+        public override void Write(Utf8JsonWriter writer, Exception value, JsonSerializerOptions options)
+        {
+            if (writer == null || value?.GetType().IsAssignableFrom(typeof(Exception)) != true)
+                return;
 
-        public bool? ContentScript { get; set; }
+            var error = new
+            {
+                message = value.Message,
+                stack = value.StackTrace,
+                name = value.GetType().Name,
+            };
+
+            var val = JsonSerializer.Serialize(error);
+            writer.WriteStringValue(val);
+        }
     }
 }
