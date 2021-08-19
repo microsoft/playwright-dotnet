@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 "reject",
                     new
                     {
-                        error = error,
+                        error = error.ToObject(),
                     }
                 )
                 .ConfigureAwait(false);

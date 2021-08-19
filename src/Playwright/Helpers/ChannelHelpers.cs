@@ -52,6 +52,23 @@ namespace Microsoft.Playwright.Helpers
                 throw new ArgumentNullException($"Element {name} expected, but was not found.");
             return result;
         }
+
+        // this method is needed, because a converter for <see cref="Exception"/> is no longer supported
+        // since .NET5 and throws an exception of "Serialization and deserialization of 'System.Type' instances are not supported and should be avoided since they can lead to security issues."}
+        internal static dynamic ToObject(this Exception exception)
+        {
+            if (exception == null) return new { };
+
+            return new
+            {
+                error = new
+                {
+                    message = exception.Message,
+                    stack = exception.StackTrace,
+                    name = exception.GetType().Name,
+                },
+            };
+        }
     }
 }
 #nullable disable
