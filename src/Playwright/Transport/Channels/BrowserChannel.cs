@@ -77,7 +77,8 @@ namespace Microsoft.Playwright.Transport.Channels
             string userAgent = null,
             ViewportSize viewportSize = default,
             ScreenSize screenSize = default,
-            string baseUrl = default)
+            string baseUrl = default,
+            bool? strictSelectors = default)
         {
             var args = new Dictionary<string, object>
             {
@@ -103,6 +104,7 @@ namespace Microsoft.Playwright.Transport.Channels
             args.Add("offline", offline);
             args.Add("permissions", permissions);
             args.Add("proxy", proxy);
+            args.Add("strictSelectors", strictSelectors);
 
             if (!string.IsNullOrEmpty(recordHarPath))
             {
