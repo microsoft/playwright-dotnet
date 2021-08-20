@@ -91,6 +91,21 @@ stages:
         packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
         versioningScheme: 'off'
 
+    - task: DotNetCoreCLI@2
+      displayName: Build Playwright.MSTest
+      inputs:
+        command: 'build'
+        projects: '**/Playwright.MSTest.csproj'
+        arguments: '-c $(BuildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: Pack Playwright.MSTest NuGet
+      inputs:
+        command: 'pack'
+        packagesToPack: '**/Playwright.MSTest.csproj'
+        packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
+        versioningScheme: 'off'
+
     - task: PublishBuildArtifacts@1
       displayName: Copy NuGet Artifacts to Build Results
       inputs:
@@ -172,6 +187,32 @@ stages:
 
     - task: NuGetCommand@2
       displayName: Push NUnit NuGet to Nuget.org
+      inputs:
+        command: 'push'
+        packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg'
+        nuGetFeedType: 'external'
+        publishFeedCredentials: 'NuGet-Playwright'
+
+- stage: ReleasePlaywrightMSTest
+  dependsOn: BuildPackageSign
+
+  jobs:
+  - job: ReleaseNugetMSTest
+    displayName: Publish Playwright.MSTest on Nuget.org
+    condition: eq('${{parameters.doRelease}}', true)
+
+    steps:
+    - checkout: none
+    - task: DownloadBuildArtifacts@1
+      displayName: Download the NuGet Packages from Build System
+      inputs:
+        buildType: 'current'
+        downloadType: 'specific'
+        itemPattern: '**/*.MSTest.*'
+        downloadPath: '$(System.ArtifactsDirectory)'
+
+    - task: NuGetCommand@2
+      displayName: Push MSTest NuGet to Nuget.org
       inputs:
         command: 'push'
         packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg'
