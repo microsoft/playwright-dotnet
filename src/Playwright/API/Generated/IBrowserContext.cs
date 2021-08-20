@@ -205,7 +205,7 @@ namespace Microsoft.Playwright
         /// <code>
         /// var context = await browser.NewContextAsync();<br/>
         /// await context.GrantPermissionsAsync(new[] { "clipboard-read" });<br/>
-        /// // Alternatively, you can use the helper class ContextPermissions<br/>
+        /// // Alternatively, you can use the helper class ContextPermissions <br/>
         /// //  to specify the permissions...<br/>
         /// // do stuff ...<br/>
         /// await context.ClearPermissionsAsync();
@@ -287,7 +287,7 @@ namespace Microsoft.Playwright
         ///   "&lt;div&gt;Or click me&lt;/div&gt;\n");<br/>
         /// <br/>
         /// await page.ClickAsync("div");<br/>
-        /// // Note: it makes sense to await the result here, because otherwise, the context<br/>
+        /// // Note: it makes sense to await the result here, because otherwise, the context <br/>
         /// //  gets closed and the binding function will throw an exception.<br/>
         /// Assert.Equal("Click me", await result.Task);
         /// </code>
