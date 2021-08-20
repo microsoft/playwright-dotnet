@@ -101,7 +101,8 @@ namespace Microsoft.Playwright.Core
                userAgent: options.UserAgent,
                viewportSize: options.ViewportSize,
                screenSize: options.ScreenSize,
-               baseUrl: options.BaseURL).ConfigureAwait(false)).Object;
+               baseUrl: options.BaseURL,
+               strictSelectors: options.StrictSelectors).ConfigureAwait(false)).Object;
 
             context.RecordVideo = !string.IsNullOrEmpty(options.RecordVideoDir);
 
@@ -142,6 +143,7 @@ namespace Microsoft.Playwright.Core
                 StorageState = options.StorageState,
                 StorageStatePath = options.StorageStatePath,
                 BaseURL = options.BaseURL,
+                StrictSelectors = options.StrictSelectors,
             };
 
             var context = (BrowserContext)await NewContextAsync(contextOptions).ConfigureAwait(false);

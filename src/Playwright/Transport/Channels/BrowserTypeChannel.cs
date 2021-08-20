@@ -123,7 +123,8 @@ namespace Microsoft.Playwright.Transport.Channels
             Dictionary<string, object> recordVideo = default,
             IEnumerable<string> ignoreDefaultArgs = default,
             bool? ignoreAllDefaultArgs = default,
-            string baseUrl = default)
+            string baseUrl = default,
+            bool? strictSelectors = default)
         {
             var channelArgs = new Dictionary<string, object>
             {
@@ -146,6 +147,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 { "acceptDownloads", acceptDownloads },
                 { "ignoreHTTPSErrors", ignoreHTTPSErrors },
                 { "bypassCSP", bypassCSP },
+                { "strictSelectors", strictSelectors },
             };
 
             if (viewportSize?.Width == -1)

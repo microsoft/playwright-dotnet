@@ -70,6 +70,7 @@ namespace Microsoft.Playwright
             ScreenSize = clone.ScreenSize;
             StorageState = clone.StorageState;
             StorageStatePath = clone.StorageStatePath;
+            StrictSelectors = clone.StrictSelectors;
             TimezoneId = clone.TimezoneId;
             UserAgent = clone.UserAgent;
             ViewportSize = clone.ViewportSize;
@@ -278,6 +279,17 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("storageStatePath")]
         public string? StorageStatePath { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// It specified, enables strict selectors mode for this context. In the strict selectors
+        /// mode all operations on selectors that imply single target DOM element will throw
+        /// when more than one element matches the selector. See <see cref="ILocator"/> to learn
+        /// more about the strict mode.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("strictSelectors")]
+        public bool? StrictSelectors { get; set; }
 
         /// <summary>
         /// <para>
