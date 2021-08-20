@@ -1,4 +1,4 @@
-# Rolling Playwright-Python to the latest Playwright driver
+# Rolling Playwright-dotnet to the latest Playwright driver
 
 * remove old gen files: `find src/Playwright | grep Generated | xargs rm`
 * install dotnet with installer: https://dotnet.microsoft.com/download/dotnet/5.0
