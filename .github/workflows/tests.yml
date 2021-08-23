@@ -72,7 +72,7 @@ jobs:
         run: ./build.ps1 driver
       - name: Building...
         run: |
-          dotnet build -f netcoreapp3.1 ./src/Playwright/Playwright.csproj
+          dotnet build -f netstandard2.0 ./src/Playwright/Playwright.csproj
           dotnet build -f netcoreapp3.1 ./src/Playwright.Tests/Playwright.Tests.csproj
       - name: Installing Browsers and dependencies...
         run: |

@@ -234,15 +234,14 @@ namespace Microsoft.Playwright.Core
 
         public async Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions options = default)
         {
-            var result = WaitForNavigationAsync(options == null ? null :
-                new()
-                {
-                    UrlString = options?.UrlString,
-                    UrlRegex = options?.UrlRegex,
-                    UrlFunc = options?.UrlFunc,
-                    WaitUntil = options?.WaitUntil,
-                    Timeout = options?.Timeout,
-                });
+            var result = WaitForNavigationAsync(new()
+            {
+                UrlString = options?.UrlString,
+                UrlRegex = options?.UrlRegex,
+                UrlFunc = options?.UrlFunc,
+                WaitUntil = options?.WaitUntil,
+                Timeout = options?.Timeout,
+            });
             if (action != null)
             {
                 await Task.WhenAll(result, action()).ConfigureAwait(false);
@@ -521,7 +520,7 @@ namespace Microsoft.Playwright.Core
         {
             if (UrlMatches(Url, urlString, urlRegex, urlFunc))
             {
-                return WaitForLoadStateAsync(ToLoadState(options?.WaitUntil), options != null ? new() { Timeout = options?.Timeout } : null);
+                return WaitForLoadStateAsync(ToLoadState(options?.WaitUntil), new() { Timeout = options?.Timeout });
             }
 
             return WaitForNavigationAsync(
