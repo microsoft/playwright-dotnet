@@ -164,7 +164,7 @@ namespace Microsoft.Playwright.Transport
 
             if (typeof(T) == typeof(JsonElement?))
             {
-                return (T)(object)result;
+                return (T)(object)result?.Clone();
             }
             else if (result == null)
             {
