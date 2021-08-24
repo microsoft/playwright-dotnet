@@ -182,14 +182,7 @@ namespace Microsoft.Playwright.Tests
             else
             {
                 Assert.AreEqual(name, details.Issuer);
-                if (TestConstants.IsLinux)
-                {
-                    Assert.AreEqual("TLS 1.3", details.Protocol);
-                }
-                else
-                {
-                    Assert.AreEqual("TLS 1.2", details.Protocol);
-                }
+                StringAssert.Contains("TLS 1.", details.Protocol);
             }
         }
 
