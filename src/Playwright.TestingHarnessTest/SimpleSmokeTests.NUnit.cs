@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Playwright.Tests.MSTest
 {
-        
+
     public class SimpleSmokeTestsNUnit : PageTest
     {
         [Test]
