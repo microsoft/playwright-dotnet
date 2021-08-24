@@ -39,23 +39,14 @@ namespace Microsoft.Playwright
 
         public int Run(string[] args)
         {
-            args ??= Array.Empty<string>();
-            for (int i = 0; i < args.Length; i++)
-            {
-                var a = args[i];
-                if (a.Contains(" "))
-                {
-                    var left = a.IndexOf('=');
-                    if (left >= 0)
-                    {
-                        args[i] = a.Substring(0, left + 1) + "\"" + a.Substring(left + 1, a.Length - left - 1) + "\"";
-                    }
-                    else
-                    {
-                        args[i] = $"\"{a}\"";
-                    }
-                }
-            }
+            // we need to use this logic, because .NET by design does some weird magic with the quotes
+            // so, we'll use a bit of our own magic... We'll start by calling the same base mathod, however
+            // we know it'll return the executable & path in the first argument. We'll use this to replace
+            // the entire string, which we can access from the "original" command line that we were called with
+            // which doesn't have the quotes stripped, but does include the full path
+            // see https://github.com/microsoft/playwright-dotnet/issues/1653
+            args = Environment.GetCommandLineArgs();
+            var lineArguments = Environment.CommandLine.Replace(args[0], string.Empty);
 
             string pwPath = null;
             try
@@ -67,7 +58,7 @@ namespace Microsoft.Playwright
                 return PrintError("Microsoft.Playwright assembly was found, but is missing required assets. Please ensure to build your project before running Playwright tool.");
             }
 
-            var playwrightStartInfo = new ProcessStartInfo(pwPath, string.Join(" ", args))
+            var playwrightStartInfo = new ProcessStartInfo(pwPath, lineArguments)
             {
                 UseShellExecute = false,
                 CreateNoWindow = true,
