@@ -20,4 +20,10 @@
     <ProjectReference Include="..\Playwright.NUnit\Playwright.NUnit.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="index.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
