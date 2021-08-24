@@ -39,11 +39,7 @@ namespace Microsoft.Playwright
 
         public int Run(string[] args)
         {
-            // we need to use this logic, because .NET by design does some weird magic with the quotes
-            // so, we'll use a bit of our own magic... We'll start by calling the same base mathod, however
-            // we know it'll return the executable & path in the first argument. We'll use this to replace
-            // the entire string, which we can access from the "original" command line that we were called with
-            // which doesn't have the quotes stripped, but does include the full path
+            // we need to use the original command line to avoid getting quotes stripped by the runtime
             // see https://github.com/microsoft/playwright-dotnet/issues/1653
             args = Environment.GetCommandLineArgs();
             var lineArguments = Environment.CommandLine.Replace(args[0], string.Empty);
