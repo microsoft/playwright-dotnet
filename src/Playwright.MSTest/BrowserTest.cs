@@ -35,7 +35,7 @@ namespace Microsoft.Playwright.MSTest
         public IBrowser? Browser { get; private set; }
         private readonly List<IBrowserContext> _contexts = new();
 
-        public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions options)
+        public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions? options)
         {
             var context = await Browser!.NewContextAsync(options);
             _contexts.Add(context);

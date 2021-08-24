@@ -49,10 +49,16 @@ namespace Microsoft.Playwright.MSTest
         public int WorkerIndex { get => _currentWorker!.WorkerIndex; }
 
         [TestInitialize]
-
-        protected async Task Setup()
+        public async Task Setup()
         {
-            Playwright = await _playwrightTask;
+            try
+            {
+                Playwright = await _playwrightTask;
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message, e.StackTrace);
+            }
             Assert.IsNotNull(Playwright, "Playwright could not be instantiated.");
             BrowserType = Playwright[BrowserName];
             Assert.IsNotNull(BrowserType, $"The requested browser ({BrowserName}) could not be found - make sure your BROWSER env variable is set correctly.");
@@ -65,8 +71,7 @@ namespace Microsoft.Playwright.MSTest
         }
 
         [TestCleanup]
-
-        protected async Task Teardown()
+        public async Task Teardown()
         {
             if (TestOK)
             {
@@ -107,10 +112,10 @@ namespace Microsoft.Playwright.MSTest
 
         protected bool TestOK
         {
-            get => TestContext.CurrentTestOutcome == UnitTestOutcome.Passed
-                || TestContext.CurrentTestOutcome == UnitTestOutcome.NotRunnable;
+            get => TestContext!.CurrentTestOutcome == UnitTestOutcome.Passed
+                || TestContext!.CurrentTestOutcome == UnitTestOutcome.NotRunnable;
         }
 
-        public TestContext TestContext { get; set; }
+        public TestContext? TestContext { get; set; }
     }
 }
