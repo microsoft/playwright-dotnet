@@ -1,0 +1,38 @@
+name: Test Harness Tests
+
+on:
+  push:
+    branches:
+      - main
+      - release-*
+  pull_request:
+    branches:
+      - main
+      - release-*
+
+jobs:
+  test_net5:
+    name: Quick Test Harness Tests using .NET 5
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 1
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+      - name: Install prerequisites and download drivers
+        shell: pwsh
+        run: ./build.ps1 driver
+      - name: Building...
+        run: dotnet build ./src
+      - name: Installing Browsers and dependencies...
+        run: |
+          dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install
+          dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install-deps
+      - name: Running tests... 
+        run: |
+          xvfb-run dotnet test ./src/Playwright.TestingHarnessTest/Playwright.TestingHarnessTest.csproj -c Debug -f net5.0 --logger "trx"
