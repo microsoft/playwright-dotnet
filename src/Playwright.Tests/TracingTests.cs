@@ -38,7 +38,7 @@ namespace Microsoft.Playwright.Tests
     [Parallelizable(ParallelScope.Self)]
     public class TracingTests : ContextTestEx
     {
-        [PlaywrightTest("tracing.spec.ts", "should collect trace")]
+        [PlaywrightTest("tracing.spec.ts", "should collect trace with resources, but no js")]
         public async Task ShouldCollectTrace()
         {
             await Context.Tracing.StartAsync(new()
@@ -49,9 +49,10 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await Context.NewPageAsync();
-            await page.GotoAsync(Server.EmptyPage);
+            await page.GotoAsync(Server.Prefix + "/frames/frame.html");
             await page.SetContentAsync("<button>Click</button>");
             await page.ClickAsync("\"Click\"");
+            await page.WaitForTimeoutAsync(2000);
             await page.CloseAsync();
 
             using var tmp = new TempDirectory();
