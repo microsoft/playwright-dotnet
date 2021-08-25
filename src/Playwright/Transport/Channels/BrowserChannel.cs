@@ -149,7 +149,6 @@ namespace Microsoft.Playwright.Transport.Channels
             }
 
             args.Add("baseURL", baseUrl);
-            args["sdkLanguage"] = "csharp";
 
             return Connection.SendMessageToServerAsync<BrowserContextChannel>(
                 Guid,

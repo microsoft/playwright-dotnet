@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
@@ -42,7 +41,7 @@ namespace Microsoft.Playwright
 #pragma warning disable CA2000 // Dispose objects before losing scope
             var connection = new Connection(new StdIOTransport());
 #pragma warning restore CA2000
-            var playwright = await connection.WaitForObjectWithKnownNameAsync<PlaywrightImpl>("Playwright").ConfigureAwait(false);
+            var playwright = await connection.InitializePlaywrightAsync().ConfigureAwait(false);
             playwright.Connection = connection;
             return playwright;
         }

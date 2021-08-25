@@ -192,7 +192,6 @@ namespace Microsoft.Playwright.Transport.Channels
             channelArgs.Add("ignoreDefaultArgs", ignoreDefaultArgs);
             channelArgs.Add("ignoreAllDefaultArgs", ignoreAllDefaultArgs);
             channelArgs.Add("baseURL", baseUrl);
-            channelArgs.Add("sdkLanguage", "csharp");
 
             return Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "launchPersistentContext", channelArgs);
         }
