@@ -18,3 +18,6 @@ dotnet_diagnostic.SA1618.severity = none
 dotnet_diagnostic.SA1629.severity = none
 dotnet_diagnostic.CA1041.severity = none # [Obsolete] can exist without message
 dotnet_diagnostic.CS0612.severity = none # We can use [Obsolete] in generated code
+dotnet_diagnostic.SA1300.severity = none # Sometimes, we want to use _ in the name
+dotnet_diagnostic.CA1707.severity = none # Sometimes, we want to use _ in the name
+dotnet_diagnostic.CA1707.severity = none # Sometimes, we want to use _ in the name

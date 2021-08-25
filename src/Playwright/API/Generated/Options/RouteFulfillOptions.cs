@@ -46,6 +46,7 @@ namespace Microsoft.Playwright
         public RouteFulfillOptions(RouteFulfillOptions clone)
         {
             if (clone == null) return;
+            _response = clone._response;
             Body = clone.Body;
             BodyBytes = clone.BodyBytes;
             ContentType = clone.ContentType;
@@ -53,6 +54,15 @@ namespace Microsoft.Playwright
             Path = clone.Path;
             Status = clone.Status;
         }
+
+        /// <summary>
+        /// <para>
+        /// Intercepted response. Will be used to populate all response fields not explicitely
+        /// overridden.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("_response")]
+        public IResponse? _response { get; set; }
 
         /// <summary><para>Optional response body as text.</para></summary>
         [JsonPropertyName("body")]
