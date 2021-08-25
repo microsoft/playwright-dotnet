@@ -28,20 +28,14 @@ using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
-    internal class WorkerChannel : WorkerChannelImpl
+    internal partial class WorkerChannel
     {
-        public WorkerChannel(string guid, Connection connection, Worker owner) : base(guid, connection, owner)
-        {
-        }
-
-        internal event EventHandler Closed;
-
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
             switch (method)
             {
                 case "close":
-                    Closed?.Invoke(this, EventArgs.Empty);
+                    OnClose();
                     break;
             }
         }

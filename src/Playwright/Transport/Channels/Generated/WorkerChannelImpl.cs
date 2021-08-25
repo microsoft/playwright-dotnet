@@ -75,6 +75,15 @@ namespace Microsoft.Playwright.Transport.Channels
                     }
                 )
                 .ConfigureAwait(false)).GetObject<JSHandle>("handle", Connection);
+
+        protected void OnClose() => Close?.Invoke(this, new());
+    }
+
+    internal partial class WorkerChannel : WorkerChannelImpl
+    {
+        public WorkerChannel(string guid, Connection connection, Worker owner) : base(guid, connection, owner)
+        {
+        }
     }
 }
 #nullable disable

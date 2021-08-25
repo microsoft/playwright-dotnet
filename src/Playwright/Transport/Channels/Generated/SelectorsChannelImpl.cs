@@ -59,5 +59,12 @@ namespace Microsoft.Playwright.Transport.Channels
                 )
                 .ConfigureAwait(false);
     }
+
+    internal partial class SelectorsChannel : SelectorsChannelImpl
+    {
+        public SelectorsChannel(string guid, Connection connection, Selectors owner) : base(guid, connection, owner)
+        {
+        }
+    }
 }
 #nullable disable

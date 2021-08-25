@@ -65,5 +65,12 @@ namespace Microsoft.Playwright.Transport.Channels
                 )
                 .ConfigureAwait(false);
     }
+
+    internal partial class BindingCallChannel : BindingCallChannelImpl
+    {
+        public BindingCallChannel(string guid, Connection connection, BindingCall owner) : base(guid, connection, owner)
+        {
+        }
+    }
 }
 #nullable disable

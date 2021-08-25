@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Core
             _channel = new(guid, parent.Connection, this);
             _initializer = initializer;
 
-            _channel.Closed += (_, _) =>
+            _channel.Close += (_, _) =>
             {
                 if (Page != null)
                 {

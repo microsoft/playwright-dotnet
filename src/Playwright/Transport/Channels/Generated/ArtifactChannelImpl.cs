@@ -91,5 +91,12 @@ namespace Microsoft.Playwright.Transport.Channels
                 null)
                 .ConfigureAwait(false);
     }
+
+    internal partial class ArtifactChannel : ArtifactChannelImpl
+    {
+        public ArtifactChannel(string guid, Connection connection, Artifact owner) : base(guid, connection, owner)
+        {
+        }
+    }
 }
 #nullable disable
