@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Core
             _channel = new(guid, parent.Connection, this);
             _initializer = initializer;
 
-            _channel.Closed += (_, _) =>
+            _channel.Close += (_, _) =>
             {
                 if (Page != null)
                 {
@@ -71,14 +71,16 @@ namespace Microsoft.Playwright.Core
 
         public async Task<T> EvaluateAsync<T>(string expression, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
-                script: expression,
-                arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
+                expression,
+                null,
+                ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
         public async Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = null)
-            => (await _channel.EvaluateExpressionHandleAsync(
-                script: expression,
-                arg: ScriptsHelper.SerializedArgument(arg))
-            .ConfigureAwait(false))?.Object;
+            => await _channel.EvaluateExpressionHandleAsync(
+                expression,
+                null,
+                ScriptsHelper.SerializedArgument(arg))
+            .ConfigureAwait(false);
 
         public async Task<IWorker> WaitForCloseAsync(Func<Task> action = default, float? timeout = default)
         {

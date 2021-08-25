@@ -57,15 +57,16 @@ namespace Microsoft.Playwright.Core
 
         public async Task<System.IO.Stream> CreateReadStreamAsync()
         {
-            var stream = (await _channel.GetStreamAsync().ConfigureAwait(false)).Stream;
-            string base64 = await stream.ReadAsync().ConfigureAwait(false);
-            await stream.CloseAsync().ConfigureAwait(false);
+            var playwrightStream = await _channel.StreamAsync().ConfigureAwait(false);
+            var streamChannel = playwrightStream.Channel;
+            string base64 = await streamChannel.ReadAsync().ConfigureAwait(false);
+            await streamChannel.CloseAsync().ConfigureAwait(false);
             return new MemoryStream(Convert.FromBase64String(base64));
         }
 
         internal Task CancelAsync() => _channel.CancelAsync();
 
-        internal Task<string> FailureAsync() => _channel.GetFailureAsync();
+        internal Task<string> FailureAsync() => _channel.FailureAsync();
 
         internal Task DeleteAsync() => _channel.DeleteAsync();
     }

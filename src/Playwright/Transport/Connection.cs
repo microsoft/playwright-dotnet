@@ -198,7 +198,6 @@ namespace Microsoft.Playwright.Transport
             options.Converters.Add(new ChannelOwnerToGuidConverter<ElementHandle>(this));
             options.Converters.Add(new ChannelOwnerToGuidConverter<IChannelOwner>(this));
             options.Converters.Add(new HttpMethodConverter());
-
             return options;
         }
 

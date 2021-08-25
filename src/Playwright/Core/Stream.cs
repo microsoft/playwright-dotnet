@@ -29,15 +29,15 @@ namespace Microsoft.Playwright.Core
 {
     internal class Stream : ChannelOwnerBase, IChannelOwner<Stream>
     {
-        private readonly StreamChannel _channel;
-
         internal Stream(IChannelOwner parent, string guid) : base(parent, guid)
         {
-            _channel = new(guid, parent.Connection, this);
+            Channel = new(guid, parent.Connection, this);
         }
 
-        ChannelBase IChannelOwner.Channel => _channel;
+        ChannelBase IChannelOwner.Channel => Channel;
 
-        IChannel<Stream> IChannelOwner<Stream>.Channel => _channel;
+        IChannel<Stream> IChannelOwner<Stream>.Channel => Channel;
+
+        public StreamChannel Channel { get; }
     }
 }
