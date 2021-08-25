@@ -327,7 +327,7 @@ namespace Microsoft.Playwright.Core
             foreach (var item in _routes)
             {
                 if (
-                    (item.Times == 0 || item.HandledCount >= item.Times) &&
+                    ((item.Times ?? 0) == 0 || item.HandledCount >= item.Times) &&
                     ((item.Url != null && UrlMatches(request.Url, item.Url)) ||
                     (item.Regex?.IsMatch(request.Url) == true) ||
                     (item.Function?.Invoke(request.Url) == true)))
