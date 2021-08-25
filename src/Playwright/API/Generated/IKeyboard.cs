@@ -204,7 +204,7 @@ namespace Microsoft.Playwright
         /// <para>To press a special key, like <c>Control</c> or <c>ArrowDown</c>, use <see cref="IKeyboard.PressAsync"/>.</para>
         /// <code>
         /// await page.Keyboard.TypeAsync("Hello"); // types instantly<br/>
-        /// await page.Keyboard.TypeAsync("World"); // types slower, like a user
+        /// await page.Keyboard.TypeAsync("World", new KeyboardTypeOptions { Delay = 100 }); // types slower, like a user
         /// </code>
         /// </summary>
         /// <remarks>

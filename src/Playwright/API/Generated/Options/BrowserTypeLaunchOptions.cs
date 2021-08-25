@@ -102,7 +102,9 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// If specified, accepted downloads are downloaded into this directory. Otherwise,
-        /// temporary directory is created and is deleted when browser is closed.
+        /// temporary directory is created and is deleted when browser is closed. In either
+        /// case, the downloads are deleted when the browser context they were created in is
+        /// closed.
         /// </para>
         /// </summary>
         [JsonPropertyName("downloadsPath")]

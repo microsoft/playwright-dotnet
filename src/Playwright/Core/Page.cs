@@ -25,6 +25,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -741,28 +742,31 @@ namespace Microsoft.Playwright.Core
         public Task AddInitScriptAsync(string script, string scriptPath)
             => _channel.AddInitScriptAsync(ScriptsHelper.EvaluationScript(script, scriptPath));
 
-        public Task RouteAsync(string urlString, Action<IRoute> handler)
+        public Task RouteAsync(string url, Action<IRoute> handler, PageRouteOptions options = null)
             => RouteAsync(
                 new()
                 {
-                    Url = urlString,
+                    Url = url,
                     Handler = handler,
+                    Times = options?.Times,
                 });
 
-        public Task RouteAsync(Regex urlRegex, Action<IRoute> handler)
-            => RouteAsync(
+        public Task RouteAsync(Regex url, Action<IRoute> handler, PageRouteOptions options = null)
+             => RouteAsync(
                 new()
                 {
-                    Regex = urlRegex,
+                    Regex = url,
                     Handler = handler,
+                    Times = options?.Times,
                 });
 
-        public Task RouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler)
+        public Task RouteAsync(Func<string, bool> url, Action<IRoute> handler, PageRouteOptions options = null)
             => RouteAsync(
                 new()
                 {
-                    Function = urlFunc,
+                    Function = url,
                     Handler = handler,
+                    Times = options?.Times,
                 });
 
         public Task UnrouteAsync(string urlString, Action<IRoute> handler)
@@ -893,6 +897,7 @@ namespace Microsoft.Playwright.Core
                 Strict = options?.Strict,
             });
 
+#pragma warning disable CS0612 // Type or member is obsolete
         public Task<bool> IsHiddenAsync(string selector, PageIsHiddenOptions options = default)
             => MainFrame.IsHiddenAsync(selector, new()
             {
@@ -906,6 +911,7 @@ namespace Microsoft.Playwright.Core
                 Timeout = options?.Timeout,
                 Strict = options?.Strict,
             });
+#pragma warning restore CS0612 // Type or member is obsolete
 
         public Task PauseAsync() => Context.Channel.PauseAsync();
 
@@ -1005,11 +1011,12 @@ namespace Microsoft.Playwright.Core
             foreach (var route in _routes)
             {
                 if (
-                    (route.Url != null && Context.UrlMatches(e.Request.Url, route.Url)) ||
+                    (route.Times == 0 || route.HandledCount >= route.Times) &&
+                    ((route.Url != null && Context.UrlMatches(e.Request.Url, route.Url)) ||
                     (route.Regex?.IsMatch(e.Request.Url) == true) ||
-                    (route.Function?.Invoke(e.Request.Url) == true))
+                    (route.Function?.Invoke(e.Request.Url) == true)))
                 {
-                    route.Handler(e.Route);
+                    route.Handle(e.Route);
                     return;
                 }
             }

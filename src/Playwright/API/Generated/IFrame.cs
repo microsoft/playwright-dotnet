@@ -503,7 +503,7 @@ namespace Microsoft.Playwright
         /// Returns the main resource response. In case of multiple redirects, the navigation
         /// will resolve with the response of the last redirect.
         /// </para>
-        /// <para><c>frame.goto</c> will throw an error if:</para>
+        /// <para>The method will throw an error if:</para>
         /// <list type="bullet">
         /// <item><description>there's an SSL error (e.g. in case of self-signed certificates).</description></item>
         /// <item><description>target URL is invalid.</description></item>
@@ -512,16 +512,16 @@ namespace Microsoft.Playwright
         /// <item><description>the main resource failed to load.</description></item>
         /// </list>
         /// <para>
-        /// <c>frame.goto</c> will not throw an error when any valid HTTP status code is returned
-        /// by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
-        /// The status code for such responses can be retrieved by calling <see cref="IResponse.Status"/>.
+        /// The method will not throw an error when any valid HTTP status code is returned by
+        /// the remote server, including 404 "Not Found" and 500 "Internal Server Error".  The
+        /// status code for such responses can be retrieved by calling <see cref="IResponse.Status"/>.
         /// </para>
         /// </summary>
         /// <remarks>
         /// <para>
-        /// <c>frame.goto</c> either throws an error or returns a main resource response. The
-        /// only exceptions are navigation to <c>about:blank</c> or navigation to the same URL
-        /// with a different hash, which would succeed and return <c>null</c>.
+        /// The method either throws an error or returns a main resource response. The only
+        /// exceptions are navigation to <c>about:blank</c> or navigation to the same URL with
+        /// a different hash, which would succeed and return <c>null</c>.
         /// </para>
         /// <para>
         /// Headless mode doesn't support navigation to a PDF document. See the <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=761295">upstream
@@ -681,10 +681,6 @@ namespace Microsoft.Playwright
         /// frame. Locator is resolved to the element immediately before performing an action,
         /// so a series of actions on the same locator can in fact be performed on different
         /// DOM elements. That would happen if the DOM structure between those actions has changed.
-        /// </para>
-        /// <para>
-        /// Note that locator always implies visibility, so it will always be locating visible
-        /// elements.
         /// </para>
         /// </summary>
         /// <param name="selector">

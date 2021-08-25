@@ -498,11 +498,13 @@ namespace Microsoft.Playwright.Core
         public Task<bool> IsEnabledAsync(string selector, FrameIsEnabledOptions options = default)
             => _channel.IsEnabledAsync(selector, timeout: options?.Timeout, options?.Strict);
 
+#pragma warning disable CS0612 // Type or member is obsolete
         public Task<bool> IsHiddenAsync(string selector, FrameIsHiddenOptions options = default)
             => _channel.IsHiddenAsync(selector, timeout: options?.Timeout, options?.Strict);
 
         public Task<bool> IsVisibleAsync(string selector, FrameIsVisibleOptions options = default)
             => _channel.IsVisibleAsync(selector, timeout: options?.Timeout, options?.Strict);
+#pragma warning restore CS0612 // Type or member is obsolete
 
         public Task WaitForURLAsync(string url, FrameWaitForURLOptions options = default)
             => WaitForURLAsync(url, null, null, options);
