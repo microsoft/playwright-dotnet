@@ -249,7 +249,15 @@ namespace Microsoft.Playwright.Transport.Converters
                     var defaultConverter = JsonExtensions.GetNewDefaultSerializerOptions();
                     string serialized = JsonSerializer.Serialize(dicResult, defaultConverter);
 
-                    return JsonSerializer.Deserialize<T>(serialized, defaultConverter);
+                    var retValue = JsonSerializer.Deserialize<T>(serialized, defaultConverter);
+
+                    // This particular check & clone call is required because otherwise, when we attempt to
+                    // access the value, we run into an Object Disposed Exception.
+                    // See: https://github.com/microsoft/playwright-dotnet/issues/1706
+                    if (retValue is JsonElement retValueAsJson)
+                    {
+                        return retValueAsJson.Clone();
+                    }
                 }
 
                 object objResult = Activator.CreateInstance(t);
@@ -283,7 +291,9 @@ namespace Microsoft.Playwright.Transport.Converters
 
             if (t == typeof(JsonElement?))
             {
-                return result;
+                // we need to make sure that the returned instance *is not* dependent on the
+                // lifecycle of JsonDocument, hence we Clone it
+                return result.Clone();
             }
 
             if (result.ValueKind == JsonValueKind.Array)

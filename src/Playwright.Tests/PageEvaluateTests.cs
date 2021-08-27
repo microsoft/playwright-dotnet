@@ -681,5 +681,12 @@ namespace Microsoft.Playwright.Tests
         {
             Test = 1
         }
+
+        [PlaywrightTest(Description = "https://github.com/microsoft/playwright-dotnet/issues/1706")]
+        public async Task ShouldNotReturnDisposedJsonElement()
+        {
+            var result = await Page.EvaluateAsync<JsonElement?>("()=> [{a:1,b:2},{a:1,b:2}]");
+            Assert.AreEqual("[{\"o\":[{\"k\":\"a\",\"v\":{\"n\":1}},{\"k\":\"b\",\"v\":{\"n\":2}}]},{\"o\":[{\"k\":\"a\",\"v\":{\"n\":1}},{\"k\":\"b\",\"v\":{\"n\":2}}]}]", result.ToString());
+        }
     }
 }
