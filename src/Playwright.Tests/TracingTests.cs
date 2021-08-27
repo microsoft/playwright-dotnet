@@ -138,19 +138,21 @@ namespace Microsoft.Playwright.Tests
         {
             List<TraceEventEntry> results = new();
             var archive = ZipFile.OpenRead(path);
-            var events = archive.GetEntry("trace.trace");
-            if (events != null)
+            foreach (var events in new[] { archive.GetEntry("trace.trace"), archive.GetEntry("trace.network") })
             {
-                var reader = new StreamReader(events.Open());
-                while (true)
+                if (events != null)
                 {
-                    var line = reader.ReadLine();
-                    if (line == null) break;
-                    results.Add(JsonSerializer.Deserialize<TraceEventEntry>(line,
-                        new()
-                        {
-                            PropertyNameCaseInsensitive = true,
-                        }));
+                    var reader = new StreamReader(events.Open());
+                    while (true)
+                    {
+                        var line = reader.ReadLine();
+                        if (line == null) break;
+                        results.Add(JsonSerializer.Deserialize<TraceEventEntry>(line,
+                            new()
+                            {
+                                PropertyNameCaseInsensitive = true,
+                            }));
+                    }
                 }
             }
             return results;
