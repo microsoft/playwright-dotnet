@@ -41,7 +41,8 @@ namespace Microsoft.Playwright.Tests
             var neverResolves = page.EvaluateHandleAsync("() => new Promise(r => {})");
             await browser.CloseAsync();
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => neverResolves);
-            StringAssert.Contains("Protocol error", exception.Message);
+            // WebKit under task-set -c 1 is giving browser, rest are giving target.
+            StringAssert.Contains(" closed", exception.Message);
 
         }
 
