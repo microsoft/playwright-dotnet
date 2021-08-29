@@ -24,6 +24,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Helpers
@@ -38,6 +39,11 @@ namespace Microsoft.Playwright.Helpers
             }
 
             return input.Select(x => new NameValueEntry(x.Key, x.Value)).ToArray();
+        }
+
+        public static async Task<IEnumerable<T>> WaitForResultsAsync<T>(this IEnumerable<Task<T>> listOfTasks)
+        {
+            return await Task.WhenAll(listOfTasks).ConfigureAwait(false);
         }
     }
 }

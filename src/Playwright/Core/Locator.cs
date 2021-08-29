@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Core
 {
@@ -47,17 +48,25 @@ namespace Microsoft.Playwright.Core
         public ILocator Last => new Locator(_frame, $"{_selector} >> _nth=last");
 
         public async Task<IReadOnlyList<string>> AllInnerTextsAsync()
-            => (await _frame.QuerySelectorAllAsync(_selector).ConfigureAwait(false))
-            .Select(async x => await x.InnerTextAsync().ConfigureAwait(false))
-            .Where(x => x.Result != null)
-            .Select(x => x.Result)
-            .ToArray();
+        {
+            var handles = await _frame.QuerySelectorAllAsync(_selector).ConfigureAwait(false);
+            return (await handles
+                    .Select(async x => await x.InnerTextAsync().ConfigureAwait(false))
+                    .WaitForResultsAsync()
+                    .ConfigureAwait(false))
+                .ToArray();
+        }
 
         public async Task<IReadOnlyList<string>> AllTextContentsAsync()
-            => (await _frame.QuerySelectorAllAsync(_selector).ConfigureAwait(false))
-            .Select(async x => await x.TextContentAsync().ConfigureAwait(false))
-            .Select(x => x.Result ?? string.Empty) // we don't filter nulls, as per https://github.com/microsoft/playwright/blob/master/src/client/locator.ts#L205
-            .ToArray();
+        {
+            var handles = await _frame.QuerySelectorAllAsync(_selector).ConfigureAwait(false);
+            return (await handles
+                .Select(async x => await x.TextContentAsync().ConfigureAwait(false))
+                .WaitForResultsAsync()
+                .ConfigureAwait(false))
+                .Select(x => x ?? string.Empty) // we don't filter nulls, as per https://github.com/microsoft/playwright/blob/master/src/client/locator.ts#L205
+                .ToArray();
+        }
 
         public async Task<LocatorBoundingBoxResult> BoundingBoxAsync(LocatorBoundingBoxOptions options = null)
             => await WithElementAsync(
