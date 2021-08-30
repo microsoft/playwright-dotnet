@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Tests
                     StartInfo =
                     {
                         FileName = GetExecutablePath(),
-                        Arguments = $"launch-server {BrowserType.Name}",
+                        Arguments = $@"launch-server {BrowserType.Name}",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardInput = true,
