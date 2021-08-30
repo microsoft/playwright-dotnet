@@ -50,11 +50,11 @@ namespace Microsoft.Playwright.Tests
                     StartInfo =
                     {
                         FileName = GetExecutablePath(),
-                        Arguments = $"launch-server {BrowserType.Name}",
+                        Arguments = $@"launch-server {BrowserType.Name}",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardInput = true,
-                        RedirectStandardError = true,
+                        RedirectStandardError = false,
                         CreateNoWindow = true,
                     },
                 };
@@ -76,12 +76,11 @@ namespace Microsoft.Playwright.Tests
         [TearDown]
         public void TearDown()
         {
-            _browserServer.Process.Kill();
+            _browserServer.Process.Kill(true);
             _browserServer = null;
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to reconnect to a browser")]
-        [Test, Timeout(TestConstants.DefaultTestTimeout)]
         public async Task ShouldBeAbleToConnectToBrowserAsync()
         {
             var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
