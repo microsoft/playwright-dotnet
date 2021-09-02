@@ -271,7 +271,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should should set bodySize, headersSize, and transferSize")]
-        [Timeout(int.MaxValue)]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Chromium, SkipAttribute.Targets.Webkit)]
         public async Task ShouldSetAllTheResponseSizes()
         {
             Server.SetRoute("/get", async ctx =>
@@ -292,7 +292,20 @@ namespace Microsoft.Playwright.Tests
             var sizes = await tsc.Task;
 
             Assert.AreEqual(6, sizes.ResponseBodySize);
-            Assert.GreaterOrEqual(sizes.ResponseHeadersSize, 150);
+            Assert.GreaterOrEqual(sizes.ResponseHeadersSize, 142);
+            Assert.GreaterOrEqual(sizes.ResponseTransferSize, 160);
+        }
+
+        [PlaywrightTest("page-network-request.spec.ts", "should should set bodySize to 0 when there was no response body")]
+        public async Task ShouldSetBodySizeTo0WhenNoResponseBody()
+        {
+            var response = await Page.GotoAsync(Server.EmptyPage);
+            await response.FinishedAsync();
+
+            var sizes = response.Request.Sizes;
+
+            Assert.AreEqual(0, sizes.ResponseBodySize);
+            Assert.GreaterOrEqual(sizes.ResponseHeadersSize, 142);
             Assert.GreaterOrEqual(sizes.ResponseTransferSize, 160);
         }
     }

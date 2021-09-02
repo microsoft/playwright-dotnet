@@ -130,14 +130,14 @@ namespace Microsoft.Playwright.Tests
             string FOO_URL = Server.Prefix + "/foo.html";
             var response = await Page.GotoAsync(FOO_URL);
             await response.FinishedAsync();
-            Assert.AreEqual(new[] {
+            CollectionAssert.AreEquivalent(new[] {
                 $"GET {FOO_URL}",
                 $"302 {FOO_URL}",
                 $"DONE {FOO_URL}",
                 $"GET {Server.EmptyPage}",
                 $"200 {Server.EmptyPage}",
                 $"DONE {Server.EmptyPage}"
-            }, events);
+            }, events.ToArray());
 
             // Check redirect chain
             var redirectedFrom = response.Request.RedirectedFrom;
