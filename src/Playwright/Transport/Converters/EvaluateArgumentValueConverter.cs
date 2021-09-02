@@ -260,18 +260,25 @@ namespace Microsoft.Playwright.Transport.Converters
                     }
                 }
 
-                object objResult = Activator.CreateInstance(t);
-
-                foreach (var kv in keyValues)
+                try
                 {
-                    var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions();
+                    object objResult = Activator.CreateInstance(t);
 
-                    var property = t.GetProperties().FirstOrDefault(prop => string.Equals(prop.Name, kv.K, StringComparison.OrdinalIgnoreCase));
-                    serializerOptions.Converters.Add(GetNewConverter(property.PropertyType));
-                    property.SetValue(objResult, kv.V.ToObject(property.PropertyType, serializerOptions));
+                    foreach (var kv in keyValues)
+                    {
+                        var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions();
+
+                        var property = t.GetProperties().FirstOrDefault(prop => string.Equals(prop.Name, kv.K, StringComparison.OrdinalIgnoreCase));
+                        serializerOptions.Converters.Add(GetNewConverter(property.PropertyType));
+                        property.SetValue(objResult, kv.V.ToObject(property.PropertyType, serializerOptions));
+                    }
+
+                    return objResult;
                 }
-
-                return objResult;
+                catch (Exception)
+                {
+                    return null;
+                }
             }
 
             if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("v", out var vNull) && vNull.ValueKind == JsonValueKind.Null)

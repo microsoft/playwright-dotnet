@@ -400,6 +400,25 @@ namespace Microsoft.Playwright.Core
                 trial: options?.Trial,
                 strict: options?.Strict);
 
+        public Task SetCheckedAsync(string selector, bool checkedState, FrameSetCheckedOptions options = null)
+            => checkedState ?
+            _channel.CheckAsync(
+                selector,
+                position: options?.Position,
+                timeout: options?.Timeout,
+                force: options?.Force,
+                noWaitAfter: options?.NoWaitAfter,
+                trial: options?.Trial,
+                strict: options?.Strict)
+            : _channel.UncheckAsync(
+                selector,
+                position: options?.Position,
+                timeout: options?.Timeout,
+                force: options?.Force,
+                noWaitAfter: options?.NoWaitAfter,
+                trial: options?.Trial,
+                strict: options?.Strict);
+
         public Task SetContentAsync(string html, FrameSetContentOptions options = default)
             => _channel.SetContentAsync(html, timeout: options?.Timeout, waitUntil: options?.WaitUntil);
 

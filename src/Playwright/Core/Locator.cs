@@ -89,6 +89,11 @@ namespace Microsoft.Playwright.Core
                 _selector,
                 ConvertOptions<FrameClickOptions>(options));
 
+        public Task SetCheckedAsync(bool checkedState, LocatorSetCheckedOptions options = null)
+            => checkedState ?
+                CheckAsync(ConvertOptions<LocatorCheckOptions>(options))
+                : UncheckAsync(ConvertOptions<LocatorUncheckOptions>(options));
+
         public Task<int> CountAsync()
             => EvaluateAllAsync<int>("ee => ee.length");
 

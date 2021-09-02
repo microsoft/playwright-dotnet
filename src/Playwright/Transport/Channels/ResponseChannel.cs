@@ -34,22 +34,10 @@ namespace Microsoft.Playwright.Transport.Channels
         {
         }
 
+        internal override void OnMessage(string method, System.Text.Json.JsonElement? serverParams) => base.OnMessage(method, serverParams);
+
         internal async Task<string> GetBodyAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "body", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
-
-        internal async Task<string> FinishedAsync()
-        {
-            var element = await Connection.SendMessageToServerAsync(Guid, "finished", null).ConfigureAwait(false);
-            if (element != null)
-            {
-                if (element.Value.TryGetProperty("error", out var errorValue))
-                {
-                    return errorValue.GetString();
-                }
-            }
-
-            return null;
-        }
 
         internal async Task<ResponseServerAddrResult> ServerAddrAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "serverAddr", null).ConfigureAwait(false))

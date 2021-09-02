@@ -253,6 +253,21 @@ namespace Microsoft.Playwright.Core
         public Task<string> InputValueAsync(ElementHandleInputValueOptions options = null)
             => _channel.InputValueAsync(options?.Timeout);
 
+        public Task SetCheckedAsync(bool checkedState, ElementHandleSetCheckedOptions options = null)
+             => checkedState
+             ? _channel.CheckAsync(
+                 position: options?.Position,
+                 timeout: options?.Timeout,
+                 force: options?.Force,
+                 noWaitAfter: options?.NoWaitAfter,
+                 trial: options?.Trial)
+             : _channel.UncheckAsync(
+                 position: options?.Position,
+                 timeout: options?.Timeout,
+                 force: options?.Force,
+                 noWaitAfter: options?.NoWaitAfter,
+                 trial: options?.Trial);
+
         internal static ScreenshotType DetermineScreenshotType(string path)
         {
             string mimeType = path.MimeType();

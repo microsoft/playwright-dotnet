@@ -117,5 +117,16 @@ namespace Microsoft.Playwright.Tests
             await Page.CheckAsync("input", new() { Trial = true });
             Assert.True(await Page.EvaluateAsync<bool>("window['checkbox'].checked"));
         }
+
+        [PlaywrightTest("page-check.spec.ts", "should check the box using setChecked")]
+        public async Task ShouldCheckTheBoxUsingSetChecked()
+        {
+            await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
+            await Page.SetCheckedAsync("input", true);
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("checkbox.checked"));
+            await Page.SetCheckedAsync("input", false);
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("checkbox.checked"));
+        }
+
     }
 }

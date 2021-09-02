@@ -33,6 +33,10 @@ namespace Microsoft.Playwright.Transport.Channels
 
         public Request Request { get; set; }
 
+        public Response Response { get; set; }
+
+        public RequestSizesResult RequestSizes { get; set; }
+
         public string FailureText { get; set; }
 
         public float ResponseEndTiming { get; set; }

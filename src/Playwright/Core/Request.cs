@@ -96,6 +96,8 @@ namespace Microsoft.Playwright.Core
 
         internal Request FinalRequest => RedirectedTo != null ? ((Request)RedirectedTo).FinalRequest : this;
 
+        public RequestSizesResult Sizes { get; internal set; }
+
         public async Task<IResponse> ResponseAsync() => (await _channel.GetResponseAsync().ConfigureAwait(false))?.Object;
 
         public JsonElement? PostDataJSON()

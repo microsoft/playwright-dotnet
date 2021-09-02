@@ -802,6 +802,27 @@ namespace Microsoft.Playwright.Core
             return _channel.SetViewportSizeAsync(ViewportSize);
         }
 
+        public Task SetCheckedAsync(string selector, bool checkedState, PageSetCheckedOptions options = null)
+            => checkedState ?
+            MainFrame.CheckAsync(selector, new()
+            {
+                Position = options?.Position,
+                Force = options?.Force,
+                NoWaitAfter = options?.NoWaitAfter,
+                Strict = options?.Strict,
+                Timeout = options?.Timeout,
+                Trial = options?.Trial,
+            })
+            : MainFrame.UncheckAsync(selector, new()
+            {
+                Position = options?.Position,
+                Force = options?.Force,
+                NoWaitAfter = options?.NoWaitAfter,
+                Timeout = options?.Timeout,
+                Trial = options?.Trial,
+                Strict = options?.Strict,
+            });
+
         public Task CheckAsync(string selector, PageCheckOptions options = default)
             => MainFrame.CheckAsync(selector, new()
             {
