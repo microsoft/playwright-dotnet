@@ -145,15 +145,15 @@ namespace Microsoft.Playwright.Tests
                     };
                 });
             }");
-            CollectionAssert.AreEquivalent(new[] { "prompt" }, await Page.EvaluateAsync<string[]>("window.events"));
+            Assert.AreEqual(new[] { "prompt" }, await Page.EvaluateAsync<string[]>("window.events"));
             await Context.GrantPermissionsAsync(Array.Empty<string>(), new() { Origin = Server.EmptyPage });
-            CollectionAssert.AreEquivalent(new[] { "prompt", "denied" }, await Page.EvaluateAsync<string[]>("window.events"));
+            Assert.AreEqual(new[] { "prompt", "denied" }, await Page.EvaluateAsync<string[]>("window.events"));
             await Context.GrantPermissionsAsync(new[] { "geolocation" }, new() { Origin = Server.EmptyPage });
-            CollectionAssert.AreEquivalent(
+            Assert.AreEqual(
                 new[] { "prompt", "denied", "granted" },
                 await Page.EvaluateAsync<string[]>("window.events"));
             await Context.ClearPermissionsAsync();
-            CollectionAssert.AreEquivalent(
+            Assert.AreEqual(
                 new[] { "prompt", "denied", "granted", "prompt" },
                 await Page.EvaluateAsync<string[]>("window.events"));
         }

@@ -250,7 +250,7 @@ namespace Microsoft.Playwright.Tests
 
             var sizes = await tsc.Task;
             Assert.AreEqual(5, sizes.RequestBodySize);
-            Assert.GreaterOrEqual(sizes.RequestHeadersSize, 300);
+            Assert.GreaterOrEqual(sizes.RequestHeadersSize, 200);
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should should set bodySize to 0 if there was no body")]
@@ -267,7 +267,7 @@ namespace Microsoft.Playwright.Tests
 
             var sizes = await tsc.Task;
             Assert.AreEqual(0, sizes.RequestBodySize);
-            Assert.GreaterOrEqual(sizes.RequestHeadersSize, 228);
+            Assert.GreaterOrEqual(sizes.RequestHeadersSize, 200);
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should should set bodySize, headersSize, and transferSize")]
