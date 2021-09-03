@@ -74,6 +74,17 @@ namespace Microsoft.Playwright
     /// await locator.HoverAsync();<br/>
     /// await locator.ClickAsync();
     /// </code>
+    /// <para>**Strictness**</para>
+    /// <para>
+    /// Locators are strict. This means that all operations on locators that imply some
+    /// target DOM element will throw if more than one element matches given selector.
+    /// </para>
+    /// <code>
+    /// // Throws if there are several buttons in DOM:<br/>
+    /// await page.Locator("button").ClickAsync();<br/>
+    /// // Works because you explicitly tell locator to pick the first element:<br/>
+    /// await page.Locator("button").First.ClickAsync();
+    /// </code>
     /// </summary>
     public partial interface ILocator
     {

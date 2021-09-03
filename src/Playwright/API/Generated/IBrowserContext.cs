@@ -424,7 +424,15 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>To remove a route with its handler you can use <see cref="IBrowserContext.UnrouteAsync"/>.</para>
         /// </summary>
-        /// <remarks><para>Enabling routing disables http cache.</para></remarks>
+        /// <remarks>
+        /// <para>
+        /// <see cref="IPage.RouteAsync"/> will not intercept requests intercepted by Service
+        /// Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
+        /// issue. We recommend disabling Service Workers when using request interception. Via
+        /// <c>await context.addInitScript(() =&gt; delete window.navigator.serviceWorker);</c>
+        /// </para>
+        /// <para>Enabling routing disables http cache.</para>
+        /// </remarks>
         /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while routing. When a <paramref name="baseURL"/> via the context options was provided
@@ -432,7 +440,8 @@ namespace Microsoft.Playwright
         /// URL()</c></a> constructor.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
-        Task RouteAsync(string url, Action<IRoute> handler);
+        /// <param name="options">Call options</param>
+        Task RouteAsync(string url, Action<IRoute> handler, BrowserContextRouteOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -475,7 +484,15 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>To remove a route with its handler you can use <see cref="IBrowserContext.UnrouteAsync"/>.</para>
         /// </summary>
-        /// <remarks><para>Enabling routing disables http cache.</para></remarks>
+        /// <remarks>
+        /// <para>
+        /// <see cref="IPage.RouteAsync"/> will not intercept requests intercepted by Service
+        /// Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
+        /// issue. We recommend disabling Service Workers when using request interception. Via
+        /// <c>await context.addInitScript(() =&gt; delete window.navigator.serviceWorker);</c>
+        /// </para>
+        /// <para>Enabling routing disables http cache.</para>
+        /// </remarks>
         /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while routing. When a <paramref name="baseURL"/> via the context options was provided
@@ -483,7 +500,8 @@ namespace Microsoft.Playwright
         /// URL()</c></a> constructor.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
-        Task RouteAsync(Regex url, Action<IRoute> handler);
+        /// <param name="options">Call options</param>
+        Task RouteAsync(Regex url, Action<IRoute> handler, BrowserContextRouteOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -526,7 +544,15 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>To remove a route with its handler you can use <see cref="IBrowserContext.UnrouteAsync"/>.</para>
         /// </summary>
-        /// <remarks><para>Enabling routing disables http cache.</para></remarks>
+        /// <remarks>
+        /// <para>
+        /// <see cref="IPage.RouteAsync"/> will not intercept requests intercepted by Service
+        /// Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
+        /// issue. We recommend disabling Service Workers when using request interception. Via
+        /// <c>await context.addInitScript(() =&gt; delete window.navigator.serviceWorker);</c>
+        /// </para>
+        /// <para>Enabling routing disables http cache.</para>
+        /// </remarks>
         /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while routing. When a <paramref name="baseURL"/> via the context options was provided
@@ -534,7 +560,8 @@ namespace Microsoft.Playwright
         /// URL()</c></a> constructor.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
-        Task RouteAsync(Func<string, bool> url, Action<IRoute> handler);
+        /// <param name="options">Call options</param>
+        Task RouteAsync(Func<string, bool> url, Action<IRoute> handler, BrowserContextRouteOptions? options = default);
 
         /// <summary>
         /// <para>

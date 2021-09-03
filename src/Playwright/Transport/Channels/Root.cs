@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -22,43 +22,30 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Core;
+using Microsoft.Playwright.Helpers;
 
-#nullable enable
-
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright.Transport.Channels
 {
-    public class LocatorIsHiddenOptions
+    internal class Root : ChannelOwnerBase
     {
-        public LocatorIsHiddenOptions() { }
+        private readonly Connection _connection;
 
-        public LocatorIsHiddenOptions(LocatorIsHiddenOptions clone)
+        internal Root(IChannelOwner parent, Connection connection, string guid) : base(parent, connection, guid)
         {
-            if (clone == null) return;
-            Timeout = clone.Timeout;
+            _connection = connection;
         }
 
-        /// <summary>
-        /// <para>
-        /// **DEPRECATED** This option is ignored. <see cref="ILocator.IsHiddenAsync"/> does
-        /// not wait for the element to become hidden and returns immediately.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        [System.Obsolete]
-        public float? Timeout { get; set; }
+        internal async Task<PlaywrightImpl> InitializeAsync()
+        {
+            var args = new
+            {
+                sdkLanguage = "csharp",
+            };
+
+            var jsonElement = await _connection.SendMessageToServerAsync(string.Empty, "initialize", args).ConfigureAwait(false);
+            return jsonElement.GetObject<PlaywrightImpl>("playwright", _connection);
+        }
     }
 }
-
-#nullable disable

@@ -16,3 +16,5 @@ dotnet_diagnostic.SA1614.severity = none
 dotnet_diagnostic.SA1615.severity = none
 dotnet_diagnostic.SA1618.severity = none
 dotnet_diagnostic.SA1629.severity = none
+dotnet_diagnostic.CA1041.severity = none # [Obsolete] can exist without message
+dotnet_diagnostic.CS0612.severity = none # We can use [Obsolete] in generated code

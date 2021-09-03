@@ -39,35 +39,19 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageIsHiddenOptions
+    public class PageRouteOptions
     {
-        public PageIsHiddenOptions() { }
+        public PageRouteOptions() { }
 
-        public PageIsHiddenOptions(PageIsHiddenOptions clone)
+        public PageRouteOptions(PageRouteOptions clone)
         {
             if (clone == null) return;
-            Strict = clone.Strict;
-            Timeout = clone.Timeout;
+            Times = clone.Times;
         }
 
-        /// <summary>
-        /// <para>
-        /// When true, the call requires selector to resolve to a single element. If given selector
-        /// resolves to more then one element, the call throws an exception.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("strict")]
-        public bool? Strict { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// **DEPRECATED** This option is ignored. <see cref="IPage.IsHiddenAsync"/> does not
-        /// wait for the element to become hidden and returns immediately.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        [System.Obsolete]
-        public float? Timeout { get; set; }
+        /// <summary><para>How often a route should be used. By default it will be used every time.</para></summary>
+        [JsonPropertyName("times")]
+        public int? Times { get; set; }
     }
 }
 

@@ -54,7 +54,8 @@ namespace Microsoft.Playwright.Core
             => (await _channel.WaitForSelectorAsync(
                 selector: selector,
                 state: options?.State,
-                timeout: options?.Timeout).ConfigureAwait(false))?.Object;
+                timeout: options?.Timeout,
+                strict: options?.Strict).ConfigureAwait(false))?.Object;
 
         public Task WaitForElementStateAsync(ElementState state, ElementHandleWaitForElementStateOptions options = default)
             => _channel.WaitForElementStateAsync(state, timeout: options?.Timeout);

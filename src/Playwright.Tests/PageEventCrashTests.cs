@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Tests
             await CrashAsync(Page);
             await crashEvent.Task;
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("() => {}"));
-            StringAssert.Contains("crash", exception.Message);
+            StringAssert.Contains("Target crashed", exception.Message);
         }
 
         // We skip all browser because crash uses internals.

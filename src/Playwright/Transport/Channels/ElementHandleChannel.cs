@@ -53,13 +53,14 @@ namespace Microsoft.Playwright.Transport.Channels
             }
         }
 
-        internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout)
+        internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout, bool? strict)
         {
             var args = new Dictionary<string, object>
             {
                 ["selector"] = selector,
                 ["timeout"] = timeout,
                 ["state"] = state,
+                ["strict"] = strict,
             };
 
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(

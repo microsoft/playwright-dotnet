@@ -592,7 +592,14 @@ namespace Microsoft.Playwright.Tests
                 return response.json();
             }"));
 
-            StringAssert.Contains("failed", exception.Message);
+            if (TestConstants.IsChromium)
+                StringAssert.Contains("Failed", exception.Message);
+            else if (TestConstants.IsWebKit)
+                StringAssert.Contains("TypeError", exception.Message);
+            else if (TestConstants.IsFirefox)
+                StringAssert.Contains("NetworkError", exception.Message);
+            else
+                Assert.Fail("Unknown browser type.");
         }
 
         [PlaywrightTest("page-route.spec.ts", "should support cors with POST")]

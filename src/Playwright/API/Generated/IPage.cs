@@ -935,7 +935,7 @@ namespace Microsoft.Playwright
         /// Returns the main resource response. In case of multiple redirects, the navigation
         /// will resolve with the response of the last redirect.
         /// </para>
-        /// <para><c>page.goto</c> will throw an error if:</para>
+        /// <para>The method will throw an error if:</para>
         /// <list type="bullet">
         /// <item><description>there's an SSL error (e.g. in case of self-signed certificates).</description></item>
         /// <item><description>target URL is invalid.</description></item>
@@ -944,17 +944,17 @@ namespace Microsoft.Playwright
         /// <item><description>the main resource failed to load.</description></item>
         /// </list>
         /// <para>
-        /// <c>page.goto</c> will not throw an error when any valid HTTP status code is returned
-        /// by the remote server, including 404 "Not Found" and 500 "Internal Server Error".
-        /// The status code for such responses can be retrieved by calling <see cref="IResponse.Status"/>.
+        /// The method will not throw an error when any valid HTTP status code is returned by
+        /// the remote server, including 404 "Not Found" and 500 "Internal Server Error".  The
+        /// status code for such responses can be retrieved by calling <see cref="IResponse.Status"/>.
         /// </para>
         /// <para>Shortcut for main frame's <see cref="IFrame.GotoAsync"/></para>
         /// </summary>
         /// <remarks>
         /// <para>
-        /// <c>page.goto</c> either throws an error or returns a main resource response. The
-        /// only exceptions are navigation to <c>about:blank</c> or navigation to the same URL
-        /// with a different hash, which would succeed and return <c>null</c>.
+        /// The method either throws an error or returns a main resource response. The only
+        /// exceptions are navigation to <c>about:blank</c> or navigation to the same URL with
+        /// a different hash, which would succeed and return <c>null</c>.
         /// </para>
         /// <para>
         /// Headless mode doesn't support navigation to a PDF document. See the <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=761295">upstream
@@ -1122,10 +1122,6 @@ namespace Microsoft.Playwright
         /// page. Locator is resolved to the element immediately before performing an action,
         /// so a series of actions on the same locator can in fact be performed on different
         /// DOM elements. That would happen if the DOM structure between those actions has changed.
-        /// </para>
-        /// <para>
-        /// Note that locator always implies visibility, so it will always be locating visible
-        /// elements.
         /// </para>
         /// <para>Shortcut for main frame's <see cref="IFrame.Locator"/>.</para>
         /// </summary>
@@ -1363,6 +1359,12 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <remarks>
         /// <para>The handler will only be called for the first url if the response is a redirect.</para>
+        /// <para>
+        /// <see cref="IPage.RouteAsync"/> will not intercept requests intercepted by Service
+        /// Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
+        /// issue. We recommend disabling Service Workers when using request interception. Via
+        /// <c>await context.addInitScript(() =&gt; delete window.navigator.serviceWorker);</c>
+        /// </para>
         /// <para>Enabling routing disables http cache.</para>
         /// </remarks>
         /// <param name="url">
@@ -1372,7 +1374,8 @@ namespace Microsoft.Playwright
         /// URL()</c></a> constructor.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
-        Task RouteAsync(string url, Action<IRoute> handler);
+        /// <param name="options">Call options</param>
+        Task RouteAsync(string url, Action<IRoute> handler, PageRouteOptions? options = default);
 
         /// <summary>
         /// <para>Routing provides the capability to modify network requests that are made by a page.</para>
@@ -1413,6 +1416,12 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <remarks>
         /// <para>The handler will only be called for the first url if the response is a redirect.</para>
+        /// <para>
+        /// <see cref="IPage.RouteAsync"/> will not intercept requests intercepted by Service
+        /// Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
+        /// issue. We recommend disabling Service Workers when using request interception. Via
+        /// <c>await context.addInitScript(() =&gt; delete window.navigator.serviceWorker);</c>
+        /// </para>
         /// <para>Enabling routing disables http cache.</para>
         /// </remarks>
         /// <param name="url">
@@ -1422,7 +1431,8 @@ namespace Microsoft.Playwright
         /// URL()</c></a> constructor.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
-        Task RouteAsync(Regex url, Action<IRoute> handler);
+        /// <param name="options">Call options</param>
+        Task RouteAsync(Regex url, Action<IRoute> handler, PageRouteOptions? options = default);
 
         /// <summary>
         /// <para>Routing provides the capability to modify network requests that are made by a page.</para>
@@ -1463,6 +1473,12 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <remarks>
         /// <para>The handler will only be called for the first url if the response is a redirect.</para>
+        /// <para>
+        /// <see cref="IPage.RouteAsync"/> will not intercept requests intercepted by Service
+        /// Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
+        /// issue. We recommend disabling Service Workers when using request interception. Via
+        /// <c>await context.addInitScript(() =&gt; delete window.navigator.serviceWorker);</c>
+        /// </para>
         /// <para>Enabling routing disables http cache.</para>
         /// </remarks>
         /// <param name="url">
@@ -1472,7 +1488,8 @@ namespace Microsoft.Playwright
         /// URL()</c></a> constructor.
         /// </param>
         /// <param name="handler">handler function to route the request.</param>
-        Task RouteAsync(Func<string, bool> url, Action<IRoute> handler);
+        /// <param name="options">Call options</param>
+        Task RouteAsync(Func<string, bool> url, Action<IRoute> handler, PageRouteOptions? options = default);
 
         /// <summary><para>Returns the buffer with the captured screenshot.</para></summary>
         /// <param name="options">Call options</param>
@@ -1500,7 +1517,7 @@ namespace Microsoft.Playwright
         /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
         /// // single selection matching both the value and the label<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-        /// // multiple <br/>
+        /// // multiple<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
         /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
@@ -1541,7 +1558,7 @@ namespace Microsoft.Playwright
         /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
         /// // single selection matching both the value and the label<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-        /// // multiple <br/>
+        /// // multiple<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
         /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
@@ -1582,7 +1599,7 @@ namespace Microsoft.Playwright
         /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
         /// // single selection matching both the value and the label<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-        /// // multiple <br/>
+        /// // multiple<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
         /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
@@ -1623,7 +1640,7 @@ namespace Microsoft.Playwright
         /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
         /// // single selection matching both the value and the label<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-        /// // multiple <br/>
+        /// // multiple<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
         /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
@@ -1664,7 +1681,7 @@ namespace Microsoft.Playwright
         /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
         /// // single selection matching both the value and the label<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-        /// // multiple <br/>
+        /// // multiple<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
         /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
@@ -1705,7 +1722,7 @@ namespace Microsoft.Playwright
         /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
         /// // single selection matching both the value and the label<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-        /// // multiple <br/>
+        /// // multiple<br/>
         /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
         /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>

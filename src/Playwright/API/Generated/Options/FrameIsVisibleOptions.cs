@@ -61,12 +61,12 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+        /// **DEPRECATED** This option is ignored. <see cref="IFrame.IsVisibleAsync"/> does
+        /// not wait for the element to become visible and returns immediately.
         /// </para>
         /// </summary>
         [JsonPropertyName("timeout")]
+        [System.Obsolete]
         public float? Timeout { get; set; }
     }
 }

@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Tests
                 newPage.EvaluateAsync<string>("() => new Promise(r => { })"),
                 newPage.CloseAsync()
             ));
-            StringAssert.Contains("Protocol error", exception.Message);
+            StringAssert.Contains("Target closed", exception.Message);
         }
 
         [PlaywrightTest("page-basic.spec.ts", "async stacks should work")]

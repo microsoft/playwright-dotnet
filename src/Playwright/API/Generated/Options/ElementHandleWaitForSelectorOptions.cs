@@ -47,6 +47,7 @@ namespace Microsoft.Playwright
         {
             if (clone == null) return;
             State = clone.State;
+            Strict = clone.Strict;
             Timeout = clone.Timeout;
         }
 
@@ -69,6 +70,15 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("state")]
         public WaitForSelectorState? State { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// When true, the call requires selector to resolve to a single element. If given selector
+        /// resolves to more then one element, the call throws an exception.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("strict")]
+        public bool? Strict { get; set; }
 
         /// <summary>
         /// <para>

@@ -45,7 +45,7 @@ namespace Microsoft.Playwright.Transport
     {
         private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new();
         private readonly ConcurrentDictionary<int, ConnectionCallback> _callbacks = new();
-        private readonly ChannelOwnerBase _rootObject;
+        private readonly Root _rootObject;
         private readonly IConnectionTransport _transport;
         private readonly TaskQueue _queue = new();
         private int _lastId;
@@ -201,22 +201,9 @@ namespace Microsoft.Playwright.Transport
             return options;
         }
 
-        internal async Task<T> WaitForObjectWithKnownNameAsync<T>(string guid)
-            where T : class
+        internal Task<PlaywrightImpl> InitializePlaywrightAsync()
         {
-            if (Objects.TryGetValue(guid, out var channel))
-            {
-                return (T)channel;
-            }
-
-            if (IsClosed)
-            {
-                throw new PlaywrightException(_reason);
-            }
-
-            var tcs = new TaskCompletionSource<IChannelOwner>(TaskCreationOptions.RunContinuationsAsynchronously);
-            _waitingForObject.TryAdd(guid, tcs);
-            return (T)await tcs.Task.ConfigureAwait(false);
+            return _rootObject.InitializeAsync();
         }
 
         internal void OnObjectCreated(string guid, IChannelOwner result)

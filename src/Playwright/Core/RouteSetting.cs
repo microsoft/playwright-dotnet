@@ -36,5 +36,21 @@ namespace Microsoft.Playwright.Core
         public Func<string, bool> Function { get; set; }
 
         public Action<IRoute> Handler { get; set; }
+
+        public int? Times { get; internal set; }
+
+        public int HandledCount { get; set; }
+
+        public void Handle(IRoute route)
+        {
+            try
+            {
+                Handler(route);
+            }
+            finally
+            {
+                HandledCount++;
+            }
+        }
     }
 }

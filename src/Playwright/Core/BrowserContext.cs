@@ -24,8 +24,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -242,14 +244,14 @@ namespace Microsoft.Playwright.Core
             return (await Channel.NewPageAsync().ConfigureAwait(false)).Object;
         }
 
-        public Task RouteAsync(string urlString, Action<IRoute> handler)
-            => RouteAsync(urlString, null, null, handler);
+        public Task RouteAsync(string url, Action<IRoute> handler, BrowserContextRouteOptions options = default)
+            => RouteAsync(url, null, null, handler, options);
 
-        public Task RouteAsync(Regex urlRegex, Action<IRoute> handler)
-            => RouteAsync(null, urlRegex, null, handler);
+        public Task RouteAsync(Regex url, Action<IRoute> handler, BrowserContextRouteOptions options = default)
+            => RouteAsync(null, url, null, handler, options);
 
-        public Task RouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler)
-            => RouteAsync(null, null, urlFunc, handler);
+        public Task RouteAsync(Func<string, bool> url, Action<IRoute> handler, BrowserContextRouteOptions options = default)
+            => RouteAsync(null, null, url, handler, options);
 
         public Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
             => Channel.SetExtraHTTPHeadersAsync(headers);
@@ -325,11 +327,12 @@ namespace Microsoft.Playwright.Core
             foreach (var item in _routes)
             {
                 if (
-                    (item.Url != null && UrlMatches(request.Url, item.Url)) ||
+                    ((item.Times ?? 0) == 0 || item.HandledCount >= item.Times) &&
+                    ((item.Url != null && UrlMatches(request.Url, item.Url)) ||
                     (item.Regex?.IsMatch(request.Url) == true) ||
-                    (item.Function?.Invoke(request.Url) == true))
+                    (item.Function?.Invoke(request.Url) == true)))
                 {
-                    item.Handler(route);
+                    item.Handle(route);
                     return;
                 }
             }
@@ -359,13 +362,14 @@ namespace Microsoft.Playwright.Core
             return url;
         }
 
-        private Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler)
+        private Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler, BrowserContextRouteOptions options)
             => RouteAsync(new()
             {
                 Regex = urlRegex,
                 Url = urlString,
                 Function = urlFunc,
                 Handler = handler,
+                Times = options?.Times,
             });
 
         private Task RouteAsync(RouteSetting setting)

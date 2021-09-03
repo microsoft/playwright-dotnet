@@ -38,7 +38,7 @@ namespace Microsoft.Playwright.Tests
     [Parallelizable(ParallelScope.Self)]
     public class TracingTests : ContextTestEx
     {
-        [PlaywrightTest("tracing.spec.ts", "should collect trace")]
+        [PlaywrightTest("tracing.spec.ts", "should collect trace with resources, but no js")]
         public async Task ShouldCollectTrace()
         {
             await Context.Tracing.StartAsync(new()
@@ -49,9 +49,10 @@ namespace Microsoft.Playwright.Tests
             });
 
             var page = await Context.NewPageAsync();
-            await page.GotoAsync(Server.EmptyPage);
+            await page.GotoAsync(Server.Prefix + "/frames/frame.html");
             await page.SetContentAsync("<button>Click</button>");
             await page.ClickAsync("\"Click\"");
+            await page.WaitForTimeoutAsync(2000);
             await page.CloseAsync();
 
             using var tmp = new TempDirectory();
@@ -137,19 +138,21 @@ namespace Microsoft.Playwright.Tests
         {
             List<TraceEventEntry> results = new();
             var archive = ZipFile.OpenRead(path);
-            var events = archive.GetEntry("trace.trace");
-            if (events != null)
+            foreach (var events in new[] { archive.GetEntry("trace.trace"), archive.GetEntry("trace.network") })
             {
-                var reader = new StreamReader(events.Open());
-                while (true)
+                if (events != null)
                 {
-                    var line = reader.ReadLine();
-                    if (line == null) break;
-                    results.Add(JsonSerializer.Deserialize<TraceEventEntry>(line,
-                        new()
-                        {
-                            PropertyNameCaseInsensitive = true,
-                        }));
+                    var reader = new StreamReader(events.Open());
+                    while (true)
+                    {
+                        var line = reader.ReadLine();
+                        if (line == null) break;
+                        results.Add(JsonSerializer.Deserialize<TraceEventEntry>(line,
+                            new()
+                            {
+                                PropertyNameCaseInsensitive = true,
+                            }));
+                    }
                 }
             }
             return results;

@@ -82,6 +82,7 @@ namespace Microsoft.Playwright
             ReducedMotion = clone.ReducedMotion;
             ScreenSize = clone.ScreenSize;
             SlowMo = clone.SlowMo;
+            StrictSelectors = clone.StrictSelectors;
             Timeout = clone.Timeout;
             TimezoneId = clone.TimezoneId;
             TracesDir = clone.TracesDir;
@@ -173,7 +174,9 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// If specified, accepted downloads are downloaded into this directory. Otherwise,
-        /// temporary directory is created and is deleted when browser is closed.
+        /// temporary directory is created and is deleted when browser is closed. In either
+        /// case, the downloads are deleted when the browser context they were created in is
+        /// closed.
         /// </para>
         /// </summary>
         [JsonPropertyName("downloadsPath")]
@@ -372,6 +375,17 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("slowMo")]
         public float? SlowMo { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// It specified, enables strict selectors mode for this context. In the strict selectors
+        /// mode all operations on selectors that imply single target DOM element will throw
+        /// when more than one element matches the selector. See <see cref="ILocator"/> to learn
+        /// more about the strict mode.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("strictSelectors")]
+        public bool? StrictSelectors { get; set; }
 
         /// <summary>
         /// <para>
