@@ -63,6 +63,7 @@ namespace Microsoft.Playwright.Core
                 e.Request.Timing.ResponseEnd = e.ResponseEndTiming;
                 RequestFailed?.Invoke(this, e.Request);
                 e.Page?.FireRequestFailed(e.Request);
+                e.Response?.ReportFinished(e.FailureText);
             };
             Channel.Request += (_, e) =>
             {
@@ -72,8 +73,10 @@ namespace Microsoft.Playwright.Core
             Channel.RequestFinished += (_, e) =>
             {
                 e.Request.Timing.ResponseEnd = e.ResponseEndTiming;
+                e.Request.Sizes = e.RequestSizes;
                 RequestFinished?.Invoke(this, e.Request);
                 e.Page?.FireRequestFinished(e.Request);
+                e.Response?.ReportFinished();
             };
             Channel.Response += (_, e) =>
             {

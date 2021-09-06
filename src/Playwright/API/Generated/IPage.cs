@@ -1741,6 +1741,50 @@ namespace Microsoft.Playwright
         /// <param name="options">Call options</param>
         Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, PageSelectOptionOptions? options = default);
 
+        /// <summary>
+        /// <para>
+        /// This method checks or unchecks an element matching <paramref name="selector"/> by
+        /// performing the following steps:
+        /// </para>
+        /// <list type="ordinal">
+        /// <item><description>
+        /// Find an element matching <paramref name="selector"/>. If there is none, wait until
+        /// a matching element is attached to the DOM.
+        /// </description></item>
+        /// <item><description>
+        /// Ensure that matched element is a checkbox or a radio input. If not, this method
+        /// throws.
+        /// </description></item>
+        /// <item><description>If the element already has the right checked state, this method returns immediately.</description></item>
+        /// <item><description>
+        /// Wait for <a href="./actionability.md">actionability</a> checks on the matched element,
+        /// unless <paramref name="force"/> option is set. If the element is detached during
+        /// the checks, the whole action is retried.
+        /// </description></item>
+        /// <item><description>Scroll the element into view if needed.</description></item>
+        /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
+        /// <item><description>
+        /// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
+        /// option is set.
+        /// </description></item>
+        /// <item><description>Ensure that the element is now checked or unchecked. If not, this method throws.</description></item>
+        /// </list>
+        /// <para>
+        /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+        /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
+        /// this.
+        /// </para>
+        /// <para>Shortcut for main frame's <see cref="IFrame.SetCheckedAsync"/>.</para>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to search for an element. If there are multiple elements satisfying the
+        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
+        /// for more details.
+        /// </param>
+        /// <param name="checkedState">Whether to check or uncheck the checkbox.</param>
+        /// <param name="options">Call options</param>
+        Task SetCheckedAsync(string selector, bool checkedState, PageSetCheckedOptions? options = default);
+
         /// <param name="html">HTML markup to assign to the page.</param>
         /// <param name="options">Call options</param>
         Task SetContentAsync(string html, PageSetContentOptions? options = default);

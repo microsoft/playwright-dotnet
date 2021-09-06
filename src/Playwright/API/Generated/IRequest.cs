@@ -154,6 +154,14 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
+        /// Returns resource size information for given request. Requires the response to be
+        /// finished via <see cref="IResponse.FinishedAsync"/> to ensure the info is available.
+        /// </para>
+        /// </summary>
+        RequestSizesResult Sizes { get; }
+
+        /// <summary>
+        /// <para>
         /// Returns resource timing information for given request. Most of the timing values
         /// become available upon the response, <c>responseEnd</c> becomes available when request
         /// finishes. Find more information at <a href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceResourceTiming">Resource

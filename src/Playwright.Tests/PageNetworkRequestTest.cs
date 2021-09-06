@@ -235,5 +235,78 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/pptr.png");
             Assert.True(requests[0].IsNavigationRequest);
         }
+
+        [PlaywrightTest("page-network-request.spec.ts", "should set bodySize and headersSize")]
+        public async Task ShouldSetBodySizeAndHeaderSize()
+        {
+            await Page.GotoAsync(Server.EmptyPage);
+            var tsc = new TaskCompletionSource<RequestSizesResult>();
+            Page.Request += async (sender, r) =>
+            {
+                await (await r.ResponseAsync()).FinishedAsync();
+                tsc.SetResult(r.Sizes);
+            };
+            await Page.EvaluateAsync("() => fetch('./get', { method: 'POST', body: '12345'}).then(r => r.text())");
+
+            var sizes = await tsc.Task;
+            Assert.AreEqual(5, sizes.RequestBodySize);
+            Assert.GreaterOrEqual(sizes.RequestHeadersSize, 200);
+        }
+
+        [PlaywrightTest("page-network-request.spec.ts", "should should set bodySize to 0 if there was no body")]
+        public async Task ShouldSetBodysizeTo0IfThereWasNoBody()
+        {
+            await Page.GotoAsync(Server.EmptyPage);
+            var tsc = new TaskCompletionSource<RequestSizesResult>();
+            Page.Request += async (sender, r) =>
+            {
+                await (await r.ResponseAsync()).FinishedAsync();
+                tsc.SetResult(r.Sizes);
+            };
+            await Page.EvaluateAsync("() => fetch('./get').then(r => r.text())");
+
+            var sizes = await tsc.Task;
+            Assert.AreEqual(0, sizes.RequestBodySize);
+            Assert.GreaterOrEqual(sizes.RequestHeadersSize, 200);
+        }
+
+        [PlaywrightTest("page-network-request.spec.ts", "should should set bodySize, headersSize, and transferSize")]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Chromium, SkipAttribute.Targets.Webkit)]
+        public async Task ShouldSetAllTheResponseSizes()
+        {
+            Server.SetRoute("/get", async ctx =>
+            {
+                ctx.Response.Headers["Content-Type"] = "text/plain; charset=utf-8";
+                await ctx.Response.WriteAsync("abc134");
+                await ctx.Response.CompleteAsync();
+            });
+
+            await Page.GotoAsync(Server.EmptyPage);
+            var tsc = new TaskCompletionSource<RequestSizesResult>();
+            Page.Request += async (sender, r) =>
+            {
+                await (await r.ResponseAsync()).FinishedAsync();
+                tsc.SetResult(r.Sizes);
+            };
+            var message = await Page.EvaluateAsync<string>("() => fetch('./get').then(r => r.arrayBuffer()).then(b => b.bufferLength)");
+            var sizes = await tsc.Task;
+
+            Assert.AreEqual(6, sizes.ResponseBodySize);
+            Assert.GreaterOrEqual(sizes.ResponseHeadersSize, 142);
+            Assert.GreaterOrEqual(sizes.ResponseTransferSize, 160);
+        }
+
+        [PlaywrightTest("page-network-request.spec.ts", "should should set bodySize to 0 when there was no response body")]
+        public async Task ShouldSetBodySizeTo0WhenNoResponseBody()
+        {
+            var response = await Page.GotoAsync(Server.EmptyPage);
+            await response.FinishedAsync();
+
+            var sizes = response.Request.Sizes;
+
+            Assert.AreEqual(0, sizes.ResponseBodySize);
+            Assert.GreaterOrEqual(sizes.ResponseHeadersSize, 142);
+            Assert.GreaterOrEqual(sizes.ResponseTransferSize, 160);
+        }
     }
 }

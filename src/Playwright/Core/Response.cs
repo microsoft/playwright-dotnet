@@ -37,12 +37,14 @@ namespace Microsoft.Playwright.Core
     {
         private readonly ResponseChannel _channel;
         private readonly ResponseInitializer _initializer;
+        private readonly TaskCompletionSource<string> _finishedTask;
 
         internal Response(IChannelOwner parent, string guid, ResponseInitializer initializer) : base(parent, guid)
         {
             _channel = new(guid, parent.Connection, this);
             _initializer = initializer;
             _initializer.Request.Timing = _initializer.Timing;
+            _finishedTask = new();
 
             Headers = new();
             foreach (var kv in initializer.Headers)
@@ -89,7 +91,7 @@ namespace Microsoft.Playwright.Core
 
         public async Task<byte[]> BodyAsync() => Convert.FromBase64String(await _channel.GetBodyAsync().ConfigureAwait(false));
 
-        public Task<string> FinishedAsync() => _channel.FinishedAsync();
+        public Task<string> FinishedAsync() => _finishedTask.Task;
 
         public async Task<JsonElement?> JsonAsync()
         {
@@ -105,6 +107,11 @@ namespace Microsoft.Playwright.Core
         {
             byte[] content = await BodyAsync().ConfigureAwait(false);
             return Encoding.UTF8.GetString(content);
+        }
+
+        internal void ReportFinished(string erroMessage = null)
+        {
+            _finishedTask.SetResult(erroMessage);
         }
     }
 }

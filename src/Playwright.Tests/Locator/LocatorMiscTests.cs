@@ -87,6 +87,17 @@ namespace Microsoft.Playwright.Tests.Locator
             Assert.IsFalse(await Page.EvaluateAsync<bool>("checkbox.checked"));
         }
 
+        [PlaywrightTest("locator-misc-1.spec.ts", "should check the box using setChecked")]
+        public async Task ShouldCheckTheBoxUsingSetChecked()
+        {
+            await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
+            var input = Page.Locator("input");
+            await input.SetCheckedAsync(true);
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("checkbox.checked"));
+            await input.SetCheckedAsync(false);
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("checkbox.checked"));
+        }
+
         [PlaywrightTest("locator-misc-1.spec.ts", "should select single option")]
         public async Task ShouldSelectSingleOption()
         {

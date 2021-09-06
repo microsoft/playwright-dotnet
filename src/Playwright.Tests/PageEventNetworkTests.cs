@@ -121,23 +121,30 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-event-network.spec.ts", "should support redirects")]
         public async Task ShouldSupportRedirects()
         {
-            var events = new List<string>();
-            Page.Request += (_, e) => events.Add($"{e.Method} {e.Url}");
-            Page.Response += (_, e) => events.Add($"{(int)e.Status} {e.Url}");
-            Page.RequestFinished += (_, e) => events.Add($"DONE {e.Url}");
-            Page.RequestFailed += (_, e) => events.Add($"FAIL {e.Url}");
-            Server.SetRedirect("/foo.html", "/empty.html");
             string FOO_URL = Server.Prefix + "/foo.html";
+            string EMPTY_URL = Server.EmptyPage;
+
+            var events = new Dictionary<string, List<string>>()
+            {
+                [FOO_URL] = new(),
+                [EMPTY_URL] = new()
+            };
+
+            Page.Request += (_, e) => events[e.Url].Add(e.Method);
+            Page.Response += (_, e) => events[e.Url].Add(e.Status.ToString());
+            Page.RequestFinished += (_, e) => events[e.Url].Add("DONE");
+            Page.RequestFailed += (_, e) => events[e.Url].Add("FAIL");
+            Server.SetRedirect("/foo.html", "/empty.html");
             var response = await Page.GotoAsync(FOO_URL);
             await response.FinishedAsync();
-            Assert.AreEqual(new[] {
-                $"GET {FOO_URL}",
-                $"302 {FOO_URL}",
-                $"DONE {FOO_URL}",
-                $"GET {Server.EmptyPage}",
-                $"200 {Server.EmptyPage}",
-                $"DONE {Server.EmptyPage}"
-            }, events);
+
+            var expected = new Dictionary<string, List<string>>
+            {
+                [FOO_URL] = new() { "GET", "302", "DONE" },
+                [EMPTY_URL] = new() { "GET", "200", "DONE" }
+            };
+
+            Assert.AreEqual(expected, events);
 
             // Check redirect chain
             var redirectedFrom = response.Request.RedirectedFrom;
