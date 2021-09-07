@@ -84,6 +84,7 @@ function Invoke-Roll() {
     # Let's update the project file
     [xml]$version = Get-Content ".\src\Common\Version.props"
     $version.Project.PropertyGroup.DriverVersion = $package.version + "-" + $rev
+    $version.Project.PropertyGroup.AssemblyVersion = $package.version.Split("-")[0]
     "Updating to " + $package.version + "-" + $rev
     $version.Save("$pwd\src\Common\Version.props")
   } else {
