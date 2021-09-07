@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <AssemblyVersion>1.14.0</AssemblyVersion>
+    <AssemblyVersion>1.15.0</AssemblyVersion>
     <PackageVersion>$(AssemblyVersion)-next-1</PackageVersion>
     <DriverVersion>1.15.0-next-1630407870000</DriverVersion>
     <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
