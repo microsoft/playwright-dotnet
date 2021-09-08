@@ -341,5 +341,37 @@ namespace Microsoft.Playwright.Tests
             Page.SetDefaultNavigationTimeout(1_000);
             await PlaywrightAssert.ThrowsAsync<TimeoutException>(async () => await Page.RunAndWaitForNavigationAsync(() => Task.CompletedTask));
         }
+
+        [PlaywrightTest]
+        public async Task ShouldNotFailWithWaitForEvent()
+        {
+            var failed = false;
+            TaskScheduler.UnobservedTaskException += (_, e) =>
+            {
+                e.SetObserved();
+                failed = true;
+            };
+
+            await Page.GotoAsync(Server.EmptyPage);
+            await Page.MainFrame.SetContentAsync(@$"
+<!DOCTYPE html>
+<html>
+<body>
+<form action='{Server.EmptyPage}'>
+  <input type='text' id='fname' name='fname' value='John'><br>
+  <input type='submit' value='Submit'>
+</form> 
+</body>
+</html>
+");
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            await Page.RunAndWaitForNavigationAsync(async () =>
+            {
+                await Page.ClickAsync("text=Submit");
+                await Task.Delay(TimeSpan.FromSeconds(3));
+            });
+
+            Assert.False(failed);
+        }
     }
 }

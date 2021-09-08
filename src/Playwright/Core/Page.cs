@@ -244,6 +244,8 @@ namespace Microsoft.Playwright.Core
 
         internal Page Opener => _initializer.Opener;
 
+        internal PageChannel Channel => _channel;
+
         internal float DefaultTimeout
         {
             get => _defaultTimeout;
