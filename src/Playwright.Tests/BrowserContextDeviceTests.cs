@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class BrowserContextDeviceTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-device.spec.ts", "should work")]

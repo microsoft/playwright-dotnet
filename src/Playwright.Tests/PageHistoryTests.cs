@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageHistoryTests : PageTestEx
     {
         [PlaywrightTest("page-history.spec.ts", "page.goBack should work")]

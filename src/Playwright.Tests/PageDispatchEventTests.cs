@@ -29,7 +29,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>dispatchevent.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class PageDispatchEventTests : PageTestEx
     {
         [PlaywrightTest("page-dispatchevent.spec.ts", "should dispatch click event")]

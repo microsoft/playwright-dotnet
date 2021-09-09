@@ -27,7 +27,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class LoggerTests : PlaywrightTestEx
     {
         [PlaywrightTest("logger.spec.ts", "should log")]

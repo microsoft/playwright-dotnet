@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class ElementHandleBoundingBoxTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should work")]

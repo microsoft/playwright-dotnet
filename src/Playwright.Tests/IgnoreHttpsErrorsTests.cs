@@ -34,7 +34,6 @@ namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>ignorehttpserrors.spec.ts</playwright-file>
     ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
-    [Parallelizable(ParallelScope.Self)]
     public class IgnoreHttpsErrorsTests : BrowserTestEx
     {
         [PlaywrightTest("ignorehttpserrors.spec.ts", "should work")]

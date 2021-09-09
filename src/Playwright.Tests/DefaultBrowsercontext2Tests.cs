@@ -32,7 +32,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     /// <playwright-file>defaultbrowsercontext-2.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class DefaultBrowsercontext2Tests : PlaywrightTestEx
     {
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support hasTouch option")]

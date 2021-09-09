@@ -27,7 +27,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests.Locator
 {
-    [Parallelizable(ParallelScope.Self)]
     public class LocatorMiscTests : PageTestEx
     {
         [PlaywrightTest("locator-misc-1.spec.ts", "should hover")]

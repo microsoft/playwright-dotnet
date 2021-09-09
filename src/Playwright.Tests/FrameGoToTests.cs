@@ -33,7 +33,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class FrameGoToTests : PageTestEx
     {
         [PlaywrightTest("frame-goto.spec.ts", "should navigate subframes")]

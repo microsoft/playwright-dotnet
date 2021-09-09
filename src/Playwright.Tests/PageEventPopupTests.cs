@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageEventPopupTests : PageTestEx
     {
         [PlaywrightTest("page-event-popup.spec.ts", "should work")]

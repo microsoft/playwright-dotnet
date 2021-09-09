@@ -27,7 +27,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class JSHandleToStringTests : PageTestEx
     {
         [PlaywrightTest("jshandle-to-string.spec.ts", "should work for primitives")]

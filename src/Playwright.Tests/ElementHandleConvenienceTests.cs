@@ -29,7 +29,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>elementhandle-convenience.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class ElementHandleConvenienceTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-convenience.spec.ts", "should have a nice preview")]

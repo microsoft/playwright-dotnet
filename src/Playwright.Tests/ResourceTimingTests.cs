@@ -30,7 +30,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>resource-timing.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class ResourceTimingTests : PageTestEx
     {
         private void VerifyConnectionTimingConsistency(RequestTimingResult timing)

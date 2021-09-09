@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class BrowserContextCredentialsTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should fail without credentials")]

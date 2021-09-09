@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PopupTests : BrowserTestEx
     {
         [PlaywrightTest("popup.spec.ts", "should inherit user agent from browser context")]

@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class JSHandleJsonValueTests : PageTestEx
     {
         [PlaywrightTest("jshandle-json-value.spec.ts", "should work")]

@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageEventPageErrorTests : PageTestEx
     {
         [PlaywrightTest("page-event-pageerror.spec.ts", "should fire")]

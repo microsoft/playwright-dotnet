@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class JSHandlePropertiesTests : PageTestEx
     {
         [PlaywrightTest("jshandle-properties.spec.ts", "getProperties should work")]

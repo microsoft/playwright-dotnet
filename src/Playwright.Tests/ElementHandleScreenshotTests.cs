@@ -33,7 +33,6 @@ using SixLabors.ImageSharp;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>elementhandle-screenshot.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class ElementHandleScreenshotTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should work")]

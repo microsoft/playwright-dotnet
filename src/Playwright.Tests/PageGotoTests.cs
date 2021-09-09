@@ -33,7 +33,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageGotoTests : PageTestEx
     {
         [PlaywrightTest("page-goto.spec.ts", "should work")]

@@ -33,7 +33,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageEventNetworkTests : PageTestEx
     {
         [PlaywrightTest("page-event-network.spec.ts", "Page.Events.Request")]

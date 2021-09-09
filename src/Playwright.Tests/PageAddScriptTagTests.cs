@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageAddScriptTagTests : PageTestEx
     {
         [PlaywrightTest("page-add-script-tag.spec.ts", "should throw an error if no options are provided")]

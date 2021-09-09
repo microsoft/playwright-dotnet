@@ -33,7 +33,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageNetworkResponseTests : PageTestEx
     {
         [PlaywrightTest("page-network-response.spec.ts", "should return body")]

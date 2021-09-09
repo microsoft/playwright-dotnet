@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageAutoWaitingBasicTests : PageTestEx
     {
         [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigation when clicking anchor")]

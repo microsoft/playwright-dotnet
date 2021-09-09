@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class FrameEvaluateTests : PageTestEx
     {
         [PlaywrightTest("frame-evaluate.spec.ts", "should have different execution contexts")]

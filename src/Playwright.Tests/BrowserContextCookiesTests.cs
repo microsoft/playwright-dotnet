@@ -31,7 +31,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class BrowserContextCookiesTests : PageTestEx
     {
         [PlaywrightTest("browsercontext-cookies.spec.ts", "should return no cookies in pristine browser context")]

@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class ElementHandleSelectTextTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-select-text.spec.ts", "should select textarea")]

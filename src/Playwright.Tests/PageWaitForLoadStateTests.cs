@@ -34,7 +34,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>page-wait-for-load-state.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class PageWaitForLoadStateTests : PageTestEx
     {
         [PlaywrightTest("page-wait-for-load-state.ts", "should pick up ongoing navigation")]

@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class BrowserContextClearCookiesTests : PageTestEx
     {
         [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should clear cookies")]

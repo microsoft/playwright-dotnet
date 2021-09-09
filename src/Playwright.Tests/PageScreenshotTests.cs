@@ -34,7 +34,6 @@ namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>page-screenshot.spec.ts</playwright-file>
 
-    [Parallelizable(ParallelScope.Self)]
     public class PageScreenshotTests : PageTestEx
     {
         [PlaywrightTest("page-screenshot.spec.ts", "should work")]

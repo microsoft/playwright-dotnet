@@ -29,7 +29,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>browser.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class BrowserTests : BrowserTestEx
     {
         [PlaywrightTest("browser.spec.ts", "should create new page")]

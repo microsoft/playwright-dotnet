@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class EvalOnSelectorAllTests : PageTestEx
     {
         [PlaywrightTest("eval-on-selector-all.spec.ts", "should work with css selector")]

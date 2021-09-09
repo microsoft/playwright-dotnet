@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class EmulationFocusTests : PageTestEx
     {
         [PlaywrightTest("emulation-focus.spec.ts", "should think that it is focused by default")]

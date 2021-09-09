@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class BrowserContextViewportTests : PageTestEx
     {
         [PlaywrightTest("browsercontext-viewport.spec.ts", "should get the proper default viewport size")]

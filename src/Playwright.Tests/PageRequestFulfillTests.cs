@@ -32,7 +32,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class RequestFulfillTests : PageTestEx
     {
         [PlaywrightTest("page-request-fulfill.spec.ts", "should work")]

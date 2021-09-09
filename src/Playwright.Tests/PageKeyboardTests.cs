@@ -31,7 +31,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageKeyboardTests : PageTestEx
     {
         [PlaywrightTest("page-keyboard.spec.ts", "should type into a textarea")]

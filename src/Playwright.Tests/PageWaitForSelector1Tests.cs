@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageWaitForSelector1Tests : PageTestEx
     {
         private const string AddElement = "tag => document.body.appendChild(document.createElement(tag))";

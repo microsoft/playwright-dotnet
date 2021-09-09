@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PermissionsTests : PageTestEx
     {
         [PlaywrightTest("permissions.spec.ts", "should be prompt by default")]

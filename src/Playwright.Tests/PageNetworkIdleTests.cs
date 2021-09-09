@@ -36,7 +36,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>page-network-idle.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class PageNetworkIdleTests : PageTestEx
     {
         [PlaywrightTest("page-network-idle.spec.ts", "should navigate to empty page with networkidle")]

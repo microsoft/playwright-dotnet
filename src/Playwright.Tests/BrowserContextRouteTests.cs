@@ -32,7 +32,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class BrowserContextRouteTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-route.spec.ts", "should intercept")]

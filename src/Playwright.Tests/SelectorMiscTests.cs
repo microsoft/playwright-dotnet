@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class SelectorMiscTests : PageTestEx
     {
         [PlaywrightTest("selectors-misc.spec.ts", "should work for open shadow roots")]

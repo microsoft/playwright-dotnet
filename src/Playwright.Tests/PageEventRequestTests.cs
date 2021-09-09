@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageEventRequestTests : PageTestEx
     {
         [PlaywrightTest("page-event-request.spec.ts", "should fire for navigation requests")]

@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageDragTests : PageTestEx
     {
         [PlaywrightTest("page-drag.spec.ts", "should work")]

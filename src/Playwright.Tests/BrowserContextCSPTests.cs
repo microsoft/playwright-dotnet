@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class BrowserContextCSPTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-csp.spec.ts", "should bypass CSP meta tag")]

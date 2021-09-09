@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class QuerySelectorTests : PageTestEx
     {
         [PlaywrightTest("queryselector.spec.ts", "should query existing elements")]

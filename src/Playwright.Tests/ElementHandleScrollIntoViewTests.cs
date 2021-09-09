@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class ElementHandleScrollIntoViewTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should work")]

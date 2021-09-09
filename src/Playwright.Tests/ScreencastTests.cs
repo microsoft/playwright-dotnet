@@ -30,7 +30,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>screencast.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class ScreencastTests : BrowserTestEx
     {
         [PlaywrightTest("screencast.spec.ts", "videoSize should require videosPath")]

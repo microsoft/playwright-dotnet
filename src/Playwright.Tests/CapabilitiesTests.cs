@@ -30,7 +30,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>capabilities.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class CapabilitiesTests : PageTestEx
     {
         [PlaywrightTest("capabilities.spec.ts", "Web Assembly should work")]

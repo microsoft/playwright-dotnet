@@ -32,7 +32,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>pdf.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class PdfTests : PageTestEx
     {
         [PlaywrightTest("pdf.spec.ts", "should be able to save file")]
