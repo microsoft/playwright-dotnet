@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageCheckTests : PageTestEx
     {
         [PlaywrightTest("page-check.spec.ts", "should check the box")]

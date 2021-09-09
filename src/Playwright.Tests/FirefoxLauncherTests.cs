@@ -31,7 +31,6 @@ namespace Microsoft.Playwright.Tests.Firefox
 {
     ///<playwright-file>firefox/launcher.spec.ts</playwright-file>
     ///<playwright-describe>launcher</playwright-describe>
-    [Parallelizable(ParallelScope.Self)]
     public class FirefoxLauncherTests : PlaywrightTestEx
     {
         [PlaywrightTest("firefox/launcher.spec.ts", "should pass firefox user preferences")]

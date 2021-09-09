@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class BrowserContextExposeFunctionTests : ContextTestEx
     {
         [PlaywrightTest("browsercontext-expose-function.spec.ts", "expose binding should work")]

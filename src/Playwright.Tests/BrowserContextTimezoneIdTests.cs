@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class BrowserContextTimezoneIdTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-timezone-id.spec.ts", "should work")]

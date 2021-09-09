@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class ElementHandleClickTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-click.spec.ts", "should work")]

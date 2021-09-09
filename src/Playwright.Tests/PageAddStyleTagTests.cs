@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageAddStyleTagTests : PageTestEx
     {
         [PlaywrightTest("page-add-style-tag.spec.ts", "should throw an error if no options are provided")]

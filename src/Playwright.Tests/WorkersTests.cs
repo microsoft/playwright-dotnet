@@ -31,7 +31,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class WorkersTests : PageTestEx
     {
         [PlaywrightTest("workers.spec.ts", "Page.workers")]

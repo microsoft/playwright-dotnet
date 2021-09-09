@@ -29,7 +29,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>selectors-register.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class SelectorsRegisterTests : PageTestEx
     {
         [PlaywrightTest("selectors-register.spec.ts", "should work")]

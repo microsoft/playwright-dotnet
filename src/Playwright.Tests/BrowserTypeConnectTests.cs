@@ -33,7 +33,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>browsertype-connect.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class BrowserTypeConnectTests : PlaywrightTestEx
     {
         private BrowserServer _browserServer;

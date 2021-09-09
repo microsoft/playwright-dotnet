@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageFillTests : PageTestEx
     {
         [PlaywrightTest("page-fill.spec.ts", "should fill textarea")]

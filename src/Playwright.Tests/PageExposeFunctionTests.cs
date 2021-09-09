@@ -31,7 +31,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>page-expose-function.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class PageExposeFunctionTests : PageTestEx
     {
         [PlaywrightTest("page-expose-function.spec.ts", "exposeBinding should work")]

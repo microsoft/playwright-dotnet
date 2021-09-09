@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class FrameHierarchyTests : PageTestEx
     {
         [PlaywrightTest("frame-hierarchy.spec.ts", "should handle nested frames")]

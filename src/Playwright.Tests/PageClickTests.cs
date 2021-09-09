@@ -31,7 +31,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageClickTests : PageTestEx
     {
         [PlaywrightTest("page-click.spec.ts", "should click the button")]

@@ -31,7 +31,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageEvaluateHandleTests : PageTestEx
     {
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should work")]

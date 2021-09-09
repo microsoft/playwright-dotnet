@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageEmulateMediaTests : PageTestEx
     {
         [PlaywrightTest("page-emulate-media.spec.ts", "should emulate scheme work")]

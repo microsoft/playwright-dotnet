@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageClickReactTests : PageTestEx
     {
         [PlaywrightTest("page-click-react.spec.ts", "should retarget when element is recycled during hit testing")]

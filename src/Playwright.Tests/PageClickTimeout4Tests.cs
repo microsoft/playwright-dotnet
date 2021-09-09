@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageClickTimeout4Tests : PageTestEx
     {
         [PlaywrightTest("page-click-timeout-4.spec.ts", "should timeout waiting for stable position")]

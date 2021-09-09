@@ -31,7 +31,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class ProxyTests : PlaywrightTestEx
     {
         [PlaywrightTest("proxy.spec.ts", "should use proxy")]

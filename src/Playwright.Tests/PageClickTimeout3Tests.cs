@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageClickTimeout3Tests : PageTestEx
     {
         [PlaywrightTest("page-click-timeout-3.spec.ts", "should fail when element jumps during hit testing")]

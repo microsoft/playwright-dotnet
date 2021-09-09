@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageBasicTests : PageTestEx
     {
         [PlaywrightTest("page-basic.spec.ts", "should reject all promises when page is closed")]

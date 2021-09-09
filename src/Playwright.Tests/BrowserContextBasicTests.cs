@@ -32,7 +32,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class BrowserContextBasicTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-basic.spec.ts", "should create new context")]

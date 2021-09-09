@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class BrowserContextLocaleTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-locale.spec.ts", "should affect accept-language header")]

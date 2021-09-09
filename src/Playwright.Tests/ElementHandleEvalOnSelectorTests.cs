@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class ElementHandleEvalOnSelectorTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-eval-on-selector.spec.ts", "should work for all")]

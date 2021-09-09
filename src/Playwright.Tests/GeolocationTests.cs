@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class GeolocationTests : PageTestEx
     {
         [PlaywrightTest("geolocation.spec.ts", "should work")]

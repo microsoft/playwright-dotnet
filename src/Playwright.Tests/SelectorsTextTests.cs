@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class SelectorsTextTests : PageTestEx
     {
         [PlaywrightTest("selectors-text.spec.ts", "query")]

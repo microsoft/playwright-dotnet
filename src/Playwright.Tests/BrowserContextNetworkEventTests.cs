@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class BrowserContextNetworkEventTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-network-event.spec.ts", "BrowserContext.Events.Request")]

@@ -31,7 +31,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>download.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class DownloadTests : PageTestEx
     {
         [SetUp]

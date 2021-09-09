@@ -34,7 +34,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>page-set-input-files.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class PageSetInputFilesTests : PageTestEx
     {
         [PlaywrightTest("page-set-input-files.spec.ts", "should upload the file")]

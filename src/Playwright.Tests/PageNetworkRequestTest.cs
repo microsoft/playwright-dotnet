@@ -32,7 +32,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>network-request.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class PageNetworkRequestTest : PageTestEx
     {
         [PlaywrightTest("page-network-request.spec.ts", "should work for main frame navigation request")]

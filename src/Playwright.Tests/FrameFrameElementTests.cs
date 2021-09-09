@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class FrameFrameElementTests : PageTestEx
     {
         [PlaywrightTest("frame-frame-element.spec.ts", "should work")]

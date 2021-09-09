@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class JSHandleAsElementTests : PageTestEx
     {
         [PlaywrightTest("jshandle-as-element.spec.ts", "should work")]

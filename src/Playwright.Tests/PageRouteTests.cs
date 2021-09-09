@@ -36,7 +36,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageRouteTests : PageTestEx
     {
         [PlaywrightTest("page-route.spec.ts", "should intercept")]

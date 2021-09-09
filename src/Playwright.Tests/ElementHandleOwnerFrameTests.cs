@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class ElementHandleOwnerFrameTests : PageTestEx
     {
         [PlaywrightTest("elementhandle-owner-frame.spec.ts", "should work")]

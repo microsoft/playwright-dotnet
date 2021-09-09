@@ -33,7 +33,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageWaitForNavigationTests : PageTestEx
     {
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work")]

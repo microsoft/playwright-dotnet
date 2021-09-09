@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageWaitForFunctionTests : PageTestEx
     {
         [PlaywrightTest("page-wait-for-function.spec.ts", "should timeout")]

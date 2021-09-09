@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageClickTimeout1Tests : PageTestEx
     {
         [PlaywrightTest("page-click-timeout-1.spec.ts", "should avoid side effects after timeout")]

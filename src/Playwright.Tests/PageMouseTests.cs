@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageMouseTests : PageTestEx
     {
         [PlaywrightTest("page-mouse.spec.ts", "should click the document")]

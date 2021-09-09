@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class DefaultBrowserContext1Tests : PlaywrightTestEx
     {
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "context.cookies() should work")]

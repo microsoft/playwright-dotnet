@@ -32,7 +32,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageWaitForUrlTests : PageTestEx
     {
         [PlaywrightTest("page-wait-for-url.spec.ts", "should work")]

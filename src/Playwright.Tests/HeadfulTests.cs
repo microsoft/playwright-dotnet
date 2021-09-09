@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>headful.spec.ts</playwright-file>
 
-    [Parallelizable(ParallelScope.Self)]
     public class HeadfulTests : PlaywrightTestEx
     {
         [PlaywrightTest("headful.spec.ts", "should have default url when launching browser")]

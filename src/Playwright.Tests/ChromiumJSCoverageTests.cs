@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class ChromiumJSCoverageTests : PageTestEx
     {
         [PlaywrightTest("chromium-js-coverage.spec.ts", "JS Coverage", "should work")]

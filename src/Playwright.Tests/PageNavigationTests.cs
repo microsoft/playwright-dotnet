@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageNavigationTests : PageTestEx
     {
         [PlaywrightTest("page-navigation.spec.ts", "should work with _blank target")]

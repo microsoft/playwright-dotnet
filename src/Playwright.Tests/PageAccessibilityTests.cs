@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageAccessibilityTests : PageTestEx
     {
         [PlaywrightTest("page-accessibility.spec.ts", "should work with regular text")]

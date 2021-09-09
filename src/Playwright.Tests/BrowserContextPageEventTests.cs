@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class BrowserContextPageEventTests : BrowserTestEx
     {
         [PlaywrightTest("browsercontext-page-event.spec.ts", "should have url")]

@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageDialogTests : PageTestEx
     {
         [PlaywrightTest("page-dialog.spec.ts", "should fire")]

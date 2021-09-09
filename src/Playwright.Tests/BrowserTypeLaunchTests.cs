@@ -30,7 +30,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>browsertype-launch.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class BrowserTypeLaunchTests : PlaywrightTestEx
     {
         [PlaywrightTest("browsertype-launch.spec.ts", "should reject all promises when browser is closed")]

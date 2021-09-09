@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageSetContentTests : PageTestEx
     {
         const string _expectedOutput = "<html><head></head><body><div>hello</div></body></html>";

@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests.Locator
 {
-    [Parallelizable(ParallelScope.Self)]
     public class LocatorConvenienceTests : PageTestEx
     {
         [PlaywrightTest("locator-convenience.spec.ts", "should have a nice preview")]

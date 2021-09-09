@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageSetExtraHTTPHeadersTests : PageTestEx
     {
         [PlaywrightTest("page-set-extra-http-headers.spec.ts", "should work")]

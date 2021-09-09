@@ -30,7 +30,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>web-socket.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class WebSocketTests : PageTestEx
     {
         [PlaywrightTest("web-socket.spec.ts", "should work")]

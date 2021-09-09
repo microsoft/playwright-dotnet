@@ -35,7 +35,6 @@ using NUnit.Framework;
 namespace Microsoft.Playwright.Tests
 {
     ///<playwright-file>tracing.spec.ts</playwright-file>
-    [Parallelizable(ParallelScope.Self)]
     public class TracingTests : ContextTestEx
     {
         [PlaywrightTest("tracing.spec.ts", "should collect trace with resources, but no js")]

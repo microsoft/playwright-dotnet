@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class PageSelectOptionTests : PageTestEx
     {
         [PlaywrightTest("page-select-option.spec.ts", "should select single option")]

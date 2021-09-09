@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class GlobTests : PageTestEx
     {
         [PlaywrightTest("interception.spec.ts", "should work with glob")]

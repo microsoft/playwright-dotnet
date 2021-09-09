@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class BeforeUnloadTests : PageTestEx
     {
         [PlaywrightTest("beforeunload.spec.ts", "should run beforeunload if asked for")]
