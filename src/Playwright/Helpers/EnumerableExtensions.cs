@@ -41,9 +41,9 @@ namespace Microsoft.Playwright.Helpers
             return input.Select(x => new NameValueEntry(x.Key, x.Value)).ToArray();
         }
 
-        public static async Task<IEnumerable<T>> WaitForResultsAsync<T>(this IEnumerable<Task<T>> listOfTasks)
+        public static async Task<IEnumerable<TResult>> SelectAsync<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, Task<TResult>> method)
         {
-            return await Task.WhenAll(listOfTasks).ConfigureAwait(false);
+            return await Task.WhenAll(source.Select(x => method(x))).ConfigureAwait(false);
         }
     }
 }
