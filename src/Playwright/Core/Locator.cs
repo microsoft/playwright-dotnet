@@ -51,8 +51,7 @@ namespace Microsoft.Playwright.Core
         {
             var handles = await _frame.QuerySelectorAllAsync(_selector).ConfigureAwait(false);
             return (await handles
-                    .Select(async x => await x.InnerTextAsync().ConfigureAwait(false))
-                    .WaitForResultsAsync()
+                    .SelectAsync(async x => await x.InnerTextAsync().ConfigureAwait(false))
                     .ConfigureAwait(false))
                 .ToArray();
         }
@@ -61,8 +60,7 @@ namespace Microsoft.Playwright.Core
         {
             var handles = await _frame.QuerySelectorAllAsync(_selector).ConfigureAwait(false);
             return (await handles
-                    .Select(async x => await x.TextContentAsync().ConfigureAwait(false))
-                    .WaitForResultsAsync()
+                    .SelectAsync(async x => await x.TextContentAsync().ConfigureAwait(false))
                     .ConfigureAwait(false))
                 .Select(x => x ?? string.Empty) // we don't filter nulls, as per https://github.com/microsoft/playwright/blob/master/src/client/locator.ts#L205
                 .ToArray();
