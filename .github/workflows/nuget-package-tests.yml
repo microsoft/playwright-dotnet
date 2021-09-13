@@ -36,8 +36,15 @@ jobs:
         run: |
           dotnet pack ./src/Playwright/Playwright.csproj -c Debug -o ./src/Playwright.LocalNugetTest/nupkg
           dotnet pack ./src/Playwright.NUnit/Playwright.NUnit.csproj -c Debug -o ./src/Playwright.LocalNugetTest/nupkg
+      - name: Install new NuGet Versions
+        run: |
+          dotnet add Playwright.LocalNugetTest.48.csproj package Microsoft.Playwright.NUnit -s ./nupkg --prerelease
+          dotnet add Playwright.LocalNugetTest.50.csproj package Microsoft.Playwright.NUnit -s ./nupkg --prerelease
+        working-directory: ./src/Playwright.LocalNugetTest/
       - name: Build LocalNugetTest 
-        run: dotnet build
+        run: |
+          dotnet build Playwright.LocalNugetTest.48.csproj
+          dotnet build Playwright.LocalNugetTest.50.csproj
         working-directory: ./src/Playwright.LocalNugetTest/
       - name: Install Dependencies
         run: playwright install-deps
@@ -45,6 +52,9 @@ jobs:
       - name: Install Browsers
         run: playwright install
         working-directory: ./src/Playwright.LocalNugetTest/
-      - name: Run Tests
-        run: dotnet test
+      - name: Run Tests (net50)
+        run: dotnet test Playwright.LocalNugetTest.50.csproj
+        working-directory: ./src/Playwright.LocalNugetTest/
+      - name: Run Tests (net48)
+        run: dotnet test Playwright.LocalNugetTest.48.csproj
         working-directory: ./src/Playwright.LocalNugetTest/
