@@ -47,11 +47,11 @@ jobs:
           dotnet build Playwright.LocalNugetTest.50.csproj
         working-directory: ./src/Playwright.LocalNugetTest/
       - name: Install Dependencies
-        run: playwright install-deps
-        working-directory: ./src/Playwright.LocalNugetTest/
+        run: dotnet Microsoft.Playwright.dll -- install-deps
+        working-directory: ./src/Playwright.LocalNugetTest/bin/Debug/net5.0/
       - name: Install Browsers
-        run: playwright install
-        working-directory: ./src/Playwright.LocalNugetTest/
+        run: dotnet Microsoft.Playwright.dll -- install
+        working-directory: ./src/Playwright.LocalNugetTest/bin/Debug/net5.0/
       - name: Run Tests (net50)
         run: dotnet test Playwright.LocalNugetTest.50.csproj
         working-directory: ./src/Playwright.LocalNugetTest/
