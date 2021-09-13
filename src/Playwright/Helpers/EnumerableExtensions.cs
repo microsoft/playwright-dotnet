@@ -22,8 +22,10 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Helpers
@@ -38,6 +40,11 @@ namespace Microsoft.Playwright.Helpers
             }
 
             return input.Select(x => new NameValueEntry(x.Key, x.Value)).ToArray();
+        }
+
+        public static async Task<IEnumerable<TResult>> SelectAsync<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, Task<TResult>> method)
+        {
+            return await Task.WhenAll(source.Select(x => method(x))).ConfigureAwait(false);
         }
     }
 }
