@@ -39,7 +39,9 @@ namespace Microsoft.Playwright.MSTest.Services
         {
             Browser = await parentTest!.BrowserType!.LaunchAsync(new()
             {
-                Headless = Environment.GetEnvironmentVariable("HEADED") != "1"
+                Headless = Environment.GetEnvironmentVariable("HEADED") != "1",
+                Channel = Environment.GetEnvironmentVariable("CHANNEL"),
+                SlowMo = float.TryParse(Environment.GetEnvironmentVariable("SLOWMO"), out float slowmo) ? slowmo : null
             });
         }
     }
