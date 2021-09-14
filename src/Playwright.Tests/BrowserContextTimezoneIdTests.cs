@@ -33,7 +33,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsercontext-timezone-id.spec.ts", "should work")]
         public async Task ShouldWork()
         {
-            await using var browser = await Playwright[TestConstants.BrowserName].LaunchAsync();
+            await using var browser = await Playwright[BrowserName].LaunchAsync();
 
             const string func = "() => new Date(1479579154987).toString()";
             await using (var context = await browser.NewContextAsync(new() { TimezoneId = "America/Jamaica" }))

@@ -187,11 +187,11 @@ namespace Microsoft.Playwright.Tests
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(
                 () => Page.GotoAsync(Server.EmptyPage));
 
-            if (TestConstants.IsChromium)
+            if (this.IsChromium())
             {
                 StringAssert.Contains("net::ERR_ABORTED", exception.Message);
             }
-            else if (TestConstants.IsFirefox)
+            else if (this.IsFirefox())
             {
                 StringAssert.Contains("NS_BINDING_ABORTED", exception.Message);
             }
@@ -224,7 +224,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldFailWhenNavigatingToBadUrl()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync("asdfasdf"));
-            if (TestConstants.IsChromium || TestConstants.IsWebKit)
+            if (this.IsChromium() || this.IsWebKit())
             {
                 StringAssert.Contains("Cannot navigate to invalid URL", exception.Message);
             }
@@ -243,7 +243,7 @@ namespace Microsoft.Playwright.Tests
             Page.RequestFailed += (_, e) => Assert.NotNull(e);
 
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
-            TestUtils.AssertSSLError(exception.Message);
+            TestUtils.AssertSSLError(this, exception.Message);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when navigating to bad SSL after redirects")]
@@ -253,7 +253,7 @@ namespace Microsoft.Playwright.Tests
             Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
             Server.SetRedirect("/redirect/2.html", "/empty.html");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync(HttpsServer.Prefix + "/redirect/1.html"));
-            TestUtils.AssertSSLError(exception.Message);
+            TestUtils.AssertSSLError(this, exception.Message);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should not crash when navigating to bad SSL after a cross origin navigation")]
@@ -279,15 +279,15 @@ namespace Microsoft.Playwright.Tests
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync("http://localhost:44123/non-existing-url"));
 
-            if (TestConstants.IsChromium)
+            if (this.IsChromium())
             {
                 StringAssert.Contains("net::ERR_CONNECTION_REFUSED", exception.Message);
             }
-            else if (TestConstants.IsWebKit && TestConstants.IsWindows)
+            else if (this.IsWebKit() && this.IsWindows())
             {
                 StringAssert.Contains("Couldn't connect to server", exception.Message);
             }
-            else if (TestConstants.IsWebKit)
+            else if (this.IsWebKit())
             {
                 StringAssert.Contains("Could not connect", exception.Message);
             }
@@ -391,11 +391,11 @@ namespace Microsoft.Playwright.Tests
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync(Server.EmptyPage));
             await anotherTask;
 
-            if (TestConstants.IsChromium)
+            if (this.IsChromium())
             {
                 StringAssert.Contains("net::ERR_ABORTED", exception.Message);
             }
-            else if (TestConstants.IsWebKit)
+            else if (this.IsWebKit())
             {
                 StringAssert.Contains("cancelled", exception.Message);
             }
@@ -565,7 +565,7 @@ namespace Microsoft.Playwright.Tests
         {
             Server.SetRoute("/one-style.html", _ => Task.Delay(10_000));
             var request = Server.WaitForRequest("/one-style.html");
-            var failed = Page.GotoAsync(Server.Prefix + "/one-style.html", new() { WaitUntil = TestConstants.IsFirefox ? WaitUntilState.NetworkIdle : WaitUntilState.Load });
+            var failed = Page.GotoAsync(Server.Prefix + "/one-style.html", new() { WaitUntil = this.IsFirefox() ? WaitUntilState.NetworkIdle : WaitUntilState.Load });
             await request;
             await Page.GotoAsync(Server.EmptyPage);
 

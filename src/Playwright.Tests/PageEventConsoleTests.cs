@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Tests
                 Page.WaitForConsoleMessageAsync(),
                 Page.EvaluateAsync("() => console.log('hello', 5, { foo: 'bar'})"));
 
-            if (TestConstants.IsFirefox)
+            if (this.IsFirefox())
             {
                 Assert.AreEqual("hello 5 JSHandle@object", message.Text);
             }
@@ -104,7 +104,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldNotFailForWindowObject()
         {
             var message = await Page.RunAndWaitForConsoleMessageAsync(() => Page.EvaluateAsync("() => console.error(window)"));
-            if (TestConstants.IsFirefox)
+            if (this.IsFirefox())
             {
                 Assert.AreEqual("JSHandle@object", message.Text);
             }

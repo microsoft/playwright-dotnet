@@ -171,7 +171,7 @@ namespace Microsoft.Playwright.Tests.Locator
             await textarea.EvaluateAsync<string>("textarea => textarea.value = 'some value'");
 
             await textarea.SelectTextAsync();
-            if (TestConstants.IsFirefox)
+            if (this.IsFirefox())
             {
                 Assert.AreEqual(0, await textarea.EvaluateAsync<int>("el => el.selectionStart"));
                 Assert.AreEqual(10, await textarea.EvaluateAsync<int>("el => el.selectionEnd"));

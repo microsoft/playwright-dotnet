@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.Tests
                 window.keyPromise = new Promise(resolve => document.addEventListener('keydown', event => resolve(event.key)));
             }");
             await Page.Keyboard.PressAsync("Meta");
-            Assert.AreEqual(TestConstants.IsFirefox && !TestConstants.IsMacOSX ? "OS" : "Meta", await Page.EvaluateAsync<string>("keyPromise"));
+            Assert.AreEqual(this.IsFirefox() && !this.IsMacOSX() ? "OS" : "Meta", await Page.EvaluateAsync<string>("keyPromise"));
         }
 
         [PlaywrightTest("page-keyboard.spec.ts", "should move with the arrow keys")]
@@ -433,7 +433,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
             var textarea = await Page.QuerySelectorAsync("textarea");
             await textarea.TypeAsync("some text");
-            string modifier = TestConstants.IsMacOSX ? "Meta" : "Control";
+            string modifier = this.IsMacOSX() ? "Meta" : "Control";
             await Page.Keyboard.DownAsync(modifier);
             await Page.Keyboard.PressAsync("a");
             await Page.Keyboard.UpAsync(modifier);
@@ -454,7 +454,7 @@ namespace Microsoft.Playwright.Tests
                     event.preventDefault();
                 }, false);
             }");
-            string modifier = TestConstants.IsMacOSX ? "Meta" : "Control";
+            string modifier = this.IsMacOSX() ? "Meta" : "Control";
             await Page.Keyboard.DownAsync(modifier);
             await Page.Keyboard.PressAsync("a");
             await Page.Keyboard.UpAsync(modifier);
@@ -472,7 +472,7 @@ namespace Microsoft.Playwright.Tests
             string code = result.code;
             bool metaKey = result.metaKey;
 
-            if (TestConstants.IsFirefox && !TestConstants.IsMacOSX)
+            if (this.IsFirefox() && !this.IsMacOSX())
             {
                 Assert.AreEqual("OS", key);
             }
@@ -481,7 +481,7 @@ namespace Microsoft.Playwright.Tests
                 Assert.AreEqual("Meta", key);
             }
 
-            if (TestConstants.IsFirefox)
+            if (this.IsFirefox())
             {
                 Assert.AreEqual("OSLeft", code);
             }
@@ -490,7 +490,7 @@ namespace Microsoft.Playwright.Tests
                 Assert.AreEqual("MetaLeft", code);
             }
 
-            if (TestConstants.IsFirefox && !TestConstants.IsMacOSX)
+            if (this.IsFirefox() && !this.IsMacOSX())
             {
                 Assert.False(metaKey);
             }

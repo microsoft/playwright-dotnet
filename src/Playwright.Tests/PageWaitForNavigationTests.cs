@@ -112,7 +112,7 @@ namespace Microsoft.Playwright.Tests
                 navigationTask,
                 Page.ClickAsync("a")
             ));
-            TestUtils.AssertSSLError(exception.Message);
+            TestUtils.AssertSSLError(this, exception.Message);
         }
 
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work with history.pushState()")]

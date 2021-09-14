@@ -96,7 +96,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("downloads-path.spec.ts", "should report downloads in downloadsPath folder with a relative path")]
         public async Task ShouldReportDownloadsInDownloadsPathFolderWithARelativePath()
         {
-            var browser = await Playwright[TestConstants.BrowserName]
+            var browser = await Playwright[BrowserName]
                 .LaunchAsync(new()
                 {
                     DownloadsPath = "."
@@ -118,7 +118,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldAcceptDownloadsInPersistentContext()
         {
             var userProfile = new TempDirectory();
-            var browser = await Playwright[TestConstants.BrowserName]
+            var browser = await Playwright[BrowserName]
                 .LaunchPersistentContextAsync(userProfile.Path, new()
                 {
                     AcceptDownloads = true,
@@ -139,7 +139,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldDeleteDownloadsWhenPersistentContextCloses()
         {
             var userProfile = new TempDirectory();
-            var browser = await Playwright[TestConstants.BrowserName]
+            var browser = await Playwright[BrowserName]
                 .LaunchPersistentContextAsync(userProfile.Path, new()
                 {
                     AcceptDownloads = true,
@@ -166,7 +166,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             _tmp = new();
-            _browser = await Playwright[TestConstants.BrowserName].LaunchAsync(new() { DownloadsPath = _tmp.Path });
+            _browser = await Playwright[BrowserName].LaunchAsync(new() { DownloadsPath = _tmp.Path });
         }
 
         [TearDown]

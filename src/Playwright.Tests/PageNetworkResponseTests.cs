@@ -174,7 +174,7 @@ namespace Microsoft.Playwright.Tests
 
             var name = "puppeteer-tests";
             Assert.AreEqual(name, details.SubjectName);
-            if (TestConstants.IsWebKit)
+            if (this.IsWebKit())
             {
                 Assert.AreEqual(1550084863f, details.ValidFrom);
             }

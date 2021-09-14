@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.NUnit
                     return result;
                 }
 
-                var browserName = pwTest._browserName;
+                var browserName = pwTest.BrowserName;
                 if (_attParent._combinations.Any(combination =>
                 {
                     var requirements = (Enum.GetValues(typeof(Targets)) as Targets[]).Where(x => combination.HasFlag(x));

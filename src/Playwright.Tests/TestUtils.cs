@@ -45,17 +45,17 @@ namespace Microsoft.Playwright.Tests
             return Path.Combine(current, directory);
         }
 
-        internal static void AssertSSLError(string errorMessage)
+        internal static void AssertSSLError(NUnit.PlaywrightTest test, string errorMessage)
         {
-            if (TestConstants.IsChromium)
+            if (test.IsChromium())
             {
                 StringAssert.Contains("net::ERR_CERT_AUTHORITY_INVALID", errorMessage);
             }
-            else if (TestConstants.IsWebKit)
+            else if (test.IsWebKit())
             {
-                if (TestConstants.IsMacOSX)
+                if (test.IsMacOSX())
                     StringAssert.Contains("The certificate for this server is invalid", errorMessage);
-                else if (TestConstants.IsWindows)
+                else if (test.IsWindows())
                     StringAssert.Contains("SSL peer certificate or SSH remote key was not OK", errorMessage);
                 else
                     StringAssert.Contains("Unacceptable TLS certificate", errorMessage);

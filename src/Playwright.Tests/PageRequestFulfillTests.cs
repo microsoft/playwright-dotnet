@@ -34,6 +34,8 @@ namespace Microsoft.Playwright.Tests
 {
     public class RequestFulfillTests : PageTestEx
     {
+        private ScreenshotHelper ScreenshotHelper => new(this);
+
         [PlaywrightTest("page-request-fulfill.spec.ts", "should work")]
         public async Task ShouldWork()
         {

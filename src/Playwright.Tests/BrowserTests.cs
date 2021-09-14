@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browser.spec.ts", "should create new page")]
         public async Task ShouldCreateNewPage()
         {
-            var browser = await Playwright[TestConstants.BrowserName].LaunchAsync();
+            var browser = await Playwright[BrowserName].LaunchAsync();
             var page1 = await browser.NewPageAsync();
             Assert.That(browser.Contexts, Has.Length.EqualTo(1));
 
@@ -61,7 +61,7 @@ namespace Microsoft.Playwright.Tests
         {
             string version = Browser.Version;
 
-            if (TestConstants.IsChromium)
+            if (this.IsChromium())
             {
                 Assert.That(version, Does.Match("\\d+\\.\\d+\\.\\d+\\.\\d+"));
             }

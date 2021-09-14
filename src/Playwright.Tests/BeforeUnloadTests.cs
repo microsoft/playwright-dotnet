@@ -46,11 +46,11 @@ namespace Microsoft.Playwright.Tests
             var dialog = await dialogEvent.Task;
             Assert.AreEqual(DialogType.BeforeUnload, dialog.Type);
             Assert.IsEmpty(dialog.DefaultValue);
-            if (TestConstants.IsChromium)
+            if (this.IsChromium())
             {
                 Assert.IsEmpty(dialog.Message);
             }
-            else if (TestConstants.IsWebKit)
+            else if (this.IsWebKit())
             {
                 Assert.AreEqual("Leave?", dialog.Message);
             }

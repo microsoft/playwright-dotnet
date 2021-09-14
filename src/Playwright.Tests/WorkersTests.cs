@@ -84,7 +84,7 @@ namespace Microsoft.Playwright.Tests
 
             await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1,2,3,this)'], {type: 'application/javascript'})))");
             var log = await consoleTcs.Task;
-            if (TestConstants.IsFirefox)
+            if (this.IsFirefox())
             {
                 Assert.AreEqual("1 2 3 JSHandle@object", log.Text);
             }

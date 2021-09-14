@@ -154,7 +154,7 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual("Mozilla/5.0", parts[0]);
 
-            if (TestConstants.IsFirefox)
+            if (this.IsFirefox())
             {
                 string[] engineBrowser = parts[2].Split(' ');
                 Assert.That(engineBrowser[0], Does.StartWith("Gecko"));
@@ -167,7 +167,7 @@ namespace Microsoft.Playwright.Tests
                 string[] engineBrowser = parts[4].Split(' ');
                 Assert.That(engineBrowser[1], Does.StartWith("Safari/"));
 
-                if (TestConstants.IsChromium)
+                if (this.IsChromium())
                 {
                     StringAssert.Contains("Chrome/", engineBrowser[0]);
                 }

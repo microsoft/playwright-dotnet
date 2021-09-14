@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsertype-basic.spec.ts", "browserType.name should work")]
         public void BrowserTypeNameShouldWork()
             => Assert.AreEqual(
-                TestConstants.BrowserName switch
+                BrowserName switch
                 {
                     "webkit" => "webkit",
                     "firefox" => "firefox",

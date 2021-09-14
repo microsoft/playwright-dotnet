@@ -73,7 +73,7 @@ namespace Microsoft.Playwright.Tests
         {
             var response = await Page.GotoAsync(Server.EmptyPage);
 
-            string expected = TestConstants.BrowserName switch
+            string expected = BrowserName switch
             {
                 "chromium" => "Chrome",
                 "firefox" => "Firefox",

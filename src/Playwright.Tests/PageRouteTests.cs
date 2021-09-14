@@ -256,11 +256,11 @@ namespace Microsoft.Playwright.Tests
             Page.RequestFailed += (_, e) => failedRequest = e;
             await Page.GotoAsync(Server.EmptyPage).ContinueWith(_ => { });
             Assert.NotNull(failedRequest);
-            if (TestConstants.IsWebKit)
+            if (this.IsWebKit())
             {
                 Assert.AreEqual("Request intercepted", failedRequest.Failure);
             }
-            else if (TestConstants.IsFirefox)
+            else if (this.IsFirefox())
             {
                 Assert.AreEqual("NS_ERROR_OFFLINE", failedRequest.Failure);
             }
@@ -289,11 +289,11 @@ namespace Microsoft.Playwright.Tests
             await Page.RouteAsync("**/*", (route) => route.AbortAsync());
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync(Server.EmptyPage));
             Assert.NotNull(exception);
-            if (TestConstants.IsWebKit)
+            if (this.IsWebKit())
             {
                 StringAssert.Contains("Request intercepted", exception.Message);
             }
-            else if (TestConstants.IsFirefox)
+            else if (this.IsFirefox())
             {
                 StringAssert.Contains("NS_ERROR_FAILURE", exception.Message);
             }
@@ -591,11 +591,11 @@ namespace Microsoft.Playwright.Tests
                 return response.json();
             }"));
 
-            if (TestConstants.IsChromium)
+            if (this.IsChromium())
                 StringAssert.Contains("Failed", exception.Message);
-            else if (TestConstants.IsWebKit)
+            else if (this.IsWebKit())
                 StringAssert.Contains("TypeError", exception.Message);
-            else if (TestConstants.IsFirefox)
+            else if (this.IsFirefox())
                 StringAssert.Contains("NetworkError", exception.Message);
             else
                 Assert.Fail("Unknown browser type.");

@@ -119,7 +119,7 @@ namespace Microsoft.Playwright.Tests
             await Page.EvaluateAsync("() => document.querySelector('#button-3').addEventListener('mousedown', e => window.lastEvent = e, true)");
             var modifiers = new Dictionary<string, string> { ["Shift"] = "shiftKey", ["Control"] = "ctrlKey", ["Alt"] = "altKey", ["Meta"] = "metaKey" };
             // In Firefox, the Meta modifier only exists on Mac
-            if (TestConstants.IsFirefox && !TestConstants.IsMacOSX)
+            if (this.IsFirefox() && !this.IsMacOSX())
             {
                 modifiers.Remove("Meta");
             }
@@ -143,7 +143,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldTweenMouseMovement()
         {
             // The test becomes flaky on WebKit without next line.
-            if (TestConstants.IsWebKit)
+            if (this.IsWebKit())
             {
                 await Page.EvaluateAsync("() => new Promise(requestAnimationFrame)");
             }

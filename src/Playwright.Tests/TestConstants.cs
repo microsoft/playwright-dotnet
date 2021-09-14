@@ -25,6 +25,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Microsoft.Playwright.NUnit;
 
 [assembly: NUnit.Framework.Timeout(Microsoft.Playwright.Tests.TestConstants.DefaultTestTimeout)]
 [assembly: NUnit.Framework.Parallelizable(NUnit.Framework.ParallelScope.Fixtures)]
@@ -33,20 +34,11 @@ namespace Microsoft.Playwright.Tests
 {
     internal static class TestConstants
     {
-        public static string BrowserName => NUnit.PlaywrightTest.BrowserName;
-
         public const int DefaultTestTimeout = 30_000;
         public const int DefaultTimeout = 10_000;
         public const int DefaultTaskTimeout = 5_000;
 
         public const string AboutBlank = "about:blank";
-
-        internal static readonly bool IsWebKit = BrowserName == BrowserType.Webkit;
-        internal static readonly bool IsFirefox = BrowserName == BrowserType.Firefox;
-        internal static readonly bool IsChromium = BrowserName == BrowserType.Chromium;
-        internal static readonly bool IsMacOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
-        internal static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-        internal static readonly bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
         public static string FileToUpload => TestUtils.GetWebServerFile("file-to-upload.txt");
 
@@ -58,5 +50,14 @@ namespace Microsoft.Playwright.Tests
             "        http://localhost:<PORT>/frames/frame.html (dos)",
             "    http://localhost:<PORT>/frames/frame.html (aframe)"
         };
+
+        internal static bool IsWebKit(this PlaywrightTest test) => test.BrowserName == BrowserType.Webkit;
+        internal static bool IsFirefox(this PlaywrightTest test) => test.BrowserName == BrowserType.Firefox;
+        internal static bool IsChromium(this PlaywrightTest test) => test.BrowserName == BrowserType.Chromium;
+
+
+        internal static bool IsMacOSX(this PlaywrightTest _) => RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+        internal static bool IsWindows(this PlaywrightTest  _) => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        internal static bool IsLinux(this PlaywrightTest _) => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
     }
 }

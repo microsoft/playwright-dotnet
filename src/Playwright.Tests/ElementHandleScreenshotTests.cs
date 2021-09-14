@@ -35,6 +35,8 @@ namespace Microsoft.Playwright.Tests
     ///<playwright-file>elementhandle-screenshot.spec.ts</playwright-file>
     public class ElementHandleScreenshotTests : PageTestEx
     {
+        private ScreenshotHelper ScreenshotHelper => new(this);
+
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should work")]
         public async Task ShouldWork()
         {

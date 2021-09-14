@@ -24,6 +24,7 @@
 
 using System;
 using System.IO;
+using Microsoft.Playwright.NUnit;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
@@ -31,19 +32,26 @@ namespace Microsoft.Playwright.Tests
 {
     internal class ScreenshotHelper
     {
-        internal static bool PixelMatch(string screenShotFile, string fileName)
+        private readonly PlaywrightTest _parent;
+
+        public ScreenshotHelper(NUnit.PlaywrightTest parent)
+        {
+            _parent = parent;
+        }
+
+        internal bool PixelMatch(string screenShotFile, string fileName)
             => PixelMatch(screenShotFile, File.ReadAllBytes(fileName));
 
-        internal static bool PixelMatch(string screenShotFile, byte[] screenshot)
+        internal bool PixelMatch(string screenShotFile, byte[] screenshot)
         {
             const int pixelThreshold = 10;
             const decimal totalTolerance = 0.05m;
 
-            var baseImage = Image.Load<Rgb24>(Path.Combine(TestUtils.FindParentDirectory("Screenshots"), TestConstants.BrowserName, screenShotFile));
+            var baseImage = Image.Load<Rgb24>(Path.Combine(TestUtils.FindParentDirectory("Screenshots"), _parent.BrowserName, screenShotFile));
             var compareImage = Image.Load<Rgb24>(screenshot);
 
             //Just for debugging purpose
-            compareImage.Save(Path.Combine(TestUtils.FindParentDirectory("Screenshots"), TestConstants.BrowserName, "test.png"));
+            compareImage.Save(Path.Combine(TestUtils.FindParentDirectory("Screenshots"), _parent.BrowserName, "test.png"));
 
             if (baseImage.Width != compareImage.Width || baseImage.Height != compareImage.Height)
             {

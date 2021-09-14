@@ -52,7 +52,7 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(-1, cookie.Expires);
             Assert.IsFalse(cookie.HttpOnly);
             Assert.IsFalse(cookie.Secure);
-            Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
+            Assert.AreEqual(this.IsChromium() ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
 
             tmp.Dispose();
             await context.DisposeAsync();
@@ -84,7 +84,7 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(-1, cookie.Expires);
             Assert.IsFalse(cookie.HttpOnly);
             Assert.IsFalse(cookie.Secure);
-            Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
+            Assert.AreEqual(this.IsChromium() ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
 
             tmp.Dispose();
             await context.DisposeAsync();
@@ -141,7 +141,7 @@ namespace Microsoft.Playwright.Tests
 
             await page.FirstChildFrame().EvaluateAsync<string>("document.cookie = 'username=John Doe'");
             await page.WaitForTimeoutAsync(2000);
-            bool allowsThirdParty = TestConstants.IsFirefox;
+            bool allowsThirdParty = this.IsFirefox();
             var cookies = await context.CookiesAsync(new[] { Server.CrossProcessPrefix + "/grid.html" });
 
             if (allowsThirdParty)
@@ -153,7 +153,7 @@ namespace Microsoft.Playwright.Tests
                 Assert.IsFalse(cookie.HttpOnly);
                 Assert.AreEqual("username", cookie.Name);
                 Assert.AreEqual("/", cookie.Path);
-                Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
+                Assert.AreEqual(this.IsChromium() ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
                 Assert.IsFalse(cookie.Secure);
                 Assert.AreEqual("John Doe", cookie.Value);
             }
@@ -247,7 +247,7 @@ namespace Microsoft.Playwright.Tests
             await page.GotoAsync("data:text/html, <script>var something = \"forbidden\"</script>");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.EvaluateAsync("something"));
 
-            if (TestConstants.IsWebKit)
+            if (this.IsWebKit())
             {
                 StringAssert.Contains("Can't find variable: something", exception.Message);
             }

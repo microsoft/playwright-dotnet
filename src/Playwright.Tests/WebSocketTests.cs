@@ -157,7 +157,7 @@ namespace Microsoft.Playwright.Tests
 
             await socketErrorTcs.Task;
 
-            if (TestConstants.IsFirefox)
+            if (this.IsFirefox())
             {
                 Assert.AreEqual("CLOSE_ABNORMAL", socketErrorTcs.Task.Result);
             }

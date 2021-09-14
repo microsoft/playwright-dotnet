@@ -84,7 +84,7 @@ namespace Microsoft.Playwright.Tests
         [Skip(SkipAttribute.Targets.Webkit)]
         public async Task ShouldPlayVideo()
         {
-            await Page.GotoAsync(Server.Prefix + (TestConstants.IsWebKit ? "/video_mp4.html" : "/video.html"));
+            await Page.GotoAsync(Server.Prefix + (this.IsWebKit() ? "/video_mp4.html" : "/video.html"));
             await Page.EvalOnSelectorAsync("video", "v => v.play()");
             await Page.EvalOnSelectorAsync("video", "v => v.pause()");
         }

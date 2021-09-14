@@ -43,7 +43,7 @@ namespace Microsoft.Playwright.Tests
             );
 
             string expectedError = "";
-            if (TestConstants.IsFirefox)
+            if (this.IsFirefox())
             {
                 expectedError = @"Error: Fancy error!
     at c (myscript.js:14:11)
@@ -51,7 +51,7 @@ namespace Microsoft.Playwright.Tests
     at a (myscript.js:6:5)
     at  (myscript.js:3:1)";
             }
-            else if (TestConstants.IsChromium)
+            else if (this.IsChromium())
             {
                 expectedError = @"Error: Fancy error!
     at c (myscript.js:14:11)
@@ -59,7 +59,7 @@ namespace Microsoft.Playwright.Tests
     at a (myscript.js:6:5)
     at myscript.js:3:1";
             }
-            else if (TestConstants.IsWebKit)
+            else if (this.IsWebKit())
             {
                 expectedError = @$"Error: Fancy error!
     at c ({Page.Url}:14:36)
@@ -105,7 +105,7 @@ namespace Microsoft.Playwright.Tests
                     pageError.Task,
                     Page.EvaluateAsync<JsonElement>("value => setTimeout(() => { throw value; }, 0)", kv[0]));
 
-                StringAssert.Contains(TestConstants.IsFirefox ? "uncaught exception: " + kv[1].ToString() : kv[1].ToString(), error);
+                StringAssert.Contains(this.IsFirefox() ? "uncaught exception: " + kv[1].ToString() : kv[1].ToString(), error);
             }
         }
 
@@ -119,7 +119,7 @@ namespace Microsoft.Playwright.Tests
                 pageError.Task,
                 Page.EvaluateAsync<JsonElement>("value => setTimeout(() => { throw {}; }, 0)", 0));
 
-            StringAssert.Contains(TestConstants.IsChromium ? "Object" : "[object Object]", error);
+            StringAssert.Contains(this.IsChromium() ? "Object" : "[object Object]", error);
         }
 
         [PlaywrightTest("page-event-pageerror.spec.ts", "should handle window")]
@@ -132,7 +132,7 @@ namespace Microsoft.Playwright.Tests
                 pageError.Task,
                 Page.EvaluateAsync<JsonElement>("value => setTimeout(() => { throw window ; }, 0)", 0));
 
-            StringAssert.Contains(TestConstants.IsChromium ? "Window" : "[object Window]", error);
+            StringAssert.Contains(this.IsChromium() ? "Window" : "[object Window]", error);
         }
     }
 }

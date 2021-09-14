@@ -213,7 +213,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should isolate cookies between launches")]
         public async Task ShouldIsolateCookiesBetweenLaunches()
         {
-            await using (await Playwright[TestConstants.BrowserName].LaunchAsync())
+            await using (await Playwright[BrowserName].LaunchAsync())
             {
                 await Browser.NewContextAsync();
 
@@ -229,7 +229,7 @@ namespace Microsoft.Playwright.Tests
                 });
             }
 
-            await using (await Playwright[TestConstants.BrowserName].LaunchAsync())
+            await using (await Playwright[BrowserName].LaunchAsync())
             {
                 var context1 = await Browser.NewContextAsync();
                 var cookies = await context1.CookiesAsync();
@@ -312,7 +312,7 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(-1, cookie.Expires);
             Assert.IsFalse(cookie.HttpOnly);
             Assert.IsFalse(cookie.Secure);
-            Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
+            Assert.AreEqual(this.IsChromium() ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should set a cookie with a path")]
@@ -341,7 +341,7 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(cookie.Expires, -1);
             Assert.IsFalse(cookie.HttpOnly);
             Assert.IsFalse(cookie.Secure);
-            Assert.AreEqual(TestConstants.IsWebKit && TestConstants.IsWindows ? SameSiteAttribute.None : SameSiteAttribute.Lax, cookie.SameSite);
+            Assert.AreEqual(this.IsWebKit() && this.IsWindows() ? SameSiteAttribute.None : SameSiteAttribute.Lax, cookie.SameSite);
 
             Assert.AreEqual("gridcookie=GRID", await Page.EvaluateAsync<string>("document.cookie"));
             await Page.GotoAsync(Server.EmptyPage);
@@ -464,7 +464,7 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(cookie.Expires, -1);
             Assert.IsFalse(cookie.HttpOnly);
             Assert.IsTrue(cookie.Secure);
-            Assert.AreEqual(TestConstants.IsWebKit && TestConstants.IsWindows ? SameSiteAttribute.None : SameSiteAttribute.Lax, cookie.SameSite);
+            Assert.AreEqual(this.IsWebKit() && this.IsWindows() ? SameSiteAttribute.None : SameSiteAttribute.Lax, cookie.SameSite);
         }
 
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should set cookies for a frame")]
@@ -511,7 +511,7 @@ namespace Microsoft.Playwright.Tests
 
             await Page.FirstChildFrame().EvaluateAsync<string>("document.cookie = 'username=John Doe'");
             await Page.WaitForTimeoutAsync(2000);
-            bool allowsThirdParty = TestConstants.IsFirefox;
+            bool allowsThirdParty = this.IsFirefox();
             var cookies = await Context.CookiesAsync(new[] { Server.CrossProcessPrefix + "/grid.html" });
 
             if (allowsThirdParty)

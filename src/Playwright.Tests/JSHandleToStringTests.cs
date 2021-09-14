@@ -42,7 +42,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkForComplicatedObjects()
         {
             var aHandle = await Page.EvaluateHandleAsync("() => window");
-            if (TestConstants.IsFirefox)
+            if (this.IsFirefox())
             {
                 Assert.AreEqual("JSHandle@object", aHandle.ToString());
             }
