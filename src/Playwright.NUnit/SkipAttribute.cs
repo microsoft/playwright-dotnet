@@ -75,12 +75,10 @@ namespace Microsoft.Playwright.NUnit
 
             public override TestResult Execute(TestExecutionContext context)
             {
-                var result = Test.MakeTestResult();
-
                 if (context.TestObject is not PlaywrightTest pwTest)
                 {
                     Assert.Fail("Skip attribute cannot be used without a PlaywrightTest base class.");
-                    return result;
+                    return null;
                 }
 
                 var browserName = pwTest.BrowserName;
@@ -101,7 +99,7 @@ namespace Microsoft.Playwright.NUnit
                 }))
                 {
                     Assert.Ignore("Skipped by browser/platform");
-                    return result;
+                    return null;
                 }
 
                 return _cmdParent.Execute(context);
