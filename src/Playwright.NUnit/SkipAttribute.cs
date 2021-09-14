@@ -29,10 +29,11 @@ using System.Runtime.InteropServices;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Commands;
 
 namespace Microsoft.Playwright.NUnit
 {
-    public class SkipAttribute : NUnitAttribute, IApplyToTest
+    public class SkipAttribute : NUnitAttribute, IWrapTestMethod
     {
         private readonly Targets[] _combinations;
 
@@ -56,26 +57,54 @@ namespace Microsoft.Playwright.NUnit
             _combinations = combinations;
         }
 
-        public void ApplyToTest(Test test)
+        public TestCommand Wrap(TestCommand command)
         {
-            if (_combinations.Any(combination =>
+            return new IgnorableCommandWrapper(this, command);
+        }
+
+        private class IgnorableCommandWrapper : TestCommand
+        {
+            private readonly SkipAttribute _attParent;
+            private readonly TestCommand _cmdParent;
+
+            public IgnorableCommandWrapper(SkipAttribute parent, TestCommand cmdParent) : base(cmdParent.Test)
             {
-                var requirements = (Enum.GetValues(typeof(Targets)) as Targets[]).Where(x => combination.HasFlag(x));
-                return requirements.All(flag =>
-                    flag switch
-                    {
-                        Targets.Windows => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows),
-                        Targets.Linux => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux),
-                        Targets.OSX => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX),
-                        Targets.Chromium => NUnit.PlaywrightTest.BrowserName == BrowserType.Chromium,
-                        Targets.Firefox => NUnit.PlaywrightTest.BrowserName == BrowserType.Firefox,
-                        Targets.Webkit => NUnit.PlaywrightTest.BrowserName == BrowserType.Webkit,
-                        _ => false,
-                    });
-            }))
+                _attParent = parent;
+                _cmdParent = cmdParent;
+            }
+
+            public override TestResult Execute(TestExecutionContext context)
             {
-                test.RunState = RunState.Ignored;
-                test.Properties.Set(global::NUnit.Framework.Internal.PropertyNames.SkipReason, "Skipped by browser/platform");
+                var result = Test.MakeTestResult();
+
+                if (context.TestObject is not PlaywrightTest pwTest)
+                {
+                    Assert.Fail("Skip attribute cannot be used without a PlaywrightTest base class.");
+                    return result;
+                }
+
+                var browserName = pwTest._browserName;
+                if (_attParent._combinations.Any(combination =>
+                {
+                    var requirements = (Enum.GetValues(typeof(Targets)) as Targets[]).Where(x => combination.HasFlag(x));
+                    return requirements.All(flag =>
+                        flag switch
+                        {
+                            Targets.Windows => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows),
+                            Targets.Linux => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux),
+                            Targets.OSX => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX),
+                            Targets.Chromium => browserName == BrowserType.Chromium,
+                            Targets.Firefox => browserName == BrowserType.Firefox,
+                            Targets.Webkit => browserName == BrowserType.Webkit,
+                            _ => false,
+                        });
+                }))
+                {
+                    Assert.Ignore("Skipped by browser/platform");
+                    return result;
+                }
+
+                return _cmdParent.Execute(context);
             }
         }
     }
