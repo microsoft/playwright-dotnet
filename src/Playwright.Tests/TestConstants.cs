@@ -57,7 +57,7 @@ namespace Microsoft.Playwright.Tests
 
 
         internal static bool IsMacOSX(this PlaywrightTest _) => RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
-        internal static bool IsWindows(this PlaywrightTest  _) => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        internal static bool IsWindows(this PlaywrightTest _) => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
         internal static bool IsLinux(this PlaywrightTest _) => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
     }
 }

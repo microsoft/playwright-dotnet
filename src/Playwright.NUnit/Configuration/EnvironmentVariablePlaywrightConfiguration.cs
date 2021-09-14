@@ -22,29 +22,24 @@
  * SOFTWARE.
  */
 
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.Playwright.MSTest;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
-namespace Playwright.TestingHarnessTest.MSTest
+namespace Microsoft.Playwright.NUnit.Configuration
 {
-    [TestClass]
-    [TestCategory("Smoke")]
-    public class SimpleSmokeTests : PageTest
+    internal class EnvironmentVariablePlaywrightConfiguration : PlaywrightConfiguration
     {
-        [TestMethod]
-        public async Task ShouldOpenPlaywright()
-        {
-            var path = Path.GetFullPath("index.html");
-            Assert.IsNotNull(Page);
-            await Page.GotoAsync("file://" + path);
-            var h1 = await Page.TextContentAsync("h1");
-            Assert.AreEqual("Getting started.", h1);
+        public override string BaseURL => Environment.GetEnvironmentVariable("BASEURL");
 
-            var title = await Page.EvaluateAsync<string>("() => document.title");
-            Assert.AreEqual("This is a website.", title);
-        }
+        public override string BrowserName => (Environment.GetEnvironmentVariable("BROWSER") ?? Microsoft.Playwright.BrowserType.Chromium).ToLower();
 
+        public override bool? BypassCSP => bool.TryParse(Environment.GetEnvironmentVariable("BYPASSCSP"), out bool bypassCSP) ? bypassCSP : null;
+
+        public override string Channel => Environment.GetEnvironmentVariable("CHANNEL");
+
+        public override bool? Headless => Environment.GetEnvironmentVariable("HEADED") != "1";
+
+        public override ViewportSize ViewportSize => null;
+
+        public override float? SlowMo => float.TryParse(Environment.GetEnvironmentVariable("SLOWMO"), out float slowMo) ? slowMo : null;
     }
 }

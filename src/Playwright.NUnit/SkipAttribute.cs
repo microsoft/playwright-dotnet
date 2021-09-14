@@ -33,7 +33,7 @@ using NUnit.Framework.Internal.Commands;
 
 namespace Microsoft.Playwright.NUnit
 {
-    public class SkipAttribute : NUnitAttribute, IWrapTestMethod
+    public class SkipAttribute : NUnitAttribute, IWrapTestMethod, IWrapSetUpTearDown
     {
         private readonly Targets[] _combinations;
 
