@@ -34,8 +34,14 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes><![CDATA[
 ]]></PackageReleaseNotes>
+    <StartupObject>Microsoft.Playwright.CLI.Program</StartupObject>
   </PropertyGroup>
   <Import Project="../Common/SignAssembly.props" />
+  <ItemGroup>
+    <Compile Include="..\Playwright\API\PlaywrightException.cs" Link="Links\PlaywrightException.cs" />
+    <Compile Include="..\Playwright\Helpers\Paths.cs" Link="Links\Paths.cs" />
+    <Compile Include="..\Playwright\Program.cs" Link="Links\Program.cs" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -45,5 +51,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Links\" />
   </ItemGroup>
 </Project>
