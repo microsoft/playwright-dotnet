@@ -30,19 +30,27 @@ namespace Microsoft.Playwright.NUnit
 {
     public class PlaywrightTest : WorkerAwareTest
     {
-        public string BrowserName => PlaywrightConfiguration.Current.BrowserName;
+        public string BrowserName => Configuration.BrowserName;
 
         private static readonly Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
 
         public IPlaywright Playwright { get; private set; }
         public IBrowserType BrowserType { get; private set; }
+        public PlaywrightConfiguration Configuration { get; private set; } = PlaywrightConfiguration.Global;
 
         [SetUp]
         public async Task PlaywrightSetup()
         {
+            Configuration = PlaywrightConfiguration.Global.Cascade();
+            ApplyConfigurationChanges(Configuration);
+
             Playwright = await _playwrightTask;
             BrowserType = Playwright[BrowserName];
             Assert.IsNotNull(BrowserType, $"The requested browser ({BrowserName}) could not be found - make sure your BROWSER env variable is set correctly.");
+        }
+
+        protected virtual void ApplyConfigurationChanges(PlaywrightConfiguration configuration)
+        {
         }
     }
 }

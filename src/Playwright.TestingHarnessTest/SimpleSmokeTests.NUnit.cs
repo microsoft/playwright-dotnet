@@ -29,7 +29,7 @@ using NUnit.Framework;
 
 namespace Playwright.TestingHarnessTest.NUnit
 {
-
+    [Category("Smoke")]
     public class SimpleSmokeTests : PageTest
     {
         [Test]

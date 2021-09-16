@@ -31,14 +31,10 @@ namespace Microsoft.Playwright.NUnit
     {
         public IBrowser Browser { get; internal set; }
 
-        public static Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType) =>
+        public static Task<BrowserService> Register(PlaywrightTest test, IBrowserType browserType) =>
             test.RegisterService("Browser", async () => new BrowserService
             {
-                Browser = await browserType.LaunchAsync(PlaywrightConfiguration.Current.BrowserTypeLaunchOptionsBuilder.Build(new()
-                {
-                    Channel = PlaywrightConfiguration.Current.Channel,
-                    SlowMo = PlaywrightConfiguration.Current.SlowMo,
-                }))
+                Browser = await browserType.LaunchAsync(test.Configuration.BrowserTypeLaunchOptions)
             });
 
         public Task ResetAsync() => Task.CompletedTask;

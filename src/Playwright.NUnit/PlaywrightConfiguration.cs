@@ -29,45 +29,26 @@ namespace Microsoft.Playwright.NUnit
 {
     public abstract class PlaywrightConfiguration
     {
-        public static PlaywrightConfiguration Current { get; private set; } = new EnvironmentVariablePlaywrightConfiguration();
+        public static PlaywrightConfiguration Global { get; private set; } = new EnvironmentVariablePlaywrightConfiguration();
 
-        internal PlaywrightConfiguration()
+        internal PlaywrightConfiguration(PlaywrightConfiguration parent = null)
         {
-
+            // doing this in the constructor ensures we *clone*, rather than reference
+            BrowserNewContextOptions = new(parent?.BrowserNewContextOptions);
+            BrowserTypeLaunchOptions = new(parent?.BrowserTypeLaunchOptions);
         }
 
         public static PlaywrightConfiguration UseEnvironmentVariables()
         {
-            Current = new EnvironmentVariablePlaywrightConfiguration();
-            return Current;
+            Global = new EnvironmentVariablePlaywrightConfiguration();
+            return Global;
         }
 
-        public abstract string BaseURL { get; }
         public abstract string BrowserName { get; }
-        public abstract bool? BypassCSP { get; }
-        public abstract string Channel { get; }
-        public abstract bool? Headless { get; }
-        public abstract ViewportSize ViewportSize { get; }
-        public abstract float? SlowMo { get; }
 
-        public OptionsBuilder<BrowserNewContextOptions> BrowserNewContextOptionsBuilder { get; } = new();
+        internal abstract PlaywrightConfiguration Cascade();
 
-        public OptionsBuilder<BrowserTypeLaunchOptions> BrowserTypeLaunchOptionsBuilder { get; } = new();
-
-        public class OptionsBuilder<T> where T : class
-        {
-            private Action<T> _conf;
-
-            public void Configure(Action<T> conf)
-            {
-                _conf = conf;
-            }
-
-            internal T Build(T options)
-            {
-                _conf?.Invoke(options);
-                return options;
-            }
-        }
+        public BrowserNewContextOptions BrowserNewContextOptions { get; private set; }
+        public BrowserTypeLaunchOptions BrowserTypeLaunchOptions { get; private set; }
     }
 }

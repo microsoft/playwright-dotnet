@@ -28,18 +28,39 @@ namespace Microsoft.Playwright.NUnit.Configuration
 {
     internal class EnvironmentVariablePlaywrightConfiguration : PlaywrightConfiguration
     {
-        public override string BaseURL => Environment.GetEnvironmentVariable("BASEURL");
+        public EnvironmentVariablePlaywrightConfiguration(PlaywrightConfiguration configuration = null) : base(configuration)
+        {
 
+        }
         public override string BrowserName => (Environment.GetEnvironmentVariable("BROWSER") ?? Microsoft.Playwright.BrowserType.Chromium).ToLower();
 
-        public override bool? BypassCSP => bool.TryParse(Environment.GetEnvironmentVariable("BYPASSCSP"), out bool bypassCSP) ? bypassCSP : null;
 
-        public override string Channel => Environment.GetEnvironmentVariable("CHANNEL");
+        private string BaseURL => Environment.GetEnvironmentVariable("BASEURL");
+         
+        private bool? BypassCSP => bool.TryParse(Environment.GetEnvironmentVariable("BYPASSCSP"), out bool bypassCSP) ? bypassCSP : null;
+         
+        private string Channel => Environment.GetEnvironmentVariable("CHANNEL");
+         
+        private bool? Headless => Environment.GetEnvironmentVariable("HEADED") != "1";
 
-        public override bool? Headless => Environment.GetEnvironmentVariable("HEADED") != "1";
+        private ViewportSize ViewportSize => null;
 
-        public override ViewportSize ViewportSize => null;
+        private float? SlowMo => float.TryParse(Environment.GetEnvironmentVariable("SLOWMO"), out float slowMo) ? slowMo : null;
 
-        public override float? SlowMo => float.TryParse(Environment.GetEnvironmentVariable("SLOWMO"), out float slowMo) ? slowMo : null;
+        internal override PlaywrightConfiguration Cascade()
+        {
+            PlaywrightConfiguration config = new EnvironmentVariablePlaywrightConfiguration(Global);
+
+            // apply all the config from env variables
+            config.BrowserTypeLaunchOptions.Channel = Channel;
+            config.BrowserTypeLaunchOptions.Headless = Headless;
+            config.BrowserTypeLaunchOptions.SlowMo = SlowMo;
+
+            config.BrowserNewContextOptions.ViewportSize = ViewportSize;
+            config.BrowserNewContextOptions.BaseURL = BaseURL;
+            config.BrowserNewContextOptions.BypassCSP = BypassCSP;
+            
+            return config;
+        }
     }
 }

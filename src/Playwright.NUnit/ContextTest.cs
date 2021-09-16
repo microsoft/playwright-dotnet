@@ -33,7 +33,7 @@ namespace Microsoft.Playwright.NUnit
 
         public virtual BrowserNewContextOptions ContextOptions()
         {
-            return null;
+            return Configuration.BrowserNewContextOptions;
         }
 
         [SetUp]
