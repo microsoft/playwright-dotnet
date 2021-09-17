@@ -27,11 +27,21 @@ using Microsoft.Playwright.NUnit.Configuration;
 
 namespace Microsoft.Playwright.NUnit
 {
-    public abstract class PlaywrightConfiguration
+    public class PlaywrightConfiguration
     {
         public static PlaywrightConfiguration Global { get; private set; } = new EnvironmentVariablePlaywrightConfiguration();
 
-        internal PlaywrightConfiguration(PlaywrightConfiguration parent = null)
+        /// <summary>
+        /// This constructor should not be called by user-code, but exists here only because
+        /// <see cref="System.Text.Json.JsonSerializer"/> does not know how to deserialize the type
+        /// without a public constructor.
+        /// </summary>
+        public PlaywrightConfiguration() : this(null)
+        {
+
+        }
+
+        internal PlaywrightConfiguration(PlaywrightConfiguration parent)
         {
             // doing this in the constructor ensures we *clone*, rather than reference
             BrowserNewContextOptions = new(parent?.BrowserNewContextOptions);
@@ -44,9 +54,15 @@ namespace Microsoft.Playwright.NUnit
             return Global;
         }
 
-        public abstract string BrowserName { get; }
+        public static PlaywrightConfiguration UseFile(string path = null)
+        {
+            Global = new FilePlaywrightConfiguration(path ?? "playwright.config");
+            return Global;
+        }
 
-        internal abstract PlaywrightConfiguration Cascade();
+        public virtual string BrowserName { get; set; } = Microsoft.Playwright.BrowserType.Chromium.ToLower();
+
+        internal virtual PlaywrightConfiguration Cascade() => throw new NotImplementedException();
 
         public BrowserNewContextOptions BrowserNewContextOptions { get; private set; }
         public BrowserTypeLaunchOptions BrowserTypeLaunchOptions { get; private set; }

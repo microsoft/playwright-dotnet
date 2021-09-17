@@ -32,15 +32,15 @@ namespace Microsoft.Playwright.NUnit.Configuration
         {
 
         }
-        public override string BrowserName => (Environment.GetEnvironmentVariable("BROWSER") ?? Microsoft.Playwright.BrowserType.Chromium).ToLower();
 
+        public override string BrowserName => (Environment.GetEnvironmentVariable("BROWSER") ?? base.BrowserName).ToLower();
 
         private string BaseURL => Environment.GetEnvironmentVariable("BASEURL");
-         
+
         private bool? BypassCSP => bool.TryParse(Environment.GetEnvironmentVariable("BYPASSCSP"), out bool bypassCSP) ? bypassCSP : null;
-         
+
         private string Channel => Environment.GetEnvironmentVariable("CHANNEL");
-         
+
         private bool? Headless => Environment.GetEnvironmentVariable("HEADED") != "1";
 
         private ViewportSize ViewportSize => null;
@@ -59,7 +59,7 @@ namespace Microsoft.Playwright.NUnit.Configuration
             config.BrowserNewContextOptions.ViewportSize = ViewportSize;
             config.BrowserNewContextOptions.BaseURL = BaseURL;
             config.BrowserNewContextOptions.BypassCSP = BypassCSP;
-            
+
             return config;
         }
     }

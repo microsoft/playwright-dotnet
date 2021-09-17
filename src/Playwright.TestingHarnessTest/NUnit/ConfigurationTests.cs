@@ -29,15 +29,14 @@ using NUnit.Framework;
 namespace Playwright.TestingHarnessTest.NUnit
 {
     [SetUpFixture]
-    public class MySpecialSetup
+    public class AssemblyConfiguration
     {
         internal static string _userAgentName = "SpecialUserAgent-v111";
 
         [OneTimeSetUp]
-        public void OneTimeConfig()
+        public void ConfigureGlobal()
         {
             PlaywrightConfiguration.Global.BrowserNewContextOptions.UserAgent = _userAgentName;
-            PlaywrightConfiguration.Global.BrowserNewContextOptions.AcceptDownloads = true;
             PlaywrightConfiguration.Global.BrowserNewContextOptions.ColorScheme = Microsoft.Playwright.ColorScheme.Dark;
         }
     }
@@ -48,14 +47,7 @@ namespace Playwright.TestingHarnessTest.NUnit
         public async Task ShouldUseGloballyConfiguredUserAgent()
         {
             await Page.SetContentAsync("<html></html>");
-            Assert.AreEqual(MySpecialSetup._userAgentName, await Page.EvaluateAsync<string>("() => navigator.userAgent"));
-        }
-
-        [Skip(SkipAttribute.Targets.Windows)]
-        [Test]
-        public void Random()
-        {
-            Assert.Fail();
+            Assert.AreEqual(AssemblyConfiguration._userAgentName, await Page.EvaluateAsync<string>("() => navigator.userAgent"));
         }
     }
 
@@ -63,9 +55,10 @@ namespace Playwright.TestingHarnessTest.NUnit
     {
         private static readonly string _userAgent = "NewUserAgent-v1";
 
-        protected override void ApplyConfigurationChanges(PlaywrightConfiguration configuration)
+        [OneTimeSetUp]
+        public void DoSomething()
         {
-            configuration.BrowserNewContextOptions.UserAgent = _userAgent;
+            Configuration.BrowserNewContextOptions.UserAgent = _userAgent;
         }
 
         [Test]

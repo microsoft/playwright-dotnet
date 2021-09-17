@@ -22,35 +22,29 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Text.Json;
-using System.Threading.Tasks;
+using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.NUnit
+// Note: we use a special namespace, because NUnit will execute our global setup only
+// once per namespace. So we can isolate this from the rest of the changes.
+namespace Playwright.TestingHarnessTest.NUnit.File
 {
-    public class PlaywrightTest : WorkerAwareTest
+    [SetUpFixture]
+    public class FileConfigurationTestSetUp
     {
-        public string BrowserName => Configuration.BrowserName;
-
-        private static readonly Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
-
-        public IPlaywright Playwright { get; private set; }
-        public IBrowserType BrowserType { get; private set; }
-        public PlaywrightConfiguration Configuration { get; private set; } = PlaywrightConfiguration.Global;
-
         [OneTimeSetUp]
-        public void Configure()
+        public void ConfigureGlobal()
         {
-            Configuration = PlaywrightConfiguration.Global.Cascade();
+            PlaywrightConfiguration.UseFile("playwright.config");
         }
+    }
 
-        [SetUp]
-        public async Task PlaywrightSetup()
+    public class FileConfigurationTests : PageTest
+    {
+        [Test]
+        public void TestBrowserLoadedIsTheSameAsInConfig()
         {
-            Playwright = await _playwrightTask;
-            BrowserType = Playwright[BrowserName];
-            Assert.IsNotNull(BrowserType, $"The requested browser ({BrowserName}) could not be found - make sure your BROWSER env variable is set correctly.");
+            Assert.AreEqual("webkit", BrowserType.Name);
         }
     }
 }
