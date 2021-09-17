@@ -39,45 +39,24 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    /// <summary>
-    /// Result of calling <see cref="IRequest.SizesAsync"/>.
-    /// </summary>
-    public partial class RequestSizesResult
+    public class TracingStopChunkOptions
     {
-        /// <summary>
-        /// <para>
-        /// Size of the request body (POST data payload) in bytes. Set to 0 if there was no
-        /// body.
-        /// </para>
-        /// </summary>
-        [Required]
-        [JsonPropertyName("requestBodySize")]
-        public int RequestBodySize { get; set; } = default!;
+        public TracingStopChunkOptions() { }
+
+        public TracingStopChunkOptions(TracingStopChunkOptions clone)
+        {
+            if (clone == null) return;
+            Path = clone.Path;
+        }
 
         /// <summary>
         /// <para>
-        /// Total number of bytes from the start of the HTTP request message until (and including)
-        /// the double CRLF before the body.
+        /// Export trace collected since the last <see cref="ITracing.StartChunkAsync"/> call
+        /// into the file with the given path.
         /// </para>
         /// </summary>
-        [Required]
-        [JsonPropertyName("requestHeadersSize")]
-        public int RequestHeadersSize { get; set; } = default!;
-
-        /// <summary><para>Size of the received response body (encoded) in bytes.</para></summary>
-        [Required]
-        [JsonPropertyName("responseBodySize")]
-        public int ResponseBodySize { get; set; } = default!;
-
-        /// <summary>
-        /// <para>
-        /// Total number of bytes from the start of the HTTP response message until (and including)
-        /// the double CRLF before the body.
-        /// </para>
-        /// </summary>
-        [Required]
-        [JsonPropertyName("responseHeadersSize")]
-        public int ResponseHeadersSize { get; set; } = default!;
+        [JsonPropertyName("path")]
+        public string? Path { get; set; }
     }
 }
 

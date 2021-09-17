@@ -52,6 +52,7 @@ namespace Microsoft.Playwright
             ColorScheme = clone.ColorScheme;
             DeviceScaleFactor = clone.DeviceScaleFactor;
             ExtraHTTPHeaders = clone.ExtraHTTPHeaders;
+            ForcedColors = clone.ForcedColors;
             Geolocation = clone.Geolocation;
             HasTouch = clone.HasTouch;
             HttpCredentials = clone.HttpCredentials;
@@ -132,6 +133,22 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("extraHTTPHeaders")]
         public IEnumerable<KeyValuePair<string, string>>? ExtraHTTPHeaders { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Emulates <c>'forced-colors'</c> media feature, supported values are <c>'active'</c>,
+        /// <c>'none'</c>. See <see cref="IPage.EmulateMediaAsync"/> for more details. Defaults
+        /// to <c>'none'</c>.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// It's not supported in WebKit, see <a href="https://bugs.webkit.org/show_bug.cgi?id=225281">here</a>
+        /// in their issue tracker.
+        /// </para>
+        /// </remarks>
+        [JsonPropertyName("forcedColors")]
+        public ForcedColors? ForcedColors { get; set; }
 
         [JsonPropertyName("geolocation")]
         public Geolocation? Geolocation { get; set; }

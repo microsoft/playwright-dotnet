@@ -75,6 +75,14 @@ namespace Microsoft.Playwright
     {
         /// <summary>
         /// <para>
+        /// An object with all the request HTTP headers associated with this request. The header
+        /// names are lower-cased.
+        /// </para>
+        /// </summary>
+        Task<Dictionary<string, string>> AllHeadersAsync();
+
+        /// <summary>
+        /// <para>
         /// The method returns <c>null</c> unless this request has failed, as reported by <c>requestfailed</c>
         /// event.
         /// </para>
@@ -91,8 +99,26 @@ namespace Microsoft.Playwright
         /// <summary><para>Returns the <see cref="IFrame"/> that initiated this request.</para></summary>
         IFrame Frame { get; }
 
-        /// <summary><para>An object with HTTP headers associated with the request. All header names are lower-case.</para></summary>
+        /// <summary>
+        /// <para>
+        /// **DEPRECATED** Incomplete list of headers as seen by the rendering engine. Use <see
+        /// cref="IRequest.AllHeadersAsync"/> instead.
+        /// </para>
+        /// </summary>
         Dictionary<string, string> Headers { get; }
+
+        /// <summary>
+        /// <para>
+        /// An array with all the request HTTP headers associated with this request. Unlike
+        /// <see cref="IRequest.AllHeadersAsync"/>, header names are NOT lower-cased. Headers
+        /// with multiple entries, such as <c>Set-Cookie</c>, appear in the array multiple times.
+        /// </para>
+        /// </summary>
+        Task<IReadOnlyList<RequestHeadersArrayResult>> HeadersArrayAsync();
+
+        /// <summary><para>Returns the value of the header matching the name. The name is case insensitive.</para></summary>
+        /// <param name="name">Name of the header.</param>
+        Task<string?> HeaderValueAsync(string name);
 
         /// <summary><para>Whether this request is driving frame's navigation.</para></summary>
         bool IsNavigationRequest { get; }
@@ -152,13 +178,8 @@ namespace Microsoft.Playwright
         /// </summary>
         Task<IResponse?> ResponseAsync();
 
-        /// <summary>
-        /// <para>
-        /// Returns resource size information for given request. Requires the response to be
-        /// finished via <see cref="IResponse.FinishedAsync"/> to ensure the info is available.
-        /// </para>
-        /// </summary>
-        RequestSizesResult Sizes { get; }
+        /// <summary><para>Returns resource size information for given request.</para></summary>
+        Task<RequestSizesResult> SizesAsync();
 
         /// <summary>
         /// <para>

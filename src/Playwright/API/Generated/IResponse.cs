@@ -42,10 +42,13 @@ namespace Microsoft.Playwright
     /// <summary><para><see cref="IResponse"/> class represents responses which are received by page.</para></summary>
     public partial interface IResponse
     {
+        /// <summary><para>An object with all the response HTTP headers associated with this response.</para></summary>
+        Task<Dictionary<string, string>> AllHeadersAsync();
+
         /// <summary><para>Returns the buffer with response body.</para></summary>
         Task<byte[]> BodyAsync();
 
-        /// <summary><para>Waits for this response to finish, returns failure error if request failed.</para></summary>
+        /// <summary><para>Waits for this response to finish, returns always <c>null</c>.</para></summary>
         Task<string?> FinishedAsync();
 
         /// <summary><para>Returns the <see cref="IFrame"/> that initiated this response.</para></summary>
@@ -53,11 +56,40 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Returns the object with HTTP headers associated with the response. All header names
-        /// are lower-case.
+        /// **DEPRECATED** Incomplete list of headers as seen by the rendering engine. Use <see
+        /// cref="IResponse.AllHeadersAsync"/> instead.
         /// </para>
         /// </summary>
         Dictionary<string, string> Headers { get; }
+
+        /// <summary>
+        /// <para>
+        /// An array with all the request HTTP headers associated with this response. Unlike
+        /// <see cref="IResponse.AllHeadersAsync"/>, header names are NOT lower-cased. Headers
+        /// with multiple entries, such as <c>Set-Cookie</c>, appear in the array multiple times.
+        /// </para>
+        /// </summary>
+        Task<IReadOnlyList<ResponseHeadersArrayResult>> HeadersArrayAsync();
+
+        /// <summary>
+        /// <para>
+        /// Returns the value of the header matching the name. The name is case insensitive.
+        /// If multiple headers have the same name (except <c>set-cookie</c>), they are returned
+        /// as a list separated by <c>, </c>. For <c>set-cookie</c>, the <c>\n</c> separator
+        /// is used. If no headers are found, <c>null</c> is returned.
+        /// </para>
+        /// </summary>
+        /// <param name="name">Name of the header.</param>
+        Task<string?> HeaderValueAsync(string name);
+
+        /// <summary>
+        /// <para>
+        /// Returns all values of the headers matching the name, for example <c>set-cookie</c>.
+        /// The name is case insensitive.
+        /// </para>
+        /// </summary>
+        /// <param name="name">Name of the header.</param>
+        Task<IReadOnlyList<string>> HeaderValuesAsync(string name);
 
         /// <summary>
         /// <para>Returns the JSON representation of response body.</para>
