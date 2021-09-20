@@ -50,5 +50,8 @@ namespace Microsoft.Playwright.Core
 
         public Task UpAsync(MouseUpOptions options = default)
             => _channel.MouseUpAsync(button: options?.Button, clickCount: options?.ClickCount);
+
+        public Task WheelAsync(float deltaX, float deltaY)
+            => _channel.MouseWheelAsync(deltaX, deltaY);
     }
 }
