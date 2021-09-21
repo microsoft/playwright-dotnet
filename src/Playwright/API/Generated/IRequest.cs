@@ -114,7 +114,7 @@ namespace Microsoft.Playwright
         /// with multiple entries, such as <c>Set-Cookie</c>, appear in the array multiple times.
         /// </para>
         /// </summary>
-        Task<IReadOnlyList<RequestHeadersArrayResult>> HeadersArrayAsync();
+        Task<System.Collections.Specialized.NameValueCollection> HeadersArrayAsync();
 
         /// <summary><para>Returns the value of the header matching the name. The name is case insensitive.</para></summary>
         /// <param name="name">Name of the header.</param>

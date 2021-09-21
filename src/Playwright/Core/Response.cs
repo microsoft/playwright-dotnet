@@ -24,6 +24,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -38,6 +40,7 @@ namespace Microsoft.Playwright.Core
         private readonly ResponseChannel _channel;
         private readonly ResponseInitializer _initializer;
         private readonly TaskCompletionSource<string> _finishedTask;
+        private readonly NameValueCollection _headers = new();
 
         internal Response(IChannelOwner parent, string guid, ResponseInitializer initializer) : base(parent, guid)
         {
@@ -46,28 +49,9 @@ namespace Microsoft.Playwright.Core
             _initializer.Request.Timing = _initializer.Timing;
             _finishedTask = new();
 
-            Headers = new();
             foreach (var kv in initializer.Headers)
             {
-                var name = kv.Name.ToLower();
-
-                // There are case-sensitive dupes :/
-                if (!Headers.ContainsKey(name))
-                {
-                    Headers.Add(kv.Name.ToLower(), kv.Value);
-                }
-            }
-
-            _initializer.Request.Headers.Clear();
-            foreach (var kv in _initializer.RequestHeaders)
-            {
-                var name = kv.Name.ToLower();
-
-                // There are case-sensitive dupes :/
-                if (!_initializer.Request.Headers.ContainsKey(name))
-                {
-                    _initializer.Request.Headers.Add(kv.Name.ToLower(), kv.Value);
-                }
+                _headers.Add(kv.Name.ToLower(), kv.Value);
             }
         }
 
@@ -89,9 +73,17 @@ namespace Microsoft.Playwright.Core
 
         IChannel<Response> IChannelOwner<Response>.Channel => _channel;
 
+        public Task<Dictionary<string, string>> AllHeadersAsync() => throw new NotImplementedException();
+
         public async Task<byte[]> BodyAsync() => Convert.FromBase64String(await _channel.GetBodyAsync().ConfigureAwait(false));
 
         public Task<string> FinishedAsync() => _finishedTask.Task;
+
+        public Task<NameValueCollection> HeadersArrayAsync() => throw new NotImplementedException();
+
+        public Task<string> HeaderValueAsync(string name) => throw new NotImplementedException();
+
+        public Task<IReadOnlyList<string>> HeaderValuesAsync(string name) => throw new NotImplementedException();
 
         public async Task<JsonElement?> JsonAsync()
         {

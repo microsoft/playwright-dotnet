@@ -117,7 +117,27 @@ namespace Microsoft.Playwright.Transport.Channels
                     FrameDetached?.Invoke(this, serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
                     break;
                 case "dialog":
-                    Dialog?.Invoke(this, serverParams?.GetProperty("dialog").ToObject<DialogChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
+                    var dialog = serverParams?.GetProperty("dialog").ToObject<DialogChannel>(Connection.GetDefaultJsonSerializerOptions()).Object;
+                    if ("beforeunload".Equals(dialog.Type, StringComparison.Ordinal))
+                    {
+                        try
+                        {
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+                            dialog.AcceptAsync(null).GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+                        }
+                        catch (PlaywrightException)
+                        {
+                            // Noop
+                        }
+                    }
+                    else
+                    {
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+                        dialog.DismissAsync().GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+                    }
+                    Dialog?.Invoke(this, dialog);
                     break;
                 case "console":
                     Console?.Invoke(this, serverParams?.GetProperty("message").ToObject<ConsoleMessage>(Connection.GetDefaultJsonSerializerOptions()));

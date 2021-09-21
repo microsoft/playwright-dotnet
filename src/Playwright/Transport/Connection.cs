@@ -244,6 +244,7 @@ namespace Microsoft.Playwright.Transport
             {
                 if (message.Method == "__create__")
                 {
+                    // Note: an exception here might indicate a type is missing from ChannelOwnerType enum.
                     var createObjectInfo = message.Params.Value.ToObject<CreateObjectInfo>(GetDefaultJsonSerializerOptions());
                     CreateRemoteObject(message.Guid, createObjectInfo.Type, createObjectInfo.Guid, createObjectInfo.Initializer);
 

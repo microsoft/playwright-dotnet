@@ -42,6 +42,10 @@ namespace Microsoft.Playwright.Core
                     screenshots: options?.Screenshots,
                     snapshots: options?.Snapshots);
 
+        public Task StartChunkAsync() => throw new System.NotImplementedException();
+
+        public Task StopChunkAsync(TracingStopChunkOptions options = null) => throw new System.NotImplementedException();
+
         public async Task StopAsync(TracingStopOptions options = default)
         {
             if (!string.IsNullOrEmpty(options?.Path))
