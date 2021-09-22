@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
+using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
@@ -36,6 +36,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal Task<ResponseChannel> GetResponseAsync() => Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "response", null);
 
-        internal Task<NameValueEntry[]> GetRawHeadersAsync() => Connection.SendMessageToServerAsync<NameValueEntry[]>(Guid, "rawResponseHeaders", null);
+        internal async Task<NameValueEntry[]> GetRawHeadersAsync() =>
+            (await Connection.SendMessageToServerAsync(Guid, "rawRequestHeaders", null).ConfigureAwait(false))?.GetProperty("headers").ToObject<NameValueEntry[]>();
     }
 }

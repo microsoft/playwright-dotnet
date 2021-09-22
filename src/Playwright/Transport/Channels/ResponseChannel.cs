@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
@@ -46,5 +47,11 @@ namespace Microsoft.Playwright.Transport.Channels
         internal async Task<ResponseSecurityDetailsResult> SecurityDetailsAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "securityDetails", null).ConfigureAwait(false))
                 ?.GetProperty("value").ToObject<ResponseSecurityDetailsResult>(Connection.GetDefaultJsonSerializerOptions());
+
+        internal async Task<RequestSizesResult> SizesAsync() =>
+            (await Connection.SendMessageToServerAsync(Guid, "sizes", null).ConfigureAwait(false))?.GetProperty("sizes").ToObject<RequestSizesResult>();
+
+        internal async Task<NameValueEntry[]> GetRawHeadersAsync() =>
+            (await Connection.SendMessageToServerAsync(Guid, "rawResponseHeaders", null).ConfigureAwait(false))?.GetProperty("headers").ToObject<NameValueEntry[]>();
     }
 }

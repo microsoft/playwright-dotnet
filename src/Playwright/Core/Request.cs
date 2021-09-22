@@ -143,7 +143,15 @@ namespace Microsoft.Playwright.Core
 
         public async Task<string> HeaderValueAsync(string name) => (await GetRawHeadersAsync().ConfigureAwait(false)).Get(name);
 
-        public Task<RequestSizesResult> SizesAsync() => throw new NotImplementedException();
+        public async Task<RequestSizesResult> SizesAsync()
+        {
+            if (await ResponseAsync().ConfigureAwait(false) is not IChannelOwner<Response> res)
+            {
+                throw new PlaywrightException("Unable to fetch sizes for a failed request.");
+            }
+
+            return await ((ResponseChannel)res.Channel).SizesAsync().ConfigureAwait(false);
+        }
 
         private async Task<NameValueCollection> GetRawHeadersAsync()
         {

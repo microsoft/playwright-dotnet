@@ -41,6 +41,7 @@ namespace Microsoft.Playwright.Core
         private readonly ResponseInitializer _initializer;
         private readonly TaskCompletionSource<string> _finishedTask;
         private readonly NameValueCollection _headers = new();
+        private NameValueCollection _rawHeaders;
 
         internal Response(IChannelOwner parent, string guid, ResponseInitializer initializer) : base(parent, guid)
         {
@@ -57,7 +58,14 @@ namespace Microsoft.Playwright.Core
 
         public IFrame Frame => _initializer.Request.Frame;
 
-        public Dictionary<string, string> Headers { get; }
+        public Dictionary<string, string> Headers
+        {
+            get
+            {
+                return _headers.Keys.Cast<string>().Select<string, (string Key, string Value)>(
+                    x => new(x, string.Join(", ", _headers.GetValues(x).Distinct()))).ToDictionary(x => x.Key, y => y.Value);
+            }
+        }
 
         public bool Ok => Status is 0 or >= 200 and <= 299;
 
@@ -73,17 +81,20 @@ namespace Microsoft.Playwright.Core
 
         IChannel<Response> IChannelOwner<Response>.Channel => _channel;
 
-        public Task<Dictionary<string, string>> AllHeadersAsync() => throw new NotImplementedException();
+        public async Task<Dictionary<string, string>> AllHeadersAsync()
+            => (from key in (await GetRawHeadersAsync().ConfigureAwait(false)).Cast<string>()
+                from value in _headers.GetValues(key)
+                select (key, value)).ToDictionary(x => x.key, y => y.value);
 
         public async Task<byte[]> BodyAsync() => Convert.FromBase64String(await _channel.GetBodyAsync().ConfigureAwait(false));
 
         public Task<string> FinishedAsync() => _finishedTask.Task;
 
-        public Task<NameValueCollection> HeadersArrayAsync() => throw new NotImplementedException();
+        public Task<NameValueCollection> HeadersArrayAsync() => GetRawHeadersAsync();
 
-        public Task<string> HeaderValueAsync(string name) => throw new NotImplementedException();
+        public async Task<string> HeaderValueAsync(string name) => (await GetRawHeadersAsync().ConfigureAwait(false)).Get(name);
 
-        public Task<IReadOnlyList<string>> HeaderValuesAsync(string name) => throw new NotImplementedException();
+        public async Task<IReadOnlyList<string>> HeaderValuesAsync(string name) => (await GetRawHeadersAsync().ConfigureAwait(false)).GetValues(name);
 
         public async Task<JsonElement?> JsonAsync()
         {
@@ -104,6 +115,19 @@ namespace Microsoft.Playwright.Core
         internal void ReportFinished(string erroMessage = null)
         {
             _finishedTask.SetResult(erroMessage);
+        }
+
+        private async Task<NameValueCollection> GetRawHeadersAsync()
+        {
+            if (_rawHeaders != null) return _rawHeaders;
+
+            _rawHeaders = new NameValueCollection();
+            var headers = await _channel.GetRawHeadersAsync().ConfigureAwait(false);
+            foreach (var header in headers)
+            {
+                _rawHeaders.Add(header.Name, header.Value);
+            }
+            return _rawHeaders;
         }
     }
 }

@@ -62,7 +62,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var response = await Page.GotoAsync(Server.EmptyPage);
-            StringAssert.Contains("bar", response.Headers["foo"]);
+            StringAssert.Contains("bar", await response.HeaderValueAsync("foo"));
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should return json")]
@@ -108,7 +108,7 @@ namespace Microsoft.Playwright.Tests
         {
             Server.EnableGzip("/simple.json");
             var response = await Page.GotoAsync(Server.Prefix + "/simple.json");
-            Assert.AreEqual("gzip", response.Headers["content-encoding"]);
+            Assert.AreEqual("gzip", await response.HeaderValueAsync("content-encoding"));
             Assert.AreEqual("{\"foo\": \"bar\"}", (await response.TextAsync()).Trim());
         }
 
