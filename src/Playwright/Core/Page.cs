@@ -285,7 +285,7 @@ namespace Microsoft.Playwright.Core
         {
             var args = new Dictionary<string, object>
             {
-                ["media"] = options?.Media ?? Media.Null,
+                ["media"] = options?.Media,
                 ["colorScheme"] = options?.ColorScheme ?? ColorScheme.Null,
                 ["reducedMotion"] = options?.ReducedMotion ?? ReducedMotion.Null,
                 ["forcedColors"] = options?.ForcedColors ?? ForcedColors.Null,
