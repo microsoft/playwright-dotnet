@@ -36,26 +36,34 @@ namespace Microsoft.Playwright.Core
             _channel = channel;
         }
 
-        public Task StartAsync(TracingStartOptions options = default)
-            => _channel.TracingStartAsync(
-                    name: options?.Name,
-                    screenshots: options?.Screenshots,
-                    snapshots: options?.Snapshots);
+        public async Task StartAsync(TracingStartOptions options = default)
+        {
+            await _channel.TracingStartAsync(
+                        name: options?.Name,
+                        screenshots: options?.Screenshots,
+                        snapshots: options?.Snapshots).ConfigureAwait(false);
 
-        public Task StartChunkAsync() => throw new System.NotImplementedException();
+            await StartChunkAsync().ConfigureAwait(false);
+        }
 
-        public Task StopChunkAsync(TracingStopChunkOptions options = null) => throw new System.NotImplementedException();
+        public Task StartChunkAsync() => _channel.StartChunkAsync();
+
+        public async Task StopChunkAsync(TracingStopChunkOptions options = null)
+        {
+            var artifact = await _channel.StopChunkAsync(!string.IsNullOrEmpty(options?.Path)).ConfigureAwait(false);
+            if (artifact == null)
+                return;
+
+            if (string.IsNullOrEmpty(options?.Path))
+                throw new PlaywrightException("Specified path was invalid or empty. Trace could not be saved.");
+
+            await artifact.SaveAsAsync(options.Path).ConfigureAwait(false);
+            await artifact.DeleteAsync().ConfigureAwait(false);
+        }
 
         public async Task StopAsync(TracingStopOptions options = default)
         {
-            if (!string.IsNullOrEmpty(options?.Path))
-            {
-                var result = await _channel.TracingExportAsync().ConfigureAwait(false);
-                var artifact = result.Object;
-                await artifact.SaveAsAsync(options?.Path).ConfigureAwait(false);
-                await artifact.DeleteAsync().ConfigureAwait(false);
-            }
-
+            await StopChunkAsync(new() { Path = options?.Path }).ConfigureAwait(false);
             await _channel.TracingStopAsync().ConfigureAwait(false);
         }
     }

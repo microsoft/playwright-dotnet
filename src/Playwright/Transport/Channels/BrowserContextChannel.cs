@@ -260,10 +260,20 @@ namespace Microsoft.Playwright.Transport.Channels
                 Guid,
                 "tracingStop");
 
-        internal Task<ArtifactChannel> TracingExportAsync()
-            => Connection.SendMessageToServerAsync<ArtifactChannel>(
-                Guid,
-                "tracingExport",
-                new Dictionary<string, object>());
+        internal Task StartChunkAsync()
+            => Connection.SendMessageToServerAsync(Guid, "tracingStartChunk", null);
+
+        internal async Task<Artifact> StopChunkAsync(bool save = false)
+        {
+            var result = await Connection.SendMessageToServerAsync(Guid, "tracingStopChunk", new Dictionary<string, object>
+            {
+                ["save"] = save,
+            }).ConfigureAwait(false);
+
+            if (save)
+                return result.GetObject<Artifact>("artifact", Connection);
+
+            return null;
+        }
     }
 }
