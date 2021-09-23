@@ -24,8 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -40,8 +38,7 @@ namespace Microsoft.Playwright.Core
     {
         private readonly RequestChannel _channel;
         private readonly RequestInitializer _initializer;
-        private readonly NameValueCollection _headers = new();
-        private NameValueCollection _rawHeaders;
+        private RawHeaders _rawHeaders;
 
         internal Request(IChannelOwner parent, string guid, RequestInitializer initializer) : base(parent, guid)
         {
@@ -59,7 +56,8 @@ namespace Microsoft.Playwright.Core
 
             foreach (var kv in initializer.Headers)
             {
-                _headers.Add(kv.Name.ToLower(), kv.Value);
+                if (!Headers.ContainsKey(kv.Name.ToLower()))
+                    Headers.Add(kv.Name.ToLower(), kv.Value);
             }
         }
 
@@ -71,14 +69,7 @@ namespace Microsoft.Playwright.Core
 
         public IFrame Frame => _initializer.Frame;
 
-        public Dictionary<string, string> Headers
-        {
-            get
-            {
-                return _headers.Keys.Cast<string>().Select<string, (string Key, string Value)>(
-                    x => new(x, string.Join(", ", _headers.GetValues(x).Distinct()))).ToDictionary(x => x.Key, y => y.Value);
-            }
-        }
+        public Dictionary<string, string> Headers { get; } = new();
 
         public bool IsNavigationRequest => _initializer.IsNavigationRequest;
 
@@ -134,15 +125,6 @@ namespace Microsoft.Playwright.Core
             return JsonDocument.Parse(content).RootElement;
         }
 
-        public async Task<Dictionary<string, string>> AllHeadersAsync() =>
-            (from key in (await GetRawHeadersAsync().ConfigureAwait(false)).Cast<string>()
-             from value in _headers.GetValues(key)
-             select (key, value)).ToDictionary(x => x.key, y => y.value);
-
-        public Task<NameValueCollection> HeadersArrayAsync() => GetRawHeadersAsync();
-
-        public async Task<string> HeaderValueAsync(string name) => (await GetRawHeadersAsync().ConfigureAwait(false)).Get(name);
-
         public async Task<RequestSizesResult> SizesAsync()
         {
             if (await ResponseAsync().ConfigureAwait(false) is not IChannelOwner<Response> res)
@@ -153,16 +135,26 @@ namespace Microsoft.Playwright.Core
             return await ((ResponseChannel)res.Channel).SizesAsync().ConfigureAwait(false);
         }
 
-        private async Task<NameValueCollection> GetRawHeadersAsync()
+        public async Task<IReadOnlyCollection<KeyValuePair<string, string>>> AllHeadersAsync()
+            => (await GetRawHeadersAsync().ConfigureAwait(false)).Headers;
+
+        public async Task<IReadOnlyCollection<KeyValuePair<string, string>>> HeadersArrayAsync()
+            => (await GetRawHeadersAsync().ConfigureAwait(false)).HeadersArray;
+
+        public async Task<string> HeaderValueAsync(string name)
+            => (await GetRawHeadersAsync().ConfigureAwait(false)).Get(name);
+
+        private async Task<RawHeaders> GetRawHeadersAsync()
         {
             if (_rawHeaders != null) return _rawHeaders;
 
-            _rawHeaders = new NameValueCollection();
-            var headers = await _channel.GetRawHeadersAsync().ConfigureAwait(false);
-            foreach (var header in headers)
+            if (await ResponseAsync().ConfigureAwait(false) is not IChannelOwner<Response> res)
             {
-                _rawHeaders.Add(header.Name, header.Value);
+                throw new PlaywrightException("Something went wrong, fetching raw headers.");
             }
+
+            var headers = await ((ResponseChannel)res.Channel).GetRawRequestHeadersAsync().ConfigureAwait(false);
+            _rawHeaders = new(headers);
             return _rawHeaders;
         }
     }

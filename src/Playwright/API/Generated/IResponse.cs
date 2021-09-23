@@ -42,8 +42,7 @@ namespace Microsoft.Playwright
     /// <summary><para><see cref="IResponse"/> class represents responses which are received by page.</para></summary>
     public partial interface IResponse
     {
-        /// <summary><para>An object with all the response HTTP headers associated with this response.</para></summary>
-        Task<Dictionary<string, string>> AllHeadersAsync();
+        Task<IReadOnlyCollection<KeyValuePair<string, string>>> AllHeadersAsync();
 
         /// <summary><para>Returns the buffer with response body.</para></summary>
         Task<byte[]> BodyAsync();
@@ -62,14 +61,7 @@ namespace Microsoft.Playwright
         /// </summary>
         Dictionary<string, string> Headers { get; }
 
-        /// <summary>
-        /// <para>
-        /// An array with all the request HTTP headers associated with this response. Unlike
-        /// <see cref="IResponse.AllHeadersAsync"/>, header names are NOT lower-cased. Headers
-        /// with multiple entries, such as <c>Set-Cookie</c>, appear in the array multiple times.
-        /// </para>
-        /// </summary>
-        Task<System.Collections.Specialized.NameValueCollection> HeadersArrayAsync();
+        Task<IReadOnlyCollection<KeyValuePair<string, string>>> HeadersArrayAsync();
 
         /// <summary>
         /// <para>

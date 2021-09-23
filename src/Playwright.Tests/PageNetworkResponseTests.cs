@@ -22,7 +22,9 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -62,7 +64,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             var response = await Page.GotoAsync(Server.EmptyPage);
-            StringAssert.Contains("bar", await response.HeaderValueAsync("foo"));
+            StringAssert.Contains("bar", response.Headers["foo"]);
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should return json")]
@@ -108,7 +110,7 @@ namespace Microsoft.Playwright.Tests
         {
             Server.EnableGzip("/simple.json");
             var response = await Page.GotoAsync(Server.Prefix + "/simple.json");
-            Assert.AreEqual("gzip", await response.HeaderValueAsync("content-encoding"));
+            Assert.AreEqual("gzip", response.Headers["content-encoding"]);
             Assert.AreEqual("{\"foo\": \"bar\"}", (await response.TextAsync()).Trim());
         }
 
@@ -195,5 +197,29 @@ namespace Microsoft.Playwright.Tests
         }
 
         public override BrowserNewContextOptions ContextOptions() => new() { IgnoreHTTPSErrors = true };
+
+        [PlaywrightTest("har.spec.ts", "should report multiple set-cookie headers")]
+        public async Task ShouldReportMultipleSetCookieHeaders()
+        {
+            Server.SetRoute("/headers", async ctx =>
+            {
+                ctx.Response.Headers.Append("Set-Cookie", "a=b");
+                ctx.Response.Headers.Append("Set-Cookie", "c=d");
+                await Task.CompletedTask;
+            });
+
+            await Page.GotoAsync(Server.EmptyPage);
+            var responseTask = Page.WaitForResponseAsync("**/*");
+            await Task.WhenAll(responseTask, Page.EvaluateAsync("() => fetch('/headers')"));
+
+            var response = responseTask.Result;
+            CollectionAssert.AreEqual(new KeyValuePair<string, string>[] {
+                new("set-cookie", "a=b"),
+                new("set-cookie", "c=d")
+            }, (await response.AllHeadersAsync()).Where(x => x.Key == "set-cookie").ToArray());
+
+            Assert.IsNull(await response.HeaderValueAsync("not-there"));
+            Assert.AreEqual("a=b\nc=d", await response.HeaderValueAsync("set-cookie"));
+        }
     }
 }

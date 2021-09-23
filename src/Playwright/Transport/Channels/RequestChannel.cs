@@ -35,8 +35,5 @@ namespace Microsoft.Playwright.Transport.Channels
         }
 
         internal Task<ResponseChannel> GetResponseAsync() => Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "response", null);
-
-        internal async Task<NameValueEntry[]> GetRawHeadersAsync() =>
-            (await Connection.SendMessageToServerAsync(Guid, "rawRequestHeaders", null).ConfigureAwait(false))?.GetProperty("headers").ToObject<NameValueEntry[]>();
     }
 }
