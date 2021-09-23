@@ -18,12 +18,14 @@ function Get-Help() {
   Write-Host "                            downloads the new driver."
   Write-Host "  driver                    Downloads the driver."
   Write-Host "  help                      Prints this message."
+  Write-Host "  wwwroot                   Copies over the wwwroot."
 }
 
 function Invoke-Init() {
   Invoke-InitializeSubmodule
   if ($prereqs) { Invoke-InstallRequirements }
   Invoke-DownloadDriver
+  Invoke-WWWRoot
 }
 
 function Get-SubmoduleStatus() {
