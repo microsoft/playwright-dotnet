@@ -22,15 +22,14 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Text.Json;
-using Microsoft.Playwright.Core;
+using System.Threading.Tasks;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
     internal partial class WorkerChannel
     {
-        internal override void OnMessage(string method, JsonElement? serverParams)
+        internal override async Task OnMessageAsync(string method, JsonElement? serverParams)
         {
             switch (method)
             {
@@ -38,6 +37,8 @@ namespace Microsoft.Playwright.Transport.Channels
                     OnClose();
                     break;
             }
+
+            await base.OnMessageAsync(method, serverParams).ConfigureAwait(false);
         }
     }
 }

@@ -35,8 +35,6 @@ namespace Microsoft.Playwright.Transport.Channels
         {
         }
 
-        internal override void OnMessage(string method, System.Text.Json.JsonElement? serverParams) => base.OnMessage(method, serverParams);
-
         internal async Task<string> GetBodyAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "body", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
 

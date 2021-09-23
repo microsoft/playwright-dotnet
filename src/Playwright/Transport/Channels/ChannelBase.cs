@@ -23,6 +23,7 @@
  */
 
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
@@ -38,8 +39,9 @@ namespace Microsoft.Playwright.Transport.Channels
 
         public Connection Connection { get; }
 
-        internal virtual void OnMessage(string method, JsonElement? serverParams)
+        internal virtual async Task OnMessageAsync(string method, JsonElement? serverParams)
         {
+            await Task.CompletedTask.ConfigureAwait(false);
         }
     }
 }

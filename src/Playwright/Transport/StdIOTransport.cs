@@ -37,6 +37,7 @@ namespace Microsoft.Playwright.Transport
         private readonly Process _process;
         private readonly CancellationTokenSource _readerCancellationSource = new();
         private readonly List<byte> _data = new();
+        private Func<MessageReceivedEventArgs, Task> _messageHandlerCallback;
         private int? _currentMessageSize;
 
         internal StdIOTransport()
@@ -54,13 +55,14 @@ namespace Microsoft.Playwright.Transport
         /// <inheritdoc cref="IDisposable.Dispose"/>
         ~StdIOTransport() => Dispose(false);
 
-        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
-
         public event EventHandler<TransportClosedEventArgs> TransportClosed;
 
         public event EventHandler<LogReceivedEventArgs> LogReceived;
 
         public bool IsClosed { get; private set; }
+
+        public void SetMessageHandler(Func<MessageReceivedEventArgs, Task> handleTransportMessageAsync)
+            => _messageHandlerCallback = handleTransportMessageAsync;
 
         /// <inheritdoc/>
         public void Dispose()
@@ -173,7 +175,7 @@ namespace Microsoft.Playwright.Transport
                     {
                         _data.AddRange(buffer.AsMemory().Slice(0, read).ToArray());
 
-                        ProcessStream(token);
+                        await ProcessStreamAsync(token).ConfigureAwait(false);
                     }
                 }
             }
@@ -183,7 +185,7 @@ namespace Microsoft.Playwright.Transport
             }
         }
 
-        private void ProcessStream(CancellationToken token)
+        private async Task ProcessStreamAsync(CancellationToken token)
         {
             while (!token.IsCancellationRequested)
             {
@@ -206,7 +208,10 @@ namespace Microsoft.Playwright.Transport
                 string result = System.Text.Encoding.UTF8.GetString(_data.GetRange(0, _currentMessageSize.Value).ToArray());
                 _data.RemoveRange(0, _currentMessageSize.Value);
                 _currentMessageSize = null;
-                MessageReceived?.Invoke(this, new(result));
+                if (_messageHandlerCallback != null)
+                {
+                    await _messageHandlerCallback(new(result)).ConfigureAwait(false);
+                }
             }
         }
     }

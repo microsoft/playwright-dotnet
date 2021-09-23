@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Transport
             _rootObject = new(null, this, string.Empty);
 
             _transport = connectionTransport;
-            _transport.MessageReceived += Transport_MessageReceived;
+            _transport.SetMessageHandler(HandleTransportMessageAsync);
             _transport.LogReceived += (_, e) => Console.Error.WriteLine(e.Message);
             _transport.TransportClosed += (_, e) => Close(e.CloseReason);
         }
@@ -215,7 +215,7 @@ namespace Microsoft.Playwright.Transport
             }
         }
 
-        private void Transport_MessageReceived(object sender, MessageReceivedEventArgs e)
+        private async Task HandleTransportMessageAsync(MessageReceivedEventArgs e)
         {
             var message = JsonSerializer.Deserialize<PlaywrightServerMessage>(e.Message, JsonExtensions.DefaultJsonSerializerOptions);
 
@@ -259,7 +259,10 @@ namespace Microsoft.Playwright.Transport
                 }
 
                 Objects.TryGetValue(message.Guid, out var obj);
-                obj?.Channel?.OnMessage(message.Method, message.Params);
+                if (obj?.Channel is ChannelBase channelBase)
+                {
+                    await channelBase.OnMessageAsync(message.Method, message.Params).ConfigureAwait(false);
+                }
             }
             catch (Exception ex)
             {

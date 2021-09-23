@@ -42,7 +42,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal event EventHandler<FrameChannelLoadStateEventArgs> LoadState;
 
-        internal override void OnMessage(string method, JsonElement? serverParams)
+        internal override async Task OnMessageAsync(string method, JsonElement? serverParams)
         {
             switch (method)
             {
@@ -62,6 +62,8 @@ namespace Microsoft.Playwright.Transport.Channels
                         serverParams?.ToObject<FrameChannelLoadStateEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
             }
+
+            await base.OnMessageAsync(method, serverParams).ConfigureAwait(false);
         }
 
         internal Task<ElementHandleChannel> QuerySelectorAsync(string selector, bool? strict)

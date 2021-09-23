@@ -24,6 +24,7 @@
 
 using System;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
 
@@ -45,7 +46,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal event EventHandler<string> SocketError;
 
-        internal override void OnMessage(string method, JsonElement? serverParams)
+        internal override async Task OnMessageAsync(string method, JsonElement? serverParams)
         {
             bool IsTextOrBinaryFrame(out int opcode)
             {
@@ -87,6 +88,8 @@ namespace Microsoft.Playwright.Transport.Channels
                     SocketError?.Invoke(this, serverParams?.GetProperty("error").ToObject<string>());
                     break;
             }
+
+            await base.OnMessageAsync(method, serverParams).ConfigureAwait(false);
         }
     }
 }

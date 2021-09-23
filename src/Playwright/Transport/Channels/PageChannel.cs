@@ -73,7 +73,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal event EventHandler<VideoEventArgs> Video;
 
-        internal override void OnMessage(string method, JsonElement? serverParams)
+        internal override async Task OnMessageAsync(string method, JsonElement? serverParams)
         {
             switch (method)
             {
@@ -118,26 +118,28 @@ namespace Microsoft.Playwright.Transport.Channels
                     break;
                 case "dialog":
                     var dialog = serverParams?.GetProperty("dialog").ToObject<DialogChannel>(Connection.GetDefaultJsonSerializerOptions()).Object;
-                    if ("beforeunload".Equals(dialog.Type, StringComparison.Ordinal))
+                    if (Dialog != null)
                     {
-                        try
-                        {
-#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
-                            dialog.AcceptAsync(null).GetAwaiter().GetResult();
-#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
-                        }
-                        catch (PlaywrightException)
-                        {
-                            // Noop
-                        }
+                        Dialog.Invoke(this, dialog);
                     }
                     else
                     {
-#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
-                        dialog.DismissAsync().GetAwaiter().GetResult();
-#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+                        if ("beforeunload".Equals(dialog.Type, StringComparison.Ordinal))
+                        {
+                            try
+                            {
+                                await dialog.AcceptAsync(null).ConfigureAwait(false);
+                            }
+                            catch (PlaywrightException)
+                            {
+                                // Noop
+                            }
+                        }
+                        else
+                        {
+                            await dialog.DismissAsync().ConfigureAwait(false);
+                        }
                     }
-                    Dialog?.Invoke(this, dialog);
                     break;
                 case "console":
                     Console?.Invoke(this, serverParams?.GetProperty("message").ToObject<ConsoleMessage>(Connection.GetDefaultJsonSerializerOptions()));

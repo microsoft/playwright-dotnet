@@ -42,7 +42,8 @@ namespace Microsoft.Playwright.Transport
         private readonly string _wsEndpoint;
         private readonly BrowserTypeConnectOptions _options;
         private readonly float _slowMo;
-        private CancellationTokenSource _webSocketToken;
+        private readonly CancellationTokenSource _webSocketToken;
+        private Func<MessageReceivedEventArgs, Task> _messageHandlerCallback;
 
         internal WebSocketTransport(
             string wsEndpoint = default,
@@ -56,13 +57,14 @@ namespace Microsoft.Playwright.Transport
             SetRequestHeaders();
         }
 
-        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
-
         public event EventHandler<LogReceivedEventArgs> LogReceived;
 
         public event EventHandler<TransportClosedEventArgs> TransportClosed;
 
         private bool IsClosed { get; set; }
+
+        public void SetMessageHandler(Func<MessageReceivedEventArgs, Task> handleTransportMessageAsync)
+            => _messageHandlerCallback = handleTransportMessageAsync;
 
         public async Task SendAsync(string message)
         {
@@ -109,7 +111,10 @@ namespace Microsoft.Playwright.Transport
                     if (result.EndOfMessage)
                     {
                         string output = Encoding.UTF8.GetString(memoryStream.ToArray());
-                        MessageReceived?.Invoke(this, new MessageReceivedEventArgs(output));
+                        if (_messageHandlerCallback != null)
+                        {
+                            await _messageHandlerCallback(new(output)).ConfigureAwait(false);
+                        }
                         memoryStream.Dispose();
                         memoryStream = new MemoryStream();
                     }

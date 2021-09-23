@@ -43,7 +43,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
         public new ElementHandle Object { get; set; }
 
-        internal override void OnMessage(string method, JsonElement? serverParams)
+        internal override async Task OnMessageAsync(string method, JsonElement? serverParams)
         {
             switch (method)
             {
@@ -51,6 +51,8 @@ namespace Microsoft.Playwright.Transport.Channels
                     PreviewUpdated?.Invoke(this, new() { Preview = serverParams.Value.GetProperty("preview").ToString() });
                     break;
             }
+
+            await base.OnMessageAsync(method, serverParams).ConfigureAwait(false);
         }
 
         internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout, bool? strict)

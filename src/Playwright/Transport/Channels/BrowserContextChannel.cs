@@ -59,7 +59,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal event EventHandler<BrowserContextChannelResponseEventArgs> Response;
 
-        internal override void OnMessage(string method, JsonElement? serverParams)
+        internal override async Task OnMessageAsync(string method, JsonElement? serverParams)
         {
             switch (method)
             {
@@ -106,13 +106,14 @@ namespace Microsoft.Playwright.Transport.Channels
                     Response?.Invoke(this, serverParams?.ToObject<BrowserContextChannelResponseEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
             }
+            await base.OnMessageAsync(method, serverParams).ConfigureAwait(false);
         }
 
         internal Task<PageChannel> NewPageAsync()
-            => Connection.SendMessageToServerAsync<PageChannel>(
-                Guid,
-                "newPage",
-                null);
+                => Connection.SendMessageToServerAsync<PageChannel>(
+                    Guid,
+                    "newPage",
+                    null);
 
         internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close");
 

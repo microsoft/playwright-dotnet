@@ -33,11 +33,6 @@ namespace Microsoft.Playwright.Transport
     internal interface IConnectionTransport
     {
         /// <summary>
-        /// Occurs when a message is received.
-        /// </summary>
-        event EventHandler<MessageReceivedEventArgs> MessageReceived;
-
-        /// <summary>
         /// Occurs when a log message is received.
         /// </summary>
         event EventHandler<LogReceivedEventArgs> LogReceived;
@@ -59,5 +54,11 @@ namespace Microsoft.Playwright.Transport
         /// </summary>
         /// <param name="closeReason">Close reason.</param>
         void Close(string closeReason);
+
+        /// <summary>
+        /// Sets the handler for incoming messages.
+        /// </summary>
+        /// <param name="handleTransportMessageAsync">The object containing data about the received message.</param>
+        void SetMessageHandler(Func<MessageReceivedEventArgs, Task> handleTransportMessageAsync);
     }
 }

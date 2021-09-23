@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal event EventHandler Closed;
 
-        internal override void OnMessage(string method, JsonElement? serverParams)
+        internal override async Task OnMessageAsync(string method, JsonElement? serverParams)
         {
             switch (method)
             {
@@ -49,6 +49,8 @@ namespace Microsoft.Playwright.Transport.Channels
                     Closed?.Invoke(this, EventArgs.Empty);
                     break;
             }
+
+            await base.OnMessageAsync(method, serverParams).ConfigureAwait(false);
         }
 
         internal Task<BrowserContextChannel> NewContextAsync(
