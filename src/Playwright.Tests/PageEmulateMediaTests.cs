@@ -169,5 +169,20 @@ namespace Microsoft.Playwright.Tests
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('(prefers-reduced-motion: no-preference)').matches"));
             await Page.EmulateMediaAsync(new() { ReducedMotion = ReducedMotion.Null });
         }
+
+        [PlaywrightTest("page-emulate-media.spec.ts", "should emulate forcedColors")]
+        [Skip(SkipAttribute.Targets.Webkit)] // see: https://bugs.webkit.org/show_bug.cgi?id=225281
+        public async Task ShouldEmulateForcedColors()
+        {
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: none)').matches"));
+            await Page.EmulateMediaAsync(new() { ForcedColors = ForcedColors.None });
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: none)').matches"));
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: active)').matches"));
+            await Page.EmulateMediaAsync(new() { ForcedColors = ForcedColors.Active });
+            Assert.IsFalse(await Page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: none)').matches"));
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: active)').matches"));
+            await Page.EmulateMediaAsync(new() { ForcedColors = null });
+            Assert.IsTrue(await Page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: none)').matches"));
+        }
     }
 }

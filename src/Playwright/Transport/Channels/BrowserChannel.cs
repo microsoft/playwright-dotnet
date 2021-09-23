@@ -56,8 +56,8 @@ namespace Microsoft.Playwright.Transport.Channels
         internal Task<BrowserContextChannel> NewContextAsync(
             bool? acceptDownloads = null,
             bool? bypassCSP = null,
-            ColorScheme? colorScheme = null,
-            ReducedMotion? reducedMotion = null,
+            ColorScheme? colorScheme = ColorScheme.Null,
+            ReducedMotion? reducedMotion = ReducedMotion.Null,
             float? deviceScaleFactor = null,
             IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null,
             Geolocation geolocation = null,
@@ -80,7 +80,8 @@ namespace Microsoft.Playwright.Transport.Channels
             ViewportSize viewportSize = default,
             ScreenSize screenSize = default,
             string baseUrl = default,
-            bool? strictSelectors = default)
+            bool? strictSelectors = default,
+            ForcedColors? forcedColors = default)
         {
             var args = new Dictionary<string, object>
             {
@@ -107,6 +108,7 @@ namespace Microsoft.Playwright.Transport.Channels
             args.Add("permissions", permissions);
             args.Add("proxy", proxy);
             args.Add("strictSelectors", strictSelectors);
+            args.Add("forcedColors", forcedColors);
 
             if (!string.IsNullOrEmpty(recordHarPath))
             {

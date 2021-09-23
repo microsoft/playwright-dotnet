@@ -45,6 +45,8 @@ namespace Microsoft.Playwright
         Active,
         [EnumMember(Value = "none")]
         None,
+        [EnumMember(Value = "null")]
+        Null,
     }
 }
 

@@ -117,7 +117,8 @@ namespace Microsoft.Playwright.Core
                 recordVideo: Browser.GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize),
                 ignoreDefaultArgs: options.IgnoreDefaultArgs,
                 ignoreAllDefaultArgs: options.IgnoreAllDefaultArgs,
-                baseUrl: options.BaseURL).ConfigureAwait(false)).Object;
+                baseUrl: options.BaseURL,
+                forcedColors: options.ForcedColors).ConfigureAwait(false)).Object;
         }
 
         public async Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions options = null)

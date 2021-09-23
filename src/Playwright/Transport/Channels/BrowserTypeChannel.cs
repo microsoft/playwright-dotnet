@@ -116,15 +116,16 @@ namespace Microsoft.Playwright.Transport.Channels
             IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = default,
             bool? offline = default,
             HttpCredentials httpCredentials = default,
-            ColorScheme? colorScheme = default,
-            ReducedMotion? reducedMotion = default,
+            ColorScheme? colorScheme = ColorScheme.Null,
+            ReducedMotion? reducedMotion = ReducedMotion.Null,
             string recordHarPath = default,
             bool? recordHarOmitContent = default,
             Dictionary<string, object> recordVideo = default,
             IEnumerable<string> ignoreDefaultArgs = default,
             bool? ignoreAllDefaultArgs = default,
             string baseUrl = default,
-            bool? strictSelectors = default)
+            bool? strictSelectors = default,
+            ForcedColors? forcedColors = null)
         {
             var channelArgs = new Dictionary<string, object>
             {
@@ -192,6 +193,7 @@ namespace Microsoft.Playwright.Transport.Channels
             channelArgs.Add("ignoreDefaultArgs", ignoreDefaultArgs);
             channelArgs.Add("ignoreAllDefaultArgs", ignoreAllDefaultArgs);
             channelArgs.Add("baseURL", baseUrl);
+            channelArgs.Add("forcedColors", forcedColors);
 
             return Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "launchPersistentContext", channelArgs);
         }

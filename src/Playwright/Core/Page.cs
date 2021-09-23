@@ -285,9 +285,10 @@ namespace Microsoft.Playwright.Core
         {
             var args = new Dictionary<string, object>
             {
-                ["media"] = options?.Media,
-                ["colorScheme"] = options?.ColorScheme,
-                ["reducedMotion"] = options?.ReducedMotion,
+                ["media"] = options?.Media ?? Media.Null,
+                ["colorScheme"] = options?.ColorScheme ?? ColorScheme.Null,
+                ["reducedMotion"] = options?.ReducedMotion ?? ReducedMotion.Null,
+                ["forcedColors"] = options?.ForcedColors ?? ForcedColors.Null,
             };
             return _channel.EmulateMediaAsync(args);
         }

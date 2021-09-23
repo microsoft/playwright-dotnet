@@ -62,18 +62,6 @@ namespace Microsoft.Playwright
         [JsonPropertyName("colorScheme")]
         public ColorScheme? ColorScheme { get; set; }
 
-        /// <summary>
-        /// <para>
-        /// Emulates <c>'forced-colors'</c> media feature, supported values are <c>'active'</c>
-        /// and <c>'none'</c>. Passing <c>null</c> disables forced colors emulation.
-        /// </para>
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// It's not supported in WebKit, see <a href="https://bugs.webkit.org/show_bug.cgi?id=225281">here</a>
-        /// in their issue tracker.
-        /// </para>
-        /// </remarks>
         [JsonPropertyName("forcedColors")]
         public ForcedColors? ForcedColors { get; set; }
 
