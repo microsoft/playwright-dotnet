@@ -18,4 +18,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+  <Target Name="CheckWwwRootExists" BeforeTargets="Build">
+    <Error Text="wwwroot prerequisites are missing. Ensure you've ran `.\build.ps1 wwwroot` from the root of the solution." Condition="!Exists('$(MSBuildProjectDirectory)\wwwroot\background-color.html')" />
+  </Target>
 </Project>

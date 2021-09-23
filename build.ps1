@@ -18,12 +18,14 @@ function Get-Help() {
   Write-Host "                            downloads the new driver."
   Write-Host "  driver                    Downloads the driver."
   Write-Host "  help                      Prints this message."
+  Write-Host "  wwwroot                   Copies over the wwwroot."
 }
 
 function Invoke-Init() {
   Invoke-InitializeSubmodule
   if ($prereqs) { Invoke-InstallRequirements }
   Invoke-DownloadDriver
+  Invoke-WWWRoot
 }
 
 function Get-SubmoduleStatus() {
@@ -54,6 +56,12 @@ function Invoke-DownloadDriver() {
   if ($prereqs) { Invoke-InstallRequirements }
   Write-Host "🚀 Downloading drivers..." -NoNewline
   dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
+}
+
+function Invoke-WWWRoot() {
+  Write-Host "🌐 Synchronizing wwwroot folder..."
+  Remove-Item -Path .\src\Playwright.Tests.TestServer\wwwroot\ -Recurse -ErrorAction Ignore
+  Copy-Item -Path .\playwright\tests\assets -Destination .\src\Playwright.Tests.TestServer\wwwroot\ -Recurse
 }
 
 function Invoke-Roll() {
@@ -94,6 +102,7 @@ function Invoke-Roll() {
   Write-Host "🚀 Generating API..."
   node "playwright/utils/doclint/generateDotnetApi.js" "src/Playwright"
   Invoke-DownloadDriver
+  Invoke-WWWRoot
 }
 
 if ($verbs.Length -eq 0) {
@@ -106,4 +115,5 @@ switch ($verbs[0]) {
   "help" { Get-Help }
   "roll" { Invoke-Roll }
   "driver" { Invoke-DownloadDriver }
+  "wwwroot" { Invoke-WWWRoot }
 }
