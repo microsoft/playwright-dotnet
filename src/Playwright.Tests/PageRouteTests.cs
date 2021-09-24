@@ -224,7 +224,14 @@ namespace Microsoft.Playwright.Tests
             await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = Server.EmptyPage });
             await Page.RouteAsync("**/*", (route) =>
             {
-                Assert.AreEqual(Server.EmptyPage, route.Request.Headers["referer"]);
+                if (TestConstants.IsChromium)
+                {
+                    Assert.AreEqual(Server.EmptyPage + ", " + Server.EmptyPage, route.Request.Headers["referer"]);
+                }
+                else
+                {
+                    Assert.AreEqual(Server.EmptyPage, route.Request.Headers["referer"]);
+                }
                 route.ContinueAsync();
             });
             var response = await Page.GotoAsync(Server.EmptyPage);

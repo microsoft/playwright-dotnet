@@ -125,12 +125,7 @@ namespace Microsoft.Playwright
         [JsonPropertyName("deviceScaleFactor")]
         public float? DeviceScaleFactor { get; set; }
 
-        /// <summary>
-        /// <para>
-        /// An object containing additional HTTP headers to be sent with every request. All
-        /// header values must be strings.
-        /// </para>
-        /// </summary>
+        /// <summary><para>An object containing additional HTTP headers to be sent with every request.</para></summary>
         [JsonPropertyName("extraHTTPHeaders")]
         public IEnumerable<KeyValuePair<string, string>>? ExtraHTTPHeaders { get; set; }
 
@@ -166,7 +161,7 @@ namespace Microsoft.Playwright
         [JsonPropertyName("httpCredentials")]
         public HttpCredentials? HttpCredentials { get; set; }
 
-        /// <summary><para>Whether to ignore HTTPS errors during navigation. Defaults to <c>false</c>.</para></summary>
+        /// <summary><para>Whether to ignore HTTPS errors when sending network requests. Defaults to <c>false</c>.</para></summary>
         [JsonPropertyName("ignoreHTTPSErrors")]
         public bool? IgnoreHTTPSErrors { get; set; }
 
