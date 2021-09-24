@@ -73,7 +73,13 @@ namespace Microsoft.Playwright
     /// </remarks>
     public partial interface IRequest
     {
-        Task<IReadOnlyCollection<KeyValuePair<string, string>>> AllHeadersAsync();
+        /// <summary>
+        /// <para>
+        /// An object with all the request HTTP headers associated with this request. The header
+        /// names are lower-cased.
+        /// </para>
+        /// </summary>
+        Task<Dictionary<string, string>> AllHeadersAsync();
 
         /// <summary>
         /// <para>
@@ -101,7 +107,14 @@ namespace Microsoft.Playwright
         /// </summary>
         Dictionary<string, string> Headers { get; }
 
-        Task<IReadOnlyCollection<KeyValuePair<string, string>>> HeadersArrayAsync();
+        /// <summary>
+        /// <para>
+        /// An array with all the request HTTP headers associated with this request. Unlike
+        /// <see cref="IRequest.AllHeadersAsync"/>, header names are NOT lower-cased. Headers
+        /// with multiple entries, such as <c>Set-Cookie</c>, appear in the array multiple times.
+        /// </para>
+        /// </summary>
+        Task<IReadOnlyList<RequestHeadersArrayResult>> HeadersArrayAsync();
 
         /// <summary><para>Returns the value of the header matching the name. The name is case insensitive.</para></summary>
         /// <param name="name">Name of the header.</param>

@@ -40,6 +40,7 @@ namespace Microsoft.Playwright.Core
         private readonly ResponseChannel _channel;
         private readonly ResponseInitializer _initializer;
         private readonly TaskCompletionSource<string> _finishedTask;
+        private readonly RawHeaders _headers;
         private RawHeaders _rawHeaders;
 
         internal Response(IChannelOwner parent, string guid, ResponseInitializer initializer) : base(parent, guid)
@@ -49,16 +50,12 @@ namespace Microsoft.Playwright.Core
             _initializer.Request.Timing = _initializer.Timing;
             _finishedTask = new();
 
-            foreach (var kv in initializer.Headers)
-            {
-                if (!Headers.ContainsKey(kv.Name.ToLower()))
-                    Headers.Add(kv.Name.ToLower(), kv.Value);
-            }
+            _headers = new RawHeaders(_initializer.Headers.ConvertAll(x => new NameValueEntry(x.Name, x.Value)).ToArray());
         }
 
         public IFrame Frame => _initializer.Request.Frame;
 
-        public Dictionary<string, string> Headers { get; } = new();
+        public Dictionary<string, string> Headers => _headers.Headers;
 
         public bool Ok => Status is 0 or >= 200 and <= 299;
 
@@ -74,14 +71,14 @@ namespace Microsoft.Playwright.Core
 
         IChannel<Response> IChannelOwner<Response>.Channel => _channel;
 
-        public async Task<IReadOnlyCollection<KeyValuePair<string, string>>> AllHeadersAsync()
+        public async Task<Dictionary<string, string>> AllHeadersAsync()
             => (await GetRawHeadersAsync().ConfigureAwait(false)).Headers;
 
         public async Task<byte[]> BodyAsync() => Convert.FromBase64String(await _channel.GetBodyAsync().ConfigureAwait(false));
 
         public Task<string> FinishedAsync() => _finishedTask.Task;
 
-        public async Task<IReadOnlyCollection<KeyValuePair<string, string>>> HeadersArrayAsync()
+        public async Task<IReadOnlyList<ResponseHeadersArrayResult>> HeadersArrayAsync()
             => (await GetRawHeadersAsync().ConfigureAwait(false)).HeadersArray;
 
         public async Task<string> HeaderValueAsync(string name)

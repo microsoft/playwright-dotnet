@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -38,6 +39,7 @@ namespace Microsoft.Playwright.Core
     {
         private readonly RequestChannel _channel;
         private readonly RequestInitializer _initializer;
+        private readonly RawHeaders _headers;
         private RawHeaders _rawHeaders;
 
         internal Request(IChannelOwner parent, string guid, RequestInitializer initializer) : base(parent, guid)
@@ -54,11 +56,7 @@ namespace Microsoft.Playwright.Core
                 _initializer.RedirectedFrom.RedirectedTo = this;
             }
 
-            foreach (var kv in initializer.Headers)
-            {
-                if (!Headers.ContainsKey(kv.Name.ToLower()))
-                    Headers.Add(kv.Name.ToLower(), kv.Value);
-            }
+            _headers = new RawHeaders(initializer.Headers.ConvertAll(x => new NameValueEntry(x.Name, x.Value)).ToArray());
         }
 
         ChannelBase IChannelOwner.Channel => _channel;
@@ -69,7 +67,7 @@ namespace Microsoft.Playwright.Core
 
         public IFrame Frame => _initializer.Frame;
 
-        public Dictionary<string, string> Headers { get; } = new();
+        public Dictionary<string, string> Headers => _headers.Headers;
 
         public bool IsNavigationRequest => _initializer.IsNavigationRequest;
 
@@ -135,11 +133,11 @@ namespace Microsoft.Playwright.Core
             return await ((ResponseChannel)res.Channel).SizesAsync().ConfigureAwait(false);
         }
 
-        public async Task<IReadOnlyCollection<KeyValuePair<string, string>>> AllHeadersAsync()
+        public async Task<Dictionary<string, string>> AllHeadersAsync()
             => (await GetRawHeadersAsync().ConfigureAwait(false)).Headers;
 
-        public async Task<IReadOnlyCollection<KeyValuePair<string, string>>> HeadersArrayAsync()
-            => (await GetRawHeadersAsync().ConfigureAwait(false)).HeadersArray;
+        public async Task<IReadOnlyList<RequestHeadersArrayResult>> HeadersArrayAsync()
+            => (await GetRawHeadersAsync().ConfigureAwait(false)).HeadersArray.ConvertAll(x => new RequestHeadersArrayResult() { Name = x.Name, Value = x.Value });
 
         public async Task<string> HeaderValueAsync(string name)
             => (await GetRawHeadersAsync().ConfigureAwait(false)).Get(name);

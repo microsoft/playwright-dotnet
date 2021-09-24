@@ -10,7 +10,7 @@ namespace Microsoft.Playwright.Core
 
         public RawHeaders(NameValueEntry[] headers)
         {
-            HeadersArray = new(headers.Select(x => new KeyValuePair<string, string>(x.Name, x.Value)));
+            HeadersArray = new(headers.Select(x => new ResponseHeadersArrayResult() { Name = x.Name, Value = x.Value }));
             foreach (var entry in headers)
             {
                 var name = entry.Name.ToLower();
@@ -24,21 +24,9 @@ namespace Microsoft.Playwright.Core
             }
         }
 
-        public List<KeyValuePair<string, string>> HeadersArray { get; }
+        public List<ResponseHeadersArrayResult> HeadersArray { get; }
 
-        public IReadOnlyList<KeyValuePair<string, string>> Headers
-        {
-            get
-            {
-                var list = new List<KeyValuePair<string, string>>();
-                foreach (var key in _headersMap.Keys)
-                {
-                    foreach (var value in _headersMap[key])
-                        list.Add(new KeyValuePair<string, string>(key, value));
-                }
-                return list;
-            }
-        }
+        public Dictionary<string, string> Headers => _headersMap.Keys.ToDictionary(x => x, y => Get(y));
 
         public string Get(string name)
         {
