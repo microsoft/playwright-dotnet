@@ -102,7 +102,8 @@ namespace Microsoft.Playwright.Core
                viewportSize: options.ViewportSize,
                screenSize: options.ScreenSize,
                baseUrl: options.BaseURL,
-               strictSelectors: options.StrictSelectors).ConfigureAwait(false)).Object;
+               strictSelectors: options.StrictSelectors,
+               forcedColors: options.ForcedColors).ConfigureAwait(false)).Object;
 
             context.RecordVideo = !string.IsNullOrEmpty(options.RecordVideoDir);
 
@@ -135,6 +136,7 @@ namespace Microsoft.Playwright.Core
                 HttpCredentials = options.HttpCredentials,
                 ColorScheme = options.ColorScheme,
                 ReducedMotion = options.ReducedMotion,
+                ForcedColors = options.ForcedColors,
                 RecordHarPath = options.RecordHarPath,
                 RecordHarOmitContent = options.RecordHarOmitContent,
                 RecordVideoDir = options.RecordVideoDir,

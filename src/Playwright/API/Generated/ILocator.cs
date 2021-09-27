@@ -82,8 +82,12 @@ namespace Microsoft.Playwright
     /// <code>
     /// // Throws if there are several buttons in DOM:<br/>
     /// await page.Locator("button").ClickAsync();<br/>
-    /// // Works because you explicitly tell locator to pick the first element:<br/>
-    /// await page.Locator("button").First.ClickAsync();
+    /// <br/>
+    /// // Works because we explicitly tell locator to pick the first element:<br/>
+    /// await page.Locator("button").First.ClickAsync();<br/>
+    /// <br/>
+    /// // Works because Count knows what to do with multiple matches:<br/>
+    /// await page.Locator("button").CountAsync();
     /// </code>
     /// </summary>
     public partial interface ILocator

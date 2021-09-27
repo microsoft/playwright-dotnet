@@ -39,9 +39,6 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    /// <summary>
-    /// Result of calling <see cref="IBrowserContext.CookiesAsync"/>.
-    /// </summary>
     public partial class BrowserContextCookiesResult
     {
         /// <summary><para></para></summary>

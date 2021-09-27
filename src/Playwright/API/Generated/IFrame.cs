@@ -1459,7 +1459,9 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while waiting for the navigation.
+        /// while waiting for the navigation. Note that if the parameter is a string without
+        /// wilcard characters, the method will wait for navigation to URL that is exactly equal
+        /// to the string.
         /// </param>
         /// <param name="options">Call options</param>
         Task WaitForURLAsync(string url, FrameWaitForURLOptions? options = default);
@@ -1473,7 +1475,9 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while waiting for the navigation.
+        /// while waiting for the navigation. Note that if the parameter is a string without
+        /// wilcard characters, the method will wait for navigation to URL that is exactly equal
+        /// to the string.
         /// </param>
         /// <param name="options">Call options</param>
         Task WaitForURLAsync(Regex url, FrameWaitForURLOptions? options = default);
@@ -1487,7 +1491,9 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while waiting for the navigation.
+        /// while waiting for the navigation. Note that if the parameter is a string without
+        /// wilcard characters, the method will wait for navigation to URL that is exactly equal
+        /// to the string.
         /// </param>
         /// <param name="options">Call options</param>
         Task WaitForURLAsync(Func<string, bool> url, FrameWaitForURLOptions? options = default);

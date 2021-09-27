@@ -49,7 +49,7 @@ namespace Microsoft.Playwright
             Path = clone.Path;
         }
 
-        /// <summary><para>Export trace into the file with the given name.</para></summary>
+        /// <summary><para>Export trace into the file with the given path.</para></summary>
         [JsonPropertyName("path")]
         public string? Path { get; set; }
     }

@@ -39,9 +39,6 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    /// <summary>
-    /// Result of calling <see cref="IRequest.Timing"/>.
-    /// </summary>
     public partial class RequestTimingResult
     {
         /// <summary><para>Request start time in milliseconds elapsed since January 1, 1970 00:00:00 UTC</para></summary>

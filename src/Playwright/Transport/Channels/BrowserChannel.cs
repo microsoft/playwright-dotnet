@@ -56,6 +56,7 @@ namespace Microsoft.Playwright.Transport.Channels
             bool? bypassCSP = null,
             ColorScheme? colorScheme = null,
             ReducedMotion? reducedMotion = null,
+            ForcedColors? forcedColors = null,
             float? deviceScaleFactor = null,
             IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders = null,
             Geolocation geolocation = null,
@@ -105,6 +106,7 @@ namespace Microsoft.Playwright.Transport.Channels
             args.Add("permissions", permissions);
             args.Add("proxy", proxy);
             args.Add("strictSelectors", strictSelectors);
+            args.Add("forcedColors", forcedColors);
 
             if (!string.IsNullOrEmpty(recordHarPath))
             {

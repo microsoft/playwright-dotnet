@@ -39,9 +39,6 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    /// <summary>
-    /// Result of calling <see cref="ILocator.BoundingBoxAsync"/>.
-    /// </summary>
     public partial class LocatorBoundingBoxResult
     {
         /// <summary><para>the x coordinate of the element in pixels.</para></summary>

@@ -98,6 +98,17 @@ namespace Microsoft.Playwright
         /// <summary><para>Dispatches a <c>mouseup</c> event.</para></summary>
         /// <param name="options">Call options</param>
         Task UpAsync(MouseUpOptions? options = default);
+
+        /// <summary><para>Dispatches a <c>wheel</c> event.</para></summary>
+        /// <remarks>
+        /// <para>
+        /// Wheel events may cause scrolling if they are not handled, and this method does not
+        /// wait for the scrolling to finish before returning.
+        /// </para>
+        /// </remarks>
+        /// <param name="deltaX">Pixels to scroll horizontally.</param>
+        /// <param name="deltaY">Pixels to scroll vertically.</param>
+        Task WheelAsync(float deltaX, float deltaY);
     }
 }
 

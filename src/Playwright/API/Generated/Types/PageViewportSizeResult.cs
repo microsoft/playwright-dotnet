@@ -39,9 +39,6 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    /// <summary>
-    /// Result of calling <see cref="IPage.ViewportSize"/>.
-    /// </summary>
     public partial class PageViewportSizeResult
     {
         /// <summary><para>page width in pixels.</para></summary>

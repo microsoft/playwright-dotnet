@@ -80,13 +80,9 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to reconnect to a browser")]
-        public async Task ShouldBeAbleToConnectToBrowserAsync()
+        [Ignore("SKIP WIRE")]
+        public void ShouldBeAbleToConnectToBrowserAsync()
         {
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
-            var context = await browser.NewContextAsync();
-            var page = await context.NewPageAsync();
-            await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(Server.EmptyPage, page.Url);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to connect two browsers at the same time")]

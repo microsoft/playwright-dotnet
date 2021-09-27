@@ -34,8 +34,6 @@ namespace Microsoft.Playwright.Transport.Channels
         {
         }
 
-        internal override void OnMessage(string method, System.Text.Json.JsonElement? serverParams) => base.OnMessage(method, serverParams);
-
         internal async Task<string> GetBodyAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "body", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
 
@@ -46,5 +44,14 @@ namespace Microsoft.Playwright.Transport.Channels
         internal async Task<ResponseSecurityDetailsResult> SecurityDetailsAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "securityDetails", null).ConfigureAwait(false))
                 ?.GetProperty("value").ToObject<ResponseSecurityDetailsResult>(Connection.GetDefaultJsonSerializerOptions());
+
+        internal async Task<RequestSizesResult> SizesAsync() =>
+            (await Connection.SendMessageToServerAsync(Guid, "sizes", null).ConfigureAwait(false))?.GetProperty("sizes").ToObject<RequestSizesResult>();
+
+        internal async Task<NameValueEntry[]> GetRawHeadersAsync() =>
+            (await Connection.SendMessageToServerAsync(Guid, "rawResponseHeaders", null).ConfigureAwait(false))?.GetProperty("headers").ToObject<NameValueEntry[]>();
+
+        internal async Task<NameValueEntry[]> GetRawRequestHeadersAsync() =>
+          (await Connection.SendMessageToServerAsync(Guid, "rawRequestHeaders", null).ConfigureAwait(false))?.GetProperty("headers").ToObject<NameValueEntry[]>();
     }
 }

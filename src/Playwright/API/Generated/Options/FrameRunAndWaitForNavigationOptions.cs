@@ -67,7 +67,9 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while waiting for the navigation.
+        /// while waiting for the navigation. Note that if the parameter is a string without
+        /// wilcard characters, the method will wait for navigation to URL that is exactly equal
+        /// to the string.
         /// </para>
         /// </summary>
         [JsonPropertyName("urlString")]
@@ -76,7 +78,9 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while waiting for the navigation.
+        /// while waiting for the navigation. Note that if the parameter is a string without
+        /// wilcard characters, the method will wait for navigation to URL that is exactly equal
+        /// to the string.
         /// </para>
         /// </summary>
         [JsonPropertyName("urlRegex")]
@@ -85,7 +89,9 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while waiting for the navigation.
+        /// while waiting for the navigation. Note that if the parameter is a string without
+        /// wilcard characters, the method will wait for navigation to URL that is exactly equal
+        /// to the string.
         /// </para>
         /// </summary>
         [JsonPropertyName("urlFunc")]

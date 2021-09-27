@@ -66,11 +66,6 @@ namespace Microsoft.Playwright
     /// </summary>
     public partial interface IBrowserType
     {
-        /// <summary><para>This methods attaches Playwright to an existing browser instance.</para></summary>
-        /// <param name="wsEndpoint">A browser websocket endpoint to connect to.</param>
-        /// <param name="options">Call options</param>
-        Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions? options = default);
-
         /// <summary><para>A path where Playwright expects to find a bundled browser executable.</para></summary>
         string ExecutablePath { get; }
 
@@ -121,7 +116,8 @@ namespace Microsoft.Playwright
         /// local storage. More details for <a href="https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md#introduction">Chromium</a>
         /// and <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Command_Line_Options#User_Profile">Firefox</a>.
         /// Note that Chromium's user data directory is the **parent** directory of the "Profile
-        /// Path" seen at <c>chrome://version</c>.
+        /// Path" seen at <c>chrome://version</c>. Pass an empty string to use a temporary directory
+        /// instead.
         /// </param>
         /// <param name="options">Call options</param>
         Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions? options = default);

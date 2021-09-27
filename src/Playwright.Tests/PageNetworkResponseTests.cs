@@ -22,7 +22,9 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -195,5 +197,57 @@ namespace Microsoft.Playwright.Tests
         }
 
         public override BrowserNewContextOptions ContextOptions() => new() { IgnoreHTTPSErrors = true };
+
+        [PlaywrightTest("har.spec.ts", "should report multiple set-cookie headers")]
+        public async Task ShouldReportMultipleSetCookieHeaders()
+        {
+            Server.SetRoute("/headers", async ctx =>
+            {
+                ctx.Response.Headers.Append("Set-Cookie", "a=b");
+                ctx.Response.Headers.Append("Set-Cookie", "c=d");
+                await Task.CompletedTask;
+            });
+
+            await Page.GotoAsync(Server.EmptyPage);
+            var responseTask = Page.WaitForResponseAsync("**/*");
+            await Task.WhenAll(responseTask, Page.EvaluateAsync("() => fetch('/headers')"));
+
+            var response = responseTask.Result;
+            var resultedHeaders = (await response.HeadersArrayAsync()).Where(x => x.Name.ToLower() == "set-cookie");
+            var values = resultedHeaders.Select(x => x.Value).ToArray();
+            CollectionAssert.AreEqual(new string[] { "a=b", "c=d" }, values);
+
+            Assert.IsNull(await response.HeaderValueAsync("not-there"));
+            Assert.AreEqual("a=b\nc=d", await response.HeaderValueAsync("set-cookie"));
+            Assert.AreEqual(new string[] { "a=b", "c=d" }, (await response.HeaderValuesAsync("set-cookie")).ToArray());
+        }
+
+        [PlaywrightTest("page-network-response.spec.ts", "should behave the same way for headers and allHeaders")]
+        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)] // libcurl does not support non-set-cookie multivalue headers
+        public async Task ShouldBehaveTheSameWayForHeadersAndAllHeaders()
+        {
+            Server.SetRoute("/headers", async ctx =>
+            {
+                if (!TestConstants.IsChromium)
+                {
+                    ctx.Response.Headers.Append("Set-Cookie", "a=b");
+                    ctx.Response.Headers.Append("Set-Cookie", "c=d");
+                }
+                ctx.Response.Headers.Append("Name-A", "v1");
+                ctx.Response.Headers.Append("name-B", "v4");
+                ctx.Response.Headers.Append("Name-a", "v2");
+                ctx.Response.Headers.Append("name-A", "v3");
+
+                await ctx.Response.WriteAsync("\r\n");
+                await ctx.Response.CompleteAsync();
+            });
+
+            await Page.GotoAsync(Server.EmptyPage);
+            var responseTask = Page.WaitForResponseAsync("**/*");
+            await Task.WhenAll(responseTask, Page.EvaluateAsync("() => fetch('/headers')"));
+            var response = responseTask.Result;
+            var allHeaders = await response.AllHeadersAsync();
+            Assert.AreEqual(response.Headers, allHeaders);
+        }
     }
 }

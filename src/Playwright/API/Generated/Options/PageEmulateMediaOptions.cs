@@ -47,6 +47,7 @@ namespace Microsoft.Playwright
         {
             if (clone == null) return;
             ColorScheme = clone.ColorScheme;
+            ForcedColors = clone.ForcedColors;
             Media = clone.Media;
             ReducedMotion = clone.ReducedMotion;
         }
@@ -60,6 +61,9 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("colorScheme")]
         public ColorScheme? ColorScheme { get; set; }
+
+        [JsonPropertyName("forcedColors")]
+        public ForcedColors? ForcedColors { get; set; }
 
         /// <summary>
         /// <para>
