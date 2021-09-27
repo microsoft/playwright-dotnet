@@ -24,6 +24,7 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace Microsoft.Playwright.CLI
 {
@@ -31,52 +32,74 @@ namespace Microsoft.Playwright.CLI
     {
         static int Main(string[] args)
         {
-            var pathCandidate = Directory.GetCurrentDirectory();
-
-            static string getDriverDirectory(string path)
+            var path = Directory.GetCurrentDirectory();
+            if (args.Length > 1 && args[0] == "-p")
             {
-                try
+                path = Path.Combine(Directory.GetCurrentDirectory(), args[1]);
+                var isFile = File.Exists(path);
+                if (!isFile && !Directory.Exists(path))
                 {
-                    if (Directory.Exists(Path.Combine(path, ".playwright")))
-                        return path;
-
-                    foreach (var dir in Directory.GetDirectories(path))
-                    {
-                        var candidate = getDriverDirectory(dir);
-                        if (!string.IsNullOrEmpty(candidate))
-                            return candidate;
-                    }
-
-                    return null;
+                    return PrintError($"Couldn't find project using Playwright. Ensure a project or a solution exists in {path}, or provide another path using -p.");
                 }
-                catch (Exception) { return null; }
+
+                if (isFile)
+                {
+                    path = Path.Combine(path, "..");
+                }
+
+                var argsCloned = new string[args.Length - 2];
+                Array.Copy(args, 2, argsCloned, 0, args.Length - 2);
+                args = argsCloned;
             }
 
-            // we need to use the original command line to avoid getting quotes stripped by the runtime
-            // see https://github.com/microsoft/playwright-dotnet/issues/1653
-            args = Environment.GetCommandLineArgs();
-            var argumentsLine = Environment.CommandLine.Replace(args[0], string.Empty).Trim(); // replaces the original caller name
-            if (args.Length > 2 && args[1] == "-p")
+            if (File.GetAttributes(path).HasFlag(FileAttributes.Directory))
             {
-                if (Path.IsPathFullyQualified(args[2]))
+                var solutions = Directory.GetFiles(path, "*.sln");
+                var projects = Directory.GetFiles(path, "*.*proj");
+                if (solutions.Length == 0 && projects.Length == 0)
                 {
-                    pathCandidate = args[2];
+                    return PrintError($"Couldn't find project using Playwright. Ensure a project or a solution exists in {path}, or provide another path using -p.");
                 }
-                else
-                {
-                    pathCandidate = Path.Combine(Directory.GetCurrentDirectory(), Path.GetDirectoryName(args[2]));
-                }
-
-                argumentsLine = argumentsLine.Replace($"-p {args[2]}", string.Empty).Trim();
             }
 
-            var driverPath = getDriverDirectory(pathCandidate);
-            if (driverPath == null)
-                return PrintError($"Couldn't find project using Playwright. Ensure a project or a solution exists in {pathCandidate}, or provide another path using -p.");
+            var file = Traverse(new(path));
 
-            var pwHelper = new Microsoft.Playwright.Program();
-            driverPath = Helpers.Paths.GetPath(driverPath);
-            return pwHelper.Run(driverPath, string.Join(" ", argumentsLine));
+            if (string.IsNullOrEmpty(file))
+            {
+                return PrintError(@"Please make sure Playwright is installed and built prior to using Playwright tool:
+   dotnet add package Microsoft.Playwright
+   dotnet build");
+            }
+
+            var dll = Assembly.LoadFile(file);
+            foreach (Type type in dll.GetExportedTypes())
+            {
+                if (type.FullName == "Microsoft.Playwright.Program")
+                {
+                    dynamic c = Activator.CreateInstance(type);
+                    return c.Run(args);
+                }
+            }
+
+            return 0;
+        }
+
+        private static string Traverse(DirectoryInfo root)
+        {
+            foreach (var dir in root.EnumerateDirectories())
+            {
+                var candidate = Path.Combine(dir.ToString(), "Microsoft.Playwright.dll");
+                if (File.Exists(candidate))
+                {
+                    return candidate;
+                }
+                string result = Traverse(dir);
+                if (!string.IsNullOrEmpty(result))
+                {
+                    return result;
+                }
+            }
+            return null;
         }
 
         private static int PrintError(string error)

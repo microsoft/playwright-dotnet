@@ -36,7 +36,7 @@ namespace Microsoft.Playwright.Helpers
             DirectoryInfo assemblyDirectory = new(AppContext.BaseDirectory);
             if (!assemblyDirectory.Exists || !File.Exists(Path.Combine(assemblyDirectory.FullName, "Microsoft.Playwright.dll")))
             {
-                var assemblyLocation = typeof(Paths).Assembly.Location;
+                var assemblyLocation = typeof(Playwright).Assembly.Location;
                 assemblyDirectory = new FileInfo(assemblyLocation).Directory;
             }
 
@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Helpers
             throw new PlaywrightException($"Driver not found: {executableFile}");
         }
 
-        internal static string GetPath(string driversPath)
+        private static string GetPath(string driversPath)
         {
             string platformId;
             string runnerName;
