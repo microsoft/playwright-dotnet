@@ -355,6 +355,16 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["clickCount"] = clickCount,
                 });
 
+        internal Task MouseWheelAsync(float deltaX, float deltaY)
+            => Connection.SendMessageToServerAsync(
+                Guid,
+                "mouseWheel",
+                new Dictionary<string, object>
+                {
+                    ["deltaX"] = deltaX,
+                    ["deltaY"] = deltaY,
+                });
+
         internal Task TouchscreenTapAsync(float x, float y)
             => Connection.SendMessageToServerAsync(
                 Guid,

@@ -30,6 +30,36 @@ namespace Microsoft.Playwright.Tests
 {
     public class BeforeUnloadTests : PageTestEx
     {
+        [PlaywrightTest("beforeunload.spec.ts", "should close browser with beforeunload page")]
+        public async Task ShouldCloseBrowserWithBeforeUnloadPage()
+        {
+            var browser = await BrowserType.LaunchAsync();
+            var page = await browser.NewPageAsync();
+            await page.GotoAsync(Server.Prefix + "/beforeunload.html");
+            // we have to interact with the page
+            await page.ClickAsync("body");
+            await browser.CloseAsync();
+        }
+
+        [PlaywrightTest("beforeunload.spec.ts", "should access page after beforeunload")]
+        public async Task ShouldAccessPageAfterBeforeUnload()
+        {
+            await Page.GotoAsync(Server.Prefix + "/beforeunload.html");
+            // we have to interact with the page
+            await Page.ClickAsync("body");
+            var dialogT = new TaskCompletionSource<bool>();
+            Page.Dialog += async (_, dialog) =>
+            {
+                await dialog.DismissAsync();
+                dialogT.SetResult(true);
+            };
+
+            await Page.CloseAsync(new() { RunBeforeUnload = true });
+            await dialogT.Task;
+
+            await Page.EvaluateAsync("() => document.title");
+        }
+
         [PlaywrightTest("beforeunload.spec.ts", "should run beforeunload if asked for")]
         public async Task ShouldRunBeforeunloadIfAskedFor()
         {

@@ -24,6 +24,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -38,6 +40,8 @@ namespace Microsoft.Playwright.Core
         private readonly ResponseChannel _channel;
         private readonly ResponseInitializer _initializer;
         private readonly TaskCompletionSource<string> _finishedTask;
+        private readonly RawHeaders _headers;
+        private Task<RawHeaders> _rawHeadersTask;
 
         internal Response(IChannelOwner parent, string guid, ResponseInitializer initializer) : base(parent, guid)
         {
@@ -46,34 +50,12 @@ namespace Microsoft.Playwright.Core
             _initializer.Request.Timing = _initializer.Timing;
             _finishedTask = new();
 
-            Headers = new();
-            foreach (var kv in initializer.Headers)
-            {
-                var name = kv.Name.ToLower();
-
-                // There are case-sensitive dupes :/
-                if (!Headers.ContainsKey(name))
-                {
-                    Headers.Add(kv.Name.ToLower(), kv.Value);
-                }
-            }
-
-            _initializer.Request.Headers.Clear();
-            foreach (var kv in _initializer.RequestHeaders)
-            {
-                var name = kv.Name.ToLower();
-
-                // There are case-sensitive dupes :/
-                if (!_initializer.Request.Headers.ContainsKey(name))
-                {
-                    _initializer.Request.Headers.Add(kv.Name.ToLower(), kv.Value);
-                }
-            }
+            _headers = new RawHeaders(_initializer.Headers.ConvertAll(x => new NameValueEntry(x.Name, x.Value)).ToArray());
         }
 
         public IFrame Frame => _initializer.Request.Frame;
 
-        public Dictionary<string, string> Headers { get; }
+        public Dictionary<string, string> Headers => _headers.Headers;
 
         public bool Ok => Status is 0 or >= 200 and <= 299;
 
@@ -89,9 +71,21 @@ namespace Microsoft.Playwright.Core
 
         IChannel<Response> IChannelOwner<Response>.Channel => _channel;
 
+        public async Task<Dictionary<string, string>> AllHeadersAsync()
+            => (await GetRawHeadersAsync().ConfigureAwait(false)).Headers;
+
         public async Task<byte[]> BodyAsync() => Convert.FromBase64String(await _channel.GetBodyAsync().ConfigureAwait(false));
 
         public Task<string> FinishedAsync() => _finishedTask.Task;
+
+        public async Task<IReadOnlyList<Header>> HeadersArrayAsync()
+            => (await GetRawHeadersAsync().ConfigureAwait(false)).HeadersArray;
+
+        public async Task<string> HeaderValueAsync(string name)
+            => (await GetRawHeadersAsync().ConfigureAwait(false)).Get(name);
+
+        public async Task<IReadOnlyList<string>> HeaderValuesAsync(string name)
+            => (await GetRawHeadersAsync().ConfigureAwait(false)).GetAll(name);
 
         public async Task<JsonElement?> JsonAsync()
         {
@@ -112,6 +106,22 @@ namespace Microsoft.Playwright.Core
         internal void ReportFinished(string erroMessage = null)
         {
             _finishedTask.SetResult(erroMessage);
+        }
+
+        private Task<RawHeaders> GetRawHeadersAsync()
+        {
+            if (_rawHeadersTask == null)
+            {
+                _rawHeadersTask = GetRawHeadersTaskAsync();
+            }
+
+            return _rawHeadersTask;
+        }
+
+        private async Task<RawHeaders> GetRawHeadersTaskAsync()
+        {
+            var headers = await _channel.GetRawHeadersAsync().ConfigureAwait(false);
+            return new(headers);
         }
     }
 }

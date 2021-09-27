@@ -39,9 +39,6 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    /// <summary>
-    /// Result of calling <see cref="IResponse.ServerAddrAsync"/>.
-    /// </summary>
     public partial class ResponseServerAddrResult
     {
         /// <summary><para>IPv4 or IPV6 address of the server.</para></summary>

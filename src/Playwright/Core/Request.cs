@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -38,6 +39,8 @@ namespace Microsoft.Playwright.Core
     {
         private readonly RequestChannel _channel;
         private readonly RequestInitializer _initializer;
+        private readonly RawHeaders _headers;
+        private Task<RawHeaders> _rawHeadersTask;
 
         internal Request(IChannelOwner parent, string guid, RequestInitializer initializer) : base(parent, guid)
         {
@@ -53,17 +56,7 @@ namespace Microsoft.Playwright.Core
                 _initializer.RedirectedFrom.RedirectedTo = this;
             }
 
-            Headers = new();
-            foreach (var kv in initializer.Headers)
-            {
-                var name = kv.Name.ToLower();
-
-                // There are case-sensitive dupes :/
-                if (!Headers.ContainsKey(name))
-                {
-                    Headers.Add(kv.Name.ToLower(), kv.Value);
-                }
-            }
+            _headers = new RawHeaders(initializer.Headers.ConvertAll(x => new NameValueEntry(x.Name, x.Value)).ToArray());
         }
 
         ChannelBase IChannelOwner.Channel => _channel;
@@ -74,7 +67,7 @@ namespace Microsoft.Playwright.Core
 
         public IFrame Frame => _initializer.Frame;
 
-        public Dictionary<string, string> Headers { get; }
+        public Dictionary<string, string> Headers => _headers.Headers;
 
         public bool IsNavigationRequest => _initializer.IsNavigationRequest;
 
@@ -108,8 +101,7 @@ namespace Microsoft.Playwright.Core
             }
 
             string content = PostData;
-            string contentType = string.Empty;
-            Headers.TryGetValue("content-type", out contentType);
+            Headers.TryGetValue("content-type", out string contentType);
             if (contentType == "application/x-www-form-urlencoded")
             {
                 var parsed = HttpUtility.ParseQueryString(PostData);
@@ -129,6 +121,46 @@ namespace Microsoft.Playwright.Core
             }
 
             return JsonDocument.Parse(content).RootElement;
+        }
+
+        public async Task<RequestSizesResult> SizesAsync()
+        {
+            if (await ResponseAsync().ConfigureAwait(false) is not IChannelOwner<Response> res)
+            {
+                throw new PlaywrightException("Unable to fetch resources sizes.");
+            }
+
+            return await ((ResponseChannel)res.Channel).SizesAsync().ConfigureAwait(false);
+        }
+
+        public async Task<Dictionary<string, string>> AllHeadersAsync()
+            => (await GetRawHeadersAsync().ConfigureAwait(false)).Headers;
+
+        public async Task<IReadOnlyList<Header>> HeadersArrayAsync()
+            => (await GetRawHeadersAsync().ConfigureAwait(false)).HeadersArray;
+
+        public async Task<string> HeaderValueAsync(string name)
+            => (await GetRawHeadersAsync().ConfigureAwait(false)).Get(name);
+
+        private Task<RawHeaders> GetRawHeadersAsync()
+        {
+            if (_rawHeadersTask == null)
+            {
+                _rawHeadersTask = GetRawHeadersTaskAsync();
+            }
+
+            return _rawHeadersTask;
+        }
+
+        private async Task<RawHeaders> GetRawHeadersTaskAsync()
+        {
+            if (await ResponseAsync().ConfigureAwait(false) is not IChannelOwner<Response> res)
+            {
+                throw new PlaywrightException("Unable to fetch raw headers.");
+            }
+
+            var headers = await ((ResponseChannel)res.Channel).GetRawRequestHeadersAsync().ConfigureAwait(false);
+            return new(headers);
         }
     }
 }

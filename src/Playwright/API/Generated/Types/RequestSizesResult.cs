@@ -39,9 +39,6 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    /// <summary>
-    /// Result of calling <see cref="IRequest.Sizes"/>.
-    /// </summary>
     public partial class RequestSizesResult
     {
         /// <summary>
@@ -64,7 +61,7 @@ namespace Microsoft.Playwright
         [JsonPropertyName("requestHeadersSize")]
         public int RequestHeadersSize { get; set; } = default!;
 
-        /// <summary><para>Size of the received response body in bytes.</para></summary>
+        /// <summary><para>Size of the received response body (encoded) in bytes.</para></summary>
         [Required]
         [JsonPropertyName("responseBodySize")]
         public int ResponseBodySize { get; set; } = default!;
@@ -78,11 +75,6 @@ namespace Microsoft.Playwright
         [Required]
         [JsonPropertyName("responseHeadersSize")]
         public int ResponseHeadersSize { get; set; } = default!;
-
-        /// <summary><para>Total number of bytes received for the request.</para></summary>
-        [Required]
-        [JsonPropertyName("responseTransferSize")]
-        public int ResponseTransferSize { get; set; } = default!;
     }
 }
 

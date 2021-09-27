@@ -118,6 +118,7 @@ namespace Microsoft.Playwright.Transport.Channels
             HttpCredentials httpCredentials = default,
             ColorScheme? colorScheme = default,
             ReducedMotion? reducedMotion = default,
+            ForcedColors? forcedColors = default,
             string recordHarPath = default,
             bool? recordHarOmitContent = default,
             Dictionary<string, object> recordVideo = default,
@@ -192,6 +193,7 @@ namespace Microsoft.Playwright.Transport.Channels
             channelArgs.Add("ignoreDefaultArgs", ignoreDefaultArgs);
             channelArgs.Add("ignoreAllDefaultArgs", ignoreAllDefaultArgs);
             channelArgs.Add("baseURL", baseUrl);
+            channelArgs.Add("forcedColors", forcedColors);
 
             return Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "launchPersistentContext", channelArgs);
         }

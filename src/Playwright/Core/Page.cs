@@ -88,7 +88,14 @@ namespace Microsoft.Playwright.Core
             {
                 if (Dialog == null)
                 {
-                    _ = e.DismissAsync();
+                    if ("beforeunload".Equals(e.Type, StringComparison.Ordinal))
+                    {
+                        _ = e.AcceptAsync(null);
+                    }
+                    else
+                    {
+                        _ = e.DismissAsync();
+                    }
                 }
                 else
                 {
@@ -288,6 +295,7 @@ namespace Microsoft.Playwright.Core
                 ["media"] = options?.Media,
                 ["colorScheme"] = options?.ColorScheme,
                 ["reducedMotion"] = options?.ReducedMotion,
+                ["forcedColors"] = options?.ForcedColors,
             };
             return _channel.EmulateMediaAsync(args);
         }

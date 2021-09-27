@@ -39,37 +39,24 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public partial class ResponseSecurityDetailsResult
+    public class TracingStopChunkOptions
     {
-        /// <summary>
-        /// <para>
-        /// Common Name component of the Issuer field. from the certificate. This should only
-        /// be used for informational purposes. Optional.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("issuer")]
-        public string? Issuer { get; set; }
+        public TracingStopChunkOptions() { }
 
-        /// <summary><para>The specific TLS protocol used. (e.g. <c>TLS 1.3</c>). Optional.</para></summary>
-        [JsonPropertyName("protocol")]
-        public string? Protocol { get; set; }
+        public TracingStopChunkOptions(TracingStopChunkOptions clone)
+        {
+            if (clone == null) return;
+            Path = clone.Path;
+        }
 
         /// <summary>
         /// <para>
-        /// Common Name component of the Subject field from the certificate. This should only
-        /// be used for informational purposes. Optional.
+        /// Export trace collected since the last <see cref="ITracing.StartChunkAsync"/> call
+        /// into the file with the given path.
         /// </para>
         /// </summary>
-        [JsonPropertyName("subjectName")]
-        public string? SubjectName { get; set; }
-
-        /// <summary><para>Unix timestamp (in seconds) specifying when this cert becomes valid. Optional.</para></summary>
-        [JsonPropertyName("validFrom")]
-        public float? ValidFrom { get; set; }
-
-        /// <summary><para>Unix timestamp (in seconds) specifying when this cert becomes invalid. Optional.</para></summary>
-        [JsonPropertyName("validTo")]
-        public float? ValidTo { get; set; }
+        [JsonPropertyName("path")]
+        public string? Path { get; set; }
     }
 }
 

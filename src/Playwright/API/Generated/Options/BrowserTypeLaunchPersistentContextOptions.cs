@@ -59,6 +59,7 @@ namespace Microsoft.Playwright
             Env = clone.Env;
             ExecutablePath = clone.ExecutablePath;
             ExtraHTTPHeaders = clone.ExtraHTTPHeaders;
+            ForcedColors = clone.ForcedColors;
             Geolocation = clone.Geolocation;
             HandleSIGHUP = clone.HandleSIGHUP;
             HandleSIGINT = clone.HandleSIGINT;
@@ -197,14 +198,25 @@ namespace Microsoft.Playwright
         [JsonPropertyName("executablePath")]
         public string? ExecutablePath { get; set; }
 
-        /// <summary>
-        /// <para>
-        /// An object containing additional HTTP headers to be sent with every request. All
-        /// header values must be strings.
-        /// </para>
-        /// </summary>
+        /// <summary><para>An object containing additional HTTP headers to be sent with every request.</para></summary>
         [JsonPropertyName("extraHTTPHeaders")]
         public IEnumerable<KeyValuePair<string, string>>? ExtraHTTPHeaders { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Emulates <c>'forced-colors'</c> media feature, supported values are <c>'active'</c>,
+        /// <c>'none'</c>. See <see cref="IPage.EmulateMediaAsync"/> for more details. Defaults
+        /// to <c>'none'</c>.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// It's not supported in WebKit, see <a href="https://bugs.webkit.org/show_bug.cgi?id=225281">here</a>
+        /// in their issue tracker.
+        /// </para>
+        /// </remarks>
+        [JsonPropertyName("forcedColors")]
+        public ForcedColors? ForcedColors { get; set; }
 
         [JsonPropertyName("geolocation")]
         public Geolocation? Geolocation { get; set; }
@@ -263,7 +275,7 @@ namespace Microsoft.Playwright
         [JsonPropertyName("ignoreDefaultArgs")]
         public IEnumerable<string>? IgnoreDefaultArgs { get; set; }
 
-        /// <summary><para>Whether to ignore HTTPS errors during navigation. Defaults to <c>false</c>.</para></summary>
+        /// <summary><para>Whether to ignore HTTPS errors when sending network requests. Defaults to <c>false</c>.</para></summary>
         [JsonPropertyName("ignoreHTTPSErrors")]
         public bool? IgnoreHTTPSErrors { get; set; }
 

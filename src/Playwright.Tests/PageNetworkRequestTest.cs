@@ -243,7 +243,7 @@ namespace Microsoft.Playwright.Tests
             Page.Request += async (sender, r) =>
             {
                 await (await r.ResponseAsync()).FinishedAsync();
-                tsc.SetResult(r.Sizes);
+                tsc.SetResult(await r.SizesAsync());
             };
             await Page.EvaluateAsync("() => fetch('./get', { method: 'POST', body: '12345'}).then(r => r.text())");
 
@@ -260,7 +260,7 @@ namespace Microsoft.Playwright.Tests
             Page.Request += async (sender, r) =>
             {
                 await (await r.ResponseAsync()).FinishedAsync();
-                tsc.SetResult(r.Sizes);
+                tsc.SetResult(await r.SizesAsync());
             };
             await Page.EvaluateAsync("() => fetch('./get').then(r => r.text())");
 
@@ -285,14 +285,13 @@ namespace Microsoft.Playwright.Tests
             Page.Request += async (sender, r) =>
             {
                 await (await r.ResponseAsync()).FinishedAsync();
-                tsc.SetResult(r.Sizes);
+                tsc.SetResult(await r.SizesAsync());
             };
             var message = await Page.EvaluateAsync<string>("() => fetch('./get').then(r => r.arrayBuffer()).then(b => b.bufferLength)");
             var sizes = await tsc.Task;
 
             Assert.AreEqual(6, sizes.ResponseBodySize);
             Assert.GreaterOrEqual(sizes.ResponseHeadersSize, 142);
-            Assert.GreaterOrEqual(sizes.ResponseTransferSize, 160);
         }
 
         [PlaywrightTest("page-network-request.spec.ts", "should should set bodySize to 0 when there was no response body")]
@@ -301,11 +300,46 @@ namespace Microsoft.Playwright.Tests
             var response = await Page.GotoAsync(Server.EmptyPage);
             await response.FinishedAsync();
 
-            var sizes = response.Request.Sizes;
+            var sizes = await response.Request.SizesAsync();
 
             Assert.AreEqual(0, sizes.ResponseBodySize);
             Assert.GreaterOrEqual(sizes.ResponseHeadersSize, 142);
-            Assert.GreaterOrEqual(sizes.ResponseTransferSize, 160);
+        }
+
+
+        [PlaywrightTest("page-network-request.spec.ts", "should report raw headers")]
+        public async Task ShouldReportRawHeaders()
+        {
+            var expectedHeaders = new Dictionary<string, string>();
+            Server.SetRoute("/headers", async ctx =>
+            {
+                expectedHeaders.Clear();
+                foreach (var header in ctx.Request.Headers)
+                {
+                    expectedHeaders.Add(header.Key.ToLower(), header.Value);
+                }
+
+                await ctx.Response.CompleteAsync();
+            });
+
+            await Page.GotoAsync(Server.EmptyPage);
+            //Page.RunAndWaitForRequestFinishedAsync(
+            //    async () => await Page.EvaluateAsync("**/*")
+            var requestTask = Page.WaitForRequestAsync("**/*");
+            var evalTask = Page.EvaluateAsync(@"() =>
+fetch('/headers', {
+      headers: [
+        ['header-a', 'value-a'],
+        ['header-b', 'value-b'],
+        ['header-a', 'value-a-1'],
+        ['header-a', 'value-a-2'],
+      ]
+    })
+");
+            await Task.WhenAll(requestTask, evalTask);
+            var req = requestTask.Result;
+            Assert.AreEqual("value-a, value-a-1, value-a-2", await req.HeaderValueAsync("header-a"));
+            Assert.IsNull(await req.HeaderValueAsync("not-there"));
         }
     }
 }
