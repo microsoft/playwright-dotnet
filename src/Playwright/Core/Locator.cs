@@ -43,9 +43,9 @@ namespace Microsoft.Playwright.Core
             _selector = selector;
         }
 
-        public ILocator First => new Locator(_frame, $"{_selector} >> _nth=first");
+        public ILocator First => new Locator(_frame, $"{_selector} >> nth=0");
 
-        public ILocator Last => new Locator(_frame, $"{_selector} >> _nth=last");
+        public ILocator Last => new Locator(_frame, $"{_selector} >> nth=-1");
 
         public async Task<IReadOnlyList<string>> AllInnerTextsAsync()
         {
@@ -121,6 +121,9 @@ namespace Microsoft.Playwright.Core
         public Task<T> EvaluateAllAsync<T>(string expression, object arg = null)
             => _frame.EvalOnSelectorAllAsync<T>(_selector, expression, arg);
 
+        public Task<JsonElement?> EvaluateAsync(string expression, object arg = null, LocatorEvaluateOptions options = null)
+            => EvaluateAsync<JsonElement?>(expression, arg, options);
+
         public Task<T> EvaluateAsync<T>(string expression, object arg = null, LocatorEvaluateOptions options = null)
             => _frame.EvalOnSelectorAsync<T>(_selector, expression, arg, ConvertOptions<FrameEvalOnSelectorOptions>(options));
 
@@ -167,7 +170,7 @@ namespace Microsoft.Playwright.Core
             => _frame.IsVisibleAsync(_selector, ConvertOptions<FrameIsVisibleOptions>(options));
 
         public ILocator Nth(int index)
-            => new Locator(_frame, $"{_selector} >> _nth=${index}");
+            => new Locator(_frame, $"{_selector} >> nth={index}");
 
         public Task PressAsync(string key, LocatorPressOptions options = null)
             => _frame.PressAsync(_selector, key, ConvertOptions<FramePressOptions>(options));
