@@ -21,7 +21,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyVersion>1.1.0</AssemblyVersion>
-    <PackageVersion>$(AssemblyVersion)-next-1</PackageVersion>
+    <PackageVersion>$(AssemblyVersion)</PackageVersion>
     <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <NoDefaultExcludes>true</NoDefaultExcludes>
