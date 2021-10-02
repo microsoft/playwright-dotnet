@@ -39,11 +39,6 @@ namespace Microsoft.Playwright
 
         public int Run(string[] args)
         {
-            // we need to use the original command line to avoid getting quotes stripped by the runtime
-            // see https://github.com/microsoft/playwright-dotnet/issues/1653
-            args = Environment.GetCommandLineArgs();
-            var lineArguments = Environment.CommandLine.Replace(args[0], string.Empty);
-
             string pwPath = null;
             try
             {
@@ -54,7 +49,7 @@ namespace Microsoft.Playwright
                 return PrintError("Microsoft.Playwright assembly was found, but is missing required assets. Please ensure to build your project before running Playwright tool.");
             }
 
-            var playwrightStartInfo = new ProcessStartInfo(pwPath, lineArguments)
+            var playwrightStartInfo = new ProcessStartInfo(pwPath, string.Join(" ", args))
             {
                 UseShellExecute = false,
                 CreateNoWindow = true,
