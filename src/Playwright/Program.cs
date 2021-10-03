@@ -49,7 +49,8 @@ namespace Microsoft.Playwright
                 return PrintError("Microsoft.Playwright assembly was found, but is missing required assets. Please ensure to build your project before running Playwright tool.");
             }
 
-            var playwrightStartInfo = new ProcessStartInfo(pwPath, string.Join(" ", args))
+            string allArgs = args != null && args.Length > 0 ? "\"" + string.Join("\" \"", args) + "\"" : string.Empty;
+            var playwrightStartInfo = new ProcessStartInfo(pwPath, allArgs)
             {
                 UseShellExecute = false,
                 CreateNoWindow = true,
