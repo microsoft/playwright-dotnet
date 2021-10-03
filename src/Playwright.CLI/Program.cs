@@ -52,6 +52,8 @@ namespace Microsoft.Playwright.CLI
                 args = argsCloned;
             }
 
+            // Locating project is important, otherwise we are at risk
+            // of traversing entire fs from root.
             if (File.GetAttributes(path).HasFlag(FileAttributes.Directory))
             {
                 var solutions = Directory.GetFiles(path, "*.sln");
@@ -71,15 +73,12 @@ namespace Microsoft.Playwright.CLI
    dotnet build");
             }
 
+            // Only Microsoft.Playwright.Program::Run knows how to run the driver.
+            // Each version of Microsoft.Playwright has its own way and we must
+            // delegate to it.
             var dll = Assembly.LoadFile(file);
-            foreach (Type type in dll.GetExportedTypes())
-            {
-                if (type.FullName == "Microsoft.Playwright.Program")
-                {
-                    dynamic c = Activator.CreateInstance(type);
-                    return c.Run(args);
-                }
-            }
+            dynamic c = dll.CreateInstance("Microsoft.Playwright.Program");
+            c.Run(args);
 
             return 0;
         }
