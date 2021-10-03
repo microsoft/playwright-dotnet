@@ -23,8 +23,11 @@
  */
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Microsoft.Playwright.CLI
 {
@@ -62,25 +65,26 @@ namespace Microsoft.Playwright.CLI
                 }
             }
 
-            var file = Traverse(new(path));
+            var driversPath = Traverse(new(path));
 
-            if (string.IsNullOrEmpty(file))
+            if (string.IsNullOrEmpty(driversPath))
             {
                 return PrintError(@"Please make sure Playwright is installed and built prior to using Playwright tool:
    dotnet add package Microsoft.Playwright
    dotnet build");
             }
 
-            var dll = Assembly.LoadFile(file);
-            foreach (Type type in dll.GetExportedTypes())
+            var pwPath = GetPath(driversPath);
+            string allArgs = args != null && args.Length > 0 ? "\"" + string.Join("\" \"", args) + "\"" : string.Empty;
+            using var pwProcess = new Process()
             {
-                if (type.FullName == "Microsoft.Playwright.Program")
+                StartInfo = new(pwPath, allArgs)
                 {
-                    dynamic c = Activator.CreateInstance(type);
-                    return c.Run(args);
-                }
-            }
-
+                    CreateNoWindow = true,
+                },
+            };
+            pwProcess.Start();
+            pwProcess.WaitForExit();
             return 0;
         }
 
@@ -88,8 +92,8 @@ namespace Microsoft.Playwright.CLI
         {
             foreach (var dir in root.EnumerateDirectories())
             {
-                var candidate = Path.Combine(dir.ToString(), "Microsoft.Playwright.dll");
-                if (File.Exists(candidate))
+                var candidate = Path.Combine(dir.ToString(), ".playwright");
+                if (Directory.Exists(candidate))
                 {
                     return candidate;
                 }
@@ -106,6 +110,33 @@ namespace Microsoft.Playwright.CLI
         {
             Console.Error.WriteLine("\x1b[91m" + error + "\x1b[0m");
             return 1;
+        }
+
+        private static string GetPath(string driversPath)
+        {
+            string platformId;
+            string runnerName;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                platformId = RuntimeInformation.OSArchitecture == Architecture.X64 ? "win32_x64" : "win";
+                runnerName = "playwright.cmd";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                runnerName = "playwright.sh";
+                platformId = "mac";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                runnerName = "playwright.sh";
+                platformId = "linux";
+            }
+            else
+            {
+                throw new Exception("Unknown platform");
+            }
+
+            return Path.Combine(driversPath, "node", platformId, runnerName);
         }
     }
 }
