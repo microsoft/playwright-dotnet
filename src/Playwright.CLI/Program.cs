@@ -26,8 +26,8 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Threading;
+using Microsoft.Playwright.Driver;
 
 namespace Microsoft.Playwright.CLI
 {
@@ -55,6 +55,7 @@ namespace Microsoft.Playwright.CLI
                 args = argsCloned;
             }
 
+            // Check for project or solution to ensure we are not traversing entire C:\.
             if (File.GetAttributes(path).HasFlag(FileAttributes.Directory))
             {
                 var solutions = Directory.GetFiles(path, "*.sln");
@@ -65,30 +66,29 @@ namespace Microsoft.Playwright.CLI
                 }
             }
 
-            var driversPath = Traverse(new(path));
+            // Safe to traverse.
+            var dotPlaywright = FindDotPlaywright(new(path));
 
-            if (string.IsNullOrEmpty(driversPath))
+            if (string.IsNullOrEmpty(dotPlaywright))
             {
                 return PrintError(@"Please make sure Playwright is installed and built prior to using Playwright tool:
    dotnet add package Microsoft.Playwright
    dotnet build");
             }
 
-            var pwPath = GetPath(driversPath);
-            string allArgs = args != null && args.Length > 0 ? "\"" + string.Join("\" \"", args) + "\"" : string.Empty;
-            using var pwProcess = new Process()
+            try
             {
-                StartInfo = new(pwPath, allArgs)
-                {
-                    CreateNoWindow = true,
-                },
-            };
-            pwProcess.Start();
-            pwProcess.WaitForExit();
+                string driverPath = DriverPaths.GetExecutablePathGivenDotPlaywright(dotPlaywright);
+                DriverRunner.Run(driverPath, args);
+            }
+            catch
+            {
+                return PrintError("Microsoft.Playwright assembly was found, but is missing required assets. Please ensure to build your project before running Playwright tool.");
+            }
             return 0;
         }
 
-        private static string Traverse(DirectoryInfo root)
+        private static string FindDotPlaywright(DirectoryInfo root)
         {
             foreach (var dir in root.EnumerateDirectories())
             {
@@ -97,7 +97,7 @@ namespace Microsoft.Playwright.CLI
                 {
                     return candidate;
                 }
-                string result = Traverse(dir);
+                string result = FindDotPlaywright(dir);
                 if (!string.IsNullOrEmpty(result))
                 {
                     return result;
@@ -110,33 +110,6 @@ namespace Microsoft.Playwright.CLI
         {
             Console.Error.WriteLine("\x1b[91m" + error + "\x1b[0m");
             return 1;
-        }
-
-        private static string GetPath(string driversPath)
-        {
-            string platformId;
-            string runnerName;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                platformId = RuntimeInformation.OSArchitecture == Architecture.X64 ? "win32_x64" : "win";
-                runnerName = "playwright.cmd";
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                runnerName = "playwright.sh";
-                platformId = "mac";
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                runnerName = "playwright.sh";
-                platformId = "linux";
-            }
-            else
-            {
-                throw new Exception("Unknown platform");
-            }
-
-            return Path.Combine(driversPath, "node", platformId, runnerName);
         }
     }
 }

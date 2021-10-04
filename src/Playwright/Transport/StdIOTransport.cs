@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Driver;
 using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport
@@ -124,7 +125,7 @@ namespace Microsoft.Playwright.Transport
             {
                 StartInfo =
                 {
-                    FileName = Paths.GetExecutablePath(),
+                    FileName = DriverPaths.GetExecutablePathGivenThisAssembly(),
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardInput = true,

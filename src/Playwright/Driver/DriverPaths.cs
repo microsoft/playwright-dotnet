@@ -27,36 +27,41 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Microsoft.Playwright.Helpers
+namespace Microsoft.Playwright.Driver
 {
-    internal static class Paths
+    internal static class DriverPaths
     {
-        internal static string GetExecutablePath()
+        internal static string GetExecutablePathGivenThisAssembly()
         {
             DirectoryInfo assemblyDirectory = new(AppContext.BaseDirectory);
             if (!assemblyDirectory.Exists || !File.Exists(Path.Combine(assemblyDirectory.FullName, "Microsoft.Playwright.dll")))
             {
-                var assemblyLocation = typeof(Playwright).Assembly.Location;
+                var assemblyLocation = typeof(DriverPaths).Assembly.Location;
                 assemblyDirectory = new FileInfo(assemblyLocation).Directory;
             }
 
-            string executableFile = GetPath(assemblyDirectory.FullName);
+            string executableFile = GetExecutablePathGivenAssemblyDirectory(assemblyDirectory.FullName);
             if (File.Exists(executableFile))
             {
                 return executableFile;
             }
 
             // if the above fails, we can assume we're in the nuget registry
-            executableFile = GetPath(assemblyDirectory.Parent.Parent.FullName);
+            executableFile = GetExecutablePathGivenAssemblyDirectory(assemblyDirectory.Parent.Parent.FullName);
             if (File.Exists(executableFile))
             {
                 return executableFile;
             }
 
-            throw new PlaywrightException($"Driver not found: {executableFile}");
+            throw new Exception($"Driver not found: {executableFile}");
         }
 
-        private static string GetPath(string driversPath)
+        internal static string GetExecutablePathGivenAssemblyDirectory(string assemblyDirectory)
+        {
+            return GetExecutablePathGivenDotPlaywright(Path.Combine(assemblyDirectory, ".playwright"));
+        }
+
+        internal static string GetExecutablePathGivenDotPlaywright(string dotPlaywight)
         {
             string platformId;
             string runnerName;
@@ -77,10 +82,10 @@ namespace Microsoft.Playwright.Helpers
             }
             else
             {
-                throw new PlaywrightException("Unknown platform");
+                throw new Exception("Unknown platform");
             }
 
-            return Path.Combine(driversPath, ".playwright", "node", platformId, runnerName);
+            return Path.Combine(dotPlaywight, "node", platformId, runnerName);
         }
     }
 }

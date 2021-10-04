@@ -29,4 +29,10 @@
         <ProjectReference Include="..\Playwright.Tests.TestServer\Playwright.Tests.TestServer.csproj" />
         <ProjectReference Include="..\Playwright.NUnit\Playwright.NUnit.csproj" />
     </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\Playwright\Driver\DriverPaths.cs" Link="Links\DriverPaths.cs" />
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Links\" />
+    </ItemGroup>
 </Project>

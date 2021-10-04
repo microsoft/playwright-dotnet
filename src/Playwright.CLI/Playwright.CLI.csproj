@@ -20,7 +20,7 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyVersion>1.2.0</AssemblyVersion>
+    <AssemblyVersion>1.2.1</AssemblyVersion>
     <PackageVersion>$(AssemblyVersion)-next-1</PackageVersion>
     <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
@@ -37,6 +37,10 @@
   </PropertyGroup>
   <Import Project="../Common/SignAssembly.props" />
   <ItemGroup>
+    <Compile Include="..\Playwright\Driver\DriverPaths.cs" Link="Links\DriverPaths.cs" />
+    <Compile Include="..\Playwright\Driver\DriverRunner.cs" Link="Links\DriverRunner.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -45,5 +49,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Links\" />
   </ItemGroup>
 </Project>

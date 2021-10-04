@@ -25,84 +25,24 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
-using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Driver;
 
 namespace Microsoft.Playwright
 {
-    public class Program
+    public static class Program
     {
         public static int Main(string[] args)
         {
-            var p = new Program();
-            return p.Run(args);
-        }
-
-        public int Run(string[] args)
-        {
-            string pwPath = null;
             try
             {
-                pwPath = Paths.GetExecutablePath();
+                string driverPath = DriverPaths.GetExecutablePathGivenThisAssembly();
+                DriverRunner.Run(driverPath, args);
+                return 0;
             }
             catch
             {
                 return PrintError("Microsoft.Playwright assembly was found, but is missing required assets. Please ensure to build your project before running Playwright tool.");
             }
-
-            string allArgs = args != null && args.Length > 0 ? "\"" + string.Join("\" \"", args) + "\"" : string.Empty;
-            var playwrightStartInfo = new ProcessStartInfo(pwPath, allArgs)
-            {
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                RedirectStandardError = true,
-                RedirectStandardInput = true,
-                RedirectStandardOutput = true,
-            };
-
-            using var pwProcess = new Process()
-            {
-                StartInfo = playwrightStartInfo,
-            };
-
-            playwrightStartInfo.EnvironmentVariables.Add("PW_CLI_TARGET_LANG", "csharp");
-            playwrightStartInfo.EnvironmentVariables.Add("PW_CLI_NAME ", "playwright");
-
-            using var outputWaitHandle = new AutoResetEvent(false);
-            using var errorWaitHandle = new AutoResetEvent(false);
-
-            pwProcess.OutputDataReceived += (_, e) =>
-            {
-                if (e.Data == null)
-                {
-                    outputWaitHandle.Set();
-                }
-                else
-                {
-                    Console.WriteLine(e.Data);
-                }
-            };
-
-            pwProcess.ErrorDataReceived += (_, e) =>
-            {
-                if (e.Data == null)
-                {
-                    errorWaitHandle.Set();
-                }
-                else
-                {
-                    Console.Error.WriteLine(e.Data);
-                }
-            };
-
-            pwProcess.Start();
-
-            pwProcess.BeginOutputReadLine();
-            pwProcess.BeginErrorReadLine();
-
-            pwProcess.WaitForExit();
-            outputWaitHandle.WaitOne(5000);
-            errorWaitHandle.WaitOne(5000);
-            return 0;
         }
 
         private static int PrintError(string error)
