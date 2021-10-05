@@ -154,12 +154,7 @@ namespace Microsoft.Playwright.Core
 
         private async Task<RawHeaders> GetRawHeadersTaskAsync()
         {
-            if (await ResponseAsync().ConfigureAwait(false) is not IChannelOwner<Response> res)
-            {
-                throw new PlaywrightException("Unable to fetch raw headers.");
-            }
-
-            var headers = await ((ResponseChannel)res.Channel).GetRawRequestHeadersAsync().ConfigureAwait(false);
+            var headers = await _channel.GetRawRequestHeadersAsync().ConfigureAwait(false);
             return new(headers);
         }
     }
