@@ -217,5 +217,26 @@ namespace Microsoft.Playwright.Tests.Locator
             Assert.AreEqual(50, box.Width);
             Assert.AreEqual(50, box.Height);
         }
+
+        [PlaywrightTest("locator-misc-2.spec.ts", "should waitFor")]
+        public async Task ShouldWaitFor()
+        {
+            await Page.SetContentAsync("<div></div>");
+            var locator = Page.Locator("span");
+            var task = locator.WaitForAsync();
+            await Page.EvalOnSelectorAsync("div", "div => div.innerHTML = '<span>target</span>'");
+            await task;
+            Assert.AreEqual("target", await locator.TextContentAsync());
+        }
+
+        [PlaywrightTest("locator-misc-2.spec.ts", "should waitFor hidden")]
+        public async Task ShouldWaitForHidden()
+        {
+            await Page.SetContentAsync("<div><span></span></div>");
+            var locator = Page.Locator("span");
+            var task = locator.WaitForAsync(new() { State = WaitForSelectorState.Hidden });
+            await Page.EvalOnSelectorAsync("div", "div => div.innerHTML = ''");
+            await task;
+        }
     }
 }

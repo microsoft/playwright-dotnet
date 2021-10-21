@@ -156,7 +156,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.Prefix + "/input/select.html");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.SelectOptionAsync("body", string.Empty));
-            StringAssert.Contains("Element is not a <select> element.", exception.Message);
+            StringAssert.Contains("Element is not a <select> element", exception.Message);
         }
 
         [PlaywrightTest("page-select-option.spec.ts", "should return [] on no matched values")]

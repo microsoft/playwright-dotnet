@@ -76,12 +76,12 @@ namespace Microsoft.Playwright.Tests.Locator
             Assert.AreEqual("input value", await locator.InputValueAsync());
 
             var e = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.InputValueAsync("#inner"));
-            StringAssert.Contains("Node is not an HTMLInputElement or HTMLTextAreaElement or HTMLSelectElement", e.Message);
+            StringAssert.Contains("Node is not an <input>, <textarea> or <select> element", e.Message);
 
             var locator2 = Page.Locator("#inner");
             e = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await locator2.InputValueAsync());
 
-            StringAssert.Contains("Node is not an HTMLInputElement or HTMLTextAreaElement or HTMLSelectElement", e.Message);
+            StringAssert.Contains("Node is not an <input>, <textarea> or <select> element", e.Message);
         }
 
         [PlaywrightTest("locator-convenience.spec.ts", "innerHTML should work")]
@@ -108,11 +108,11 @@ namespace Microsoft.Playwright.Tests.Locator
         {
             await Page.SetContentAsync("<svg>text</svg>");
             var e = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.InnerTextAsync("svg"));
-            StringAssert.Contains("Not an HTMLElement", e.Message);
+            StringAssert.Contains("Node is not an HTMLElement", e.Message);
 
             var locator = Page.Locator("svg");
             e = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await locator.InnerTextAsync());
-            StringAssert.Contains("Not an HTMLElement", e.Message);
+            StringAssert.Contains("Node is not an HTMLElement", e.Message);
         }
 
 

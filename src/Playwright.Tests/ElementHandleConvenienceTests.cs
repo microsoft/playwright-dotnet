@@ -81,11 +81,11 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<svg>text</svg>");
             var exception1 = Assert.ThrowsAsync<PlaywrightException>(async () => await Page.InnerTextAsync("svg"));
-            StringAssert.Contains("Not an HTMLElement", exception1.Message);
+            StringAssert.Contains("Node is not an HTMLElement", exception1.Message);
 
             var handle = await Page.QuerySelectorAsync("svg");
             var exception2 = Assert.ThrowsAsync<PlaywrightException>(async () => await handle.InnerTextAsync());
-            StringAssert.Contains("Not an HTMLElement", exception2.Message);
+            StringAssert.Contains("Node is not an HTMLElement", exception2.Message);
         }
 
         [PlaywrightTest("elementhandle-convenience.spec.ts", "textContent should work")]

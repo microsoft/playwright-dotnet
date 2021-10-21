@@ -87,7 +87,7 @@ namespace Microsoft.Playwright
         ///     {<br/>
         ///         using var playwright = await Playwright.CreateAsync();<br/>
         ///         await using var browser = await playwright.Webkit.LaunchAsync();<br/>
-        ///         await using var context = await browser.NewContextAsync(Playwright.Devices["iPhone 6"]);<br/>
+        ///         await using var context = await browser.NewContextAsync(playwright.Devices["iPhone 6"]);<br/>
         /// <br/>
         ///         var page = await context.NewPageAsync();<br/>
         ///         await page.GotoAsync("https://www.theverge.com");<br/>
