@@ -561,7 +561,7 @@ namespace Microsoft.Playwright.Core
                 Strict = options?.Strict,
             });
 
-        public Task WaitForTimeoutAsync(float timeout) => Task.Delay(Convert.ToInt32(timeout));
+        public Task WaitForTimeoutAsync(float timeout) => MainFrame.WaitForTimeoutAsync(timeout);
 
         public Task<IElementHandle> WaitForSelectorAsync(string selector, PageWaitForSelectorOptions options = default)
             => MainFrame.WaitForSelectorAsync(selector, new()

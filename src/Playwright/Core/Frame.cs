@@ -115,7 +115,8 @@ namespace Microsoft.Playwright.Core
 
         public Task<string> TitleAsync() => _channel.TitleAsync();
 
-        public Task WaitForTimeoutAsync(float timeout) => Task.Delay(Convert.ToInt32(timeout));
+        public Task WaitForTimeoutAsync(float timeout)
+            => _channel.WaitForTimeoutAsync(timeout);
 
         public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, string values, FrameSelectOptionOptions options = default)
             => SelectOptionAsync(selector, new[] { values }, options);
@@ -443,7 +444,16 @@ namespace Microsoft.Playwright.Core
                 selector: selector,
                 state: options?.State,
                 timeout: options?.Timeout,
-                strict: options?.Strict).ConfigureAwait(false))?.Object;
+                strict: options?.Strict,
+                omitReturnValue: false).ConfigureAwait(false))?.Object;
+
+        public async Task<IElementHandle> LocatorWaitForAsync(string selector, LocatorWaitForOptions options = default)
+            => (await _channel.WaitForSelectorAsync(
+                selector: selector,
+                state: options?.State,
+                timeout: options?.Timeout,
+                strict: true,
+                omitReturnValue: true).ConfigureAwait(false))?.Object;
 
         public async Task<IJSHandle> EvaluateHandleAsync(string script, object args = null)
             => (await _channel.EvaluateExpressionHandleAsync(

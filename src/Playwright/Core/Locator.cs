@@ -229,6 +229,9 @@ namespace Microsoft.Playwright.Core
         ILocator ILocator.Locator(string selector)
             => new Locator(_frame, $"{_selector} >> {selector}");
 
+        public Task WaitForAsync(LocatorWaitForOptions options = null)
+            => _frame.LocatorWaitForAsync(_selector, ConvertOptions<LocatorWaitForOptions>(options));
+
         public override string ToString() => "Locator@" + _selector;
 
         private T ConvertOptions<T>(object incoming, Action<T> configure = null)

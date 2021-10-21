@@ -982,6 +982,24 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="options">Call options</param>
         Task UncheckAsync(LocatorUncheckOptions? options = default);
+
+        /// <summary>
+        /// <para>
+        /// Returns when element specified by locator satisfies the <paramref name="state"/>
+        /// option.
+        /// </para>
+        /// <para>
+        /// If target element already satisfies the condition, the method returns immediately.
+        /// Otherwise, waits for up to <paramref name="timeout"/> milliseconds until the condition
+        /// is met.
+        /// </para>
+        /// <code>
+        /// var orderSent = page.Locator("#order-sent");<br/>
+        /// orderSent.WaitForAsync();
+        /// </code>
+        /// </summary>
+        /// <param name="options">Call options</param>
+        Task WaitForAsync(LocatorWaitForOptions? options = default);
     }
 }
 

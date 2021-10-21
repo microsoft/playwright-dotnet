@@ -39,35 +39,46 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public partial class Proxy
+    public class LocatorWaitForOptions
     {
-        /// <summary>
-        /// <para>
-        /// Proxy to be used for all requests. HTTP and SOCKS proxies are supported, for example
-        /// <c>http://myproxy.com:3128</c> or <c>socks5://myproxy.com:3128</c>. Short form <c>myproxy.com:3128</c>
-        /// is considered an HTTP proxy.
-        /// </para>
-        /// </summary>
-        [Required]
-        [JsonPropertyName("server")]
-        public string Server { get; set; } = default!;
+        public LocatorWaitForOptions() { }
+
+        public LocatorWaitForOptions(LocatorWaitForOptions clone)
+        {
+            if (clone == null) return;
+            State = clone.State;
+            Timeout = clone.Timeout;
+        }
 
         /// <summary>
+        /// <para>Defaults to <c>'visible'</c>. Can be either:</para>
+        /// <list type="bullet">
+        /// <item><description><c>'attached'</c> - wait for element to be present in DOM.</description></item>
+        /// <item><description><c>'detached'</c> - wait for element to not be present in DOM.</description></item>
+        /// <item><description>
+        /// <c>'visible'</c> - wait for element to have non-empty bounding box and no <c>visibility:hidden</c>.
+        /// Note that element without any content or with <c>display:none</c> has an empty bounding
+        /// box and is not considered visible.
+        /// </description></item>
+        /// <item><description>
+        /// <c>'hidden'</c> - wait for element to be either detached from DOM, or have an empty
+        /// bounding box or <c>visibility:hidden</c>. This is opposite to the <c>'visible'</c>
+        /// option.
+        /// </description></item>
+        /// </list>
+        /// </summary>
+        [JsonPropertyName("state")]
+        public WaitForSelectorState? State { get; set; }
+
+        /// <summary>
         /// <para>
-        /// Optional comma-separated domains to bypass proxy, for example <c>".com, chromium.org,
-        /// .domain.com"</c>.
+        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
         /// </para>
         /// </summary>
-        [JsonPropertyName("bypass")]
-        public string? Bypass { get; set; }
-
-        /// <summary><para>Optional username to use if HTTP proxy requires authentication.</para></summary>
-        [JsonPropertyName("username")]
-        public string? Username { get; set; }
-
-        /// <summary><para>Optional password to use if HTTP proxy requires authentication.</para></summary>
-        [JsonPropertyName("password")]
-        public string? Password { get; set; }
+        [JsonPropertyName("timeout")]
+        public float? Timeout { get; set; }
     }
 }
 

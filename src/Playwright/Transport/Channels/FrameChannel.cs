@@ -162,7 +162,7 @@ namespace Microsoft.Playwright.Transport.Channels
         internal async Task<string> TitleAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "title", null).ConfigureAwait(false))?.GetProperty("value").ToString();
 
-        internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout, bool? strict)
+        internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout, bool? strict, bool? omitReturnValue)
         {
             var args = new Dictionary<string, object>
             {
@@ -170,10 +170,23 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["timeout"] = timeout,
                 ["state"] = state,
                 ["strict"] = strict,
+                ["omitReturnValue"] = omitReturnValue,
             };
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(
                 Guid,
                 "waitForSelector",
+                args);
+        }
+
+        internal Task WaitForTimeoutAsync(float timeout)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["timeout"] = timeout,
+            };
+            return Connection.SendMessageToServerAsync<ElementHandleChannel>(
+                Guid,
+                "waitForTimeout",
                 args);
         }
 
