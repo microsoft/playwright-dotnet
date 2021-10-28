@@ -62,7 +62,7 @@ namespace Microsoft.Playwright.Helpers
             string runnerName;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                platformId = RuntimeInformation.OSArchitecture == Architecture.X64 ? "win32_x64" : "win";
+                platformId = "win32_x64";
                 runnerName = "playwright.cmd";
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
