@@ -1,8 +1,8 @@
 <Project>
   <PropertyGroup>
-    <AssemblyVersion>1.16.0</AssemblyVersion>
+    <AssemblyVersion>1.16.2</AssemblyVersion>
     <PackageVersion>$(AssemblyVersion)</PackageVersion>
-    <DriverVersion>1.16.0-1634781227000</DriverVersion>
+    <DriverVersion>1.16.2-1635322350000</DriverVersion>
     <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <NoDefaultExcludes>true</NoDefaultExcludes>
