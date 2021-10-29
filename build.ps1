@@ -94,7 +94,7 @@ function Invoke-Roll() {
     $version.Project.PropertyGroup.DriverVersion = $package.version + "-" + $rev
     $version.Project.PropertyGroup.AssemblyVersion = $package.version.Split("-")[0]
     "Updating to " + $package.version + "-" + $rev
-    $version.Save("$pwd\src\Common\Version.props")
+    $version.Save([IO.Path]::Combine($pwd, 'src', 'Common', 'Version.props'))
   } else {
     Invoke-InitializeSubmodule
   }
