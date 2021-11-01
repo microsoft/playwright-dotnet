@@ -79,6 +79,7 @@ namespace Microsoft.Playwright.Transport
                 _readerCancellationSource?.Cancel();
                 try
                 {
+                    _process?.Dispose();
                     _process?.Kill();
                 }
                 catch
