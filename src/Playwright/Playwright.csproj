@@ -43,7 +43,6 @@
       <DriverNodeLicense Include=".drivers\linux\LICENSE" />
       <DriverNodeLinux Include=".drivers\linux\node" />
       <DriverNodeMac Include=".drivers\mac\node" />
-      <DriverNodeWin32 Include=".drivers\win32\node.exe" />
       <DriverNodeWin32_x64 Include=".drivers\win32_x64\node.exe" />
       <DriverShell Include="Scripts\playwright.sh" />
       <DriverCmd Include="Scripts\playwright.cmd" />
@@ -52,11 +51,9 @@
     <Copy SourceFiles="@(DriverNodeLicense)" DestinationFiles="@(DriverNodeLicense->'.playwright\node\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(DriverNodeLinux)" DestinationFiles="@(DriverNodeLinux->'.playwright\node\linux\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(DriverNodeMac)" DestinationFiles="@(DriverNodeMac->'.playwright\node\mac\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverNodeWin32)" DestinationFiles="@(DriverNodeWin32->'.playwright\node\win32\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(DriverNodeWin32_x64)" DestinationFiles="@(DriverNodeWin32_x64->'.playwright\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(DriverShell)" DestinationFiles="@(DriverShell->'.playwright\node\linux\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(DriverShell)" DestinationFiles="@(DriverShell->'.playwright\node\mac\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverCmd)" DestinationFiles="@(DriverCmd->'.playwright\node\win32\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(DriverCmd)" DestinationFiles="@(DriverCmd->'.playwright\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
   <ItemGroup>

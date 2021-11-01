@@ -45,7 +45,6 @@ namespace Playwright.Tooling
             "mac",
             "linux",
             "win32_x64",
-            "win32",
         };
 
         public string BasePath { get; set; }
