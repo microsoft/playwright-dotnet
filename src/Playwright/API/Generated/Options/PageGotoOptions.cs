@@ -86,6 +86,10 @@ namespace Microsoft.Playwright
         /// <c>'networkidle'</c> - consider operation to be finished when there are no network
         /// connections for at least <c>500</c> ms.
         /// </description></item>
+        /// <item><description>
+        /// <c>'commit'</c> - consider operation to be finished when network response is received
+        /// and the document started loading.
+        /// </description></item>
         /// </list>
         /// </summary>
         [JsonPropertyName("waitUntil")]

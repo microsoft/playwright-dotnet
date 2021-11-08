@@ -259,8 +259,11 @@ namespace Microsoft.Playwright.Transport.Channels
                 Guid,
                 "tracingStop");
 
-        internal Task StartChunkAsync()
-            => Connection.SendMessageToServerAsync(Guid, "tracingStartChunk", null);
+        internal Task StartChunkAsync(string title = null)
+            => Connection.SendMessageToServerAsync(Guid, "tracingStartChunk", new Dictionary<string, object>
+            {
+                ["title"] = title,
+            });
 
         internal async Task<Artifact> StopChunkAsync(bool save = false)
         {

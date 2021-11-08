@@ -39,40 +39,15 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class TracingStartOptions
+    public class TracingStartChunkOptions
     {
-        public TracingStartOptions() { }
+        public TracingStartChunkOptions() { }
 
-        public TracingStartOptions(TracingStartOptions clone)
+        public TracingStartChunkOptions(TracingStartChunkOptions clone)
         {
             if (clone == null) return;
-            Name = clone.Name;
-            Screenshots = clone.Screenshots;
-            Snapshots = clone.Snapshots;
             Title = clone.Title;
         }
-
-        /// <summary>
-        /// <para>
-        /// If specified, the trace is going to be saved into the file with the given name inside
-        /// the <paramref name="tracesDir"/> folder specified in <see cref="IBrowserType.LaunchAsync"/>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("name")]
-        public string? Name { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Whether to capture screenshots during tracing. Screenshots are used to build a timeline
-        /// preview.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("screenshots")]
-        public bool? Screenshots { get; set; }
-
-        /// <summary><para>Whether to capture DOM snapshot on every action.</para></summary>
-        [JsonPropertyName("snapshots")]
-        public bool? Snapshots { get; set; }
 
         /// <summary><para>Trace name to be shown in the Trace Viewer.</para></summary>
         [JsonPropertyName("title")]

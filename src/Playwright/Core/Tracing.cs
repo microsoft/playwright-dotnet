@@ -46,7 +46,7 @@ namespace Microsoft.Playwright.Core
             await StartChunkAsync().ConfigureAwait(false);
         }
 
-        public Task StartChunkAsync() => _channel.StartChunkAsync();
+        public Task StartChunkAsync(TracingStartChunkOptions options = default) => _channel.StartChunkAsync(options?.Title);
 
         public async Task StopChunkAsync(TracingStopChunkOptions options = null)
         {
