@@ -47,6 +47,8 @@ namespace Microsoft.Playwright
         DOMContentLoaded,
         [EnumMember(Value = "networkidle")]
         NetworkIdle,
+        [EnumMember(Value = "commit")]
+        Commit,
     }
 }
 
