@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
@@ -577,5 +578,25 @@ namespace Microsoft.Playwright.Tests
         public void ExtraHTTPHeadersShouldBePushedToProvisionalPage()
         {
         }
+
+        [PlaywrightTest("page-goto.spec.ts", "should return when navigation is comitted if commit is specified")]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        public async Task ShouldReturnWhenNavigationIsComittedIfCommitIsSpecified()
+        {
+            Server.SetRoute("/empty.html", async context =>
+            {
+                context.Response.StatusCode = 200;
+                context.Response.Headers.Add("content-type", "text/html");
+                context.Response.Headers.Add("content-length", "8192");
+                // Write enought bytes of the body to trigge response received event.
+                var str = "<title>" + new string('a', 4100);
+                await context.Response.WriteAsync(str);
+                await context.Response.BodyWriter.FlushAsync();
+            });
+
+            var response = await Page.GotoAsync(Server.EmptyPage, new() { WaitUntil = TestConstants.IsFirefox ? WaitUntilState.NetworkIdle : WaitUntilState.Load });
+            Assert.AreEqual(200, response.Status);
+        }
+
     }
 }

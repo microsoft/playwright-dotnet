@@ -1313,8 +1313,9 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Returns the main resource response. In case of multiple redirects, the navigation
-        /// will resolve with the response of the last redirect.
+        /// This method reloads the current page, in the same way as if the user had triggered
+        /// a browser refresh. Returns the main resource response. In case of multiple redirects,
+        /// the navigation will resolve with the response of the last redirect.
         /// </para>
         /// </summary>
         /// <param name="options">Call options</param>

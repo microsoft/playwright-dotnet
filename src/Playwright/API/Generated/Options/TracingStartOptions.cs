@@ -49,6 +49,7 @@ namespace Microsoft.Playwright
             Name = clone.Name;
             Screenshots = clone.Screenshots;
             Snapshots = clone.Snapshots;
+            Title = clone.Title;
         }
 
         /// <summary>
@@ -72,6 +73,10 @@ namespace Microsoft.Playwright
         /// <summary><para>Whether to capture DOM snapshot on every action.</para></summary>
         [JsonPropertyName("snapshots")]
         public bool? Snapshots { get; set; }
+
+        /// <summary><para>Trace name to be shown in the Trace Viewer.</para></summary>
+        [JsonPropertyName("title")]
+        public string? Title { get; set; }
     }
 }
 

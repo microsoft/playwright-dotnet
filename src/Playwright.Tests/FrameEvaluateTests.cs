@@ -117,7 +117,7 @@ namespace Microsoft.Playwright.Tests
             var frame1 = await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
             await FrameUtils.DetachFrameAsync(Page, "frame1");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => frame1.EvaluateAsync("() => 7 * 8"));
-            StringAssert.Contains("Execution Context is not available in detached frame", exception.Message);
+            StringAssert.Contains("Frame was detached", exception.Message);
         }
 
         [PlaywrightTest("frame-evaluate.spec.ts", "should be isolated between frames")]

@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -22,19 +22,37 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
-using Microsoft.Playwright.Core;
+using System.ComponentModel.DataAnnotations;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.Transport.Protocol
+#nullable enable
+
+namespace Microsoft.Playwright
 {
-    internal class FrameInitializer
+    public class TracingStartChunkOptions
     {
-        public string Url { get; set; }
+        public TracingStartChunkOptions() { }
 
-        public string Name { get; set; }
+        public TracingStartChunkOptions(TracingStartChunkOptions clone)
+        {
+            if (clone == null) return;
+            Title = clone.Title;
+        }
 
-        public Frame ParentFrame { get; set; }
-
-        public List<WaitUntilState> LoadStates { get; set; }
+        /// <summary><para>Trace name to be shown in the Trace Viewer.</para></summary>
+        [JsonPropertyName("title")]
+        public string? Title { get; set; }
     }
 }
+
+#nullable disable

@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Core
     internal partial class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     {
         private readonly FrameChannel _channel;
-        private readonly List<LoadState> _loadStates = new();
+        private readonly List<WaitUntilState> _loadStates = new();
 
         internal Frame(IChannelOwner parent, string guid, FrameInitializer initializer) : base(parent, guid)
         {
@@ -88,7 +88,7 @@ namespace Microsoft.Playwright.Core
         /// <summary>
         /// Raised when a new LoadState was added.
         /// </summary>
-        public event EventHandler<LoadState> LoadState;
+        public event EventHandler<WaitUntilState> LoadState;
 
         ChannelBase IChannelOwner.Channel => _channel;
 
@@ -150,10 +150,21 @@ namespace Microsoft.Playwright.Core
 
         public async Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions options = default)
         {
-            Task<LoadState> task;
+            Task<WaitUntilState> task;
             Waiter waiter = null;
-            LoadState loadState = state ?? Microsoft.Playwright.LoadState.Load;
-
+            WaitUntilState loadState = Microsoft.Playwright.WaitUntilState.Load;
+            switch (state)
+            {
+                case Microsoft.Playwright.LoadState.Load:
+                    loadState = Microsoft.Playwright.WaitUntilState.Load;
+                    break;
+                case Microsoft.Playwright.LoadState.DOMContentLoaded:
+                    loadState = Microsoft.Playwright.WaitUntilState.DOMContentLoaded;
+                    break;
+                case Microsoft.Playwright.LoadState.NetworkIdle:
+                    loadState = Microsoft.Playwright.WaitUntilState.NetworkIdle;
+                    break;
+            }
             try
             {
                 lock (_loadStates)
@@ -164,7 +175,7 @@ namespace Microsoft.Playwright.Core
                     }
 
                     waiter = SetupNavigationWaiter("frame.WaitForLoadStateAsync", options?.Timeout);
-                    task = waiter.WaitForEventAsync<LoadState>(this, "LoadState", s =>
+                    task = waiter.WaitForEventAsync<WaitUntilState>(this, "LoadState", s =>
                     {
                         waiter.Log($"  \"{s}\" event fired");
                         return s == loadState;
@@ -214,7 +225,7 @@ namespace Microsoft.Playwright.Core
 
             if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntil2.ToValueString()))
             {
-                await waiter.WaitForEventAsync<LoadState>(
+                await waiter.WaitForEventAsync<WaitUntilState>(
                     this,
                     "LoadState",
                     e =>

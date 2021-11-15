@@ -99,5 +99,8 @@ namespace Microsoft.Playwright.Transport.Channels
 
         [EnumMember(Value = "fetchRequest")]
         FetchRequest,
+
+        [EnumMember(Value = "APIRequestContext")]
+        APIRequestContext,
     }
 }

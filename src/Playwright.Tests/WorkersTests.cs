@@ -62,7 +62,7 @@ namespace Microsoft.Playwright.Tests
             await Page.EvaluateAsync("workerObj => workerObj.terminate()", workerObj);
             Assert.AreEqual(worker, await workerDestroyedTcs.Task);
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => workerThisObj.GetPropertyAsync("self"));
-            StringAssert.Contains("Target closed", exception.Message);
+            StringAssert.IsMatch("(Worker was closed)|(Target closed)", exception.Message);
         }
 
         [PlaywrightTest("workers.spec.ts", "should report console logs")]

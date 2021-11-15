@@ -121,7 +121,8 @@ namespace Microsoft.Playwright
         /// });
         /// </code>
         /// </summary>
-        Task StartChunkAsync();
+        /// <param name="options">Call options</param>
+        Task StartChunkAsync(TracingStartChunkOptions? options = default);
 
         /// <summary><para>Stop tracing.</para></summary>
         /// <param name="options">Call options</param>
