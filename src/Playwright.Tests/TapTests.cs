@@ -71,7 +71,11 @@ namespace Microsoft.Playwright.Tests
             var handle = await TrackEventsAsync("#b");
             await Page.TapAsync("#b", new() { Trial = true });
 
-            Assert.IsEmpty(await handle.JsonValueAsync<string[]>());
+            string[] result = await handle.JsonValueAsync<string[]>();
+            Assert.AreEqual(result, new string[] {
+                "pointerover", "pointerenter",
+                "pointerout", "pointerleave",
+            });
         }
 
         [PlaywrightTest("tap.spec.ts", "should not send mouse events touchstart is canceled")]

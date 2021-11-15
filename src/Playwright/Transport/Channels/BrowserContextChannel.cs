@@ -265,11 +265,12 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["title"] = title,
             });
 
-        internal async Task<Artifact> StopChunkAsync(bool save = false)
+        internal async Task<Artifact> StopChunkAsync(bool save = false, bool skipCompress = false)
         {
             var result = await Connection.SendMessageToServerAsync(Guid, "tracingStopChunk", new Dictionary<string, object>
             {
                 ["save"] = save,
+                ["skipCompress"] = skipCompress,
             }).ConfigureAwait(false);
 
             if (save)

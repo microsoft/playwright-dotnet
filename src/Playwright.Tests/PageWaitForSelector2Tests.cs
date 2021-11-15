@@ -256,7 +256,7 @@ namespace Microsoft.Playwright.Tests
             var waitPromise = frame.WaitForSelectorAsync("//*[@class=\"box\"]");
             await FrameUtils.DetachFrameAsync(Page, "frame1");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => waitPromise);
-            StringAssert.Contains("waitForFunction failed: frame got detached.", exception.Message);
+            StringAssert.Contains("Frame was detached", exception.Message);
         }
 
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should return the element handle xpath")]

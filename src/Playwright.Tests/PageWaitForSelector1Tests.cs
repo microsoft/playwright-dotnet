@@ -99,7 +99,7 @@ namespace Microsoft.Playwright.Tests
 
             await Page.GotoAsync(Server.EmptyPage);
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => task);
-            StringAssert.Contains("Execution context was destroyed, most likely because of a navigation", exception.Message);
+            StringAssert.Contains("Error: frame navigated while waiting for selector", exception.Message);
         }
 
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should work with removed MutationObserver")]
@@ -273,7 +273,7 @@ namespace Microsoft.Playwright.Tests
             await FrameUtils.DetachFrameAsync(Page, "frame1");
             var waitException = await waitTask;
             Assert.NotNull(waitException);
-            StringAssert.Contains("waitForFunction failed: frame got detached.", waitException.Message);
+            StringAssert.Contains("Frame was detached", waitException.Message);
         }
 
         private async Task GiveItTimeToLogAsync(IFrame frame)
