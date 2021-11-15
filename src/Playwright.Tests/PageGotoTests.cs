@@ -580,7 +580,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should return when navigation is comitted if commit is specified")]
-        [Skip(SkipAttribute.Targets.Firefox | SkipAttribute.Targets.Webkit)]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
         public async Task ShouldReturnWhenNavigationIsComittedIfCommitIsSpecified()
         {
             Server.SetRoute("/empty.html", async context =>
