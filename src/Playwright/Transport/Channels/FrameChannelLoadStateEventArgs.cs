@@ -28,8 +28,8 @@ namespace Microsoft.Playwright.Transport.Channels
 {
     internal class FrameChannelLoadStateEventArgs : EventArgs
     {
-        public LoadState? Add { get; set; }
+        public WaitUntilState? Add { get; set; }
 
-        public LoadState? Remove { get; set; }
+        public WaitUntilState? Remove { get; set; }
     }
 }

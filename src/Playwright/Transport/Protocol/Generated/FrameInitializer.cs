@@ -35,6 +35,6 @@ namespace Microsoft.Playwright.Transport.Protocol
 
         public Frame ParentFrame { get; set; }
 
-        public List<LoadState> LoadStates { get; set; }
+        public List<WaitUntilState> LoadStates { get; set; }
     }
 }
