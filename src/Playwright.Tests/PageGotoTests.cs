@@ -587,8 +587,8 @@ namespace Microsoft.Playwright.Tests
                 context.Response.StatusCode = 200;
                 context.Response.Headers.Add("content-type", "text/html");
                 context.Response.Headers.Add("content-length", "8192");
-            // Write enought bytes of the body to trigge response received event.
-            var str = "<title>" + new string('a', 4100);
+                // Write enought bytes of the body to trigge response received event.
+                var str = "<title>" + new string('a', 4100);
                 await context.Response.WriteAsync(str);
                 await context.Response.BodyWriter.FlushAsync();
             });
