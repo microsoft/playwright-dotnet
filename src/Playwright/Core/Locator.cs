@@ -136,6 +136,9 @@ namespace Microsoft.Playwright.Core
         public Task FocusAsync(LocatorFocusOptions options = null)
             => _frame.FocusAsync(_selector, ConvertOptions<FrameFocusOptions>(options));
 
+        IFrameLocator ILocator.FrameLocator(string selector) =>
+            new FrameLocator(_frame, $"{_selector} >> {selector}");
+
         public Task<string> GetAttributeAsync(string name, LocatorGetAttributeOptions options = null)
             => _frame.GetAttributeAsync(_selector, name, ConvertOptions<FrameGetAttributeOptions>(options));
 

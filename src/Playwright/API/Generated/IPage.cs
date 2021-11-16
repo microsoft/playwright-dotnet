@@ -895,6 +895,23 @@ namespace Microsoft.Playwright
         /// </param>
         IFrame? FrameByUrl(Func<string, bool> url);
 
+        /// <summary>
+        /// <para>
+        /// When working with iframes, you can create a frame locator that will enter the iframe
+        /// and allow selecting elements in that iframe. Following snippet locates element with
+        /// text "Submit" in the iframe with id <c>my-frame</c>, like <c>&lt;iframe id="my-frame"&gt;</c>:
+        /// </para>
+        /// <code>
+        /// var locator = page.FrameLocator("#my-iframe").Locator("text=Submit");<br/>
+        /// await locator.ClickAsync();
+        /// </code>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to use when resolving DOM element. See <a href="./selectors.md">working
+        /// with selectors</a> for more details.
+        /// </param>
+        IFrameLocator FrameLocator(string selector);
+
         /// <summary><para>An array of all frames attached to the page.</para></summary>
         IReadOnlyList<IFrame> Frames { get; }
 

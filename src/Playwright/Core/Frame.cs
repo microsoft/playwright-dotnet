@@ -113,6 +113,9 @@ namespace Microsoft.Playwright.Core
         public async Task<IElementHandle> FrameElementAsync()
             => (await _channel.FrameElementAsync().ConfigureAwait(false)).Object;
 
+        public IFrameLocator FrameLocator(string selector)
+            => new FrameLocator(this, selector);
+
         public Task<string> TitleAsync() => _channel.TitleAsync();
 
         public Task WaitForTimeoutAsync(float timeout)
