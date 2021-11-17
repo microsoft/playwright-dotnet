@@ -418,6 +418,7 @@ namespace Microsoft.Playwright.Transport
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DEBUGPWD")))
             {
                 Trace.WriteLine(message);
+                Console.Error.WriteLine(message);
             }
         }
     }

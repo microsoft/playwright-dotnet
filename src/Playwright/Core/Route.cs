@@ -124,7 +124,7 @@ namespace Microsoft.Playwright.Core
 
             if (!string.IsNullOrEmpty(contentType))
             {
-                resultHeaders["content-type'"] = contentType;
+                resultHeaders["content-type"] = contentType;
             }
             else if (!string.IsNullOrEmpty(path))
             {

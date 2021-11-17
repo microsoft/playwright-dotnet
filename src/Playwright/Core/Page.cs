@@ -282,6 +282,8 @@ namespace Microsoft.Playwright.Core
 
         public IFrame FrameByUrl(Func<string, bool> urlFunc) => Frames.FirstOrDefault(f => urlFunc(f.Url));
 
+        IFrameLocator IPage.FrameLocator(string selector) => MainFrame.FrameLocator(selector);
+
         public Task<string> TitleAsync() => MainFrame.TitleAsync();
 
         public Task BringToFrontAsync() => _channel.BringToFrontAsync();

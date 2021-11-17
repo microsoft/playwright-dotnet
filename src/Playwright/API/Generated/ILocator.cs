@@ -383,6 +383,22 @@ namespace Microsoft.Playwright
         /// <param name="options">Call options</param>
         Task FocusAsync(LocatorFocusOptions? options = default);
 
+        /// <summary>
+        /// <para>
+        /// When working with iframes, you can create a frame locator that will enter the iframe
+        /// and allow selecting elements in that iframe:
+        /// </para>
+        /// <code>
+        /// var locator = page.FrameLocator("iframe").Locator("text=Submit");<br/>
+        /// await locator.ClickAsync();
+        /// </code>
+        /// </summary>
+        /// <param name="selector">
+        /// A selector to use when resolving DOM element. See <a href="./selectors.md">working
+        /// with selectors</a> for more details.
+        /// </param>
+        IFrameLocator FrameLocator(string selector);
+
         /// <summary><para>Returns element attribute value.</para></summary>
         /// <param name="name">Attribute name to get the value for.</param>
         /// <param name="options">Call options</param>
@@ -470,7 +486,7 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// The method finds an element matching the specified selector in the <c>Locator</c>'s
-        /// subtree. See <a href="./selectors.md">Working with selectors</a> for more details.
+        /// subtree.
         /// </para>
         /// </summary>
         /// <param name="selector">
