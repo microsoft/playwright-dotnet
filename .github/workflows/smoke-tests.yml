@@ -12,7 +12,7 @@ on:
 
 jobs:
   test_net5:
-    name: Quick Test Harness Tests using .NET 5
+    name: Quick Test Harness Tests using .NET 6
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -23,7 +23,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
       - name: Install prerequisites and download drivers
         shell: pwsh
         run: |
@@ -33,8 +33,8 @@ jobs:
         run: dotnet build ./src
       - name: Installing Browsers and dependencies...
         run: |
-          dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install
-          dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install-deps
+          dotnet run --project ./src/Playwright/Playwright.csproj -f net6.0 -- install
+          dotnet run --project ./src/Playwright/Playwright.csproj -f net6.0 -- install-deps
       - name: Running tests... 
         run: |
-          xvfb-run dotnet test ./src/Playwright.TestingHarnessTest/Playwright.TestingHarnessTest.csproj -c Debug -f net5.0 --logger "trx"
+          xvfb-run dotnet test ./src/Playwright.TestingHarnessTest/Playwright.TestingHarnessTest.csproj -c Debug -f net6.0 --logger "trx"
