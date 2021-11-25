@@ -91,7 +91,7 @@ namespace Microsoft.Playwright.Transport
 
         private async Task DispatchIncomingMessagesAsync()
         {
-#pragma warning disable VSTHRD103
+#pragma warning disable VSTHRD103, CA1849
             var buffer = WebSocket.CreateClientBuffer(DefaultBufferSize, DefaultBufferSize);
             var memoryStream = new MemoryStream();
             string closeReason = string.Empty;

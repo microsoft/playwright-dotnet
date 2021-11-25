@@ -91,7 +91,7 @@ namespace Microsoft.Playwright.Helpers
             => new()
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 Converters =
                 {
                     new JsonStringEnumMemberConverter(JsonNamingPolicy.CamelCase),

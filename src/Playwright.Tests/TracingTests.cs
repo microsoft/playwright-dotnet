@@ -147,7 +147,7 @@ namespace Microsoft.Playwright.Tests
                         var line = reader.ReadLine();
                         if (line == null) break;
                         results.Add(JsonSerializer.Deserialize<TraceEventEntry>(line,
-                            new()
+                            new JsonSerializerOptions
                             {
                                 PropertyNameCaseInsensitive = true,
                             }));
