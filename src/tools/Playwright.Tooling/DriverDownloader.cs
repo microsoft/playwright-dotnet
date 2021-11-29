@@ -119,6 +119,14 @@ namespace Playwright.Tooling
         {
             Console.WriteLine("Downloading driver for " + platform);
             string cdn = "https://playwright.azureedge.net/builds/driver";
+            if (
+                driverVersion.Contains("-alpha")
+                || driverVersion.Contains("-beta")
+                || driverVersion.Contains("-next")
+            )
+            {
+                cdn += "/next";
+            }
 
             using var client = new HttpClient();
             string url = $"{cdn}/playwright-{driverVersion}-{platform}.zip";
