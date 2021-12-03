@@ -27,7 +27,7 @@ using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
-    internal class ElectronApplicationInitializer
+    internal class ElectronApplicationInitializer : EventTargetInitializer
     {
         public BrowserContext Context { get; set; }
     }

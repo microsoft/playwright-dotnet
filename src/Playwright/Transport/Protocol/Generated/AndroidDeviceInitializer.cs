@@ -27,7 +27,7 @@ using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
-    internal class AndroidDeviceInitializer
+    internal class AndroidDeviceInitializer : EventTargetInitializer
     {
         public string Model { get; set; }
 

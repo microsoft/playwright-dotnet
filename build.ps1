@@ -67,8 +67,8 @@ function Invoke-WWWRoot() {
 function Invoke-Roll() {
   if ($verbs.Length -eq 2) {
     if ((Get-SubmoduleStatus).StartsWith("+")) {
-      $decision = $Host.UI.PromptForChoice("Update Submodule", 
-        "The Submodule is already at a different commit, do you want to still use the new sha?", 
+      $decision = $Host.UI.PromptForChoice("Update Submodule",
+        "The Submodule is already at a different commit, do you want to still use the new sha?",
         @('&Yes, update', "E&xit"),
         0)
       if ($decision -eq 1) {
@@ -91,9 +91,9 @@ function Invoke-Roll() {
 
     # Let's update the project file
     [xml]$version = Get-Content ".\src\Common\Version.props"
-    $version.Project.PropertyGroup.DriverVersion = $package.version + "-" + $rev
-    $version.Project.PropertyGroup.AssemblyVersion = $package.version.Split("-")[0]
-    "Updating to " + $package.version + "-" + $rev
+    $version.Project.PropertyGroup.DriverVersion = $package.version
+    $version.Project.PropertyGroup.AssemblyVersion = $package.version
+    "Updating to " + $package.version
     $version.Save([IO.Path]::Combine($pwd, 'src', 'Common', 'Version.props'))
   } else {
     Invoke-InitializeSubmodule

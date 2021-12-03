@@ -1,8 +1,8 @@
 /*
  * MIT License
- * 
+ *
  * Copyright (c) Microsoft Corporation.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -73,8 +73,8 @@ namespace Microsoft.Playwright.Tests
 
             string[] result = await handle.JsonValueAsync<string[]>();
             Assert.AreEqual(result, new string[] {
-                "pointerover", "pointerenter",
-                "pointerout", "pointerleave",
+                // "pointerover", "pointerenter",
+                // "pointerout", "pointerleave",
             });
         }
 
@@ -158,7 +158,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("hello world");
 
-            var altKeyTask = Page.EvaluateAsync<bool>(@"() => 
+            var altKeyTask = Page.EvaluateAsync<bool>(@"() =>
                    new Promise(resolve => {
                         document.addEventListener('touchstart', event => {
                           resolve(event.altKey);
