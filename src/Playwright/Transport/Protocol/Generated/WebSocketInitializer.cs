@@ -27,7 +27,7 @@ using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
-    internal class WebSocketInitializer
+    internal class WebSocketInitializer : EventTargetInitializer
     {
         public string Url { get; set; }
     }

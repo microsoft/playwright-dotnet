@@ -27,10 +27,7 @@ using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
-    internal class SocksSocketInitializer
+    internal class JsonPipeInitializer
     {
-        public string DstAddr { get; set; }
-
-        public int DstPort { get; set; }
     }
 }

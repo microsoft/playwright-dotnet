@@ -27,7 +27,7 @@ using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
-    internal class PageInitializer
+    internal class PageInitializer : EventTargetInitializer
     {
         public Frame MainFrame { get; set; }
 
