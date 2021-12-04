@@ -7,7 +7,7 @@
 
 ## Rolling
 
-1. Checkout the upstream release branch of the `playwright` repository.
+1. Checkout the upstream main/release branch of the `playwright` repository.
 1. Checkout the main/release branch of the `playwright-dotnet` repository.
 1. Pick the latest driver from GitHub Action where you want to roll to. For releases, it should be `v1.X.Y`. For main branch, it should be something like `v1.X.Y-<timestamp>`.
 
