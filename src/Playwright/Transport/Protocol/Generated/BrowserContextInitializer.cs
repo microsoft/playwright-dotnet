@@ -27,8 +27,10 @@ using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
-    internal class BrowserContextInitializer
+    internal class BrowserContextInitializer : EventTargetInitializer
     {
         public bool IsChromium { get; set; }
+
+        public APIRequestContext APIRequestContext { get; set; }
     }
 }

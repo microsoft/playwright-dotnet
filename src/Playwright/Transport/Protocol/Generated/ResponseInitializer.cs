@@ -37,9 +37,7 @@ namespace Microsoft.Playwright.Transport.Protocol
 
         public string StatusText { get; set; }
 
-        public List<HeaderEntry> RequestHeaders { get; set; }
-
-        public List<HeaderEntry> Headers { get; set; }
+        public List<NameValue> Headers { get; set; }
 
         public RequestTimingResult Timing { get; set; }
     }

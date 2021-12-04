@@ -27,18 +27,7 @@ using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
-    internal class PlaywrightInitializer
+    internal class EventTargetInitializer
     {
-        public BrowserType Chromium { get; set; }
-
-        public BrowserType Firefox { get; set; }
-
-        public BrowserType Webkit { get; set; }
-
-        public List<DeviceDescriptorEntry> DeviceDescriptors { get; set; }
-
-        public Selectors Selectors { get; set; }
-
-        public Browser PreLaunchedBrowser { get; set; }
     }
 }

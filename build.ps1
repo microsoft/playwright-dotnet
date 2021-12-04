@@ -61,6 +61,8 @@ function Invoke-Roll() {
 
   Write-Host "🚀 Generating API..."
   node "$upstream_repo_path/utils/doclint/generateDotnetApi.js" "src/Playwright"
+  Write-Host "🚀 Generating transport channels..."
+  node "$upstream_repo_path/utils/generate_dotnet_channels.js" "src/Playwright"
   Invoke-DownloadDriver
   Invoke-UpdateWWWRoot
 }
