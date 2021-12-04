@@ -27,9 +27,7 @@ jobs:
           dotnet-version: 5.0.x
       - name: Install prerequisites and download drivers
         shell: pwsh
-        run: |
-          .\build.ps1 driver -prereqs
-          .\build.ps1 wwwroot
+        run: ./build.ps1 driver -prereqs
       - name: Install Playwright CLI
         run: dotnet tool install --global Microsoft.Playwright.CLI
       - name: Build NUnit Package

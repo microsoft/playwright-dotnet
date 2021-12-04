@@ -3,44 +3,27 @@
 [CmdletBinding(PositionalBinding = $false)]
 Param(
   [Parameter(ValueFromRemainingArguments = $true)][String[]]$verbs,
-  [Switch]$reset,
   [Switch]$prereqs
 )
 
+$upstream_repo_path = Join-Path -Path ".." -ChildPath "playwright"
+
 function Get-Help() {
-  Write-Host "Actions (defaults to help):"
+  Write-Host "Commands:"
   Write-Host "  init                      Performs the initalization of the repository, and installs/downloads"
-  Write-Host "                            all the required artifacts (i.e. driver), and initializes the submodule."
-  Write-Host "                            -reset     Forces the submodule to be updated."
+  Write-Host "                            all the required artifacts (i.e. driver)."
   Write-Host "                            -prereqs   Installs all the required prerequisites and dev certificates."
   Write-Host ""
-  Write-Host "  roll [commit sha]         Moves the submodule to the commit specified, generates the API, and downloads"
-  Write-Host "                            downloads the new driver."
+  Write-Host "  roll <driver-version>     Updates the API version, downloads driver, generates the API, and transport interfaces."
   Write-Host "  driver                    Downloads the driver."
   Write-Host "  help                      Prints this message."
   Write-Host "  wwwroot                   Copies over the wwwroot."
 }
 
 function Invoke-Init() {
-  Invoke-InitializeSubmodule
   if ($prereqs) { Invoke-InstallRequirements }
   Invoke-DownloadDriver
   Invoke-WWWRoot
-}
-
-function Get-SubmoduleStatus() {
-  $smStatus = git submodule status
-  return $smStatus
-}
-
-function Invoke-InitializeSubmodule($enableReset = $true) {
-  # Check the status of the submodule, if not initialized, let's do that
-  if ((Get-SubmoduleStatus).StartsWith("-") -or ($enableReset -and $reset)) {
-    Write-Host "🔨 Initializing git submodule..." -NoNewline
-    git submodule update --init >$null 2>&1
-    if ((Get-SubmoduleStatus).StartsWith("-")) { throw 'Could not initialize git submodule' }
-    Write-Host "`r✅ Finished initializing git submodule."
-  }
 }
 
 function Invoke-InstallRequirements() {
@@ -51,58 +34,35 @@ function Invoke-InstallRequirements() {
 }
 
 function Invoke-DownloadDriver() {
-  # We need the submodule to be initialized for this, so we're forcing the check
-  Invoke-InitializeSubmodule $false
   if ($prereqs) { Invoke-InstallRequirements }
   Write-Host "🚀 Downloading drivers..." -NoNewline
   dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
 }
 
-function Invoke-WWWRoot() {
+function Invoke-UpdateWWWRoot() {
   Write-Host "🌐 Synchronizing wwwroot folder..."
-  Remove-Item -Path .\src\Playwright.Tests.TestServer\wwwroot\ -Recurse -Force
-  Copy-Item -Path .\playwright\tests\assets -Destination .\src\Playwright.Tests.TestServer\wwwroot\ -Recurse
+  $dotnet_wwwroot_path = "./src/Playwright.Tests.TestServer/wwwroot"
+  Remove-Item -Path "$dotnet_wwwroot_path" -Recurse -Force
+  Copy-Item -Path "$upstream_repo_path/tests/assets" -Destination $dotnet_wwwroot_path -Recurse
 }
 
 function Invoke-Roll() {
-  if ($verbs.Length -eq 2) {
-    if ((Get-SubmoduleStatus).StartsWith("+")) {
-      $decision = $Host.UI.PromptForChoice("Update Submodule", 
-        "The Submodule is already at a different commit, do you want to still use the new sha?", 
-        @('&Yes, update', "E&xit"),
-        0)
-      if ($decision -eq 1) {
-        Write-Host "⚠ Stopping roll."
-        return;
-      }
-    }
-    else {
-      Invoke-InitializeSubmodule
-    }
+  $new_driver_version = $verbs[1];
+  $package = Get-Content "$upstream_repo_path/package.json" | ConvertFrom-Json
+  $upstream_package_version = $package.version
 
-    Push-Location "playwright"
-    Write-Host "🚀 Moving submodule to" $verbs[1]
-    git fetch
-    git checkout $verbs[1]
-    $rev = (git show -s --format=%ct HEAD) + '000'
-    Pop-Location
+  Write-Host "🚀 Rolling .NET to driver $new_driver_version and upstream version $upstream_package_version"
 
-    $package = Get-Content "playwright/package.json" | ConvertFrom-Json
-
-    # Let's update the project file
-    [xml]$version = Get-Content ".\src\Common\Version.props"
-    $version.Project.PropertyGroup.DriverVersion = $package.version + "-" + $rev
-    $version.Project.PropertyGroup.AssemblyVersion = $package.version.Split("-")[0]
-    "Updating to " + $package.version + "-" + $rev
-    $version.Save([IO.Path]::Combine($pwd, 'src', 'Common', 'Version.props'))
-  } else {
-    Invoke-InitializeSubmodule
-  }
+  # Let's update the project file
+  [xml]$version = Get-Content "./src/Common/Version.props"
+  $version.Project.PropertyGroup.DriverVersion = $new_driver_version
+  $version.Project.PropertyGroup.AssemblyVersion = $package.version.Split("-")[0]
+  $version.Save([IO.Path]::Combine($pwd, 'src', 'Common', 'Version.props'))
 
   Write-Host "🚀 Generating API..."
-  node "playwright/utils/doclint/generateDotnetApi.js" "src/Playwright"
+  node "$upstream_repo_path/utils/doclint/generateDotnetApi.js" "src/Playwright"
   Invoke-DownloadDriver
-  Invoke-WWWRoot
+  Invoke-UpdateWWWRoot
 }
 
 if ($verbs.Length -eq 0) {
@@ -115,5 +75,5 @@ switch ($verbs[0]) {
   "help" { Get-Help }
   "roll" { Invoke-Roll }
   "driver" { Invoke-DownloadDriver }
-  "wwwroot" { Invoke-WWWRoot }
+  "wwwroot" { Invoke-UpdateWWWRoot }
 }

@@ -73,24 +73,7 @@ namespace Playwright.Tooling
 
                 var regex = new Regex("<!-- GEN:(.*?) -->(.*?)<!-- GEN:stop -->", RegexOptions.Compiled);
 
-                // get commit hash
-                var gitInfo = new ProcessStartInfo
-                {
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    FileName = "git",
-                    CreateNoWindow = true,
-                    WorkingDirectory = Path.Combine(BasePath, "playwright"),
-                    Arguments = "rev-parse HEAD",
-                };
-
-                var gitProcess = Process.Start(gitInfo);
-                gitProcess.WaitForExit();
-                var hash = (await gitProcess.StandardOutput.ReadToEndAsync().ConfigureAwait(false))?.Trim();
-                var client = new HttpClient();
-                string readmeUrl = $"https://github.com/microsoft/playwright/blob/{hash}/README.md";
-                var readme = await client.GetStringAsync(readmeUrl).ConfigureAwait(false);
-
+                var readme = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "..", "playwright", "README.md"));
                 static string ReplaceBrowserVersion(string content, MatchCollection browserMatches)
                 {
                     foreach (Match match in browserMatches)
@@ -118,7 +101,15 @@ namespace Playwright.Tooling
         private async Task DownloadDriverAsync(DirectoryInfo destinationDirectory, string driverVersion, string platform)
         {
             Console.WriteLine("Downloading driver for " + platform);
-            string cdn = "https://playwright.azureedge.net/builds/driver/next";
+            string cdn = "https://playwright.azureedge.net/builds/driver";
+            if (
+                driverVersion.Contains("-alpha")
+                || driverVersion.Contains("-beta")
+                || driverVersion.Contains("-next")
+            )
+            {
+                cdn += "/next";
+            }
 
             using var client = new HttpClient();
             string url = $"{cdn}/playwright-{driverVersion}-{platform}.zip";

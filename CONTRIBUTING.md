@@ -80,7 +80,7 @@ if you have PowerShell installed on your system.
 When you get the repo, you need to initialize the submodules and download the driver to start work. To do this, you can call:
 
 ```ps
-.\build.ps1 driver -prereqs
+./build.ps1 driver -prereqs
 ```
 
 This will run the following commands:
@@ -111,13 +111,13 @@ The resulting code will follow our style guides. This is also enforced in our CI
 Tests can either be executed in their entirety:
 
 ```powershell
-dotnet test .\src\Playwright.sln
+dotnet test ./src/Playwright.sln
 ```
 
 You can also specify a single test to run:
 
 ```powershell
-dotnet test .\src\Playwright.sln --filter Playwright.Tests.TapTests
+dotnet test ./src/Playwright.sln --filter Playwright.Tests.TapTests
 ```
 
 Additionally, you can use the Test Explorer if you're using Visual Studio.
@@ -131,7 +131,7 @@ We use the [generator](https://github.com/microsoft/playwright/blob/master/utils
 To generate the API, identify the commit sha of the point in time you wish to roll to, and run
 
 ```powershell
-.\build.ps1 roll commitsha
+./build.ps1 roll commitsha
 ```
 
 This will essentially run the following:
