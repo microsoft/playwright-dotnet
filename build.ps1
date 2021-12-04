@@ -60,7 +60,7 @@ function Invoke-DownloadDriver() {
 
 function Invoke-WWWRoot() {
   Write-Host "🌐 Synchronizing wwwroot folder..."
-  Remove-Item -Path .\src\Playwright.Tests.TestServer\wwwroot\ -Recurse -ErrorAction Ignore
+  Remove-Item -Path .\src\Playwright.Tests.TestServer\wwwroot\ -Recurse -Force
   Copy-Item -Path .\playwright\tests\assets -Destination .\src\Playwright.Tests.TestServer\wwwroot\ -Recurse
 }
 
