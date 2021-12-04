@@ -122,24 +122,14 @@ dotnet test ./src/Playwright.sln --filter Playwright.Tests.TapTests
 
 Additionally, you can use the Test Explorer if you're using Visual Studio.
 
-### Generating the API & rolling the driver (upstream)
+### Generating the APIs & rolling the driver (upstream)
 
-We use the [generator](https://github.com/microsoft/playwright/blob/master/utils/doclint/generateDotnetApi.js), located upstream, to generate the interfaces from the "single source of truth". To help us keep track of versions, this repository has a [submodule dependency](https://github.blog/2016-02-01-working-with-submodules/) to upstream. 
+We use [this](https://github.com/microsoft/playwright/blob/master/utils/doclint/generateDotnetApi.js) generator for the API and [that](https://github.com/microsoft/playwright/blob/master/utils/generate_dotnet_channels.js) for generating the transport channels. Both are located upstream.
 
-> Note: to simplify, this assumes you have PowerShell on your system. You can perform each of these steps manually, however.
-
-To generate the API, identify the commit sha of the point in time you wish to roll to, and run
+To generate the API, identify the upstream driver version from the GitHub Actions logs of the point in time you wish to roll to, and run:
 
 ```powershell
-./build.ps1 roll commitsha
+./build.ps1 roll <driver-version>
 ```
 
-This will essentially run the following:
-
-```powershell
-cd playwright
-git checkout commitsha
-cd ..
-node "playwright/utils/doclint/generateDotnetApi.js" "src/Playwright"
-dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
-```
+This will re-generate the neccessary files for the new driver version.

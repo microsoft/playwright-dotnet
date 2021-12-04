@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.Transport.Protocol
 
         public string PostData { get; set; }
 
-        public List<NameValue> Headers { get; set; }
+        public List<HeaderEntry> Headers { get; set; }
 
         public bool IsNavigationRequest { get; set; }
 

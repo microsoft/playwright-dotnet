@@ -31,6 +31,6 @@ namespace Microsoft.Playwright.Transport.Protocol
     {
         public bool IsChromium { get; set; }
 
-        public APIRequestContext APIRequestContext { get; set; }
+        // public APIRequestContext APIRequestContext { get; set; }
     }
 }

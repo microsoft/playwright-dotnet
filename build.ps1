@@ -7,6 +7,10 @@ Param(
 )
 
 $upstream_repo_path = Join-Path -Path ".." -ChildPath "playwright"
+if ($env:PW_SRC_DIR -ne $null) {
+  $upstream_repo_path = $env:PW_SRC_DIR
+}
+Write-Host "Upstream repo path: $upstream_repo_path"
 
 function Get-Help() {
   Write-Host "Commands:"
@@ -56,12 +60,12 @@ function Invoke-Roll() {
   # Let's update the project file
   [xml]$version = Get-Content "./src/Common/Version.props"
   $version.Project.PropertyGroup.DriverVersion = $new_driver_version
-  $version.Project.PropertyGroup.AssemblyVersion = $package.version.Split("-")[0]
   $version.Save([IO.Path]::Combine($pwd, 'src', 'Common', 'Version.props'))
 
   Write-Host "🚀 Generating API..."
   node "$upstream_repo_path/utils/doclint/generateDotnetApi.js" "src/Playwright"
   Write-Host "🚀 Generating transport channels..."
+  Remove-Item -Path "src/Playwright/Transport/Protocol/Generated/" -Recurse -Force
   node "$upstream_repo_path/utils/generate_dotnet_channels.js" "src/Playwright"
   Invoke-DownloadDriver
   Invoke-UpdateWWWRoot

@@ -73,7 +73,8 @@ namespace Playwright.Tooling
 
                 var regex = new Regex("<!-- GEN:(.*?) -->(.*?)<!-- GEN:stop -->", RegexOptions.Compiled);
 
-                var readme = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "..", "playwright", "README.md"));
+                var basePlaywrightDir = Environment.GetEnvironmentVariable("PW_SRC_DIR") ?? Path.Combine(Environment.CurrentDirectory, "..", "playwright");
+                var readme = File.ReadAllText(Path.Combine(basePlaywrightDir, "README.md"));
                 static string ReplaceBrowserVersion(string content, MatchCollection browserMatches)
                 {
                     foreach (Match match in browserMatches)
