@@ -22,14 +22,16 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Microsoft.Playwright.Transport.Channels;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Core
 {
-    internal class BrowserContextInitializer : EventTargetInitializer
+    internal class APIRequestContext
     {
-        public bool IsChromium { get; set; }
-
-        public Core.APIRequestContext APIRequestContext { get; set; }
+        public APIRequestContext(IChannelOwner parent)
+        {
+        }
     }
 }
