@@ -86,10 +86,8 @@ namespace Microsoft.Playwright
     /// <remarks>
     /// Inherits from <see cref="IJSHandle"/>
     /// <para>
-    /// In most cases, you would want to use the <see cref="ILocator"/> object instead.
-    /// You should only use <see cref="IElementHandle"/> if you want to retain a handle
-    /// to a particular DOM Node that you intend to pass into <see cref="IPage.EvaluateAsync"/>
-    /// as an argument.
+    /// The use of ElementHandle is discouraged, use <see cref="ILocator"/> objects and
+    /// web-first assertions instead.
     /// </para>
     /// </remarks>
     public partial interface IElementHandle : IJSHandle

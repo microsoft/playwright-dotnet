@@ -23,12 +23,13 @@
  */
 
 using System.Collections.Generic;
-using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
-    internal class BrowserContextInitializer
+    internal class BrowserContextInitializer : EventTargetInitializer
     {
         public bool IsChromium { get; set; }
+
+        // public Core.APIRequestContext APIRequestContext { get; set; }
     }
 }

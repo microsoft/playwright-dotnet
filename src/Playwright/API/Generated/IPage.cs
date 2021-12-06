@@ -590,6 +590,13 @@ namespace Microsoft.Playwright
         /// </code>
         /// <para>Shortcut for main frame's <see cref="IFrame.EvalOnSelectorAsync"/>.</para>
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// This method does not wait for the element to pass actionability checks and therefore
+        /// can lead to the flaky tests. Use <see cref="ILocator.EvaluateAsync"/>, other <see
+        /// cref="ILocator"/> helper methods or web-first assertions instead.
+        /// </para>
+        /// </remarks>
         /// <param name="selector">
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
@@ -616,6 +623,12 @@ namespace Microsoft.Playwright
         /// <para>Examples:</para>
         /// <code>var divsCount = await page.EvalOnSelectorAllAsync&lt;bool&gt;("div", "(divs, min) =&gt; divs.length &gt;= min", 10);</code>
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// In most cases, <see cref="ILocator.EvaluateAllAsync"/>, other <see cref="ILocator"/>
+        /// helper methods and web-first assertions do a better job.
+        /// </para>
+        /// </remarks>
         /// <param name="selector">
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
@@ -653,7 +666,7 @@ namespace Microsoft.Playwright
         /// cref="IPage.EvaluateAsync"/>:
         /// </para>
         /// <code>
-        /// var bodyHandle = await page.QuerySelectorAsync("body");<br/>
+        /// var bodyHandle = await page.EvaluateAsync("document.body");<br/>
         /// var html = await page.EvaluateAsync&lt;string&gt;("([body, suffix]) =&gt; body.innerHTML + suffix", new object [] { bodyHandle, "hello" });<br/>
         /// await bodyHandle.DisposeAsync();
         /// </code>
@@ -1304,10 +1317,16 @@ namespace Microsoft.Playwright
         /// <para>
         /// The method finds an element matching the specified selector within the page. If
         /// no elements match the selector, the return value resolves to <c>null</c>. To wait
-        /// for an element on the page, use <see cref="IPage.WaitForSelectorAsync"/>.
+        /// for an element on the page, use <see cref="ILocator.WaitForAsync"/>.
         /// </para>
         /// <para>Shortcut for main frame's <see cref="IFrame.QuerySelectorAsync"/>.</para>
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The use of <see cref="IElementHandle"/> is discouraged, use <see cref="ILocator"/>
+        /// objects and web-first assertions instead.
+        /// </para>
+        /// </remarks>
         /// <param name="selector">
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
@@ -1322,6 +1341,12 @@ namespace Microsoft.Playwright
         /// </para>
         /// <para>Shortcut for main frame's <see cref="IFrame.QuerySelectorAllAsync"/>.</para>
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The use of <see cref="IElementHandle"/> is discouraged, use <see cref="ILocator"/>
+        /// objects and web-first assertions instead.
+        /// </para>
+        /// </remarks>
         /// <param name="selector">
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
@@ -2781,6 +2806,12 @@ namespace Microsoft.Playwright
         /// }
         /// </code>
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Playwright automatically waits for element to be ready before performing an action.
+        /// Using <see cref="ILocator"/> objects and web-first assertions make the code wait-for-selector-free.
+        /// </para>
+        /// </remarks>
         /// <param name="selector">
         /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
         /// for more details.
