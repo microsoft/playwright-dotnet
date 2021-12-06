@@ -23,7 +23,6 @@
  */
 
 using System.Collections.Generic;
-using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
@@ -31,6 +30,6 @@ namespace Microsoft.Playwright.Transport.Protocol
     {
         public bool IsChromium { get; set; }
 
-        // public APIRequestContext APIRequestContext { get; set; }
+        // public Core.APIRequestContext APIRequestContext { get; set; }
     }
 }

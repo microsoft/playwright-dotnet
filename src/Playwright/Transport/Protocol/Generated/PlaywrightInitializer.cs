@@ -23,7 +23,6 @@
  */
 
 using System.Collections.Generic;
-using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
@@ -37,8 +36,8 @@ namespace Microsoft.Playwright.Transport.Protocol
 
         public List<DeviceDescriptorEntry> DeviceDescriptors { get; set; }
 
-        public Selectors Selectors { get; set; }
+        public Core.Selectors Selectors { get; set; }
 
-        public Browser PreLaunchedBrowser { get; set; }
+        public Core.Browser PreLaunchedBrowser { get; set; }
     }
 }

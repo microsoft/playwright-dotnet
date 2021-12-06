@@ -23,18 +23,17 @@
  */
 
 using System.Collections.Generic;
-using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class PageInitializer : EventTargetInitializer
     {
-        public Frame MainFrame { get; set; }
+        public Core.Frame MainFrame { get; set; }
 
         public ViewportSize ViewportSize { get; set; }
 
         public bool IsClosed { get; set; }
 
-        public Page Opener { get; set; }
+        public Core.Page Opener { get; set; }
     }
 }

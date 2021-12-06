@@ -23,12 +23,11 @@
  */
 
 using System.Collections.Generic;
-using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class ElectronApplicationInitializer : EventTargetInitializer
     {
-        public BrowserContext Context { get; set; }
+        public Core.BrowserContext Context { get; set; }
     }
 }

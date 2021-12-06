@@ -23,13 +23,12 @@
  */
 
 using System.Collections.Generic;
-using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class ResponseInitializer
     {
-        public Request Request { get; set; }
+        public Core.Request Request { get; set; }
 
         public string Url { get; set; }
 
