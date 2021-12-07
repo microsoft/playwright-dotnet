@@ -1,11 +1,11 @@
 # How to Contribute
 
-You can contribute to Playwright for .NET with issues and PRs. 
+You can contribute to Playwright for .NET with issues and PRs.
 
 ## Contribution Bar
 
-Contributions must meet a certain standard of coding. To ensure this, the Project Maintainers perform regular Code Reviews. 
-Additionally, a suite of tests runs for each PR. 
+Contributions must meet a certain standard of coding. To ensure this, the Project Maintainers perform regular Code Reviews.
+Additionally, a suite of tests runs for each PR.
 
 ## DOs and DONT'Ts
 Please do:
@@ -28,9 +28,11 @@ Please do not:
 * **DON'T** add API additions without filing an issue and discussing with us first.
 
 ## Breaking Changes
+
 Playwright is evergreen. Breaking Changes _should not_ happen. If they do, they follow a strict process and should come from [upstream](https://github.com/microsoft/playwright).
 
 ### Commit Messages
+
 Commit messages should follow the Semantic Commit Messages format:
 
 ```
@@ -64,6 +66,7 @@ Fixes #123, fixes #234
 ```
 
 ## PR Feedback
+
 Microsoft team and community members will provide feedback on your change. Community feedback is highly valued. You will often see the absence of team feedback if the community has already provided good review feedback.
 
 One or more Microsoft team members will review every PR prior to merge. They will often reply with "LGTM, modulo comments". That means that the PR will be merged once the feedback is resolved. "LGTM" == "looks good to me".
@@ -73,28 +76,22 @@ There are lots of thoughts and [approaches](https://github.com/antlr/antlr4-cpp/
 ## Development Workflow
 
 ### Prerequisites
-Before building the solution for the first time, you will need to download the drivers. You can do this by either running commands manually, or by using the provided script,
-if you have PowerShell installed on your system.
+
+Before building the solution for the first time, you will need to download the drivers. You can do this by either running commands manually, or by using the provided script.
 
 #### Initialize
-When you get the repo, you need to initialize the submodules and download the driver to start work. To do this, you can call:
 
-```ps
-./build.ps1 driver -prereqs
-```
+When you get the repo, you need to download the drivers, dotnet format tool, etc. To do this, you can call:
 
-This will run the following commands:
-```ps
-git submodule update --init
-dotnet tool install --global dotnet-format
-dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
+```bash
+./build.sh --download-driver
 ```
 
 #### Dotnet Format
 
 To help with formatting, you can make use of `dotnet format`. All you have to do is run
 
-```powershell
+```bash
 dotnet format
 ```
 
@@ -108,15 +105,16 @@ The resulting code will follow our style guides. This is also enforced in our CI
 ### Running Tests Locally
 
 #### Running tests
+
 Tests can either be executed in their entirety:
 
-```powershell
+```bash
 dotnet test ./src/Playwright.sln
 ```
 
 You can also specify a single test to run:
 
-```powershell
+```bash
 dotnet test ./src/Playwright.sln --filter Playwright.Tests.TapTests
 ```
 
@@ -128,8 +126,8 @@ We use [this](https://github.com/microsoft/playwright/blob/master/utils/doclint/
 
 To generate the API, identify the upstream driver version from the GitHub Actions logs of the point in time you wish to roll to, and run:
 
-```powershell
-./build.ps1 roll <driver-version>
+```bash
+./build.sh --roll <driver-version>
 ```
 
 This will re-generate the neccessary files for the new driver version.
