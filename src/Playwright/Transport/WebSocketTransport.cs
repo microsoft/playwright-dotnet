@@ -130,6 +130,7 @@ namespace Microsoft.Playwright.Transport
         public void Close(string closeReason)
         {
             _webSocketToken.Cancel();
+            HandleSocketClosed(closeReason);
         }
 
         private void HandleSocketClosed(string closeReason)
