@@ -106,8 +106,7 @@ namespace Playwright.Tooling
             if (
                 driverVersion.Contains("-alpha")
                 || driverVersion.Contains("-beta")
-                || driverVersion.Contains("-next")
-            )
+                || driverVersion.Contains("-next"))
             {
                 cdn += "/next";
             }
