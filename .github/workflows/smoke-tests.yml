@@ -25,8 +25,8 @@ jobs:
         with:
           dotnet-version: 5.0.x
       - name: Install prerequisites and download drivers
-        shell: pwsh
-        run: ./build.ps1 driver
+        shell: bash
+        run: ./build.sh --download-driver
       - name: Building...
         run: dotnet build ./src
       - name: Installing Browsers and dependencies...
