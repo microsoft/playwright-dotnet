@@ -236,7 +236,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when navigating to bad SSL")]
-        [Ignore("Fix me #1058")]
         public async Task ShouldFailWhenNavigatingToBadSSL()
         {
             Page.Request += (_, e) => Assert.NotNull(e);
@@ -248,7 +247,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when navigating to bad SSL after redirects")]
-        [Ignore("Fix me #1058")]
         public async Task ShouldFailWhenNavigatingToBadSSLAfterRedirects()
         {
             Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
@@ -258,7 +256,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should not crash when navigating to bad SSL after a cross origin navigation")]
-        [Ignore("Fix me #1058")]
         public async Task ShouldNotCrashWhenNavigatingToBadSSLAfterACrossOriginNavigation()
         {
             await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
@@ -488,7 +485,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should fail when navigating and show the url at the error message")]
-        [Ignore("Fix me #1058")]
         public async Task ShouldFailWhenNavigatingAndShowTheUrlAtTheErrorMessage()
         {
             string url = HttpsServer.Prefix + "/redirect/1.html";

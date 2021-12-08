@@ -55,11 +55,9 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("interception.spec.ts", "should work with ignoreHTTPSErrors")]
-        [Ignore("Fix me #1058")]
-        public async Task ShouldWorkWitIgnoreHTTPSErrors()
+        public async Task ShouldWorkWithIgnoreHTTPSErrors()
         {
-            await using var browser = await BrowserType.LaunchAsync();
-            var context = await browser.NewContextAsync(new()
+            var context = await Browser.NewContextAsync(new()
             {
                 IgnoreHTTPSErrors = true
             });
@@ -67,8 +65,9 @@ namespace Microsoft.Playwright.Tests
             var page = await context.NewPageAsync();
 
             await page.RouteAsync("**/*", (route) => route.ContinueAsync());
-            var response = await page.GotoAsync(HttpsServer.Prefix + "/empty.html");
+            var response = await page.GotoAsync(HttpsServer.EmptyPage);
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
+            await context.CloseAsync();
         }
 
 
