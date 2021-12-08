@@ -45,7 +45,6 @@ namespace Microsoft.Playwright.Core
         private readonly BrowserContextInitializer _initializer;
         private readonly ITracing _tracing;
         private List<RouteSetting> _routes = new();
-        private bool _isClosedOrClosing;
 
         private float? _defaultNavigationTimeout;
         private float? _defaultTimeout;
@@ -145,8 +144,6 @@ namespace Microsoft.Playwright.Core
 
         internal bool IsChromium => _initializer.IsChromium;
 
-        internal bool RecordVideo { get; set; }
-
         internal BrowserNewContextOptions Options { get; set; }
 
         public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => Channel.AddCookiesAsync(cookies);
@@ -169,13 +166,13 @@ namespace Microsoft.Playwright.Core
         {
             try
             {
-                if (!_isClosedOrClosing)
+                if (Options.RecordHarPath != null)
                 {
-                    _isClosedOrClosing = true;
-                    await Channel.CloseAsync().ConfigureAwait(false);
-                    await _closeTcs.Task.ConfigureAwait(false);
+                    Artifact artifact = await Channel.HarExportAsync().ConfigureAwait(false);
+                    await artifact.SaveAsAsync(Options.RecordHarPath).ConfigureAwait(false);
+                    await artifact.DeleteAsync().ConfigureAwait(false);
                 }
-
+                await Channel.CloseAsync().ConfigureAwait(false);
                 await _closeTcs.Task.ConfigureAwait(false);
             }
             catch (Exception e) when (IsTransient(e))
