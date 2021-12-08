@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
@@ -80,6 +81,41 @@ namespace Microsoft.Playwright.Tests.Locator
             await Page.SetContentAsync("<select><option>One</option><option>Two</option></select>");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.Locator("option").EvaluateAsync("() => {}"));
             StringAssert.Contains("strict mode violation", exception.Message);
+        }
+
+        [PlaywrightTest("locator-query.spec.ts", "should filter by text")]
+        public async Task ShouldFilterByText()
+        {
+            await Page.SetContentAsync("<div>Foobar</div><div>Bar</div>");
+            StringAssert.Contains(await Page.Locator("div").WithText("Foo").TextContentAsync(), "Foobar");
+        }
+
+        [PlaywrightTest("locator-query.spec.ts", "should filter by text 2")]
+        public async Task ShouldFilterByText2()
+        {
+            await Page.SetContentAsync("<div>foo <span>hello world</span> bar</div>");
+            StringAssert.Contains(await Page.Locator("div").WithText("hello world").TextContentAsync(), "foo hello world bar");
+        }
+
+        [PlaywrightTest("locator-query.spec.ts", "should filter by regex")]
+        public async Task ShouldFilterByRegex()
+        {
+            await Page.SetContentAsync("<div>Foobar</div><div>Bar</div>");
+            StringAssert.Contains(await Page.Locator("div").WithText(new Regex("Foo.*")).InnerTextAsync(), "Foobar");
+        }
+
+        [PlaywrightTest("locator-query.spec.ts", "should filter by text with quotes")]
+        public async Task ShouldFilterByTextWithQuotes()
+        {
+            await Page.SetContentAsync("<div>Hello \"world\"</div><div>Hello world</div>");
+            StringAssert.Contains(await Page.Locator("div").WithText("Hello \"world\"").InnerTextAsync(), "Hello \"world\"");
+        }
+
+        [PlaywrightTest("locator-query.spec.ts", "should filter by regex with quotes")]
+        public async Task ShouldFilterByRegexWithQuotes()
+        {
+            await Page.SetContentAsync("<div>Hello \"world\"</div><div>Hello world</div>");
+            StringAssert.Contains(await Page.Locator("div").WithText(new Regex("Hello \"world\"")).InnerTextAsync(), "Hello \"world\"");
         }
     }
 }

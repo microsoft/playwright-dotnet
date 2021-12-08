@@ -154,14 +154,6 @@ namespace Microsoft.Playwright
         /// on downloaded content via the passed <see cref="IDownload"/> instance.
         /// </para>
         /// </summary>
-        /// <remarks>
-        /// <para>
-        /// Browser context **must** be created with the <paramref name="acceptDownloads"/>
-        /// set to <c>true</c> when user needs access to the downloaded content. If <paramref
-        /// name="acceptDownloads"/> is not set, download events are emitted, but the actual
-        /// download is not performed and user has no access to the downloaded files.
-        /// </para>
-        /// </remarks>
         event EventHandler<IDownload> Download;
 
         /// <summary>

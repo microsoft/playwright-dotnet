@@ -27,6 +27,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 
@@ -110,6 +112,9 @@ namespace Microsoft.Playwright.Core
         public Task DispatchEventAsync(string type, object eventInit = null, LocatorDispatchEventOptions options = null)
             => _frame.DispatchEventAsync(_selector, type, eventInit, ConvertOptions<FrameDispatchEventOptions>(options));
 
+        public Task DragToAsync(ILocator target, LocatorDragToOptions options = null)
+            => _frame.DragAndDropAsync(_selector, ((Locator)target)._selector, ConvertOptions<FrameDragAndDropOptions>(options));
+
         public async Task<IElementHandle> ElementHandleAsync(LocatorElementHandleOptions options = null)
             => await _frame.WaitForSelectorAsync(
                 _selector,
@@ -174,6 +179,12 @@ namespace Microsoft.Playwright.Core
 
         public ILocator Nth(int index)
             => new Locator(_frame, $"{_selector} >> nth={index}");
+
+        public ILocator WithText(string text)
+            => new Locator(_frame, $"{_selector} >> :scope:has-text({text.EscapeWithQuotes("\"")})");
+
+        public ILocator WithText(Regex regex)
+            => new Locator(_frame, $"{_selector} >> :scope:text-matches({regex.ToString().EscapeWithQuotes("\"")})");
 
         public Task PressAsync(string key, LocatorPressOptions options = null)
             => _frame.PressAsync(_selector, key, ConvertOptions<FramePressOptions>(options));
