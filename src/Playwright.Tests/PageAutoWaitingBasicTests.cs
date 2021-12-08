@@ -214,7 +214,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithNoWaitAfterTrue()
         {
             Server.SetRoute("/empty.html", _ => Task.CompletedTask);
-            await Page.SetContentAsync($@"<a href=""{ Server.EmptyPage}"" target=target>empty.html</a>");
+            await Page.SetContentAsync($"<a id=anchor href='{Server.EmptyPage}'>empty.html</a>");
             await Page.ClickAsync("a", new() { NoWaitAfter = true });
         }
 

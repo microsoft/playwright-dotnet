@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("capabilities.spec.ts", "should play video")]
-        [Skip(SkipAttribute.Targets.Webkit)]
+        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Linux, SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows, SkipAttribute.Targets.Firefox)]
         public async Task ShouldPlayVideo()
         {
             await Page.GotoAsync(Server.Prefix + (TestConstants.IsWebKit ? "/video_mp4.html" : "/video.html"));
