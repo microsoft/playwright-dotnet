@@ -90,7 +90,7 @@ namespace Microsoft.Playwright.Tests
                 Assert.AreEqual(result.ToString(), "121");
                 await browser.CloseAsync();
             }
-            {                
+            {
                 var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
                 var context = await browser.NewContextAsync();
                 var page = await context.NewPageAsync();
@@ -218,7 +218,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsertype-connect.spec.ts", "should terminate network waiters")]
         [Ignore("SKIP WIRE")]
         public void ShouldTerminateNetworkWaiters()
-        {         
+        {
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should respect selectors")]
