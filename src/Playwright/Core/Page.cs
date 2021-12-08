@@ -233,7 +233,7 @@ namespace Microsoft.Playwright.Core
         {
             get
             {
-                if (!Context.RecordVideo)
+                if (Context.Options.RecordVideoDir == null)
                 {
                     return null;
                 }
