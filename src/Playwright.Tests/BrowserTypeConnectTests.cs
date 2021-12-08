@@ -82,39 +82,55 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to reconnect to a browser")]
         public async Task ShouldBeAbleToConnectToBrowserAsync()
         {
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
-            var context = await browser.NewContextAsync();
-            var page = await context.NewPageAsync();
-            await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(Server.EmptyPage, page.Url);
+            {
+                var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+                var context = await browser.NewContextAsync();
+                var page = await context.NewPageAsync();
+                var result = await page.EvaluateAsync("11 * 11");
+                Assert.AreEqual(result.ToString(), "121");
+                await browser.CloseAsync();
+            }
+            {                
+                var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+                var context = await browser.NewContextAsync();
+                var page = await context.NewPageAsync();
+                await page.GotoAsync(Server.EmptyPage);
+                Assert.AreEqual(Server.EmptyPage, page.Url);
+                await browser.CloseAsync();
+            }
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to connect two browsers at the same time")]
         public async Task ShouldBeAbleToConnectTwoBrowsersAtTheSameTime()
         {
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
             var browser1 = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
-            var context = await browser.NewContextAsync();
-            var context1 = await browser1.NewContextAsync();
-            var page = await context.NewPageAsync();
-            var page1 = await context1.NewPageAsync();
-            await page.GotoAsync(Server.EmptyPage);
-            await page1.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(Server.EmptyPage, page.Url);
-            Assert.AreEqual(Server.EmptyPage, page1.Url);
-            await browser.CloseAsync();
+            Assert.AreEqual(browser1.Contexts.Count, 0);
+            await browser1.NewContextAsync();
+            Assert.AreEqual(browser1.Contexts.Count, 1);
+
+            var browser2 = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            Assert.AreEqual(browser2.Contexts.Count, 0);
+            var context2 = await browser2.NewContextAsync();
+            Assert.AreEqual(browser1.Contexts.Count, 1);
+            Assert.AreEqual(browser2.Contexts.Count, 1);
+
             await browser1.CloseAsync();
+            Assert.AreEqual(browser2.Contexts.Count, 1);
+
+            var page2 = await context2.NewPageAsync();
+            var result = await page2.EvaluateAsync("11 * 11");
+            Assert.AreEqual(result.ToString(), "121");
+            await browser2.CloseAsync();
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "disconnected event should be emitted when browser is closed or server is closed")]
         public async Task DisconnectedEventShouldBeEmittedWhenBrowserIsClosedOrServerIsClosed()
         {
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
-            var context = await browser.NewContextAsync();
-            var page = await context.NewPageAsync();
-            await page.GotoAsync(Server.EmptyPage);
-            await browser.CloseAsync();
-            Assert.AreEqual(browser.IsConnected, false);
+            var browserOne = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            int browserOneCloseCount = 0;
+            browserOne.Disconnected += (_, e) => browserOneCloseCount++;
+            await browserOne.CloseAsync();
+            Assert.AreEqual(browserOneCloseCount, 1);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should support slowmo option")]
@@ -142,6 +158,7 @@ namespace Microsoft.Playwright.Tests
             var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
             Assert.AreEqual(browser.IsConnected, true);
             await browser.CloseAsync();
+            Assert.AreEqual(browser.IsConnected, false);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should throw when used after isConnected returns false")]
@@ -151,8 +168,10 @@ namespace Microsoft.Playwright.Tests
             var page = await browser.NewPageAsync();
             await browser.CloseAsync();
             Assert.AreEqual(browser.IsConnected, false);
-            Assert.ThrowsAsync<PlaywrightException>(async () => await page.EvaluateAsync("1 + 1"));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await page.EvaluateAsync("1 + 1"));
+            Assert.AreEqual("Connection closed (Browser closed)", exception.Message);
         }
+
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should reject navigation when browser closes")]
         public async Task ShouldRejectNavigationWhenBrowserCloses()
@@ -160,8 +179,10 @@ namespace Microsoft.Playwright.Tests
             var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
             var page = await browser.NewPageAsync();
             await browser.CloseAsync();
+
             Assert.AreEqual(browser.IsConnected, false);
-            Assert.ThrowsAsync<PlaywrightException>(async () => await page.GotoAsync(Server.EmptyPage));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await page.GotoAsync(Server.EmptyPage));
+            Assert.AreEqual("Connection closed (Browser closed)", exception.Message);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should reject waitForSelector when browser closes")]
@@ -170,10 +191,12 @@ namespace Microsoft.Playwright.Tests
             var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GotoAsync(Server.EmptyPage);
+            var watchdog = page.WaitForSelectorAsync("div");
             await browser.CloseAsync();
+
             Assert.AreEqual(browser.IsConnected, false);
-            Assert.ThrowsAsync<PlaywrightException>(async () => await page.WaitForSelectorAsync("img"));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await watchdog);
+            Assert.That(exception.Message, Contains.Substring("Target closed"));
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should emit close events on pages and contexts")]
@@ -182,16 +205,20 @@ namespace Microsoft.Playwright.Tests
             var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
-            await page.GotoAsync(Server.EmptyPage);
+            bool pageClosed = false, contextClosed = false;
+            page.Close += (_, e) => pageClosed = true;
+            context.Close += (_, e) => contextClosed = true;
+
             await browser.CloseAsync();
-            Assert.AreEqual(page.IsClosed, true);
+            Assert.AreEqual(pageClosed, true);
+            Assert.AreEqual(contextClosed, true);
             Assert.AreEqual(browser.IsConnected, false);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should terminate network waiters")]
         [Ignore("SKIP WIRE")]
         public void ShouldTerminateNetworkWaiters()
-        {
+        {         
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should respect selectors")]
