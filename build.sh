@@ -43,7 +43,7 @@ function download_driver() {
 
 function update_assets() {
   echo "updating assets..."
-  dotnet_assets_path="./src/Playwright.Tests.TestServer/wwwroot"
+  dotnet_assets_path="./src/Playwright.Tests.TestServer/assets"
   rm -rf "$dotnet_assets_path"
   cp -r "${upstream_repo_path}/tests/assets" "${dotnet_assets_path}"
   echo "done"
