@@ -93,6 +93,7 @@ namespace Microsoft.Playwright.Tests.TestServer
                     .SetBasePath(context.HostingEnvironment.ContentRootPath)
                     .AddEnvironmentVariables()
                 )
+                .UseWebRoot("assets")
                 .Configure(app => app
 #if NETCOREAPP
                     .UseWebSockets()
