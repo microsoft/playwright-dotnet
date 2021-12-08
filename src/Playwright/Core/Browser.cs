@@ -105,7 +105,7 @@ namespace Microsoft.Playwright.Core
                strictSelectors: options.StrictSelectors,
                forcedColors: options.ForcedColors).ConfigureAwait(false)).Object;
 
-            context.RecordVideo = !string.IsNullOrEmpty(options.RecordVideoDir);
+            context.Options = options;
 
             BrowserContextsList.Add(context);
             return context;

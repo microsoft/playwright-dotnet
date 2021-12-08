@@ -278,5 +278,13 @@ namespace Microsoft.Playwright.Transport.Channels
 
             return null;
         }
+
+        internal async Task<Artifact> HarExportAsync()
+        {
+            var result = await Connection.SendMessageToServerAsync(
+            Guid,
+            "harExport").ConfigureAwait(false);
+            return result.GetObject<Artifact>("artifact", Connection);
+        }
     }
 }
