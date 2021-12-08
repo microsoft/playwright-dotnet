@@ -602,46 +602,6 @@ namespace Microsoft.Playwright.Helpers
         };
 
         /// <summary>
-        /// Quotes the specified <see cref="string"/>.
-        /// </summary>
-        /// <param name="value">The string to quote.</param>
-        /// <returns>A quoted string.</returns>
-        public static string Quote(this string value)
-        {
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            if (!IsQuoted(value))
-            {
-                value = string.Concat("\"", value, "\"");
-            }
-
-            return value;
-        }
-
-        /// <summary>
-        /// Unquote the specified <see cref="string"/>.
-        /// </summary>
-        /// <param name="value">The string to unquote.</param>
-        /// <returns>An unquoted string.</returns>
-        public static string UnQuote(this string value)
-        {
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            if (IsQuoted(value))
-            {
-                value = value.Trim('"');
-            }
-
-            return value;
-        }
-
-        /// <summary>
         /// Parse the query string.
         /// </summary>
         /// <param name="query">Query string.</param>
@@ -753,13 +713,6 @@ namespace Microsoft.Playwright.Helpers
             return string.Concat(tokens.ToArray());
         }
 
-        /// <summary>
-        /// Converts a string to a byte array. It's a shortcut for Convert.FromBase64String.
-        /// </summary>
-        /// <param name="value">Value to parse.</param>
-        /// <returns>Value as an array of bytes.</returns>
-        public static byte[] AsBinary(this string value) => Convert.FromBase64String(value);
-
         internal static string GetContentType(this string path)
         {
             const string defaultContentType = "application/octet-stream";
@@ -786,9 +739,6 @@ namespace Microsoft.Playwright.Helpers
                 MimeType = file.MimeType(),
             };
         }
-
-        private static bool IsQuoted(this string value)
-            => value.StartsWith("\"", StringComparison.OrdinalIgnoreCase) && value.EndsWith("\"", StringComparison.OrdinalIgnoreCase);
 
         private static string GetExtension(string path)
         {
