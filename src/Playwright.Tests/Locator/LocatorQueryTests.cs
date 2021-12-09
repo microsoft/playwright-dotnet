@@ -117,5 +117,12 @@ namespace Microsoft.Playwright.Tests.Locator
             await Page.SetContentAsync("<div>Hello \"world\"</div><div>Hello world</div>");
             StringAssert.Contains(await Page.Locator("div").WithText(new Regex("Hello \"world\"")).InnerTextAsync(), "Hello \"world\"");
         }
+
+        [PlaywrightTest("locator-query.spec.ts", "should filter by regex and regexp flags")]
+        public async Task ShouldFilterByRegexandRegexpFlags()
+        {
+            await Page.SetContentAsync("<div>Hello \"world\"</div><div>Hello world</div>");
+            StringAssert.Contains(await Page.Locator("div").WithText(new Regex("hElLo \"wOrld\"", RegexOptions.IgnoreCase)).InnerTextAsync(), "Hello \"world\"");
+        }
     }
 }

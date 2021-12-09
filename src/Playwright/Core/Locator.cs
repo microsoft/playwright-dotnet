@@ -184,7 +184,7 @@ namespace Microsoft.Playwright.Core
             => new Locator(_frame, $"{_selector} >> :scope:has-text({text.EscapeWithQuotes("\"")})");
 
         public ILocator WithText(Regex regex)
-            => new Locator(_frame, $"{_selector} >> :scope:text-matches({regex.ToString().EscapeWithQuotes("\"")})");
+            => new Locator(_frame, $"{_selector} >> :scope:text-matches({regex.ToString().EscapeWithQuotes("\"")}, {regex.Options.GetInlineFlags().EscapeWithQuotes("\"")})");
 
         public Task PressAsync(string key, LocatorPressOptions options = null)
             => _frame.PressAsync(_selector, key, ConvertOptions<FramePressOptions>(options));
