@@ -77,13 +77,8 @@ namespace Microsoft.Playwright.Transport
                 IsClosed = true;
                 TransportClosed?.Invoke(this, new() { CloseReason = closeReason });
                 _readerCancellationSource?.Cancel();
-                try
-                {
-                    _process?.Kill();
-                }
-                catch
-                {
-                }
+                _process.StandardInput.Close();
+                _process.WaitForExit();
             }
         }
 
