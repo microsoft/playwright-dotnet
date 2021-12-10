@@ -65,7 +65,7 @@ namespace Microsoft.Playwright
             };
 
             playwrightStartInfo.EnvironmentVariables.Add("PW_CLI_TARGET_LANG", "csharp");
-            playwrightStartInfo.EnvironmentVariables.Add("PW_CLI_NAME ", "playwright");
+            playwrightStartInfo.EnvironmentVariables.Add("PW_CLI_DISPLAY_VERSION", GetSemVerPackageVersion());
 
             using var outputWaitHandle = new AutoResetEvent(false);
             using var errorWaitHandle = new AutoResetEvent(false);
@@ -109,6 +109,15 @@ namespace Microsoft.Playwright
         {
             Console.Error.WriteLine("\x1b[91m" + error + "\x1b[0m");
             return 1;
+        }
+
+        private static string GetSemVerPackageVersion()
+        {
+            // AssemblyName.Version returns a 4 digit version number, this method
+            // drops the last number which represents the build revision.
+            string version = typeof(Playwright).Assembly.GetName().Version.ToString();
+            string[] versionParts = version.Split('.');
+            return $"{versionParts[0]}.{versionParts[1]}.{versionParts[2]}";
         }
     }
 }
