@@ -11,15 +11,12 @@ on:
       - release-*
 
 jobs:
-  test_net5:
-    name: Quick Test Harness Tests using .NET 5
+  test-net5:
+    name: Test Harness Tests .NET 5
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: true
-          fetch-depth: 1
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
@@ -27,12 +24,9 @@ jobs:
       - name: Install prerequisites and download drivers
         shell: bash
         run: ./build.sh --download-driver
-      - name: Building...
+      - name: Building
         run: dotnet build ./src
-      - name: Installing Browsers and dependencies...
-        run: |
-          dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install
-          dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install-deps
-      - name: Running tests... 
-        run: |
-          xvfb-run dotnet test ./src/Playwright.TestingHarnessTest/Playwright.TestingHarnessTest.csproj -c Debug -f net5.0 --logger "trx"
+      - name: Installing Browsers and dependencies
+        run: dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install --with-deps
+      - name: Running tests 
+        run: xvfb-run dotnet test ./src/Playwright.TestingHarnessTest/Playwright.TestingHarnessTest.csproj -c Debug -f net5.0 --logger "trx"

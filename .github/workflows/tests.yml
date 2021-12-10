@@ -11,20 +11,17 @@ on:
       - release-*
 
 jobs:
-  test_net5:
-    name: ${{ matrix.product }} on ${{ matrix.os }} using .NET 5
+  test-net5:
+    name: ${{ matrix.browser }}/${{ matrix.os }}/.NET 5
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        product: [CHROMIUM, FIREFOX, WEBKIT]
+        browser: [chromium, firefox, webkit]
         os: [windows-latest, ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: true
-          fetch-depth: 1
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
@@ -32,33 +29,26 @@ jobs:
       - name: Install prerequisites and download drivers
         shell: bash
         run: ./build.sh --download-driver
-      - name: Building...
+      - name: Building
         run: dotnet build ./src
-      - name: Installing Browsers and dependencies...
-        run: |
-          dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install
-          dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install-deps
-      - name: Running tests...
-        if: ${{ matrix.os != 'ubuntu-latest' }}
+      - name: Installing Browsers and dependencies
+        run: dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install --with-deps ${{ matrix.browser }}
+      - name: Running tests
+        if: matrix.os != 'ubuntu-latest'
         env:
-          BROWSER: ${{ matrix.product }}
-        run: 
-          dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --logger "trx;LogFileName=TestResults.xml" -- NUnit.NumberOfTestWorkers=1
-      - name: Running tests... (Linux)
-        if: ${{ matrix.os == 'ubuntu-latest' }}
+          BROWSER: ${{ matrix.browser }}
+        run: dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --logger "trx;LogFileName=TestResults.xml" -- NUnit.NumberOfTestWorkers=1
+      - name: Running tests (Linux)
+        if: matrix.os == 'ubuntu-latest'
         env:
-          BROWSER: ${{ matrix.product }}
-        run: |
-          xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --logger "trx" -- NUnit.NumberOfTestWorkers=1
+          BROWSER: ${{ matrix.browser }}
+        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --logger "trx" -- NUnit.NumberOfTestWorkers=1
 
-  test_net31:
-    name: Chromium on Ubuntu using .NET 3.1
+  test-net31:
+    name: chromium/ubuntu/.NET 3.1
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: true
-          fetch-depth: 0
       - name: Setup .NET Core 3.1
         uses: actions/setup-dotnet@v1
         with:
@@ -70,16 +60,13 @@ jobs:
       - name: Install prerequisites and download drivers
         shell: bash
         run: ./build.sh --download-driver
-      - name: Building...
+      - name: Building
         run: |
           dotnet build -f netstandard2.0 ./src/Playwright/Playwright.csproj
           dotnet build -f netcoreapp3.1 ./src/Playwright.Tests/Playwright.Tests.csproj
-      - name: Installing Browsers and dependencies...
-        run: |
-          dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install
-          dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install-deps
-      - name: Running tests... 
+      - name: Installing Browsers and dependencies
+        run: dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install --with-deps chromium
+      - name: Running tests
         env:
           BROWSER: CHROMIUM
-        run: |
-          xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f netcoreapp3.1 --logger "trx" -- NUnit.NumberOfTestWorkers=1
+        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f netcoreapp3.1 --logger "trx" -- NUnit.NumberOfTestWorkers=1
