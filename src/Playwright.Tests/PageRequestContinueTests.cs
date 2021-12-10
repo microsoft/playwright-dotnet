@@ -47,7 +47,9 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.RouteAsync("**/*", (route) =>
             {
+#pragma warning disable 0612
                 var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["FOO"] = "bar" };
+#pragma warning restore 0612
                 route.ContinueAsync(new() { Headers = headers });
             });
             await Page.GotoAsync(Server.EmptyPage);

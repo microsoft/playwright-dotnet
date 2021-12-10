@@ -79,8 +79,8 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Whether to automatically download all the attachments. Defaults to <c>false</c>
-        /// where all the downloads are canceled.
+        /// Whether to automatically download all the attachments. Defaults to <c>true</c> where
+        /// all the downloads are accepted.
         /// </para>
         /// </summary>
         [JsonPropertyName("acceptDownloads")]

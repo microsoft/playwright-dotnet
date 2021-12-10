@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowOnUnsupportedInputs()
         {
             await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
-            foreach (string type in new[] { "button", "checkbox", "file", "image", "radio", "range", "reset", "submit" })
+            foreach (string type in new[] { "button", "checkbox", "file", "image", "radio", "reset", "submit" })
             {
                 await Page.EvalOnSelectorAsync("input", "(input, type) => input.setAttribute('type', type)", type);
                 var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.FillAsync("input", string.Empty));

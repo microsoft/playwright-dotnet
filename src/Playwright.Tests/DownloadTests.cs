@@ -75,9 +75,9 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual($"{Server.Prefix}/downloadWithFilename", download.Url);
             Assert.AreEqual("file.txt", download.SuggestedFilename);
 
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => download.PathAsync());
-            StringAssert.Contains("acceptDownloads", await download.FailureAsync());
-            StringAssert.Contains("acceptDownloads: true", exception.Message);
+            string path = await download.PathAsync();
+            Assert.True(new FileInfo(path).Exists);
+            Assert.AreEqual("Hello world", File.ReadAllText(path));
         }
 
         [PlaywrightTest("download.spec.ts", "should report downloads with acceptDownloads: true")]
