@@ -11,10 +11,9 @@ on:
       - release-*
 
 jobs:
-  test-net5:
-    name: Test Harness Tests .NET 5
+  build:
+    name: Build the NuGet file
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET Core
@@ -26,7 +25,34 @@ jobs:
         run: ./build.sh --download-driver
       - name: Building
         run: dotnet build ./src
+      - run: dotnet pack ./src/Playwright/Playwright.csproj -c Debug
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+      - uses: actions/upload-artifact@v2
+        with:
+          name: nuget-package
+          path: src/Playwright/bin/Debug/Microsoft.Playwright.*.nupkg
+  test-net5:
+    name: Test Harness Tests .NET 5
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [build]
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: nuget-package
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+      - name: Install dependencies
+        run: dotnet add package Microsoft.Playwright --prerelease -s "$PWD/../../src/Playwright/bin/Debug"
+        working-directory: src/Playwright.TestingHarnessTest/
       - name: Installing Browsers and dependencies
-        run: dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install --with-deps
+        shell: pwsh
+        run: bin/Debug/net5/playwright.ps1 install --with-deps
       - name: Running tests 
         run: xvfb-run dotnet test ./src/Playwright.TestingHarnessTest/Playwright.TestingHarnessTest.csproj -c Debug -f net5.0 --logger "trx"
