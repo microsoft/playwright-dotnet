@@ -8,6 +8,7 @@
       Playwright enables reliable end-to-end testing for modern web apps. This package brings in additional helpers
       and fixtures to enable using it within NUnit.
     </Description>
+    <PackageIcon>icon.png</PackageIcon>
     <TargetFrameworks>netcoreapp3.1;net5.0;net48</TargetFrameworks>
     <DebugSymbols>true</DebugSymbols>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -36,5 +37,8 @@
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Common\icon.png" Pack="true" Visible="false" PackagePath="icon.png" />
   </ItemGroup>
 </Project>
