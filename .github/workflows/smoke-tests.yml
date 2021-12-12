@@ -24,24 +24,25 @@ jobs:
         shell: bash
         run: ./build.sh --download-driver
       - name: Building
-        run: dotnet build ./src
-      - run: dotnet pack ./src/Playwright/Playwright.csproj -c Debug
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+        run: |
+          dotnet build -c Release ./src/Playwright
+          rm -rf src/Playwright/bin
+          # TODO: for some reason on the first build it does not include the .playwright folder
+          dotnet build -c Release ./src/Playwright
       - uses: actions/upload-artifact@v2
         with:
           name: nuget-package
-          path: src/Playwright/bin/Debug/Microsoft.Playwright.*.nupkg
+          path: src/Playwright/bin/Release/Microsoft.Playwright.*.nupkg
   test-net5:
     name: Test Harness Tests .NET 5
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: [build]
     steps:
+      - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         with:
           name: nuget-package
-      - uses: actions/checkout@v2
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
