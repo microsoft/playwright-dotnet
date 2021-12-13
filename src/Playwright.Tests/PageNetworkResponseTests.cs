@@ -64,7 +64,9 @@ namespace Microsoft.Playwright.Tests
             });
 
             var response = await Page.GotoAsync(Server.EmptyPage);
+#pragma warning disable 0612
             StringAssert.Contains("bar", response.Headers["foo"]);
+#pragma warning restore 0612
         }
 
         [PlaywrightTest("page-network-response.spec.ts", "should return json")]
@@ -110,7 +112,9 @@ namespace Microsoft.Playwright.Tests
         {
             Server.EnableGzip("/simple.json");
             var response = await Page.GotoAsync(Server.Prefix + "/simple.json");
+#pragma warning disable 0612
             Assert.AreEqual("gzip", response.Headers["content-encoding"]);
+#pragma warning restore 0612
             Assert.AreEqual("{\"foo\": \"bar\"}", (await response.TextAsync()).Trim());
         }
 
@@ -247,7 +251,9 @@ namespace Microsoft.Playwright.Tests
             await Task.WhenAll(responseTask, Page.EvaluateAsync("() => fetch('/headers')"));
             var response = responseTask.Result;
             var allHeaders = await response.AllHeadersAsync();
+#pragma warning disable 0612
             Assert.AreEqual(response.Headers, allHeaders);
+#pragma warning restore 0612
         }
     }
 }

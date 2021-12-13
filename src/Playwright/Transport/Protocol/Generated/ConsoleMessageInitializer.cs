@@ -23,7 +23,6 @@
  */
 
 using System.Collections.Generic;
-using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
@@ -33,7 +32,7 @@ namespace Microsoft.Playwright.Transport.Protocol
 
         public string Text { get; set; }
 
-        public List<JSHandle> Args { get; set; }
+        public List<Core.JSHandle> Args { get; set; }
 
         public ConsoleMessageLocation Location { get; set; }
     }

@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.Transport
         internal async Task<T> SendMessageToServerAsync<T>(
             string guid,
             string method,
-            object args)
+            object args = null)
         {
             if (IsClosed)
             {

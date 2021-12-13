@@ -89,6 +89,24 @@ namespace Microsoft.Playwright
     /// // Works because Count knows what to do with multiple matches:<br/>
     /// await page.Locator("button").CountAsync();
     /// </code>
+    /// <para>**Lists**</para>
+    /// <para>You can also use locators to work with the element lists.</para>
+    /// <code>
+    /// // Locate elements, this locator points to a list.<br/>
+    /// var rows = page.Locator("table tr");<br/>
+    /// <br/>
+    /// // Pattern 1: use locator methods to calculate text on the whole list.<br/>
+    /// var texts = await rows.AllTextContentsAsync();<br/>
+    /// <br/>
+    /// // Pattern 2: do something with each element in the list:<br/>
+    /// var count = await rows.CountAsync()<br/>
+    /// for (let i = 0; i &lt; count; ++i)<br/>
+    ///   Console.WriteLine(await rows.Nth(i).TextContentAsync());<br/>
+    /// <br/>
+    /// // Pattern 3: resolve locator to elements on page and map them to their text content<br/>
+    /// // Note: the code inside evaluateAll runs in page, you can call any DOM apis there<br/>
+    /// var texts = await rows.EvaluateAllAsync("list =&gt; list.map(element =&gt; element.textContent)");
+    /// </code>
     /// </summary>
     public partial interface ILocator
     {
@@ -267,6 +285,10 @@ namespace Microsoft.Playwright
         /// <param name="eventInit">Optional event-specific initialization properties.</param>
         /// <param name="options">Call options</param>
         Task DispatchEventAsync(string type, object? eventInit = default, LocatorDispatchEventOptions? options = default);
+
+        /// <param name="target">Locator of the element to drag to.</param>
+        /// <param name="options">Call options</param>
+        Task DragToAsync(ILocator target, LocatorDragToOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -1016,6 +1038,24 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="options">Call options</param>
         Task WaitForAsync(LocatorWaitForOptions? options = default);
+
+        /// <summary>
+        /// <para>
+        /// Matches elements containing specified text somewhere inside, possibly in a child
+        /// or a descendant element. For example, <c>"Playwright"</c> matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
+        /// </para>
+        /// </summary>
+        /// <param name="text">Text to filter by as a string or as a regular expression.</param>
+        ILocator WithText(string text);
+
+        /// <summary>
+        /// <para>
+        /// Matches elements containing specified text somewhere inside, possibly in a child
+        /// or a descendant element. For example, <c>"Playwright"</c> matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
+        /// </para>
+        /// </summary>
+        /// <param name="text">Text to filter by as a string or as a regular expression.</param>
+        ILocator WithText(Regex text);
     }
 }
 

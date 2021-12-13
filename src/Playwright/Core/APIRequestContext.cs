@@ -22,20 +22,16 @@
  * SOFTWARE.
  */
 
-using System;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Microsoft.Playwright.Transport.Channels;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Core
 {
-    /// <summary>
-    /// Extensions for <see cref="double"/>.
-    /// </summary>
-    internal static class DoubleExtensions
+    internal class APIRequestContext
     {
-        /// <summary>
-        /// Checks if the double is a negative zero.
-        /// </summary>
-        /// <param name="d">Number to check.</param>
-        /// <returns>Whether the number is negative zero or not.</returns>
-        public static bool IsNegativeZero(this double d) => d == 0.0 && BitConverter.GetBytes(0d) != BitConverter.GetBytes(d);
+        public APIRequestContext(IChannelOwner parent)
+        {
+        }
     }
 }

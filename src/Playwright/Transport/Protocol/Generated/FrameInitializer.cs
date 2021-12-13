@@ -23,7 +23,6 @@
  */
 
 using System.Collections.Generic;
-using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
@@ -33,7 +32,7 @@ namespace Microsoft.Playwright.Transport.Protocol
 
         public string Name { get; set; }
 
-        public Frame ParentFrame { get; set; }
+        public Core.Frame ParentFrame { get; set; }
 
         public List<WaitUntilState> LoadStates { get; set; }
     }

@@ -105,6 +105,7 @@ namespace Microsoft.Playwright
         /// cref="IRequest.AllHeadersAsync"/> instead.
         /// </para>
         /// </summary>
+        [System.Obsolete]
         Dictionary<string, string> Headers { get; }
 
         /// <summary>

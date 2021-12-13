@@ -38,7 +38,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("downloads-path.spec.ts", "should keep downloadsPath folder")]
         public async Task ShouldKeepDownloadsPathFolder()
         {
-            var page = await _browser.NewPageAsync();
+            var page = await _browser.NewPageAsync(new() { AcceptDownloads = false });
             await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
             var downloadTask = page.WaitForDownloadAsync();
 

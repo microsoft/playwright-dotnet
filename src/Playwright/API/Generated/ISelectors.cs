@@ -67,11 +67,11 @@ namespace Microsoft.Playwright
         /// var page = await browser.NewPageAsync();<br/>
         /// await page.SetContentAsync("&lt;div&gt;&lt;button&gt;Click me&lt;/button&gt;&lt;/div&gt;");<br/>
         /// // Use the selector prefixed with its name.<br/>
-        /// var button = await page.QuerySelectorAsync("tag=button");<br/>
+        /// var button = page.Locator("tag=button");<br/>
         /// // Combine it with other selector engines.<br/>
         /// await page.ClickAsync("tag=div &gt;&gt; text=\"Click me\"");<br/>
         /// // Can use it in any methods supporting selectors.<br/>
-        /// int buttonCount = await page.EvalOnSelectorAllAsync&lt;int&gt;("tag=button", "buttons =&gt; buttons.length");
+        /// int buttonCount = await page.Locator("tag=button").CountAsync();
         /// </code>
         /// </summary>
         /// <param name="name">

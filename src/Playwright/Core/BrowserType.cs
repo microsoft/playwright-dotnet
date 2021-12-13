@@ -76,7 +76,7 @@ namespace Microsoft.Playwright.Core
         public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions options = default)
         {
             options ??= new BrowserTypeLaunchPersistentContextOptions();
-            return (await _channel.LaunchPersistentContextAsync(
+            var context = (await _channel.LaunchPersistentContextAsync(
                 userDataDir,
                 headless: options.Headless,
                 channel: options.Channel,
@@ -119,6 +119,16 @@ namespace Microsoft.Playwright.Core
                 ignoreAllDefaultArgs: options.IgnoreAllDefaultArgs,
                 baseUrl: options.BaseURL,
                 forcedColors: options.ForcedColors).ConfigureAwait(false)).Object;
+
+            // TODO: unite with a single browser context options type which is derived from channels
+            context.Options = new()
+            {
+                RecordVideoDir = options.RecordVideoDir,
+                RecordVideoSize = options.RecordVideoSize,
+                RecordHarPath = options.RecordHarPath,
+                RecordHarOmitContent = options.RecordHarOmitContent,
+            };
+            return context;
         }
 
         public async Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions options = null)

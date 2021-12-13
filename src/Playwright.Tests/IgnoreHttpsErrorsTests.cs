@@ -37,26 +37,17 @@ namespace Microsoft.Playwright.Tests
     public class IgnoreHttpsErrorsTests : BrowserTestEx
     {
         [PlaywrightTest("ignorehttpserrors.spec.ts", "should work")]
-        [Ignore("Fix me #1058")]
         public async Task ShouldWork()
         {
             await using var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true });
             var page = await context.NewPageAsync();
-            var requestTask = Server.WaitForRequest(
-                "/empty.html",
-                request => request.HttpContext.Features.Get<ITlsHandshakeFeature>().Protocol);
-            var responseTask = page.GotoAsync(HttpsServer.Prefix + "/empty.html");
-
-            await TaskUtils.WhenAll(
-                requestTask,
-                responseTask);
+            var responseTask = page.GotoAsync(HttpsServer.EmptyPage);
 
             var response = responseTask.Result;
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
         }
 
         [PlaywrightTest("ignorehttpserrors.spec.ts", "should isolate contexts")]
-        [Ignore("Fix me #1058")]
         public async Task ShouldIsolateContexts()
         {
             await using (var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true }))
@@ -75,10 +66,9 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("ignorehttpserrors.spec.ts", "should work with mixed content")]
-        [Ignore("Fix me #1058")]
         public async Task ShouldWorkWithMixedContent()
         {
-            Server.SetRoute("/mixedcontent.html", async (context) =>
+            HttpsServer.SetRoute("/mixedcontent.html", async (context) =>
             {
                 await context.Response.WriteAsync($"<iframe src='{Server.EmptyPage}'></iframe>");
             });
@@ -91,7 +81,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("ignorehttpserrors.spec.ts", "should work with WebSocket")]
-        [Ignore("Fix me #1058")]
         public async Task ShouldWorkWithWebSocket()
         {
             await using var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true });
@@ -109,7 +98,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("ignorehttpserrors.spec.ts", "should fail with WebSocket if not ignored")]
-        [Ignore("Fix me #1058")]
         public async Task ShouldFailWithWebSocketIfNotIgnored()
         {
             await using var context = await Browser.NewContextAsync();

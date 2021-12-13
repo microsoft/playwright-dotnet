@@ -23,13 +23,12 @@
  */
 
 using System.Collections.Generic;
-using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class RequestInitializer
     {
-        public Frame Frame { get; set; }
+        public Core.Frame Frame { get; set; }
 
         public string Url { get; set; }
 
@@ -43,6 +42,6 @@ namespace Microsoft.Playwright.Transport.Protocol
 
         public bool IsNavigationRequest { get; set; }
 
-        public Request RedirectedFrom { get; set; }
+        public Core.Request RedirectedFrom { get; set; }
     }
 }

@@ -22,15 +22,36 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
-using Microsoft.Playwright.Core;
+using System;
+using System.Text.RegularExpressions;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Helpers
 {
-    internal class SocksSocketInitializer
+    /// <summary>
+    /// Extensions for <see cref="System.Text.RegularExpressions.RegexOptions"/>.
+    /// </summary>
+    internal static class RegexOptionsExtensions
     {
-        public string DstAddr { get; set; }
-
-        public int DstPort { get; set; }
+        public static string GetInlineFlags(this System.Text.RegularExpressions.RegexOptions options)
+        {
+            string flags = string.Empty;
+            if (options.HasFlag(RegexOptions.IgnoreCase))
+            {
+                flags += "i";
+            }
+            if (options.HasFlag(RegexOptions.Singleline))
+            {
+                flags += "s";
+            }
+            if (options.HasFlag(RegexOptions.Multiline))
+            {
+                flags += "m";
+            }
+            if ((options & ~(RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline)) != 0)
+            {
+                throw new ArgumentException("Unsupported RegularExpression flags");
+            }
+            return flags;
+        }
     }
 }

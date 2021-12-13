@@ -18,18 +18,15 @@ jobs:
         os: [windows-latest, ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: true
-          fetch-depth: 0
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.x
       - name: Install prerequisites and download drivers
-        shell: pwsh
+        shell: bash
         run: |
-          .\build.ps1 driver -prereqs
-          .\build.ps1 wwwroot
+          ./build.sh --download-driver
+          ./build.sh --setup-dotnet-deps
       - name: Install Playwright CLI
         run: dotnet tool install --global Microsoft.Playwright.CLI
       - name: Build NUnit Package
@@ -41,11 +38,8 @@ jobs:
       - name: Build LocalNugetTest 
         run: dotnet build
         working-directory: ./src/Playwright.LocalNugetTest/
-      - name: Install Dependencies
-        run: playwright install-deps
-        working-directory: ./src/Playwright.LocalNugetTest/
-      - name: Install Browsers
-        run: playwright install
+      - name: Install browsers and dependencies
+        run: playwright install --with-deps
         working-directory: ./src/Playwright.LocalNugetTest/
       - name: Run Tests
         run: dotnet test

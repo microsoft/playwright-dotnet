@@ -23,12 +23,11 @@
  */
 
 using System.Collections.Generic;
-using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class RouteInitializer
     {
-        public Request Request { get; set; }
+        public Core.Request Request { get; set; }
     }
 }
