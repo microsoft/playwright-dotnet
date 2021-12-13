@@ -85,8 +85,15 @@ namespace Microsoft.Playwright.Transport
         {
             var timeout = _options?.Timeout ?? 30000;
             using var connectCancellationSource = new CancellationTokenSource((int)timeout);
-            await _webSocket.ConnectAsync(new Uri(_wsEndpoint), connectCancellationSource.Token).ConfigureAwait(false);
-            _ = Task.Factory.StartNew(() => DispatchIncomingMessagesAsync(), _webSocketToken.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+            try
+            {
+                await _webSocket.ConnectAsync(new Uri(_wsEndpoint), connectCancellationSource.Token).ConfigureAwait(false);
+                _ = Task.Factory.StartNew(() => DispatchIncomingMessagesAsync(), _webSocketToken.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+            }
+            catch (Exception)
+            {
+                throw new PlaywrightException($"Timeout {timeout}ms exceeded");
+            }
         }
 
         private async Task DispatchIncomingMessagesAsync()
@@ -122,7 +129,7 @@ namespace Microsoft.Playwright.Transport
 
             // Does not matter whether this is error or not, report
             // transport as closed, close web socket if open.
-            HandleSocketClosed(closeReason);
+            Close(closeReason);
             memoryStream.Dispose();
 #pragma warning restore VSTHRD103
         }

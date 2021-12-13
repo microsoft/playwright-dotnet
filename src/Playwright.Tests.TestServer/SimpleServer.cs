@@ -56,6 +56,7 @@ namespace Microsoft.Playwright.Tests.TestServer
         public string Prefix { get; }
         public string CrossProcessPrefix { get; }
         public string EmptyPage { get; internal set; }
+        public HttpRequest LastRequest { get; internal set; }
 
         internal IList<string> GzipRoutes { get; }
 
@@ -101,10 +102,16 @@ namespace Microsoft.Playwright.Tests.TestServer
                     {
                         RequestReceived?.Invoke(this, new() { Request = context.Request });
 
-                        if (context.Request.Path == "/ws")
+                        LastRequest = context.Request;
+
+                        if (context.Request.Path == "/ws" || context.Request.Path == "/ws-slow")
                         {
                             if (context.WebSockets.IsWebSocketRequest)
                             {
+                                if (context.Request.Path == "/ws-slow")
+                                {
+                                    var taskToAwait = Task.Run(async () => { await Task.Delay(3000); });
+                                }
                                 var webSocket = await context.WebSockets.AcceptWebSocketAsync();
                                 await webSocket.SendAsync(new(Encoding.UTF8.GetBytes("incoming")), WebSocketMessageType.Text, true, CancellationToken.None);
                                 await ReceiveLoopAsync(webSocket, context.Request.Headers["User-Agent"].ToString().Contains("Firefox"), CancellationToken.None);
@@ -226,7 +233,7 @@ namespace Microsoft.Playwright.Tests.TestServer
 
         public void SetRedirect(string from, string to) => SetRoute(from, context =>
         {
-            context.Response.Redirect(to);
+            context.Response.Redirect(to, false);
             return Task.CompletedTask;
         });
 
