@@ -128,43 +128,8 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsertype-connect.spec.ts", "should timeout in connect while connecting")]
         public async Task ShouldTimeoutInConnectWhileConnecting()
         {
-            string WsEndpoint = "ws://localhost:" + Server.Port.ToString() + "/ws";
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await BrowserType.ConnectAsync(WsEndpoint, new BrowserTypeConnectOptions { Timeout = 100 }));
-            StringAssert.Contains("Timeout 100ms exceeded", exception.Message);
-        }
-
-        [PlaywrightTest("browsertype-connect.spec.ts", "should send extra headers with connect request")]
-        public async Task ShouldSendExtraHeadersWithConnect()
-        {
-            string WsEndpoint = "ws://localhost:" + Server.Port.ToString() + "/ws";
-            await BrowserType.ConnectAsync(WsEndpoint, new BrowserTypeConnectOptions
-            {
-                Headers = new Dictionary<string, string>
-                {
-                    ["User-Agent"] = "Playwright",
-                    ["foo"] = "bar",
-                }
-            });
-            Assert.NotNull(Server.LastRequest);
-            Assert.Equals("Playwright", Server.LastRequest.Headers["User-Agent"]);
-            Assert.Equals("bar", Server.LastRequest.Headers["foo"]);
-        }
-
-        [PlaywrightTest("browsertype-connect.spec.ts", "should send default headers with connect request")]
-        public async Task ShouldSendDefaultUserAgentHeaderWithConnect()
-        {
-            // Issue : Semphore disposed during server connection
-            string WsEndpoint = "ws://localhost:" + Server.Port.ToString() + "/ws";
-            await BrowserType.ConnectAsync(WsEndpoint, new BrowserTypeConnectOptions
-            {
-                Headers = new Dictionary<string, string>
-                {
-                    ["foo"] = "bar",
-                }
-            });
-            Assert.NotNull(Server.LastRequest);
-            Assert.Equals("bar", Server.LastRequest.Headers["foo"]);
-            StringAssert.Contains("Playwright", Server.LastRequest.Headers["user-agent"]);
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await BrowserType.ConnectAsync(_browserServer.WSEndpoint, new BrowserTypeConnectOptions { Timeout = 1 }));
+            StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should support slowmo option")]
@@ -306,45 +271,6 @@ namespace Microsoft.Playwright.Tests
                     StringAssert.Contains("Page closed", exception.Message);
                 }
             }
-        }
-
-        [PlaywrightTest("browsertype-connect.spec.ts", "should respect selectors")]
-        public async Task ShouldRespectSelectors()
-        {
-            string mycss = @"
-            ({
-                query(root, selector) {
-                    return root.querySelector(selector);
-                },
-                queryAll(root, selector) {
-                    return Array.from(root.querySelectorAll(selector));
-                }
-            })";
-            await Playwright.Selectors.RegisterAsync("mycss1", new() { Script = mycss });
-
-            var browser1 = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
-            var context1 = await browser1.NewContextAsync();
-
-            await Playwright.Selectors.RegisterAsync("mycss2", new() { Script = mycss });
-
-            var page1 = await context1.NewPageAsync();
-            await page1.SetContentAsync("<div>hello</div>");
-            Assert.AreEqual("hello", await page1.InnerHTMLAsync("css=div"));
-            Assert.AreEqual("hello", await page1.InnerHTMLAsync("mycss1=div"));
-            Assert.AreEqual("hello", await page1.InnerHTMLAsync("mycss2=div"));
-
-            var browser2 = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
-            await Playwright.Selectors.RegisterAsync("mycss3", new() { Script = mycss });
-            var page2 = await browser2.NewPageAsync();
-            await page2.SetContentAsync("<div>hello</div>");
-
-            Assert.AreEqual("hello", await page2.InnerHTMLAsync("css=div"));
-            Assert.AreEqual("hello", await page2.InnerHTMLAsync("mycss1=div"));
-            Assert.AreEqual("hello", await page2.InnerHTMLAsync("mycss2=div"));
-            Assert.AreEqual("hello", await page2.InnerHTMLAsync("mycss3=div"));
-
-            await browser1.CloseAsync();
-            await browser2.CloseAsync();
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should not throw on close after disconnect")]

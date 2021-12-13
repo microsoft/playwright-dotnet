@@ -105,14 +105,10 @@ namespace Microsoft.Playwright.Tests.TestServer
 
                         LastRequest = context.Request;
 
-                        if (context.Request.Path == "/ws" || context.Request.Path == "/ws-slow")
+                        if (context.Request.Path == "/ws")
                         {
                             if (context.WebSockets.IsWebSocketRequest)
                             {
-                                if (context.Request.Path == "/ws-slow")
-                                {
-                                    var taskToAwait = Task.Run(async () => { await Task.Delay(3000); });
-                                }
                                 var webSocket = await context.WebSockets.AcceptWebSocketAsync();
                                 await webSocket.SendAsync(new(Encoding.UTF8.GetBytes("incoming")), WebSocketMessageType.Text, true, CancellationToken.None);
                                 await ReceiveLoopAsync(webSocket, context.Request.Headers["User-Agent"].ToString().Contains("Firefox"), CancellationToken.None);
