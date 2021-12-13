@@ -30,7 +30,6 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Playwright.NUnit;
-using Microsoft.Playwright.Tests.TestServer;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -137,14 +136,9 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsertype-connect.spec.ts", "should send extra headers with connect request")]
         public async Task ShouldSendExtraHeadersWithConnect()
         {
-            // Issue : Semphore disposed during server connection
-            int port = Server.Port + 100;
-            var disposableServer = new SimpleServer(port, TestUtils.FindParentDirectory("Playwright.Tests.TestServer"), false);
-            await disposableServer.StartAsync();
-
-            string WsEndpoint = "ws://localhost:" + port.ToString() + "/ws";
-            //string WsEndpoint = "ws://localhost:" + Server.Port.ToString() + "/ws";
-            await BrowserType.ConnectAsync(WsEndpoint, new BrowserTypeConnectOptions {
+            string WsEndpoint = "ws://localhost:" + Server.Port.ToString() + "/ws";
+            await BrowserType.ConnectAsync(WsEndpoint, new BrowserTypeConnectOptions
+            {
                 Headers = new Dictionary<string, string>
                 {
                     ["User-Agent"] = "Playwright",
@@ -154,7 +148,6 @@ namespace Microsoft.Playwright.Tests
             Assert.NotNull(Server.LastRequest);
             Assert.Equals("Playwright", Server.LastRequest.Headers["User-Agent"]);
             Assert.Equals("bar", Server.LastRequest.Headers["foo"]);
-            await disposableServer.StopAsync();
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should send default headers with connect request")]
@@ -305,9 +298,9 @@ namespace Microsoft.Playwright.Tests
             {
                 await task;
             }
-            catch(Exception)
+            catch (Exception)
             {
-                foreach(var exception in task.Exception.InnerExceptions)
+                foreach (var exception in task.Exception.InnerExceptions)
                 {
                     Console.WriteLine(exception.Message);
                     StringAssert.Contains("Page closed", exception.Message);
@@ -318,8 +311,6 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsertype-connect.spec.ts", "should respect selectors")]
         public async Task ShouldRespectSelectors()
         {
-            // Issue: Doesn't register the selectors
-
             string mycss = @"
             ({
                 query(root, selector) {
@@ -329,19 +320,9 @@ namespace Microsoft.Playwright.Tests
                     return Array.from(root.querySelectorAll(selector));
                 }
             })";
-            // Register one engine before connecting.
-            //string mycss = "{\n" +
-            //      "    query(root, selector) {\n" +
-            //      "      return root.querySelector(selector);\n" +
-            //      "    },\n" +
-            //      "    queryAll(root, selector) {\n" +
-            //      "      return Array.from(root.querySelectorAll(selector));\n" +
-            //      "    }\n" +
-            //      "  }";
             await Playwright.Selectors.RegisterAsync("mycss1", new() { Script = mycss });
 
             var browser1 = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
-            //var browser1 = await BrowserType.LaunchAsync();
             var context1 = await browser1.NewContextAsync();
 
             await Playwright.Selectors.RegisterAsync("mycss2", new() { Script = mycss });
@@ -455,9 +436,6 @@ namespace Microsoft.Playwright.Tests
             var videoSavePath = tempDirectory.Path + "my-video.webm";
             await page.Video.SaveAsAsync(videoSavePath);
             Assert.That(videoSavePath, Does.Exist);
-
-            var exception = await PlaywrightAssert.ThrowsAsync<Exception>(async () => await page.Video.PathAsync());
-            Assert.NotNull(exception);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to connect 20 times to a single server without warnings")]
@@ -469,8 +447,9 @@ namespace Microsoft.Playwright.Tests
                 browsers.Add(await BrowserType.ConnectAsync(_browserServer.WSEndpoint));
             }
 
-            Assert.DoesNotThrowAsync(async() => {
-                foreach(var browser in browsers)
+            Assert.DoesNotThrowAsync(async () =>
+            {
+                foreach (var browser in browsers)
                 {
                     await browser.CloseAsync();
                 }
@@ -548,12 +527,9 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsertype-connect.spec.ts", "should save har")]
         public async Task ShouldSaveHar()
         {
-            // Issue: Doesn't save the har : https://github.com/microsoft/playwright-dotnet/pull/1863/files
-
             using var tempDirectory = new TempDirectory();
-            var harPath = tempDirectory.Path;
-            //var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
-            var browser = await BrowserType.LaunchAsync();
+            var harPath = tempDirectory.Path + "/test.har";
+            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
             var context = await browser.NewContextAsync(new()
             {
                 RecordHarPath = harPath
@@ -565,15 +541,9 @@ namespace Microsoft.Playwright.Tests
             await browser.CloseAsync();
 
 
-            //Assert.That(harPath, Does.Exist);
+            Assert.That(harPath, Does.Exist);
             var logString = System.IO.File.ReadAllText(harPath);
-            dynamic logJson = Newtonsoft.Json.JsonConvert.DeserializeObject(logString);
-            var log = logJson.log;
-
-            Assert.AreEqual(log.entries, 1);
-            var entry = log.entries[0];
-            Assert.AreEqual(entry.pageref, log.pages[0].id);
-            Assert.AreEqual(entry.request.url, Server.EmptyPage);
+            StringAssert.Contains(Server.EmptyPage, logString);
         }
 
         private class BrowserServer

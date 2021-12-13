@@ -100,6 +100,8 @@ namespace Microsoft.Playwright.Core
 
         public event EventHandler<IResponse> Response;
 
+        public bool IsClosed { get; private set; }
+
         public ITracing Tracing
         {
             get => _tracing;
@@ -166,6 +168,11 @@ namespace Microsoft.Playwright.Core
         {
             try
             {
+                if (IsClosed)
+                {
+                    return;
+                }
+                IsClosed = true;
                 if (Options.RecordHarPath != null)
                 {
                     Artifact artifact = await Channel.HarExportAsync().ConfigureAwait(false);
