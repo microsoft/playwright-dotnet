@@ -65,9 +65,6 @@ namespace Microsoft.Playwright
         /// </summary>
         IElementHandle? AsElement();
 
-        /// <summary><para>The <c>jsHandle.dispose</c> method stops referencing the element handle.</para></summary>
-        Task DisposeAsync();
-
         /// <summary>
         /// <para>Returns the return value of <paramref name="expression"/>.</para>
         /// <para>This method passes this handle as the first argument to <paramref name="expression"/>.</para>
@@ -78,7 +75,7 @@ namespace Microsoft.Playwright
         /// <para>Examples:</para>
         /// <code>
         /// var tweetHandle = await page.QuerySelectorAsync(".tweet .retweets");<br/>
-        /// Assert.Equals("10 retweets", await tweetHandle.EvaluateAsync("node =&gt; node.innerText"));
+        /// Assert.AreEqual("10 retweets", await tweetHandle.EvaluateAsync("node =&gt; node.innerText"));
         /// </code>
         /// </summary>
         /// <param name="expression">

@@ -252,7 +252,7 @@ namespace Microsoft.Playwright
         /// <para>Examples:</para>
         /// <code>
         /// var tweets = page.Locator(".tweet .retweets");<br/>
-        /// Assert.Equals("10 retweets", await tweets.EvaluateAsync("node =&gt; node.innerText"));
+        /// Assert.AreEqual("10 retweets", await tweets.EvaluateAsync("node =&gt; node.innerText"));
         /// </code>
         /// </summary>
         /// <param name="expression">
