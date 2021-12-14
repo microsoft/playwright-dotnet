@@ -18,19 +18,33 @@ jobs:
         os: [windows-latest, ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .NET Core
+      - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
       - name: Install prerequisites and download drivers
         shell: bash
         run: |
           ./build.sh --download-driver
           ./build.sh --setup-dotnet-deps
+      # .NET tool internally has two sources when we install it with --add-source
+      # so our local version needs to be higher that it gets priority over the remote one
+      - name: Bump Playwright.CLI version for local development
+        shell: bash
+        run: |
+          xml_file_path="./src/Playwright.CLI/Playwright.CLI.csproj"
+          xml_file_contents=$(cat "${xml_file_path}")
+          xml_file_contents=$(echo "${xml_file_contents}" | sed "s|<AssemblyVersion>.*</AssemblyVersion>|<AssemblyVersion>99.99.99</AssemblyVersion>|")
+          echo "${xml_file_contents}" > "${xml_file_path}"
+      - name: Build Playwright.CLI
+        run: dotnet build src/Playwright.CLI
       - name: Install Playwright CLI
-        run: dotnet tool install --global Microsoft.Playwright.CLI
+        shell: bash
+        run: dotnet tool install --global Microsoft.Playwright.CLI --prerelease --add-source $PWD/src/Playwright.CLI/nupkg/
+      - name: Build Playwright
+        run: dotnet build -c Debug ./src/Playwright/
       - name: Build NUnit Package
-        run: dotnet build -c Debug ./src/Playwright.NUnit/Playwright.NUnit.csproj
+        run: dotnet build -c Debug ./src/Playwright.NUnit/
       - name: Generate NuGet packages 
         run: |
           dotnet pack ./src/Playwright/Playwright.csproj -c Debug -o ./src/Playwright.LocalNugetTest/nupkg

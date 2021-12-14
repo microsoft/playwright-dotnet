@@ -104,13 +104,17 @@ namespace Microsoft.Playwright.Transport
                     if (_webSocket.State != WebSocketState.Open)
                         break;
 
-                    memoryStream.Write(buffer.Array, 0, result.Count);
+#pragma warning disable CA1835 // Change the 'WriteAsync' method call to use the 'Stream.WriteAsync(ReadOnlyMemory<byte>, CancellationToken)' overload
+                    await memoryStream.WriteAsync(buffer.Array, 0, result.Count).ConfigureAwait(false);
+#pragma warning restore CA1835 // Change the 'WriteAsync' method call to use the 'Stream.WriteAsync(ReadOnlyMemory<byte>, CancellationToken)' overload
 
                     if (result.EndOfMessage)
                     {
                         string output = Encoding.UTF8.GetString(memoryStream.ToArray());
                         MessageReceived?.Invoke(this, new MessageReceivedEventArgs(output));
+#pragma warning disable CA1849 // 'Stream.Dispose()' synchronously blocks. Await 'Stream.DisposeAsync()' instead
                         memoryStream.Dispose();
+#pragma warning restore CA1849 // 'Stream.Dispose()' synchronously blocks. Await 'Stream.DisposeAsync()' instead
                         memoryStream = new MemoryStream();
                     }
                 }
@@ -123,7 +127,9 @@ namespace Microsoft.Playwright.Transport
             // Does not matter whether this is error or not, report
             // transport as closed, close web socket if open.
             HandleSocketClosed(closeReason);
+#pragma warning disable CA1849 // 'Stream.Dispose()' synchronously blocks. Await 'Stream.DisposeAsync()' instead
             memoryStream.Dispose();
+#pragma warning restore CA1849 // 'Stream.Dispose()' synchronously blocks. Await 'Stream.DisposeAsync()' instead
 #pragma warning restore VSTHRD103
         }
 

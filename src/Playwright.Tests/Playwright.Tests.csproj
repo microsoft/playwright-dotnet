@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netcoreapp3.1;net5.0;</TargetFrameworks>
+        <TargetFrameworks>netcoreapp3.1;net6.0;</TargetFrameworks>
         <IsTestProject>true</IsTestProject>
         <ReleaseVersion>0.0.0</ReleaseVersion>
         <NoWarn>1701;1702</NoWarn>
@@ -17,7 +17,7 @@
         <PackageReference Include="NUnit" Version="3.12.0" />
         <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
         <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
         <PackageReference Include="NETStandard.Library" Version="2.0.3" />
         <PackageReference Include="System.CodeDom" Version="5.0.0" />
         <PackageReference Include="System.Net.Http" Version="4.3.4" />

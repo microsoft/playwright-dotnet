@@ -31,7 +31,7 @@ stages:
       displayName: 'Use .NET Core sdk'
       inputs:
         packageType: sdk
-        version: 5.x
+        version: 6.x
         installationPath: $(Agent.ToolsDirectory)/dotnet
 
     - task: MicroBuildSigningPlugin@3

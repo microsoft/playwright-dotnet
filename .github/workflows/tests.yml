@@ -22,41 +22,41 @@ jobs:
         os: [windows-latest, ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .NET Core
+      - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
       - name: Install prerequisites and download drivers
         shell: bash
         run: ./build.sh --download-driver
       - name: Building
         run: dotnet build ./src
       - name: Installing Browsers and dependencies
-        run: dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install --with-deps ${{ matrix.browser }}
+        run: dotnet run --project ./src/Playwright/Playwright.csproj -f net6.0 -- install --with-deps ${{ matrix.browser }}
       - name: Running tests
         if: matrix.os != 'ubuntu-latest'
         env:
           BROWSER: ${{ matrix.browser }}
-        run: dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --logger "trx;LogFileName=TestResults.xml" -- NUnit.NumberOfTestWorkers=1
+        run: dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net6.0 --logger "trx;LogFileName=TestResults.xml" -- NUnit.NumberOfTestWorkers=1
       - name: Running tests (Linux)
         if: matrix.os == 'ubuntu-latest'
         env:
           BROWSER: ${{ matrix.browser }}
-        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --logger "trx" -- NUnit.NumberOfTestWorkers=1
+        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net6.0 --logger "trx" -- NUnit.NumberOfTestWorkers=1
 
   test-net31:
     name: chromium/ubuntu/.NET 3.1
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .NET Core 3.1
+      - name: Setup .NET 3.1
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.x
-      - name: Setup .NET 5.0 # needed for our build steps
+      - name: Setup .NET 6.0 # needed for our build steps
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
       - name: Install prerequisites and download drivers
         shell: bash
         run: ./build.sh --download-driver
@@ -65,7 +65,7 @@ jobs:
           dotnet build -f netstandard2.0 ./src/Playwright/Playwright.csproj
           dotnet build -f netcoreapp3.1 ./src/Playwright.Tests/Playwright.Tests.csproj
       - name: Installing Browsers and dependencies
-        run: dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install --with-deps chromium
+        run: dotnet run --project ./src/Playwright/Playwright.csproj -f net6.0 -- install --with-deps chromium
       - name: Running tests
         env:
           BROWSER: CHROMIUM

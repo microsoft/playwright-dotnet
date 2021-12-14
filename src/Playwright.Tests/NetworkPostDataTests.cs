@@ -52,7 +52,7 @@ namespace Microsoft.Playwright.Tests
 
             await Task.WhenAll(task, actualTask);
 
-            string expectedJsonValue = JsonSerializer.Serialize(value, new()
+            string expectedJsonValue = JsonSerializer.Serialize(value, new JsonSerializerOptions()
             {
                 Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                 WriteIndented = true

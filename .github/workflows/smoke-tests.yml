@@ -17,16 +17,16 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .NET Core
+      - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
       - name: Install prerequisites and download drivers
         shell: bash
         run: ./build.sh --download-driver
       - name: Building
         run: dotnet build ./src
       - name: Installing Browsers and dependencies
-        run: dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install --with-deps
+        run: dotnet run --project ./src/Playwright/Playwright.csproj -f net6.0 -- install --with-deps
       - name: Running tests 
-        run: xvfb-run dotnet test ./src/Playwright.TestingHarnessTest/Playwright.TestingHarnessTest.csproj -c Debug -f net5.0 --logger "trx"
+        run: xvfb-run dotnet test ./src/Playwright.TestingHarnessTest/Playwright.TestingHarnessTest.csproj -c Debug -f net6.0 --logger "trx"
