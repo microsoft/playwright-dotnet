@@ -289,7 +289,7 @@ namespace Microsoft.Playwright
         /// await page.ClickAsync("div");<br/>
         /// // Note: it makes sense to await the result here, because otherwise, the context<br/>
         /// //  gets closed and the binding function will throw an exception.<br/>
-        /// Assert.Equal("Click me", await result.Task);
+        /// Assert.AreEqual("Click me", await result.Task);
         /// </code>
         /// </summary>
         /// <param name="name">Name of the function on the window object.</param>
