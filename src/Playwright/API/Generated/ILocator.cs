@@ -41,72 +41,11 @@ namespace Microsoft.Playwright
 {
     /// <summary>
     /// <para>
-    /// Locator represents a view to the element(s) on the page. It captures the logic sufficient
-    /// to retrieve the element at any given moment. Locator can be created with the <see
-    /// cref="IPage.Locator"/> method.
+    /// Locators are the central piece of Playwright's auto-waiting and retry-ability. In
+    /// a nutshell, locators represent a way to find element(s) on the page at any moment.
+    /// Locator can be created with the <see cref="IPage.Locator"/> method.
     /// </para>
-    /// <code>
-    /// var locator = page.Locator("text=Submit");<br/>
-    /// await locator.ClickAsync();
-    /// </code>
-    /// <para>
-    /// The difference between the Locator and <see cref="IElementHandle"/> is that the
-    /// latter points to a particular element, while Locator captures the logic of how to
-    /// retrieve that element.
-    /// </para>
-    /// <para>
-    /// In the example below, handle points to a particular DOM element on page. If that
-    /// element changes text or is used by React to render an entirely different component,
-    /// handle is still pointing to that very DOM element. This can lead to unexpected behaviors.
-    /// </para>
-    /// <code>
-    /// var handle = await page.QuerySelectorAsync("text=Submit");<br/>
-    /// await handle.HoverAsync();<br/>
-    /// await handle.ClickAsync();
-    /// </code>
-    /// <para>
-    /// With the locator, every time the <c>element</c> is used, up-to-date DOM element
-    /// is located in the page using the selector. So in the snippet below, underlying DOM
-    /// element is going to be located twice.
-    /// </para>
-    /// <code>
-    /// var locator = page.Locator("text=Submit");<br/>
-    /// await locator.HoverAsync();<br/>
-    /// await locator.ClickAsync();
-    /// </code>
-    /// <para>**Strictness**</para>
-    /// <para>
-    /// Locators are strict. This means that all operations on locators that imply some
-    /// target DOM element will throw if more than one element matches given selector.
-    /// </para>
-    /// <code>
-    /// // Throws if there are several buttons in DOM:<br/>
-    /// await page.Locator("button").ClickAsync();<br/>
-    /// <br/>
-    /// // Works because we explicitly tell locator to pick the first element:<br/>
-    /// await page.Locator("button").First.ClickAsync();<br/>
-    /// <br/>
-    /// // Works because Count knows what to do with multiple matches:<br/>
-    /// await page.Locator("button").CountAsync();
-    /// </code>
-    /// <para>**Lists**</para>
-    /// <para>You can also use locators to work with the element lists.</para>
-    /// <code>
-    /// // Locate elements, this locator points to a list.<br/>
-    /// var rows = page.Locator("table tr");<br/>
-    /// <br/>
-    /// // Pattern 1: use locator methods to calculate text on the whole list.<br/>
-    /// var texts = await rows.AllTextContentsAsync();<br/>
-    /// <br/>
-    /// // Pattern 2: do something with each element in the list:<br/>
-    /// var count = await rows.CountAsync()<br/>
-    /// for (let i = 0; i &lt; count; ++i)<br/>
-    ///   Console.WriteLine(await rows.Nth(i).TextContentAsync());<br/>
-    /// <br/>
-    /// // Pattern 3: resolve locator to elements on page and map them to their text content<br/>
-    /// // Note: the code inside evaluateAll runs in page, you can call any DOM apis there<br/>
-    /// var texts = await rows.EvaluateAllAsync("list =&gt; list.map(element =&gt; element.textContent)");
-    /// </code>
+    /// <para><a href="./locators.md">Learn more about locators</a>.</para>
     /// </summary>
     public partial interface ILocator
     {

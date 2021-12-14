@@ -62,6 +62,13 @@ namespace Microsoft.Playwright
     /// // Works because we explicitly tell locator to pick the first frame:<br/>
     /// await page.FrameLocator(".result-frame").First.Locator("button").ClickAsync();
     /// </code>
+    /// <para>**Converting Locator to FrameLocator**</para>
+    /// <para>
+    /// If you have a <see cref="ILocator"/> object pointing to an <c>iframe</c> it can
+    /// be converted to <see cref="IFrameLocator"/> using <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:scope"><c>:scope</c></a>
+    /// CSS selector:
+    /// </para>
+    /// <code>var frameLocator = locator.FrameLocator(":scope");</code>
     /// </summary>
     public partial interface IFrameLocator
     {

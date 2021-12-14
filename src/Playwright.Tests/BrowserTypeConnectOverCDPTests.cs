@@ -22,24 +22,33 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Tests
 {
-    internal class PlaywrightInitializer
+    ///<playwright-file>chromium/chromium.spec.ts</playwright-file>
+    public class BrowserTypeConnectOverCDPTests : PlaywrightTestEx
     {
-        public Core.BrowserType Chromium { get; set; }
+        [PlaywrightTest("chromium/chromium.spec.ts", "should connect to an existing cdp session")]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        public async Task ShouldConnectToAnExistingCDPSession()
+        {
+            int port = 9393 + WorkerIndex;
+            IBrowser browserServer = await BrowserType.LaunchAsync(new() { Args = new[] { $"--remote-debugging-port={port}" } });
+            try
+            {
+                IBrowser cdpBrowser = await BrowserType.ConnectOverCDPAsync($"http://localhost:{port}/");
+                var contexts = cdpBrowser.Contexts;
+                Assert.AreEqual(1, contexts.Count);
+                await cdpBrowser.CloseAsync();
+            }
+            finally
+            {
 
-        public Core.BrowserType Firefox { get; set; }
-
-        public Core.BrowserType Webkit { get; set; }
-
-        public Core.LocalUtils Utils { get; set; }
-
-        public List<DeviceDescriptorEntry> DeviceDescriptors { get; set; }
-
-        public Core.Selectors Selectors { get; set; }
-
-        public Core.Browser PreLaunchedBrowser { get; set; }
+                await browserServer.CloseAsync();
+            }
+        }
     }
 }
