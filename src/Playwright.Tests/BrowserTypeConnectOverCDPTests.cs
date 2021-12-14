@@ -41,7 +41,9 @@ namespace Microsoft.Playwright.Tests
             {
                 IBrowser cdpBrowser = await BrowserType.ConnectOverCDPAsync($"http://localhost:{port}/");
                 var contexts = cdpBrowser.Contexts;
-                Assert.AreEqual(1, contexts.Count);
+                Assert.AreEqual(1, cdpBrowser.Contexts.Count);
+                var page = await cdpBrowser.Contexts[0].NewPageAsync();
+                Assert.AreEqual(2, await page.EvaluateAsync<int>("1 + 1"));
                 await cdpBrowser.CloseAsync();
             }
             finally
