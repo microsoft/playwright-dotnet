@@ -36,6 +36,7 @@
     <Rule Id="CA1307" Action="None" /><!-- GetHashCode with locale settings-->
     <Rule Id="CA1725" Action="Error" /><!-- Parameter names should match base declaration-->
     <Rule Id="CA1812" Action="None" /><!-- Avoid uninstantiated internal classes. CA1812 fails to evaluate classes used for deserialization see https://github.com/dotnet/roslyn-analyzers/issues/3210 -->
+    <Rule Id="CA1845" Action="None" /><!-- Use span-based 'string.Concat' and 'AsSpan' instead -->
   </Rules>
   <Rules AnalyzerId="Microsoft.VisualStudio.Threading.Analyzers" RuleNamespace="Microsoft.VisualStudio.Threading.Analyzers">
     <Rule Id="VSTHRD200" Action="Error" /><!-- Use Async naming convention -->
