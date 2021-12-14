@@ -20,7 +20,7 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyVersion>1.2.0</AssemblyVersion>
+    <AssemblyVersion>1.2.1</AssemblyVersion>
     <PackageVersion>$(AssemblyVersion)-next-2</PackageVersion>
     <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
