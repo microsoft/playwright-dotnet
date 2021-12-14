@@ -22,24 +22,15 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.Playwright.Transport.Channels;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Core
 {
-    internal class PlaywrightInitializer
+    internal class LocalUtils
     {
-        public Core.BrowserType Chromium { get; set; }
-
-        public Core.BrowserType Firefox { get; set; }
-
-        public Core.BrowserType Webkit { get; set; }
-
-        public Core.LocalUtils Utils { get; set; }
-
-        public List<DeviceDescriptorEntry> DeviceDescriptors { get; set; }
-
-        public Core.Selectors Selectors { get; set; }
-
-        public Core.Browser PreLaunchedBrowser { get; set; }
+        public LocalUtils(IChannelOwner parent)
+        {
+        }
     }
 }

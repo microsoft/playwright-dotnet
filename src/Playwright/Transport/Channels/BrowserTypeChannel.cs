@@ -23,6 +23,7 @@
  */
 
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 
@@ -196,6 +197,18 @@ namespace Microsoft.Playwright.Transport.Channels
             channelArgs.Add("forcedColors", forcedColors);
 
             return Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "launchPersistentContext", channelArgs);
+        }
+
+        internal Task<JsonElement> ConnectOverCDPAsync(string endpointURL, IEnumerable<KeyValuePair<string, string>> headers = default, float? slowMo = default, float? timeout = default)
+        {
+            var channelArgs = new Dictionary<string, object>
+            {
+                { "endpointURL", endpointURL },
+                { "headers", headers.Remap() },
+                { "slowMo", slowMo },
+                { "timeout", timeout },
+            };
+            return Connection.SendMessageToServerAsync<JsonElement>(Guid, "connectOverCDP", channelArgs);
         }
     }
 }
