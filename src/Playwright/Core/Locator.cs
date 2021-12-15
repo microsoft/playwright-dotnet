@@ -269,7 +269,7 @@ namespace Microsoft.Playwright.Core
             }
             finally
             {
-                await (handle?.DisposeAsync()).ConfigureAwait(false);
+                await handle.DisposeAsync().ConfigureAwait(false);
             }
         }
 
@@ -283,7 +283,7 @@ namespace Microsoft.Playwright.Core
             }
             finally
             {
-                await (handle?.DisposeAsync()).ConfigureAwait(false);
+                await handle.DisposeAsync().ConfigureAwait(false);
             }
         }
     }

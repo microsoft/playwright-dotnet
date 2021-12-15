@@ -66,10 +66,25 @@ namespace Microsoft.Playwright
     /// </summary>
     public partial interface IBrowserType
     {
-        /// <summary><para>This methods attaches Playwright to an existing browser instance.</para></summary>
-        /// <param name="wsEndpoint">A browser websocket endpoint to connect to.</param>
+        /// <summary>
+        /// <para>
+        /// This methods attaches Playwright to an existing browser instance using the Chrome
+        /// DevTools Protocol.
+        /// </para>
+        /// <para>The default browser context is accessible via <see cref="IBrowser.Contexts"/>.</para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Connecting over the Chrome DevTools Protocol is only supported for Chromium-based
+        /// browsers.
+        /// </para>
+        /// </remarks>
+        /// <param name="endpointURL">
+        /// A CDP websocket endpoint or http url to connect to. For example <c>http://localhost:9222/</c>
+        /// or <c>ws://127.0.0.1:9222/devtools/browser/387adf4c-243f-4051-a181-46798f4a46f4</c>.
+        /// </param>
         /// <param name="options">Call options</param>
-        Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions? options = default);
+        Task<IBrowser> ConnectOverCDPAsync(string endpointURL, BrowserTypeConnectOverCDPOptions? options = default);
 
         /// <summary><para>A path where Playwright expects to find a bundled browser executable.</para></summary>
         string ExecutablePath { get; }

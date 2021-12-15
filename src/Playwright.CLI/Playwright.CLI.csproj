@@ -5,7 +5,8 @@
     <PackageId>Microsoft.Playwright.CLI</PackageId>
     <Summary>The Playwright CLI dotnet tool.</Summary>
     <Description>Playwright enables reliable end-to-end testing for modern web apps. It is built to enable cross-browser web automation that is ever-green, capable, reliable and fast. Learn more at https://playwright.dev/dotnet/.</Description>
-    <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
+    <PackageIcon>icon.png</PackageIcon>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <DebugSymbols>true</DebugSymbols>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RunWithWarnings>true</RunWithWarnings>
@@ -18,9 +19,10 @@
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
+    <RollForward>Major</RollForward>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyVersion>1.2.0</AssemblyVersion>
+    <AssemblyVersion>1.2.1</AssemblyVersion>
     <PackageVersion>$(AssemblyVersion)-next-2</PackageVersion>
     <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
@@ -45,5 +47,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Common\icon.png" Pack="true" Visible="false" PackagePath="icon.png" />
   </ItemGroup>
 </Project>

@@ -34,6 +34,8 @@ namespace Microsoft.Playwright.Transport.Protocol
 
         public Core.BrowserType Webkit { get; set; }
 
+        public Core.LocalUtils Utils { get; set; }
+
         public List<DeviceDescriptorEntry> DeviceDescriptors { get; set; }
 
         public Core.Selectors Selectors { get; set; }

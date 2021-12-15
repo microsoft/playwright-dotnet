@@ -6,6 +6,7 @@
     <PackageId>Microsoft.Playwright</PackageId>
     <Summary>The .NET port of Playwright, used to automate Chromium, Firefox and WebKit with a single API.</Summary>
     <Description>Playwright enables reliable end-to-end testing for modern web apps. It is built to enable cross-browser web automation that is ever-green, capable, reliable and fast. Learn more at https://playwright.dev/dotnet/.</Description>
+    <PackageIcon>icon.png</PackageIcon>
     <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
     <DebugSymbols>true</DebugSymbols>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -60,6 +61,7 @@
     <None Include=".playwright\**" Pack="true" PackagePath=".playwright" />
     <None Include="build\**" Pack="true" PackagePath="buildTransitive" />
     <None Remove=".drivers\**" />
+    <None Include="..\Common\icon.png" Pack="true" Visible="false" PackagePath="icon.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="16.9.60">

@@ -12,6 +12,7 @@ if [[ ($1 == '--help') || ($1 == '-h') ]]; then
   echo "  --roll <version>      - roll the .NET language binding to a specific driver version"
   echo "  --download-driver     - download the driver"
   echo "  --setup-dotnet-deps   - download and install the .NET tool deps"
+  echo "  --update-assets       - sync the assets from 'playwright' to 'playwright-dotnet'"
   echo "  --help                - show this help"
   echo
   exit 0
@@ -66,7 +67,6 @@ function roll_driver() {
   node "$upstream_repo_path/utils/generate_dotnet_channels.js" "src/Playwright"
 
   download_driver
-  update_assets
 
   echo "done"
 }
@@ -75,11 +75,12 @@ CMD="$1"
 if [[ ("$CMD" == "--init") ]]; then
   download_dotnet_tool_deps
   download_driver
-  update_assets
 elif [[ ("$CMD" == "--roll") ]]; then
   roll_driver $2
 elif [[ ("$CMD" == "--download-driver") ]]; then
   download_driver
+elif [[ ("$CMD" == "--update-assets") ]]; then
+  update_assets
 elif [[ ("$CMD" == "--setup-dotnet-deps") ]]; then
   download_dotnet_tool_deps
 else

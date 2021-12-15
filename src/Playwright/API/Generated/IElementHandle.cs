@@ -280,8 +280,8 @@ namespace Microsoft.Playwright
         /// <para>Examples:</para>
         /// <code>
         /// var tweetHandle = await page.QuerySelectorAsync(".tweet");<br/>
-        /// Assert.Equals("100", await tweetHandle.EvalOnSelectorAsync(".like", "node =&gt; node.innerText"));<br/>
-        /// Assert.Equals("10", await tweetHandle.EvalOnSelectorAsync(".retweets", "node =&gt; node.innerText"));
+        /// Assert.AreEqual("100", await tweetHandle.EvalOnSelectorAsync(".like", "node =&gt; node.innerText"));<br/>
+        /// Assert.AreEqual("10", await tweetHandle.EvalOnSelectorAsync(".retweets", "node =&gt; node.innerText"));
         /// </code>
         /// </summary>
         /// <param name="selector">
@@ -311,7 +311,7 @@ namespace Microsoft.Playwright
         /// <para>Examples:</para>
         /// <code>
         /// var feedHandle = await page.QuerySelectorAsync(".feed");<br/>
-        /// Assert.Equals(new [] { "Hello!", "Hi!" }, await feedHandle.EvalOnSelectorAllAsync&lt;string[]&gt;(".tweet", "nodes =&gt; nodes.map(n =&gt; n.innerText)"));
+        /// Assert.AreEqual(new [] { "Hello!", "Hi!" }, await feedHandle.EvalOnSelectorAllAsync&lt;string[]&gt;(".tweet", "nodes =&gt; nodes.map(n =&gt; n.innerText)"));
         /// </code>
         /// </summary>
         /// <param name="selector">

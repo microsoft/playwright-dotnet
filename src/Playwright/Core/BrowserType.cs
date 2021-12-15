@@ -23,7 +23,9 @@
  */
 
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
@@ -164,6 +166,22 @@ namespace Microsoft.Playwright.Core
             {
                 throw new PlaywrightException("Unable to close transport");
             }
+        }
+
+        public async Task<IBrowser> ConnectOverCDPAsync(string endpointURL, BrowserTypeConnectOverCDPOptions options = null)
+        {
+            if (Name != "chromium")
+            {
+                throw new ArgumentException("Connecting over CDP is only supported in Chromium.");
+            }
+            options ??= new BrowserTypeConnectOverCDPOptions();
+            JsonElement result = await _channel.ConnectOverCDPAsync(endpointURL, headers: options.Headers, slowMo: options.SlowMo, timeout: options.Timeout).ConfigureAwait(false);
+            Browser browser = result.GetProperty("browser").ToObject<Browser>(_channel.Connection.GetDefaultJsonSerializerOptions());
+            if (result.TryGetProperty("defaultContext", out JsonElement defaultContextValue))
+            {
+                browser.BrowserContextsList.Add(defaultContextValue.ToObject<BrowserContext>(_channel.Connection.GetDefaultJsonSerializerOptions()));
+            }
+            return browser;
         }
     }
 }

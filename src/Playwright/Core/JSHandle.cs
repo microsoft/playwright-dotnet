@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Core
             return result;
         }
 
-        public Task DisposeAsync() => _channel.DisposeAsync();
+        public async ValueTask DisposeAsync() => await _channel.DisposeAsync().ConfigureAwait(false);
 
         public override string ToString() => Preview;
     }
